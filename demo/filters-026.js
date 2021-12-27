@@ -34,6 +34,24 @@ const swirl = scrawl.makeFilter({
     ]
 });
 
+// Test the ability to load a user-created easing algorithm into the gradient
+const bespokeEasings = {
+
+    'user-steps': (val) => {
+
+        if (val < 0.2) return 0.1;
+        if (val < 0.4) return 0.3;
+        if (val < 0.6) return 0.7;
+        if (val < 0.8) return 0.5;
+        return 0.9;
+    },
+    'user-zigzag': (val) => {
+
+        if (val < 0.3) return val * 3;
+        else if (val < 0.7) return 0.9 - ((val - 0.3) * 2);
+        else return 0.1 + ((val - 0.7) * 3);
+    },
+};
 
 // Create the target entity
 const piccy = scrawl.makePicture({
@@ -96,10 +114,28 @@ scrawl.observeAndUpdate({
         outerRadius_percent: ['outerRadius', '%'],
         outerRadius_absolute: ['outerRadius', 'round'],
         angle: ['angle', 'round'],
-        easing: ['easing', 'raw'],
         transparentEdges: ['transparentEdges', 'boolean'],
     },
 });
+
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+    let val = e.target.value;
+
+    if (['user-steps', 'user-zigzag'].includes(val)) {
+        swirl.set({
+            easing: bespokeEasings[val],
+        });
+    }
+    else {
+        swirl.set({
+            easing: val,
+        });
+    }
+}, '#easing');
 
 // Setup form
 const opacity = document.querySelector('#opacity');

@@ -17,9 +17,12 @@ scrawl.importDomImage('.flowers');
 
 
 // Create the gradients
-scrawl.makeGradient({
+const redToBlue = scrawl.makeGradient({
     name: 'red-to-blue',
     endX: '100%',
+
+    easing: 'linear',
+    precision: 1,
 
     colors: [
         [0, 'red'],
@@ -27,9 +30,12 @@ scrawl.makeGradient({
     ],
 });
 
-scrawl.makeGradient({
+const blueToRed = scrawl.makeGradient({
     name: 'blue-to-red',
     endX: '100%',
+
+    easing: 'linear',
+    precision: 1,
 
     colors: [
         [999, 'red'],
@@ -46,6 +52,9 @@ const animatedGradient1 = scrawl.makeGradient({
         paletteEnd: -1,
     },
     cyclePalette: true,
+
+    easing: 'linear',
+    precision: 1,
 })
 .updateColor(0, '#ff0000')
 .updateColor(83, '#000000')
@@ -72,6 +81,9 @@ const animatedGradient2 = scrawl.makeGradient({
     },
     cyclePalette: true,
 
+    easing: 'linear',
+    precision: 1,
+
     colors: [
         [0, 'red'],
         [339, 'red'],
@@ -84,6 +96,20 @@ const animatedGradient2 = scrawl.makeGradient({
         [999, 'red']
     ],
 });
+
+// Test the ability to load a user-created easing algorithm into the gradient
+const bespokeEasings = {
+
+    'user-steps': (val) => {
+
+        if (val < 0.2) return 0.1;
+        if (val < 0.4) return 0.3;
+        if (val < 0.6) return 0.5;
+        if (val < 0.8) return 0.7;
+        return 0.9;
+    },
+    'user-repeat': (val) => (val * 4) % 1,
+};
 
 
 // Create the filter
@@ -157,12 +183,33 @@ scrawl.observeAndUpdate({
     },
 });
 
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+    let val = e.target.value;
+
+    const items = {
+        easing: val,
+    };
+
+    if (['user-steps', 'user-repeat'].includes(val)) items.easing = bespokeEasings[val];
+
+    blueToRed.set(items);
+    redToBlue.set(items);
+    animatedGradient1.set(items);
+    animatedGradient2.set(items);
+
+}, '#easing');
+
 // Setup form
 const opacity = document.querySelector('#opacity');
 opacity.value = 1;
 
 document.querySelector('#useNaturalGrayscale').value = '0';
 document.querySelector('#gradient').value = 'red-to-blue';
+document.querySelector('#easing').options.selectedIndex = 0;
 
 
 // #### Drag-and-Drop image loading functionality

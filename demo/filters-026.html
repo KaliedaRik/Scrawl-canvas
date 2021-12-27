@@ -105,6 +105,9 @@
         <option value="easeOutBounce">easeOutBounce</option>
         <option value="easeOutInBounce">easeOutInBounce</option>
         <option value="easeInBounce">easeInBounce</option>
+        <option value="" disabled>---</option>
+        <option value="user-steps">steps (user-defined)</option>
+        <option value="user-zigzag">zigzag (user-defined)</option>
       </select>
     </div>
     <div class="yellow">&nbsp;</div>
@@ -124,8 +127,9 @@
 
     <ul>
       <li>Create a test Picture entity</li>
-      <li>Create a glitch filter and apply it to the test entity</li>
+      <li>Create a swirl filter and apply it to the test entity</li>
       <li>Update filter attributes and observe the effect they have on the entity</li>
+      <li>Check that the filter responds to easing updates, including user-defined easing algorithms</li>
     </ul>
 
     <p><b>Touch test:</b> not required</p>

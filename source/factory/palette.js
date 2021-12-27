@@ -54,7 +54,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { λnull, isa_obj, mergeOver, xt, xta, pushUnique, Ωempty, easeEngines } from '../core/utilities.js';
+import { λnull, isa_obj, isa_fn, mergeOver, xt, xta, pushUnique, Ωempty, easeEngines } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
@@ -107,6 +107,9 @@ let defaultAttributes = {
 
 // The __easing__ value represents a transformation that will be applied to a copy of the color stops Array - this allows us to create non-linear gradients
     easing: 'linear',
+
+// The __precision__ value - higher values lead to fewer stops being added to the gradient
+    precision: 0,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -156,7 +159,21 @@ S.colors = function (item) {
 // __easing__ - a String representing the easing to be applied to the gradient 
 S.easing = function (item) {
 
-    this.easing = item;
+    if (isa_fn(item) || easeEngines[item]) {
+
+        this.easing = item;
+        this.dirtyPalette = true;
+    }
+};
+
+// __precision__ - a positive integer Number value between 0 and 50. If value is `0` (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.
+S.precision = function (item) {
+
+    item = parseInt(item, 10);
+    if (isNaN(item) || item < 0) item = 0;
+    if (item > 50) item = 50;
+
+    this.precision = item;
     this.dirtyPalette = true;
 };
 
@@ -334,7 +351,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
     // It's at this point that we apply the easing function
 
-    let { stops, easing } = this;
+    let { stops, easing, precision } = this;
 
     let keys = Object.keys(this.colors),
         spread, offset, i, iz, item, n;
@@ -349,7 +366,13 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
             end = 999;
         }
 
-        const engine = (null != easeEngines[easing]) ? easeEngines[easing] : easeEngines['linear'];
+        let engine;
+
+        if (isa_fn(easing)) engine = easing;
+        else {
+
+            engine = (null != easeEngines[easing]) ? easeEngines[easing] : easeEngines['linear'];
+        }
 
         // Option 1 start == end, cycle irrelevant
         if (start === end) return stops[start] || 'rgba(0,0,0,0)';
@@ -362,13 +385,11 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
         
             spread = end - start;
 
-            for (i = 0, iz = keys.length; i < iz; i++) {
+            if (precision) {
 
-                item = keys[i];
+                for (i = start + 1; i < end; i += precision) {
 
-                if (item > start && item < end) {
-
-                    offset = engine((item - start) / spread);
+                    offset = (i - start) / spread;
 
                     if (cycle) {
 
@@ -376,7 +397,29 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
                         else if (offset < 0) offset += 1;
                     }
 
-                    if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
+                    offset = engine(offset);
+
+                    if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[i]);
+                }
+            }
+            else {
+
+                for (i = 0, iz = keys.length; i < iz; i++) {
+
+                    item = keys[i];
+
+                    if (item > start && item < end) {
+
+                        offset = (item - start) / spread;
+
+                        if (cycle) {
+
+                            if (offset > 1) offset -= 1;
+                            else if (offset < 0) offset += 1;
+                        }
+
+                        if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
+                    }
                 }
             }
         }
@@ -388,22 +431,40 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                 gradient.addColorStop(0, stops[start]);
                 gradient.addColorStop(1, stops[end]);
-            
+
                 n = 999 - start;
                 spread = n + end;
 
-                for (i = 0, iz = keys.length; i < iz; i++) {
+                if (precision) {
 
-                    item = keys[i];
+                    for (i = 0; i < spread; i += precision) {
 
-                    if (item > start) offset = engine((item - start) / spread);
-                    else if (item < end) offset = engine((item + n) / spread);
-                    else continue;
+                        item = i + start;
 
-                    if (offset > 1) offset -= 1;
-                    else if (offset < 0) offset += 1;
+                        if (item > 999) item -= 999;
 
-                    if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
+                        offset = engine(i / spread);
+
+                        if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
+                    }
+                }
+                else {
+
+                    for (i = 0, iz = keys.length; i < iz; i++) {
+
+                        item = keys[i];
+
+                        if (item === 999) offset = (item - start - 0.01) / spread;
+                        else if (item > start) offset = (item - start) / spread;
+                        else if (item === 0) offset = (item + n + 0.01) / spread;
+                        else if (item < end) offset = (item + n) / spread;
+                        else continue;
+
+                        if (offset > 1) offset -= 1;
+                        else if (offset < 0) offset += 1;
+
+                        if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
+                    }
                 }
             }
 
@@ -415,15 +476,30 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
             
                 spread = start - end;
 
-                for (i = 0, iz = keys.length; i < iz; i++) {
+                if (precision) {
 
-                    item = keys[i];
+                    for (i = end + 1; i < start; i += precision) {
 
-                    if (item < start && item > end) {
+                        if (i < start && i > end) {
 
-                        offset = engine(1 - ((item - end) / spread));
+                            offset = engine(1 - ((i - end) / spread));
 
-                        if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
+                            if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[i]);
+                        }
+                    }
+                }
+                else {
+
+                    for (i = 0, iz = keys.length; i < iz; i++) {
+
+                        item = keys[i];
+
+                        if (item < start && item > end) {
+
+                            offset = 1 - ((item - end) / spread);
+
+                            if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
+                        }
                     }
                 }
             }

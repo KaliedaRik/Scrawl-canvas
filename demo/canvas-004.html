@@ -52,6 +52,17 @@
     <div class="pink label">paletteEnd</div>
     <div class="pink"><input class="controlItem" id="paletteEnd" type="range" value="0" min="0" max="999" step="1" /></div>
 
+    <div class="pink label">Cycle palette</div>
+    <div class="pink">
+        <select class="controlItem" id="cyclePalette">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="pink label">&nbsp;</div>
+    <div class="pink label">&nbsp;</div>
+
     <div class="green label">startX</div>
     <div class="green"><input class="controlItem" id="startX" type="range" value="0" min="0" max="100" step="1" /></div>
 
@@ -72,7 +83,7 @@
 
     <div class="yellow label">Include red</div>
     <div class="yellow">
-      <select class="controlItem" id="red">
+      <select class="controlItem colorItems" id="red">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -80,11 +91,79 @@
 
     <div class="yellow label">Include blue</div>
     <div class="yellow">
-        <select class="controlItem" id="blue">
+        <select class="controlItem colorItems" id="blue">
           <option value="0">false</option>
           <option value="1">true</option>
       </select>
     </div>
+
+    <div class="lavender label">Easing</div>
+    <div class="lavender">
+      <select class="controlItem" id="easing">
+        <option value="linear">linear</option>
+        <option value="out">out</option>
+        <option value="in">in</option>
+        <option value="" disabled>---</option>
+        <option value="easeOut">easeOut</option>
+        <option value="easeOutIn">easeOutIn</option>
+        <option value="easeInOut">easeInOut</option>
+        <option value="easeIn">easeIn</option>
+        <option value="easeOut3">easeOut3</option>
+        <option value="easeOutIn3">easeOutIn3</option>
+        <option value="easeInOut3">easeInOut3</option>
+        <option value="easeIn3">easeIn3</option>
+        <option value="easeOut4">easeOut4</option>
+        <option value="easeOutIn4">easeOutIn4</option>
+        <option value="easeInOut4">easeInOut4</option>
+        <option value="easeIn4">easeIn4</option>
+        <option value="easeOut5">easeOut5</option>
+        <option value="easeOutIn5">easeOutIn5</option>
+        <option value="easeInOut5">easeInOut5</option>
+        <option value="easeIn5">easeIn5</option>
+        <option value="" disabled>---</option>
+        <option value="cosine">cosine</option>
+        <option value="hermite">hermite</option>
+        <option value="quintic">quintic</option>
+        <option value="" disabled>---</option>
+        <option value="easeOutSine">easeOutSine</option>
+        <option value="easeOutInSine">easeOutInSine</option>
+        <option value="easeInSine">easeInSine</option>
+        <option value="easeOutQuad">easeOutQuad</option>
+        <option value="easeOutInQuad">easeOutInQuad</option>
+        <option value="easeInQuad">easeInQuad</option>
+        <option value="easeOutCubic">easeOutCubic</option>
+        <option value="easeOutInCubic">easeOutInCubic</option>
+        <option value="easeInCubic">easeInCubic</option>
+        <option value="easeOutQuart">easeOutQuart</option>
+        <option value="easeOutInQuart">easeOutInQuart</option>
+        <option value="easeInQuart">easeInQuart</option>
+        <option value="easeOutQuint">easeOutQuint</option>
+        <option value="easeOutInQuint">easeOutInQuint</option>
+        <option value="easeInQuint">easeInQuint</option>
+        <option value="easeOutExpo">easeOutExpo</option>
+        <option value="easeOutInExpo">easeOutInExpo</option>
+        <option value="easeInExpo">easeInExpo</option>
+        <option value="easeOutCirc">easeOutCirc</option>
+        <option value="easeOutInCirc">easeOutInCirc</option>
+        <option value="easeInCirc">easeInCirc</option>
+        <option value="" disabled>---</option>
+        <option value="easeOutBack">easeOutBack</option>
+        <option value="easeOutInBack">easeOutInBack</option>
+        <option value="easeInBack">easeInBack</option>
+        <option value="easeOutElastic">easeOutElastic</option>
+        <option value="easeOutInElastic">easeOutInElastic</option>
+        <option value="easeInElastic">easeInElastic</option>
+        <option value="easeOutBounce">easeOutBounce</option>
+        <option value="easeOutInBounce">easeOutInBounce</option>
+        <option value="easeInBounce">easeInBounce</option>
+        <option value="" disabled>---</option>
+        <option value="user-steps">steps (user-defined)</option>
+        <option value="user-repeat">repeat (user-defined)</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Precision</div>
+    <div class="lavender"><input class="controlItem" id="precision" type="range" value="1" min="0" max="20" step="1" /></div>
 
   </div>
 
@@ -101,6 +180,9 @@
       <li>Check that we can successfully manipulate the gradient's start and end coordinates, and its start and end radius values</li>
       <li>Check that we can successfully manipulate the palettes's start and end cursors</li>
       <li>Check that we can dynamically add and remove color stops</li>
+      <li>Check that we can ease the gradient, including user-defined easing algorithms</li>
+      <li>Check that when precision is set to 0, gradient uses the linear easing</li>
+      <li>Check that when cyclePalette is set to true and the palette's end value is smaller than its start value, the gradient draws itself by going through the 0/999 endpoints</li>
     </ul>
     <p>Additionally, test to make sure canvas responds correctly to external dimensions resizing - &lt;canvas> element is responsive - by changing its width and height values using the controls.</p>
     

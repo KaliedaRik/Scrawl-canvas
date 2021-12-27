@@ -147,14 +147,26 @@
     <p>Entitys can be stamped onto the canvas in a variety of ways:</p>
 
     <ul>
+      <li>They can be scaled, rotated and flipped as required.</li>
       <li>They can take <strong>Color</strong>, <strong>Gradient</strong>, <strong>RadialGradient</strong>, and <strong>ConicGradient</strong> (where the browser supports it) styles for both their fill and stroke styling.</li>
+      <ul>
+        <li>All gradient styles can be bound to their containing cell, or to particular entitys.</li>
+        <li>Color factories can accept both RGB and HSL color strings, and support <strong>color ranges</strong>.</li> 
+        <li>Colors, and gradient styles, can have easing algorithms applied to them &mdash; <strong>non-linear gradients</strong>.</li>
+      </ul>
       <li>They can also take <strong>Pattern</strong> styles which may contain a variety of image-based assets; patterns can be scaled, skewed and positioned as requested.</li>
-      <li>All styles can be bound to their containing cell, or to particular entitys.</li>
-      <li>Entitys can also act as clipping zones for subesequent drawing activities.</li>
-      <li>The visual assets used by Picture entitys and Pattern styles can include fully responsive <strong>&lt;img></strong> elements, or image files.</li>
-      <li><strong>&lt;video></strong> and <strong>&lt;canvas></strong> elements are also supported, as are spritesheet animations.</li>
+      <li>Entitys can also act as <strong>clipping zones</strong> for subesequent drawing activities.</li>
+      <li>The visual assets used by Picture entitys and Pattern styles can include fully responsive <strong>&lt;img></strong> elements (with a <strong>srcset</strong> attribute), or image files.</li>
+      <li><strong>&lt;video></strong> and <strong>&lt;canvas></strong> element assets are also supported, as are <strong>spritesheet animations</strong>.</li>
       <li>Scrawl-canvas includes a <strong>NoiseAsset</strong> asset (for Perlin, Simplex, Worley, etc, noise generation), alongside an <strong>RdAsset</strong> reaction-diffusion asset (for more organic patterns).</li>
       <li>Third-party asset generators (for example TensorFlow) can be accommodated using the <strong>RawAsset</strong> asset</li>
+    </ul>
+
+    <p>Scrawl-canvas treats additional canvas Cells (layers) in the same way as it treats entitys:</p>
+
+    <ul>
+      <li>Cells can be positioned like entitys (absolutely, relatively, by reference); they can be scaled, rotated and flipped; they can be animated &mdash; including along paths.</li>
+      <li>Like the base canvas Cells can track mouse/touch interactions and movements, which allows users to interact with entitys displayed on the Cell.</li>
     </ul>
 
     <div class="container">
@@ -529,8 +541,10 @@
         <li>matrix, pixellate, blur;</li>
         <li>compositing and blending operations;</li>
         <li>image and noise asset upload (for use with composites and blends); and</li>
-        <li>displacement mapping.</li>
+        <li>gradient, and displacement, mapping.</li>
     </ul>
+
+    <p>Filters can be applied to individual entitys, to Groups of entitys, and also to Cell displays.</p>
 
     <p><strong>Filters can be animated</strong> using Scrawl-canvas tween functionality.</p>
 
@@ -840,93 +854,30 @@
       </div>
     </div>
 
-    <h2>Module and packet code tests</h2>
-
-    <p>Many Scrawl-canvas objects can be saved to JSON strings known as <strong>packets</strong>, and restored from them. Scrawl-canvas <strong>clone</strong> functionality is built on top of its packet functionality; every demo that invokes a clone call on a Scrawl-canvas artefact or object is also testing that artefact/object's packet functionality. Similarly, many demos test object <strong>kill</strong> functionality, using packets to restore the objects after they have been killed.</p>
-
-    <p>Scrawl-canvas code is easy to use in <strong>ES6 modules</strong>.</p>
-
-    <p>Modular code, and the ability to kill and restore Scrawl-canvas objects, becomes important when using Scrawl-canvas in framework environments such as <strong>React</strong> or <strong>Svelte</strong>.</p>
-
-    <div class="container">
-
-      <div class="no-padding"><img src="thumbs/modules-001.webp" /></div>
-      <div>
-        <a href="modules-001.html">Modules 001</a>
-        Scrawl-canvas modularized code - London crime charts
-      </div>
-
-      <div class="no-padding"><img src="thumbs/modules-002.webp" /></div>
-      <div>
-        <a href="modules-002.html">Modules 002</a>
-        Spiral charts
-      </div>
-
-      <div class="no-padding"><img src="thumbs/modules-003.webp" /></div>
-      <div>
-        <a href="modules-003.html">Modules 003</a>
-        Factory functions to create more complex, compound entitys
-      </div>
-
-      <div class="no-padding"><img src="thumbs/packets-001.webp" /></div>
-      <div>
-        <a href="packets-001.html">Packets 001</a>
-        Save and load Scrawl-canvas entity using text packets
-      </div>
-
-      <div class="no-padding"><img src="thumbs/packets-002.webp" /></div>
-      <div>
-        <a href="packets-002.html">Packets 002</a>
-        Scrawl-canvas packets - save and load a range of different entitys
-      </div>
-    </div>
-
-    <h2>Snippet code tests</h2>
-
-    <p>Scrawl-canvas snippets are <strong>module-based functions</strong> which can be <strong>imported</strong> into any other code and <strong>applied to DOM elements</strong>. The functions add a canvas to the DOM element to act as its background, allowing complex displays and animations to be added to the element.</p>
-
-    <p>The results are similar to the <a href="https://ishoudinireadyyet.com/">Houdini</a> <a href="https://developers.google.com/web/updates/2018/01/paintapi">CSS Paint API</a>, though the path to achieving those results is different.</p>
-
-    <p><strong>Snippet canvases are responsive:</strong> a well-written snippet will be able to adapt to changes in its host element's position, dimensions and styling attributes in real time, and should be able to tidy up after itself if its host element gets removed from the web page (for instance when it is part of a component).</p>
-
-    <p>The idea behind the snippets functionality is to allow third party developers to develop code Snippets which other developers can then import and apply in their own sites. Note that there are inherent dangers in this approach: <b><i>it is always safer to host and review snippets code yourselves, to minimize the opportunities for third parties to inject malignant code into unsuspecting websites!</i></b></p>
-
-    <div class="container">
-
-      <div class="no-padding"><img src="thumbs/snippets-001.webp" /></div>
-      <div>
-        <a href="snippets-001.html">Snippets 001</a>
-        Scrawl-canvas DOM element snippets
-      </div>
-
-      <div class="no-padding"><img src="thumbs/snippets-002.webp" /></div>
-      <div>
-        <a href="snippets-002.html">Snippets 002</a>
-        Scrawl-canvas stack element snippets
-      </div>
-
-      <div class="no-padding"><img src="thumbs/snippets-003.webp" /></div>
-      <div>
-        <a href="snippets-003.html">Snippets 003</a>
-        DOM element snippet - test canvas adaption to local element variations
-      </div>
-
-      <div class="no-padding"><img src="thumbs/snippets-004.webp" /></div>
-      <div>
-        <a href="snippets-004.html">Snippets 004</a>
-        Snippets included in the Scrawl-canvas demo/snippets folder
-      </div>
-
-      <div class="no-padding"><img src="thumbs/snippets-005.webp" /></div>
-      <div>
-        <a href="snippets-005.html">Snippets 005</a>
-        Create a responsive, interactive and accessible before/after slider infographic
-      </div>
-    </div>
-
     <h2>DOM and Stack tests</h2>
 
-    <p>Scrawl-canvas &lt;canvas> elements do not live in splendid isolation; the library is aware of each canvas's wider environment. Functionality is included to add and/or remove <strong>event listeners</strong> to other elements which can be used to control the canvas display. The Scrawl-canvas <strong>animation loop</strong> can also be stopped and restarted as required. <strong>New canvases</strong> can be added to the web page in real time, and removed just as easily.</p>
+    <p>Scrawl-canvas &lt;canvas> elements do not live in splendid isolation; the library is aware of each canvas's wider environment:</p>
+
+    <ul>
+      <li>Scrawl canvas treats <strong>accessibility as a First Class Issue:</strong></li>
+      <ul>
+        <li>All canvases have appropriate <strong>ARIA tags</strong> added to them &mdash; including ARIA labels and descriptions.</li>
+        <li><strong>Graphical text</strong> is automatically exposed to the DOM, to make it readable to assistive technology</li>
+        <li><strong>Graphical navigation</strong> is automatically reflected into the DOM via &lt;a> anchor elements which can be triggered via the keyboard. This extends to responding visually to keyboard-driven <strong>focus/blur</strong> events.</li>
+        <li>Canvases can adapt to <strong>user preferences</strong>, for instance <strong>prefers-reduced-motion</strong> and <strong>prefers-color-scheme</strong>.</li>
+      </ul>
+      <li>Scrawl canvas treats <strong>responsiveness as a First Class Requirement:</strong></li>
+      <ul>
+        <li>Scrawl-canvas &lt;canvas> elements are aware of their size and shape, and include functionality to adapt to changes in their dimensions (approximating <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Container_Queries">CSS container queries</a> functionality). Canvases can be used safely within CSS grids.</li>
+        <li>Canvases also emulate responsive behaviours associated with the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">CSS object-fit</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/background-size">background-size</a> properties.</li>
+        <li>Scrawl-canvas handles changes to asset files in real time &mdash; both for changes to the <strong>&ltimg src=""></strong> attribute, and browser-controlled actions related to <strong>&ltimg srcset=""></strong> when the user changes the browser's viewport size.</li>
+        <li>Scrawl-canvas does everything it can to support <strong>CSS font and text attributes</strong>; this includes support for <strong>@font-face</strong> fonts loaded from the cloud.</li>
+      </ul>
+      <li><strong>New &lt;canvas> elements</strong> can be added to the web page in real time, and removed when required; Scrawl-canvas includes functionality to help component-based Javascript frameworks (eg: <strong>React, Svelte</strong>) use canvases more efficiently and safely.</li>
+      <li>Functionality is included to easily add and/or remove <strong>event listeners</strong> to canvas elements, and also other elements which can be used to control the canvas display &mdash; for instance to help make the canvas scene/animation more accessible to assistive technology and keyboard users.</li>
+      <li>Scrawl-canvas &lt;canvas> elements can be made to respond to <strong>touch events</strong>; canvases can be made to remain static while dragging entitys, but follow browser-based touch actions (such as page scrolling) at other times.</li>
+      <li>The Scrawl-canvas <strong>animation loop</strong> can also be stopped and restarted as required. In addition, &lt;canvas> elements will only run their animations when they are <strong>visible in the browser viewport</strong> (via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">intersection observers</a>) &mdash; canvases automatically track their position in, and movement through, the viewport.</li>
+    </ul>
 
     <p>Scrawl-canvas <strong>stacks</strong> extend the library's unique positioning, manipulation and animation functionality to <strong>DOM elements</strong>. This allows us to combine stacks and canvases so that DOM elements can be used to position canvas entitys, and give us the power to animate DOM elements along path-based entitys. It also gives users the power to <strong>interact with &lt;canvas> elements rotated in 3D space</strong>.</p>
 
@@ -1020,6 +971,90 @@
       <div>
         <a href="dom-016.html">DOM-016</a>
         Determine the displayed shape of the visible stack; react to changes in the displayed shape
+      </div>
+    </div>
+
+    <h2>Module and packet code tests</h2>
+
+    <p>Many Scrawl-canvas objects can be saved to JSON strings known as <strong>packets</strong>, and restored from them. Scrawl-canvas <strong>clone</strong> functionality is built on top of its packet functionality; every demo that invokes a clone call on a Scrawl-canvas artefact or object is also testing that artefact/object's packet functionality. Similarly, many demos test object <strong>kill</strong> functionality, using packets to restore the objects after they have been killed.</p>
+
+    <p>Scrawl-canvas code is easy to use in <strong>ES6 modules</strong>.</p>
+
+    <p>Modular code, and the ability to kill and restore Scrawl-canvas objects, becomes important when using Scrawl-canvas in framework environments such as <strong>React</strong> or <strong>Svelte</strong>.</p>
+
+    <div class="container">
+
+      <div class="no-padding"><img src="thumbs/modules-001.webp" /></div>
+      <div>
+        <a href="modules-001.html">Modules 001</a>
+        Scrawl-canvas modularized code - London crime charts
+      </div>
+
+      <div class="no-padding"><img src="thumbs/modules-002.webp" /></div>
+      <div>
+        <a href="modules-002.html">Modules 002</a>
+        Spiral charts
+      </div>
+
+      <div class="no-padding"><img src="thumbs/modules-003.webp" /></div>
+      <div>
+        <a href="modules-003.html">Modules 003</a>
+        Factory functions to create more complex, compound entitys
+      </div>
+
+      <div class="no-padding"><img src="thumbs/packets-001.webp" /></div>
+      <div>
+        <a href="packets-001.html">Packets 001</a>
+        Save and load Scrawl-canvas entity using text packets
+      </div>
+
+      <div class="no-padding"><img src="thumbs/packets-002.webp" /></div>
+      <div>
+        <a href="packets-002.html">Packets 002</a>
+        Scrawl-canvas packets - save and load a range of different entitys
+      </div>
+    </div>
+
+    <h2>Snippet code tests</h2>
+
+    <p>Scrawl-canvas snippets are <strong>module-based functions</strong> which can be <strong>imported</strong> into any other code and <strong>applied to DOM elements</strong>. The functions add a canvas to the DOM element to act as its background, allowing complex displays and animations to be added to the element.</p>
+
+    <p>The results are similar to the <a href="https://ishoudinireadyyet.com/">Houdini</a> <a href="https://developers.google.com/web/updates/2018/01/paintapi">CSS Paint API</a>, though the path to achieving those results is different.</p>
+
+    <p><strong>Snippet canvases are responsive:</strong> a well-written snippet will be able to adapt to changes in its host element's position, dimensions and styling attributes in real time, and should be able to tidy up after itself if its host element gets removed from the web page (for instance when it is part of a component).</p>
+
+    <p>The idea behind the snippets functionality is to allow third party developers to develop code Snippets which other developers can then import and apply in their own sites. Note that there are inherent dangers in this approach: <b><i>it is always safer to host and review snippets code yourselves, to minimize the opportunities for third parties to inject malignant code into unsuspecting websites!</i></b></p>
+
+    <div class="container">
+
+      <div class="no-padding"><img src="thumbs/snippets-001.webp" /></div>
+      <div>
+        <a href="snippets-001.html">Snippets 001</a>
+        Scrawl-canvas DOM element snippets
+      </div>
+
+      <div class="no-padding"><img src="thumbs/snippets-002.webp" /></div>
+      <div>
+        <a href="snippets-002.html">Snippets 002</a>
+        Scrawl-canvas stack element snippets
+      </div>
+
+      <div class="no-padding"><img src="thumbs/snippets-003.webp" /></div>
+      <div>
+        <a href="snippets-003.html">Snippets 003</a>
+        DOM element snippet - test canvas adaption to local element variations
+      </div>
+
+      <div class="no-padding"><img src="thumbs/snippets-004.webp" /></div>
+      <div>
+        <a href="snippets-004.html">Snippets 004</a>
+        Snippets included in the Scrawl-canvas demo/snippets folder
+      </div>
+
+      <div class="no-padding"><img src="thumbs/snippets-005.webp" /></div>
+      <div>
+        <a href="snippets-005.html">Snippets 005</a>
+        Create a responsive, interactive and accessible before/after slider infographic
       </div>
     </div>
 

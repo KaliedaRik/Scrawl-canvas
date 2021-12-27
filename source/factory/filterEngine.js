@@ -6,7 +6,7 @@
 
 import { constructors, filter, filternames, styles, stylesnames } from '../core/library.js';
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
-import { easeEngines } from '../core/utilities.js';
+import { easeEngines, isa_fn } from '../core/utilities.js';
 
 import { makeAnimation } from './animation.js';
 import { requestCell, releaseCell } from './cell.js';
@@ -3682,7 +3682,15 @@ P.theBigActionsObject = {
 
                 if (x < xz && y < yz && x < tWidth && xz > 0 && y < tHeight && yz > 0) {
 
-                    const swirlName = `swirl-${startX}-${startY}-${innerRadius}-${outerRadius}-${angle}-${easing}-${iWidth}-${iHeight}`;
+                    let e = easing;
+                    let ename = easing;
+
+                    if (isa_fn(e)) ename = `ude-${e(0)}-${e(0.1)}-${e(0.2)}-${e(0.3)}-${e(0.4)}-${e(0.5)}-${e(0.6)}-${e(0.7)}-${e(0.8)}-${e(0.9)}-${e(1)}`;
+                    else {
+                        e = (null != easeEngines[e]) ? easeEngines[e] : easeEngines['linear'];
+                    }
+
+                    const swirlName = `swirl-${startX}-${startY}-${innerRadius}-${outerRadius}-${angle}-${ename}-${iWidth}-${iHeight}`;
 
                     const swirlCoords = this.getOrAddWorkstore(swirlName);
 
@@ -3690,8 +3698,6 @@ P.theBigActionsObject = {
 
                         const start = requestCoordinate();
                         const coord = requestCoordinate();
-
-                        const e = (null != easeEngines[easing]) ? easing : 'linear';
 
                         start.setFromArray([sx, sy]);
 
@@ -3725,7 +3731,7 @@ P.theBigActionsObject = {
 
                                     dLen = 1 - ((distance - inner) / complexLen);
 
-                                    dLen = easeEngines[e](dLen);
+                                    dLen = e(dLen);
 
                                     coord.rotate(angle * dLen).add(start);
 

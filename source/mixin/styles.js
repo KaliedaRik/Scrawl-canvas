@@ -15,7 +15,7 @@
 
 // #### Imports
 import { entity, palette } from '../core/library.js';
-import { addStrings, λnull, mergeOver, isa_obj, mergeDiscard, Ωempty } from '../core/utilities.js';
+import { addStrings, λnull, mergeOver, xt, isa_obj, mergeDiscard, Ωempty } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 import { makePalette, paletteKeys } from '../factory/palette.js';
@@ -61,6 +61,8 @@ export default function (P = Ωempty) {
 // + A better approach to managing gradient colors is to use the `updateColor` and `removeColor` functions
 
 // The __easing__ _pseudo-attribute_ represents a transformation that will be applied to a copy of the color stops Array - this allows us to create non-linear gradients. Value is passed through to the Palette object
+
+// The __precision__ _pseudo-attribute_ - value is passed through to the Palette object
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -71,6 +73,14 @@ export default function (P = Ωempty) {
         if (items.colors) copy.colors = items.colors;
         else if (this.palette && this.palette.colors) copy.colors = this.palette.colors;
         else copy.colors = {'0 ': [0,0,0,1], '999 ': [255,255,255,1]};
+
+        if (items.easing) copy.easing = items.easing;
+        else if (this.palette && this.palette.easing) copy.easing = this.palette.easing;
+        else copy.easing = 'linear';
+
+        if (xt(items.precision)) copy.precision = items.precision;
+        else if (this.palette && xt(this.palette.precision)) copy.precision = this.palette.precision;
+        else copy.precision = 0;
 
         return copy;
     };
@@ -287,6 +297,12 @@ export default function (P = Ωempty) {
     S.easing = function (item) {
 
         if (this.palette) this.palette.set({ easing: item });
+    };
+
+// `precision` - Pass through a positive integer Number value between 0 and 50 to the Palette object. If value is `0` (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.
+    S.precision = function (item) {
+
+        if (this.palette) this.palette.set({ precision: item });
     };
 
 // `delta` - Gradient-type styles objects support the delta attribute, and can be delta-animated using its attributes

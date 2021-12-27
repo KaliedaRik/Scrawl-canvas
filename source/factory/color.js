@@ -21,7 +21,7 @@
 
 // #### Imports
 import { constructors, entity } from '../core/library.js';
-import { mergeOver, xt, xtGet, isa_obj, easeEngines, Ωempty } from '../core/utilities.js';
+import { mergeOver, xt, xtGet, isa_obj, isa_fn, easeEngines, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
@@ -98,7 +98,7 @@ let defaultAttributes = {
 // The __autoUpdate__ Boolean flag switches on color animation
     autoUpdate: false,
 
-// The __easing__ attribute affects the `getRangeColor` function, applying an easing function to those requests.
+// The __easing__ attribute affects the `getRangeColor` function, applying an easing function to those requests. Value may be a predefined easing String name, or a function accepting a Number value and returning a Number value, both values to be positive floats in the range 0-1
     easing: 'linear',
 
 // ##### Non-retained argument attributes (for factory, clone, set functions)
@@ -226,10 +226,17 @@ P.set = function (items = Ωempty) {
 // #### Get, Set, deltaSet
 let S = P.setters;
 
+S.easing = function (item) {
+
+    if (isa_fn(item)) this.easing = item; 
+    else if (item.substring && easeEngines[item]) this.easing = item; 
+};
+
 S.color = function (item) {
 
     this.convert(item);
 };
+
 P.setColor = function (item) {
 
     this.convert(item);
@@ -361,9 +368,8 @@ P.getRangeColor = function (item) {
 
         let {rMin, gMin, bMin, aMin, rMax, gMax, bMax, aMax, easing} = this;
 
-        const e = (null != easeEngines[easing]) ? easing : 'linear';
-
-        item = easeEngines[e](item);
+        if (isa_fn(easing)) item = easing(item);
+        else item = easeEngines[easing](item);
 
         if (item > 1) item = 1;
         else if (item < 0) item = 0;

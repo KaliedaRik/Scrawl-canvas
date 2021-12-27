@@ -29,6 +29,17 @@
     <div class="pink label">paletteEnd</div>
     <div class="pink"><input class="controlItem" id="paletteEnd" type="range" value="0" min="0" max="999" step="1" /></div>
 
+    <div class="pink label">Cycle palette</div>
+    <div class="pink">
+        <select class="controlItem" id="cyclePalette">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="pink label">&nbsp;</div>
+    <div class="pink label">&nbsp;</div>
+
     <div class="green label">startX</div>
     <div class="green"><input class="controlItem" id="startX" type="range" value="0" min="0" max="100" step="1" /></div>
 
@@ -43,7 +54,7 @@
 
     <div class="yellow label">Include red</div>
     <div class="yellow">
-      <select class="controlItem" id="red">
+      <select class="controlItem colorItems" id="red">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -51,7 +62,7 @@
 
     <div class="yellow label">Include blue</div>
     <div class="yellow">
-        <select class="controlItem" id="blue">
+        <select class="controlItem colorItems" id="blue">
           <option value="0">false</option>
           <option value="1">true</option>
       </select>
@@ -116,8 +127,15 @@
         <option value="easeOutBounce">easeOutBounce</option>
         <option value="easeOutInBounce">easeOutInBounce</option>
         <option value="easeInBounce">easeInBounce</option>
+        <option value="" disabled>---</option>
+        <option value="user-steps">steps (user-defined)</option>
+        <option value="user-repeat">repeat (user-defined)</option>
       </select>
     </div>
+
+    <div class="lavender label">Precision</div>
+    <div class="lavender"><input class="controlItem" id="precision" type="range" value="1" min="0" max="20" step="1" /></div>
+
   </div>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
@@ -131,6 +149,9 @@
       <li>Check that we can successfully manipulate the gradient's start and end coordinates</li>
       <li>Check that we can successfully manipulate the palettes's start and end cursors</li>
       <li>Check that we can dynamically add and remove color stops</li>
+      <li>Check that we can ease the gradient, including user-defined easing algorithms</li>
+      <li>Check that when precision is set to 0, gradient uses the linear easing</li>
+      <li>Check that when cyclePalette is set to true and the palette's end value is smaller than its start value, the gradient draws itself by going through the 0/999 endpoints</li>
     </ul>
 
     <p><b>Touch test:</b> not required</p>

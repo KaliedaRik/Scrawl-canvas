@@ -24,9 +24,10 @@ export default function (P = Ωempty) {
         monochromeStart: 0,
         monochromeRange: 255,
 
-        // When the `color` choice has been set to `gradient` we can control the start and end colors of the gradient using the __gradientStart__ and __gradientEnd__ attributes
-        gradientStart: '#ff0000',
-        gradientEnd: '#00ff00',
+        // When the `color` choice has been set to `gradient` we can update the Color object underlying the "gradient" (yes, I know it's confusing nomenclature but I was in a rush and correcting the gradient/rainbowGradient attribute names will need to wait until we release the next major version of SC) using the following _pseudo-attributes_
+        // + __gradientStart__ - Color object minimumColor value (default: `#ff0000`)
+        // + __gradientEnd__ - Color object maximumColor value (default: `#00ff00`)
+        // + __gradientEasing__ - Color object easing value (default: `linear`)
 
         // When the `color` choice has been set to `hue` we can control the pixel colors (in terms of their HSL components) using the __hueStart__, __hueRange__, __saturation__ and __luminosity__ attributes:
         // + `hueStart` - float Number value in degrees, will be clamped to between 0 and 360
@@ -38,8 +39,16 @@ export default function (P = Ωempty) {
         saturation: 100,
         luminosity: 50,
 
+        // The `rainbow` color uses a Gradient object
         // __rainbowGradientChoke__ - positive integer Number greater than 0 - control the speed of any rainbowGradient animation
         rainbowGradientChoke: 1,
+
+        // The following _pseudo-attributes_ can be used to pass values through to the rainbow gradient:
+        // + __rainbowEasing__ - gradient easing value (default: `linear`)
+        // + __rainbowPrecision__ - gradient precision (default: 50)
+        // + __rainbowPaletteStart__ - gradient palette start (default: 0)
+        // + __rainbowPaletteEnd__ - gradient palette end (default: 999)
+        // + __rainbowDelta__ - gradient delta object (default: {})
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -89,6 +98,38 @@ export default function (P = Ωempty) {
         }
     };
 
+    S.rainbowEasing = function (item) {
+
+        this.rainbowGradient.set({
+            easing: item,
+        });
+        this.dirtyOutput = true;
+    };
+
+    S.rainbowPrecision = function (item) {
+
+        this.rainbowGradient.set({
+            precision: item,
+        });
+        this.dirtyOutput = true;
+    };
+
+    S.rainbowPaletteStart = function (item) {
+
+        this.rainbowGradient.set({
+            paletteStart: item,
+        });
+        this.dirtyOutput = true;
+    };
+
+    S.rainbowPaletteEnd = function (item) {
+
+        this.rainbowGradient.set({
+            paletteEnd: item,
+        });
+        this.dirtyOutput = true;
+    };
+
     // `rainbowDelta` - an animation delta object
     // + Use this function to set up the rainbow gradient animation
     S.rainbowDelta = function (item) {
@@ -116,6 +157,15 @@ export default function (P = Ωempty) {
             this.colorFactory.setMaximumColor(item);
             this.dirtyOutput = true;
         }
+    };
+
+    S.gradientEasing = function (item) {
+
+            this.colorFactory.set({
+                easing: item,
+            });
+
+            this.dirtyOutput = true;
     };
 
     S.monochromeStart = function (item) {
