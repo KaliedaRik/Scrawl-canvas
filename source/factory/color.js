@@ -20,8 +20,10 @@
 
 
 // #### Imports
-import { constructors, entity } from '../core/library.js';
-import { mergeOver, xt, xtGet, isa_obj, isa_fn, easeEngines, Ωempty } from '../core/utilities.js';
+import { constructors, entity, radian } from '../core/library.js';
+import { mergeOver, xt, xtGet, isa_obj, isa_fn, easeEngines, Ωempty, λfirstArg, pushUnique, interpolate } from '../core/utilities.js';
+
+import { requestCell, releaseCell } from './cell.js';
 
 import baseMix from '../mixin/base.js';
 
@@ -32,13 +34,38 @@ const Color = function (items = Ωempty) {
     this.makeName(items.name);
     this.register();
     this.set(this.defs);
+
+    this.rgb = [];
+    this.rgb_max = [];
+    this.rgb_min = [];
+
+    this.hsl = [];
+    this.hsl_max = [];
+    this.hsl_min = [];
+
+    this.hwb = [];
+    this.hwb_max = [];
+    this.hwb_min = [];
+
+    this.xyz = [];
+    this.xyz_max = [];
+    this.xyz_min = [];
+
+    this.lab = [];
+    this.lab_max = [];
+    this.lab_min = [];
+
+    this.lch = [];
+    this.lch_max = [];
+    this.lch_min = [];
+
+    this.easingFunction = λfirstArg;
+
+    this.convert('transparent');
+    this.convert('black', '_min');
+    this.convert('white', '_max');
+
     this.set(items);
-
-    if (xt(items.color)) this.convert(items.color);
-
-    if (items.random) this.generateRandomColor(items);
-
-    this.checkValues();
 
     return this;
 };
@@ -61,60 +88,65 @@ P = baseMix(P);
 let defaultAttributes = {
 
 
-// The color channel attributes __r__, __g__, __b__ and __a__ are all integer Numbers in the range 0 (no contribution to color from this channel) to 255 (100% contribution)
-    r: 0,
-    g: 0,
-    b: 0,
+// A Color object can hold details of three colors
+// + The 'current', or last evaluated color
+// + The 'maximum' range color; relevant attributes are suffixed with `_max`
+// + The 'minimum' range color; relevant attributes are suffixed with `_min`
+// 
+// On recieving a color to store or process, the Color object will calculate the color's values in several different color spaces: `RGB`, `HSL`, `HWB`, `XYZ`, `LAB`, `LCH`
+    rgb: null,
+    rgb_max: null,
+    rgb_min: null,
 
-// The alpha channel attribute __a__ is a float Number between 0 (transparent) and 1 (opaque)
-    a: 1,
+    hsl: null,
+    hsl_max: null,
+    hsl_min: null,
 
-// We can limit a channel's range - useful, for instance, when asking the Color object to supply us with a restricted-random color, or when animating the color. Channel maximum values __must__ be higher than their minimum values.
-    rMax: 255,
-    gMax: 255,
-    bMax: 255,
-    aMax: 1,
+// hwb() color Strings are not yet widely supported as valid input into browser canvas engines
+    hwb: null,
+    hwb_max: null,
+    hwb_min: null,
 
-    rMin: 0,
-    gMin: 0,
-    bMin: 0,
-    aMin: 0,
+// xyz() colors are not valid CSS color strings; they are an intermediary step on the way to converting rgb color values into lab notation
+    xyz: null,
+    xyz_max: null,
+    xyz_min: null,
 
-// We can ask the Color object to update its channel values when it completes each get() invocation response. Channel __shift__ values can be set separately, and can be float Numbers.
-    rShift: 0,
-    gShift: 0,
-    bShift: 0,
-    aShift: 0,
+// lab() color Strings are not yet widely supported as valid input into browser canvas engines
+    lab: null,
+    lab_max: null,
+    lab_min: null,
 
-// The __bounce__ boolean flags determine whether the color animation will be sticky (false, default), remaining at the channel's minimum or maximum value when it is reached, or whether that channel will bounce between its minimum and maximum values as the animation progresses.
-    rBounce: false,
-    gBounce: false,
-    bBounce: false,
-    aBounce: false,
+// lch() color Strings are not yet widely supported as valid input into browser canvas engines
+    lch: null,
+    lch_max: null,
+    lch_min: null,
 
-// The __opaque__ Boolean flag will supply colors in 'rgb()' format; when set to false 'rgba()' format colors are supplied.
-    opaque: true,
-
-// The __autoUpdate__ Boolean flag switches on color animation
-    autoUpdate: false,
-
-// The __easing__ attribute affects the `getRangeColor` function, applying an easing function to those requests. Value may be a predefined easing String name, or a function accepting a Number value and returning a Number value, both values to be positive floats in the range 0-1
+// The __easing__ and __easingFunction__ attributes affect the `getRangeColor` function, applying an easing function to those requests. Value may be a predefined easing String name, or a function accepting a Number value and returning a Number value, both values to be positive floats in the range 0-1
     easing: 'linear',
+    easingFunction: null,
+
+// __colorSpace__ - String value defining the color space to be used by the Color object for its internal calculations.
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH'`
+    colorSpace: 'RGB',
+
+// __returnColorAs__ - String value defining the type of color String the Color object will return.
+// + This is a shorter list than the internal colorSpace attribute as we only return values for CSS specified color spaces. Note that some of these color spaces are not widely supported across browsers and will lead to errors in canvases displayed on non-supported browsers
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'LAB', 'LCH'`
+    returnColorAs: 'RGB',
+
 
 // ##### Non-retained argument attributes (for factory, clone, set functions)
-
+//
 // __random__ - the factory function, and the clone function, can ask the Color object to set its initial channel values randomly by including this attribute in the argument object; if the attribute resolves to true, random color functionality is invoked to set the r, g and b channel attributes to appropriately random values.
-
-// __color__ - a CSS color definition String which the Color object will attempt to convert into appropriate r, g, b and a channel attribute values.
-
-// __minimumColor__, __maximumColor__ - convenience pseudo-attributes to set the max and min rgba attributes
-
+//
+// __color__, __minimumColor__, __maximumColor__ - CSS color definition Strings which the Color object will attempt to convert into various color space values.
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
-// No additional packet functionality required
+P.packetFunctions = pushUnique(P.packetFunctions, ['easingFunction']);
 
 
 // #### Clone management
@@ -135,10 +167,12 @@ P.kill = function () {
         if (state) {
 
             let fill = state.fillStyle,
-                stroke = state.strokeStyle;
+                stroke = state.strokeStyle,
+                shadow = state.shadowColor;
 
             if (isa_obj(fill) && fill.name === myname) state.fillStyle = state.defs.fillStyle;
             if (isa_obj(stroke) && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+            if (isa_obj(shadow) && shadow.name === myname) state.shadowColor = state.defs.shadowColor;
         }
     });
     
@@ -156,19 +190,24 @@ P.get = function (item) {
 
     if (!xt(item)) {
 
-        let {r, g, b, a} = this;
-
-        if (this.opaque) return `rgb(${r}, ${g}, ${b})`;
-        else return `rgba(${r}, ${g}, ${b}, ${a})`;
-    }
-    else if (item === 'random') {
-
-        this.generateRandomColor();
-        return this.get();
+        return this.getCurrentColor();
     }
     else if (item.toFixed) {
 
         return this.getRangeColor(item);
+    }
+    else if (item === 'min') {
+
+        return this.getMinimumColor();
+    }
+    else if (item === 'max') {
+
+        return this.getMaximumColor();
+    }
+    else if (item === 'random') {
+
+        this.generateRandomColor();
+        return this.getCurrentColor();
     }
     else{
 
@@ -217,8 +256,7 @@ P.set = function (items = Ωempty) {
                 else if (typeof defs[key] !== 'undefined') this[key] = value;
             }
         }
-        if (items.random) this.generateRandomColor(items);
-        else this.checkValues();
+        if (items.random) this.generateRandomColor();
     }
     return this;
 };
@@ -226,12 +264,13 @@ P.set = function (items = Ωempty) {
 // #### Get, Set, deltaSet
 let S = P.setters;
 
-S.easing = function (item) {
-
-    if (isa_fn(item)) this.easing = item; 
-    else if (item.substring && easeEngines[item]) this.easing = item; 
-};
-
+// The `color`, `minimumColor` and `maximumColor` functions take in a CSS color String and converts it into a set of arrays containing data relevant to various color spaces. __Note that browsers vary in the range of color spaces they support.__
+// + Widely supported: various RGB space color Strings - keywords, hex values, `rgb()`, `rgba()`
+// + Widely supported: HSL space color Strings - `hsl()`, `hsla()`
+// + Valid, but poorly supported: HWB, LAB, LCH color spaces - `hwb()`, `lab()`, `lch()`
+// + Not valid or supported: XYZ color space - `xyz()` - used internally to convert between RGB and LAB spaces
+//
+// These setter functions have complementary Color object functions: `setColor`, `setMinimumColor`, `setMaximumColor`
 S.color = function (item) {
 
     this.convert(item);
@@ -245,114 +284,229 @@ P.setColor = function (item) {
 
 S.minimumColor = function (item) {
 
-    let {r, g, b, a} = this;
-
-    this.convert(item);
-
-    this.rMin = this.r;
-    this.gMin = this.g;
-    this.bMin = this.b;
-    this.aMin = this.a;
-
-    this.r = r;
-    this.g = g;
-    this.b = b;
-    this.a = a;
+    this.convert(item, '_min');
 };
 P.setMinimumColor = function (item) {
 
-    let {r, g, b, a} = this;
-
-    this.convert(item);
-
-    this.rMin = this.r;
-    this.gMin = this.g;
-    this.bMin = this.b;
-    this.aMin = this.a;
-
-    this.r = r;
-    this.g = g;
-    this.b = b;
-    this.a = a;
-
+    this.convert(item, '_min');
     return this;
 };
 
 S.maximumColor = function (item) {
 
-    let {r, g, b, a} = this;
-
-    this.convert(item);
-
-    this.rMax = this.r;
-    this.gMax = this.g;
-    this.bMax = this.b;
-    this.aMax = this.a;
-
-    this.r = r;
-    this.g = g;
-    this.b = b;
-    this.a = a;
+    this.convert(item, '_max');
 };
 P.setMaximumColor = function (item) {
 
-    let {r, g, b, a} = this;
-
-    this.convert(item);
-
-    this.rMax = this.r;
-    this.gMax = this.g;
-    this.bMax = this.b;
-    this.aMax = this.a;
-
-    this.r = r;
-    this.g = g;
-    this.b = b;
-    this.a = a;
-
+    this.convert(item, '_max');
     return this;
 };
 
+// `easing` (and its complementary Color object functions: `setEasing`) - we can apply easing functions to colors, for instance when invoking the Color object's `getRangeColor()` function to return the most appropriate color between the Color object's minimum and maximum color values
+// + Can accept a String value identifying an SC pre-defined easing function (default: `linear`)
+// + Can also accept a function accepting a single Number argument (a value between 0-1) and returning an eased Number (again, between 0-1)
+S.easing = function (item) {
+
+    this.setEasingHelper(item);
+};
+S.easingFunction = S.easing;
+
+P.setEasing = function (item) {
+
+    this.setEasingHelper(item);
+    return this;
+};
+P.setEasingFunction = P.setEasing;
+P.setEasingHelper = function (item) {
+
+    if (isa_fn(item)) {
+
+        this.easing = 'function';
+        this.easingFunction = item;
+    }
+    else if (item.substring && easeEngines[item]) {
+
+        this.easing = item; 
+        this.easingFunction = λfirstArg;
+    }
+    else {
+
+        this.easing = 'linear'; 
+        this.easingFunction = λfirstArg;
+    }
+};
+
+P.internalColorSpaces = ['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH'];
+S.colorSpace = function (item) {
+
+    this.setColorSpaceHelper(item);
+};
+P.setColorSpace = function (item) {
+
+    this.setColorSpaceHelper(item);
+    return this;
+};
+P.setColorSpaceHelper = function (item) {
+
+    if (item.substring) {
+
+        item = item.toUpperCase();
+
+        if (this.internalColorSpaces.includes(item)) {
+
+            const current = this.getCurrentColor(),
+                min = this.getMinimumColor(),
+                max = this.getMaximumColor();
+
+            this.colorSpace = item.toUpperCase();
+            this.updateColorConversions(current, min, max);
+        }
+    }
+};
+
+P.returnedColorSpaces = ['RGB', 'HSL', 'HWB', 'LAB', 'LCH'];
+S.returnColorAs = function (item) {
+
+    this.setReturnColorAsHelper(item);
+};
+P.setReturnColorAs = function (item) {
+    
+    this.setReturnColorAsHelper(item);
+    return this;
+};
+P.setReturnColorAsHelper = function (item) {
+    
+    if (item.substring) {
+
+        item = item.toUpperCase();
+
+        if (this.returnedColorSpaces.includes(item)) {
+
+            const current = this.getCurrentColor(),
+                min = this.getMinimumColor(),
+                max = this.getMaximumColor();
+
+            this.returnColorAs = item.toUpperCase();
+            this.updateColorConversions(current, min, max);
+        }
+    }
+};
+
+
 // #### Prototype functions
+
+P.updateColorConversions = function (current, min, max) {
+
+    this.convert(current);
+    this.convert(min, '_min');
+    this.convert(max, '_max');
+};
 
 // `getData` function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
 P.getData = function () {
 
-    if (this.autoUpdate) this.update();
-
-    this.checkValues();
-
-    return this.get();
+    return this.getCurrentColor();
 };
 
-// `generateRandomColor` function asks the Color object to supply a random color, as restricted by its channel minimum and maximum attributes
-P.generateRandomColor = function (items = Ωempty) {
+P.getCurrentColor = function () {
 
-    let round = Math.round,
-        rnd = Math.random;
+    const { rgb, hsl, hwb, lab, lch } = this;
+    return this.returnColor(rgb, hsl, hwb, lab, lch);
+};
 
-    let rMax = this.rMax = xtGet(items.rMax, this.rMax, 255),
-        gMax = this.gMax = xtGet(items.gMax, this.gMax, 255),
-        bMax = this.bMax = xtGet(items.bMax, this.bMax, 255);
+P.getMinimumColor = function () {
 
-    let rMin = this.rMin = xtGet(items.rMin, this.rMin, 0),
-        gMin = this.gMin = xtGet(items.gMin, this.gMin, 0),
-        bMin = this.bMin = xtGet(items.bMin, this.bMin, 0);
+    const { rgb_min, hsl_min, hwb_min, lab_min, lch_min } = this;
+    return this.returnColor(rgb_min, hsl_min, hwb_min, lab_min, lch_min);
+};
 
-    this.r = items.r || round((rnd() * (rMax - rMin)) + rMin);
-    this.g = items.g || round((rnd() * (gMax - gMin)) + gMin);
-    this.b = items.b || round((rnd() * (bMax - bMin)) + bMin);
+P.getMaximumColor = function () {
 
-    if (!this.opaque) {
+    const { rgb_max, hsl_max, hwb_max, lab_max, lch_max } = this;
+    return this.returnColor(rgb_max, hsl_max, hwb_max, lab_max, lch_max);
+};
 
-        aMax = this.aMax = xtGet(items.aMax, this.aMax, 1);
-        aMin = this.aMin = xtGet(items.aMin, this.aMin, 0);
-        this.a = items.a || (rnd() * (aMax - aMin)) + aMin;
+P.returnColor = function (rgb, hsl, hwb, lab, lch) {
+
+    if (rgb == null) {
+
+        ({rgb, hsl, hwb, lab, lch} = this);
     }
 
-    this.checkValues();
-    
-    return this;
+    const { buildColorString, returnColorAs } = this;
+
+    switch (returnColorAs) {
+
+        case 'RGB' : return buildColorString(...rgb, 'RGB');
+
+        case 'HSL' : return buildColorString(...hsl, 'HSL');
+
+        case 'HWB' :
+            if (!supportsHWB) return buildColorString(...rgb, 'RGB');
+            return buildColorString(...hwb, 'HWB');
+
+        case 'LAB' :
+            if (!supportsLAB) return buildColorString(...rgb, 'RGB');
+            return buildColorString(...lab, 'LAB');
+
+        case 'LCH' :
+            if (!supportsLCH) return buildColorString(...rgb, 'RGB');
+            return buildColorString(...lch, 'LCH');
+
+        default :
+            return 'rgba(0 0 0 / 0)';
+    }
+};
+
+P.returnColorFromValues = function (b, c, d, a) {
+
+    const { colorSpace, returnColorAs } = this;
+
+    let col = this.buildColorString(b, c, d, a, colorSpace);
+
+    let flag = false;
+    if ('XYZ' === colorSpace) flag = true;
+    else if (colorSpace !== returnColorAs) flag = true;
+    else if ('HWB' === returnColorAs && !supportsHWB) flag = true;
+    else if ('LAB' === returnColorAs && !supportsLAB) flag = true;
+    else if ('LCH' === returnColorAs && !supportsLCH) flag = true;
+
+    if (flag) {
+
+        this.setColor(col);
+        return this.returnColor();
+    }
+    return col;
+};
+
+P.buildColorString = function (a, b, c, d, req) {
+
+    if (!req) req = this.returnColorAs;
+
+    switch (req) {
+
+        case 'RGB' : return `rgba(${Math.round(a)} ${Math.round(b)} ${Math.round(c)} / ${d})`;
+        case 'HSL' : return `hsl(${a} ${b}% ${c}% / ${d})`;
+        case 'HWB' : return `hwb(${a} ${b}% ${c}% / ${d})`;
+        case 'LAB' : return `lab(${a}% ${b} ${c} / ${d})`;
+        case 'LCH' : return `lch(${a}% ${b} ${c} / ${d})`;
+        case 'XYZ' : return `xyz(${a}% ${b} ${c} / ${d})`;
+        default : return 'rgba(0 0 0 / 0)';
+    }
+}
+
+// `generateRandomColor` - generate a random, fully opaque color
+P.generateRandomColor = function () {
+
+    let r = Math.floor(Math.random() * 256),
+        g = Math.floor(Math.random() * 256),
+        b= Math.floor(Math.random() * 256);
+
+    if (r > 255) r = 255;
+    if (g > 255) g = 255;
+    if (b > 255) b = 255;
+
+    this.setColor(`rgb(${r} ${g} ${b})`);
 };
 
 // `getRangeColor` - function which generates a color in the range between the minimum and maximum colors. 
@@ -364,565 +518,537 @@ P.getRangeColor = function (item) {
 
     if (xt(item) && item.toFixed) {
 
-        let floor = Math.floor;
+        const { calculateRangeColorValues, buildColorString, setColor, getCurrentColor, colorSpace } = this;
 
-        let {rMin, gMin, bMin, aMin, rMax, gMax, bMax, aMax, easing} = this;
+        const vals = calculateRangeColorValues(item);
 
-        if (isa_fn(easing)) item = easing(item);
-        else item = easeEngines[easing](item);
+        const res = buildColorString(...vals, colorSpace);
 
-        if (item > 1) item = 1;
-        else if (item < 0) item = 0;
+        setColor(res);
+    }
+    return getCurrentColor();
+};
 
-        if (isNaN(item)) item = 1;
+// `calculateRangeColorValues` - internal helper function
+P.calculateRangeColorValues = function (item) {
 
-        let r = floor(rMin + ((rMax - rMin) * item));
-        let g = floor(gMin + ((gMax - gMin) * item));
-        let b = floor(bMin + ((bMax - bMin) * item));
-        let a = floor(aMin + ((aMax - aMin) * item));
+    const { colorSpace, easing, easingFunction } = this;
 
-        if (this.opaque) return `rgb(${r}, ${g}, ${b})`;
-        else return `rgba(${r}, ${g}, ${b}, ${a})`;
+    let a, b, c, d;
+
+    const col = colorSpace.toLowerCase();
+
+    const [bMin, cMin, dMin, aMin] = this[`${col}_min`];
+    const [bMax, cMax, dMax, aMax] = this[`${col}_max`];
+
+    let engine = easingFunction;
+    if (easing !== 'function' && easeEngines[easing]) engine = easeEngines[easing];
+
+    const val = engine(item);
+
+    if (aMin === aMax) a = aMin;
+    else a = interpolate(val, aMin, aMax);
+
+    if (bMin === bMax) b = bMin;
+    else b = interpolate(val, bMin, bMax);
+
+    if (cMin === cMax) c = cMin;
+    else c = interpolate(val, cMin, cMax);
+
+    if (dMin === dMax) d = dMin;
+    else d = interpolate(val, dMin, dMax);
+
+    return [b, c, d, a];
+};
+
+// `convert` - internal function. Takes a color string and converts it into a variety of color space values. Makes use of the following functions:
+// + `convertHSLtoRGB`, `convertRGBtoHSL`
+// + `convertHWBtoRGB`, `convertRGBtoHWB`, `convertRGBHtoHWB`
+// + `convertXYZtoRGB`, `convertRGBtoXYZ`
+// + `convertXYZtoLAB`, `convertLABtoXYZ`
+// + `convertLABtoLCH`, `convertLCHtoLAB`
+P.convert = function (color, suffix = '') {
+
+    // Currently converting to as many color spaces as possible - we can make this more sane by only converting for the colors we want to convert (RGB + the internal color space + the returned color space)
+
+    color = color.toLowerCase();
+
+    const rgb = this[`rgb${suffix}`];
+    const hsl = this[`hsl${suffix}`];
+    const hwb = this[`hwb${suffix}`];
+    const xyz = this[`xyz${suffix}`];
+    const lab = this[`lab${suffix}`];
+    const lch = this[`lch${suffix}`];
+
+    // Initializing defs in the constructor causes an error - this should avoid it
+    if (!rgb) return this;
+
+    rgb.length = 0;
+    hsl.length = 0;
+    hwb.length = 0;
+    xyz.length = 0;
+    lab.length = 0;
+    lch.length = 0;
+
+    let r = 0,
+        g = 0,
+        b = 0,
+        a = 0;
+
+    // TODO: make this more efficient so we only convert to the color spaces we need (RGB, internal color space, return color space)
+    if (color.indexOf('hwb') >= 0 && !supportsHWB) {
+
+        // This could be handled better via a regex, but also need to deal with angle units
+        color = color.replace('hwb', '');
+        color = color.replace('(', '');
+        color = color.replace(')', '');
+        color = color.replace('/', '');
+
+        const vals = color.split(' ').filter(e => e != null && e !== '');
+
+        let hue = vals[0];
+        if (hue.indexOf('deg') >= 0) hue = parseFloat(hue)
+        else if (hue.indexOf('rad') >= 0) hue = parseFloat(hue) / radian;
+        else if (hue.indexOf('grad') >= 0) hue = (parseFloat(hue) / 400) * 360;
+        else if (hue.indexOf('turn') >= 0) hue = parseFloat(hue) * 360;
+        else hue = parseFloat(hue);
+
+       let white = parseFloat(vals[1]),
+           black = parseFloat(vals[2]),
+           alpha = vals[3];
+
+        if (alpha != null) {
+
+            a = (alpha.indexOf('%') >= 0) ? parseFloat(alpha) / 100 : parseFloat(alpha);
+        }
+        else a = 1;
+
+        let [b, c, d] = this.convertHWBtoRGB(hue, white, black);
+
+        b = Math.floor(b * 256);
+        if (b > 255) b = 255;
+        if (b < 0) b = 0;
+
+        c = Math.floor(c * 256);
+        if (c > 255) c = 255;
+        if (c < 0) c = 0;
+
+        d = Math.floor(d * 256);
+        if (d > 255) d = 255;
+        if (d < 0) d = 0;
+
+        rgb.push(b, c, d, a);
+        hsl.push(...this.convertRGBtoHSL(b, c, d), a);
+        hwb.push(hue, white, black, a);
+        xyz.push(...this.convertRGBtoXYZ(b, c, d), a);
+        lab.push(...this.convertXYZtoLAB(xyz[0], xyz[1], xyz[2]), a);
+        lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
+    } 
+    // The Color specification doesn't define an XYZ standard input for CSS. So we have to make one up ourselves. SC expects to receive colors defined in the XYZ color space to be raw float Numbers separated by spaces and (if required) a slash followed by the alpha value
+    // + `xyz(x-value y-value z-value)` (with alpha = 1, opaque)
+    // + `xyz(x-value y-value z-value / alpha-value)`
+    else if (color.indexOf('xyz') >= 0) {
+        
+        color = color.replace('xyz', '');
+        color = color.replace('(', '');
+        color = color.replace(')', '');
+        color = color.replace('/', '');
+
+        const vals = color.split(' ').filter(e => e != null && e !== '');
+
+        const x = parseFloat(vals[0]),
+            y = parseFloat(vals[1]),
+            z = parseFloat(vals[2]),
+            alpha = vals[3];
+
+        a = (alpha != null) ? parseFloat(alpha) : 1;
+
+        rgb.push(...this.convertXYZtoRGB(x, y, z), a);
+        hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
+        hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
+        xyz.push(x, y, z, a);
+        lab.push(...this.convertXYZtoLAB(x, y, z), a);
+        lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
+    }
+    else if (color.indexOf('lab') >= 0 && !supportsLAB) {
+
+        color = color.replace('lab', '');
+        color = color.replace('(', '');
+        color = color.replace(')', '');
+        color = color.replace('/', '');
+
+        const vals = color.split(' ').filter(e => e != null && e !== '');
+
+        const b = parseFloat(vals[0]),
+            c = parseFloat(vals[1]),
+            d = parseFloat(vals[2]),
+            alpha = vals[3];
+
+        a = (alpha != null) ? parseFloat(alpha) : 1;
+
+        lab.push(b, c, d, a);
+        xyz.push(...this.convertLABtoXYZ(b, c, d), a);
+        rgb.push(...this.convertXYZtoRGB(xyz[0], xyz[1], xyz[2]), a);
+        hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
+        hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
+        lch.push(...this.convertLABtoLCH(b, c, d), a);
+    }
+    else if (color.indexOf('lch') >= 0 && !supportsLCH) {
+
+        color = color.replace('lch', '');
+        color = color.replace('(', '');
+        color = color.replace(')', '');
+        color = color.replace('/', '');
+
+        const vals = color.split(' ').filter(e => e != null && e !== '');
+
+        const b = parseFloat(vals[0]),
+            c = parseFloat(vals[1]),
+            d = parseFloat(vals[2]),
+            alpha = vals[3];
+
+        a = (alpha != null) ? parseFloat(alpha) : 1;
+
+        lch.push(b, c, d, a);
+        lab.push(...this.convertLCHtoLAB(b, c, d), a);
+        xyz.push(...this.convertLABtoXYZ(lab[0], lab[1], lab[2]), a);
+        rgb.push(...this.convertXYZtoRGB(xyz[0], xyz[1], xyz[2]), a);
+        hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
+        hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
     }
     else {
 
-        let {r, g, b, a} = this;
-
-        if (this.opaque) return `rgb(${r}, ${g}, ${b})`;
-        else return `rgba(${r}, ${g}, ${b}, ${a})`;
-    }
-};
-
-// Internal function to make sure channel attribute values are in their correct format and ranges
-P.checkValues = function () {
-
-    let f = Math.floor,
-        r = f(this.r) || 0,
-        g = f(this.g) || 0,
-        b = f(this.b) || 0,
-        a = this.a;
-
-    this.r = (r > 255) ? 255 : ((r < 0) ? 0 : r);
-    this.g = (g > 255) ? 255 : ((g < 0) ? 0 : g);
-    this.b = (b > 255) ? 255 : ((b < 0) ? 0 : b);
-    this.a = (a > 1) ? 1 : ((a < 0) ? 0 : a);
-
-    return this;
-};
-
-// `update` function - adds the channel __shift__ attributes to the r, g, b and a attributes. This functionality can be automated by setting the __autoUpdate__ Boolean flag to true
-P.updateArray = ['r', 'g', 'b', 'a'];
-P.update = function () {
-
-    if (!xt(this.rCurrent)) this.rCurrent = this.r;
-    if (!xt(this.gCurrent)) this.gCurrent = this.g;
-    if (!xt(this.bCurrent)) this.bCurrent = this.b;
-    if (!xt(this.aCurrent)) this.aCurrent = this.a;
-
-    let list = this.updateArray;
-
-    if (this.rShift || this.gShift || this.bShift || this.aShift) {
-
-        for (let i = 0, item; i < 4; i++) {
-
-            item = list[i];
-
-            let shift = this[item + 'Shift'];
-        
-            if (shift) {
-
-                this[`${item}Current`] += shift;
-
-                let col = this[item],
-                    min = this[`${item}Min`],
-                    max = this[`${item}Max`],
-                    bounce = this[`${item}Bounce`],
-                    current = this[`${item}Current`],
-
-                    temp = Math.floor(current + shift);
-
-                if (temp > max || temp < min) {
-
-                    if (bounce) shift = -shift;
-                    else {
-
-                        col = (col > (max + min) / 2) ? max : min;
-                        shift = 0;
-                    }
-                }
-                
-                this[item] = temp;
-                this[`${item}Shift`] = shift;
-            }
-        }
+        [r, g, b, a] = this.getColorFromCanvas(color);
+        rgb.push(r, g, b, a);
+        hsl.push(...this.convertRGBtoHSL(r, g, b), a);
+        hwb.push(...this.convertRGBHtoHWB(r, g, b, hsl[0]), a);
+        xyz.push(...this.convertRGBtoXYZ(r, g, b), a);
+        lab.push(...this.convertXYZtoLAB(xyz[0], xyz[1], xyz[2]), a);
+        lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
     }
     return this;
 };
 
-// `updateByDelta` - alias for the __update__ function
-P.updateByDelta = P.update;
+P.getColorFromCanvas = function (color) {
 
-// We can also set a Color object to a new color value by invoking its `convert` function. Any CSS color string can be used as an argument (with exceptions - see above)
-P.convert = function (items) {
-
-    let r, g, b, a, temp,
-        round = Math.round;
-
-    items = (items.substring) ? items : '';
-
-    if (items.length) {
-
-        items.toLowerCase();
-        r = 0;
-        g = 0;
-        b = 0;
-        a = 1;
-        
-        if (items[0] === '#') {
-        
-            if (items.length == 4) {
-        
-                r = parseInt(items[1] + items[1], 16);
-                g = parseInt(items[2] + items[2], 16);
-                b = parseInt(items[3] + items[3], 16);
-            }
-            else if (items.length == 5) {
-        
-                r = parseInt(items[1] + items[1], 16);
-                g = parseInt(items[2] + items[2], 16);
-                b = parseInt(items[3] + items[3], 16);
-                a = parseInt(items[4] + items[4], 16) / 255;
-            }
-            else if (items.length == 7) {
-        
-                r = parseInt(items[1] + items[2], 16);
-                g = parseInt(items[3] + items[4], 16);
-                b = parseInt(items[5] + items[6], 16);
-            }
-            else if (items.length == 9) {
-        
-                r = parseInt(items[1] + items[2], 16);
-                g = parseInt(items[3] + items[4], 16);
-                b = parseInt(items[5] + items[6], 16);
-                a = parseInt(items[7] + items[8], 16) / 255;
-            }
-        }
-        else if (/rgb\(/.test(items)) {
-
-            temp = items.match(/([0-9.]+\b)/g);
-
-            if (/%/.test(items)) {
-            
-                r = round((parseFloat(temp[0]) / 100) * 255);
-                g = round((parseFloat(temp[1]) / 100) * 255);
-                b = round((parseFloat(temp[2]) / 100) * 255);
-            }
-            else {
-            
-                r = round(parseFloat(temp[0]));
-                g = round(parseFloat(temp[1]));
-                b = round(parseFloat(temp[2]));
-            }
-        }
-        else if (/rgba\(/.test(items)) {
-
-            temp = items.match(/([0-9.]+\b)/g);
-
-            if (/%/.test(items)) {
-            
-                r = round((parseFloat(temp[0]) / 100) * 255);
-                g = round((parseFloat(temp[1]) / 100) * 255);
-                b = round((parseFloat(temp[2]) / 100) * 255);
-                a = parseFloat(temp[3]) / 100;
-            }
-            else {
-            
-                r = round(parseFloat(temp[0]));
-                g = round(parseFloat(temp[1]));
-                b = round(parseFloat(temp[2]));
-                a = temp[3];
-            }
-        }
-        else if (/hsl\(/.test(items) || /hsla\(/.test(items)) {
-
-            temp = items.match(/([0-9.]+\b)/g);
-
-            this.setFromHSL(parseFloat(temp[0]), parseFloat(temp[1]), parseFloat(temp[2]), parseFloat(temp[3]));
-        }
-        else if (items === 'transparent') {
-
-            r = 0;
-            g = 0;
-            b = 0;
-            a = 0;
-        }
-        else {
-
-            temp = this.colorLibrary[items];
-
-            if (temp) {
-            
-                r = parseInt(temp[0] + temp[1], 16);
-                g = parseInt(temp[2] + temp[3], 16);
-                b = parseInt(temp[4] + temp[5], 16);
-                a = 1;
-            }
-        }
-
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
-        
-        this.checkValues();
-    }
-
-    return this;
-};
-
-
-P.getHSLfromRGB = function (dr, dg, db) {
-
-    let minColor = Math.min(dr, dg, db),
-        maxColor = Math.max(dr, dg, db);
-
-    let lum = (minColor + maxColor) / 2;
-
-    let sat = 0;
-
-    if (minColor !== maxColor) {
-
-        if (lum <= 0.5) sat = (maxColor - minColor) / (maxColor + minColor);
-        else sat = (maxColor - minColor) / (2 - maxColor - minColor);
-    }
-
-    let hue = 0;
-
-    if (maxColor === dr) hue = (dg - db) / (maxColor - minColor);
-    else if (maxColor === dg) hue = 2 + ((db - dr) / (maxColor - minColor));
-    else hue = 4 + ((dr - dg) / (maxColor - minColor));
-
-    hue *= 60;
-
-    if (hue < 0) hue += 360;
-
-    return [hue, sat, lum];
-};
-
-P.getHSL = function () {
-
-    let {r, g, b} = this;
-
-    let minColor = Math.min(r, g, b),
-        maxColor = Math.max(r, g, b);
-
-    let lum = (minColor + maxColor) / 2;
-
-    let sat = 0;
-
-    if (minColor !== maxColor) {
-
-        if (lum <= 0.5) sat = (maxColor - minColor) / (maxColor + minColor);
-        else sat = (maxColor - minColor) / (2 - maxColor - minColor);
-    }
-
-    let hue = 0;
-
-    if (maxColor === r) hue = (g - b) / (maxColor - minColor);
-    else if (maxColor === g) hue = 2 + ((b - r) / (maxColor - minColor));
-    else hue = 4 + ((r - g) / (maxColor - minColor));
-
-    hue *= 60;
-
-    if (hue < 0) hue += 360;
-
-    return [hue, sat, lum];
-};
-
-P.getRGBfromHSL = function (h, s, l, a) {
-
-    s /= 100;
-    l /= 100;
-
-    let c = (1 - Math.abs(2 * l - 1)) * s,
-        x = c * (1 - Math.abs((h / 60) % 2 - 1)),
-        m = l - c/2,
-        r = 0,
+    let r = 0,
         g = 0,
-        b = 0;
+        b = 0,
+        a = 0;
 
-    if (0 <= h && h < 60) {
-        r = c; 
-        g = x; 
-        b = 0;  
-    } else if (60 <= h && h < 120) {
-        r = x; 
-        g = c; 
-        b = 0;
-    } else if (120 <= h && h < 180) {
-        r = 0; 
-        g = c; 
-        b = x;
-    } else if (180 <= h && h < 240) {
-        r = 0; 
-        g = x; 
-        b = c;
-    } else if (240 <= h && h < 300) {
-        r = x; 
-        g = 0; 
-        b = c;
-    } else if (300 <= h && h < 360) {
-        r = c; 
-        g = 0; 
-        b = x;
+    const cell = requestCell();
+
+    const { element, engine } = cell;
+
+    element.width = 1;
+    element.height = 1;
+
+    engine.save();
+    engine.globalAlpha = 1;
+    engine.globalCompositeOperation = 'source-over';
+    engine.fillStyle = color;
+
+    engine.fillRect(0, 0, 1, 1);
+
+    const image = engine.getImageData(0, 0, 1, 1);
+
+    if (image && image.data) {
+
+        [r, g, b, a] = image.data;
+
+        a /= 255;
     }
-
-    r = Math.round((r + m) * 255);
-    g = Math.round((g + m) * 255);
-    b = Math.round((b + m) * 255);
+    engine.restore();
+    releaseCell(cell);
 
     return [r, g, b, a];
 };
 
-P.setFromHSL = function (h, s, l, a) {
+// From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/#rgb-to-hsl) - which is wrong because when I checked it sets up the hue value as NaN (!!!?!). So instead I've gone with the suggested answer in [this CSS-Tricks article](https://css-tricks.com/converting-color-spaces-in-javascript/)
+P.convertRGBtoHSL = function (red, green, blue) {
 
-    s /= 100;
-    l /= 100;
+    red /= 256;
+    green /= 256;
+    blue /= 256;
 
-    let c = (1 - Math.abs(2 * l - 1)) * s,
-        x = c * (1 - Math.abs((h / 60) % 2 - 1)),
-        m = l - c/2,
-        r = 0,
+    let max = Math.max(red, green, blue);
+    let min = Math.min(red, green, blue);
+    let [hue, sat, light] = [0, 0, (min + max)/2];
+    let d = max - min;
+
+    if (d !== 0) {
+        sat = (light === 0 || light === 1)
+            ? 0
+            : (max - light) / Math.min(light, 1 - light);
+
+        switch (max) {
+            case red:   hue = (green - blue) / d + (green < blue ? 6 : 0); break;
+            case green: hue = (blue - red) / d + 2; break;
+            case blue:  hue = (red - green) / d + 4;
+        }
+
+        hue = hue * 60;
+    }
+
+    return [hue, sat * 100, light * 100];
+};
+
+// From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/#hsl-to-rgb)
+P.convertHSLtoRGB = function (hue, sat, light) {
+    
+    hue = hue % 360;
+
+    if (hue < 0) {
+        hue += 360;
+    }
+
+    sat /= 100;
+    light /= 100;
+
+    const f = function (n) {
+        let k = (n + hue/30) % 12;
+        let a = sat * Math.min(light, 1 - light);
+        return light - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+    }
+    return [f(0), f(8), f(4)];
+};
+
+// From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/#rgb-to-hwb)
+P.convertRGBtoHWB = function (red, green, blue) {
+
+    let hsl = this.convertRGBtoHSL(red, green, blue, suffix);
+
+    red /= 256;
+    green /= 256;
+    blue /= 256;
+
+    let white = Math.min(red, green, blue);
+    let black = 1 - Math.max(red, green, blue);
+
+    return [hsl[0], white * 100, black * 100];
+};
+
+// From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/#rgb-to-hwb)
+P.convertRGBHtoHWB = function (red, green, blue, hue) {
+
+    red /= 256;
+    green /= 256;
+    blue /= 256;
+
+    let white = Math.min(red, green, blue);
+    let black = 1 - Math.max(red, green, blue);
+
+    return [hue, white * 100, black * 100];
+};
+
+// From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/#hwb-to-rgb)
+P.convertHWBtoRGB = function (hue, white, black) {
+    
+    white /= 100;
+    black /= 100;
+
+    if (white + black >= 1) {
+    
+        let gray = white / (white + black);
+        return [gray, gray, gray];
+    }
+
+    let rgb = this.convertHSLtoRGB(hue, 100, 50);
+
+    for (let i = 0; i < 3; i++) {
+
+        rgb[i] *= (1 - white - black);
+        rgb[i] += white;
+    }
+    return rgb;
+};
+
+// Code relating to XYZ conversion taken and adapted from the [vinaypillai/ac-colors repository](https://github.com/vinaypillai/ac-colors/blob/master/index.js) on GitHub
+P.convertRGBtoXYZ = function (red, green, blue) {
+
+    const invertGammaCorrection = function (val) {
+
+        if (val <= 0.04045) return val / 12.92;
+        return Math.pow((val + 0.055) / 1.055, 2.4);
+    };
+
+    red /= 255;
+    green /= 255;
+    blue /= 255;
+
+    const r = invertGammaCorrection(red),
+        g = invertGammaCorrection(green),
+        b = invertGammaCorrection(blue);
+
+    const x = (0.4124 * r) + (0.3576 * g) + (0.1805 * b),
+        y = (0.2126 * r) + (0.7152 * g) + (0.0722 * b),
+        z = (0.0193 * r) + (0.1192 * g) + (0.9505 * b);
+
+    return [x * 100 + 0, y * 100 + 0, z * 100 + 0];
+};
+
+P.convertXYZtoRGB = function (x, y, z) {
+
+    const addGammaCorrection = function (val) {
+
+        if (val <= 0.0031308) return 12.92 * val;
+        return (1.055 * Math.pow(val, 1 / 2.4)) - 0.055;
+    };
+
+    x /= 100;
+    y /= 100;
+    z /= 100;
+
+    const r = (3.2406254773200533 * x) - (1.5372079722103187 * y) - (0.4986285986982479 * z),
+      g = (-0.9689307147293197 * x) + (1.8757560608852415 * y) + (0.041517523842953964 * z),
+      b = (0.055710120445510616 * x) + (-0.2040210505984867 * y) + (1.0569959422543882 * z);
+
+    const red = addGammaCorrection(r),
+        green = addGammaCorrection(g),
+        blue = addGammaCorrection(b);
+
+    return [Math.round(red * 255) + 0, Math.round(green * 255) + 0, Math.round(blue * 255) + 0];
+};
+
+P.convertXYZtoLAB = function (x, y, z) {
+
+    const iX = 95.05,
+        iY = 100,
+        iZ = 108.9,
+        eps = 216 / 24389,
+        kap = 24389 / 27;
+
+    const cbrt = (Math.cbrt != null) ? Math.cbrt : (val) => Math.pow(val, 1 / 3);
+
+    const fwdTrans = (val) => (val > eps) ? cbrt(val) : ((kap * val) + 16) / 116;
+
+    x /= iX;
+    y /= iY;
+    z /= iZ;
+
+    const fX = fwdTrans(x),
+        fY = fwdTrans(y),
+        fZ = fwdTrans(z);
+
+    const l = 116 * fY - 16,
+        a = 500 * (fX - fY),
+        b = 200 * (fY - fZ);
+
+    return [l + 0, a + 0, b + 0];
+};
+
+P.convertLABtoXYZ = function (l, a, b) {
+
+    const iX = 95.05,
+        iY = 100,
+        iZ = 108.9,
+        eps = 216 / 24389,
+        kap = 24389 / 27;
+
+    const fY = (l + 16) / 116,
+        fZ = (fY - b / 200),
+        fX = a / 500 + fY;
+
+    const xR = (Math.pow(fX, 3) > eps) ? Math.pow(fX, 3) : (116 * fX - 16) / kap,
+        yR = (l > kap * eps) ? Math.pow((l + 16) / 116, 3) : l / kap,
+        zR = (Math.pow(fZ, 3) > eps) ? Math.pow(fZ, 3) : (116 * fZ - 16) / kap;
+
+    return [xR * iX + 0, yR * iY + 0, zR * iZ];
+};
+
+P.convertLABtoLCH = function (l, a, b) {
+
+    const maxZeroTolerance = Math.pow(10, -12);
+
+    b = (Math.abs(b) < Color.maxZeroTolerance) ? 0 : b;
+
+    const c = Math.sqrt(a * a + b * b);
+
+    const h = (Math.atan2(b, a) >= 0) ?
+        Math.atan2(b, a) / Math.PI * 180 :
+        Math.atan2(b, a) / Math.PI * 180 + 360;
+
+    return [l + 0, c + 0, h + 0];
+};
+
+P.convertLCHtoLAB = function (l, c, h) {
+
+    const a = c * Math.cos(h / 180 * Math.PI);
+    const b = c * Math.sin(h / 180 * Math.PI);
+
+    return [l + 0, a + 0, b + 0];
+};
+
+
+// We need to check whether the browser supports various color spaces. The simplest way to do that is to feed a color into a canvas element's engine, stamp a pixel, then check to see if the pixel is black (space not supported)
+// + We check for HWB, LAB andf LCH color space support
+// + We assume that the browser always supports RGB and HSL  color spaces
+// + We don't check for XYZ color space support because it is not part of the [CSS Color Module Level 4 specification](https://www.w3.org/TR/css-color-4/)
+let supportsHWB = false;
+let supportsLAB = false;
+let supportsLCH = false;
+
+const browserChecker = function () {
+
+    let r = 0,
         g = 0,
-        b = 0;
+        b = 0,
+        a = 0,
+        image;
 
-    if (0 <= h && h < 60) {
-        r = c; 
-        g = x; 
-        b = 0;  
-    } else if (60 <= h && h < 120) {
-        r = x; 
-        g = c; 
-        b = 0;
-    } else if (120 <= h && h < 180) {
-        r = 0; 
-        g = c; 
-        b = x;
-    } else if (180 <= h && h < 240) {
-        r = 0; 
-        g = x; 
-        b = c;
-    } else if (240 <= h && h < 300) {
-        r = x; 
-        g = 0; 
-        b = c;
-    } else if (300 <= h && h < 360) {
-        r = c; 
-        g = 0; 
-        b = x;
+    const cell = requestCell();
+
+    const { element, engine } = cell;
+
+    element.width = 1;
+    element.height = 1;
+
+    engine.save();
+    engine.globalAlpha = 1;
+    engine.globalCompositeOperation = 'source-over';
+
+    // Test for HWB support
+    engine.fillStyle = 'hwb(90 10% 10%)';
+    engine.fillRect(0, 0, 1, 1);
+
+    image = engine.getImageData(0, 0, 1, 1);
+
+    if (image && image.data) {
+
+        [r, g, b, a] = image.data;
     }
+    if (r || g || b) supportsHWB = true;
 
-    this.r = Math.round((r + m) * 255);
-    this.g = Math.round((g + m) * 255);
-    this.b = Math.round((b + m) * 255);
+    // Test for LAB support
+    engine.fillStyle = 'lab(29.2345% 39.3825 20.0664)';
+    engine.clearRect(0, 0, 1, 1);
+    engine.fillRect(0, 0, 1, 1);
 
-    if (null != a) {
+    image = engine.getImageData(0, 0, 1, 1);
 
-        this.a = a * 255;
+    if (image && image.data) {
+
+        [r, g, b, a] = image.data;
     }
+    if (r || g || b) supportsLAB = true;
+
+    // Test for LCH support
+    engine.fillStyle = 'lch(29.2345% 44.2 27)';
+    engine.clearRect(0, 0, 1, 1);
+    engine.fillRect(0, 0, 1, 1);
+
+    image = engine.getImageData(0, 0, 1, 1);
+
+    if (image && image.data) {
+
+        [r, g, b, a] = image.data;
+    }
+    if (r || g || b) supportsLCH = true;
+
+    engine.restore();
+    releaseCell(cell);
 };
-
-// `getYUVfromRGB` - convert an RGB format color into a YUV format color
-// + Inspired by https://github.com/SimonWaldherr/ColorConverter.js/blob/master/colorconverter.js
-P.getYUVfromRGB = function (r, g, b) {
-
-    const round = Math.round;
-
-    const y = round((0.299 * r) + (0.587 * g) + (0.114 * b)),
-        u = round((((b - y) * 0.493) + 111) / 222 * 255),
-        v = round((((r - y) * 0.877) + 155) / 312 * 255);
-
-    return [y, u, v];
-};
-
-// `getRGBfromYUV` - convert an RGB format color into a YUV format color
-P.getRGBfromYUV = function (y, u, v) {
-
-    const round = Math.round;
-
-    let r = round(y + v / 0.877),
-        g = round(y - 0.39466 * u - 0.5806 * v),
-        b = round(y + u / 0.493);
-
-    if (r > 255) r = 255;
-    if (g > 255) g = 255;
-    if (b > 255) b = 255;
-
-    return [r, g, b];
-};
-
-// `getYuvDistance` - calculating color distances using YUV gives better results compared to RGB
-P.getYuvDistance = function (y1, u1, v1, y2, u2, v2) {
-
-    const dy = y1 - y2,
-        du = u1 - u2,
-        dv = v1 - v2;
-
-    // Algorithm requires the result to be a square root for proper euclidean distance but we're comparing colors, not distances, so should be okay?
-    return Math.sqrt((dy * dy) + (du * du) + (dv * dv));
-};
-
-
-// Color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/color_value
-P.colorLibrary = {
-    aliceblue: 'f0f8ff',
-    antiquewhite: 'faebd7',
-    aqua: '00ffff',
-    aquamarine: '7fffd4',
-    azure: 'f0ffff',
-    beige: 'f5f5dc',
-    bisque: 'ffe4c4',
-    black: '000000',
-    blanchedalmond: 'ffe4c4',
-    blue: '0000ff',
-    blueviolet: '8a2be2',
-    brown: 'a52a2a',
-    burlywood: 'deb887',
-    cadetblue: '5f9ea0',
-    chartreuse: '7fff00',
-    chocolate: 'd2691e',
-    coral: 'ff7f50',
-    cornflowerblue: '6495ed',
-    cornsilk: 'fff8dc',
-    crimson: 'dc143c',
-    darkblue: '00008b',
-    darkcyan: '008b8b',
-    darkgoldenrod: 'b8860b',
-    darkgray: 'a9a9a9',
-    darkgreen: '006400',
-    darkgrey: 'a9a9a9',
-    darkkhaki: 'bdb76b',
-    darkmagenta: '8b008b',
-    darkolivegreen: '556b2f',
-    darkorange: 'ff8c00',
-    darkorchid: '9932cc',
-    darkred: '8b0000',
-    darksalmon: 'e9967a',
-    darkseagreen: '8fbc8f',
-    darkslateblue: '483d8b',
-    darkslategray: '2f4f4f',
-    darkslategrey: '2f4f4f',
-    darkturquoise: '00ced1',
-    darkviolet: '9400d3',
-    deeppink: 'ff1493',
-    deepskyblue: '00bfff',
-    dimgray: '696969',
-    dimgrey: '696969',
-    dodgerblue: '1e90ff',
-    firebrick: 'b22222',
-    floralwhite: 'fffaf0',
-    forestgreen: '228b22',
-    fuchsia: 'ff00ff',
-    gainsboro: 'dcdcdc',
-    ghostwhite: 'f8f8ff',
-    gold: 'ffd700',
-    goldenrod: 'daa520',
-    gray: '808080',
-    green: '008000',
-    greenyellow: 'adff2f',
-    grey: '808080',
-    honeydew: 'f0fff0',
-    hotpink: 'ff69b4',
-    indianred: 'cd5c5c',
-    indigo: '4b0082',
-    ivory: 'fffff0',
-    khaki: 'f0e68c',
-    lavender: 'e6e6fa',
-    lavenderblush: 'fff0f5',
-    lawngreen: '7cfc00',
-    lemonchiffon: 'fffacd',
-    lightblue: 'add8e6',
-    lightcoral: 'f08080',
-    lightcyan: 'e0ffff',
-    lightgoldenrodyellow: 'fafad2',
-    lightgray: 'd3d3d3',
-    lightgreen: '90ee90',
-    lightgrey: 'd3d3d3',
-    lightpink: 'ffb6c1',
-    lightsalmon: 'ffa07a',
-    lightseagreen: '20b2aa',
-    lightskyblue: '87cefa',
-    lightslategray: '778899',
-    lightslategrey: '778899',
-    lightsteelblue: 'b0c4de',
-    lightyellow: 'ffffe0',
-    lime: '00ff00',
-    limegreen: '32cd32',
-    linen: 'faf0e6',
-    maroon: '800000',
-    mediumaquamarine: '66cdaa',
-    mediumblue: '0000cd',
-    mediumorchid: 'ba55d3',
-    mediumpurple: '9370db',
-    mediumseagreen: '3cb371',
-    mediumslateblue: '7b68ee',
-    mediumspringgreen: '00fa9a',
-    mediumturquoise: '48d1cc',
-    mediumvioletred: 'c71585',
-    midnightblue: '191970',
-    mintcream: 'f5fffa',
-    mistyrose: 'ffe4e1',
-    moccasin: 'ffe4b5',
-    navajowhite: 'ffdead',
-    navy: '000080',
-    oldlace: 'fdf5e6',
-    olive: '808000',
-    olivedrab: '6b8e23',
-    orange: 'ffa500',
-    orangered: 'ff4500',
-    orchid: 'da70d6',
-    palegoldenrod: 'eee8aa',
-    palegreen: '98fb98',
-    paleturquoise: 'afeeee',
-    palevioletred: 'db7093',
-    papayawhip: 'ffefd5',
-    peachpuff: 'ffdab9',
-    peru: 'cd853f',
-    pink: 'ffc0cb',
-    plum: 'dda0dd',
-    powderblue: 'b0e0e6',
-    purple: '800080',
-    rebeccapurple: '663399',
-    red: 'ff0000',
-    rosybrown: 'bc8f8f',
-    royalblue: '4169e1',
-    saddlebrown: '8b4513',
-    salmon: 'fa8072',
-    sandybrown: 'f4a460',
-    seagreen: '2e8b57',
-    seashell: 'fff5ee',
-    sienna: 'a0522d',
-    silver: 'c0c0c0',
-    skyblue: '87ceeb',
-    slateblue: '6a5acd',
-    slategray: '708090',
-    slategrey: '708090',
-    snow: 'fffafa',
-    springgreen: '00ff7f',
-    steelblue: '4682b4',
-    tan: 'd2b48c',
-    teal: '008080',
-    thistle: 'd8bfd8',
-    tomato: 'ff6347',
-    turquoise: '40e0d0',
-    violet: 'ee82ee',
-    wheat: 'f5deb3',
-    white: 'ffffff',
-    whitesmoke: 'f5f5f5',
-    yellow: 'ffff00',
-    yellowgreen: '9acd32'
-};
-
+browserChecker();
 
 // #### Factory
 // ```

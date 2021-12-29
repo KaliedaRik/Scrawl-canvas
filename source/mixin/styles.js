@@ -63,6 +63,13 @@ export default function (P = Ωempty) {
 // The __easing__ _pseudo-attribute_ represents a transformation that will be applied to a copy of the color stops Array - this allows us to create non-linear gradients. Value is passed through to the Palette object
 
 // The __precision__ _pseudo-attribute_ - value is passed through to the Palette object
+
+// The __colorSpace__ - String _pseudo-attribute_ defines the color space to be used by the Palette's Color object for its internal calculations - value is passed through to the Palette object
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH'` with `RGB` as the default
+//
+// The __returnColorAs__ - String _pseudo-attribute_ defines the type of color String the Palette's Color object will return - value is passed through to the Palette object
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'LAB', 'LCH'` with `RGB` as the default
+
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -81,6 +88,14 @@ export default function (P = Ωempty) {
         if (xt(items.precision)) copy.precision = items.precision;
         else if (this.palette && xt(this.palette.precision)) copy.precision = this.palette.precision;
         else copy.precision = 0;
+
+        if (items.colorSpace) copy.colorSpace = items.colorSpace;
+        else if (this.palette && this.palette.colorSpace) copy.colorSpace = this.palette.colorSpace;
+        else copy.colorSpace = 'RGB';
+
+        if (items.returnColorAs) copy.returnColorAs = items.returnColorAs;
+        else if (this.palette && this.palette.returnColorAs) copy.returnColorAs = this.palette.returnColorAs;
+        else copy.returnColorAs = 'RGB';
 
         return copy;
     };
@@ -293,10 +308,23 @@ export default function (P = Ωempty) {
         if (Array.isArray(item) && this.palette) this.palette.set({ colors: item });
     };
 
-// `easing` - Pass through the String name of an easing function that will be applied to the colors array by the Palette object
+// `easing`, `easingFunction` - the easing to be applied to the gradient 
+// + Can accept a String value identifying an SC pre-defined easing function (default: `linear`)
+// + Can also accept a function accepting a single Number argument (a value between 0-1) and returning an eased Number (again, between 0-1)
     S.easing = function (item) {
 
         if (this.palette) this.palette.set({ easing: item });
+    };
+    S.easingFunction = S.easing;
+
+// `colorSpace`, `returnColorAs` - Pass through a color space String to the Palette object
+    S.colorSpace = function (item) {
+
+        if (this.palette) this.palette.set({ colorSpace: item });
+    };
+    S.returnColorAs = function (item) {
+
+        if (this.palette) this.palette.set({ returnColorAs: item });
     };
 
 // `precision` - Pass through a positive integer Number value between 0 and 50 to the Palette object. If value is `0` (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.

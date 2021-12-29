@@ -45,7 +45,7 @@ export default function (P = Ωempty) {
 
         // The following _pseudo-attributes_ can be used to pass values through to the rainbow gradient:
         // + __rainbowEasing__ - gradient easing value (default: `linear`)
-        // + __rainbowPrecision__ - gradient precision (default: 50)
+        // + __rainbowPrecision__ - gradient precision (default: 0)
         // + __rainbowPaletteStart__ - gradient palette start (default: 0)
         // + __rainbowPaletteEnd__ - gradient palette end (default: 999)
         // + __rainbowDelta__ - gradient delta object (default: {})

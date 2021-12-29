@@ -54,7 +54,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { λnull, isa_obj, isa_fn, mergeOver, xt, xta, pushUnique, Ωempty, easeEngines } from '../core/utilities.js';
+import { λnull, λfirstArg, isa_obj, isa_fn, mergeOver, xt, xta, pushUnique, Ωempty, easeEngines } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
@@ -67,10 +67,18 @@ const Palette = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
+
+    this.factory = makeColor({
+
+        name: `${this.name}-color-factory`,
+    });
+
     this.set(this.defs);
 
     this.colors = items.colors || {'0 ': [0,0,0,1], '999 ': [255,255,255,1]};
     this.stops = Array(1000);
+    this.easingFunction = λfirstArg;
+
 
     this.set(items);
 
@@ -105,16 +113,28 @@ let defaultAttributes = {
 // If the __cyclic__ flag is set, then we know to calculate appropriate stop values between the last key color and the first key color, thus allowing for smooth crossing of the 1 -> 0 stops boundary
     cyclic: false,
 
-// The __easing__ value represents a transformation that will be applied to a copy of the color stops Array - this allows us to create non-linear gradients
+// The __easing__ and __easingFunction__ attributes affect represents a transformation that will be applied to a copy of the color stops Array - this allows us to create non-linear gradients
     easing: 'linear',
+    easingFunction: null,
 
 // The __precision__ value - higher values lead to fewer stops being added to the gradient
     precision: 0,
+
+// ##### Non-retained argument attributes (for factory, clone, set functions) - these attributes get passed on to the Palette's Color object
+
+// __colorSpace__ - String value defining the color space to be used by the Palette's Color object for its internal calculations.
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH'` with `RGB` as the default
+//
+// __returnColorAs__ - String value defining the type of color String the Palette's Color object will return.
+// + This is a shorter list than the internal colorSpace attribute as we only return values for CSS specified color spaces. Note that some of these color spaces are not widely supported across browsers and will lead to errors in canvases displayed on non-supported browsers
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'LAB', 'LCH'` with `RGB` as the default
+
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
+P.packetFunctions = pushUnique(P.packetFunctions, ['easingFunction']);
 P.packetExclusions = pushUnique(P.packetExclusions, ['stops']);
 
 
@@ -123,7 +143,14 @@ P.packetExclusions = pushUnique(P.packetExclusions, ['stops']);
 
 
 // #### Kill management
-// No additional kill functionality required
+P.kill = function () {
+
+    if (this.factory && this.factory.kill) this.factory.kill();
+
+    this.deregister();
+    
+    return this;
+};
 
 
 // #### Get, Set, deltaSet
@@ -133,13 +160,14 @@ let G = P.getters,
 
 // __colors__ - an array of arrays, each sub-array being in the form `[Number, String]` where:
 // + Number is a positive integer in the range 0-999
-// + String is any legitimate CSS color string value
+// + String is any legitimate CSS color string value (rgb-key, rgb-hex, `rgb()`, `rgba()`, `hsl()`, `hsla()`, `hwb()`, `lch()`, `lab()`). Also accepts xyz color space colors in the format `xyz(x-value y-value z-value)` or `xyz(x-value y-value z-value / alpha-value)`
 S.colors = function (item) {
 
     if (Array.isArray(item)) {
 
         let f = this.factory,
-            newCols = {};
+            newCols = {},
+            colorSpace = f.colorSpace.toLowerCase();
 
         item.forEach(c => {
 
@@ -147,24 +175,87 @@ S.colors = function (item) {
             if (pos.toFixed && col.substring) {
 
                 f.convert(col);
-                newCols[`${pos} `] = [f.r, f.g, f.b, f.a];
+                console.log(f[colorSpace])
+                newCols[`${pos} `] = [...f[colorSpace]];
             }
         });
-
         this.colors = newCols;
         this.dirtyPalette = true;
     }
 };
 
-// __easing__ - a String representing the easing to be applied to the gradient 
+// __easing__, __easingFunction__ - the easing to be applied to the gradient 
+// + Can accept a String value identifying an SC pre-defined easing function (default: `linear`)
+// + Can also accept a function accepting a single Number argument (a value between 0-1) and returning an eased Number (again, between 0-1)
 S.easing = function (item) {
 
-    if (isa_fn(item) || easeEngines[item]) {
-
-        this.easing = item;
-        this.dirtyPalette = true;
-    }
+    this.setEasingHelper(item);
 };
+S.easingFunction = S.easing;
+P.setEasing = function (item) {
+
+    this.setEasingHelper(item);
+    return this;
+};
+P.setEasingFunction = P.setEasing;
+P.setEasingHelper = function (item) {
+
+    if (isa_fn(item)) {
+
+        this.easing = 'function';
+        this.easingFunction = item;
+    }
+    else if (item.substring && easeEngines[item]) {
+
+        this.easing = item; 
+        this.easingFunction = λfirstArg;
+    }
+    else {
+
+        this.easing = 'linear'; 
+        this.easingFunction = λfirstArg;
+    }
+    this.dirtyPalette = true;
+};
+
+// The __colorSpace__ and __returnColorAs__ attributes get passed through to the Palette's Color object
+S.colorSpace = function (item) {
+
+    if (item.substring) {
+
+        const ITM = item.toUpperCase();
+        const itm = item.toLowerCase();
+
+        if (['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH'].includes(ITM)) {
+
+            const oldColors = Object.assign({}, this.colors);
+
+            const oldSpace = this.factory.colorSpace;
+
+            this.factory.set({ colorSpace: ITM });
+
+            for (const [key, value] of Object.entries(oldColors)) {
+
+                const color = this.factory.buildColorString(...value, oldSpace);
+
+                this.factory.setColor(color);
+
+                this.colors[key].length = 0
+                this.colors[key].push(...this.factory[itm]);
+            }
+            this.dirtyPalette = true;
+        }
+    }
+}
+
+S.returnColorAs = function (item) {
+    
+    this.factory.set({
+
+        returnColorAs: item,
+    });
+    this.dirtyPalette = true;
+}
 
 // __precision__ - a positive integer Number value between 0 and 50. If value is `0` (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.
 S.precision = function (item) {
@@ -189,123 +280,58 @@ P.recalculateHold = [];
 // `recalculate` - populate the stops Array with CSS color Strings, as determined by colors stored in the `colors` object
 P.recalculate = function () {
 
-    let keys, i, iz, j, jz, cursor, diff, 
-        current, next, nextKey, temp,
-        r, g, b, a,
-        colors = this.colors,
-        stops = this.stops,
-        make = this.makeColorString,
-        hold = this.recalculateHold;
-
-    keys = Object.keys(colors);
-    keys = keys.map(n => parseInt(n, 10))
-    keys.sort((a, b) => a - b);
-
-    stops.fill('rgba(0,0,0,0)');
-
     this.dirtyPalette = false;
 
-    for (i = 0, iz = keys.length - 1; i < iz; i++) {
+    const { colors, stops, factory } = this;
 
-        cursor = keys[i];
-        nextKey = keys[i + 1];
-        diff = nextKey - cursor;
+    stops.fill('rgba(0 0 0 / 0)');
 
-        current = colors[cursor + ' '];
-        next = colors[nextKey + ' '];
+    const { colorSpace } = factory;
 
-        r = (next[0] - current[0]) / diff;
-        g = (next[1] - current[1]) / diff;
-        b = (next[2] - current[2]) / diff;
-        a = (next[3] - current[3]) / diff;
+    let colorKeys = Object.keys(colors);
+    colorKeys = colorKeys.map(n => parseInt(n, 10))
+    colorKeys.sort((a, b) => a - b);
 
-        for (j = 0, jz = diff; j < jz; j++) {
+    let currentKey = colorKeys[0], 
+        nextKey, currentVals, nextVals, dA, dB, dC, dD, diff;
 
-            hold[0] = current[0] + (r * j);
-            hold[1] = current[1] + (g * j);
-            hold[2] = current[2] + (b * j);
-            hold[3] = current[3] + (a * j);
+    let [b, c, d, a] = colors[`${currentKey} `];
 
-            stops[cursor] = make(hold);
-            cursor++;
-        }
-    }
+    stops[currentKey] = factory.returnColorFromValues(b, c, d, a);
 
-    stops[cursor] = make(next);
+    for (let i = 0, iz = colorKeys.length - 1; i < iz; i++) {
 
-    if (this.cyclic) {
+        currentKey = colorKeys[i];
+        nextKey = colorKeys[i + 1];
+        currentVals = colors[`${currentKey} `];
+        nextVals = colors[`${nextKey} `];
 
-        cursor = keys[keys.length - 1];
-        nextKey = keys[0];
-        diff = (nextKey + 1000) - cursor;
+        diff = nextKey - currentKey;
+        dB = (nextVals[0] - currentVals[0]) / diff;
+        dC = (nextVals[1] - currentVals[1]) / diff;
+        dD = (nextVals[2] - currentVals[2]) / diff;
+        dA = (nextVals[3] - currentVals[3]) / diff;
 
-        current = colors[cursor + ' '];
-        next = colors[nextKey + ' '];
+        factory.setMinimumColor(factory.buildColorString(...currentVals, colorSpace));
+        factory.setMaximumColor(factory.buildColorString(...nextVals, colorSpace));
 
-        r = (next[0] - current[0]) / diff;
-        g = (next[1] - current[1]) / diff;
-        b = (next[2] - current[2]) / diff;
-        a = (next[3] - current[3]) / diff;
+        for (let j = currentKey + 1; j <= nextKey; j++) {
 
-        for (j = 0, jz = diff; j < jz; j++) {
+            b += dB;
+            c += dC;
+            d += dD;
+            a += dA;
 
-            hold[0] = current[0] + (r * j);
-            hold[1] = current[1] + (g * j);
-            hold[2] = current[2] + (b * j);
-            hold[3] = current[3] + (a * j);
-
-            stops[cursor] = make(hold);
-            cursor++;
-
-            if (cursor > 999) cursor -= 1000;
-        }
-    }
-    else {
-
-        cursor = keys[0];
-        
-        if (cursor > 0) {
-
-            temp = stops[cursor];
-            
-            for (i = 0, iz = cursor; i < iz; i++) {
-
-                stops[i] = temp;
-            }
-        }
-
-        cursor = keys[keys.length - 1];
-
-        if (cursor < 999) {
-
-            temp = stops[cursor];
-
-            for (i = cursor, iz = 1000; i < iz; i++) {
-
-                stops[i] = temp;
-            }
+            stops[j] = factory.returnColorFromValues(b, c, d, a);
         }
     }
 };
 
 // `makeColorString` - internal helper function
-P.makeColorString = function (item) {
+P.makeColorString = function (a, b, c, d) {
 
-    let f = Math.floor,
-        r, g, b, a;
-
-    let constrainer = (n, min, max) => {
-        if (n < min) return min;
-        if (n > max) return max;
-        return n;
-    };
-
-    r = constrainer(f(item[0]), 0, 255),
-    g = constrainer(f(item[1]), 0, 255),
-    b = constrainer(f(item[2]), 0, 255),
-    a = constrainer(item[3], 0, 1);
-
-    return `rgba(${r},${g},${b},${a})`;
+    if (this && this.factory) return this.factory.buildColorString(a, b, c, d);
+    return 'rgba(0 0 0 / 0)';
 };
 
 // `updateColor` - add or update a gradient-type style's Palette object with a color.
@@ -313,7 +339,8 @@ P.makeColorString = function (item) {
 // + __color__ - CSS color String
 P.updateColor = function (index, color) {
 
-    let f = this.factory;
+    const f = this.factory,
+        colorSpace = f.colorSpace.toLowerCase();
 
     if (xta(index, color)) {
 
@@ -323,7 +350,7 @@ P.updateColor = function (index, color) {
 
             f.convert(color);
             index += ' ';
-            this.colors[index] = [f.r, f.g, f.b, f.a];
+            this.colors[index] = [...f[colorSpace]];
             this.dirtyPalette = true;
         }
     }
@@ -351,7 +378,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
     // It's at this point that we apply the easing function
 
-    let { stops, easing, precision } = this;
+    let { stops, easing, easingFunction, precision } = this;
 
     let keys = Object.keys(this.colors),
         spread, offset, i, iz, item, n;
@@ -366,13 +393,8 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
             end = 999;
         }
 
-        let engine;
-
-        if (isa_fn(easing)) engine = easing;
-        else {
-
-            engine = (null != easeEngines[easing]) ? easeEngines[easing] : easeEngines['linear'];
-        }
+        let engine = easingFunction;
+        if (easing !== 'function' && easeEngines[easing]) engine = easeEngines[easing];
 
         // Option 1 start == end, cycle irrelevant
         if (start === end) return stops[start] || 'rgba(0,0,0,0)';
@@ -510,13 +532,6 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
     // No gradient: no colors
     else return 'rgba(0,0,0,0)';
 };
-
-// `factory` - We add a Scrawl-canvas [Color object](./color.html) to the Palette factory prototype - one object is used for all the calculations preformed by all Palette objects
-P.factory = makeColor({
-
-    name: 'palette-factory-color-calculator',
-    opaque: false,
-});
 
 
 // #### Factory

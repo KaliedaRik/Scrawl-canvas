@@ -109,10 +109,12 @@ scrawl.observeAndUpdate({
         endY: ['endY', '%'],
         endRadius: ['endRadius', 'int'],
 
-        easing: ['easing', 'raw'],
         precision: ['precision', 'int'],
 
         cyclePalette: ['cyclePalette', 'boolean'],
+
+        colorSpace: ['colorSpace', 'raw'],
+        returnColorAs: ['returnColorAs', 'raw'],
     },
 });
 
@@ -163,19 +165,6 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
 
 // Set the DOM input values
-document.querySelector('#paletteStart').value = 0;
-document.querySelector('#paletteEnd').value = 999;
-document.querySelector('#startX').value = 50;
-document.querySelector('#startY').value = 50;
-document.querySelector('#startRadius').value = 0;
-document.querySelector('#endX').value = 50;
-document.querySelector('#endY').value = 50;
-document.querySelector('#endRadius').value = 500;
-document.querySelector('#red').value = 0;
-document.querySelector('#blue').value = 0;
-document.querySelector('#easing').options.selectedIndex = 0;
-document.querySelector('#precision').value = 50;
-
 const paletteStart = document.querySelector('#paletteStart');
 const paletteEnd = document.querySelector('#paletteEnd');
 const startX = document.querySelector('#startX');
@@ -200,6 +189,8 @@ document.querySelector('#red').value = 0;
 document.querySelector('#blue').value = 0;
 document.querySelector('#easing').options.selectedIndex = 0;
 document.querySelector('#cyclePalette').value = 0;
+document.querySelector('#colorSpace').options.selectedIndex = 0;
+document.querySelector('#returnColorAs').options.selectedIndex = 0;
 
 
 // #### Development and testing
