@@ -708,7 +708,7 @@ P.getGradientData = function (gradient) {
 // Each function is held in the `theBigActionsObject` object, for convenience
 P.theBigActionsObject = {
 
-// __alpha-to-channels__ - Copies the alpha channel value over to the selected value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
+// __alpha-to-channels__ - [RGB] Copies the alpha channel value over to the selected value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
     'alpha-to-channels': function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
@@ -749,7 +749,7 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __area-alpha__ - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
+// __area-alpha__ - [RGB] Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
     'area-alpha': function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
@@ -798,7 +798,7 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __average-channels__ - Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0.
+// __average-channels__ - [RGB] Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0.
     'average-channels': function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
@@ -870,7 +870,7 @@ P.theBigActionsObject = {
 
 // DEPRECATED! __binary__ - use the updated `threshold` filter instead, which now incorporates binary filter functionality
 //
-// __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations. The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
+// __blend__ - [RGB] Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations. The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     'blend': function (requirements) {
 
         const copyPixel = function (fr, tr, data) {
@@ -926,7 +926,8 @@ P.theBigActionsObject = {
 
         const alphaCalc = (dA, mA) => (dA + (mA * (1 - dA))) * 255;
 
-        const { getHSLfromRGB, getRGBfromHSL } = this.colorEngine;
+        // const { getHSLfromRGB, getRGBfromHSL } = this.colorEngine;
+        const colorEngine = this.colorEngine;
 
         let [input, output, mix] = this.getInputAndOutputLines(requirements);
 
@@ -1359,14 +1360,6 @@ P.theBigActionsObject = {
 
             case 'color' :
 
-                const colorCalc = (iR, iG, iB, mR, mG, mB) => {
-
-                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
-                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
-
-                    return getRGBfromHSL(iH, iS, mL);
-                };
-
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
 
@@ -1384,7 +1377,7 @@ P.theBigActionsObject = {
 
                                 [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                                [cr, cg, cb] = colorCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                                [cr, cg, cb] = colorEngine.calculateColorBlend(dinR, dinG, dinB, dmixR, dmixG, dmixB);
 
                                 ig = ir + 1;
                                 ib = ig + 1;
@@ -1401,14 +1394,6 @@ P.theBigActionsObject = {
 
             case 'hue' :
 
-                const hueCalc = (iR, iG, iB, mR, mG, mB) => {
-
-                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
-                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
-
-                    return getRGBfromHSL(iH, mS, mL);
-                };
-
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
 
@@ -1426,7 +1411,7 @@ P.theBigActionsObject = {
 
                                 [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                                [cr, cg, cb] = hueCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                                [cr, cg, cb] = colorEngine.calculateHueBlend(dinR, dinG, dinB, dmixR, dmixG, dmixB);
 
                                 ig = ir + 1;
                                 ib = ig + 1;
@@ -1443,14 +1428,6 @@ P.theBigActionsObject = {
 
             case 'luminosity' :
 
-                const luminosityCalc = (iR, iG, iB, mR, mG, mB) => {
-
-                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
-                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
-
-                    return getRGBfromHSL(mH, mS, iL);
-                };
-
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
 
@@ -1468,7 +1445,7 @@ P.theBigActionsObject = {
 
                                 [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                                [cr, cg, cb] = luminosityCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                                [cr, cg, cb] = colorEngine.calculateLuminosityBlend(dinR, dinG, dinB, dmixR, dmixG, dmixB);
 
                                 ig = ir + 1;
                                 ib = ig + 1;
@@ -1485,14 +1462,6 @@ P.theBigActionsObject = {
 
             case 'saturation' :
 
-                const saturationCalc = (iR, iG, iB, mR, mG, mB) => {
-
-                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
-                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
-
-                    return getRGBfromHSL(mH, iS, mL);
-                };
-
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
 
@@ -1510,7 +1479,7 @@ P.theBigActionsObject = {
 
                                 [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                                [cr, cg, cb] = saturationCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                                [cr, cg, cb] = colorEngine.calculateSaturationBlend(dinR, dinG, dinB, dmixR, dmixG, dmixB);
 
                                 ig = ir + 1;
                                 ib = ig + 1;

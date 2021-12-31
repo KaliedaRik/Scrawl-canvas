@@ -1008,6 +1008,46 @@ P.convertLCHtoLAB = function (l, c, h) {
     return [l + 0, a + 0, b + 0];
 };
 
+// The following functions are used by the Blend filter
+// + input is the six RGB parts of the input and mix channels
+// + output is the RGB version of the mixed HSL colors generated from the RGB inputs
+P.calculateColorBlend = function (iR, iG, iB, mR, mG, mB) {
+
+    const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
+    const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
+
+    const [r, g, b] = this.convertHSLtoRGB(iH, iS, mL);
+
+    return [Math.floor(r * 256), Math.floor(g * 256), Math.floor(b * 256)];
+};
+P.calculateHueBlend = function (iR, iG, iB, mR, mG, mB) {
+
+    const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
+    const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
+
+    const [r, g, b] = this.convertHSLtoRGB(iH, mS, mL);
+
+    return [Math.floor(r * 256), Math.floor(g * 256), Math.floor(b * 256)];
+};
+P.calculateSaturationBlend = function (iR, iG, iB, mR, mG, mB) {
+
+    const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
+    const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
+
+    const [r, g, b] = this.convertHSLtoRGB(mH, iS, mL);
+
+    return [Math.floor(r * 256), Math.floor(g * 256), Math.floor(b * 256)];
+};
+P.calculateLuminosityBlend = function (iR, iG, iB, mR, mG, mB) {
+
+    const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
+    const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
+
+    const [r, g, b] = this.convertHSLtoRGB(mH, mS, iL);
+
+    return [Math.floor(r * 256), Math.floor(g * 256), Math.floor(b * 256)];
+};
+
 
 // We need to check whether the browser supports various color spaces. The simplest way to do that is to feed a color into a canvas element's engine, stamp a pixel, then check to see if the pixel is black (space not supported)
 // + We check for HWB, LAB andf LCH color space support
