@@ -1365,8 +1365,12 @@ P.theBigActionsObject = {
 
                         [ir, mr] = getLinePositions(x, y);
 
-                        ia = ir + 3;
-                        ma = mr + 3;
+                        ig = ir + 1;
+                        ib = ig + 1;
+                        ia = ib + 1;
+                        mg = mr + 1;
+                        mb = mg + 1;
+                        ma = mb + 1;
 
                         if (iData[ia]) {
 
@@ -1375,17 +1379,12 @@ P.theBigActionsObject = {
                             else if (!mData[ma]) copyPixel(ir, ir, iData);
                             else {
 
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                [cr, cg, cb] = colorEngine.calculateColorBlend(dinR, dinG, dinB, dmixR, dmixG, dmixB);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
+                                [cr, cg, cb] = colorEngine.calculateColorBlend(iData[ir], iData[ig], iData[ib], mData[mr], mData[mg], mData[mb]);
 
                                 oData[ir] = cr;
                                 oData[ig] = cg;
                                 oData[ib] = cb;
-                                oData[ia] = alphaCalc(dinA, dmixA);
+                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
                             }
                         }
                     }
@@ -1399,8 +1398,12 @@ P.theBigActionsObject = {
 
                         [ir, mr] = getLinePositions(x, y);
 
-                        ia = ir + 3;
-                        ma = mr + 3;
+                        ig = ir + 1;
+                        ib = ig + 1;
+                        ia = ib + 1;
+                        mg = mr + 1;
+                        mb = mg + 1;
+                        ma = mb + 1;
 
                         if (iData[ia]) {
 
@@ -1409,17 +1412,12 @@ P.theBigActionsObject = {
                             else if (!mData[ma]) copyPixel(ir, ir, iData);
                             else {
 
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                [cr, cg, cb] = colorEngine.calculateHueBlend(dinR, dinG, dinB, dmixR, dmixG, dmixB);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
+                                [cr, cg, cb] = colorEngine.calculateHueBlend(iData[ir], iData[ig], iData[ib], mData[mr], mData[mg], mData[mb]);
 
                                 oData[ir] = cr;
                                 oData[ig] = cg;
                                 oData[ib] = cb;
-                                oData[ia] = alphaCalc(dinA, dmixA);
+                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
                             }
                         }
                     }
@@ -1433,8 +1431,12 @@ P.theBigActionsObject = {
 
                         [ir, mr] = getLinePositions(x, y);
 
-                        ia = ir + 3;
-                        ma = mr + 3;
+                        ig = ir + 1;
+                        ib = ig + 1;
+                        ia = ib + 1;
+                        mg = mr + 1;
+                        mb = mg + 1;
+                        ma = mb + 1;
 
                         if (iData[ia]) {
 
@@ -1443,17 +1445,12 @@ P.theBigActionsObject = {
                             else if (!mData[ma]) copyPixel(ir, ir, iData);
                             else {
 
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                [cr, cg, cb] = colorEngine.calculateLuminosityBlend(dinR, dinG, dinB, dmixR, dmixG, dmixB);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
+                                [cr, cg, cb] = colorEngine.calculateLuminosityBlend(iData[ir], iData[ig], iData[ib], mData[mr], mData[mg], mData[mb]);
 
                                 oData[ir] = cr;
                                 oData[ig] = cg;
                                 oData[ib] = cb;
-                                oData[ia] = alphaCalc(dinA, dmixA);
+                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
                             }
                         }
                     }
@@ -1467,8 +1464,12 @@ P.theBigActionsObject = {
 
                         [ir, mr] = getLinePositions(x, y);
 
-                        ia = ir + 3;
-                        ma = mr + 3;
+                        ig = ir + 1;
+                        ib = ig + 1;
+                        ia = ib + 1;
+                        mg = mr + 1;
+                        mb = mg + 1;
+                        ma = mb + 1;
 
                         if (iData[ia]) {
 
@@ -1477,17 +1478,12 @@ P.theBigActionsObject = {
                             else if (!mData[ma]) copyPixel(ir, ir, iData);
                             else {
 
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                [cr, cg, cb] = colorEngine.calculateSaturationBlend(dinR, dinG, dinB, dmixR, dmixG, dmixB);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
+                                [cr, cg, cb] = colorEngine.calculateSaturationBlend(iData[ir], iData[ig], iData[ib], mData[mr], mData[mg], mData[mb]);
 
                                 oData[ir] = cr;
                                 oData[ig] = cg;
                                 oData[ib] = cb;
-                                oData[ia] = alphaCalc(dinA, dmixA);
+                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
                             }
                         }
                     }
@@ -1533,8 +1529,8 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// DEPRECATED! __blur__ - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect. Note that this filter is expensive, thus much slower to complete compared to other filter effects.
-// + Use the gaussian blur filter instead. This is being retained only for backwards compatibility and will be removed in a future major release
+// __blur__ - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect. 
+// Note that this filter is expensive, thus much slower to complete compared to other filter effects. Where possible, memoize the results this filter produces.
     'blur': function (requirements) {
 
         const getUncheckedValue = function (flag, gridStore, pos, data, offset) {

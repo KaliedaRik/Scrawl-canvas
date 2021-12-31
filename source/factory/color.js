@@ -1009,43 +1009,51 @@ P.convertLCHtoLAB = function (l, c, h) {
 };
 
 // The following functions are used by the Blend filter
-// + input is the six RGB parts of the input and mix channels
+// + input is the six RGB parts (clamped to the 0-1 range) of the input and mix channels
 // + output is the RGB version of the mixed HSL colors generated from the RGB inputs
 P.calculateColorBlend = function (iR, iG, iB, mR, mG, mB) {
 
-    const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
-    const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
+    // const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
+    // const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
+    const [iH, iS, iL] = this.convertRGBtoHSL(iR, iG, iB);
+    const [mH, mS, mL] = this.convertRGBtoHSL(mR, mG, mB);
 
     const [r, g, b] = this.convertHSLtoRGB(iH, iS, mL);
 
-    return [Math.floor(r * 256), Math.floor(g * 256), Math.floor(b * 256)];
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 };
 P.calculateHueBlend = function (iR, iG, iB, mR, mG, mB) {
 
-    const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
-    const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
+    // const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
+    // const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
+    const [iH, iS, iL] = this.convertRGBtoHSL(iR, iG, iB);
+    const [mH, mS, mL] = this.convertRGBtoHSL(mR, mG, mB);
 
     const [r, g, b] = this.convertHSLtoRGB(iH, mS, mL);
 
-    return [Math.floor(r * 256), Math.floor(g * 256), Math.floor(b * 256)];
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 };
 P.calculateSaturationBlend = function (iR, iG, iB, mR, mG, mB) {
 
-    const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
-    const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
+    // const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
+    // const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
+    const [iH, iS, iL] = this.convertRGBtoHSL(iR, iG, iB);
+    const [mH, mS, mL] = this.convertRGBtoHSL(mR, mG, mB);
 
     const [r, g, b] = this.convertHSLtoRGB(mH, iS, mL);
 
-    return [Math.floor(r * 256), Math.floor(g * 256), Math.floor(b * 256)];
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 };
 P.calculateLuminosityBlend = function (iR, iG, iB, mR, mG, mB) {
 
-    const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
-    const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
+    // const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
+    // const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
+    const [iH, iS, iL] = this.convertRGBtoHSL(iR, iG, iB);
+    const [mH, mS, mL] = this.convertRGBtoHSL(mR, mG, mB);
 
     const [r, g, b] = this.convertHSLtoRGB(mH, mS, iL);
 
-    return [Math.floor(r * 256), Math.floor(g * 256), Math.floor(b * 256)];
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 };
 
 
