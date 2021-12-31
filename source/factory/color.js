@@ -509,6 +509,35 @@ P.generateRandomColor = function () {
     this.setColor(`rgb(${r} ${g} ${b})`);
 };
 
+// `checkColor` - input is a CSS color string; output will be a color string which is displayable on the user's device/browser
+P.checkColor = function (item) {
+
+    if (item.substring) {
+
+        let colSpace = 'RGB';
+
+        if (item.includes('hsl')) colSpace = 'HSL';
+        else if (item.includes('hwb')) colSpace = 'HWB';
+        else if (item.includes('lab')) colSpace = 'LAB';
+        else if (item.includes('lch')) colSpace = 'LCH';
+        else if (item.includes('xyz')) colSpace = 'XYZ';
+
+        if ('RGB' === colSpace || 'HSL' === colSpace) return item;
+
+        this.colorSpace = colSpace;
+
+        let colRet = colSpace;
+        if ('XYZ' === colSpace) colRet = 'RGB';
+
+        this.returnColorAs = colSpace;
+
+        this.convert(item);
+
+        return this.returnColor();
+    }
+    return 'rgba(0 0 0 / 0)';
+};
+
 // `getRangeColor` - function which generates a color in the range between the minimum and maximum colors. 
 // + when the argument is `0` the minimum color is returned; values below 0 are rounded up to 0
 // + when the argument is `1` the maximum color is returned; values above 1 are rounded down to 1
@@ -518,15 +547,15 @@ P.getRangeColor = function (item) {
 
     if (xt(item) && item.toFixed) {
 
-        const { calculateRangeColorValues, buildColorString, setColor, getCurrentColor, colorSpace } = this;
+        // const { calculateRangeColorValues, buildColorString, setColor, getCurrentColor, colorSpace } = this;
 
-        const vals = calculateRangeColorValues(item);
+        const vals = this.calculateRangeColorValues(item);
 
-        const res = buildColorString(...vals, colorSpace);
+        const res = this.buildColorString(...vals, this.colorSpace);
 
-        setColor(res);
+        this.setColor(res);
     }
-    return getCurrentColor();
+    return this.getCurrentColor();
 };
 
 // `calculateRangeColorValues` - internal helper function

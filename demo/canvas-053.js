@@ -28,20 +28,57 @@ canvas.set({
 
 
 // Build and display the reaction-diffusion asset
+const colorStops = {
+  'stepped-grays': [
+      [0, '#333'],
+      [199, '#333'],
+      [200, '#666'],
+      [399, '#666'],
+      [400, '#999'],
+      [599, '#999'],
+      [600, '#ccc'],
+      [799, '#ccc'],
+      [800, '#fff'],
+      [999, '#fff'],
+  ],
+  'red-gradient': [
+      [0, 'hsl(0 100% 40%)'],
+      [999, 'hsl(0 100% 100%)'],
+  ],
+  'red-blue': [
+      [0, 'rgb(255 0 0)'],
+      [999, 'rgb(0 0 255)'],
+  ],
+  'hue-gradient': [
+      [0, 'hwb(120 10% 10%)'],
+      [999, 'hwb(240 10% 10%)'],
+  ],
+  'monochrome': [
+      [0, 'black'],
+      [999, 'white'],
+  ],
+}
+
+const bespokeEasings = {
+
+    'user-steps': (val) => {
+
+        if (val < 0.2) return 0.1;
+        if (val < 0.4) return 0.3;
+        if (val < 0.6) return 0.5;
+        if (val < 0.8) return 0.7;
+        return 0.9;
+    },
+    'user-repeat': (val) => (val * 4) % 1,
+};
+
 const reactionAsset = scrawl.makeReactionDiffusionAsset({
 
     name: 'reaction-diffusion-asset',
     width: assetDimension,
     height: assetDimension,
 
-    rainbowColors: [
-        [0, '#804E04'],
-        [50, '#804E04'],
-        [199, '#FC9704'],
-        [800, '#FC9704'],
-        [950, '#FEEFD9'],
-        [999, '#FEEFD9'],
-    ],
+    colors: colorStops['stepped-grays'],
 });
 
 // Test that the RD asset output is always tileable by displaying it via a Pattern style
@@ -168,6 +205,39 @@ scrawl.addNativeListener('input', (e) => {
     }
 }, '#initialSettingPreference');
 
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    e.preventDefault();
+
+    if (e && e.target) {
+
+        let val = e.target.value;
+
+        reactionAsset.set({
+            colors: colorStops[val],
+        })
+    }
+}, '#colorStops');
+
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    e.preventDefault();
+
+    let val = e.target.value;
+
+    if (['user-steps', 'user-repeat'].includes(val)) {
+        reactionAsset.set({
+            easing: bespokeEasings[val],
+        });
+    }
+    else {
+        reactionAsset.set({
+            easing: val,
+        });
+    }
+
+}, '#easing');
+
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -209,16 +279,14 @@ scrawl.observeAndUpdate({
         maxGenerations: ['maxGenerations', 'round'],
         canvasWidth: ['width', 'round'],
         canvasHeight: ['height', 'round'],
-        color: ['color', 'raw'],
-        gradientStart: ['gradientStart', 'raw'],
-        gradientEnd: ['gradientEnd', 'raw'],
-        monochromeStart: ['monochromeStart', 'round'],
-        monochromeRange: ['monochromeRange', 'round'],
-        hueStart: ['hueStart', 'float'],
-        hueRange: ['hueRange', 'float'],
-        saturation: ['saturation', 'float'],
-        luminosity: ['luminosity', 'float'],
         randomEngineSeed: ['randomEngineSeed', 'raw'],
+
+        paletteStart: ['paletteStart', 'round'],
+        paletteEnd: ['paletteEnd', 'round'],
+        precision: ['precision', 'round'],
+        cyclePalette: ['cyclePalette', 'boolean'],
+        colorSpace: ['colorSpace', 'raw'],
+        returnColorAs: ['returnColorAs', 'raw'],
     },
 });
 
@@ -466,15 +534,6 @@ const qs_presets = document.querySelector('#presets'),
     qs_maxGenerations = document.querySelector('#maxGenerations'),
     qs_canvasWidth = document.querySelector('#canvasWidth'),
     qs_canvasHeight = document.querySelector('#canvasHeight'),
-    qs_color = document.querySelector('#color'),
-    qs_gradientStart = document.querySelector('#gradientStart'),
-    qs_gradientEnd = document.querySelector('#gradientEnd'),
-    qs_monochromeStart = document.querySelector('#monochromeStart'),
-    qs_monochromeRange = document.querySelector('#monochromeRange'),
-    qs_hueStart = document.querySelector('#hueStart'),
-    qs_hueRange = document.querySelector('#hueRange'),
-    qs_saturation = document.querySelector('#saturation'),
-    qs_luminosity = document.querySelector('#luminosity'),
     qs_matrixA = document.querySelector('#matrixA'),
     qs_matrixB = document.querySelector('#matrixB'),
     qs_matrixC = document.querySelector('#matrixC'),
@@ -482,7 +541,16 @@ const qs_presets = document.querySelector('#presets'),
     qs_matrixE = document.querySelector('#matrixE'),
     qs_matrixF = document.querySelector('#matrixF'),
     qs_initialSettingPreference = document.querySelector('#initialSettingPreference'),
-    qs_randomEngineSeed = document.querySelector('#randomEngineSeed');
+    qs_randomEngineSeed = document.querySelector('#randomEngineSeed'),
+    qs_paletteStart = document.querySelector('#paletteStart'),
+    qs_paletteEnd = document.querySelector('#paletteEnd'),
+    qs_precision = document.querySelector('#precision'),
+    qs_easing = document.querySelector('#easing'),
+    qs_colorStops = document.querySelector('#colorStops'),
+    qs_cyclePalette = document.querySelector('#cyclePalette'),
+    qs_colorSpace = document.querySelector('#colorSpace'),
+    qs_returnColorAs = document.querySelector('#returnColorAs');
+
 
 qs_presets.options.selectedIndex = 0;
 qs_initialRandomSeedLevel.value = 0.1;
@@ -494,15 +562,6 @@ qs_drawEvery.value = 10;
 qs_maxGenerations.value = 4000;
 qs_canvasWidth.value = assetDimension;
 qs_canvasHeight.value = assetDimension;
-qs_color.options.selectedIndex = 0;
-qs_gradientStart.value = '#ff0000';
-qs_gradientEnd.value = '#00ff00';
-qs_monochromeStart.value = 0;
-qs_monochromeRange.value = 255;
-qs_hueStart.value = 0;
-qs_hueRange.value = 120;
-qs_saturation.value = 100;
-qs_luminosity.value = 50;
 qs_matrixA.value = 1;
 qs_matrixB.value = 0;
 qs_matrixC.value = 0;
@@ -511,6 +570,14 @@ qs_matrixE.value = 0;
 qs_matrixF.value = 0;
 qs_initialSettingPreference.selectedIndex = 0;
 qs_randomEngineSeed.value = reactionAsset.get('randomEngineSeed');
+qs_paletteStart.value = 0;
+qs_paletteEnd.value = 999;
+qs_precision.value = 1;
+qs_colorStops.options.selectedIndex = 0;
+qs_easing.options.selectedIndex = 0;
+qs_cyclePalette.options.selectedIndex = 0;
+qs_colorSpace.options.selectedIndex = 0;
+qs_returnColorAs.options.selectedIndex = 0;
 
 // #### Development and testing
 console.log(scrawl.library);

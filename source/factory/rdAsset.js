@@ -32,12 +32,6 @@ const RdAsset = function (items = Ωempty) {
 
     this.subscribers = [];
 
-    this.colorFactory = makeColor({
-        name: `${this.name}-color-factory`,
-        minimumColor: items.gradientStart || 'red',
-        maximumColor: items.gradientEnd || 'green',
-    });
-
     this.set(this.defs);
     this.set(items);
 

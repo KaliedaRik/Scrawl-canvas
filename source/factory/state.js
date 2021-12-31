@@ -232,6 +232,7 @@ let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
+// The following setters use the `window.SC_colorChecker` Color factory. This factory gets created and attached to the window object during Scrawl-canvas initialization. Code for creating the factory can be found in the `core/init.js` module
 S.fillStyle = function (item) {
 
     let temp;
@@ -242,7 +243,10 @@ S.fillStyle = function (item) {
         temp = styles[item];
 
         if (temp) this.fillStyle = temp;
-        else this.fillStyle = item;
+        else {
+            temp = window.SC_colorChecker.checkColor(item);
+            this.fillStyle = temp;
+        }
     }
 };
 
@@ -256,13 +260,17 @@ S.strokeStyle = function (item) {
         temp = styles[item];
 
         if (temp) this.strokeStyle = temp;
-        else this.strokeStyle = item;
+        else this.strokeStyle = window.SC_colorChecker.checkColor(item);
     }
+};
+
+S.shadowColor = function (item) {
+
+    this.shadowColor = window.SC_colorChecker.checkColor(item);
 };
 
 
 // #### Prototype functions
-
 // Internal arrays used by a number of Style functions
 P.allKeys = Object.keys(P.defs);
 P.mainKeys = ['filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'shadowBlur', 'shadowOffsetX', 'shadowOffsetY'];

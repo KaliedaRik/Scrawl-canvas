@@ -104,7 +104,7 @@ P = baseMix(P);
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
-// The __colors__ object is a raw Javascript object which uses stop values `('0 ' - '999 ')` as keys and an `[r(0-255), g(0-255), b(0-255), a(0-1)]` array as values. 
+// The __colors__ object is a raw Javascript object which uses stop values `('0 ' - '999 ')` as keys and an Array with four members holding color data as values. 
     colors: null,
 
 // The __stops__ array is a fixed Array of length 1000 containing rgba color strings for each index. 
@@ -117,8 +117,8 @@ let defaultAttributes = {
     easing: 'linear',
     easingFunction: null,
 
-// The __precision__ value - higher values lead to fewer stops being added to the gradient
-    precision: 0,
+// The __precision__ value - higher values lead to fewer stops being added to the gradient; setting the value to `0` forces the palette to skip setting the stops between defined colors in the `colors` Array
+    precision: 1,
 
 // ##### Non-retained argument attributes (for factory, clone, set functions) - these attributes get passed on to the Palette's Color object
 
@@ -175,7 +175,6 @@ S.colors = function (item) {
             if (pos.toFixed && col.substring) {
 
                 f.convert(col);
-                console.log(f[colorSpace])
                 newCols[`${pos} `] = [...f[colorSpace]];
             }
         });

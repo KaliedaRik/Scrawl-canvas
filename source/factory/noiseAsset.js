@@ -58,12 +58,6 @@ const NoiseAsset = function (items = Ωempty) {
 
     this.subscribers = [];
 
-    this.colorFactory = makeColor({
-        name: `${this.name}-color-factory`,
-        minimumColor: items.gradientStart || 'red',
-        maximumColor: items.gradientEnd || 'green',
-    });
-
     this.set(this.defs);
     this.set(items);
 
@@ -124,7 +118,7 @@ let defaultAttributes = {
     persistence: 0.5,
     lacunarity: 2,
 
-    // The __smoothing__ attribute - a String value - identifies the smoothing function that will be applied pixel noise values as they are calculated. There are a wide number of functions available, including: easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce, cosine, hermite, quintic (default)
+    // The __smoothing__ attribute - a String value - identifies the smoothing function that will be applied pixel noise values as they are calculated. There are a wide number of functions available; default: `quintic`
     smoothing: 'quintic',
 
     // Post-processing the noise map: The __sumFunction__ attribute - a String value - identifies the smoothing function that will be applied to the noise map once the noise calculations complete. 
@@ -151,7 +145,7 @@ delete P.defs.source;
 delete P.defs.sourceLoaded;
 
 // #### Packet management
-// This functionality is disabled for Cell objects
+// This functionality is disabled for noiseAsset objects
 P.stringifyFunction = λnull;
 P.processPacketOut = λnull;
 P.finalizePacketOut = λnull;

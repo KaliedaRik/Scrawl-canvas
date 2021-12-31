@@ -27,13 +27,17 @@ const myNoise = scrawl.makeNoiseAsset({
     height: 400,
     scale: 80,
 
-    color: 'rainbow',
-    rainbowGradientChoke: 3,
-    rainbowDelta: {
+    paletteStart: 699,
+    paletteEnd: 999,
+    choke: 80,
+    delta: {
         paletteStart: -1,
         paletteEnd: -1,
     },
-    rainbowColors: [
+
+    colorSpace: 'LAB',
+
+    colors: [
         [0, '#000000'],
         [19, '#806e58'],
         [39, '#ab7533'],

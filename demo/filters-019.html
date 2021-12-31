@@ -16,228 +16,20 @@
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
-
-    .my-grid {
-      display: grid;
-
-      grid-template-columns: 1fr 1fr;      
-      grid-column-gap: 2px;
-
-      grid-template-rows: auto;
-      grid-row-gap: 2px;
-
-      justify-items: center;
-    }
   </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 019</h1>
-  <h2>Using a Noise asset with a displace filter</h2>
+  <h2>Parameters for: dither filter [in development]</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
-
-    <div class="pink label">Noise engine</div>
-    <div class="pink">
-      <select class="controlItem" id="noiseEngine">
-        <option value="perlin">Perlin (classic)</option>
-        <option value="improved-perlin">Perlin (improved)</option>
-        <option value="simplex">Simplex</option>
-        <option value="value">Value</option>
-        <option value="stripes">Stripes</option>
-        <option value="smoothed-stripes">Smoothed stripes</option>
-        <option value="worley-euclidean">Worley (euclidean)</option>
-        <option value="worley-manhattan">Worley (manhattan)</option>
-      </select>
-    </div>
-
-    <div class="green label">Color output</div>
-    <div class="green">
-      <select class="controlItem" id="color">
-        <option value="monochrome">Monochrome</option>
-        <option value="gradient">Gradient</option>
-        <option value="hue">Hue</option>
-        <option value="rainbow">Rainbow</option>
-      </select>
-    </div>
-
-    <div class="green label">Monochrome start</div>
-    <div class="green"><input class="controlItem" id="monochromeStart" type="range" value="0" min="0" max="255" step="1" /></div>
-
-    <div class="green label">Monochrome range</div>
-    <div class="green"><input class="controlItem" id="monochromeRange" type="range" value="255" min="-255" max="255" step="1" /></div>
-
-    <div class="green label">Gradient start</div>
-    <div class="green"><input class="controlItem" id="gradientStart" type="color" value="#ff0000" disabled /></div>
-
-    <div class="green label">Gradient end</div>
-    <div class="green"><input class="controlItem" id="gradientEnd" type="color" value="#00ff00" disabled /></div>
-
-    <div class="green label">Hue start</div>
-    <div class="green"><input class="controlItem" id="hueStart" type="range" value="0" min="0" max="360" step="0.5" disabled /></div>
-
-    <div class="green label">Hue range</div>
-    <div class="green"><input class="controlItem" id="hueRange" type="range" value="120" min="-350" max="400" step="5" disabled /></div>
-
-    <div class="green label">Saturation</div>
-    <div class="green"><input class="controlItem" id="saturation" type="range" value="100" min="0" max="100" step="0.1" disabled /></div>
-
-    <div class="green label">Luminosity</div>
-    <div class="green"><input class="controlItem" id="luminosity" type="range" value="50" min="0" max="100" step="0.1" disabled /></div>
-
-    <div class="lavender label">Octaves</div>
-    <div class="lavender"><input class="controlItem" id="octaves" type="range" value="1" min="1" max="10" step="1" /></div>
-
-    <div class="lavender label">Octave function</div>
-    <div class="lavender">
-      <select class="controlItem" id="octaveFunction">
-        <option value="none">none</option>
-        <option value="absolute">absolute</option>
-      </select>
-    </div>
-
-    <div class="lavender label">Persistence</div>
-    <div class="lavender"><input class="controlItem" id="persistence" type="range" value="0.5" min="0" max="1" step="0.05" disabled /></div>
-
-    <div class="lavender label">Lacunarity</div>
-    <div class="lavender"><input class="controlItem" id="lacunarity" type="range" value="2" min="1" max="10" step="1" disabled /></div>
-
-    <div class="blue label">Sum function</div>
-    <div class="blue">
-      <select class="controlItem" id="sumFunction">
-        <option value="none">none</option>
-        <option value="sine">sine</option>
-        <option value="sine-x">sine-x</option>
-        <option value="sine-y">sine-y</option>
-        <option value="modular">modular</option>
-        <option value="random">random</option>
-      </select>
-    </div>
-
-    <div class="blue label">Sine Frequency Coefficient</div>
-    <div class="blue"><input class="controlItem" id="sineFrequencyCoeff" type="range" value="1" min="0.5" max="5" step="0.1" disabled /></div>
-
-    <div class="blue label">Smoothing</div>
-    <div class="blue">
-      <select class="controlItem" id="smoothing">
-        <option value="linear">linear (none)</option>
-        <option value="out">out</option>
-        <option value="in">in</option>
-        <option value="" disabled>---</option>
-        <option value="easeOut">easeOut</option>
-        <option value="easeOutIn">easeOutIn</option>
-        <option value="easeInOut">easeInOut</option>
-        <option value="easeIn">easeIn</option>
-        <option value="easeOut3">easeOut3</option>
-        <option value="easeOutIn3">easeOutIn3</option>
-        <option value="easeInOut3">easeInOut3</option>
-        <option value="easeIn3">easeIn3</option>
-        <option value="easeOut4">easeOut4</option>
-        <option value="easeOutIn4">easeOutIn4</option>
-        <option value="easeInOut4">easeInOut4</option>
-        <option value="easeIn4">easeIn4</option>
-        <option value="easeOut5">easeOut5</option>
-        <option value="easeOutIn5">easeOutIn5</option>
-        <option value="easeInOut5">easeInOut5</option>
-        <option value="easeIn5">easeIn5</option>
-        <option value="" disabled>---</option>
-        <option value="cosine">cosine</option>
-        <option value="hermite">hermite</option>
-        <option value="quintic">quintic</option>
-        <option value="" disabled>---</option>
-        <option value="easeOutSine">easeOutSine</option>
-        <option value="easeOutInSine">easeOutInSine</option>
-        <option value="easeInSine">easeInSine</option>
-        <option value="easeOutQuad">easeOutQuad</option>
-        <option value="easeOutInQuad">easeOutInQuad</option>
-        <option value="easeInQuad">easeInQuad</option>
-        <option value="easeOutCubic">easeOutCubic</option>
-        <option value="easeOutInCubic">easeOutInCubic</option>
-        <option value="easeInCubic">easeInCubic</option>
-        <option value="easeOutQuart">easeOutQuart</option>
-        <option value="easeOutInQuart">easeOutInQuart</option>
-        <option value="easeInQuart">easeInQuart</option>
-        <option value="easeOutQuint">easeOutQuint</option>
-        <option value="easeOutInQuint">easeOutInQuint</option>
-        <option value="easeInQuint">easeInQuint</option>
-        <option value="easeOutExpo">easeOutExpo</option>
-        <option value="easeOutInExpo">easeOutInExpo</option>
-        <option value="easeInExpo">easeInExpo</option>
-        <option value="easeOutCirc">easeOutCirc</option>
-        <option value="easeOutInCirc">easeOutInCirc</option>
-        <option value="easeInCirc">easeInCirc</option>
-        <option value="" disabled>---</option>
-        <option value="easeOutBack">easeOutBack</option>
-        <option value="easeOutInBack">easeOutInBack</option>
-        <option value="easeInBack">easeInBack</option>
-        <option value="easeOutElastic">easeOutElastic</option>
-        <option value="easeOutInElastic">easeOutInElastic</option>
-        <option value="easeInElastic">easeInElastic</option>
-        <option value="easeOutBounce">easeOutBounce</option>
-        <option value="easeOutInBounce">easeOutInBounce</option>
-        <option value="easeInBounce">easeInBounce</option>
-      </select>
-    </div>
-
-    <div class="blue label">Sum Amplitude</div>
-    <div class="blue"><input class="controlItem" id="sumAmplitude" type="range" value="5" min="0.1" max="25" step="0.1" disabled /></div>
-
-    <div class="blue label">Worley output</div>
-    <div class="blue">
-      <select class="controlItem" id="worleyOutput">
-        <option value="X">X</option>
-        <option value="Y">Y</option>
-        <option value="Z">Z</option>
-        <option value="XminusY">XminusY</option>
-        <option value="XminusZ">XminusZ</option>
-        <option value="YminusX">YminusX</option>
-        <option value="YminusZ">YminusZ</option>
-        <option value="ZminusX">ZminusX</option>
-        <option value="ZminusY">ZminusY</option>
-        <option value="XaddY">XaddY</option>
-        <option value="XaddZ">XaddZ</option>
-        <option value="YaddZ">YaddZ</option>
-        <option value="XaddYminusZ">XaddYminusZ</option>
-        <option value="XaddZminusY">XaddZminusY</option>
-        <option value="YaddZminusX">YaddZminusX</option>
-        <option value="XmultiplyY">XmultiplyY</option>
-        <option value="XmultiplyZ">XmultiplyZ</option>
-        <option value="YmultiplyZ">YmultiplyZ</option>
-        <option value="XmultiplyYaddZ">XmultiplyYaddZ</option>
-        <option value="XmultiplyZaddY">XmultiplyZaddY</option>
-        <option value="YmultiplyZaddX">YmultiplyZaddX</option>
-        <option value="XmultiplyYminusZ">XmultiplyYminusZ</option>
-        <option value="XmultiplyZminusY">XmultiplyZminusY</option>
-        <option value="YmultiplyZminusX">YmultiplyZminusX</option>
-        <option value="sum">sum</option>
-      </select>
-    </div>
-
-    <div class="blue label">Worley depth</div>
-    <div class="blue"><input class="controlItem" id="worleyDepth" type="range" value="0" min="0" max="500" step="1" /></div>
-
-    <div class="yellow label">Canvas width</div>
-    <div class="yellow"><input class="controlItem" id="width" type="range" value="400" min="1" max="600" step="1" /></div>
-
-    <div class="yellow label">Canvas height</div>
-    <div class="yellow"><input class="controlItem" id="height" type="range" value="400" min="1" max="600" step="1" /></div>
-
-    <div class="yellow label">Scale</div>
-    <div class="yellow"><input class="controlItem" id="scale" type="range" value="50" min="0" max="200" step="1" /></div>
-
-    <div class="yellow label">Size</div>
-    <div class="yellow"><input class="controlItem" id="size" type="range" value="256" min="4" max="2048" step="4" /></div>
-
-    <div class="yellow label">Random seed</div>
-    <div class="yellow"><input class="controlItem" id="seed" type="text" value="noize" /></div>
-
+    <div class="yellow label">Opacity</div>
+    <div class="yellow"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
   </div>
 
-  <div class="my-grid">
-    <canvas id="mycanvas" width="400" height="400"></canvas>
-    <canvas id="noise-canvas" width="400" height="400"></canvas>
-  </div>
+  <canvas id="mycanvas" width="400" height="400"></canvas>
 
   <p id="reportmessage"></p>
 
@@ -245,10 +37,7 @@
     <h4>Test purpose</h4>
 
     <ul>
-      <li>Create a Noise asset, and a Picture entity in which we can display the asset</li>
-      <li>Create an image filter to load the Noise asset into the filter pipeline</li>
-      <li>Create a test Picture entity; create an displace filter and apply it to the test entity</li>
-      <li>Update the Noise asset attributes and observe the effects they have on the Picture entity, and on the filter applied to the Picture entity</li>
+      <li>...</li>
     </ul>
 
     <p><b>Touch test:</b> not required</p>

@@ -7,6 +7,8 @@ import { startCoreAnimationLoop } from './animationloop.js';
 import { getCanvases, getStacks } from './document.js';
 import { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } from './userInteraction.js';
 
+import { makeColor } from '../factory/color.js';
+
 
 const init = function () {
 
@@ -31,6 +33,13 @@ const init = function () {
     applyCoreResizeListener();
     applyCoreScrollListener();
     startCoreListeners();
+
+	// Dedicated entity state color engine - this allows the user to set a fillStyle, strokeStyle or shadowColor attribute to any CSS color string
+	// + Can't set this as part of the State factory initialization as it appears to run before the Color factory initializes
+	window.SC_colorChecker = makeColor({
+	    name: 'entity-colorEngine-do-not-overwrite',
+	});
+
 };
 
 // #### Exports

@@ -14,41 +14,28 @@ export default function (P = Ωempty) {
 // #### Shared attributes
     let defaultAttributes = {
 
-        // __color__ - String value determining how the generated noise will be output on the canvas. Currently recognised values are: `monochrome` (default), `gradient`, `hue` and `rainbow`.
-        color: 'monochrome',
+        choke: 15,
 
-        // When the `color` choice has been set to `monochrome` we can clamp the pixel values using the __monochromeStart__ and __monochromeRange__ attributes, both of which take integer Numbers. 
-        // + Accepted monochromeStart values are 0 to 255
-        // + Accepted monochromeRange values are -255 to 255
-        // + Be aware that the monochromeRange value will be recalculated to make sure calculated pixel values remain in the 0-255 color channel range
-        monochromeStart: 0,
-        monochromeRange: 255,
+// __paletteStart__, __paletteEnd__ _pseudo-attributes_ - We don't need to use the entire palette when building a gradient; we can restrict the palette using these start and end attributes.
 
-        // When the `color` choice has been set to `gradient` we can update the Color object underlying the "gradient" (yes, I know it's confusing nomenclature but I was in a rush and correcting the gradient/rainbowGradient attribute names will need to wait until we release the next major version of SC) using the following _pseudo-attributes_
-        // + __gradientStart__ - Color object minimumColor value (default: `#ff0000`)
-        // + __gradientEnd__ - Color object maximumColor value (default: `#00ff00`)
-        // + __gradientEasing__ - Color object easing value (default: `linear`)
+// The __cyclePalette__  _pseudo-attribute_ tells the Palette object how to handle situations where the paletteStart value is greater than the paletteEnd value:
+// + when false, we reverse the color stops
+// + when true, we keep the normal order of color stops and pass through the 1/0 border
 
-        // When the `color` choice has been set to `hue` we can control the pixel colors (in terms of their HSL components) using the __hueStart__, __hueRange__, __saturation__ and __luminosity__ attributes:
-        // + `hueStart` - float Number value in degrees, will be clamped to between 0 and 360
-        // + `hueRange` - float Number value in degrees, can be negative as well as positive
-        // + `saturation` - float Number value, between 0 and 100
-        // + `luminosity` - float Number value, between 0 and 100
-        hueStart: 0,
-        hueRange: 120,
-        saturation: 100,
-        luminosity: 50,
+// The Gradient's __delta__ object is not stored in the defs object; it acts in a similar way to the artefact delta object - though it is restricted to adding delta values to Number and 'String%' attributes.
+//
+// The __colors__ _pseudo-attribute_ can be used to pass through an array of palette color objects to the Gradient Palette object. The data is not retained by the gradient object.
+// + A better approach to managing gradient colors after it has been created is to use the `gradient.updateColor` and `gradient.removeColor` functions
 
-        // The `rainbow` color uses a Gradient object
-        // __rainbowGradientChoke__ - positive integer Number greater than 0 - control the speed of any rainbowGradient animation
-        rainbowGradientChoke: 1,
+// The __easing__ _pseudo-attribute_ represents a transformation that will be applied to a copy of the color stops Array - this allows us to create non-linear gradients. Value is passed through to the Palette object
 
-        // The following _pseudo-attributes_ can be used to pass values through to the rainbow gradient:
-        // + __rainbowEasing__ - gradient easing value (default: `linear`)
-        // + __rainbowPrecision__ - gradient precision (default: 0)
-        // + __rainbowPaletteStart__ - gradient palette start (default: 0)
-        // + __rainbowPaletteEnd__ - gradient palette end (default: 999)
-        // + __rainbowDelta__ - gradient delta object (default: {})
+// The __precision__ _pseudo-attribute_ - value is passed through to the Gradient Palette object
+
+// The __colorSpace__ - String _pseudo-attribute_ defines the color space to be used by the Gradient Palette's Color object for its internal calculations - value is passed through to the Palette object
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH'` with `RGB` as the default
+//
+// The __returnColorAs__ - String _pseudo-attribute_ defines the type of color String the Gradient Palette's Color object will return - value is passed through to the Gradient Palette object
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'LAB', 'LCH'` with `RGB` as the default
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -66,160 +53,62 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let G = P.getters, 
-        S = P.setters, 
+// These all route get/set/setDelta attribute changes through to the Gradient object
+    let S = P.setters, 
         D = P.deltaSetters;
 
+    S.paletteStart = function (item) {
 
-    P.supportedColorSchemes = ['monochrome', 'gradient', 'rainbow', 'hue'];
-    S.color = function (item) {
+        if (this.gradient) this.gradient.set({ paletteStart: item });
+    };
+    D.paletteStart = function (item) {
 
-        if (this.supportedColorSchemes.indexOf(item) >= 0) {
-
-            this.color = item;
-            this.dirtyOutput = true;
-        }
+        if (this.gradient) this.gradient.setDelta({ paletteStart: item });
     };
 
-    // `rainbowColors` - an Array of Palette stop Arrays
-    // + Use this function to change the color stops of the asset's rainbow gradient. Generally better to set this value after the scene has completed its first Display cycle
-    // + Each palette array is in the form `[Number, String]` where:
-    // + Number is a positive integer in the range 0-999
-    // + String is any legitimate CSS color string value
-    S.rainbowColors = function (item) {
+    S.paletteEnd = function (item) {
 
-        if (item && Array.isArray(item) && this.rainbowGradient) {
-
-            this.rainbowGradient.set({
-                colors: item,
-            });
-
-            this.dirtyOutput = true;
-        }
+        if (this.gradient) this.gradient.set({ paletteEnd: item });
     };
 
-    S.rainbowEasing = function (item) {
+    D.paletteEnd = function (item) {
 
-        this.rainbowGradient.set({
-            easing: item,
-        });
-        this.dirtyOutput = true;
+        if (this.gradient) this.gradient.setDelta({ paletteEnd: item });
     };
 
-    S.rainbowPrecision = function (item) {
+    S.colors = function (item) {
 
-        this.rainbowGradient.set({
-            precision: item,
-        });
-        this.dirtyOutput = true;
+        if (this.gradient) this.gradient.set({ colors: item });
     };
 
-    S.rainbowPaletteStart = function (item) {
+    S.precision = function (item) {
 
-        this.rainbowGradient.set({
-            paletteStart: item,
-        });
-        this.dirtyOutput = true;
+        if (this.gradient) this.gradient.set({ precision: item });
     };
 
-    S.rainbowPaletteEnd = function (item) {
+    S.easing = function (item) {
 
-        this.rainbowGradient.set({
-            paletteEnd: item,
-        });
-        this.dirtyOutput = true;
+        if (this.gradient) this.gradient.set({ easing: item });
+    };
+    S.easingFunction = S.easing;
+
+    S.colorSpace = function (item) {
+
+        if (this.gradient) this.gradient.set({ colorSpace: item });
+    };
+    S.returnColorAs = function (item) {
+
+        if (this.gradient) this.gradient.set({ returnColorAs: item });
     };
 
-    // `rainbowDelta` - an animation delta object
-    // + Use this function to set up the rainbow gradient animation
-    S.rainbowDelta = function (item) {
+    S.cyclePalette = function (item) {
 
-        if (item && this.rainbowGradient) {
-
-            this.rainbowGradient.delta = item;
-            this.dirtyOutput = true;
-        }
+        if (this.gradient) this.gradient.set({ cyclePalette: item });
     };
 
-    S.gradientStart = function (item) {
+    S.delta = function (items = Ωempty) {
 
-        if (item.substring) {
-
-            this.colorFactory.setMinimumColor(item);
-            this.dirtyOutput = true;
-        }
-    };
-
-    S.gradientEnd = function (item) {
-
-        if (item.substring) {
-
-            this.colorFactory.setMaximumColor(item);
-            this.dirtyOutput = true;
-        }
-    };
-
-    S.gradientEasing = function (item) {
-
-            this.colorFactory.set({
-                easing: item,
-            });
-
-            this.dirtyOutput = true;
-    };
-
-    S.monochromeStart = function (item) {
-
-        if (item.toFixed && item >= 0) {
-
-            this.monochromeStart = item % 360;
-            this.dirtyOutput = true;
-        }
-    };
-
-    S.monochromeRange = function (item) {
-
-        if (item.toFixed && item >= -255 && item < 256) {
-
-            this.monochromeRange = Math.floor(item);
-            this.dirtyOutput = true;
-        }
-    };
-
-    S.hueStart = function (item) {
-
-        if (item.toFixed) {
-
-            this.hueStart = item;
-            this.dirtyOutput = true;
-        }
-    };
-
-    S.hueRange = function (item) {
-
-        if (item.toFixed) {
-
-            this.hueRange = item;
-            this.dirtyOutput = true;
-        }
-    };
-
-    S.saturation = function (item) {
-
-        if (item.toFixed && item >= 0 && item <= 100) {
-
-            this.saturation = Math.floor(item);
-            this.dirtyOutput = true;
-        }
-    };
-
-    S.luminosity = function (item) {
-
-        if (item.toFixed && item >= 0 && item <= 100) {
-
-            this.luminosity = Math.floor(item);
-            this.dirtyOutput = true;
-        }
+        if (this.gradient) this.gradient.set({ delta: items });
     };
 
 
@@ -233,38 +122,25 @@ export default function (P = Ωempty) {
         this.element = element;
         this.engine = this.element.getContext('2d');
 
-        // The rainbow gradient allows us to map contour-like lines across a noise or rd asset's output. This gradient (unlike other colorizing options) can be animated.
-        let rainbow = document.createElement('canvas');
-        rainbow.id = `${name}-rainbow`;
-        rainbow.width = 256;
-        rainbow.height = 1;
-        this.rainbowElement = rainbow;
-        this.rainbowEngine = this.rainbowElement.getContext('2d');
+        // The color canvas allows us to map contour-like lines across a noise or rd asset's output.
+        let color = document.createElement('canvas');
+        color.id = `${name}-color`;
+        color.width = 256;
+        color.height = 1;
+        this.colorElement = color;
+        this.colorEngine = this.colorElement.getContext('2d');
 
-        this.rainbowGradient = makeGradient({
-            name: `${name}-rainbowgradient`,
+        this.gradient = makeGradient({
+            name: `${name}-gradient`,
             endX: '100%',
             delta: {
                 paletteStart: 0,
                 paletteEnd: 0,
             },
-            cyclePalette: true,
-        })
-        .updateColor(0, '#ff0000')
-        .updateColor(83, '#000000')
-        .updateColor(166, '#ffff00')
-        .updateColor(249, '#000000')
-        .updateColor(332, '#00ff00')
-        .updateColor(415, '#000000')
-        .updateColor(499, '#00ffff')
-        .updateColor(582, '#000000')
-        .updateColor(665, '#0000ff')
-        .updateColor(749, '#000000')
-        .updateColor(832, '#ff00ff')
-        .updateColor(915, '#000000')
-        .updateColor(999, '#ff0000');
+            cyclePalette: false,
+        });
 
-        this.rainbowGradientCounter = 0;
+        this.gradientLastUpdated = 0;
 
         return this;
     };
@@ -286,7 +162,7 @@ export default function (P = Ωempty) {
         return this.buildStyle(cell);
     };
 
-    // `notifySubscribers` - If the rainbow gradient is to be animated, then we need to update the asset at some point (generally the start) of each Display cycle by invoking this function
+    // `notifySubscribers` - If the gradient is to be animated, then we need to update the asset at some point (generally the start) of each Display cycle by invoking this function
     P.update = function () {
 
         this.dirtyOutput = true;
@@ -321,123 +197,48 @@ export default function (P = Ωempty) {
 
                 this.dirtyOutput = false;
 
-                let {element, engine, width, height, color, colorFactory, monochromeStart, monochromeRange, hueStart, hueRange, saturation, luminosity, rainbowGradient, rainbowGradientChoke, rainbowEngine } = this;
+                const {element, engine, width, height, colorElement, colorEngine, gradient, choke, gradientLastUpdated } = this;
+
+                const palette = gradient.palette;
 
                 // Update the Canvas element's dimensions - this will also clear the canvas display
                 element.width = width;
                 element.height = height;
 
                 let img = engine.getImageData(0, 0, width, height),
-                    d = img.data,
+                    iData = img.data,
                     len = width * height,
                     i, v, c;
 
-                // Rebuild the display, pixel-by-pixel
-                switch (color) {
+                const now = Date.now();
 
-                    case 'hue' :
+                if (gradientLastUpdated + choke < now) {
 
-                        for (i = 0; i < len; i++) {
+                    gradient.updateByDelta();
+                    this.gradientLastUpdated = now;
+                }
 
-                            v = hueStart + (this.getOutputValue(i, width) * hueRange);
-                            if (v < 0) v += 360;
-                            if (v > 360) v %= 360;
+                if (palette.dirtyPalette) palette.recalculate();
 
-                            let [r, g, b] = colorFactory.getRGBfromHSL(v, saturation, luminosity);
+                let G = colorEngine.createLinearGradient(0, 0, 255, 0);
 
-                            c = i * 4;
+                gradient.addStopsToGradient(G, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
 
-                            d[c] = r;
-                            d[++c] = g;
-                            d[++c] = b;
-                            d[++c] = 255;
-                        }
-                        break;
+                colorEngine.fillStyle = G;
+                colorEngine.fillRect(0, 0, 256, 1);
 
-                    case 'gradient' :
+                let gData = colorEngine.getImageData(0, 0, 256, 1).data;
 
-                        for (i = 0; i < len; i++) {
+                for (i = 0; i < len; i++) {
 
-                            v = this.getOutputValue(i, width);
-                            colorFactory.convert(colorFactory.getRangeColor(v));
+                    v = Math.floor(this.getOutputValue(i, width) * 255) * 4;
+                    
+                    c = i * 4;
 
-                            let {r, g, b, a} = colorFactory; 
-                            
-                            c = i * 4;
-
-                            d[c] = r;
-                            d[++c] = g;
-                            d[++c] = b;
-                            d[++c] = Math.floor(a * 255);
-                        }
-                        break;
-
-                    case 'rainbow' :
-
-                        if (rainbowGradient) {
-
-                            if (rainbowGradientChoke < 1) {
-
-                                this.rainbowGradientChoke = 1;
-                                rainbowGradientChoke = 1;
-                            }
-
-                            this.rainbowGradientCounter++;
-
-                            if (this.rainbowGradientCounter >= rainbowGradientChoke) {
-
-                                this.rainbowGradientCounter = 0;
-                                rainbowGradient.updateByDelta();
-                            }
-
-                            rainbowGradient.palette.recalculate();
-
-                            let G = rainbowEngine.createLinearGradient(0, 0, 255, 0);
-
-                            rainbowGradient.addStopsToGradient(G, rainbowGradient.paletteStart, rainbowGradient.paletteEnd, rainbowGradient.cyclePalette);
-
-                            rainbowEngine.fillStyle = G;
-                            rainbowEngine.fillRect(0, 0, 256, 1);
-
-                            let rainbowData = rainbowEngine.getImageData(0, 0, 256, 1).data;
-
-                            for (i = 0; i < len; i++) {
-
-                                v = Math.floor(this.getOutputValue(i, width) * 255) * 4;
-                                
-                                c = i * 4;
-
-                                d[c] = rainbowData[v];
-                                d[++c] = rainbowData[++v];
-                                d[++c] = rainbowData[++v];
-                                d[++c] = rainbowData[++v];
-                            }
-                        }
-                        break;
-
-                    // The default color preference is monochrome
-                    default :
-
-                        if (monochromeRange > 0) {
-
-                            if (monochromeStart + monochromeRange > 255) monochromeRange = 255 - monochromeStart;
-                        }
-                        else if (monochromeRange < 0) {
-
-                            if (monochromeStart - monochromeRange < 0) monochromeRange = monochromeStart;
-                        }
-
-                        for (i = 0; i < len; i++) {
-
-                            v = Math.floor(monochromeStart + (this.getOutputValue(i, width) * monochromeRange));
-
-                            c = i * 4;
-
-                            d[c] = v;
-                            d[++c] = v;
-                            d[++c] = v;
-                            d[++c] = 255;
-                        }
+                    iData[c] = gData[v];
+                    iData[++c] = gData[++v];
+                    iData[++c] = gData[++v];
+                    iData[++c] = gData[++v];
                 }
                 engine.putImageData(img, 0, 0);
             }
