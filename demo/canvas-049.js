@@ -65,13 +65,9 @@ scrawl.makeBlock({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let [startX, startY] = graddy.start;
-
-    let {paletteStart, paletteEnd, startAngle} = graddy;
-
-    return `    Palette - start: ${paletteStart}; end: ${paletteEnd}
-    Start - x: ${startX}; y: ${startY}
-    Angle - ${startAngle}°`;
+    return `    Palette - start: ${paletteStart.value}; end: ${paletteEnd.value}
+    Start - x: ${startX.value}%; y: ${startY.value}%
+    Angle - ${angle.value}°`;
 });
 
 
@@ -104,7 +100,7 @@ scrawl.observeAndUpdate({
         startX: ['startX', '%'],
         startY: ['startY', '%'],
 
-        startAngle: ['startAngle', 'float'],
+        angle: ['angle', 'float'],
 
         precision: ['precision', 'int'],
 
@@ -164,11 +160,26 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
 
 // Set the DOM input values
-document.querySelector('#paletteStart').value = 0;
-document.querySelector('#paletteEnd').value = 999;
-document.querySelector('#startX').value = 50;
-document.querySelector('#startY').value = 50;
-document.querySelector('#startAngle').value = 0;
+const paletteStart = document.querySelector('#paletteStart');
+const paletteEnd = document.querySelector('#paletteEnd');
+const startX = document.querySelector('#startX');
+const startY = document.querySelector('#startY');
+const angle = document.querySelector('#angle');
+const precision = document.querySelector('#precision');
+
+paletteStart.value = 0;
+paletteEnd.value = 999;
+startX.value = 50;
+startY.value = 50;
+angle.value = 0;
+precision.value = 1;
+
+document.querySelector('#red').value = 0;
+document.querySelector('#blue').value = 0;
+document.querySelector('#easing').options.selectedIndex = 0;
+document.querySelector('#cyclePalette').value = 0;
+document.querySelector('#colorSpace').options.selectedIndex = 0;
+document.querySelector('#returnColorAs').options.selectedIndex = 0;
 
 
 // #### Development and testing

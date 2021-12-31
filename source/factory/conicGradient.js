@@ -56,7 +56,7 @@ let defaultAttributes = {
 
 // ConicGradients calculate their gradients as a sweep of color around the `start` (`startX` and `startY`) coordinate. The __startAngle__ attribute - measured in degrees, not radians - represents the angle at which the color stop 0 occurs.
 // + The sweep of colors is, by default, clockwise around the start coordinate; to reverse this, swap the gradient's `paletteStart` and `paletteEnd` attributes.
-    startAngle: 0,
+    angle: 0,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -123,13 +123,13 @@ P.updateGradientArgs = function (x, y) {
 
     let gradientArgs = this.gradientArgs,
         currentStart = this.currentStart,
-        startAngle = this.startAngle * radian;
+        angle = this.angle * radian;
 
     let sx = currentStart[0] + x,
         sy = currentStart[1] + y;
 
     gradientArgs.length = 0;
-    gradientArgs.push(startAngle, sx, sy);
+    gradientArgs.push(angle, sx, sy);
 };
 
 
@@ -141,7 +141,7 @@ P.updateGradientArgs = function (x, y) {
 //
 //     startX: '50%',
 //     startY: '50%',
-//     startAngle: 90,
+//     angle: 90,
 // });
 //
 // scrawl.makeBlock({
