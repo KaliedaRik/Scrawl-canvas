@@ -1009,12 +1009,10 @@ P.convertLCHtoLAB = function (l, c, h) {
 };
 
 // The following functions are used by the Blend filter
-// + input is the six RGB parts (clamped to the 0-1 range) of the input and mix channels
-// + output is the RGB version of the mixed HSL colors generated from the RGB inputs
+// + Input is the six RGB parts (Integers clamped to the 0-255 range) of the input and mix channels
+// + Output is the RGB version of the mixed HSL colors generated from the RGB inputs
 P.calculateColorBlend = function (iR, iG, iB, mR, mG, mB) {
 
-    // const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
-    // const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
     const [iH, iS, iL] = this.convertRGBtoHSL(iR, iG, iB);
     const [mH, mS, mL] = this.convertRGBtoHSL(mR, mG, mB);
 
@@ -1024,8 +1022,6 @@ P.calculateColorBlend = function (iR, iG, iB, mR, mG, mB) {
 };
 P.calculateHueBlend = function (iR, iG, iB, mR, mG, mB) {
 
-    // const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
-    // const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
     const [iH, iS, iL] = this.convertRGBtoHSL(iR, iG, iB);
     const [mH, mS, mL] = this.convertRGBtoHSL(mR, mG, mB);
 
@@ -1035,8 +1031,6 @@ P.calculateHueBlend = function (iR, iG, iB, mR, mG, mB) {
 };
 P.calculateSaturationBlend = function (iR, iG, iB, mR, mG, mB) {
 
-    // const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
-    // const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
     const [iH, iS, iL] = this.convertRGBtoHSL(iR, iG, iB);
     const [mH, mS, mL] = this.convertRGBtoHSL(mR, mG, mB);
 
@@ -1046,8 +1040,6 @@ P.calculateSaturationBlend = function (iR, iG, iB, mR, mG, mB) {
 };
 P.calculateLuminosityBlend = function (iR, iG, iB, mR, mG, mB) {
 
-    // const [iH, iS, iL] = this.convertRGBtoHSL(Math.floor(iR * 256), Math.floor(iG * 256), Math.floor(iB * 256));
-    // const [mH, mS, mL] = this.convertRGBtoHSL(Math.floor(mR * 256), Math.floor(mG * 256), Math.floor(mB * 256));
     const [iH, iS, iL] = this.convertRGBtoHSL(iR, iG, iB);
     const [mH, mS, mL] = this.convertRGBtoHSL(mR, mG, mB);
 
