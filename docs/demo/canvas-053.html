@@ -320,6 +320,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-059.html">
+                  ./demo/canvas-059.js
+                </a>
+              
+                
+                <a class="source" href="canvas-060.html">
+                  ./demo/canvas-060.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -895,6 +905,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-034.html">
+                  ./demo/temp-034.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -1056,20 +1071,57 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> reactionAsset = scrawl.<span class="hljs-title function_">makeReactionDiffusionAsset</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> colorStops = {
+  <span class="hljs-string">&#x27;stepped-grays&#x27;</span>: [
+      [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;#333&#x27;</span>],
+      [<span class="hljs-number">199</span>, <span class="hljs-string">&#x27;#333&#x27;</span>],
+      [<span class="hljs-number">200</span>, <span class="hljs-string">&#x27;#666&#x27;</span>],
+      [<span class="hljs-number">399</span>, <span class="hljs-string">&#x27;#666&#x27;</span>],
+      [<span class="hljs-number">400</span>, <span class="hljs-string">&#x27;#999&#x27;</span>],
+      [<span class="hljs-number">599</span>, <span class="hljs-string">&#x27;#999&#x27;</span>],
+      [<span class="hljs-number">600</span>, <span class="hljs-string">&#x27;#ccc&#x27;</span>],
+      [<span class="hljs-number">799</span>, <span class="hljs-string">&#x27;#ccc&#x27;</span>],
+      [<span class="hljs-number">800</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>],
+      [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>],
+  ],
+  <span class="hljs-string">&#x27;red-gradient&#x27;</span>: [
+      [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;hsl(0 100% 40%)&#x27;</span>],
+      [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;hsl(0 100% 100%)&#x27;</span>],
+  ],
+  <span class="hljs-string">&#x27;red-blue&#x27;</span>: [
+      [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;rgb(255 0 0)&#x27;</span>],
+      [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;rgb(0 0 255)&#x27;</span>],
+  ],
+  <span class="hljs-string">&#x27;hue-gradient&#x27;</span>: [
+      [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;hwb(120 10% 10%)&#x27;</span>],
+      [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;hwb(240 10% 10%)&#x27;</span>],
+  ],
+  <span class="hljs-string">&#x27;monochrome&#x27;</span>: [
+      [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+      [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;white&#x27;</span>],
+  ],
+}
+
+<span class="hljs-keyword">const</span> bespokeEasings = {
+
+    <span class="hljs-string">&#x27;user-steps&#x27;</span>: <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0.2</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.1</span>;
+        <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0.4</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.3</span>;
+        <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0.6</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span>;
+        <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0.8</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.7</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0.9</span>;
+    },
+    <span class="hljs-string">&#x27;user-repeat&#x27;</span>: <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> (val * <span class="hljs-number">4</span>) % <span class="hljs-number">1</span>,
+};
+
+<span class="hljs-keyword">const</span> reactionAsset = scrawl.<span class="hljs-title function_">makeReactionDiffusionAsset</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;reaction-diffusion-asset&#x27;</span>,
     <span class="hljs-attr">width</span>: assetDimension,
     <span class="hljs-attr">height</span>: assetDimension,
 
-    <span class="hljs-attr">rainbowColors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;#804E04&#x27;</span>],
-        [<span class="hljs-number">50</span>, <span class="hljs-string">&#x27;#804E04&#x27;</span>],
-        [<span class="hljs-number">199</span>, <span class="hljs-string">&#x27;#FC9704&#x27;</span>],
-        [<span class="hljs-number">800</span>, <span class="hljs-string">&#x27;#FC9704&#x27;</span>],
-        [<span class="hljs-number">950</span>, <span class="hljs-string">&#x27;#FEEFD9&#x27;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;#FEEFD9&#x27;</span>],
-    ],
+    <span class="hljs-attr">colors</span>: colorStops[<span class="hljs-string">&#x27;monochrome&#x27;</span>],
 });</pre></div></div>
             
         </li>
@@ -1267,6 +1319,39 @@ scrawl.<span class="hljs-title function_">makeSpiral</span>({
     }
 }, <span class="hljs-string">&#x27;#initialSettingPreference&#x27;</span>);
 
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    e.<span class="hljs-title function_">preventDefault</span>();
+
+    <span class="hljs-keyword">if</span> (e &amp;&amp; e.<span class="hljs-property">target</span>) {
+
+        <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+
+        reactionAsset.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">colors</span>: colorStops[val],
+        })
+    }
+}, <span class="hljs-string">&#x27;#colorStops&#x27;</span>);
+
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    e.<span class="hljs-title function_">preventDefault</span>();
+
+    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+
+    <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;user-steps&#x27;</span>, <span class="hljs-string">&#x27;user-repeat&#x27;</span>].<span class="hljs-title function_">includes</span>(val)) {
+        reactionAsset.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">easing</span>: bespokeEasings[val],
+        });
+    }
+    <span class="hljs-keyword">else</span> {
+        reactionAsset.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">easing</span>: val,
+        });
+    }
+
+}, <span class="hljs-string">&#x27;#easing&#x27;</span>);
+
 scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
@@ -1308,16 +1393,14 @@ scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
         <span class="hljs-attr">maxGenerations</span>: [<span class="hljs-string">&#x27;maxGenerations&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">canvasWidth</span>: [<span class="hljs-string">&#x27;width&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">canvasHeight</span>: [<span class="hljs-string">&#x27;height&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">color</span>: [<span class="hljs-string">&#x27;color&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">gradientStart</span>: [<span class="hljs-string">&#x27;gradientStart&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">gradientEnd</span>: [<span class="hljs-string">&#x27;gradientEnd&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">monochromeStart</span>: [<span class="hljs-string">&#x27;monochromeStart&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">monochromeRange</span>: [<span class="hljs-string">&#x27;monochromeRange&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">hueStart</span>: [<span class="hljs-string">&#x27;hueStart&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">hueRange</span>: [<span class="hljs-string">&#x27;hueRange&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">saturation</span>: [<span class="hljs-string">&#x27;saturation&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">luminosity</span>: [<span class="hljs-string">&#x27;luminosity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
         <span class="hljs-attr">randomEngineSeed</span>: [<span class="hljs-string">&#x27;randomEngineSeed&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+
+        <span class="hljs-attr">paletteStart</span>: [<span class="hljs-string">&#x27;paletteStart&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">paletteEnd</span>: [<span class="hljs-string">&#x27;paletteEnd&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">precision</span>: [<span class="hljs-string">&#x27;precision&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">cyclePalette</span>: [<span class="hljs-string">&#x27;cyclePalette&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">colorSpace</span>: [<span class="hljs-string">&#x27;colorSpace&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+        <span class="hljs-attr">returnColorAs</span>: [<span class="hljs-string">&#x27;returnColorAs&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
     },
 });</pre></div></div>
             
@@ -1589,15 +1672,6 @@ scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
     qs_maxGenerations = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#maxGenerations&#x27;</span>),
     qs_canvasWidth = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#canvasWidth&#x27;</span>),
     qs_canvasHeight = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#canvasHeight&#x27;</span>),
-    qs_color = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#color&#x27;</span>),
-    qs_gradientStart = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#gradientStart&#x27;</span>),
-    qs_gradientEnd = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#gradientEnd&#x27;</span>),
-    qs_monochromeStart = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#monochromeStart&#x27;</span>),
-    qs_monochromeRange = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#monochromeRange&#x27;</span>),
-    qs_hueStart = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#hueStart&#x27;</span>),
-    qs_hueRange = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#hueRange&#x27;</span>),
-    qs_saturation = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#saturation&#x27;</span>),
-    qs_luminosity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#luminosity&#x27;</span>),
     qs_matrixA = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#matrixA&#x27;</span>),
     qs_matrixB = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#matrixB&#x27;</span>),
     qs_matrixC = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#matrixC&#x27;</span>),
@@ -1605,7 +1679,16 @@ scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
     qs_matrixE = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#matrixE&#x27;</span>),
     qs_matrixF = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#matrixF&#x27;</span>),
     qs_initialSettingPreference = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#initialSettingPreference&#x27;</span>),
-    qs_randomEngineSeed = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#randomEngineSeed&#x27;</span>);
+    qs_randomEngineSeed = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#randomEngineSeed&#x27;</span>),
+    qs_paletteStart = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteStart&#x27;</span>),
+    qs_paletteEnd = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteEnd&#x27;</span>),
+    qs_precision = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#precision&#x27;</span>),
+    qs_easing = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#easing&#x27;</span>),
+    qs_colorStops = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#colorStops&#x27;</span>),
+    qs_cyclePalette = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#cyclePalette&#x27;</span>),
+    qs_colorSpace = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#colorSpace&#x27;</span>),
+    qs_returnColorAs = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#returnColorAs&#x27;</span>);
+
 
 qs_presets.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
 qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.1</span>;
@@ -1617,15 +1700,6 @@ qs_drawEvery.<span class="hljs-property">value</span> = <span class="hljs-number
 qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
 qs_canvasWidth.<span class="hljs-property">value</span> = assetDimension;
 qs_canvasHeight.<span class="hljs-property">value</span> = assetDimension;
-qs_color.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
-qs_gradientStart.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#ff0000&#x27;</span>;
-qs_gradientEnd.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#00ff00&#x27;</span>;
-qs_monochromeStart.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-qs_monochromeRange.<span class="hljs-property">value</span> = <span class="hljs-number">255</span>;
-qs_hueStart.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-qs_hueRange.<span class="hljs-property">value</span> = <span class="hljs-number">120</span>;
-qs_saturation.<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
-qs_luminosity.<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
 qs_matrixA.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
 qs_matrixB.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
 qs_matrixC.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
@@ -1633,7 +1707,15 @@ qs_matrixD.<span class="hljs-property">value</span> = <span class="hljs-number">
 qs_matrixE.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
 qs_matrixF.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
 qs_initialSettingPreference.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
-qs_randomEngineSeed.<span class="hljs-property">value</span> = reactionAsset.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;randomEngineSeed&#x27;</span>);</pre></div></div>
+qs_randomEngineSeed.<span class="hljs-property">value</span> = reactionAsset.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;randomEngineSeed&#x27;</span>);
+qs_paletteStart.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+qs_paletteEnd.<span class="hljs-property">value</span> = <span class="hljs-number">999</span>;
+qs_precision.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+qs_colorStops.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+qs_easing.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+qs_cyclePalette.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+qs_colorSpace.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+qs_returnColorAs.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         

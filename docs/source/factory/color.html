@@ -547,8 +547,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, xt, xtGet, isa_obj, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, entity, radian } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, xt, xtGet, isa_obj, isa_fn, easeEngines, Ωempty, λfirstArg, pushUnique, interpolate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
@@ -570,13 +572,38 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rgb</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rgb_max</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rgb_min</span> = [];
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hsl</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hsl_max</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hsl_min</span> = [];
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hwb</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hwb_max</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hwb_min</span> = [];
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">xyz</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">xyz_max</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">xyz_min</span> = [];
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lab</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lab_max</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lab_min</span> = [];
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lch</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lch_max</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lch_min</span> = [];
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">easingFunction</span> = λfirstArg;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(<span class="hljs-string">&#x27;transparent&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(<span class="hljs-string">&#x27;black&#x27;</span>, <span class="hljs-string">&#x27;_min&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(<span class="hljs-string">&#x27;white&#x27;</span>, <span class="hljs-string">&#x27;_max&#x27;</span>);
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">color</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(items.<span class="hljs-property">color</span>);
-
-    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">random</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">generateRandomColor</span>(items);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkValues</span>();
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -642,13 +669,23 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>The color channel attributes <strong>r</strong>, <strong>g</strong>, <strong>b</strong> and <strong>a</strong> are all integer Numbers in the range 0 (no contribution to color from this channel) to 255 (100% contribution)</p>
+              <p>A Color object can hold details of three colors</p>
+<ul>
+<li>The ‘current’, or last evaluated color</li>
+<li>The ‘maximum’ range color; relevant attributes are suffixed with <code>_max</code></li>
+<li>The ‘minimum’ range color; relevant attributes are suffixed with <code>_min</code></li>
+</ul>
+<p>On recieving a color to store or process, the Color object will calculate the color’s values in several different color spaces: <code>RGB</code>, <code>HSL</code>, <code>HWB</code>, <code>XYZ</code>, <code>LAB</code>, <code>LCH</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">r</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">g</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">b</span>: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">rgb</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">rgb_max</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">rgb_min</span>: <span class="hljs-literal">null</span>,
+
+    <span class="hljs-attr">hsl</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">hsl_max</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">hsl_min</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -659,11 +696,13 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>The alpha channel attribute <strong>a</strong> is a float Number between 0 (transparent) and 1 (opaque)</p>
+              <p>hwb() color Strings are not yet widely supported as valid input into browser canvas engines</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">hwb</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">hwb_max</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">hwb_min</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -674,19 +713,13 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>We can limit a channel’s range - useful, for instance, when asking the Color object to supply us with a restricted-random color, or when animating the color. Channel maximum values <strong>must</strong> be higher than their minimum values.</p>
+              <p>xyz() colors are not valid CSS color strings; they are an intermediary step on the way to converting rgb color values into lab notation</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">rMax</span>: <span class="hljs-number">255</span>,
-    <span class="hljs-attr">gMax</span>: <span class="hljs-number">255</span>,
-    <span class="hljs-attr">bMax</span>: <span class="hljs-number">255</span>,
-    <span class="hljs-attr">aMax</span>: <span class="hljs-number">1</span>,
-
-    <span class="hljs-attr">rMin</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">gMin</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">bMin</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">aMin</span>: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">xyz</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">xyz_max</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">xyz_min</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -697,14 +730,13 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>We can ask the Color object to update its channel values when it completes each get() invocation response. Channel <strong>shift</strong> values can be set separately, and can be float Numbers.</p>
+              <p>lab() color Strings are not yet widely supported as valid input into browser canvas engines</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">rShift</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">gShift</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">bShift</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">aShift</span>: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">lab</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">lab_max</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">lab_min</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -715,14 +747,13 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>The <strong>bounce</strong> boolean flags determine whether the color animation will be sticky (false, default), remaining at the channel’s minimum or maximum value when it is reached, or whether that channel will bounce between its minimum and maximum values as the animation progresses.</p>
+              <p>lch() color Strings are not yet widely supported as valid input into browser canvas engines</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">rBounce</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">gBounce</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">bBounce</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">aBounce</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">lch</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">lch_max</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">lch_min</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -733,11 +764,12 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>The <strong>opaque</strong> Boolean flag will supply colors in ‘rgb()’ format; when set to false ‘rgba()’ format colors are supplied.</p>
+              <p>The <strong>easing</strong> and <strong>easingFunction</strong> attributes affect the <code>getRangeColor</code> function, applying an easing function to those requests. Value may be a predefined easing String name, or a function accepting a Number value and returning a Number value, both values to be positive floats in the range 0-1</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">opaque</span>: <span class="hljs-literal">true</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;linear&#x27;</span>,
+    <span class="hljs-attr">easingFunction</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -748,11 +780,14 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p>The <strong>autoUpdate</strong> Boolean flag switches on color animation</p>
+              <p><strong>colorSpace</strong> - String value defining the color space to be used by the Color object for its internal calculations.</p>
+<ul>
+<li>Accepted values from: <code>&#39;RGB&#39;, &#39;HSL&#39;, &#39;HWB&#39;, &#39;XYZ&#39;, &#39;LAB&#39;, &#39;LCH&#39;</code></li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">autoUpdate</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">colorSpace</span>: <span class="hljs-string">&#x27;RGB&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -763,11 +798,15 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p>The <strong>easing</strong> attribute affects the <code>getRangeColor</code> function, applying an easing function to those requests.</p>
+              <p><strong>returnColorAs</strong> - String value defining the type of color String the Color object will return.</p>
+<ul>
+<li>This is a shorter list than the internal colorSpace attribute as we only return values for CSS specified color spaces. Note that some of these color spaces are not widely supported across browsers and will lead to errors in canvases displayed on non-supported browsers</li>
+<li>Accepted values from: <code>&#39;RGB&#39;, &#39;HSL&#39;, &#39;HWB&#39;, &#39;LAB&#39;, &#39;LCH&#39;</code></li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;linear&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">returnColorAs</span>: <span class="hljs-string">&#x27;RGB&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -779,8 +818,13 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h5 id="non-retained-argument-attributes-for-factory-clone-set-functions">Non-retained argument attributes (for factory, clone, set functions)</h5>
+<p><strong>random</strong> - the factory function, and the clone function, can ask the Color object to set its initial channel values randomly by including this attribute in the argument object; if the attribute resolves to true, random color functionality is invoked to set the r, g and b channel attributes to appropriately random values.</p>
+<p><strong>color</strong>, <strong>minimumColor</strong>, <strong>maximumColor</strong> - CSS color definition Strings which the Color object will attempt to convert into various color space values.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>};
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -791,9 +835,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p><strong>random</strong> - the factory function, and the clone function, can ask the Color object to set its initial channel values randomly by including this attribute in the argument object; if the attribute resolves to true, random color functionality is invoked to set the r, g and b channel attributes to appropriately random values.</p>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;easingFunction&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -804,7 +850,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p><strong>color</strong> - a CSS color definition String which the Color object will attempt to convert into appropriate r, g, b and a channel attribute values.</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
             
@@ -816,51 +863,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p><strong>minimumColor</strong>, <strong>maximumColor</strong> - convenience pseudo-attributes to set the max and min rgba attributes</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-};
-P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>Overwrites ./mixin/base.js</p>
@@ -874,11 +876,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-24">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Remove style from all entity state objects</p>
 
@@ -891,21 +893,23 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         <span class="hljs-keyword">if</span> (state) {
 
             <span class="hljs-keyword">let</span> fill = state.<span class="hljs-property">fillStyle</span>,
-                stroke = state.<span class="hljs-property">strokeStyle</span>;
+                stroke = state.<span class="hljs-property">strokeStyle</span>,
+                shadow = state.<span class="hljs-property">shadowColor</span>;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(fill) &amp;&amp; fill.<span class="hljs-property">name</span> === myname) state.<span class="hljs-property">fillStyle</span> = state.<span class="hljs-property">defs</span>.<span class="hljs-property">fillStyle</span>;
             <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(stroke) &amp;&amp; stroke.<span class="hljs-property">name</span> === myname) state.<span class="hljs-property">strokeStyle</span> = state.<span class="hljs-property">defs</span>.<span class="hljs-property">strokeStyle</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(shadow) &amp;&amp; shadow.<span class="hljs-property">name</span> === myname) state.<span class="hljs-property">shadowColor</span> = state.<span class="hljs-property">defs</span>.<span class="hljs-property">shadowColor</span>;
         }
     });</pre></div></div>
             
         </li>
         
         
-        <li id="section-25">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Remove style from the Scrawl-canvas library</p>
 
@@ -919,11 +923,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-26">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -932,11 +936,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-27">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>get</code> - overrides function in mixin/base.js</p>
 
@@ -946,19 +950,24 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(item)) {
 
-        <span class="hljs-keyword">let</span> {r, g, b, a} = <span class="hljs-variable language_">this</span>;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">opaque</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">`rgb(<span class="hljs-subst">${r}</span>, <span class="hljs-subst">${g}</span>, <span class="hljs-subst">${b}</span>)`</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">`rgba(<span class="hljs-subst">${r}</span>, <span class="hljs-subst">${g}</span>, <span class="hljs-subst">${b}</span>, <span class="hljs-subst">${a}</span>)`</span>;
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item === <span class="hljs-string">&#x27;random&#x27;</span>) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">generateRandomColor</span>();
-        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>();
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCurrentColor</span>();
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getRangeColor</span>(item);
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item === <span class="hljs-string">&#x27;min&#x27;</span>) {
+
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMinimumColor</span>();
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item === <span class="hljs-string">&#x27;max&#x27;</span>) {
+
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMaximumColor</span>();
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item === <span class="hljs-string">&#x27;random&#x27;</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">generateRandomColor</span>();
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCurrentColor</span>();
     }
     <span class="hljs-keyword">else</span>{
 
@@ -983,11 +992,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-28">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>set</code> - overrides function in mixin/base.js - see above for the additional attributes the set object argument can use.</p>
 
@@ -1018,10 +1027,179 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-variable language_">this</span>[key] = value;
             }
         }
-        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">random</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">generateRandomColor</span>(items);
-        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkValues</span>();
+        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">random</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">generateRandomColor</span>();
     }
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p>The <code>color</code>, <code>minimumColor</code> and <code>maximumColor</code> functions take in a CSS color String and converts it into a set of arrays containing data relevant to various color spaces. <strong>Note that browsers vary in the range of color spaces they support.</strong></p>
+<ul>
+<li>Widely supported: various RGB space color Strings - keywords, hex values, <code>rgb()</code>, <code>rgba()</code></li>
+<li>Widely supported: HSL space color Strings - <code>hsl()</code>, <code>hsla()</code></li>
+<li>Valid, but poorly supported: HWB, LAB, LCH color spaces - <code>hwb()</code>, <code>lab()</code>, <code>lch()</code></li>
+<li>Not valid or supported: XYZ color space - <code>xyz()</code> - used internally to convert between RGB and LAB spaces</li>
+</ul>
+<p>These setter functions have complementary Color object functions: <code>setColor</code>, <code>setMinimumColor</code>, <code>setMaximumColor</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">color</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item);
+};
+
+P.<span class="hljs-property">setColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};
+
+S.<span class="hljs-property">minimumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item, <span class="hljs-string">&#x27;_min&#x27;</span>);
+};
+P.<span class="hljs-property">setMinimumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item, <span class="hljs-string">&#x27;_min&#x27;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};
+
+S.<span class="hljs-property">maximumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item, <span class="hljs-string">&#x27;_max&#x27;</span>);
+};
+P.<span class="hljs-property">setMaximumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item, <span class="hljs-string">&#x27;_max&#x27;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p><code>easing</code> (and its complementary Color object functions: <code>setEasing</code>) - we can apply easing functions to colors, for instance when invoking the Color object’s <code>getRangeColor()</code> function to return the most appropriate color between the Color object’s minimum and maximum color values</p>
+<ul>
+<li>Can accept a String value identifying an SC pre-defined easing function (default: <code>linear</code>)</li>
+<li>Can also accept a function accepting a single Number argument (a value between 0-1) and returning an eased Number (again, between 0-1)</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">easing</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setEasingHelper</span>(item);
+};
+S.<span class="hljs-property">easingFunction</span> = S.<span class="hljs-property">easing</span>;
+
+P.<span class="hljs-property">setEasing</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setEasingHelper</span>(item);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};
+P.<span class="hljs-property">setEasingFunction</span> = P.<span class="hljs-property">setEasing</span>;
+P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easing</span> = <span class="hljs-string">&#x27;function&#x27;</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easingFunction</span> = item;
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span> &amp;&amp; easeEngines[item]) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easing</span> = item; 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easingFunction</span> = λfirstArg;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easing</span> = <span class="hljs-string">&#x27;linear&#x27;</span>; 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easingFunction</span> = λfirstArg;
+    }
+};
+
+P.<span class="hljs-property">internalColorSpaces</span> = [<span class="hljs-string">&#x27;RGB&#x27;</span>, <span class="hljs-string">&#x27;HSL&#x27;</span>, <span class="hljs-string">&#x27;HWB&#x27;</span>, <span class="hljs-string">&#x27;XYZ&#x27;</span>, <span class="hljs-string">&#x27;LAB&#x27;</span>, <span class="hljs-string">&#x27;LCH&#x27;</span>];
+S.<span class="hljs-property">colorSpace</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setColorSpaceHelper</span>(item);
+};
+P.<span class="hljs-property">setColorSpace</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setColorSpaceHelper</span>(item);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};
+P.<span class="hljs-property">setColorSpaceHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
+
+        item = item.<span class="hljs-title function_">toUpperCase</span>();
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">internalColorSpaces</span>.<span class="hljs-title function_">includes</span>(item)) {
+
+            <span class="hljs-keyword">const</span> current = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCurrentColor</span>(),
+                min = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMinimumColor</span>(),
+                max = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMaximumColor</span>();
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorSpace</span> = item.<span class="hljs-title function_">toUpperCase</span>();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateColorConversions</span>(current, min, max);
+        }
+    }
+};
+
+P.<span class="hljs-property">returnedColorSpaces</span> = [<span class="hljs-string">&#x27;RGB&#x27;</span>, <span class="hljs-string">&#x27;HSL&#x27;</span>, <span class="hljs-string">&#x27;HWB&#x27;</span>, <span class="hljs-string">&#x27;LAB&#x27;</span>, <span class="hljs-string">&#x27;LCH&#x27;</span>];
+S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setReturnColorAsHelper</span>(item);
+};
+P.<span class="hljs-property">setReturnColorAs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+    
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setReturnColorAsHelper</span>(item);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};
+P.<span class="hljs-property">setReturnColorAsHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+    
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
+
+        item = item.<span class="hljs-title function_">toUpperCase</span>();
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">returnedColorSpaces</span>.<span class="hljs-title function_">includes</span>(item)) {
+
+            <span class="hljs-keyword">const</span> current = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCurrentColor</span>(),
+                min = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMinimumColor</span>(),
+                max = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMaximumColor</span>();
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">returnColorAs</span> = item.<span class="hljs-title function_">toUpperCase</span>();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateColorConversions</span>(current, min, max);
+        }
+    }
 };</pre></div></div>
             
         </li>
@@ -1033,90 +1211,16 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>;
+            <div class="content"><div class='highlight'><pre>
+P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">current, min, max</span>) {
 
-S.<span class="hljs-property">color</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item);
-};
-P.<span class="hljs-property">setColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item);
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};
-
-S.<span class="hljs-property">minimumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">let</span> {r, g, b, a} = <span class="hljs-variable language_">this</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rMin</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">gMin</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">bMin</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">aMin</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span> = r;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span> = g;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span> = b;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span> = a;
-};
-P.<span class="hljs-property">setMinimumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">let</span> {r, g, b, a} = <span class="hljs-variable language_">this</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rMin</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">gMin</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">bMin</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">aMin</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span> = r;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span> = g;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span> = b;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span> = a;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};
-
-S.<span class="hljs-property">maximumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">let</span> {r, g, b, a} = <span class="hljs-variable language_">this</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rMax</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">gMax</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">bMax</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">aMax</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span> = r;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span> = g;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span> = b;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span> = a;
-};
-P.<span class="hljs-property">setMaximumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">let</span> {r, g, b, a} = <span class="hljs-variable language_">this</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rMax</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">gMax</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">bMax</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">aMax</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span> = r;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span> = g;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span> = b;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span> = a;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(current);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(min, <span class="hljs-string">&#x27;_min&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(max, <span class="hljs-string">&#x27;_max&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -1128,9 +1232,101 @@ P.<span class="hljs-property">setMaximumColor</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <p><code>getData</code> function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCurrentColor</span>();
+};
+
+P.<span class="hljs-property">getCurrentColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">const</span> { rgb, hsl, hwb, lab, lch } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">returnColor</span>(rgb, hsl, hwb, lab, lch);
+};
+
+P.<span class="hljs-property">getMinimumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">const</span> { rgb_min, hsl_min, hwb_min, lab_min, lch_min } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">returnColor</span>(rgb_min, hsl_min, hwb_min, lab_min, lch_min);
+};
+
+P.<span class="hljs-property">getMaximumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">const</span> { rgb_max, hsl_max, hwb_max, lab_max, lch_max } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">returnColor</span>(rgb_max, hsl_max, hwb_max, lab_max, lch_max);
+};
+
+P.<span class="hljs-property">returnColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">rgb, hsl, hwb, lab, lch</span>) {
+
+    <span class="hljs-keyword">if</span> (rgb == <span class="hljs-literal">null</span>) {
+
+        ({rgb, hsl, hwb, lab, lch} = <span class="hljs-variable language_">this</span>);
+    }
+
+    <span class="hljs-keyword">const</span> { buildColorString, returnColorAs } = <span class="hljs-variable language_">this</span>;
+
+    <span class="hljs-keyword">switch</span> (returnColorAs) {
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;RGB&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...rgb, <span class="hljs-string">&#x27;RGB&#x27;</span>);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;HSL&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...hsl, <span class="hljs-string">&#x27;HSL&#x27;</span>);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;HWB&#x27;</span> :
+            <span class="hljs-keyword">if</span> (!supportsHWB) <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...rgb, <span class="hljs-string">&#x27;RGB&#x27;</span>);
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...hwb, <span class="hljs-string">&#x27;HWB&#x27;</span>);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;LAB&#x27;</span> :
+            <span class="hljs-keyword">if</span> (!supportsLAB) <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...rgb, <span class="hljs-string">&#x27;RGB&#x27;</span>);
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...lab, <span class="hljs-string">&#x27;LAB&#x27;</span>);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;LCH&#x27;</span> :
+            <span class="hljs-keyword">if</span> (!supportsLCH) <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...rgb, <span class="hljs-string">&#x27;RGB&#x27;</span>);
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...lch, <span class="hljs-string">&#x27;LCH&#x27;</span>);
+
+        <span class="hljs-keyword">default</span> :
+            <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>;
+    }
+};
+
+P.<span class="hljs-property">returnColorFromValues</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">b, c, d, a</span>) {
+
+    <span class="hljs-keyword">const</span> { colorSpace, returnColorAs } = <span class="hljs-variable language_">this</span>;
+
+    <span class="hljs-keyword">let</span> col = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildColorString</span>(b, c, d, a, colorSpace);
+
+    <span class="hljs-keyword">let</span> flag = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;XYZ&#x27;</span> === colorSpace) flag = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (colorSpace !== returnColorAs) flag = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;HWB&#x27;</span> === returnColorAs &amp;&amp; !supportsHWB) flag = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;LAB&#x27;</span> === returnColorAs &amp;&amp; !supportsLAB) flag = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;LCH&#x27;</span> === returnColorAs &amp;&amp; !supportsLCH) flag = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">if</span> (flag) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setColor</span>(col);
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">returnColor</span>();
+    }
+    <span class="hljs-keyword">return</span> col;
+};
+
+P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">a, b, c, d, req</span>) {
+
+    <span class="hljs-keyword">if</span> (!req) req = <span class="hljs-variable language_">this</span>.<span class="hljs-property">returnColorAs</span>;
+
+    <span class="hljs-keyword">switch</span> (req) {
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;RGB&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`rgba(<span class="hljs-subst">${<span class="hljs-built_in">Math</span>.round(a)}</span> <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.round(b)}</span> <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.round(c)}</span> / <span class="hljs-subst">${d}</span>)`</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;HSL&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`hsl(<span class="hljs-subst">${a}</span> <span class="hljs-subst">${b}</span>% <span class="hljs-subst">${c}</span>% / <span class="hljs-subst">${d}</span>)`</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;HWB&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`hwb(<span class="hljs-subst">${a}</span> <span class="hljs-subst">${b}</span>% <span class="hljs-subst">${c}</span>% / <span class="hljs-subst">${d}</span>)`</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;LAB&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`lab(<span class="hljs-subst">${a}</span>% <span class="hljs-subst">${b}</span> <span class="hljs-subst">${c}</span> / <span class="hljs-subst">${d}</span>)`</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;LCH&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`lch(<span class="hljs-subst">${a}</span>% <span class="hljs-subst">${b}</span> <span class="hljs-subst">${c}</span> / <span class="hljs-subst">${d}</span>)`</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;XYZ&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`xyz(<span class="hljs-subst">${a}</span>% <span class="hljs-subst">${b}</span> <span class="hljs-subst">${c}</span> / <span class="hljs-subst">${d}</span>)`</span>;
+        <span class="hljs-keyword">default</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>;
+    }
+}</pre></div></div>
             
         </li>
         
@@ -1141,17 +1337,21 @@ P.<span class="hljs-property">setMaximumColor</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
-              <p><code>getData</code> function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
+              <p><code>generateRandomColor</code> - generate a random, fully opaque color</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">generateRandomColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">autoUpdate</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>();
+    <span class="hljs-keyword">let</span> r = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">256</span>),
+        g = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">256</span>),
+        b= <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">256</span>);
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkValues</span>();
+    <span class="hljs-keyword">if</span> (r &gt; <span class="hljs-number">255</span>) r = <span class="hljs-number">255</span>;
+    <span class="hljs-keyword">if</span> (g &gt; <span class="hljs-number">255</span>) g = <span class="hljs-number">255</span>;
+    <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">255</span>) b = <span class="hljs-number">255</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setColor</span>(<span class="hljs-string">`rgb(<span class="hljs-subst">${r}</span> <span class="hljs-subst">${g}</span> <span class="hljs-subst">${b}</span>)`</span>);
 };</pre></div></div>
             
         </li>
@@ -1163,37 +1363,36 @@ P.<span class="hljs-property">setMaximumColor</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
-              <p><code>generateRandomColor</code> function asks the Color object to supply a random color, as restricted by its channel minimum and maximum attributes</p>
+              <p><code>checkColor</code> - input is a CSS color string; output will be a color string which is displayable on the user’s device/browser</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">generateRandomColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> round = <span class="hljs-title class_">Math</span>.<span class="hljs-property">round</span>,
-        rnd = <span class="hljs-title class_">Math</span>.<span class="hljs-property">random</span>;
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
-    <span class="hljs-keyword">let</span> rMax = <span class="hljs-variable language_">this</span>.<span class="hljs-property">rMax</span> = <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">rMax</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">rMax</span>, <span class="hljs-number">255</span>),
-        gMax = <span class="hljs-variable language_">this</span>.<span class="hljs-property">gMax</span> = <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">gMax</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">gMax</span>, <span class="hljs-number">255</span>),
-        bMax = <span class="hljs-variable language_">this</span>.<span class="hljs-property">bMax</span> = <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">bMax</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">bMax</span>, <span class="hljs-number">255</span>);
+        <span class="hljs-keyword">let</span> colSpace = <span class="hljs-string">&#x27;RGB&#x27;</span>;
 
-    <span class="hljs-keyword">let</span> rMin = <span class="hljs-variable language_">this</span>.<span class="hljs-property">rMin</span> = <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">rMin</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">rMin</span>, <span class="hljs-number">0</span>),
-        gMin = <span class="hljs-variable language_">this</span>.<span class="hljs-property">gMin</span> = <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">gMin</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">gMin</span>, <span class="hljs-number">0</span>),
-        bMin = <span class="hljs-variable language_">this</span>.<span class="hljs-property">bMin</span> = <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">bMin</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">bMin</span>, <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;hsl&#x27;</span>)) colSpace = <span class="hljs-string">&#x27;HSL&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;hwb&#x27;</span>)) colSpace = <span class="hljs-string">&#x27;HWB&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;lab&#x27;</span>)) colSpace = <span class="hljs-string">&#x27;LAB&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;lch&#x27;</span>)) colSpace = <span class="hljs-string">&#x27;LCH&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;xyz&#x27;</span>)) colSpace = <span class="hljs-string">&#x27;XYZ&#x27;</span>;
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span> = items.<span class="hljs-property">r</span> || <span class="hljs-title function_">round</span>((<span class="hljs-title function_">rnd</span>() * (rMax - rMin)) + rMin);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span> = items.<span class="hljs-property">g</span> || <span class="hljs-title function_">round</span>((<span class="hljs-title function_">rnd</span>() * (gMax - gMin)) + gMin);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span> = items.<span class="hljs-property">b</span> || <span class="hljs-title function_">round</span>((<span class="hljs-title function_">rnd</span>() * (bMax - bMin)) + bMin);
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;RGB&#x27;</span> === colSpace || <span class="hljs-string">&#x27;HSL&#x27;</span> === colSpace) <span class="hljs-keyword">return</span> item;
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">opaque</span>) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorSpace</span> = colSpace;
 
-        aMax = <span class="hljs-variable language_">this</span>.<span class="hljs-property">aMax</span> = <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">aMax</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">aMax</span>, <span class="hljs-number">1</span>);
-        aMin = <span class="hljs-variable language_">this</span>.<span class="hljs-property">aMin</span> = <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">aMin</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">aMin</span>, <span class="hljs-number">0</span>);
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span> = items.<span class="hljs-property">a</span> || (<span class="hljs-title function_">rnd</span>() * (aMax - aMin)) + aMin;
+        <span class="hljs-keyword">let</span> colRet = colSpace;
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;XYZ&#x27;</span> === colSpace) colRet = <span class="hljs-string">&#x27;RGB&#x27;</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">returnColorAs</span> = colSpace;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(item);
+
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">returnColor</span>();
     }
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkValues</span>();
-    
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>;
 };</pre></div></div>
             
         </li>
@@ -1217,129 +1416,7 @@ P.<span class="hljs-property">setMaximumColor</span> = <span class="hljs-keyword
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getRangeColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item) &amp;&amp; item.<span class="hljs-property">toFixed</span>) {
-
-        <span class="hljs-keyword">let</span> floor = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>;
-
-        <span class="hljs-keyword">let</span> {rMin, gMin, bMin, aMin, rMax, gMax, bMax, aMax, easing} = <span class="hljs-variable language_">this</span>;
-
-        <span class="hljs-keyword">if</span> (easing !== <span class="hljs-string">&#x27;linear&#x27;</span>) {
-
-            <span class="hljs-keyword">switch</span> (easing) {
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutSine&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutSine</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInSine&#x27;</span> :
-                    item = <span class="hljs-title function_">easeInSine</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInSine&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutInSine</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutQuad&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutQuad</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInQuad&#x27;</span> :
-                    item = <span class="hljs-title function_">easeInQuad</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInQuad&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutInQuad</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutCubic&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutCubic</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInCubic&#x27;</span> :
-                    item = <span class="hljs-title function_">easeInCubic</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInCubic&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutInCubic</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutQuart&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutQuart</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInQuart&#x27;</span> :
-                    item = <span class="hljs-title function_">easeInQuart</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInQuart&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutInQuart</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutQuint&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutQuint</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInQuint&#x27;</span> :
-                    item = <span class="hljs-title function_">easeInQuint</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInQuint&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutInQuint</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutExpo&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutExpo</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInExpo&#x27;</span> :
-                    item = <span class="hljs-title function_">easeInExpo</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInExpo&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutInExpo</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutCirc&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutCirc</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInCirc&#x27;</span> :
-                    item = <span class="hljs-title function_">easeInCirc</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInCirc&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutInCirc</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutBack&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutBack</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInBack&#x27;</span> :
-                    item = <span class="hljs-title function_">easeInBack</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInBack&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutInBack</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutElastic&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutElastic</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInElastic&#x27;</span> :
-                    item = <span class="hljs-title function_">easeInElastic</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInElastic&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutInElastic</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutBounce&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutBounce</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInBounce&#x27;</span> :
-                    item = <span class="hljs-title function_">easeInBounce</span>(item);
-                    <span class="hljs-keyword">break</span>;
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInBounce&#x27;</span> :
-                    item = <span class="hljs-title function_">easeOutInBounce</span>(item);
-                    <span class="hljs-keyword">break</span>;
-            }
-        }
-
-        <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">1</span>) item = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item = <span class="hljs-number">0</span>;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(item)) item = <span class="hljs-number">1</span>;
-
-        <span class="hljs-keyword">let</span> r = <span class="hljs-title function_">floor</span>(rMin + ((rMax - rMin) * item));
-        <span class="hljs-keyword">let</span> g = <span class="hljs-title function_">floor</span>(gMin + ((gMax - gMin) * item));
-        <span class="hljs-keyword">let</span> b = <span class="hljs-title function_">floor</span>(bMin + ((bMax - bMin) * item));
-        <span class="hljs-keyword">let</span> a = <span class="hljs-title function_">floor</span>(aMin + ((aMax - aMin) * item));
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">opaque</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">`rgb(<span class="hljs-subst">${r}</span>, <span class="hljs-subst">${g}</span>, <span class="hljs-subst">${b}</span>)`</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">`rgba(<span class="hljs-subst">${r}</span>, <span class="hljs-subst">${g}</span>, <span class="hljs-subst">${b}</span>, <span class="hljs-subst">${a}</span>)`</span>;
-    }
-    <span class="hljs-keyword">else</span> {
-
-        <span class="hljs-keyword">let</span> {r, g, b, a} = <span class="hljs-variable language_">this</span>;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">opaque</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">`rgb(<span class="hljs-subst">${r}</span>, <span class="hljs-subst">${g}</span>, <span class="hljs-subst">${b}</span>)`</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">`rgba(<span class="hljs-subst">${r}</span>, <span class="hljs-subst">${g}</span>, <span class="hljs-subst">${b}</span>, <span class="hljs-subst">${a}</span>)`</span>;
-    }
-};</pre></div></div>
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item) &amp;&amp; item.<span class="hljs-property">toFixed</span>) {</pre></div></div>
             
         </li>
         
@@ -1350,24 +1427,18 @@ P.<span class="hljs-property">setMaximumColor</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
-              <p>Internal function to make sure channel attribute values are in their correct format and ranges</p>
+              <p>const { calculateRangeColorValues, buildColorString, setColor, getCurrentColor, colorSpace } = this;</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkValues</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>
+        <span class="hljs-keyword">const</span> vals = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">calculateRangeColorValues</span>(item);
 
-    <span class="hljs-keyword">let</span> f = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>,
-        r = <span class="hljs-title function_">f</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span>) || <span class="hljs-number">0</span>,
-        g = <span class="hljs-title function_">f</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span>) || <span class="hljs-number">0</span>,
-        b = <span class="hljs-title function_">f</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span>) || <span class="hljs-number">0</span>,
-        a = <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span>;
+        <span class="hljs-keyword">const</span> res = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildColorString</span>(...vals, <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorSpace</span>);
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span> = (r &gt; <span class="hljs-number">255</span>) ? <span class="hljs-number">255</span> : ((r &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : r);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span> = (g &gt; <span class="hljs-number">255</span>) ? <span class="hljs-number">255</span> : ((g &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : g);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span> = (b &gt; <span class="hljs-number">255</span>) ? <span class="hljs-number">255</span> : ((b &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : b);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span> = (a &gt; <span class="hljs-number">1</span>) ? <span class="hljs-number">1</span> : ((a &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : a);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setColor</span>(res);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCurrentColor</span>();
 };</pre></div></div>
             
         </li>
@@ -1379,56 +1450,39 @@ P.<span class="hljs-property">setMaximumColor</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
-              <p><code>update</code> function - adds the channel <strong>shift</strong> attributes to the r, g, b and a attributes. This functionality can be automated by setting the <strong>autoUpdate</strong> Boolean flag to true</p>
+              <p><code>calculateRangeColorValues</code> - internal helper function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateArray</span> = [<span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;g&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>];
-P.<span class="hljs-property">update</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">calculateRangeColorValues</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rCurrent</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">rCurrent</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span>;
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">gCurrent</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">gCurrent</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span>;
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">bCurrent</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">bCurrent</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span>;
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">aCurrent</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">aCurrent</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span>;
+    <span class="hljs-keyword">const</span> { colorSpace, easing, easingFunction } = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">let</span> list = <span class="hljs-variable language_">this</span>.<span class="hljs-property">updateArray</span>;
+    <span class="hljs-keyword">let</span> a, b, c, d;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">rShift</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">gShift</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">bShift</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">aShift</span>) {
+    <span class="hljs-keyword">const</span> col = colorSpace.<span class="hljs-title function_">toLowerCase</span>();
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, item; i &lt; <span class="hljs-number">4</span>; i++) {
+    <span class="hljs-keyword">const</span> [bMin, cMin, dMin, aMin] = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${col}</span>_min`</span>];
+    <span class="hljs-keyword">const</span> [bMax, cMax, dMax, aMax] = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${col}</span>_max`</span>];
 
-            item = list[i];
+    <span class="hljs-keyword">let</span> engine = easingFunction;
+    <span class="hljs-keyword">if</span> (easing !== <span class="hljs-string">&#x27;function&#x27;</span> &amp;&amp; easeEngines[easing]) engine = easeEngines[easing];
 
-            <span class="hljs-keyword">let</span> shift = <span class="hljs-variable language_">this</span>[item + <span class="hljs-string">&#x27;Shift&#x27;</span>];
-        
-            <span class="hljs-keyword">if</span> (shift) {
+    <span class="hljs-keyword">const</span> val = <span class="hljs-title function_">engine</span>(item);
 
-                <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Current`</span>] += shift;
+    <span class="hljs-keyword">if</span> (aMin === aMax) a = aMin;
+    <span class="hljs-keyword">else</span> a = <span class="hljs-title function_">interpolate</span>(val, aMin, aMax);
 
-                <span class="hljs-keyword">let</span> col = <span class="hljs-variable language_">this</span>[item],
-                    min = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Min`</span>],
-                    max = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Max`</span>],
-                    bounce = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Bounce`</span>],
-                    current = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Current`</span>],
+    <span class="hljs-keyword">if</span> (bMin === bMax) b = bMin;
+    <span class="hljs-keyword">else</span> b = <span class="hljs-title function_">interpolate</span>(val, bMin, bMax);
 
-                    temp = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(current + shift);
+    <span class="hljs-keyword">if</span> (cMin === cMax) c = cMin;
+    <span class="hljs-keyword">else</span> c = <span class="hljs-title function_">interpolate</span>(val, cMin, cMax);
 
-                <span class="hljs-keyword">if</span> (temp &gt; max || temp &lt; min) {
+    <span class="hljs-keyword">if</span> (dMin === dMax) d = dMin;
+    <span class="hljs-keyword">else</span> d = <span class="hljs-title function_">interpolate</span>(val, dMin, dMax);
 
-                    <span class="hljs-keyword">if</span> (bounce) shift = -shift;
-                    <span class="hljs-keyword">else</span> {
-
-                        col = (col &gt; (max + min) / <span class="hljs-number">2</span>) ? max : min;
-                        shift = <span class="hljs-number">0</span>;
-                    }
-                }
-                
-                <span class="hljs-variable language_">this</span>[item] = temp;
-                <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Shift`</span>] = shift;
-            }
-        }
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">return</span> [b, c, d, a];
 };</pre></div></div>
             
         </li>
@@ -1440,11 +1494,18 @@ P.<span class="hljs-property">update</span> = <span class="hljs-keyword">functio
               <div class="sswrap ">
                 <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
-              <p><code>updateByDelta</code> - alias for the <strong>update</strong> function</p>
+              <p><code>convert</code> - internal function. Takes a color string and converts it into a variety of color space values. Makes use of the following functions:</p>
+<ul>
+<li><code>convertHSLtoRGB</code>, <code>convertRGBtoHSL</code></li>
+<li><code>convertHWBtoRGB</code>, <code>convertRGBtoHWB</code>, <code>convertRGBHtoHWB</code></li>
+<li><code>convertXYZtoRGB</code>, <code>convertRGBtoXYZ</code></li>
+<li><code>convertXYZtoLAB</code>, <code>convertLABtoXYZ</code></li>
+<li><code>convertLABtoLCH</code>, <code>convertLCHtoLAB</code></li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateByDelta</span> = P.<span class="hljs-property">update</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convert</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color, suffix = <span class="hljs-string">&#x27;&#x27;</span></span>) {</pre></div></div>
             
         </li>
         
@@ -1455,278 +1516,19 @@ P.<span class="hljs-property">update</span> = <span class="hljs-keyword">functio
               <div class="sswrap ">
                 <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
-              <p>We can also set a Color object to a new color value by invoking its <code>convert</code> function. Any CSS color string can be used as an argument (with exceptions - see above)</p>
+              <p>Currently converting to as many color spaces as possible - we can make this more sane by only converting for the colors we want to convert (RGB + the internal color space + the returned color space)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convert</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre>
+    color = color.<span class="hljs-title function_">toLowerCase</span>();
 
-    <span class="hljs-keyword">let</span> r, g, b, a, temp,
-        round = <span class="hljs-title class_">Math</span>.<span class="hljs-property">round</span>;
-
-    items = (items.<span class="hljs-property">substring</span>) ? items : <span class="hljs-string">&#x27;&#x27;</span>;
-
-    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">length</span>) {
-
-        items.<span class="hljs-title function_">toLowerCase</span>();
-        r = <span class="hljs-number">0</span>;
-        g = <span class="hljs-number">0</span>;
-        b = <span class="hljs-number">0</span>;
-        a = <span class="hljs-number">1</span>;
-        
-        <span class="hljs-keyword">if</span> (items[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;#&#x27;</span>) {
-        
-            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">length</span> == <span class="hljs-number">4</span>) {
-        
-                r = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">1</span>] + items[<span class="hljs-number">1</span>], <span class="hljs-number">16</span>);
-                g = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">2</span>] + items[<span class="hljs-number">2</span>], <span class="hljs-number">16</span>);
-                b = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">3</span>] + items[<span class="hljs-number">3</span>], <span class="hljs-number">16</span>);
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.<span class="hljs-property">length</span> == <span class="hljs-number">5</span>) {
-        
-                r = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">1</span>] + items[<span class="hljs-number">1</span>], <span class="hljs-number">16</span>);
-                g = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">2</span>] + items[<span class="hljs-number">2</span>], <span class="hljs-number">16</span>);
-                b = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">3</span>] + items[<span class="hljs-number">3</span>], <span class="hljs-number">16</span>);
-                a = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">4</span>] + items[<span class="hljs-number">4</span>], <span class="hljs-number">16</span>) / <span class="hljs-number">255</span>;
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.<span class="hljs-property">length</span> == <span class="hljs-number">7</span>) {
-        
-                r = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">1</span>] + items[<span class="hljs-number">2</span>], <span class="hljs-number">16</span>);
-                g = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">3</span>] + items[<span class="hljs-number">4</span>], <span class="hljs-number">16</span>);
-                b = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">5</span>] + items[<span class="hljs-number">6</span>], <span class="hljs-number">16</span>);
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.<span class="hljs-property">length</span> == <span class="hljs-number">9</span>) {
-        
-                r = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">1</span>] + items[<span class="hljs-number">2</span>], <span class="hljs-number">16</span>);
-                g = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">3</span>] + items[<span class="hljs-number">4</span>], <span class="hljs-number">16</span>);
-                b = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">5</span>] + items[<span class="hljs-number">6</span>], <span class="hljs-number">16</span>);
-                a = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">7</span>] + items[<span class="hljs-number">8</span>], <span class="hljs-number">16</span>) / <span class="hljs-number">255</span>;
-            }
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/rgb\(/</span>.<span class="hljs-title function_">test</span>(items)) {
-
-            temp = items.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/([0-9.]+\b)/g</span>);
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/%/</span>.<span class="hljs-title function_">test</span>(items)) {
-            
-                r = <span class="hljs-title function_">round</span>((<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">0</span>]) / <span class="hljs-number">100</span>) * <span class="hljs-number">255</span>);
-                g = <span class="hljs-title function_">round</span>((<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">1</span>]) / <span class="hljs-number">100</span>) * <span class="hljs-number">255</span>);
-                b = <span class="hljs-title function_">round</span>((<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">2</span>]) / <span class="hljs-number">100</span>) * <span class="hljs-number">255</span>);
-            }
-            <span class="hljs-keyword">else</span> {
-            
-                r = <span class="hljs-title function_">round</span>(<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">0</span>]));
-                g = <span class="hljs-title function_">round</span>(<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">1</span>]));
-                b = <span class="hljs-title function_">round</span>(<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">2</span>]));
-            }
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/rgba\(/</span>.<span class="hljs-title function_">test</span>(items)) {
-
-            temp = items.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/([0-9.]+\b)/g</span>);
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/%/</span>.<span class="hljs-title function_">test</span>(items)) {
-            
-                r = <span class="hljs-title function_">round</span>((<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">0</span>]) / <span class="hljs-number">100</span>) * <span class="hljs-number">255</span>);
-                g = <span class="hljs-title function_">round</span>((<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">1</span>]) / <span class="hljs-number">100</span>) * <span class="hljs-number">255</span>);
-                b = <span class="hljs-title function_">round</span>((<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">2</span>]) / <span class="hljs-number">100</span>) * <span class="hljs-number">255</span>);
-                a = <span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">3</span>]) / <span class="hljs-number">100</span>;
-            }
-            <span class="hljs-keyword">else</span> {
-            
-                r = <span class="hljs-title function_">round</span>(<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">0</span>]));
-                g = <span class="hljs-title function_">round</span>(<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">1</span>]));
-                b = <span class="hljs-title function_">round</span>(<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">2</span>]));
-                a = temp[<span class="hljs-number">3</span>];
-            }
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/hsl\(/</span>.<span class="hljs-title function_">test</span>(items) || <span class="hljs-regexp">/hsla\(/</span>.<span class="hljs-title function_">test</span>(items)) {
-
-            temp = items.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/([0-9.]+\b)/g</span>);
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromHSL</span>(<span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">0</span>]), <span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">1</span>]), <span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">2</span>]), <span class="hljs-built_in">parseFloat</span>(temp[<span class="hljs-number">3</span>]));
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items === <span class="hljs-string">&#x27;transparent&#x27;</span>) {
-
-            r = <span class="hljs-number">0</span>;
-            g = <span class="hljs-number">0</span>;
-            b = <span class="hljs-number">0</span>;
-            a = <span class="hljs-number">0</span>;
-        }
-        <span class="hljs-keyword">else</span> {
-
-            temp = <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorLibrary</span>[items];
-
-            <span class="hljs-keyword">if</span> (temp) {
-            
-                r = <span class="hljs-built_in">parseInt</span>(temp[<span class="hljs-number">0</span>] + temp[<span class="hljs-number">1</span>], <span class="hljs-number">16</span>);
-                g = <span class="hljs-built_in">parseInt</span>(temp[<span class="hljs-number">2</span>] + temp[<span class="hljs-number">3</span>], <span class="hljs-number">16</span>);
-                b = <span class="hljs-built_in">parseInt</span>(temp[<span class="hljs-number">4</span>] + temp[<span class="hljs-number">5</span>], <span class="hljs-number">16</span>);
-                a = <span class="hljs-number">1</span>;
-            }
-        }
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span> = r;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span> = g;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span> = b;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span> = a;
-        
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkValues</span>();
-    }
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};
-
-
-P.<span class="hljs-property">getHSLfromRGB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">dr, dg, db</span>) {
-
-    <span class="hljs-keyword">let</span> minColor = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(dr, dg, db),
-        maxColor = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(dr, dg, db);
-
-    <span class="hljs-keyword">let</span> lum = (minColor + maxColor) / <span class="hljs-number">2</span>;
-
-    <span class="hljs-keyword">let</span> sat = <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">if</span> (minColor !== maxColor) {
-
-        <span class="hljs-keyword">if</span> (lum &lt;= <span class="hljs-number">0.5</span>) sat = (maxColor - minColor) / (maxColor + minColor);
-        <span class="hljs-keyword">else</span> sat = (maxColor - minColor) / (<span class="hljs-number">2</span> - maxColor - minColor);
-    }
-
-    <span class="hljs-keyword">let</span> hue = <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">if</span> (maxColor === dr) hue = (dg - db) / (maxColor - minColor);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (maxColor === dg) hue = <span class="hljs-number">2</span> + ((db - dr) / (maxColor - minColor));
-    <span class="hljs-keyword">else</span> hue = <span class="hljs-number">4</span> + ((dr - dg) / (maxColor - minColor));
-
-    hue *= <span class="hljs-number">60</span>;
-
-    <span class="hljs-keyword">if</span> (hue &lt; <span class="hljs-number">0</span>) hue += <span class="hljs-number">360</span>;
-
-    <span class="hljs-keyword">return</span> [hue, sat, lum];
-};
-
-P.<span class="hljs-property">getHSL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">let</span> {r, g, b} = <span class="hljs-variable language_">this</span>;
-
-    <span class="hljs-keyword">let</span> minColor = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(r, g, b),
-        maxColor = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(r, g, b);
-
-    <span class="hljs-keyword">let</span> lum = (minColor + maxColor) / <span class="hljs-number">2</span>;
-
-    <span class="hljs-keyword">let</span> sat = <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">if</span> (minColor !== maxColor) {
-
-        <span class="hljs-keyword">if</span> (lum &lt;= <span class="hljs-number">0.5</span>) sat = (maxColor - minColor) / (maxColor + minColor);
-        <span class="hljs-keyword">else</span> sat = (maxColor - minColor) / (<span class="hljs-number">2</span> - maxColor - minColor);
-    }
-
-    <span class="hljs-keyword">let</span> hue = <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">if</span> (maxColor === r) hue = (g - b) / (maxColor - minColor);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (maxColor === g) hue = <span class="hljs-number">2</span> + ((b - r) / (maxColor - minColor));
-    <span class="hljs-keyword">else</span> hue = <span class="hljs-number">4</span> + ((r - g) / (maxColor - minColor));
-
-    hue *= <span class="hljs-number">60</span>;
-
-    <span class="hljs-keyword">if</span> (hue &lt; <span class="hljs-number">0</span>) hue += <span class="hljs-number">360</span>;
-
-    <span class="hljs-keyword">return</span> [hue, sat, lum];
-};
-
-P.<span class="hljs-property">getRGBfromHSL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">h, s, l, a</span>) {
-
-    s /= <span class="hljs-number">100</span>;
-    l /= <span class="hljs-number">100</span>;
-
-    <span class="hljs-keyword">let</span> c = (<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-number">2</span> * l - <span class="hljs-number">1</span>)) * s,
-        x = c * (<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>((h / <span class="hljs-number">60</span>) % <span class="hljs-number">2</span> - <span class="hljs-number">1</span>)),
-        m = l - c/<span class="hljs-number">2</span>,
-        r = <span class="hljs-number">0</span>,
-        g = <span class="hljs-number">0</span>,
-        b = <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">60</span>) {
-        r = c; 
-        g = x; 
-        b = <span class="hljs-number">0</span>;  
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">60</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">120</span>) {
-        r = x; 
-        g = c; 
-        b = <span class="hljs-number">0</span>;
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">120</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">180</span>) {
-        r = <span class="hljs-number">0</span>; 
-        g = c; 
-        b = x;
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">180</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">240</span>) {
-        r = <span class="hljs-number">0</span>; 
-        g = x; 
-        b = c;
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">240</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">300</span>) {
-        r = x; 
-        g = <span class="hljs-number">0</span>; 
-        b = c;
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">300</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">360</span>) {
-        r = c; 
-        g = <span class="hljs-number">0</span>; 
-        b = x;
-    }
-
-    r = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((r + m) * <span class="hljs-number">255</span>);
-    g = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((g + m) * <span class="hljs-number">255</span>);
-    b = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((b + m) * <span class="hljs-number">255</span>);
-
-    <span class="hljs-keyword">return</span> [r, g, b, a];
-};
-
-P.<span class="hljs-property">setFromHSL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">h, s, l, a</span>) {
-
-    s /= <span class="hljs-number">100</span>;
-    l /= <span class="hljs-number">100</span>;
-
-    <span class="hljs-keyword">let</span> c = (<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-number">2</span> * l - <span class="hljs-number">1</span>)) * s,
-        x = c * (<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>((h / <span class="hljs-number">60</span>) % <span class="hljs-number">2</span> - <span class="hljs-number">1</span>)),
-        m = l - c/<span class="hljs-number">2</span>,
-        r = <span class="hljs-number">0</span>,
-        g = <span class="hljs-number">0</span>,
-        b = <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">60</span>) {
-        r = c; 
-        g = x; 
-        b = <span class="hljs-number">0</span>;  
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">60</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">120</span>) {
-        r = x; 
-        g = c; 
-        b = <span class="hljs-number">0</span>;
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">120</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">180</span>) {
-        r = <span class="hljs-number">0</span>; 
-        g = c; 
-        b = x;
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">180</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">240</span>) {
-        r = <span class="hljs-number">0</span>; 
-        g = x; 
-        b = c;
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">240</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">300</span>) {
-        r = x; 
-        g = <span class="hljs-number">0</span>; 
-        b = c;
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">300</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">360</span>) {
-        r = c; 
-        g = <span class="hljs-number">0</span>; 
-        b = x;
-    }
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((r + m) * <span class="hljs-number">255</span>);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((g + m) * <span class="hljs-number">255</span>);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((b + m) * <span class="hljs-number">255</span>);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> != a) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">a</span> = a * <span class="hljs-number">255</span>;
-    }
-};</pre></div></div>
+    <span class="hljs-keyword">const</span> rgb = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`rgb<span class="hljs-subst">${suffix}</span>`</span>];
+    <span class="hljs-keyword">const</span> hsl = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`hsl<span class="hljs-subst">${suffix}</span>`</span>];
+    <span class="hljs-keyword">const</span> hwb = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`hwb<span class="hljs-subst">${suffix}</span>`</span>];
+    <span class="hljs-keyword">const</span> xyz = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`xyz<span class="hljs-subst">${suffix}</span>`</span>];
+    <span class="hljs-keyword">const</span> lab = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`lab<span class="hljs-subst">${suffix}</span>`</span>];
+    <span class="hljs-keyword">const</span> lch = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`lch<span class="hljs-subst">${suffix}</span>`</span>];</pre></div></div>
             
         </li>
         
@@ -1737,158 +1539,23 @@ P.<span class="hljs-property">setFromHSL</span> = <span class="hljs-keyword">fun
               <div class="sswrap ">
                 <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
-              <p>Color keywords harvested from <a href="https://developer.mozilla.org/en/docs/Web/CSS/color_value">https://developer.mozilla.org/en/docs/Web/CSS/color_value</a></p>
+              <p>Initializing defs in the constructor causes an error - this should avoid it</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">colorLibrary</span> = {
-    <span class="hljs-attr">aliceblue</span>: <span class="hljs-string">&#x27;f0f8ff&#x27;</span>,
-    <span class="hljs-attr">antiquewhite</span>: <span class="hljs-string">&#x27;faebd7&#x27;</span>,
-    <span class="hljs-attr">aqua</span>: <span class="hljs-string">&#x27;00ffff&#x27;</span>,
-    <span class="hljs-attr">aquamarine</span>: <span class="hljs-string">&#x27;7fffd4&#x27;</span>,
-    <span class="hljs-attr">azure</span>: <span class="hljs-string">&#x27;f0ffff&#x27;</span>,
-    <span class="hljs-attr">beige</span>: <span class="hljs-string">&#x27;f5f5dc&#x27;</span>,
-    <span class="hljs-attr">bisque</span>: <span class="hljs-string">&#x27;ffe4c4&#x27;</span>,
-    <span class="hljs-attr">black</span>: <span class="hljs-string">&#x27;000000&#x27;</span>,
-    <span class="hljs-attr">blanchedalmond</span>: <span class="hljs-string">&#x27;ffe4c4&#x27;</span>,
-    <span class="hljs-attr">blue</span>: <span class="hljs-string">&#x27;0000ff&#x27;</span>,
-    <span class="hljs-attr">blueviolet</span>: <span class="hljs-string">&#x27;8a2be2&#x27;</span>,
-    <span class="hljs-attr">brown</span>: <span class="hljs-string">&#x27;a52a2a&#x27;</span>,
-    <span class="hljs-attr">burlywood</span>: <span class="hljs-string">&#x27;deb887&#x27;</span>,
-    <span class="hljs-attr">cadetblue</span>: <span class="hljs-string">&#x27;5f9ea0&#x27;</span>,
-    <span class="hljs-attr">chartreuse</span>: <span class="hljs-string">&#x27;7fff00&#x27;</span>,
-    <span class="hljs-attr">chocolate</span>: <span class="hljs-string">&#x27;d2691e&#x27;</span>,
-    <span class="hljs-attr">coral</span>: <span class="hljs-string">&#x27;ff7f50&#x27;</span>,
-    <span class="hljs-attr">cornflowerblue</span>: <span class="hljs-string">&#x27;6495ed&#x27;</span>,
-    <span class="hljs-attr">cornsilk</span>: <span class="hljs-string">&#x27;fff8dc&#x27;</span>,
-    <span class="hljs-attr">crimson</span>: <span class="hljs-string">&#x27;dc143c&#x27;</span>,
-    <span class="hljs-attr">darkblue</span>: <span class="hljs-string">&#x27;00008b&#x27;</span>,
-    <span class="hljs-attr">darkcyan</span>: <span class="hljs-string">&#x27;008b8b&#x27;</span>,
-    <span class="hljs-attr">darkgoldenrod</span>: <span class="hljs-string">&#x27;b8860b&#x27;</span>,
-    <span class="hljs-attr">darkgray</span>: <span class="hljs-string">&#x27;a9a9a9&#x27;</span>,
-    <span class="hljs-attr">darkgreen</span>: <span class="hljs-string">&#x27;006400&#x27;</span>,
-    <span class="hljs-attr">darkgrey</span>: <span class="hljs-string">&#x27;a9a9a9&#x27;</span>,
-    <span class="hljs-attr">darkkhaki</span>: <span class="hljs-string">&#x27;bdb76b&#x27;</span>,
-    <span class="hljs-attr">darkmagenta</span>: <span class="hljs-string">&#x27;8b008b&#x27;</span>,
-    <span class="hljs-attr">darkolivegreen</span>: <span class="hljs-string">&#x27;556b2f&#x27;</span>,
-    <span class="hljs-attr">darkorange</span>: <span class="hljs-string">&#x27;ff8c00&#x27;</span>,
-    <span class="hljs-attr">darkorchid</span>: <span class="hljs-string">&#x27;9932cc&#x27;</span>,
-    <span class="hljs-attr">darkred</span>: <span class="hljs-string">&#x27;8b0000&#x27;</span>,
-    <span class="hljs-attr">darksalmon</span>: <span class="hljs-string">&#x27;e9967a&#x27;</span>,
-    <span class="hljs-attr">darkseagreen</span>: <span class="hljs-string">&#x27;8fbc8f&#x27;</span>,
-    <span class="hljs-attr">darkslateblue</span>: <span class="hljs-string">&#x27;483d8b&#x27;</span>,
-    <span class="hljs-attr">darkslategray</span>: <span class="hljs-string">&#x27;2f4f4f&#x27;</span>,
-    <span class="hljs-attr">darkslategrey</span>: <span class="hljs-string">&#x27;2f4f4f&#x27;</span>,
-    <span class="hljs-attr">darkturquoise</span>: <span class="hljs-string">&#x27;00ced1&#x27;</span>,
-    <span class="hljs-attr">darkviolet</span>: <span class="hljs-string">&#x27;9400d3&#x27;</span>,
-    <span class="hljs-attr">deeppink</span>: <span class="hljs-string">&#x27;ff1493&#x27;</span>,
-    <span class="hljs-attr">deepskyblue</span>: <span class="hljs-string">&#x27;00bfff&#x27;</span>,
-    <span class="hljs-attr">dimgray</span>: <span class="hljs-string">&#x27;696969&#x27;</span>,
-    <span class="hljs-attr">dimgrey</span>: <span class="hljs-string">&#x27;696969&#x27;</span>,
-    <span class="hljs-attr">dodgerblue</span>: <span class="hljs-string">&#x27;1e90ff&#x27;</span>,
-    <span class="hljs-attr">firebrick</span>: <span class="hljs-string">&#x27;b22222&#x27;</span>,
-    <span class="hljs-attr">floralwhite</span>: <span class="hljs-string">&#x27;fffaf0&#x27;</span>,
-    <span class="hljs-attr">forestgreen</span>: <span class="hljs-string">&#x27;228b22&#x27;</span>,
-    <span class="hljs-attr">fuchsia</span>: <span class="hljs-string">&#x27;ff00ff&#x27;</span>,
-    <span class="hljs-attr">gainsboro</span>: <span class="hljs-string">&#x27;dcdcdc&#x27;</span>,
-    <span class="hljs-attr">ghostwhite</span>: <span class="hljs-string">&#x27;f8f8ff&#x27;</span>,
-    <span class="hljs-attr">gold</span>: <span class="hljs-string">&#x27;ffd700&#x27;</span>,
-    <span class="hljs-attr">goldenrod</span>: <span class="hljs-string">&#x27;daa520&#x27;</span>,
-    <span class="hljs-attr">gray</span>: <span class="hljs-string">&#x27;808080&#x27;</span>,
-    <span class="hljs-attr">green</span>: <span class="hljs-string">&#x27;008000&#x27;</span>,
-    <span class="hljs-attr">greenyellow</span>: <span class="hljs-string">&#x27;adff2f&#x27;</span>,
-    <span class="hljs-attr">grey</span>: <span class="hljs-string">&#x27;808080&#x27;</span>,
-    <span class="hljs-attr">honeydew</span>: <span class="hljs-string">&#x27;f0fff0&#x27;</span>,
-    <span class="hljs-attr">hotpink</span>: <span class="hljs-string">&#x27;ff69b4&#x27;</span>,
-    <span class="hljs-attr">indianred</span>: <span class="hljs-string">&#x27;cd5c5c&#x27;</span>,
-    <span class="hljs-attr">indigo</span>: <span class="hljs-string">&#x27;4b0082&#x27;</span>,
-    <span class="hljs-attr">ivory</span>: <span class="hljs-string">&#x27;fffff0&#x27;</span>,
-    <span class="hljs-attr">khaki</span>: <span class="hljs-string">&#x27;f0e68c&#x27;</span>,
-    <span class="hljs-attr">lavender</span>: <span class="hljs-string">&#x27;e6e6fa&#x27;</span>,
-    <span class="hljs-attr">lavenderblush</span>: <span class="hljs-string">&#x27;fff0f5&#x27;</span>,
-    <span class="hljs-attr">lawngreen</span>: <span class="hljs-string">&#x27;7cfc00&#x27;</span>,
-    <span class="hljs-attr">lemonchiffon</span>: <span class="hljs-string">&#x27;fffacd&#x27;</span>,
-    <span class="hljs-attr">lightblue</span>: <span class="hljs-string">&#x27;add8e6&#x27;</span>,
-    <span class="hljs-attr">lightcoral</span>: <span class="hljs-string">&#x27;f08080&#x27;</span>,
-    <span class="hljs-attr">lightcyan</span>: <span class="hljs-string">&#x27;e0ffff&#x27;</span>,
-    <span class="hljs-attr">lightgoldenrodyellow</span>: <span class="hljs-string">&#x27;fafad2&#x27;</span>,
-    <span class="hljs-attr">lightgray</span>: <span class="hljs-string">&#x27;d3d3d3&#x27;</span>,
-    <span class="hljs-attr">lightgreen</span>: <span class="hljs-string">&#x27;90ee90&#x27;</span>,
-    <span class="hljs-attr">lightgrey</span>: <span class="hljs-string">&#x27;d3d3d3&#x27;</span>,
-    <span class="hljs-attr">lightpink</span>: <span class="hljs-string">&#x27;ffb6c1&#x27;</span>,
-    <span class="hljs-attr">lightsalmon</span>: <span class="hljs-string">&#x27;ffa07a&#x27;</span>,
-    <span class="hljs-attr">lightseagreen</span>: <span class="hljs-string">&#x27;20b2aa&#x27;</span>,
-    <span class="hljs-attr">lightskyblue</span>: <span class="hljs-string">&#x27;87cefa&#x27;</span>,
-    <span class="hljs-attr">lightslategray</span>: <span class="hljs-string">&#x27;778899&#x27;</span>,
-    <span class="hljs-attr">lightslategrey</span>: <span class="hljs-string">&#x27;778899&#x27;</span>,
-    <span class="hljs-attr">lightsteelblue</span>: <span class="hljs-string">&#x27;b0c4de&#x27;</span>,
-    <span class="hljs-attr">lightyellow</span>: <span class="hljs-string">&#x27;ffffe0&#x27;</span>,
-    <span class="hljs-attr">lime</span>: <span class="hljs-string">&#x27;00ff00&#x27;</span>,
-    <span class="hljs-attr">limegreen</span>: <span class="hljs-string">&#x27;32cd32&#x27;</span>,
-    <span class="hljs-attr">linen</span>: <span class="hljs-string">&#x27;faf0e6&#x27;</span>,
-    <span class="hljs-attr">maroon</span>: <span class="hljs-string">&#x27;800000&#x27;</span>,
-    <span class="hljs-attr">mediumaquamarine</span>: <span class="hljs-string">&#x27;66cdaa&#x27;</span>,
-    <span class="hljs-attr">mediumblue</span>: <span class="hljs-string">&#x27;0000cd&#x27;</span>,
-    <span class="hljs-attr">mediumorchid</span>: <span class="hljs-string">&#x27;ba55d3&#x27;</span>,
-    <span class="hljs-attr">mediumpurple</span>: <span class="hljs-string">&#x27;9370db&#x27;</span>,
-    <span class="hljs-attr">mediumseagreen</span>: <span class="hljs-string">&#x27;3cb371&#x27;</span>,
-    <span class="hljs-attr">mediumslateblue</span>: <span class="hljs-string">&#x27;7b68ee&#x27;</span>,
-    <span class="hljs-attr">mediumspringgreen</span>: <span class="hljs-string">&#x27;00fa9a&#x27;</span>,
-    <span class="hljs-attr">mediumturquoise</span>: <span class="hljs-string">&#x27;48d1cc&#x27;</span>,
-    <span class="hljs-attr">mediumvioletred</span>: <span class="hljs-string">&#x27;c71585&#x27;</span>,
-    <span class="hljs-attr">midnightblue</span>: <span class="hljs-string">&#x27;191970&#x27;</span>,
-    <span class="hljs-attr">mintcream</span>: <span class="hljs-string">&#x27;f5fffa&#x27;</span>,
-    <span class="hljs-attr">mistyrose</span>: <span class="hljs-string">&#x27;ffe4e1&#x27;</span>,
-    <span class="hljs-attr">moccasin</span>: <span class="hljs-string">&#x27;ffe4b5&#x27;</span>,
-    <span class="hljs-attr">navajowhite</span>: <span class="hljs-string">&#x27;ffdead&#x27;</span>,
-    <span class="hljs-attr">navy</span>: <span class="hljs-string">&#x27;000080&#x27;</span>,
-    <span class="hljs-attr">oldlace</span>: <span class="hljs-string">&#x27;fdf5e6&#x27;</span>,
-    <span class="hljs-attr">olive</span>: <span class="hljs-string">&#x27;808000&#x27;</span>,
-    <span class="hljs-attr">olivedrab</span>: <span class="hljs-string">&#x27;6b8e23&#x27;</span>,
-    <span class="hljs-attr">orange</span>: <span class="hljs-string">&#x27;ffa500&#x27;</span>,
-    <span class="hljs-attr">orangered</span>: <span class="hljs-string">&#x27;ff4500&#x27;</span>,
-    <span class="hljs-attr">orchid</span>: <span class="hljs-string">&#x27;da70d6&#x27;</span>,
-    <span class="hljs-attr">palegoldenrod</span>: <span class="hljs-string">&#x27;eee8aa&#x27;</span>,
-    <span class="hljs-attr">palegreen</span>: <span class="hljs-string">&#x27;98fb98&#x27;</span>,
-    <span class="hljs-attr">paleturquoise</span>: <span class="hljs-string">&#x27;afeeee&#x27;</span>,
-    <span class="hljs-attr">palevioletred</span>: <span class="hljs-string">&#x27;db7093&#x27;</span>,
-    <span class="hljs-attr">papayawhip</span>: <span class="hljs-string">&#x27;ffefd5&#x27;</span>,
-    <span class="hljs-attr">peachpuff</span>: <span class="hljs-string">&#x27;ffdab9&#x27;</span>,
-    <span class="hljs-attr">peru</span>: <span class="hljs-string">&#x27;cd853f&#x27;</span>,
-    <span class="hljs-attr">pink</span>: <span class="hljs-string">&#x27;ffc0cb&#x27;</span>,
-    <span class="hljs-attr">plum</span>: <span class="hljs-string">&#x27;dda0dd&#x27;</span>,
-    <span class="hljs-attr">powderblue</span>: <span class="hljs-string">&#x27;b0e0e6&#x27;</span>,
-    <span class="hljs-attr">purple</span>: <span class="hljs-string">&#x27;800080&#x27;</span>,
-    <span class="hljs-attr">rebeccapurple</span>: <span class="hljs-string">&#x27;663399&#x27;</span>,
-    <span class="hljs-attr">red</span>: <span class="hljs-string">&#x27;ff0000&#x27;</span>,
-    <span class="hljs-attr">rosybrown</span>: <span class="hljs-string">&#x27;bc8f8f&#x27;</span>,
-    <span class="hljs-attr">royalblue</span>: <span class="hljs-string">&#x27;4169e1&#x27;</span>,
-    <span class="hljs-attr">saddlebrown</span>: <span class="hljs-string">&#x27;8b4513&#x27;</span>,
-    <span class="hljs-attr">salmon</span>: <span class="hljs-string">&#x27;fa8072&#x27;</span>,
-    <span class="hljs-attr">sandybrown</span>: <span class="hljs-string">&#x27;f4a460&#x27;</span>,
-    <span class="hljs-attr">seagreen</span>: <span class="hljs-string">&#x27;2e8b57&#x27;</span>,
-    <span class="hljs-attr">seashell</span>: <span class="hljs-string">&#x27;fff5ee&#x27;</span>,
-    <span class="hljs-attr">sienna</span>: <span class="hljs-string">&#x27;a0522d&#x27;</span>,
-    <span class="hljs-attr">silver</span>: <span class="hljs-string">&#x27;c0c0c0&#x27;</span>,
-    <span class="hljs-attr">skyblue</span>: <span class="hljs-string">&#x27;87ceeb&#x27;</span>,
-    <span class="hljs-attr">slateblue</span>: <span class="hljs-string">&#x27;6a5acd&#x27;</span>,
-    <span class="hljs-attr">slategray</span>: <span class="hljs-string">&#x27;708090&#x27;</span>,
-    <span class="hljs-attr">slategrey</span>: <span class="hljs-string">&#x27;708090&#x27;</span>,
-    <span class="hljs-attr">snow</span>: <span class="hljs-string">&#x27;fffafa&#x27;</span>,
-    <span class="hljs-attr">springgreen</span>: <span class="hljs-string">&#x27;00ff7f&#x27;</span>,
-    <span class="hljs-attr">steelblue</span>: <span class="hljs-string">&#x27;4682b4&#x27;</span>,
-    <span class="hljs-attr">tan</span>: <span class="hljs-string">&#x27;d2b48c&#x27;</span>,
-    <span class="hljs-attr">teal</span>: <span class="hljs-string">&#x27;008080&#x27;</span>,
-    <span class="hljs-attr">thistle</span>: <span class="hljs-string">&#x27;d8bfd8&#x27;</span>,
-    <span class="hljs-attr">tomato</span>: <span class="hljs-string">&#x27;ff6347&#x27;</span>,
-    <span class="hljs-attr">turquoise</span>: <span class="hljs-string">&#x27;40e0d0&#x27;</span>,
-    <span class="hljs-attr">violet</span>: <span class="hljs-string">&#x27;ee82ee&#x27;</span>,
-    <span class="hljs-attr">wheat</span>: <span class="hljs-string">&#x27;f5deb3&#x27;</span>,
-    <span class="hljs-attr">white</span>: <span class="hljs-string">&#x27;ffffff&#x27;</span>,
-    <span class="hljs-attr">whitesmoke</span>: <span class="hljs-string">&#x27;f5f5f5&#x27;</span>,
-    <span class="hljs-attr">yellow</span>: <span class="hljs-string">&#x27;ffff00&#x27;</span>,
-    <span class="hljs-attr">yellowgreen</span>: <span class="hljs-string">&#x27;9acd32&#x27;</span>
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!rgb) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+
+    rgb.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    hsl.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    hwb.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    xyz.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    lab.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    lch.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">let</span> r = <span class="hljs-number">0</span>,
+        g = <span class="hljs-number">0</span>,
+        b = <span class="hljs-number">0</span>,
+        a = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -1898,6 +1565,621 @@ P.<span class="hljs-property">setFromHSL</span> = <span class="hljs-keyword">fun
               
               <div class="sswrap ">
                 <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <p>TODO: make this more efficient so we only convert to the color spaces we need (RGB, internal color space, return color space)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;hwb&#x27;</span>) &gt;= <span class="hljs-number">0</span> &amp;&amp; !supportsHWB) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
+              </div>
+              <p>This could be handled better via a regex, but also need to deal with angle units</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;hwb&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+
+        <span class="hljs-keyword">const</span> vals = color.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);
+
+        <span class="hljs-keyword">let</span> hue = vals[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;deg&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = <span class="hljs-built_in">parseFloat</span>(hue)
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;rad&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = <span class="hljs-built_in">parseFloat</span>(hue) / radian;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;grad&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = (<span class="hljs-built_in">parseFloat</span>(hue) / <span class="hljs-number">400</span>) * <span class="hljs-number">360</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;turn&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = <span class="hljs-built_in">parseFloat</span>(hue) * <span class="hljs-number">360</span>;
+        <span class="hljs-keyword">else</span> hue = <span class="hljs-built_in">parseFloat</span>(hue);
+
+       <span class="hljs-keyword">let</span> white = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]),
+           black = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]),
+           alpha = vals[<span class="hljs-number">3</span>];
+
+        <span class="hljs-keyword">if</span> (alpha != <span class="hljs-literal">null</span>) {
+
+            a = (alpha.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;%&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-built_in">parseFloat</span>(alpha) / <span class="hljs-number">100</span> : <span class="hljs-built_in">parseFloat</span>(alpha);
+        }
+        <span class="hljs-keyword">else</span> a = <span class="hljs-number">1</span>;
+
+        <span class="hljs-keyword">let</span> [b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertHWBtoRGB</span>(hue, white, black);
+
+        b = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(b * <span class="hljs-number">256</span>);
+        <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">255</span>) b = <span class="hljs-number">255</span>;
+        <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">0</span>) b = <span class="hljs-number">0</span>;
+
+        c = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(c * <span class="hljs-number">256</span>);
+        <span class="hljs-keyword">if</span> (c &gt; <span class="hljs-number">255</span>) c = <span class="hljs-number">255</span>;
+        <span class="hljs-keyword">if</span> (c &lt; <span class="hljs-number">0</span>) c = <span class="hljs-number">0</span>;
+
+        d = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(d * <span class="hljs-number">256</span>);
+        <span class="hljs-keyword">if</span> (d &gt; <span class="hljs-number">255</span>) d = <span class="hljs-number">255</span>;
+        <span class="hljs-keyword">if</span> (d &lt; <span class="hljs-number">0</span>) d = <span class="hljs-number">0</span>;
+
+        rgb.<span class="hljs-title function_">push</span>(b, c, d, a);
+        hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(b, c, d), a);
+        hwb.<span class="hljs-title function_">push</span>(hue, white, black, a);
+        xyz.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoXYZ</span>(b, c, d), a);
+        lab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        lch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoLCH</span>(lab[<span class="hljs-number">0</span>], lab[<span class="hljs-number">1</span>], lab[<span class="hljs-number">2</span>]), a);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
+              </div>
+              <p>The Color specification doesn’t define an XYZ standard input for CSS. So we have to make one up ourselves. SC expects to receive colors defined in the XYZ color space to be raw float Numbers separated by spaces and (if required) a slash followed by the alpha value</p>
+<ul>
+<li><code>xyz(x-value y-value z-value)</code> (with alpha = 1, opaque)</li>
+<li><code>xyz(x-value y-value z-value / alpha-value)</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;xyz&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
+        
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;xyz&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+
+        <span class="hljs-keyword">const</span> vals = color.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);
+
+        <span class="hljs-keyword">const</span> x = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]),
+            y = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]),
+            z = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]),
+            alpha = vals[<span class="hljs-number">3</span>];
+
+        a = (alpha != <span class="hljs-literal">null</span>) ? <span class="hljs-built_in">parseFloat</span>(alpha) : <span class="hljs-number">1</span>;
+
+        rgb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(x, y, z), a);
+        hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>]), a);
+        hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>], hsl[<span class="hljs-number">0</span>]), a);
+        xyz.<span class="hljs-title function_">push</span>(x, y, z, a);
+        lab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoLAB</span>(x, y, z), a);
+        lch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoLCH</span>(lab[<span class="hljs-number">0</span>], lab[<span class="hljs-number">1</span>], lab[<span class="hljs-number">2</span>]), a);
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;lab&#x27;</span>) &gt;= <span class="hljs-number">0</span> &amp;&amp; !supportsLAB) {
+
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;lab&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+
+        <span class="hljs-keyword">const</span> vals = color.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);
+
+        <span class="hljs-keyword">const</span> b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]),
+            c = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]),
+            d = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]),
+            alpha = vals[<span class="hljs-number">3</span>];
+
+        a = (alpha != <span class="hljs-literal">null</span>) ? <span class="hljs-built_in">parseFloat</span>(alpha) : <span class="hljs-number">1</span>;
+
+        lab.<span class="hljs-title function_">push</span>(b, c, d, a);
+        xyz.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoXYZ</span>(b, c, d), a);
+        rgb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>]), a);
+        hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>], hsl[<span class="hljs-number">0</span>]), a);
+        lch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoLCH</span>(b, c, d), a);
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;lch&#x27;</span>) &gt;= <span class="hljs-number">0</span> &amp;&amp; !supportsLCH) {
+
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;lch&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+
+        <span class="hljs-keyword">const</span> vals = color.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);
+
+        <span class="hljs-keyword">const</span> b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]),
+            c = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]),
+            d = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]),
+            alpha = vals[<span class="hljs-number">3</span>];
+
+        a = (alpha != <span class="hljs-literal">null</span>) ? <span class="hljs-built_in">parseFloat</span>(alpha) : <span class="hljs-number">1</span>;
+
+        lch.<span class="hljs-title function_">push</span>(b, c, d, a);
+        lab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLCHtoLAB</span>(b, c, d), a);
+        xyz.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoXYZ</span>(lab[<span class="hljs-number">0</span>], lab[<span class="hljs-number">1</span>], lab[<span class="hljs-number">2</span>]), a);
+        rgb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>]), a);
+        hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>], hsl[<span class="hljs-number">0</span>]), a);
+    }
+    <span class="hljs-keyword">else</span> {
+
+        [r, g, b, a] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getColorFromCanvas</span>(color);
+        rgb.<span class="hljs-title function_">push</span>(r, g, b, a);
+        hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(r, g, b), a);
+        hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(r, g, b, hsl[<span class="hljs-number">0</span>]), a);
+        xyz.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoXYZ</span>(r, g, b), a);
+        lab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        lch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoLCH</span>(lab[<span class="hljs-number">0</span>], lab[<span class="hljs-number">1</span>], lab[<span class="hljs-number">2</span>]), a);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};
+
+P.<span class="hljs-property">getColorFromCanvas</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
+
+    <span class="hljs-keyword">let</span> r = <span class="hljs-number">0</span>,
+        g = <span class="hljs-number">0</span>,
+        b = <span class="hljs-number">0</span>,
+        a = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">const</span> cell = <span class="hljs-title function_">requestCell</span>();
+
+    <span class="hljs-keyword">const</span> { element, engine } = cell;
+
+    element.<span class="hljs-property">width</span> = <span class="hljs-number">1</span>;
+    element.<span class="hljs-property">height</span> = <span class="hljs-number">1</span>;
+
+    engine.<span class="hljs-title function_">save</span>();
+    engine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
+    engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+    engine.<span class="hljs-property">fillStyle</span> = color;
+
+    engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+
+    <span class="hljs-keyword">const</span> image = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+
+    <span class="hljs-keyword">if</span> (image &amp;&amp; image.<span class="hljs-property">data</span>) {
+
+        [r, g, b, a] = image.<span class="hljs-property">data</span>;
+
+        a /= <span class="hljs-number">255</span>;
+    }
+    engine.<span class="hljs-title function_">restore</span>();
+    <span class="hljs-title function_">releaseCell</span>(cell);
+
+    <span class="hljs-keyword">return</span> [r, g, b, a];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
+              </div>
+              <p>From <a href="https://www.w3.org/TR/css-color-4/#rgb-to-hsl">CSS Color Module Level 4</a> - which is wrong because when I checked it sets up the hue value as NaN (!!!?!). So instead I’ve gone with the suggested answer in <a href="https://css-tricks.com/converting-color-spaces-in-javascript/">this CSS-Tricks article</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertRGBtoHSL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">red, green, blue</span>) {
+
+    red /= <span class="hljs-number">256</span>;
+    green /= <span class="hljs-number">256</span>;
+    blue /= <span class="hljs-number">256</span>;
+
+    <span class="hljs-keyword">let</span> max = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(red, green, blue);
+    <span class="hljs-keyword">let</span> min = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(red, green, blue);
+    <span class="hljs-keyword">let</span> [hue, sat, light] = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, (min + max)/<span class="hljs-number">2</span>];
+    <span class="hljs-keyword">let</span> d = max - min;
+
+    <span class="hljs-keyword">if</span> (d !== <span class="hljs-number">0</span>) {
+        sat = (light === <span class="hljs-number">0</span> || light === <span class="hljs-number">1</span>)
+            ? <span class="hljs-number">0</span>
+            : (max - light) / <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(light, <span class="hljs-number">1</span> - light);
+
+        <span class="hljs-keyword">switch</span> (max) {
+            <span class="hljs-keyword">case</span> <span class="hljs-attr">red</span>:   hue = (green - blue) / d + (green &lt; blue ? <span class="hljs-number">6</span> : <span class="hljs-number">0</span>); <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-attr">green</span>: hue = (blue - red) / d + <span class="hljs-number">2</span>; <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-attr">blue</span>:  hue = (red - green) / d + <span class="hljs-number">4</span>;
+        }
+
+        hue = hue * <span class="hljs-number">60</span>;
+    }
+
+    <span class="hljs-keyword">return</span> [hue, sat * <span class="hljs-number">100</span>, light * <span class="hljs-number">100</span>];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
+              </div>
+              <p>From <a href="https://www.w3.org/TR/css-color-4/#hsl-to-rgb">CSS Color Module Level 4</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertHSLtoRGB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">hue, sat, light</span>) {
+    
+    hue = hue % <span class="hljs-number">360</span>;
+
+    <span class="hljs-keyword">if</span> (hue &lt; <span class="hljs-number">0</span>) {
+        hue += <span class="hljs-number">360</span>;
+    }
+
+    sat /= <span class="hljs-number">100</span>;
+    light /= <span class="hljs-number">100</span>;
+
+    <span class="hljs-keyword">const</span> f = <span class="hljs-keyword">function</span> (<span class="hljs-params">n</span>) {
+        <span class="hljs-keyword">let</span> k = (n + hue/<span class="hljs-number">30</span>) % <span class="hljs-number">12</span>;
+        <span class="hljs-keyword">let</span> a = sat * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(light, <span class="hljs-number">1</span> - light);
+        <span class="hljs-keyword">return</span> light - a * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(-<span class="hljs-number">1</span>, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(k - <span class="hljs-number">3</span>, <span class="hljs-number">9</span> - k, <span class="hljs-number">1</span>));
+    }
+    <span class="hljs-keyword">return</span> [<span class="hljs-title function_">f</span>(<span class="hljs-number">0</span>), <span class="hljs-title function_">f</span>(<span class="hljs-number">8</span>), <span class="hljs-title function_">f</span>(<span class="hljs-number">4</span>)];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
+              </div>
+              <p>From <a href="https://www.w3.org/TR/css-color-4/#rgb-to-hwb">CSS Color Module Level 4</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertRGBtoHWB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">red, green, blue</span>) {
+
+    <span class="hljs-keyword">let</span> hsl = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(red, green, blue, suffix);
+
+    red /= <span class="hljs-number">256</span>;
+    green /= <span class="hljs-number">256</span>;
+    blue /= <span class="hljs-number">256</span>;
+
+    <span class="hljs-keyword">let</span> white = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(red, green, blue);
+    <span class="hljs-keyword">let</span> black = <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(red, green, blue);
+
+    <span class="hljs-keyword">return</span> [hsl[<span class="hljs-number">0</span>], white * <span class="hljs-number">100</span>, black * <span class="hljs-number">100</span>];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
+              </div>
+              <p>From <a href="https://www.w3.org/TR/css-color-4/#rgb-to-hwb">CSS Color Module Level 4</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertRGBHtoHWB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">red, green, blue, hue</span>) {
+
+    red /= <span class="hljs-number">256</span>;
+    green /= <span class="hljs-number">256</span>;
+    blue /= <span class="hljs-number">256</span>;
+
+    <span class="hljs-keyword">let</span> white = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(red, green, blue);
+    <span class="hljs-keyword">let</span> black = <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(red, green, blue);
+
+    <span class="hljs-keyword">return</span> [hue, white * <span class="hljs-number">100</span>, black * <span class="hljs-number">100</span>];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
+              </div>
+              <p>From <a href="https://www.w3.org/TR/css-color-4/#hwb-to-rgb">CSS Color Module Level 4</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertHWBtoRGB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">hue, white, black</span>) {
+    
+    white /= <span class="hljs-number">100</span>;
+    black /= <span class="hljs-number">100</span>;
+
+    <span class="hljs-keyword">if</span> (white + black &gt;= <span class="hljs-number">1</span>) {
+    
+        <span class="hljs-keyword">let</span> gray = white / (white + black);
+        <span class="hljs-keyword">return</span> [gray, gray, gray];
+    }
+
+    <span class="hljs-keyword">let</span> rgb = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertHSLtoRGB</span>(hue, <span class="hljs-number">100</span>, <span class="hljs-number">50</span>);
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++) {
+
+        rgb[i] *= (<span class="hljs-number">1</span> - white - black);
+        rgb[i] += white;
+    }
+    <span class="hljs-keyword">return</span> rgb;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
+              <p>Code relating to XYZ conversion taken and adapted from the <a href="https://github.com/vinaypillai/ac-colors/blob/master/index.js">vinaypillai/ac-colors repository</a> on GitHub</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertRGBtoXYZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">red, green, blue</span>) {
+
+    <span class="hljs-keyword">const</span> invertGammaCorrection = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+
+        <span class="hljs-keyword">if</span> (val &lt;= <span class="hljs-number">0.04045</span>) <span class="hljs-keyword">return</span> val / <span class="hljs-number">12.92</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>((val + <span class="hljs-number">0.055</span>) / <span class="hljs-number">1.055</span>, <span class="hljs-number">2.4</span>);
+    };
+
+    red /= <span class="hljs-number">255</span>;
+    green /= <span class="hljs-number">255</span>;
+    blue /= <span class="hljs-number">255</span>;
+
+    <span class="hljs-keyword">const</span> r = <span class="hljs-title function_">invertGammaCorrection</span>(red),
+        g = <span class="hljs-title function_">invertGammaCorrection</span>(green),
+        b = <span class="hljs-title function_">invertGammaCorrection</span>(blue);
+
+    <span class="hljs-keyword">const</span> x = (<span class="hljs-number">0.4124</span> * r) + (<span class="hljs-number">0.3576</span> * g) + (<span class="hljs-number">0.1805</span> * b),
+        y = (<span class="hljs-number">0.2126</span> * r) + (<span class="hljs-number">0.7152</span> * g) + (<span class="hljs-number">0.0722</span> * b),
+        z = (<span class="hljs-number">0.0193</span> * r) + (<span class="hljs-number">0.1192</span> * g) + (<span class="hljs-number">0.9505</span> * b);
+
+    <span class="hljs-keyword">return</span> [x * <span class="hljs-number">100</span> + <span class="hljs-number">0</span>, y * <span class="hljs-number">100</span> + <span class="hljs-number">0</span>, z * <span class="hljs-number">100</span> + <span class="hljs-number">0</span>];
+};
+
+P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
+
+    <span class="hljs-keyword">const</span> addGammaCorrection = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+
+        <span class="hljs-keyword">if</span> (val &lt;= <span class="hljs-number">0.0031308</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">12.92</span> * val;
+        <span class="hljs-keyword">return</span> (<span class="hljs-number">1.055</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(val, <span class="hljs-number">1</span> / <span class="hljs-number">2.4</span>)) - <span class="hljs-number">0.055</span>;
+    };
+
+    x /= <span class="hljs-number">100</span>;
+    y /= <span class="hljs-number">100</span>;
+    z /= <span class="hljs-number">100</span>;
+
+    <span class="hljs-keyword">const</span> r = (<span class="hljs-number">3.2406254773200533</span> * x) - (<span class="hljs-number">1.5372079722103187</span> * y) - (<span class="hljs-number">0.4986285986982479</span> * z),
+      g = (-<span class="hljs-number">0.9689307147293197</span> * x) + (<span class="hljs-number">1.8757560608852415</span> * y) + (<span class="hljs-number">0.041517523842953964</span> * z),
+      b = (<span class="hljs-number">0.055710120445510616</span> * x) + (-<span class="hljs-number">0.2040210505984867</span> * y) + (<span class="hljs-number">1.0569959422543882</span> * z);
+
+    <span class="hljs-keyword">const</span> red = <span class="hljs-title function_">addGammaCorrection</span>(r),
+        green = <span class="hljs-title function_">addGammaCorrection</span>(g),
+        blue = <span class="hljs-title function_">addGammaCorrection</span>(b);
+
+    <span class="hljs-keyword">return</span> [<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(red * <span class="hljs-number">255</span>) + <span class="hljs-number">0</span>, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(green * <span class="hljs-number">255</span>) + <span class="hljs-number">0</span>, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(blue * <span class="hljs-number">255</span>) + <span class="hljs-number">0</span>];
+};
+
+P.<span class="hljs-property">convertXYZtoLAB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
+
+    <span class="hljs-keyword">const</span> iX = <span class="hljs-number">95.05</span>,
+        iY = <span class="hljs-number">100</span>,
+        iZ = <span class="hljs-number">108.9</span>,
+        eps = <span class="hljs-number">216</span> / <span class="hljs-number">24389</span>,
+        kap = <span class="hljs-number">24389</span> / <span class="hljs-number">27</span>;
+
+    <span class="hljs-keyword">const</span> cbrt = (<span class="hljs-title class_">Math</span>.<span class="hljs-property">cbrt</span> != <span class="hljs-literal">null</span>) ? <span class="hljs-title class_">Math</span>.<span class="hljs-property">cbrt</span> : <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(val, <span class="hljs-number">1</span> / <span class="hljs-number">3</span>);
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">fwdTrans</span> = (<span class="hljs-params">val</span>) =&gt; (val &gt; eps) ? <span class="hljs-title function_">cbrt</span>(val) : ((kap * val) + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>;
+
+    x /= iX;
+    y /= iY;
+    z /= iZ;
+
+    <span class="hljs-keyword">const</span> fX = <span class="hljs-title function_">fwdTrans</span>(x),
+        fY = <span class="hljs-title function_">fwdTrans</span>(y),
+        fZ = <span class="hljs-title function_">fwdTrans</span>(z);
+
+    <span class="hljs-keyword">const</span> l = <span class="hljs-number">116</span> * fY - <span class="hljs-number">16</span>,
+        a = <span class="hljs-number">500</span> * (fX - fY),
+        b = <span class="hljs-number">200</span> * (fY - fZ);
+
+    <span class="hljs-keyword">return</span> [l + <span class="hljs-number">0</span>, a + <span class="hljs-number">0</span>, b + <span class="hljs-number">0</span>];
+};
+
+P.<span class="hljs-property">convertLABtoXYZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, a, b</span>) {
+
+    <span class="hljs-keyword">const</span> iX = <span class="hljs-number">95.05</span>,
+        iY = <span class="hljs-number">100</span>,
+        iZ = <span class="hljs-number">108.9</span>,
+        eps = <span class="hljs-number">216</span> / <span class="hljs-number">24389</span>,
+        kap = <span class="hljs-number">24389</span> / <span class="hljs-number">27</span>;
+
+    <span class="hljs-keyword">const</span> fY = (l + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>,
+        fZ = (fY - b / <span class="hljs-number">200</span>),
+        fX = a / <span class="hljs-number">500</span> + fY;
+
+    <span class="hljs-keyword">const</span> xR = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(fX, <span class="hljs-number">3</span>) &gt; eps) ? <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(fX, <span class="hljs-number">3</span>) : (<span class="hljs-number">116</span> * fX - <span class="hljs-number">16</span>) / kap,
+        yR = (l &gt; kap * eps) ? <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>((l + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>, <span class="hljs-number">3</span>) : l / kap,
+        zR = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(fZ, <span class="hljs-number">3</span>) &gt; eps) ? <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(fZ, <span class="hljs-number">3</span>) : (<span class="hljs-number">116</span> * fZ - <span class="hljs-number">16</span>) / kap;
+
+    <span class="hljs-keyword">return</span> [xR * iX + <span class="hljs-number">0</span>, yR * iY + <span class="hljs-number">0</span>, zR * iZ];
+};
+
+P.<span class="hljs-property">convertLABtoLCH</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, a, b</span>) {
+
+    <span class="hljs-keyword">const</span> maxZeroTolerance = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">10</span>, -<span class="hljs-number">12</span>);
+
+    b = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(b) &lt; <span class="hljs-title class_">Color</span>.<span class="hljs-property">maxZeroTolerance</span>) ? <span class="hljs-number">0</span> : b;
+
+    <span class="hljs-keyword">const</span> c = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(a * a + b * b);
+
+    <span class="hljs-keyword">const</span> h = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">atan2</span>(b, a) &gt;= <span class="hljs-number">0</span>) ?
+        <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">atan2</span>(b, a) / <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">180</span> :
+        <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">atan2</span>(b, a) / <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">180</span> + <span class="hljs-number">360</span>;
+
+    <span class="hljs-keyword">return</span> [l + <span class="hljs-number">0</span>, c + <span class="hljs-number">0</span>, h + <span class="hljs-number">0</span>];
+};
+
+P.<span class="hljs-property">convertLCHtoLAB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, c, h</span>) {
+
+    <span class="hljs-keyword">const</span> a = c * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>(h / <span class="hljs-number">180</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>);
+    <span class="hljs-keyword">const</span> b = c * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>(h / <span class="hljs-number">180</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>);
+
+    <span class="hljs-keyword">return</span> [l + <span class="hljs-number">0</span>, a + <span class="hljs-number">0</span>, b + <span class="hljs-number">0</span>];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
+              </div>
+              <p>We need to check whether the browser supports various color spaces. The simplest way to do that is to feed a color into a canvas element’s engine, stamp a pixel, then check to see if the pixel is black (space not supported)</p>
+<ul>
+<li>We check for HWB, LAB andf LCH color space support</li>
+<li>We assume that the browser always supports RGB and HSL  color spaces</li>
+<li>We don’t check for XYZ color space support because it is not part of the <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4 specification</a></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> supportsHWB = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">let</span> supportsLAB = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">let</span> supportsLCH = <span class="hljs-literal">false</span>;
+
+<span class="hljs-keyword">const</span> browserChecker = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">let</span> r = <span class="hljs-number">0</span>,
+        g = <span class="hljs-number">0</span>,
+        b = <span class="hljs-number">0</span>,
+        a = <span class="hljs-number">0</span>,
+        image;
+
+    <span class="hljs-keyword">const</span> cell = <span class="hljs-title function_">requestCell</span>();
+
+    <span class="hljs-keyword">const</span> { element, engine } = cell;
+
+    element.<span class="hljs-property">width</span> = <span class="hljs-number">1</span>;
+    element.<span class="hljs-property">height</span> = <span class="hljs-number">1</span>;
+
+    engine.<span class="hljs-title function_">save</span>();
+    engine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
+    engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-over&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
+              </div>
+              <p>Test for HWB support</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;hwb(90 10% 10%)&#x27;</span>;
+    engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+
+    image = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+
+    <span class="hljs-keyword">if</span> (image &amp;&amp; image.<span class="hljs-property">data</span>) {
+
+        [r, g, b, a] = image.<span class="hljs-property">data</span>;
+    }
+    <span class="hljs-keyword">if</span> (r || g || b) supportsHWB = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-50">&#x00a7;</a>
+              </div>
+              <p>Test for LAB support</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;lab(29.2345% 39.3825 20.0664)&#x27;</span>;
+    engine.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+
+    image = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+
+    <span class="hljs-keyword">if</span> (image &amp;&amp; image.<span class="hljs-property">data</span>) {
+
+        [r, g, b, a] = image.<span class="hljs-property">data</span>;
+    }
+    <span class="hljs-keyword">if</span> (r || g || b) supportsLAB = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-51">&#x00a7;</a>
+              </div>
+              <p>Test for LCH support</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;lch(29.2345% 44.2 27)&#x27;</span>;
+    engine.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+
+    image = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+
+    <span class="hljs-keyword">if</span> (image &amp;&amp; image.<span class="hljs-property">data</span>) {
+
+        [r, g, b, a] = image.<span class="hljs-property">data</span>;
+    }
+    <span class="hljs-keyword">if</span> (r || g || b) supportsLCH = <span class="hljs-literal">true</span>;
+
+    engine.<span class="hljs-title function_">restore</span>();
+    <span class="hljs-title function_">releaseCell</span>(cell);
+};
+<span class="hljs-title function_">browserChecker</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeColor</span>({
@@ -1951,11 +2233,11 @@ constructors.<span class="hljs-property">Color</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-40">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

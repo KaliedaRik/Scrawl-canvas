@@ -320,6 +320,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-059.html">
+                  ./demo/canvas-059.js
+                </a>
+              
+                
+                <a class="source" href="canvas-060.html">
+                  ./demo/canvas-060.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -895,6 +905,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-034.html">
+                  ./demo/temp-034.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -955,7 +970,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-filters-019">Demo Filters 019</h1>
-<p>Using a Noise asset with a displace filter</p>
+<p>Filter parameters: emboss</p>
 
             </div>
             
@@ -974,7 +989,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1004,73 +1019,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>,
-    noiseCanvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;noise-canvas&#x27;</span>];
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
 scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
 
-
-<span class="hljs-keyword">let</span> noiseAsset = scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-noise-generator&#x27;</span>,
-    <span class="hljs-attr">width</span>: <span class="hljs-number">400</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,
-
-    <span class="hljs-attr">noiseEngine</span>: <span class="hljs-string">&#x27;improved-perlin&#x27;</span>,
-
-    <span class="hljs-attr">rainbowColors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>],
-        [<span class="hljs-number">19</span>, <span class="hljs-string">&#x27;#806e58&#x27;</span>],
-        [<span class="hljs-number">39</span>, <span class="hljs-string">&#x27;#ab7533&#x27;</span>],
-        [<span class="hljs-number">59</span>, <span class="hljs-string">&#x27;#f78b07&#x27;</span>],
-        [<span class="hljs-number">79</span>, <span class="hljs-string">&#x27;#fae69d&#x27;</span>],
-        [<span class="hljs-number">99</span>, <span class="hljs-string">&#x27;#e8e7e3&#x27;</span>],
-        [<span class="hljs-number">119</span>, <span class="hljs-string">&#x27;#babab6&#x27;</span>],
-        [<span class="hljs-number">139</span>, <span class="hljs-string">&#x27;#f7f7f2&#x27;</span>],
-        [<span class="hljs-number">159</span>, <span class="hljs-string">&#x27;#b0b094&#x27;</span>],
-        [<span class="hljs-number">179</span>, <span class="hljs-string">&#x27;#f2f2dc&#x27;</span>],
-        [<span class="hljs-number">199</span>, <span class="hljs-string">&#x27;#757544&#x27;</span>],
-        [<span class="hljs-number">219</span>, <span class="hljs-string">&#x27;#e6e670&#x27;</span>],
-        [<span class="hljs-number">239</span>, <span class="hljs-string">&#x27;#dbdb2a&#x27;</span>],
-        [<span class="hljs-number">259</span>, <span class="hljs-string">&#x27;#919129&#x27;</span>],
-        [<span class="hljs-number">279</span>, <span class="hljs-string">&#x27;#969608&#x27;</span>],
-        [<span class="hljs-number">299</span>, <span class="hljs-string">&#x27;#f5f50c&#x27;</span>],
-        [<span class="hljs-number">319</span>, <span class="hljs-string">&#x27;#f5da0c&#x27;</span>],
-        [<span class="hljs-number">339</span>, <span class="hljs-string">&#x27;#968606&#x27;</span>],
-        [<span class="hljs-number">359</span>, <span class="hljs-string">&#x27;#d6c53a&#x27;</span>],
-        [<span class="hljs-number">379</span>, <span class="hljs-string">&#x27;#918839&#x27;</span>],
-        [<span class="hljs-number">399</span>, <span class="hljs-string">&#x27;#f5eb90&#x27;</span>],
-        [<span class="hljs-number">419</span>, <span class="hljs-string">&#x27;#c7c293&#x27;</span>],
-        [<span class="hljs-number">439</span>, <span class="hljs-string">&#x27;#c7b093&#x27;</span>],
-        [<span class="hljs-number">459</span>, <span class="hljs-string">&#x27;#c9c0b3&#x27;</span>],
-        [<span class="hljs-number">479</span>, <span class="hljs-string">&#x27;#f7f0e6&#x27;</span>],
-        [<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;#bf9a65&#x27;</span>],
-        [<span class="hljs-number">519</span>, <span class="hljs-string">&#x27;#b56e07&#x27;</span>],
-        [<span class="hljs-number">539</span>, <span class="hljs-string">&#x27;#f79502&#x27;</span>],
-        [<span class="hljs-number">559</span>, <span class="hljs-string">&#x27;#d69533&#x27;</span>],
-        [<span class="hljs-number">579</span>, <span class="hljs-string">&#x27;#704402&#x27;</span>],
-        [<span class="hljs-number">599</span>, <span class="hljs-string">&#x27;#805d2a&#x27;</span>],
-        [<span class="hljs-number">619</span>, <span class="hljs-string">&#x27;#ebd9d5&#x27;</span>],
-        [<span class="hljs-number">639</span>, <span class="hljs-string">&#x27;#dfede1&#x27;</span>],
-        [<span class="hljs-number">659</span>, <span class="hljs-string">&#x27;#dfe9ed&#x27;</span>],
-        [<span class="hljs-number">679</span>, <span class="hljs-string">&#x27;#a0cadb&#x27;</span>],
-        [<span class="hljs-number">699</span>, <span class="hljs-string">&#x27;#d2f0fc&#x27;</span>],
-        [<span class="hljs-number">719</span>, <span class="hljs-string">&#x27;#7d888c&#x27;</span>],
-        [<span class="hljs-number">739</span>, <span class="hljs-string">&#x27;#a8b2b5&#x27;</span>],
-        [<span class="hljs-number">759</span>, <span class="hljs-string">&#x27;#edf3f5&#x27;</span>],
-        [<span class="hljs-number">779</span>, <span class="hljs-string">&#x27;#a2c0de&#x27;</span>],
-        [<span class="hljs-number">799</span>, <span class="hljs-string">&#x27;#8a98a6&#x27;</span>],
-        [<span class="hljs-number">819</span>, <span class="hljs-string">&#x27;#b4b6b8&#x27;</span>],
-        [<span class="hljs-number">839</span>, <span class="hljs-string">&#x27;#f2f5f7&#x27;</span>],
-        [<span class="hljs-number">859</span>, <span class="hljs-string">&#x27;#eaebda&#x27;</span>],
-        [<span class="hljs-number">879</span>, <span class="hljs-string">&#x27;#d2d687&#x27;</span>],
-        [<span class="hljs-number">899</span>, <span class="hljs-string">&#x27;#686b2e&#x27;</span>],
-        [<span class="hljs-number">919</span>, <span class="hljs-string">&#x27;#aab038&#x27;</span>],
-        [<span class="hljs-number">939</span>, <span class="hljs-string">&#x27;#474a14&#x27;</span>],
-        [<span class="hljs-number">959</span>, <span class="hljs-string">&#x27;#b4bd28&#x27;</span>],
-        [<span class="hljs-number">979</span>, <span class="hljs-string">&#x27;#656b03&#x27;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>],
-    ],
+canvas.<span class="hljs-title function_">setBase</span>({
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -1086,33 +1040,10 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;noise&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;image&#x27;</span>,
-
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;my-noise-generator&#x27;</span>,
-
-    <span class="hljs-attr">width</span>: <span class="hljs-number">400</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,
-
-    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-
-    <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;map&#x27;</span>,
-});
-
-scrawl.<span class="hljs-title function_">makeFilter</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;displace&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;displace&#x27;</span>,
-
-    <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;map&#x27;</span>,
-
-    <span class="hljs-attr">scaleX</span>: <span class="hljs-number">20</span>,
-    <span class="hljs-attr">scaleY</span>: <span class="hljs-number">20</span>,
-
-    <span class="hljs-attr">transparentEdges</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;dither&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;dither&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -1128,7 +1059,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
 
@@ -1142,20 +1073,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;noise&#x27;</span>, <span class="hljs-string">&#x27;displace&#x27;</span>],
-});
-
-scrawl.<span class="hljs-title function_">makePicture</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;noisecanvas-display&#x27;</span>,
-    <span class="hljs-attr">group</span>: noiseCanvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;my-noise-generator&#x27;</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;dither&#x27;</span>],
 });</pre></div></div>
             
         </li>
@@ -1174,12 +1092,7 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`Dimensions: width - <span class="hljs-subst">${width.value}</span>, height - <span class="hljs-subst">${height.value}</span>
-Color (monochrome): start: <span class="hljs-subst">${monochromeStart.value}</span>; range: <span class="hljs-subst">${monochromeRange.value}</span>
-Color (hue): start: <span class="hljs-subst">${hueStart.value}</span>; range: <span class="hljs-subst">${hueRange.value}</span>; saturation: <span class="hljs-subst">${saturation.value}</span>; luminosity: <span class="hljs-subst">${luminosity.value}</span>
-Scale: <span class="hljs-subst">${scale.value}</span>; Size: <span class="hljs-subst">${size.value}</span>
-Octaves: <span class="hljs-subst">${octaves.value}</span>; Sine frequency coefficient: <span class="hljs-subst">${sineFrequencyCoeff.value}</span>
-Persistence: <span class="hljs-subst">${persistence.value}</span>; Lacunarity: <span class="hljs-subst">${lacunarity.value}</span>; Sum amplitude: <span class="hljs-subst">${sumAmplitude.value}</span>; Worley depth: <span class="hljs-subst">${worleyDepth.value}</span>`</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
 });</pre></div></div>
             
         </li>
@@ -1198,7 +1111,7 @@ Persistence: <span class="hljs-subst">${persistence.value}</span>; Lacunarity: <
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
-    <span class="hljs-attr">target</span>: [canvas, noiseCanvas],
+    <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             
@@ -1221,121 +1134,16 @@ Persistence: <span class="hljs-subst">${persistence.value}</span>; Lacunarity: <
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
 
-    <span class="hljs-attr">target</span>: noiseAsset,
+    <span class="hljs-attr">target</span>: myFilter,
 
     <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
 
     <span class="hljs-attr">updates</span>: {
 
-        <span class="hljs-attr">width</span>: [<span class="hljs-string">&#x27;width&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">height</span>: [<span class="hljs-string">&#x27;height&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">noiseEngine</span>: [<span class="hljs-string">&#x27;noiseEngine&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">color</span>: [<span class="hljs-string">&#x27;color&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">gradientStart</span>: [<span class="hljs-string">&#x27;gradientStart&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">gradientEnd</span>: [<span class="hljs-string">&#x27;gradientEnd&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">octaveFunction</span>: [<span class="hljs-string">&#x27;octaveFunction&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">octaves</span>: [<span class="hljs-string">&#x27;octaves&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">sumFunction</span>: [<span class="hljs-string">&#x27;sumFunction&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">sineFrequencyCoeff</span>: [<span class="hljs-string">&#x27;sineFrequencyCoeff&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">smoothing</span>: [<span class="hljs-string">&#x27;smoothing&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">scale</span>: [<span class="hljs-string">&#x27;scale&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">size</span>: [<span class="hljs-string">&#x27;size&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">seed</span>: [<span class="hljs-string">&#x27;seed&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">persistence</span>: [<span class="hljs-string">&#x27;persistence&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">lacunarity</span>: [<span class="hljs-string">&#x27;lacunarity&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">sumAmplitude</span>: [<span class="hljs-string">&#x27;sumAmplitude&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">monochromeStart</span>: [<span class="hljs-string">&#x27;monochromeStart&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">monochromeRange</span>: [<span class="hljs-string">&#x27;monochromeRange&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">hueStart</span>: [<span class="hljs-string">&#x27;hueStart&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">hueRange</span>: [<span class="hljs-string">&#x27;hueRange&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">saturation</span>: [<span class="hljs-string">&#x27;saturation&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">luminosity</span>: [<span class="hljs-string">&#x27;luminosity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">worleyOutput</span>: [<span class="hljs-string">&#x27;worleyOutput&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">worleyDepth</span>: [<span class="hljs-string">&#x27;worleyDepth&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
     },
-});
-
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
-
-    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
-
-    <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;sine&#x27;</span> || val === <span class="hljs-string">&#x27;sine-x&#x27;</span> || val === <span class="hljs-string">&#x27;sine-y&#x27;</span>) {
-
-        sineFrequencyCoeff.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-        sumAmplitude.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;modular&#x27;</span> || val === <span class="hljs-string">&#x27;random&#x27;</span>) {
-
-        sineFrequencyCoeff.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        sumAmplitude.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-    }
-    <span class="hljs-keyword">else</span> {
-
-        sineFrequencyCoeff.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        sumAmplitude.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-    }
-
-}, <span class="hljs-string">&#x27;#sumFunction&#x27;</span>);
-
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
-
-    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
-
-    <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;simplex&#x27;</span>) smoothing.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-    <span class="hljs-keyword">else</span> smoothing.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-
-}, <span class="hljs-string">&#x27;#noiseEngine&#x27;</span>);
-
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
-
-    <span class="hljs-keyword">let</span> val = <span class="hljs-built_in">parseFloat</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>);
-
-    <span class="hljs-keyword">if</span> (val &gt; <span class="hljs-number">1</span>) {
-        persistence.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-        lacunarity.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-    }
-    <span class="hljs-keyword">else</span> {
-        persistence.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        lacunarity.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-    }
-}, <span class="hljs-string">&#x27;#octaves&#x27;</span>);
-
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
-
-    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
-
-    <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;monochrome&#x27;</span>) {
-        monochromeStart.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-        monochromeRange.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-        gradientStart.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        gradientEnd.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        hueStart.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        hueRange.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        saturation.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        luminosity.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;hue&#x27;</span>) {
-        hueStart.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-        hueRange.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-        saturation.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-        luminosity.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-        monochromeStart.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        monochromeRange.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        gradientStart.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        gradientEnd.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-    }
-    <span class="hljs-keyword">else</span> {
-        gradientStart.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-        gradientEnd.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
-        monochromeStart.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        monochromeRange.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        hueStart.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        hueRange.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        saturation.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-        luminosity.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
-    }
-}, <span class="hljs-string">&#x27;#color&#x27;</span>);</pre></div></div>
+});</pre></div></div>
             
         </li>
         
@@ -1350,59 +1158,9 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> width = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#width&#x27;</span>),
-    height = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#height&#x27;</span>),
-    octaves = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#octaves&#x27;</span>),
-    sineFrequencyCoeff = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#sineFrequencyCoeff&#x27;</span>),
-    scale = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scale&#x27;</span>),
-    size = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#size&#x27;</span>),
-    persistence = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#persistence&#x27;</span>),
-    lacunarity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#lacunarity&#x27;</span>),
-    monochromeStart = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#monochromeStart&#x27;</span>),
-    monochromeRange = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#monochromeRange&#x27;</span>),
-    hueStart = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#hueStart&#x27;</span>),
-    hueRange = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#hueRange&#x27;</span>),
-    saturation = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#saturation&#x27;</span>),
-    luminosity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#luminosity&#x27;</span>),
-    sumAmplitude = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#sumAmplitude&#x27;</span>),
-    worleyDepth = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#worleyDepth&#x27;</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
 
-<span class="hljs-keyword">const</span> noiseEngine = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#noiseEngine&#x27;</span>),
-    color = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#color&#x27;</span>),
-    gradientStart = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#gradientStart&#x27;</span>),
-    gradientEnd = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#gradientEnd&#x27;</span>),
-    octaveFunction = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#octaveFunction&#x27;</span>),
-    sumFunction = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#sumFunction&#x27;</span>),
-    smoothing = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#smoothing&#x27;</span>),
-    seed = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#seed&#x27;</span>),
-    worleyOutput = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#worleyOutput&#x27;</span>);
-
-width.<span class="hljs-property">value</span> = <span class="hljs-number">400</span>;
-height.<span class="hljs-property">value</span> = <span class="hljs-number">400</span>;
-octaves.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-sineFrequencyCoeff.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-scale.<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
-size.<span class="hljs-property">value</span> = <span class="hljs-number">256</span>;
-persistence.<span class="hljs-property">value</span> = <span class="hljs-number">0.5</span>;
-lacunarity.<span class="hljs-property">value</span> = <span class="hljs-number">2</span>;
-monochromeStart.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-monochromeRange.<span class="hljs-property">value</span> = <span class="hljs-number">255</span>;
-hueStart.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-hueRange.<span class="hljs-property">value</span> = <span class="hljs-number">120</span>;
-saturation.<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
-luminosity.<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
-sumAmplitude.<span class="hljs-property">value</span> = <span class="hljs-number">5</span>;
-worleyDepth.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-
-noiseEngine.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
-color.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
-gradientStart.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#ff0000&#x27;</span>;
-gradientEnd.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#00ff00&#x27;</span>;
-octaveFunction.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
-sumFunction.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
-smoothing.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">3</span>;
-seed.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;noize&#x27;</span>;
-worleyOutput.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         
@@ -1412,6 +1170,21 @@ worleyOutput.<span class="hljs-property">options</span>.<span class="hljs-proper
               
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

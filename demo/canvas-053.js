@@ -78,7 +78,7 @@ const reactionAsset = scrawl.makeReactionDiffusionAsset({
     width: assetDimension,
     height: assetDimension,
 
-    colors: colorStops['stepped-grays'],
+    colors: colorStops['monochrome'],
 });
 
 // Test that the RD asset output is always tileable by displaying it via a Pattern style

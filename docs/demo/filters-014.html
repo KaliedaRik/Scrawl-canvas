@@ -320,6 +320,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-059.html">
+                  ./demo/canvas-059.js
+                </a>
+              
+                
+                <a class="source" href="canvas-060.html">
+                  ./demo/canvas-060.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -895,6 +905,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-034.html">
+                  ./demo/temp-034.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -974,7 +989,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1048,7 +1063,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
 
@@ -1202,6 +1217,21 @@ alpha_3.<span class="hljs-property">value</span> = <span class="hljs-number">0</
               
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

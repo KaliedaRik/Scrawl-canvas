@@ -1031,9 +1031,22 @@ P.<span class="hljs-property">get</span> = <span class="hljs-keyword">function</
 
 <span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
     S = P.<span class="hljs-property">setters</span>,
-    D = P.<span class="hljs-property">deltaSetters</span>;
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p>The following setters use the <code>window.SC_colorChecker</code> Color factory. This factory gets created and attached to the window object during Scrawl-canvas initialization. Code for creating the factory can be found in the <code>core/init.js</code> module</p>
 
-S.<span class="hljs-property">fillStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">fillStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">let</span> temp;
 
@@ -1043,7 +1056,10 @@ S.<span class="hljs-property">fillStyle</span> = <span class="hljs-keyword">func
         temp = styles[item];
 
         <span class="hljs-keyword">if</span> (temp) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillStyle</span> = temp;
-        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillStyle</span> = item;
+        <span class="hljs-keyword">else</span> {
+            temp = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">checkColor</span>(item);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillStyle</span> = temp;
+        }
     }
 };
 
@@ -1057,22 +1073,14 @@ S.<span class="hljs-property">strokeStyle</span> = <span class="hljs-keyword">fu
         temp = styles[item];
 
         <span class="hljs-keyword">if</span> (temp) <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeStyle</span> = temp;
-        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeStyle</span> = item;
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">checkColor</span>(item);
     }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+};
 
-            </div>
+S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">shadowColor</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">checkColor</span>(item);
+};</pre></div></div>
             
         </li>
         
@@ -1083,7 +1091,8 @@ S.<span class="hljs-property">strokeStyle</span> = <span class="hljs-keyword">fu
               <div class="sswrap ">
                 <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
-              <p>Internal arrays used by a number of Style functions</p>
+              <h4 id="prototype-functions">Prototype functions</h4>
+<p>Internal arrays used by a number of Style functions</p>
 
             </div>
             

@@ -844,6 +844,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">gutterHeight</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">gutterWidth</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">highAlpha</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">highBlue</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">highGreen</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">highRed</span>: <span class="hljs-number">255</span>,
@@ -854,6 +855,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">keepOnlyChangedAreas</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">level</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">lowAlpha</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">lowBlue</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">lowGreen</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">lowRed</span>: <span class="hljs-number">0</span>,
@@ -1232,20 +1234,41 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p><strong>binary</strong> (new in v8.4.0) - set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> arguments. Setting these values to 0 disables the action for that channel</p>
+              <p>DEPRECATED! <strong>binary</strong> - use the updated threshold filter instead</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">binary</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        <span class="hljs-keyword">let</span> lowRed = (f.<span class="hljs-property">lowRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowRed</span> : <span class="hljs-number">0</span>,
+            lowGreen = (f.<span class="hljs-property">lowGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowGreen</span> : <span class="hljs-number">0</span>,
+            lowBlue = (f.<span class="hljs-property">lowBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowBlue</span> : <span class="hljs-number">0</span>,
+            lowAlpha = (f.<span class="hljs-property">lowAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowAlpha</span> : <span class="hljs-number">255</span>,
+            highRed = (f.<span class="hljs-property">highRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highRed</span> : <span class="hljs-number">255</span>,
+            highGreen = (f.<span class="hljs-property">highGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highGreen</span> : <span class="hljs-number">255</span>,
+            highBlue = (f.<span class="hljs-property">highBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highBlue</span> : <span class="hljs-number">255</span>,
+            highAlpha = (f.<span class="hljs-property">highAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highAlpha</span> : <span class="hljs-number">255</span>;
+            
+
+        <span class="hljs-keyword">let</span> low = (f.<span class="hljs-property">low</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">low</span> : [lowRed, lowGreen, lowBlue, lowAlpha],
+            high = (f.<span class="hljs-property">high</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">high</span> : [highRed, highGreen, highBlue, highAlpha];
+
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;binary&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
             <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">blue</span>: (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">alpha</span>: (f.<span class="hljs-property">alpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">alpha</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">level</span>: (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">128</span>,
+            <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">128</span>,
+            <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">128</span>,
+            <span class="hljs-attr">blue</span>: (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">128</span>,
+            <span class="hljs-attr">alpha</span>: (f.<span class="hljs-property">alpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">alpha</span> : <span class="hljs-number">128</span>,
+            low,
+            high,
+            <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">useMixedChannel</span>: (f.<span class="hljs-property">useMixedChannel</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useMixedChannel</span> : <span class="hljs-literal">false</span>,
         }];
     },</pre></div></div>
             
@@ -1308,7 +1331,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
-              <p>DEPRECATED! <strong>blur</strong> - blurs the image</p>
+              <p><strong>blur</strong> - blurs the image</p>
 <ul>
 <li>Use the gaussian blur filter instead. This is being retained only for backwards compatibility and will be removed in a future major release</li>
 </ul>
@@ -2476,9 +2499,17 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">level</span>: (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">128</span>,
+            <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">128</span>,
+            <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">128</span>,
+            <span class="hljs-attr">blue</span>: (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">128</span>,
+            <span class="hljs-attr">alpha</span>: (f.<span class="hljs-property">alpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">alpha</span> : <span class="hljs-number">128</span>,
             low,
             high,
+            <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">useMixedChannel</span>: (f.<span class="hljs-property">useMixedChannel</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useMixedChannel</span> : <span class="hljs-literal">true</span>,
         }];
     },</pre></div></div>
             

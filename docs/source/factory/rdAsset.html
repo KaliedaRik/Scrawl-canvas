@@ -553,12 +553,6 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span> = [];
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorFactory</span> = <span class="hljs-title function_">makeColor</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-color-factory`</span>,
-        <span class="hljs-attr">minimumColor</span>: items.<span class="hljs-property">gradientStart</span> || <span class="hljs-string">&#x27;red&#x27;</span>,
-        <span class="hljs-attr">maximumColor</span>: items.<span class="hljs-property">gradientEnd</span> || <span class="hljs-string">&#x27;green&#x27;</span>,
-    });
-
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
@@ -1704,7 +1698,7 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
         [sourceA, destA, sourceB, destB] = dataArrays;
     }
 
-    <span class="hljs-keyword">return</span> destA[index] - destB[index];
+    <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> + (destA[index] - destB[index])) / <span class="hljs-number">2</span>;
 };</pre></div></div>
             
         </li>

@@ -506,6 +506,8 @@
 <span class="hljs-keyword">import</span> { getCanvases, getStacks } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./document.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./userInteraction.js&#x27;</span>;
 
+<span class="hljs-keyword">import</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/color.js&#x27;</span>;
+
 
 <span class="hljs-keyword">const</span> init = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
@@ -609,8 +611,7 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">applyCoreResizeListener</span>();
     <span class="hljs-title function_">applyCoreScrollListener</span>();
-    <span class="hljs-title function_">startCoreListeners</span>();
-};</pre></div></div>
+    <span class="hljs-title function_">startCoreListeners</span>();</pre></div></div>
             
         </li>
         
@@ -620,6 +621,28 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>Dedicated entity state color engine - this allows the user to set a fillStyle, strokeStyle or shadowColor attribute to any CSS color string</p>
+<ul>
+<li>Can’t set this as part of the State factory initialization as it appears to run before the Color factory initializes</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span> = <span class="hljs-title function_">makeColor</span>({
+	    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;entity-colorEngine-do-not-overwrite&#x27;</span>,
+	});
+
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

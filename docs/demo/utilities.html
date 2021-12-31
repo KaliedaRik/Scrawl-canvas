@@ -320,6 +320,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-059.html">
+                  ./demo/canvas-059.js
+                </a>
+              
+                
+                <a class="source" href="canvas-060.html">
+                  ./demo/canvas-060.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -895,6 +905,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-034.html">
+                  ./demo/temp-034.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -1310,6 +1325,167 @@
     }, time);
 };
 
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">addImageDragAndDrop</span> = (<span class="hljs-params">canvas, selector, targets, callback</span>) =&gt; {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> store = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(selector);
+    <span class="hljs-keyword">const</span> timeoutDelay = <span class="hljs-number">200</span>;
+
+    <span class="hljs-keyword">let</span> counter = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(targets)) targets = [targets];
+
+    scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;dragenter&#x27;</span>, <span class="hljs-string">&#x27;dragover&#x27;</span>, <span class="hljs-string">&#x27;dragleave&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+        e.<span class="hljs-title function_">preventDefault</span>();
+        e.<span class="hljs-title function_">stopPropagation</span>();
+
+    }, canvas.<span class="hljs-property">domElement</span>);
+
+    scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;drop&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+        e.<span class="hljs-title function_">preventDefault</span>();
+        e.<span class="hljs-title function_">stopPropagation</span>();
+
+        <span class="hljs-keyword">const</span> dt = e.<span class="hljs-property">dataTransfer</span>;
+
+        <span class="hljs-keyword">if</span> (dt) [...dt.<span class="hljs-property">files</span>].<span class="hljs-title function_">forEach</span>(addImageAsset);
+
+    }, canvas.<span class="hljs-property">domElement</span>);
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">addImageAsset</span> = (<span class="hljs-params">file</span>) =&gt; {
+
+        <span class="hljs-keyword">if</span> (file.<span class="hljs-property">type</span>.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;image/&#x27;</span>) === <span class="hljs-number">0</span>) {
+
+            <span class="hljs-keyword">const</span> reader = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileReader</span>();
+
+            reader.<span class="hljs-title function_">readAsDataURL</span>(file);
+
+            reader.<span class="hljs-property">onloadend</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Create a name for our new asset</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> name = <span class="hljs-string">`user-upload-<span class="hljs-subst">${counter}</span>`</span>;
+                counter++;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>Add the image to the DOM and create our asset from it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> img = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;img&#x27;</span>);
+                img.<span class="hljs-property">src</span> = reader.<span class="hljs-property">result</span>;
+                img.<span class="hljs-property">id</span> = name;
+                store.<span class="hljs-title function_">appendChild</span>(img);
+
+                scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`#<span class="hljs-subst">${name}</span>`</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>Update our Picture entity’s asset attribute so it displays the new image</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                targets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
+
+                    target.<span class="hljs-title function_">set</span>({
+                        <span class="hljs-attr">asset</span>: name,
+                    });
+                });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>HOW TO: set the Picture entity’s copy dimensions to take into account any difference between the old and new image’s dimensions</p>
+<ul>
+<li>Because of asynch stuff, we need to wait for stuff to complete before performing this functionality</li>
+<li>The Picture entity copies (for the sake of our sanity) a square part of the image. Thus we shall use the new image’s shorter dimension as the copy dimension and offset the longer copy start so we are viewing the middle of it</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
+
+                    <span class="hljs-keyword">const</span> asset = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">asset</span>[name];
+
+                    <span class="hljs-keyword">const</span> width = asset.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;width&#x27;</span>),
+                        height = asset.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;height&#x27;</span>);
+
+                    <span class="hljs-keyword">let</span> copyStartX = <span class="hljs-number">0</span>,
+                        copyStartY = <span class="hljs-number">0</span>,
+                        dim = <span class="hljs-number">0</span>;
+
+                    <span class="hljs-keyword">if</span> (width &gt; height) {
+
+                        copyStartX = (width - height) / <span class="hljs-number">2</span>;
+                        dim = height;
+                    }
+                    <span class="hljs-keyword">else</span> {
+
+                        copyStartY = (height - width) / <span class="hljs-number">2</span>;
+                        dim = width;
+                    }
+
+                    targets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
+
+                        target.<span class="hljs-title function_">set</span>({
+                            copyStartX,
+                            copyStartY,
+                            <span class="hljs-attr">copyWidth</span>: dim,
+                            <span class="hljs-attr">copyHeight</span>: dim,
+                        });
+                    })
+
+                    <span class="hljs-keyword">if</span> (callback) <span class="hljs-built_in">setTimeout</span>(callback, timeoutDelay);
+                }, timeoutDelay);
+            }
+        }
+    };
+};
 
 <span class="hljs-keyword">export</span> {
     reportSpeed,
@@ -1319,6 +1495,8 @@
     killPolylineArtefact,
     killStyle,
     killTicker,
+
+    addImageDragAndDrop,
 }</pre></div></div>
             
         </li>

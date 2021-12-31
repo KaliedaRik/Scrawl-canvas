@@ -574,7 +574,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, animationtickers, radian } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, xtGet, xto, convertTime, λ<span class="hljs-literal">null</span>, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, xtGet, xto, convertTime, λ<span class="hljs-literal">null</span>, easeEngines, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeTicker } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./ticker.js&#x27;</span>;
 
@@ -1366,7 +1366,7 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (engine.<span class="hljs-property">substring</span>) val = actions[engine](effectiveStart, effectiveChange, progress);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (engine.<span class="hljs-property">substring</span>) val = <span class="hljs-title function_">actions</span>(engine, effectiveStart, effectiveChange, progress);
         <span class="hljs-keyword">else</span> val = <span class="hljs-title function_">engine</span>(effectiveStart, effectiveChange, progress);
 
         <span class="hljs-keyword">if</span> (int) val = <span class="hljs-title function_">round</span>(val);
@@ -1408,22 +1408,27 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
               <div class="sswrap ">
                 <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
-              <p><code>engineActions</code> - Javascript Object: keys are the easing function name; values are the functions. All Scrawl-canvas easing functions need to take the following arguments:</p>
+              <p><code>engineActions</code> - internal function to run built-in easing engines</p>
 <ul>
+<li><strong>engine</strong> - String name of the required easing. All built-in easing engines are defined in the <code>core/utilities</code> file </li>
 <li><strong>start</strong> - the <code>effectiveStart</code> value, in milliseconds.</li>
 <li><strong>change</strong> - the time in milliseconds that this animation will take (<code>effectiveEnd - effectiveStart</code>).</li>
 <li><strong>position</strong> - the time elapsed since this Tween started running</li>
 </ul>
-<p>In all the following easings: </p>
+<p>Scrawl-canvas easing engines use the following metaphor to define their names: </p>
 <ul>
-<li><code>out</code> indicates an acceleration.</li>
-<li><code>in</code> indicates a deceleration.</li>
-<li>Higher numbers indicates a more intense change between starting, middle and ending speeds </li>
+<li><code>out</code> indicates an acceleration. Think of a train leaving the station.</li>
+<li><code>in</code> indicates a deceleration. Think of a train arriving the station.</li>
+<li>For the legacy engines, igher numbers indicates a more intense change between starting, middle and ending speeds</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">engineActions</span> = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">engineActions</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">engine, start, change, position</span>) {
+
+    <span class="hljs-keyword">const</span> e = (<span class="hljs-literal">null</span> != easeEngines[engine]) ? engine : <span class="hljs-string">&#x27;linear&#x27;</span>;
+    <span class="hljs-keyword">return</span> start + (change * easeEngines[e](position));
+};</pre></div></div>
             
         </li>
         
@@ -1433,462 +1438,6 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
               
               <div class="sswrap ">
                 <a class="ss" href="#section-39">&#x00a7;</a>
-              </div>
-              <p><strong>out</strong> - cosine-based easing - starts slow, speeds up</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">out</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-        
-        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
-        <span class="hljs-keyword">return</span> (start + change) + (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>((position * <span class="hljs-number">90</span>) * radian) * -change);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
-              </div>
-              <p><strong>in</strong> - sine-based easing - starts fast, slows down</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">in</span> : <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((position * <span class="hljs-number">90</span>) * radian) * change);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
-              </div>
-              <p><strong>easeIn</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeIn</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-        
-        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
-        <span class="hljs-keyword">return</span> (start + change) + ((temp * temp) * -change);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
-              </div>
-              <p><strong>easeIn3</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeIn3</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
-        <span class="hljs-keyword">return</span> (start + change) + ((temp * temp * temp) * -change);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
-              </div>
-              <p><strong>easeIn4</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeIn4</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
-        <span class="hljs-keyword">return</span> (start + change) + ((temp * temp * temp * temp) * -change);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
-              </div>
-              <p><strong>easeIn5</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeIn5</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
-        <span class="hljs-keyword">return</span> (start + change) + ((temp * temp * temp * temp * temp) * -change);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-45">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
-              </div>
-              <p><strong>easeOutIn</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeOutIn</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
-
-        <span class="hljs-keyword">return</span> (position &lt; <span class="hljs-number">0.5</span>) ?
-            start + ((position * position) * change * <span class="hljs-number">2</span>) :
-            (start + change) + ((temp * temp) * -change * <span class="hljs-number">2</span>);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-46">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
-              </div>
-              <p><strong>easeOutIn3</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeOutIn3</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
-
-        <span class="hljs-keyword">return</span> (position &lt; <span class="hljs-number">0.5</span>) ?
-            start + ((position * position * position) * change * <span class="hljs-number">4</span>) :
-            (start + change) + ((temp * temp * temp) * -change * <span class="hljs-number">4</span>);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-47">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
-              </div>
-              <p><strong>easeOutIn4</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeOutIn4</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
-
-        <span class="hljs-keyword">return</span> (position &lt; <span class="hljs-number">0.5</span>) ?
-            start + ((position * position * position * position) * change * <span class="hljs-number">8</span>) :
-            (start + change) + ((temp * temp * temp * temp) * -change * <span class="hljs-number">8</span>);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-48">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
-              </div>
-              <p><strong>easeOutIn5</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeOutIn5</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
-
-        <span class="hljs-keyword">return</span> (position &lt; <span class="hljs-number">0.5</span>) ?
-            start + ((position * position * position * position * position) * change * <span class="hljs-number">16</span>) :
-            (start + change) + ((temp * temp * temp * temp * temp) * -change * <span class="hljs-number">16</span>);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-49">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
-              </div>
-              <p><strong>easeOut</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeOut</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + ((position * position) * change);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-50">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
-              </div>
-              <p><strong>easeOut3</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeOut3</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + ((position * position * position) * change);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-51">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
-              </div>
-              <p><strong>easeOut4</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeOut4</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + ((position * position * position * position) * change);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-52">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
-              </div>
-              <p><strong>easeOut5</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeOut5</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + ((position * position * position * position * position) * change);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-53">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
-              </div>
-              <p><strong>linear</strong> - the <em><strong>default easing function</strong></em> - no change in velocity throughout the tween</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">linear</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (position * change);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-54">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
-              </div>
-              <p>The following easing functions have been taken from the <a href="https://easings.net/">easings.net</a> web page: <strong>easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-    <span class="hljs-attr">easeOutSine</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutSine</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeInSine</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeInSine</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutInSine</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutInSine</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutQuad</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutQuad</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeInQuad</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeInQuad</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutInQuad</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutInQuad</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutCubic</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutCubic</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeInCubic</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeInCubic</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutInCubic</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutInCubic</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutQuart</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutQuart</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeInQuart</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeInQuart</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutInQuart</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutInQuart</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutQuint</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutQuint</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeInQuint</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeInQuint</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutInQuint</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutInQuint</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutExpo</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutExpo</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeInExpo</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeInExpo</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutInExpo</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutInExpo</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutCirc</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutCirc</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeInCirc</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeInCirc</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutInCirc</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutInCirc</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutBack</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutBack</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeInBack</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeInBack</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutInBack</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutInBack</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutElastic</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutElastic</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeInElastic</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeInElastic</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutInElastic</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutInElastic</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutBounce</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutBounce</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeInBounce</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeInBounce</span>(position));
-    }, 
-
-    <span class="hljs-attr">easeOutInBounce</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-
-        <span class="hljs-keyword">return</span> start + (change * <span class="hljs-title function_">easeOutInBounce</span>(position));
-    }, 
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-55">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>setDefinitionsValues</code> - convert <code>start</code> and <code>end</code> values into float Numbers.</p>
 <ul>
@@ -1918,11 +1467,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-56">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>The default easing function is <code>linear</code></p>
 
@@ -1939,11 +1488,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-57">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>parseDefinitionsValue</code> - internal function invoked by <code>setDefinitionsValues</code> function.</p>
 
@@ -1971,11 +1520,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-58">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <h4 id="animation-control">Animation control</h4>
 
@@ -1984,11 +1533,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-59">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>run</code></p>
 <ul>
@@ -2015,11 +1564,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-60">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>isRunning</code> - check to see if Tween is in a running state.</p>
 
@@ -2036,11 +1585,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-61">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>halt</code></p>
 <ul>
@@ -2066,11 +1615,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-62">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>reverse</code></p>
 <ul>
@@ -2096,11 +1645,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-63">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>resume</code></p>
 <ul>
@@ -2126,11 +1675,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-64">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>seekTo</code></p>
 <ul>
@@ -2156,11 +1705,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-65">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>seekFor</code></p>
 <ul>
@@ -2186,11 +1735,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-66">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeTween</span>({
@@ -2237,11 +1786,11 @@ constructors.<span class="hljs-property">Tween</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-67">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

@@ -320,6 +320,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-059.html">
+                  ./demo/canvas-059.js
+                </a>
+              
+                
+                <a class="source" href="canvas-060.html">
+                  ./demo/canvas-060.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -895,6 +905,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-034.html">
+                  ./demo/temp-034.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -974,7 +989,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1050,7 +1065,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
 
@@ -1085,6 +1100,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`    Low color: <span class="hljs-subst">${lowCol.value}</span>, High color: <span class="hljs-subst">${highCol.value}</span>
     Level: <span class="hljs-subst">${level.value}</span>
+    Red: <span class="hljs-subst">${red.value}</span>; Green: <span class="hljs-subst">${green.value}</span>; Blue: <span class="hljs-subst">${blue.value}</span>; Alpha: <span class="hljs-subst">${alpha.value}</span>; 
     Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
 });</pre></div></div>
             
@@ -1126,15 +1142,30 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;converter&#x27;</span>,
 });
 
-scrawl.<span class="hljs-title function_">addNativeListener</span>(
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], 
-    <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">level</span>: <span class="hljs-built_in">parseFloat</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>) }), 
-    <span class="hljs-string">&#x27;#level&#x27;</span>);
+scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
-scrawl.<span class="hljs-title function_">addNativeListener</span>(
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], 
-    <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">opacity</span>: <span class="hljs-built_in">parseFloat</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>) }), 
-    <span class="hljs-string">&#x27;#opacity&#x27;</span>);
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
+
+    <span class="hljs-attr">target</span>: myFilter,
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+        <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+        <span class="hljs-attr">level</span>: [<span class="hljs-string">&#x27;level&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">red</span>: [<span class="hljs-string">&#x27;red&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">green</span>: [<span class="hljs-string">&#x27;green&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">blue</span>: [<span class="hljs-string">&#x27;blue&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">alpha</span>: [<span class="hljs-string">&#x27;alpha&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">includeRed</span>: [<span class="hljs-string">&#x27;includeRed&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">includeGreen</span>: [<span class="hljs-string">&#x27;includeGreen&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">includeBlue</span>: [<span class="hljs-string">&#x27;includeBlue&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">includeAlpha</span>: [<span class="hljs-string">&#x27;includeAlpha&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">useMixedChannel</span>: [<span class="hljs-string">&#x27;useMixedChannel&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+    },
+});
 
 scrawl.<span class="hljs-title function_">addNativeListener</span>(
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], 
@@ -1180,12 +1211,26 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> lowCol = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#lowColor&#x27;</span>),
     highCol = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#highColor&#x27;</span>),
     level = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#level&#x27;</span>),
+    red = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#red&#x27;</span>),
+    green = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#green&#x27;</span>),
+    blue = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#blue&#x27;</span>),
+    alpha = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#alpha&#x27;</span>),
     opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
 
 lowCol.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#000000&#x27;</span>;
 highCol.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#ffffff&#x27;</span>;
-level.<span class="hljs-property">value</span> = <span class="hljs-number">127</span>;
-opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+level.<span class="hljs-property">value</span> = <span class="hljs-number">128</span>;
+red.<span class="hljs-property">value</span> = <span class="hljs-number">128</span>;
+green.<span class="hljs-property">value</span> = <span class="hljs-number">128</span>;
+blue.<span class="hljs-property">value</span> = <span class="hljs-number">128</span>;
+alpha.<span class="hljs-property">value</span> = <span class="hljs-number">128</span>;
+opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#useMixedChannel&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeRed&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeGreen&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeBlue&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeAlpha&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -1195,6 +1240,21 @@ opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</
               
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

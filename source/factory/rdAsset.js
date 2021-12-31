@@ -722,7 +722,7 @@ P.getOutputValue = function (index, width) {
         [sourceA, destA, sourceB, destB] = dataArrays;
     }
 
-    return destA[index] - destB[index];
+    return (1 + (destA[index] - destB[index])) / 2;
 };
 
 

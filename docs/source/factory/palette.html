@@ -573,7 +573,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span>, isa_obj, mergeOver, xt, xta, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span>, λfirstArg, isa_obj, isa_fn, mergeOver, xt, xta, pushUnique, Ωempty, easeEngines } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./color.js&#x27;</span>;
 
@@ -597,10 +597,18 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span> = <span class="hljs-title function_">makeColor</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-color-factory`</span>,
+    });
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span> = items.<span class="hljs-property">colors</span> || {<span class="hljs-string">&#x27;0 &#x27;</span>: [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>], <span class="hljs-string">&#x27;999 &#x27;</span>: [<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">1</span>]};
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">stops</span> = <span class="hljs-title class_">Array</span>(<span class="hljs-number">1000</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">easingFunction</span> = λfirstArg;
+
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
@@ -670,7 +678,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>The <strong>colors</strong> object is a raw Javascript object which uses stop values <code>(&#39;0 &#39; - &#39;999 &#39;)</code> as keys and an <code>[r(0-255), g(0-255), b(0-255), a(0-1)]</code> array as values. </p>
+              <p>The <strong>colors</strong> object is a raw Javascript object which uses stop values <code>(&#39;0 &#39; - &#39;999 &#39;)</code> as keys and an Array with four members holding color data as values. </p>
 
             </div>
             
@@ -704,9 +712,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">cyclic</span>: <span class="hljs-literal">false</span>,
-};
-P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">cyclic</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -717,11 +723,12 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
+              <p>The <strong>easing</strong> and <strong>easingFunction</strong> attributes affect represents a transformation that will be applied to a copy of the color stops Array - this allows us to create non-linear gradients</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;stops&#x27;</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;linear&#x27;</span>,
+    <span class="hljs-attr">easingFunction</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -732,10 +739,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <p>The <strong>precision</strong> value - higher values lead to fewer stops being added to the gradient; setting the value to <code>0</code> forces the palette to skip setting the stops between defined colors in the <code>colors</code> Array</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">precision</span>: <span class="hljs-number">1</span>,</pre></div></div>
             
         </li>
         
@@ -746,8 +754,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <h5 id="non-retained-argument-attributes-for-factory-clone-set-functions---these-attributes-get-passed-on-to-the-palettes-color-object">Non-retained argument attributes (for factory, clone, set functions) - these attributes get passed on to the Palette’s Color object</h5>
 
             </div>
             
@@ -760,12 +767,21 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <p><strong>colorSpace</strong> - String value defining the color space to be used by the Palette’s Color object for its internal calculations.</p>
+<ul>
+<li>Accepted values from: <code>&#39;RGB&#39;, &#39;HSL&#39;, &#39;HWB&#39;, &#39;XYZ&#39;, &#39;LAB&#39;, &#39;LCH&#39;</code> with <code>RGB</code> as the default</li>
+</ul>
+<p><strong>returnColorAs</strong> - String value defining the type of color String the Palette’s Color object will return.</p>
+<ul>
+<li>This is a shorter list than the internal colorSpace attribute as we only return values for CSS specified color spaces. Note that some of these color spaces are not widely supported across browsers and will lead to errors in canvases displayed on non-supported browsers</li>
+<li>Accepted values from: <code>&#39;RGB&#39;, &#39;HSL&#39;, &#39;HWB&#39;, &#39;LAB&#39;, &#39;LCH&#39;</code> with <code>RGB</code> as the default</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
-    S = P.<span class="hljs-property">setters</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+};
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -776,35 +792,12 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p><strong>colors</strong> - an array of arrays, each sub-array being in the form <code>[Number, String]</code> where:</p>
-<ul>
-<li>Number is a positive integer in the range 0-999</li>
-<li>String is any legitimate CSS color string value</li>
-</ul>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">colors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item)) {
-
-        <span class="hljs-keyword">let</span> f = <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>,
-            newCols = {};
-
-        item.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> [pos, col] = c; 
-            <span class="hljs-keyword">if</span> (pos.<span class="hljs-property">toFixed</span> &amp;&amp; col.<span class="hljs-property">substring</span>) {
-
-                f.<span class="hljs-title function_">convert</span>(col);
-                newCols[<span class="hljs-string">`<span class="hljs-subst">${pos}</span> `</span>] = [f.<span class="hljs-property">r</span>, f.<span class="hljs-property">g</span>, f.<span class="hljs-property">b</span>, f.<span class="hljs-property">a</span>];
-            }
-        });
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span> = newCols;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
-    }
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;easingFunction&#x27;</span>]);
+P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;stops&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -815,11 +808,10 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p><strong>stops</strong> - Do nothing. The stops array needs to be kept private, its values set only via the <code>recalculate</code> function, which happens whenever the <code>dirtyPalette</code> attribute is set to true.</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">stops</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -830,9 +822,18 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <h4 id="kill-management">Kill management</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-property">kill</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-title function_">kill</span>();
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
+    
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};</pre></div></div>
             
         </li>
         
@@ -843,11 +844,12 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p><code>recalculateHold</code> - internal variable</p>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">recalculateHold</span> = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -858,108 +860,33 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p><code>recalculate</code> - populate the stops Array with CSS color Strings, as determined by colors stored in the <code>colors</code> object</p>
+              <p><strong>colors</strong> - an array of arrays, each sub-array being in the form <code>[Number, String]</code> where:</p>
+<ul>
+<li>Number is a positive integer in the range 0-999</li>
+<li>String is any legitimate CSS color string value (rgb-key, rgb-hex, <code>rgb()</code>, <code>rgba()</code>, <code>hsl()</code>, <code>hsla()</code>, <code>hwb()</code>, <code>lch()</code>, <code>lab()</code>). Also accepts xyz color space colors in the format <code>xyz(x-value y-value z-value)</code> or <code>xyz(x-value y-value z-value / alpha-value)</code></li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">recalculate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">colors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> keys, i, iz, j, jz, cursor, diff, 
-        current, next, nextKey, temp,
-        r, g, b, a,
-        colors = <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>,
-        stops = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stops</span>,
-        make = <span class="hljs-variable language_">this</span>.<span class="hljs-property">makeColorString</span>,
-        hold = <span class="hljs-variable language_">this</span>.<span class="hljs-property">recalculateHold</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item)) {
 
-    keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(colors);
-    keys = keys.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-built_in">parseInt</span>(n, <span class="hljs-number">10</span>))
-    keys.<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a - b);
+        <span class="hljs-keyword">let</span> f = <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>,
+            newCols = {},
+            colorSpace = f.<span class="hljs-property">colorSpace</span>.<span class="hljs-title function_">toLowerCase</span>();
 
-    stops.<span class="hljs-title function_">fill</span>(<span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>);
+        item.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">let</span> [pos, col] = c; 
+            <span class="hljs-keyword">if</span> (pos.<span class="hljs-property">toFixed</span> &amp;&amp; col.<span class="hljs-property">substring</span>) {
 
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &lt; iz; i++) {
-
-        cursor = keys[i];
-        nextKey = keys[i + <span class="hljs-number">1</span>];
-        diff = nextKey - cursor;
-
-        current = colors[cursor + <span class="hljs-string">&#x27; &#x27;</span>];
-        next = colors[nextKey + <span class="hljs-string">&#x27; &#x27;</span>];
-
-        r = (next[<span class="hljs-number">0</span>] - current[<span class="hljs-number">0</span>]) / diff;
-        g = (next[<span class="hljs-number">1</span>] - current[<span class="hljs-number">1</span>]) / diff;
-        b = (next[<span class="hljs-number">2</span>] - current[<span class="hljs-number">2</span>]) / diff;
-        a = (next[<span class="hljs-number">3</span>] - current[<span class="hljs-number">3</span>]) / diff;
-
-        <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = diff; j &lt; jz; j++) {
-
-            hold[<span class="hljs-number">0</span>] = current[<span class="hljs-number">0</span>] + (r * j);
-            hold[<span class="hljs-number">1</span>] = current[<span class="hljs-number">1</span>] + (g * j);
-            hold[<span class="hljs-number">2</span>] = current[<span class="hljs-number">2</span>] + (b * j);
-            hold[<span class="hljs-number">3</span>] = current[<span class="hljs-number">3</span>] + (a * j);
-
-            stops[cursor] = <span class="hljs-title function_">make</span>(hold);
-            cursor++;
-        }
-    }
-
-    stops[cursor] = <span class="hljs-title function_">make</span>(next);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">cyclic</span>) {
-
-        cursor = keys[keys.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>];
-        nextKey = keys[<span class="hljs-number">0</span>];
-        diff = (nextKey + <span class="hljs-number">1000</span>) - cursor;
-
-        current = colors[cursor + <span class="hljs-string">&#x27; &#x27;</span>];
-        next = colors[nextKey + <span class="hljs-string">&#x27; &#x27;</span>];
-
-        r = (next[<span class="hljs-number">0</span>] - current[<span class="hljs-number">0</span>]) / diff;
-        g = (next[<span class="hljs-number">1</span>] - current[<span class="hljs-number">1</span>]) / diff;
-        b = (next[<span class="hljs-number">2</span>] - current[<span class="hljs-number">2</span>]) / diff;
-        a = (next[<span class="hljs-number">3</span>] - current[<span class="hljs-number">3</span>]) / diff;
-
-        <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = diff; j &lt; jz; j++) {
-
-            hold[<span class="hljs-number">0</span>] = current[<span class="hljs-number">0</span>] + (r * j);
-            hold[<span class="hljs-number">1</span>] = current[<span class="hljs-number">1</span>] + (g * j);
-            hold[<span class="hljs-number">2</span>] = current[<span class="hljs-number">2</span>] + (b * j);
-            hold[<span class="hljs-number">3</span>] = current[<span class="hljs-number">3</span>] + (a * j);
-
-            stops[cursor] = <span class="hljs-title function_">make</span>(hold);
-            cursor++;
-
-            <span class="hljs-keyword">if</span> (cursor &gt; <span class="hljs-number">999</span>) cursor -= <span class="hljs-number">1000</span>;
-        }
-    }
-    <span class="hljs-keyword">else</span> {
-
-        cursor = keys[<span class="hljs-number">0</span>];
-        
-        <span class="hljs-keyword">if</span> (cursor &gt; <span class="hljs-number">0</span>) {
-
-            temp = stops[cursor];
-            
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = cursor; i &lt; iz; i++) {
-
-                stops[i] = temp;
+                f.<span class="hljs-title function_">convert</span>(col);
+                newCols[<span class="hljs-string">`<span class="hljs-subst">${pos}</span> `</span>] = [...f[colorSpace]];
             }
-        }
-
-        cursor = keys[keys.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>];
-
-        <span class="hljs-keyword">if</span> (cursor &lt; <span class="hljs-number">999</span>) {
-
-            temp = stops[cursor];
-
-            <span class="hljs-keyword">for</span> (i = cursor, iz = <span class="hljs-number">1000</span>; i &lt; iz; i++) {
-
-                stops[i] = temp;
-            }
-        }
+        });
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span> = newCols;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -972,27 +899,43 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p><code>makeColorString</code> - internal helper function</p>
+              <p><strong>easing</strong>, <strong>easingFunction</strong> - the easing to be applied to the gradient </p>
+<ul>
+<li>Can accept a String value identifying an SC pre-defined easing function (default: <code>linear</code>)</li>
+<li>Can also accept a function accepting a single Number argument (a value between 0-1) and returning an eased Number (again, between 0-1)</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">easing</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> f = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>,
-        r, g, b, a;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setEasingHelper</span>(item);
+};
+S.<span class="hljs-property">easingFunction</span> = S.<span class="hljs-property">easing</span>;
+P.<span class="hljs-property">setEasing</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> <span class="hljs-title function_">constrainer</span> = (<span class="hljs-params">n, min, max</span>) =&gt; {
-        <span class="hljs-keyword">if</span> (n &lt; min) <span class="hljs-keyword">return</span> min;
-        <span class="hljs-keyword">if</span> (n &gt; max) <span class="hljs-keyword">return</span> max;
-        <span class="hljs-keyword">return</span> n;
-    };
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setEasingHelper</span>(item);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};
+P.<span class="hljs-property">setEasingFunction</span> = P.<span class="hljs-property">setEasing</span>;
+P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    r = <span class="hljs-title function_">constrainer</span>(<span class="hljs-title function_">f</span>(item[<span class="hljs-number">0</span>]), <span class="hljs-number">0</span>, <span class="hljs-number">255</span>),
-    g = <span class="hljs-title function_">constrainer</span>(<span class="hljs-title function_">f</span>(item[<span class="hljs-number">1</span>]), <span class="hljs-number">0</span>, <span class="hljs-number">255</span>),
-    b = <span class="hljs-title function_">constrainer</span>(<span class="hljs-title function_">f</span>(item[<span class="hljs-number">2</span>]), <span class="hljs-number">0</span>, <span class="hljs-number">255</span>),
-    a = <span class="hljs-title function_">constrainer</span>(item[<span class="hljs-number">3</span>], <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`rgba(<span class="hljs-subst">${r}</span>,<span class="hljs-subst">${g}</span>,<span class="hljs-subst">${b}</span>,<span class="hljs-subst">${a}</span>)`</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easing</span> = <span class="hljs-string">&#x27;function&#x27;</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easingFunction</span> = item;
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span> &amp;&amp; easeEngines[item]) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easing</span> = item; 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easingFunction</span> = λfirstArg;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easing</span> = <span class="hljs-string">&#x27;linear&#x27;</span>; 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easingFunction</span> = λfirstArg;
+    }
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1004,6 +947,204 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
+              <p>The <strong>colorSpace</strong> and <strong>returnColorAs</strong> attributes get passed through to the Palette’s Color object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">colorSpace</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
+
+        <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ITM</span> = item.<span class="hljs-title function_">toUpperCase</span>();
+        <span class="hljs-keyword">const</span> itm = item.<span class="hljs-title function_">toLowerCase</span>();
+
+        <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;RGB&#x27;</span>, <span class="hljs-string">&#x27;HSL&#x27;</span>, <span class="hljs-string">&#x27;HWB&#x27;</span>, <span class="hljs-string">&#x27;XYZ&#x27;</span>, <span class="hljs-string">&#x27;LAB&#x27;</span>, <span class="hljs-string">&#x27;LCH&#x27;</span>].<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">ITM</span>)) {
+
+            <span class="hljs-keyword">const</span> oldColors = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>);
+
+            <span class="hljs-keyword">const</span> oldSpace = <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-property">colorSpace</span>;
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">colorSpace</span>: <span class="hljs-variable constant_">ITM</span> });
+
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(oldColors)) {
+
+                <span class="hljs-keyword">const</span> color = <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-title function_">buildColorString</span>(...value, oldSpace);
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-title function_">setColor</span>(color);
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>[key].<span class="hljs-property">length</span> = <span class="hljs-number">0</span>
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>[key].<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>[itm]);
+            }
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
+        }
+    }
+}
+
+S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+    
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-title function_">set</span>({
+
+        <span class="hljs-attr">returnColorAs</span>: item,
+    });
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p><strong>precision</strong> - a positive integer Number value between 0 and 50. If value is <code>0</code> (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">precision</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    item = <span class="hljs-built_in">parseInt</span>(item, <span class="hljs-number">10</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(item) || item &lt; <span class="hljs-number">0</span>) item = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">50</span>) item = <span class="hljs-number">50</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">precision</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p><strong>stops</strong> - Do nothing. The stops array needs to be kept private, its values set only via the <code>recalculate</code> function, which happens whenever the <code>dirtyPalette</code> attribute is set to true.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">stops</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p><code>recalculateHold</code> - internal variable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">recalculateHold</span> = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p><code>recalculate</code> - populate the stops Array with CSS color Strings, as determined by colors stored in the <code>colors</code> object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">recalculate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">const</span> { colors, stops, factory } = <span class="hljs-variable language_">this</span>;
+
+    stops.<span class="hljs-title function_">fill</span>(<span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>);
+
+    <span class="hljs-keyword">const</span> { colorSpace } = factory;
+
+    <span class="hljs-keyword">let</span> colorKeys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(colors);
+    colorKeys = colorKeys.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-built_in">parseInt</span>(n, <span class="hljs-number">10</span>))
+    colorKeys.<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a - b);
+
+    <span class="hljs-keyword">let</span> currentKey = colorKeys[<span class="hljs-number">0</span>], 
+        nextKey, currentVals, nextVals, dA, dB, dC, dD, diff;
+
+    <span class="hljs-keyword">let</span> [b, c, d, a] = colors[<span class="hljs-string">`<span class="hljs-subst">${currentKey}</span> `</span>];
+
+    stops[currentKey] = factory.<span class="hljs-title function_">returnColorFromValues</span>(b, c, d, a);
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = colorKeys.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &lt; iz; i++) {
+
+        currentKey = colorKeys[i];
+        nextKey = colorKeys[i + <span class="hljs-number">1</span>];
+        currentVals = colors[<span class="hljs-string">`<span class="hljs-subst">${currentKey}</span> `</span>];
+        nextVals = colors[<span class="hljs-string">`<span class="hljs-subst">${nextKey}</span> `</span>];
+
+        diff = nextKey - currentKey;
+        dB = (nextVals[<span class="hljs-number">0</span>] - currentVals[<span class="hljs-number">0</span>]) / diff;
+        dC = (nextVals[<span class="hljs-number">1</span>] - currentVals[<span class="hljs-number">1</span>]) / diff;
+        dD = (nextVals[<span class="hljs-number">2</span>] - currentVals[<span class="hljs-number">2</span>]) / diff;
+        dA = (nextVals[<span class="hljs-number">3</span>] - currentVals[<span class="hljs-number">3</span>]) / diff;
+
+        factory.<span class="hljs-title function_">setMinimumColor</span>(factory.<span class="hljs-title function_">buildColorString</span>(...currentVals, colorSpace));
+        factory.<span class="hljs-title function_">setMaximumColor</span>(factory.<span class="hljs-title function_">buildColorString</span>(...nextVals, colorSpace));
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = currentKey + <span class="hljs-number">1</span>; j &lt;= nextKey; j++) {
+
+            b += dB;
+            c += dC;
+            d += dD;
+            a += dA;
+
+            stops[j] = factory.<span class="hljs-title function_">returnColorFromValues</span>(b, c, d, a);
+        }
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p><code>makeColorString</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">a, b, c, d</span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-title function_">buildColorString</span>(a, b, c, d);
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
               <p><code>updateColor</code> - add or update a gradient-type style’s Palette object with a color.</p>
 <ul>
 <li><strong>index</strong> - positive integer Number between 0 and 999 inclusive</li>
@@ -1014,7 +1155,8 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index, color</span>) {
 
-    <span class="hljs-keyword">let</span> f = <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>;
+    <span class="hljs-keyword">const</span> f = <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>,
+        colorSpace = f.<span class="hljs-property">colorSpace</span>.<span class="hljs-title function_">toLowerCase</span>();
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(index, color)) {
 
@@ -1024,7 +1166,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
             f.<span class="hljs-title function_">convert</span>(color);
             index += <span class="hljs-string">&#x27; &#x27;</span>;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>[index] = [f.<span class="hljs-property">r</span>, f.<span class="hljs-property">g</span>, f.<span class="hljs-property">b</span>, f.<span class="hljs-property">a</span>];
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>[index] = [...f[colorSpace]];
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
         }
     }
@@ -1033,11 +1175,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-23">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>removeColor</code> - remove a gradient-type style’s Palette object color from a specified index</p>
 <ul>
@@ -1064,20 +1206,35 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-24">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>addStopsToGradient</code> - complete the construction of the Canvas API CanvasGradient object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">addStopsToGradient</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, start, end, cycle</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">addStopsToGradient</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, start, end, cycle</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <p>It’s at this point that we apply the easing function</p>
 
-    <span class="hljs-keyword">let</span> stops = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stops</span>,
-        keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>),
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-keyword">let</span> { stops, easing, easingFunction, precision } = <span class="hljs-variable language_">this</span>;
+
+    <span class="hljs-keyword">let</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>),
         spread, offset, i, iz, item, n;
 
     <span class="hljs-keyword">if</span> (gradient) {
@@ -1088,16 +1245,19 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(start, end)) {
             start = <span class="hljs-number">0</span>;
             end = <span class="hljs-number">999</span>;
-        }</pre></div></div>
+        }
+
+        <span class="hljs-keyword">let</span> engine = easingFunction;
+        <span class="hljs-keyword">if</span> (easing !== <span class="hljs-string">&#x27;function&#x27;</span> &amp;&amp; easeEngines[easing]) engine = easeEngines[easing];</pre></div></div>
             
         </li>
         
         
-        <li id="section-25">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Option 1 start == end, cycle irrelevant</p>
 
@@ -1108,11 +1268,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-26">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Option 2: start &lt; end, cycle irrelevant</p>
 
@@ -1125,15 +1285,41 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         
             spread = end - start;
 
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+            <span class="hljs-keyword">if</span> (precision) {
 
-                item = keys[i];
+                <span class="hljs-keyword">for</span> (i = start + <span class="hljs-number">1</span>; i &lt; end; i += precision) {
 
-                <span class="hljs-keyword">if</span> (item &gt; start &amp;&amp; item &lt; end) {
+                    offset = (i - start) / spread;
 
-                    offset = (item - start) / spread;
+                    <span class="hljs-keyword">if</span> (cycle) {
 
-                    <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.<span class="hljs-title function_">addColorStop</span>(offset, stops[item]);
+                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">1</span>) offset -= <span class="hljs-number">1</span>;
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (offset &lt; <span class="hljs-number">0</span>) offset += <span class="hljs-number">1</span>;
+                    }
+
+                    offset = <span class="hljs-title function_">engine</span>(offset);
+
+                    <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.<span class="hljs-title function_">addColorStop</span>(offset, stops[i]);
+                }
+            }
+            <span class="hljs-keyword">else</span> {
+
+                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+                    item = keys[i];
+
+                    <span class="hljs-keyword">if</span> (item &gt; start &amp;&amp; item &lt; end) {
+
+                        offset = (item - start) / spread;
+
+                        <span class="hljs-keyword">if</span> (cycle) {
+
+                            <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">1</span>) offset -= <span class="hljs-number">1</span>;
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (offset &lt; <span class="hljs-number">0</span>) offset += <span class="hljs-number">1</span>;
+                        }
+
+                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.<span class="hljs-title function_">addColorStop</span>(offset, stops[item]);
+                    }
                 }
             }
         }
@@ -1143,11 +1329,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-27">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Option 3: start &gt; end, cycle = true</p>
 
@@ -1158,30 +1344,51 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
                 gradient.<span class="hljs-title function_">addColorStop</span>(<span class="hljs-number">0</span>, stops[start]);
                 gradient.<span class="hljs-title function_">addColorStop</span>(<span class="hljs-number">1</span>, stops[end]);
-            
+
                 n = <span class="hljs-number">999</span> - start;
                 spread = n + end;
 
-                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+                <span class="hljs-keyword">if</span> (precision) {
 
-                    item = keys[i];
+                    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; spread; i += precision) {
 
-                    <span class="hljs-keyword">if</span> (item &gt; start) offset = (item - start) / spread;
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &lt; end) offset = (item + n) / spread;
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">continue</span>;
+                        item = i + start;
 
-                    <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.<span class="hljs-title function_">addColorStop</span>(offset, stops[item]);
+                        <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">999</span>) item -= <span class="hljs-number">999</span>;
+
+                        offset = <span class="hljs-title function_">engine</span>(i / spread);
+
+                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.<span class="hljs-title function_">addColorStop</span>(offset, stops[item]);
+                    }
+                }
+                <span class="hljs-keyword">else</span> {
+
+                    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+                        item = keys[i];
+
+                        <span class="hljs-keyword">if</span> (item === <span class="hljs-number">999</span>) offset = (item - start - <span class="hljs-number">0.01</span>) / spread;
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &gt; start) offset = (item - start) / spread;
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item === <span class="hljs-number">0</span>) offset = (item + n + <span class="hljs-number">0.01</span>) / spread;
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &lt; end) offset = (item + n) / spread;
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">continue</span>;
+
+                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">1</span>) offset -= <span class="hljs-number">1</span>;
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (offset &lt; <span class="hljs-number">0</span>) offset += <span class="hljs-number">1</span>;
+
+                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.<span class="hljs-title function_">addColorStop</span>(offset, stops[item]);
+                    }
                 }
             }</pre></div></div>
             
         </li>
         
         
-        <li id="section-28">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Option 4: start &gt; end, cycle = false</p>
 
@@ -1194,15 +1401,30 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
             
                 spread = start - end;
 
-                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+                <span class="hljs-keyword">if</span> (precision) {
 
-                    item = keys[i];
+                    <span class="hljs-keyword">for</span> (i = end + <span class="hljs-number">1</span>; i &lt; start; i += precision) {
 
-                    <span class="hljs-keyword">if</span> (item &lt; start &amp;&amp; item &gt; end) {
+                        <span class="hljs-keyword">if</span> (i &lt; start &amp;&amp; i &gt; end) {
 
-                        offset = <span class="hljs-number">1</span> - ((item - end) / spread);
+                            offset = <span class="hljs-title function_">engine</span>(<span class="hljs-number">1</span> - ((i - end) / spread));
 
-                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.<span class="hljs-title function_">addColorStop</span>(offset, stops[item]);
+                            <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.<span class="hljs-title function_">addColorStop</span>(offset, stops[i]);
+                        }
+                    }
+                }
+                <span class="hljs-keyword">else</span> {
+
+                    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+                        item = keys[i];
+
+                        <span class="hljs-keyword">if</span> (item &lt; start &amp;&amp; item &gt; end) {
+
+                            offset = <span class="hljs-number">1</span> - ((item - end) / spread);
+
+                            <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.<span class="hljs-title function_">addColorStop</span>(offset, stops[item]);
+                        }
                     }
                 }
             }
@@ -1213,11 +1435,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-29">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>No gradient: no colors</p>
 
@@ -1229,30 +1451,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-30">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
-              </div>
-              <p><code>factory</code> - We add a Scrawl-canvas <a href="./color.html">Color object</a> to the Palette factory prototype - one object is used for all the calculations preformed by all Palette objects</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factory</span> = <span class="hljs-title function_">makeColor</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;palette-factory-color-calculator&#x27;</span>,
-    <span class="hljs-attr">opaque</span>: <span class="hljs-literal">false</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -1271,11 +1474,11 @@ constructors.<span class="hljs-property">Palette</span> = <span class="hljs-titl
         </li>
         
         
-        <li id="section-32">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

@@ -1064,111 +1064,12 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <h5 id="easing-functions">Easing functions</h5>
-<p>The following easing variations come from the <a href="https://easings.net/">easings.net</a> web page</p>
-<ul>
-<li>Note: the naming convention for easing is different in Scrawl-canvas. Easing out implies a speeding up, while easing in implies a slowing down. Think of a train easing into a station, and then easing out of it again as it continues its journey. </li>
-</ul>
+              <h5 id="easing-engines">Easing engines</h5>
+<p><code>easeEngines</code> - an object in which keys define various easing functions</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> easeOutSine = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>((t * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">2</span>) };
-<span class="hljs-keyword">const</span> easeInSine = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((t * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">2</span>) };
-<span class="hljs-keyword">const</span> easeOutInSine = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> -(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * t) - <span class="hljs-number">1</span>) / <span class="hljs-number">2</span> };
-
-<span class="hljs-keyword">const</span> easeOutQuad = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t * t };
-<span class="hljs-keyword">const</span> easeInQuad = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - ((<span class="hljs-number">1</span> - t) * (<span class="hljs-number">1</span> - t)) };
-<span class="hljs-keyword">const</span> easeOutInQuad = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">2</span> * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) / <span class="hljs-number">2</span> };
-
-<span class="hljs-keyword">const</span> easeOutCubic = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t * t * t };
-<span class="hljs-keyword">const</span> easeInCubic = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">1</span> - t, <span class="hljs-number">3</span>) };
-<span class="hljs-keyword">const</span> easeOutInCubic = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">4</span> * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">3</span>) / <span class="hljs-number">2</span> };
-
-<span class="hljs-keyword">const</span> easeOutQuart = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t * t * t * t };
-<span class="hljs-keyword">const</span> easeInQuart = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">1</span> - t, <span class="hljs-number">4</span>) };
-<span class="hljs-keyword">const</span> easeOutInQuart = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">8</span> * t * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">4</span>) / <span class="hljs-number">2</span> };
-
-<span class="hljs-keyword">const</span> easeOutQuint = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t * t * t * t * t };
-<span class="hljs-keyword">const</span> easeInQuint = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">1</span> - t, <span class="hljs-number">5</span>) };
-<span class="hljs-keyword">const</span> easeOutInQuint = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">16</span> * t * t * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">5</span>) / <span class="hljs-number">2</span> };
-
-<span class="hljs-keyword">const</span> easeOutExpo = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t === <span class="hljs-number">0</span> ? <span class="hljs-number">0</span> : <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, <span class="hljs-number">10</span> * t - <span class="hljs-number">10</span>) };
-<span class="hljs-keyword">const</span> easeInExpo = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t === <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, -<span class="hljs-number">10</span> * t) };
-<span class="hljs-keyword">const</span> easeOutInExpo = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
-    <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
-    <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, <span class="hljs-number">20</span> * t - <span class="hljs-number">10</span>) / <span class="hljs-number">2</span> : (<span class="hljs-number">2</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, -<span class="hljs-number">20</span> * t + <span class="hljs-number">10</span>)) / <span class="hljs-number">2</span>;        
-};
-
-<span class="hljs-keyword">const</span> easeOutCirc = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(t, <span class="hljs-number">2</span>)) };
-<span class="hljs-keyword">const</span> easeInCirc = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(t - <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)) };
-<span class="hljs-keyword">const</span> easeOutInCirc = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? (<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * t, <span class="hljs-number">2</span>))) / <span class="hljs-number">2</span> : (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">2</span>)) + <span class="hljs-number">1</span>) / <span class="hljs-number">2</span> };
-
-<span class="hljs-keyword">const</span> easeOutBack = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> (<span class="hljs-number">2.70158</span> * t * t * t) - (<span class="hljs-number">1.70158</span> * t * t) };
-<span class="hljs-keyword">const</span> easeInBack = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + (<span class="hljs-number">2.70158</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(t - <span class="hljs-number">1</span>, <span class="hljs-number">3</span>)) + (<span class="hljs-number">1.70158</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(t - <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)) };
-<span class="hljs-keyword">const</span> easeOutInBack = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
-    <span class="hljs-keyword">let</span> c1 = <span class="hljs-number">1.70158</span>, c2 = c1 * <span class="hljs-number">1.525</span>;
-    <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * t, <span class="hljs-number">2</span>) * ((c2 + <span class="hljs-number">1</span>) * <span class="hljs-number">2</span> * t - c2)) / <span class="hljs-number">2</span> : (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * t - <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) * ((c2 + <span class="hljs-number">1</span>) * (t * <span class="hljs-number">2</span> - <span class="hljs-number">2</span>) + c2) + <span class="hljs-number">2</span>) / <span class="hljs-number">2</span>;
-};
-
-<span class="hljs-keyword">const</span> easeOutElastic = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
-    <span class="hljs-keyword">const</span> c4 = (<span class="hljs-number">2</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">3</span>;
-    <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
-    <span class="hljs-keyword">return</span> -<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, <span class="hljs-number">10</span> * t - <span class="hljs-number">10</span>) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((t * <span class="hljs-number">10</span> - <span class="hljs-number">10.75</span>) * c4);
-};
-
-<span class="hljs-keyword">const</span> easeInElastic = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
-    <span class="hljs-keyword">const</span> c4 = (<span class="hljs-number">2</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">3</span>;
-    <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
-    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, -<span class="hljs-number">10</span> * t) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((t * <span class="hljs-number">10</span> - <span class="hljs-number">0.75</span>) * c4) + <span class="hljs-number">1</span>;
-};
-
-<span class="hljs-keyword">const</span> easeOutInElastic = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
-    <span class="hljs-keyword">const</span> c5 = (<span class="hljs-number">2</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">4.5</span>;
-    <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
-    <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? 
-        -(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, <span class="hljs-number">20</span> * t - <span class="hljs-number">10</span>) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((<span class="hljs-number">20</span> * t - <span class="hljs-number">11.125</span>) * c5)) / <span class="hljs-number">2</span> : 
-        (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, -<span class="hljs-number">20</span> * t + <span class="hljs-number">10</span>) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((<span class="hljs-number">20</span> * t - <span class="hljs-number">11.125</span>) * c5)) / <span class="hljs-number">2</span> + <span class="hljs-number">1</span>;
-};
-
-<span class="hljs-keyword">const</span> easeOutBounce = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
-    t = <span class="hljs-number">1</span> - t;
-    <span class="hljs-keyword">const</span> n1 = <span class="hljs-number">7.5625</span>, d1 = <span class="hljs-number">2.75</span>;
-    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * t * t);
-    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>);
-    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2.5</span> / d1) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * (t -= <span class="hljs-number">2.25</span> / d1) * t + <span class="hljs-number">0.9375</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>);
-};
-
-<span class="hljs-keyword">const</span> easeInBounce = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
-    <span class="hljs-keyword">const</span> n1 = <span class="hljs-number">7.5625</span>, d1 = <span class="hljs-number">2.75</span>;
-    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) <span class="hljs-keyword">return</span> n1 * t * t;
-    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) <span class="hljs-keyword">return</span> n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>;
-    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2.5</span> / d1) <span class="hljs-keyword">return</span> n1 * (t -= <span class="hljs-number">2.25</span> / d1) * t + <span class="hljs-number">0.9375</span>;
-    <span class="hljs-keyword">return</span> n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>;
-};
-
-<span class="hljs-keyword">const</span> easeOutInBounce = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
-    <span class="hljs-keyword">const</span> n1 = <span class="hljs-number">7.5625</span>, d1 = <span class="hljs-number">2.75</span>;
-    <span class="hljs-keyword">let</span> res;
-    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0.5</span>) {
-        t = <span class="hljs-number">1</span> - <span class="hljs-number">2</span> * t;
-        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) res = n1 * t * t;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) res = n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2.5</span> / d1) res = n1 * (t -= <span class="hljs-number">2.25</span> / d1) * t + <span class="hljs-number">0.9375</span>;
-        <span class="hljs-keyword">else</span> res = n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>;
-        <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> - res) / <span class="hljs-number">2</span>;
-    }
-    <span class="hljs-keyword">else</span> {
-        t = <span class="hljs-number">2</span> * t - <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) res = n1 * t * t;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) res = n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2.5</span> / d1) res = n1 * (t -= <span class="hljs-number">2.25</span> / d1) * t + <span class="hljs-number">0.9375</span>;
-        <span class="hljs-keyword">else</span> res = n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>;
-        <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> + res) / <span class="hljs-number">2</span>;
-    }
-};
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">getArrayType</span> = someObject =&gt; someObject &amp;&amp; someObject.<span class="hljs-property">constructor</span> &amp;&amp; someObject.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span> &amp;&amp; someObject.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span> || <span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> easeEngines = {</pre></div></div>
             
         </li>
         
@@ -1178,6 +1079,248 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
               
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p>Legacy easings</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">out</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>((t * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">2</span>),
+    <span class="hljs-attr">in</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((t * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">2</span>),
+    <span class="hljs-attr">easeIn</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+        
+        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - t;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (temp * temp);
+    },
+    <span class="hljs-attr">easeIn3</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - t;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (temp * temp * temp);
+    },
+    <span class="hljs-attr">easeIn4</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - t;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (temp * temp * temp * temp);
+    },
+    <span class="hljs-attr">easeIn5</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - t;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (temp * temp * temp * temp * temp);
+    },
+    <span class="hljs-attr">easeOutIn</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> (t &lt; <span class="hljs-number">0.5</span>) ? <span class="hljs-number">2</span> * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) / <span class="hljs-number">2</span>,
+    <span class="hljs-attr">easeOutIn3</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> (t &lt; <span class="hljs-number">0.5</span>) ? <span class="hljs-number">4</span> * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">3</span>) / <span class="hljs-number">2</span>,
+    <span class="hljs-attr">easeOutIn4</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> (t &lt; <span class="hljs-number">0.5</span>) ? <span class="hljs-number">8</span> * t * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">4</span>) / <span class="hljs-number">2</span>,
+    <span class="hljs-attr">easeOutIn5</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> (t &lt; <span class="hljs-number">0.5</span>) ? <span class="hljs-number">16</span> * t * t * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">5</span>) / <span class="hljs-number">2</span>,
+
+    <span class="hljs-attr">easeInOut</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> tin = <span class="hljs-number">0.5</span> - t,
+            tout = t - <span class="hljs-number">0.5</span>;
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0.5</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (-<span class="hljs-number">2</span> * tin * tin);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * tout, <span class="hljs-number">2</span>) / <span class="hljs-number">2</span>;
+    },
+    <span class="hljs-attr">easeInOut3</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> tin = <span class="hljs-number">0.5</span> - t,
+            tout = t - <span class="hljs-number">0.5</span>;
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0.5</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (-<span class="hljs-number">4</span> * tin * tin * tin);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * tout, <span class="hljs-number">3</span>) / <span class="hljs-number">2</span>;
+    },
+    <span class="hljs-attr">easeInOut4</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> tin = <span class="hljs-number">0.5</span> - t,
+            tout = t - <span class="hljs-number">0.5</span>;
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0.5</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (-<span class="hljs-number">8</span> * tin * tin * tin * tin);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * tout, <span class="hljs-number">4</span>) / <span class="hljs-number">2</span>;
+    },
+    <span class="hljs-attr">easeInOut5</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> tin = <span class="hljs-number">0.5</span> - t,
+            tout = t - <span class="hljs-number">0.5</span>;
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0.5</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (-<span class="hljs-number">16</span> * tin * tin * tin * tin * tin);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * tout, <span class="hljs-number">5</span>) / <span class="hljs-number">2</span>;
+    },
+
+    <span class="hljs-attr">easeOut</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> t * t,
+    <span class="hljs-attr">easeOut3</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> t * t * t,
+    <span class="hljs-attr">easeOut4</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> t * t * t * t,
+    <span class="hljs-attr">easeOut5</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> t * t * t * t * t,
+
+    <span class="hljs-attr">none</span>: <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> val,
+    <span class="hljs-attr">linear</span>: <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> val,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p>Noise functionality easing engines</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">cosine</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> <span class="hljs-number">.5</span> * (<span class="hljs-number">1</span> + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>((<span class="hljs-number">1</span> - t) * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>)),
+    <span class="hljs-attr">hermite</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> t * t * (-t * <span class="hljs-number">2</span> + <span class="hljs-number">3</span>),
+    <span class="hljs-attr">quintic</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> t * t * t * (t * (t * <span class="hljs-number">6</span> - <span class="hljs-number">15</span>) + <span class="hljs-number">10</span>),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p>The following easing variations come from the <a href="https://easings.net/">easings.net</a> web page</p>
+<ul>
+<li>Note: the naming convention for easing is different in Scrawl-canvas. Easing out implies a speeding up, while easing in implies a slowing down. Think of a train easing into a station, and then easing out of it again as it continues its journey. </li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeOutSine</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>((t * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">2</span>),
+    <span class="hljs-attr">easeInSine</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((t * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">2</span>),
+    <span class="hljs-attr">easeOutInSine</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> -(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * t) - <span class="hljs-number">1</span>) / <span class="hljs-number">2</span>,
+
+    <span class="hljs-attr">easeOutQuad</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> t * t,
+    <span class="hljs-attr">easeInQuad</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> <span class="hljs-number">1</span> - ((<span class="hljs-number">1</span> - t) * (<span class="hljs-number">1</span> - t)),
+    <span class="hljs-attr">easeOutInQuad</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> (t &lt; <span class="hljs-number">0.5</span>) ? <span class="hljs-number">2</span> * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) / <span class="hljs-number">2</span>,
+
+    <span class="hljs-attr">easeOutCubic</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> t * t * t,
+    <span class="hljs-attr">easeInCubic</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">1</span> - t, <span class="hljs-number">3</span>),
+    <span class="hljs-attr">easeOutInCubic</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> (t &lt; <span class="hljs-number">0.5</span>) ? <span class="hljs-number">4</span> * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">3</span>) / <span class="hljs-number">2</span>,
+
+    <span class="hljs-attr">easeOutQuart</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> t * t * t * t,
+    <span class="hljs-attr">easeInQuart</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">1</span> - t, <span class="hljs-number">4</span>),
+    <span class="hljs-attr">easeOutInQuart</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> (t &lt; <span class="hljs-number">0.5</span>) ? <span class="hljs-number">8</span> * t * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">4</span>) / <span class="hljs-number">2</span>,
+
+    <span class="hljs-attr">easeOutQuint</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> t * t * t * t * t,
+    <span class="hljs-attr">easeInQuint</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">1</span> - t, <span class="hljs-number">5</span>),
+    <span class="hljs-attr">easeOutInQuint</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> (t &lt; <span class="hljs-number">0.5</span>) ? <span class="hljs-number">16</span> * t * t * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">5</span>) / <span class="hljs-number">2</span>,
+
+    <span class="hljs-attr">easeOutExpo</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> (t === <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, <span class="hljs-number">10</span> * t - <span class="hljs-number">10</span>),
+    <span class="hljs-attr">easeInExpo</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> (t === <span class="hljs-number">1</span>) ? <span class="hljs-number">1</span> : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, -<span class="hljs-number">10</span> * t),
+    <span class="hljs-attr">easeOutInExpo</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+        <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
+        <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, <span class="hljs-number">20</span> * t - <span class="hljs-number">10</span>) / <span class="hljs-number">2</span> : (<span class="hljs-number">2</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, -<span class="hljs-number">20</span> * t + <span class="hljs-number">10</span>)) / <span class="hljs-number">2</span>;
+    },
+
+    <span class="hljs-attr">easeOutCirc</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(t, <span class="hljs-number">2</span>)),
+    <span class="hljs-attr">easeInCirc</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(t - <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)),
+    <span class="hljs-attr">easeOutInCirc</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> { 
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0.5</span>) <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * t, <span class="hljs-number">2</span>))) / <span class="hljs-number">2</span>;
+        <span class="hljs-keyword">return</span> (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">2</span>)) + <span class="hljs-number">1</span>) / <span class="hljs-number">2</span>;
+    },
+
+    <span class="hljs-attr">easeOutBack</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> (<span class="hljs-number">2.70158</span> * t * t * t) - (<span class="hljs-number">1.70158</span> * t * t),
+    <span class="hljs-attr">easeInBack</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> <span class="hljs-number">1</span> + (<span class="hljs-number">2.70158</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(t - <span class="hljs-number">1</span>, <span class="hljs-number">3</span>)) + (<span class="hljs-number">1.70158</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(t - <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)),
+    <span class="hljs-attr">easeOutInBack</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> c1 = <span class="hljs-number">1.70158</span>, c2 = c1 * <span class="hljs-number">1.525</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0.5</span>) <span class="hljs-keyword">return</span> (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * t, <span class="hljs-number">2</span>) * ((c2 + <span class="hljs-number">1</span>) * <span class="hljs-number">2</span> * t - c2)) / <span class="hljs-number">2</span>;
+        <span class="hljs-keyword">return</span> (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * t - <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) * ((c2 + <span class="hljs-number">1</span>) * (t * <span class="hljs-number">2</span> - <span class="hljs-number">2</span>) + c2) + <span class="hljs-number">2</span>) / <span class="hljs-number">2</span>;
+    },
+
+    <span class="hljs-attr">easeOutElastic</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> c4 = (<span class="hljs-number">2</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">3</span>;
+        <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
+        <span class="hljs-keyword">return</span> -<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, <span class="hljs-number">10</span> * t - <span class="hljs-number">10</span>) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((t * <span class="hljs-number">10</span> - <span class="hljs-number">10.75</span>) * c4);
+    },
+    <span class="hljs-attr">easeInElastic</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> c4 = (<span class="hljs-number">2</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">3</span>;
+        <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
+        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, -<span class="hljs-number">10</span> * t) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((t * <span class="hljs-number">10</span> - <span class="hljs-number">0.75</span>) * c4) + <span class="hljs-number">1</span>;
+    },
+    <span class="hljs-attr">easeOutInElastic</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> c5 = (<span class="hljs-number">2</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">4.5</span>;
+        <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0.5</span>) <span class="hljs-keyword">return</span> -(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, <span class="hljs-number">20</span> * t - <span class="hljs-number">10</span>) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((<span class="hljs-number">20</span> * t - <span class="hljs-number">11.125</span>) * c5)) / <span class="hljs-number">2</span>;
+        <span class="hljs-keyword">return</span> (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, -<span class="hljs-number">20</span> * t + <span class="hljs-number">10</span>) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((<span class="hljs-number">20</span> * t - <span class="hljs-number">11.125</span>) * c5)) / <span class="hljs-number">2</span> + <span class="hljs-number">1</span>;
+    },
+
+    <span class="hljs-attr">easeOutBounce</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        t = <span class="hljs-number">1</span> - t;
+
+        <span class="hljs-keyword">const</span> n1 = <span class="hljs-number">7.5625</span>, 
+            d1 = <span class="hljs-number">2.75</span>;
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * t * t);
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>);
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2.5</span> / d1) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * (t -= <span class="hljs-number">2.25</span> / d1) * t + <span class="hljs-number">0.9375</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>);
+    },
+
+    <span class="hljs-attr">easeInBounce</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> n1 = <span class="hljs-number">7.5625</span>, 
+            d1 = <span class="hljs-number">2.75</span>;
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) <span class="hljs-keyword">return</span> n1 * t * t;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) <span class="hljs-keyword">return</span> n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2.5</span> / d1) <span class="hljs-keyword">return</span> n1 * (t -= <span class="hljs-number">2.25</span> / d1) * t + <span class="hljs-number">0.9375</span>;
+        <span class="hljs-keyword">return</span> n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p>This is wrong</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">easeOutInBounce</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> n1 = <span class="hljs-number">7.5625</span>, d1 = <span class="hljs-number">2.75</span>;
+        <span class="hljs-keyword">let</span> res;
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0.5</span>) {
+            t = <span class="hljs-number">1</span> - <span class="hljs-number">2</span> * t;
+            <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) res = n1 * t * t;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) res = n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2.5</span> / d1) res = n1 * (t -= <span class="hljs-number">2.25</span> / d1) * t + <span class="hljs-number">0.9375</span>;
+            <span class="hljs-keyword">else</span> res = n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>;
+            <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> - res) / <span class="hljs-number">2</span>;
+        }
+        <span class="hljs-keyword">else</span> {
+            t = <span class="hljs-number">2</span> * t - <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) res = n1 * t * t;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) res = n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2.5</span> / d1) res = n1 * (t -= <span class="hljs-number">2.25</span> / d1) * t + <span class="hljs-number">0.9375</span>;
+            <span class="hljs-keyword">else</span> res = n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>;
+            <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> + res) / <span class="hljs-number">2</span>;
+        }
+    },
+};
+
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">getArrayType</span> = someObject =&gt; someObject &amp;&amp; someObject.<span class="hljs-property">constructor</span> &amp;&amp; someObject.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span> &amp;&amp; someObject.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span> || <span class="hljs-literal">null</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Code to detect browser from Code Box: <a href="https://code-boxx.com/detect-browser-with-javascript/">https://code-boxx.com/detect-browser-with-javascript/</a></p>
 <ul>
@@ -1210,11 +1353,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-29">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
@@ -1249,36 +1392,7 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
     xtGet,
     xto, 
 
-    easeOutSine,
-    easeInSine,
-    easeOutInSine,
-    easeOutQuad,
-    easeInQuad,
-    easeOutInQuad,
-    easeOutCubic,
-    easeInCubic,
-    easeOutInCubic,
-    easeOutQuart,
-    easeInQuart,
-    easeOutInQuart,
-    easeOutQuint,
-    easeInQuint,
-    easeOutInQuint,
-    easeOutExpo,
-    easeInExpo,
-    easeOutInExpo,
-    easeOutCirc,
-    easeInCirc,
-    easeOutInCirc,
-    easeOutBack,
-    easeInBack,
-    easeOutInBack,
-    easeOutElastic,
-    easeInElastic,
-    easeOutInElastic,
-    easeOutBounce,
-    easeInBounce,
-    easeOutInBounce,
+    easeEngines,
 
     getArrayType,
 

@@ -320,6 +320,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-059.html">
+                  ./demo/canvas-059.js
+                </a>
+              
+                
+                <a class="source" href="canvas-060.html">
+                  ./demo/canvas-060.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -895,6 +905,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-034.html">
+                  ./demo/temp-034.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -1078,7 +1093,7 @@ canvas.<span class="hljs-title function_">set</span>({
     }).<span class="hljs-title function_">run</span>();
 };
 
-<span class="hljs-keyword">const</span> easings = [<span class="hljs-string">&#x27;easeOutSine&#x27;</span>, <span class="hljs-string">&#x27;easeOutQuad&#x27;</span>, <span class="hljs-string">&#x27;easeOutCubic&#x27;</span>, <span class="hljs-string">&#x27;easeOutQuart&#x27;</span>, <span class="hljs-string">&#x27;easeOutQuint&#x27;</span>, <span class="hljs-string">&#x27;easeOutExpo&#x27;</span>, <span class="hljs-string">&#x27;easeOutCirc&#x27;</span>, <span class="hljs-string">&#x27;easeOutBack&#x27;</span>, <span class="hljs-string">&#x27;easeOutElastic&#x27;</span>, <span class="hljs-string">&#x27;easeOutBounce&#x27;</span>, <span class="hljs-string">&#x27;easeInSine&#x27;</span>, <span class="hljs-string">&#x27;easeInQuad&#x27;</span>, <span class="hljs-string">&#x27;easeInCubic&#x27;</span>, <span class="hljs-string">&#x27;easeInQuart&#x27;</span>, <span class="hljs-string">&#x27;easeInQuint&#x27;</span>, <span class="hljs-string">&#x27;easeInExpo&#x27;</span>, <span class="hljs-string">&#x27;easeInCirc&#x27;</span>, <span class="hljs-string">&#x27;easeInBack&#x27;</span>, <span class="hljs-string">&#x27;easeInElastic&#x27;</span>, <span class="hljs-string">&#x27;easeInBounce&#x27;</span>, <span class="hljs-string">&#x27;easeOutInSine&#x27;</span>, <span class="hljs-string">&#x27;easeOutInQuad&#x27;</span>, <span class="hljs-string">&#x27;easeOutInCubic&#x27;</span>, <span class="hljs-string">&#x27;easeOutInQuart&#x27;</span>, <span class="hljs-string">&#x27;easeOutInQuint&#x27;</span>, <span class="hljs-string">&#x27;easeOutInExpo&#x27;</span>, <span class="hljs-string">&#x27;easeOutInCirc&#x27;</span>, <span class="hljs-string">&#x27;easeOutInBack&#x27;</span>, <span class="hljs-string">&#x27;easeOutInElastic&#x27;</span>, <span class="hljs-string">&#x27;easeOutInBounce&#x27;</span>];
+<span class="hljs-keyword">const</span> easings = [<span class="hljs-string">&#x27;linear&#x27;</span>, <span class="hljs-string">&#x27;out&#x27;</span>, <span class="hljs-string">&#x27;easeOut&#x27;</span>, <span class="hljs-string">&#x27;easeOut3&#x27;</span>, <span class="hljs-string">&#x27;easeOut4&#x27;</span>, <span class="hljs-string">&#x27;easeOut5&#x27;</span>, <span class="hljs-string">&#x27;easeOutSine&#x27;</span>, <span class="hljs-string">&#x27;easeOutQuad&#x27;</span>, <span class="hljs-string">&#x27;easeOutCubic&#x27;</span>, <span class="hljs-string">&#x27;easeOutQuart&#x27;</span>, <span class="hljs-string">&#x27;easeOutQuint&#x27;</span>, <span class="hljs-string">&#x27;easeOutExpo&#x27;</span>, <span class="hljs-string">&#x27;easeOutCirc&#x27;</span>, <span class="hljs-string">&#x27;easeOutBack&#x27;</span>, <span class="hljs-string">&#x27;easeOutElastic&#x27;</span>, <span class="hljs-string">&#x27;easeOutBounce&#x27;</span>, <span class="hljs-string">&#x27;in&#x27;</span>, <span class="hljs-string">&#x27;easeIn&#x27;</span>, <span class="hljs-string">&#x27;easeIn3&#x27;</span>, <span class="hljs-string">&#x27;easeIn4&#x27;</span>, <span class="hljs-string">&#x27;easeIn5&#x27;</span>, <span class="hljs-string">&#x27;easeInSine&#x27;</span>, <span class="hljs-string">&#x27;easeInQuad&#x27;</span>, <span class="hljs-string">&#x27;easeInCubic&#x27;</span>, <span class="hljs-string">&#x27;easeInQuart&#x27;</span>, <span class="hljs-string">&#x27;easeInQuint&#x27;</span>, <span class="hljs-string">&#x27;easeInExpo&#x27;</span>, <span class="hljs-string">&#x27;easeInCirc&#x27;</span>, <span class="hljs-string">&#x27;easeInBack&#x27;</span>, <span class="hljs-string">&#x27;easeInElastic&#x27;</span>, <span class="hljs-string">&#x27;easeInBounce&#x27;</span>, <span class="hljs-string">&#x27;easeOutIn&#x27;</span>, <span class="hljs-string">&#x27;easeOutIn3&#x27;</span>, <span class="hljs-string">&#x27;easeOutIn4&#x27;</span>, <span class="hljs-string">&#x27;easeOutIn5&#x27;</span>, <span class="hljs-string">&#x27;easeOutInSine&#x27;</span>, <span class="hljs-string">&#x27;easeOutInQuad&#x27;</span>, <span class="hljs-string">&#x27;easeOutInCubic&#x27;</span>, <span class="hljs-string">&#x27;easeOutInQuart&#x27;</span>, <span class="hljs-string">&#x27;easeOutInQuint&#x27;</span>, <span class="hljs-string">&#x27;easeOutInExpo&#x27;</span>, <span class="hljs-string">&#x27;easeOutInCirc&#x27;</span>, <span class="hljs-string">&#x27;easeOutInBack&#x27;</span>, <span class="hljs-string">&#x27;easeOutInElastic&#x27;</span>, <span class="hljs-string">&#x27;easeOutInBounce&#x27;</span>, <span class="hljs-string">&#x27;easeInOut&#x27;</span>, <span class="hljs-string">&#x27;easeInOut3&#x27;</span>, <span class="hljs-string">&#x27;easeInOut4&#x27;</span>, <span class="hljs-string">&#x27;easeInOut5&#x27;</span>, <span class="hljs-string">&#x27;none&#x27;</span>, <span class="hljs-string">&#x27;nOnSeNsE&#x27;</span>, <span class="hljs-string">&#x27;cosine&#x27;</span>, <span class="hljs-string">&#x27;hermite&#x27;</span>, <span class="hljs-string">&#x27;quintic&#x27;</span>];
 
 easings.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">easing, index</span>) =&gt;</span> <span class="hljs-title function_">easingDisplayComponent</span>(easing, <span class="hljs-number">50</span> + (index * <span class="hljs-number">30</span>)));</pre></div></div>
             

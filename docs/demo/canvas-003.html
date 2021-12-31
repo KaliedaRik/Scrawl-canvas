@@ -320,6 +320,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-059.html">
+                  ./demo/canvas-059.js
+                </a>
+              
+                
+                <a class="source" href="canvas-060.html">
+                  ./demo/canvas-060.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -895,6 +905,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-034.html">
+                  ./demo/temp-034.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -1023,12 +1038,18 @@ canvas.<span class="hljs-title function_">set</span>({
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Create the linear gradient - we will kill and resurrect it as the demo runs</p>
+<ul>
+<li>Needs to be a let, not a const, because we’re going to kill/resurrect this gradient</li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> graddy = scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mygradient&#x27;</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+
+    <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;linear&#x27;</span>,
+    <span class="hljs-attr">precision</span>: <span class="hljs-number">1</span>,
 });</pre></div></div>
             
         </li>
@@ -1039,6 +1060,32 @@ canvas.<span class="hljs-title function_">set</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>Test the ability to load a user-created easing algorithm into the gradient</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> bespokeEasings = {
+
+    <span class="hljs-string">&#x27;user-steps&#x27;</span>: <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0.2</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.1</span>;
+        <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0.4</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.3</span>;
+        <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0.6</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span>;
+        <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0.8</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0.7</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0.9</span>;
+    },
+    <span class="hljs-string">&#x27;user-repeat&#x27;</span>: <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> (val * <span class="hljs-number">4</span>) % <span class="hljs-number">1</span>,
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Create a block entity which will use the gradient</p>
 
@@ -1060,11 +1107,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1072,19 +1119,20 @@ canvas.<span class="hljs-title function_">set</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Palette - start: <span class="hljs-subst">${graddy.get(<span class="hljs-string">&#x27;paletteStart&#x27;</span>)}</span>; end: <span class="hljs-subst">${graddy.get(<span class="hljs-string">&#x27;paletteEnd&#x27;</span>)}</span>
-    Start - x: <span class="hljs-subst">${graddy.get(<span class="hljs-string">&#x27;startX&#x27;</span>).toFixed(<span class="hljs-number">0</span>)}</span>; y: <span class="hljs-subst">${graddy.get(<span class="hljs-string">&#x27;startY&#x27;</span>).toFixed(<span class="hljs-number">0</span>)}</span>
-    End - x: <span class="hljs-subst">${graddy.get(<span class="hljs-string">&#x27;endX&#x27;</span>).toFixed(<span class="hljs-number">0</span>)}</span>; y: <span class="hljs-subst">${graddy.get(<span class="hljs-string">&#x27;endY&#x27;</span>).toFixed(<span class="hljs-number">0</span>)}</span>`</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Palette - start: <span class="hljs-subst">${paletteStart.value}</span>; end: <span class="hljs-subst">${paletteEnd.value}</span>
+    Start - x: <span class="hljs-subst">${startX.value}</span>%; y: <span class="hljs-subst">${startY.value}</span>%
+    End - x: <span class="hljs-subst">${endX.value}</span>%; y: <span class="hljs-subst">${endY.value}</span>%
+    Precision: <span class="hljs-subst">${precision.value}</span>`</span>;
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1100,11 +1148,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Setup form observer functionality. We’re doing it this way (wrapped in a function) so we can test that it can be killed, and then recreated, later</p>
@@ -1133,24 +1181,16 @@ canvas.<span class="hljs-title function_">set</span>({
 
             <span class="hljs-attr">endX</span>: [<span class="hljs-string">&#x27;endX&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
             <span class="hljs-attr">endY</span>: [<span class="hljs-string">&#x27;endY&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+
+            <span class="hljs-attr">precision</span>: [<span class="hljs-string">&#x27;precision&#x27;</span>, <span class="hljs-string">&#x27;int&#x27;</span>],
+
+            <span class="hljs-attr">cyclePalette</span>: [<span class="hljs-string">&#x27;cyclePalette&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+
+            <span class="hljs-attr">colorSpace</span>: [<span class="hljs-string">&#x27;colorSpace&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+            <span class="hljs-attr">returnColorAs</span>: [<span class="hljs-string">&#x27;returnColorAs&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
         },
     });
 }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>… Create the form observer</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myobserver = <span class="hljs-title function_">makeObserver</span>();</pre></div></div>
             
         </li>
         
@@ -1161,31 +1201,11 @@ canvas.<span class="hljs-title function_">set</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>Adding and removing color stops to the gradient - we’re using <strong>updateColor</strong> and <strong>removeColor</strong> functions rather than setting them on the gradient, so need separate event listener(s) to action form changes.</p>
+              <p>… Create the form observer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">events</span> = (<span class="hljs-params">e</span>) =&gt; {
-
-    e.<span class="hljs-title function_">preventDefault</span>();
-    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> val = <span class="hljs-built_in">parseInt</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>);
-
-    <span class="hljs-keyword">switch</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>) {
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;red&#x27;</span>:
-            <span class="hljs-keyword">if</span> (val) graddy.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">350</span>, <span class="hljs-string">&#x27;red&#x27;</span>);
-            <span class="hljs-keyword">else</span> graddy.<span class="hljs-title function_">removeColor</span>(<span class="hljs-number">350</span>);
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;blue&#x27;</span>:
-            <span class="hljs-keyword">if</span> (val) graddy.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">650</span>, <span class="hljs-string">&#x27;blue&#x27;</span>);
-            <span class="hljs-keyword">else</span> graddy.<span class="hljs-title function_">removeColor</span>(<span class="hljs-number">650</span>);
-            <span class="hljs-keyword">break</span>;
-    }
-};
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], events, <span class="hljs-string">&#x27;.controlItem&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myobserver = <span class="hljs-title function_">makeObserver</span>();</pre></div></div>
             
         </li>
         
@@ -1196,18 +1216,54 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>Set the DOM input values</p>
+              <p>Adding and removing color stops to the gradient - we’re using <strong>updateColor</strong> and <strong>removeColor</strong> functions rather than setting them on the gradient, so need separate event listener(s) to action form changes.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteStart&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteEnd&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">999</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#startX&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#startY&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#endX&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#endY&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#red&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#blue&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">events</span> = (<span class="hljs-params">e</span>) =&gt; {
+
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+};
+
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    <span class="hljs-title function_">events</span>(e);
+
+    <span class="hljs-keyword">let</span> val = <span class="hljs-built_in">parseInt</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>);
+
+    <span class="hljs-keyword">switch</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>) {
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;red&#x27;</span> :
+            <span class="hljs-keyword">if</span> (val) graddy.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">350</span>, <span class="hljs-string">&#x27;red&#x27;</span>);
+            <span class="hljs-keyword">else</span> graddy.<span class="hljs-title function_">removeColor</span>(<span class="hljs-number">350</span>);
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;blue&#x27;</span> :
+            <span class="hljs-keyword">if</span> (val) graddy.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">650</span>, <span class="hljs-string">&#x27;blue&#x27;</span>);
+            <span class="hljs-keyword">else</span> graddy.<span class="hljs-title function_">removeColor</span>(<span class="hljs-number">650</span>);
+            <span class="hljs-keyword">break</span>;
+    }
+}, <span class="hljs-string">&#x27;.colorItems&#x27;</span>);
+
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    <span class="hljs-title function_">events</span>(e);
+
+    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+
+    <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;user-steps&#x27;</span>, <span class="hljs-string">&#x27;user-repeat&#x27;</span>].<span class="hljs-title function_">includes</span>(val)) {
+        graddy.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">easing</span>: bespokeEasings[val],
+        });
+    }
+    <span class="hljs-keyword">else</span> {
+        graddy.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">easing</span>: val,
+        });
+    }
+
+}, <span class="hljs-string">&#x27;#easing&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1217,6 +1273,42 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>Set the DOM input values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> paletteStart = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteStart&#x27;</span>);
+<span class="hljs-keyword">const</span> paletteEnd = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteEnd&#x27;</span>);
+<span class="hljs-keyword">const</span> startX = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#startX&#x27;</span>);
+<span class="hljs-keyword">const</span> startY = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#startY&#x27;</span>);
+<span class="hljs-keyword">const</span> endX = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#endX&#x27;</span>);
+<span class="hljs-keyword">const</span> endY = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#endY&#x27;</span>);
+<span class="hljs-keyword">const</span> precision = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#precision&#x27;</span>);
+
+paletteStart.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+paletteEnd.<span class="hljs-property">value</span> = <span class="hljs-number">999</span>;
+startX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+startY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+endX.<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
+endY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+precision.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#red&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#blue&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#easing&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#cyclePalette&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#colorSpace&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#returnColorAs&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
@@ -1231,11 +1323,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Repopulate the graddy variable</p>
 
@@ -1246,11 +1338,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Reset the block fillStyle to the gradient</p>
 
@@ -1263,11 +1355,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Kill the form observer</p>
 
@@ -1279,11 +1371,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>… and recreate it</p>
 
