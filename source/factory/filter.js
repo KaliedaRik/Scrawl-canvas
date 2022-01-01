@@ -231,6 +231,7 @@ let defaultAttributes = {
     blend: 'normal',
     blue: 0,
     blueInBlue: 0,
+    blueColor: 'rgba(0 0 0 / 1)',
     blueInGreen: 0,
     blueInRed: 0,
     channelX: 'red',
@@ -251,6 +252,7 @@ let defaultAttributes = {
     gradient: null,
     green: 0,
     greenInBlue: 0,
+    greenColor: 'rgba(0 0 0 / 1)',
     greenInGreen: 0,
     greenInRed: 0,
     gutterHeight: 1,
@@ -258,6 +260,7 @@ let defaultAttributes = {
     height: 1,
     highAlpha: 255,
     highBlue: 255,
+    highColor: 'rgba(255 255 255 / 1)',
     highGreen: 255,
     highRed: 255,
     includeAlpha: false, 
@@ -269,6 +272,7 @@ let defaultAttributes = {
     level: 0,
     lowAlpha: 0,
     lowBlue: 0,
+    lowColor: 'rgba(0 0 0 / 1)',
     lowGreen: 0,
     lowRed: 0,
     offsetAlphaX: 0,
@@ -302,8 +306,10 @@ let defaultAttributes = {
     ranges: null,
     red: 0,
     redInBlue: 0,
+    redColor: 'rgba(0 0 0 / 1)',
     redInGreen: 0,
     redInRed: 0,
+    reference: 'black',
     scaleX: 1,
     scaleY: 1,
     seed: 'some-random-string-or-other',
@@ -502,7 +508,7 @@ const setActionsArray = {
         }];
     },
 
-// DEPRECATED! __binary__ - use the updated threshold filter instead
+// DEPRECATED! __binary__ - use the updated threshold filter instead, as this functionality has been added to it.
     binary: function (f) {
         let lowRed = (f.lowRed != null) ? f.lowRed : 0,
             lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,
@@ -564,7 +570,8 @@ const setActionsArray = {
     },
 
 // __blur__ - blurs the image
-// + Use the gaussian blur filter instead. This is being retained only for backwards compatibility and will be removed in a future major release
+// A bespoke blur function. Creates visual artefacts with various settings that might be useful. Strongly advise to memoize the results from this filter as it is resource-intensive.
+// + Use the gaussian blur filter for a smoother result.
     blur: function (f) {
         f.actions = [{
             action: 'blur',
@@ -600,6 +607,8 @@ const setActionsArray = {
     },
 
 // __channelLevels__ (new in v8.4.0) - produces a posterize effect. Takes in four arguments - `red`, `green`, `blue` and `alpha` - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value
+// + TODO - add in a `reference` attribute, which will be an Array of CSS color strings. Use these colors to generate the red, green and blue Arrays. 
+// + This idea might be better suited to a new `posterize` or `dither` filter, where pixels update themselves to the closest reference color, using a more sophisticated color distance measurement
     channelLevels: function (f) {
         f.actions = [{
             action: 'lock-channels-to-levels',
@@ -654,44 +663,119 @@ const setActionsArray = {
     },
 
 // __chroma__ - using an array of `range` arrays, determine whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. Each range array comprises six Numbers representing `[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]` values.
+// + Since v8.7.0 we can also define range Arrays as `[color-string, color-string]`
     chroma: function (f) {
+
+    	const processedRanges = [],
+            res = [];
+
+        if ((f.ranges != null)) {
+
+            f.ranges.forEach(range => {
+
+                if (range.length === 6) processedRanges.push(range);
+                else if (range.length === 2) {
+
+                    if (range[0].substring && range[1].substring) {
+
+                        res.length = 0;
+
+                        range.forEach(col => {
+
+                            let [r, g, b] = window.SC_colorChecker.extractRGBfromColor(col);
+                            res.push(r, g, b);
+                        });
+                    }
+                    processedRanges.push(res);
+                } 
+            })
+        }
+
         f.actions = [{
             action: 'chroma',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            ranges: (f.ranges != null) ? f.ranges : [],
+            ranges: processedRanges,
         }];
     },
 
 // __chromakey__ (new in v8.4.0) - determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the `red`, `green` and `blue` arguments. The sensitivity of the effect can be manipulated using the `transparentAt` and `opaqueAt` values, both of which lie in the range 0-1.
+// + Since v8.7.0, this filter also accepts a `reference` color string in place of the `red, green, blue` values
     chromakey: function (f) {
+
+        let red = (f.red != null) ? f.red : 0,
+            green = (f.green != null) ? f.green : 255,
+            blue = (f.blue != null) ? f.blue : 0;
+
+        if (f.reference != null) {
+
+            [red, green, blue] = window.SC_colorChecker.extractRGBfromColor(f.reference);
+
+            f.red = red;
+            f.green = green;
+            f.blue = blue;
+
+            delete f.reference;
+        }
+
         f.actions = [{
             action: 'colors-to-alpha',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            red: (f.red != null) ? f.red : 0,
-            green: (f.green != null) ? f.green : 255,
-            blue: (f.blue != null) ? f.blue : 0,
+            red,
+            green,
+            blue,
             transparentAt: (f.transparentAt != null) ? f.transparentAt : 0,
             opaqueAt: (f.opaqueAt != null) ? f.opaqueAt : 1,
         }];
     },
 
 // __clampChannels__ (new in v8.4.0) - clamp each color channel to a range set by `lowColor` and `highColor` values
+// + Since v8.7.0, this filter also accepts `lowColor` and `highColor` CSS color Strings in place of the `lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue` values
     clampChannels: function (f) {
+
+        let lowRed = (f.lowRed != null) ? f.lowRed : 0,
+            lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,
+            lowBlue = (f.lowBlue != null) ? f.lowBlue : 0,
+            highRed = (f.highRed != null) ? f.highRed : 255,
+            highGreen = (f.highGreen != null) ? f.highGreen : 255,
+            highBlue = (f.highBlue != null) ? f.highBlue : 255;
+
+        if (f.lowColor != null) {
+
+            [lowRed, lowGreen, lowBlue] = window.SC_colorChecker.extractRGBfromColor(f.lowColor);
+
+            f.lowRed = lowRed;
+            f.lowGreen = lowGreen;
+            f.lowBlue = lowBlue;
+
+            delete f.lowColor;
+        }
+
+        if (f.highColor != null) {
+            
+            [highRed, highGreen, highBlue] = window.SC_colorChecker.extractRGBfromColor(f.highColor);
+
+            f.highRed = highRed;
+            f.highGreen = highGreen;
+            f.highBlue = highBlue;
+
+            delete f.highColor;
+        }
+
         f.actions = [{
             action: 'clamp-channels',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            lowRed: (f.lowRed != null) ? f.lowRed : 0,
-            lowGreen: (f.lowGreen != null) ? f.lowGreen : 0,
-            lowBlue: (f.lowBlue != null) ? f.lowBlue : 0,
-            highRed: (f.highRed != null) ? f.highRed : 255,
-            highGreen: (f.highGreen != null) ? f.highGreen : 255,
-            highBlue: (f.highBlue != null) ? f.highBlue : 255,
+            lowRed,
+            lowGreen,
+            lowBlue,
+            highRed,
+            highGreen,
+            highBlue,
         }];
     },
 
@@ -709,7 +793,11 @@ const setActionsArray = {
         }];
     },
 
-// __corrode__ (new in v8.5.2) - performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the `width` and `height` arguments, while setting the home pixel's position within the matrix can be set using the `offsetX` and `offsetY` arguments. The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the `level` attribute. Channels can be selected by setting the `includeRed`, `includeGreen`, `includeBlue` (all false by default) and `includeAlpha` (default: true) flags.
+// __corrode__ (new in v8.5.2) - performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. 
+// + Note that this filter is expensive, thus much slower to complete compared to other filter effects. Memoization is strongly advised!
+// + The matrix dimensions can be set using the `width` and `height` arguments, while setting the home pixel's position within the matrix can be set using the `offsetX` and `offsetY` arguments. 
+// + The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the `level` attribute. 
+// + Channels can be selected by setting the `includeRed`, `includeGreen`, `includeBlue` (all false by default) and `includeAlpha` (default: true) flags.
     corrode: function (f) {
         f.actions = [{
             action: 'corrode',
@@ -846,16 +934,38 @@ const setActionsArray = {
     },
 
 // __flood__ (new in v8.4.0) - creates a uniform sheet of the required color, which can then be used by other filter actions
+// + Note that the `alpha` value is given in the range `0-255` (like the color channels), not `0-1` or `0%-100%` (as is expected in various CSS color String definitions)
+// + Since v8.7.0, this filter also accepts a `reference` color string in place of the `red, green, blue, alpha` values
     flood: function (f) {
+
+        let red = (f.red != null) ? f.red : 0,
+            green = (f.green != null) ? f.green : 0,
+            blue = (f.blue != null) ? f.blue : 0,
+            alpha = (f.alpha != null) ? f.alpha : 255;
+
+        if (f.reference != null) {
+
+            [red, green, blue, alpha] = window.SC_colorChecker.extractRGBfromColor(f.reference);
+
+            alpha = Math.round(alpha * 255);
+
+            f.red = red;
+            f.green = green;
+            f.blue = blue;
+            f.alpha = alpha;
+
+            delete f.reference;
+        }
+
         f.actions = [{
             action: 'flood',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            red: (f.red != null) ? f.red : 0,
-            green: (f.green != null) ? f.green : 0,
-            blue: (f.blue != null) ? f.blue : 0,
-            alpha: (f.alpha != null) ? f.alpha : 255,
+            red,
+            green,
+            blue,
+            alpha,
         }];
     },
 
@@ -1224,6 +1334,7 @@ const setActionsArray = {
     },
 
 // __threshold__ - creates a duotone effect - grayscales the input then, for each pixel, checks the color channel values against a "level" argument: pixels with channel values above the level value are assigned to the 'high' color; otherwise they are updated to the 'low' color.
+// + Since v8.7.0, this filter also accepts `lowColor` and `highColor` CSS color Strings in place of the `lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue` values
     threshold: function (f) {
         let lowRed = (f.lowRed != null) ? f.lowRed : 0,
             lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,
@@ -1234,6 +1345,37 @@ const setActionsArray = {
             highBlue = (f.highBlue != null) ? f.highBlue : 255,
             highAlpha = (f.highAlpha != null) ? f.highAlpha : 255;
             
+        if (f.lowColor != null) {
+
+            [lowRed, lowGreen, lowBlue, lowAlpha] = window.SC_colorChecker.extractRGBfromColor(f.lowColor);
+
+            lowAlpha = Math.round(lowAlpha * 255);
+
+            f.lowRed = lowRed;
+            f.lowGreen = lowGreen;
+            f.lowBlue = lowBlue;
+            f.lowAlpha = lowAlpha;
+
+            f.low = [lowRed, lowGreen, lowBlue, lowAlpha];
+
+            delete f.lowColor;
+        }
+
+        if (f.highColor != null) {
+            
+            [highRed, highGreen, highBlue, highAlpha] = window.SC_colorChecker.extractRGBfromColor(f.highColor);
+
+            highAlpha = Math.round(highAlpha * 255);
+
+            f.highRed = highRed;
+            f.highGreen = highGreen;
+            f.highBlue = highBlue;
+            f.highAlpha = highAlpha;
+
+            f.high = [highRed, highGreen, highBlue, highAlpha];
+
+            delete f.highColor;
+        }
 
         let low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue, lowAlpha],
             high = (f.high != null) ? f.high : [highRed, highGreen, highBlue, highAlpha];
@@ -1260,20 +1402,76 @@ const setActionsArray = {
 
 // __tint__ - has similarities to the SVG &lt;feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels.
     tint: function (f) {
+
+        let redInRed = (f.redInRed != null) ? f.redInRed : 1,
+            redInGreen = (f.redInGreen != null) ? f.redInGreen : 0,
+            redInBlue = (f.redInBlue != null) ? f.redInBlue : 0,
+            greenInRed = (f.greenInRed != null) ? f.greenInRed : 0,
+            greenInGreen = (f.greenInGreen != null) ? f.greenInGreen : 1,
+            greenInBlue = (f.greenInBlue != null) ? f.greenInBlue : 0,
+            blueInRed = (f.blueInRed != null) ? f.blueInRed : 0,
+            blueInGreen = (f.blueInGreen != null) ? f.blueInGreen : 0,
+            blueInBlue = (f.blueInBlue != null) ? f.blueInBlue : 1;
+            
+        if (f.redColor != null) {
+
+            [redInRed, greenInRed, blueInRed] = window.SC_colorChecker.extractRGBfromColor(f.redColor);
+
+            redInRed /= 255;
+            greenInRed /= 255;
+            blueInRed /= 255;
+
+            f.redInRed = redInRed;
+            f.greenInRed = greenInRed;
+            f.blueInRed = blueInRed;
+
+            delete f.redColor;
+        }
+
+        if (f.greenColor != null) {
+            
+            [redInGreen, greenInGreen, blueInGreen] = window.SC_colorChecker.extractRGBfromColor(f.greenColor);
+
+            redInGreen /= 255;
+            greenInGreen /= 255;
+            blueInGreen /= 255;
+
+            f.redInGreen = redInGreen;
+            f.greenInGreen = greenInGreen;
+            f.blueInGreen = blueInGreen;
+
+            delete f.greenColor;
+        }
+
+        if (f.blueColor != null) {
+            
+            [redInBlue, greenInBlue, blueInBlue] = window.SC_colorChecker.extractRGBfromColor(f.blueColor);
+
+            redInBlue /= 255;
+            greenInBlue /= 255;
+            blueInBlue /= 255;
+
+            f.redInBlue = redInBlue;
+            f.greenInBlue = greenInBlue;
+            f.blueInBlue = blueInBlue;
+
+            delete f.blueColor;
+        }
+
         f.actions = [{
             action: 'tint-channels',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            redInRed: (f.redInRed != null) ? f.redInRed : 1,
-            redInGreen: (f.redInGreen != null) ? f.redInGreen : 0,
-            redInBlue: (f.redInBlue != null) ? f.redInBlue : 0,
-            greenInRed: (f.greenInRed != null) ? f.greenInRed : 0,
-            greenInGreen: (f.greenInGreen != null) ? f.greenInGreen : 1,
-            greenInBlue: (f.greenInBlue != null) ? f.greenInBlue : 0,
-            blueInRed: (f.blueInRed != null) ? f.blueInRed : 0,
-            blueInGreen: (f.blueInGreen != null) ? f.blueInGreen : 0,
-            blueInBlue: (f.blueInBlue != null) ? f.blueInBlue : 1,
+            redInRed,
+            redInGreen,
+            redInBlue,
+            greenInRed,
+            greenInGreen,
+            greenInBlue,
+            blueInRed,
+            blueInGreen,
+            blueInBlue,
         }];
     },
 

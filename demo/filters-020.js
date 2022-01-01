@@ -16,6 +16,7 @@ const canvas = scrawl.library.canvas.mycanvas;
 scrawl.importDomImage('.flowers');
 
 
+// Create the filter
 const myFilter = scrawl.makeFilter({
 
     name: 'clamp',
@@ -28,6 +29,10 @@ const myFilter = scrawl.makeFilter({
     highGreen: 255,
     highBlue: 255,
     opacity: 1,
+});
+
+const colorFactory = scrawl.makeColor({
+    name: 'my-color-factory',
 });
 
 
@@ -53,9 +58,10 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Red: ${lowRed.value} - ${highRed.value}
-    Green: ${lowGreen.value} - ${highGreen.value}
-    Blue: ${lowBlue.value} - ${highBlue.value}
+    return `    Red - low: ${lowRed.value}; high - ${highRed.value}
+    Green - low: ${lowGreen.value}; high - ${highGreen.value}
+    Blue - low: ${lowBlue.value}; high - ${highBlue.value}
+    Color - low: ${lowColor.value}; high: ${highColor.value}
     Opacity - ${opacity.value}`;
 });
 
@@ -91,7 +97,41 @@ scrawl.observeAndUpdate({
         'high-blue': ['highBlue', 'round'],
         'opacity': ['opacity', 'float'],
     },
+
+    callback: () => {
+
+        lowColor.value = colorFactory.convertRGBtoHex(lowRed.value, lowGreen.value, lowBlue.value);
+        highColor.value = colorFactory.convertRGBtoHex(highRed.value, highGreen.value, highBlue.value);
+    },
 });
+
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    if (e && e.target) {
+
+        const target = e.target.id,
+            val = e.target.value;
+
+        let [r, g, b] = colorFactory.extractRGBfromColor(val)
+
+        if ('low-color' === target) {
+
+            myFilter.set({ lowColor: val });
+
+            lowRed.value = r;
+            lowGreen.value = g;
+            lowBlue.value = b;
+        }
+        else if ('high-color' === target) {
+            
+            myFilter.set({ highColor: val });
+
+            highRed.value = r;
+            highGreen.value = g;
+            highBlue.value = b;
+        }
+    }
+}, '.colorSelector');
 
 // Setup form
 const lowRed = document.querySelector('#low-red'),
@@ -100,6 +140,8 @@ const lowRed = document.querySelector('#low-red'),
     highRed = document.querySelector('#high-red'),
     highGreen = document.querySelector('#high-green'),
     highBlue = document.querySelector('#high-blue'),
+    lowColor = document.querySelector('#low-color'),
+    highColor = document.querySelector('#high-color'),
     opacity = document.querySelector('#opacity');
 
 lowRed.value = 0;
@@ -108,6 +150,8 @@ lowBlue.value = 0;
 highRed.value = 255;
 highGreen.value = 255;
 highBlue.value = 255;
+lowColor.value = '#000000';
+highColor.value = '#ffffff';
 opacity.value = 1;
 
 

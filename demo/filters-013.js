@@ -15,6 +15,10 @@ const canvas = scrawl.library.canvas.mycanvas;
 
 scrawl.importDomImage('.flowers');
 
+const colorFactory = scrawl.makeColor({
+    name: 'my-color-factory',
+});
+
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
@@ -90,17 +94,44 @@ scrawl.observeAndUpdate({
         alpha: ['alpha', 'int'],
         opacity: ['opacity', 'float'],
     },
+
+    callback: () => {
+
+        reference.value = colorFactory.convertRGBtoHex(red.value, green.value, blue.value);
+    },
 });
+
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    if (e && e.target) {
+
+        const target = e.target.id,
+            val = e.target.value;
+
+        myFilter.set({ 
+            reference: val, 
+        });
+
+        let [r, g, b, a] = colorFactory.extractRGBfromColor(val)
+
+        red.value = r;
+        green.value = g;
+        blue.value = b;
+        alpha.value = Math.round(a * 255);
+    }
+}, '.colorSelector');
 
 
 // Setup form
 const opacity = document.querySelector('#opacity'),
+    reference = document.querySelector('#reference'),
     red = document.querySelector('#red'),
     green = document.querySelector('#green'),
     blue = document.querySelector('#blue'),
     alpha = document.querySelector('#alpha');
 
 opacity.value = 1;
+reference.value = '#000000';
 red.value = 0;
 green.value = 0;
 blue.value = 0;

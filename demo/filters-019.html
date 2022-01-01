@@ -21,15 +21,26 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 019</h1>
-  <h2>Parameters for: dither filter [in development]</h2>
+  <h2>Parameters for: edgeDetect, sharpen filters</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
-    <div class="yellow label">Opacity</div>
-    <div class="yellow"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+    
+    <div class="lavender label">Opacity</div>
+    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div class="yellow label">Memoize filters</div>
+    <div class="yellow">
+      <select class="controlItem" id="memoizeFilterOutput">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
   </div>
 
-  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <canvas id="mycanvas" width="600" height="300"></canvas>
 
   <p id="reportmessage"></p>
 
@@ -37,7 +48,9 @@
     <h4>Test purpose</h4>
 
     <ul>
-      <li>...</li>
+      <li>Create two test Picture entitys</li>
+      <li>Create redgeDetect and sharpen filters; apply them to the test entitys</li>
+      <li>Update filter attribute and observe the effect it has on the entitys</li>
     </ul>
 
     <p><b>Touch test:</b> not required</p>

@@ -758,6 +758,135 @@ P.convert = function (color, suffix = '') {
     return this;
 };
 
+// `extractRGBfromColor` - takes a color string and returns it's RGB equivalent channel values:
+P.extractRGBfromColor = function (color) {
+
+    color = color.toLowerCase();
+
+    let b, c, d, a, vals, alpha, hue, white, black;
+
+    // TODO: make this more efficient so we only convert to the color spaces we need (RGB, internal color space, return color space)
+    if (color.includes('hwb') && !supportsHWB) {
+
+        // This could be handled better via a regex, but also need to deal with angle units
+        color = color.replace('hwb', '');
+        color = color.replace('(', '');
+        color = color.replace(')', '');
+        color = color.replace('/', '');
+
+        const vals = color.split(' ').filter(e => e != null && e !== '');
+
+        hue = vals[0];
+        if (hue.indexOf('deg') >= 0) hue = parseFloat(hue)
+        else if (hue.indexOf('rad') >= 0) hue = parseFloat(hue) / radian;
+        else if (hue.indexOf('grad') >= 0) hue = (parseFloat(hue) / 400) * 360;
+        else if (hue.indexOf('turn') >= 0) hue = parseFloat(hue) * 360;
+        else hue = parseFloat(hue);
+
+       white = parseFloat(vals[1]);
+       black = parseFloat(vals[2]);
+       alpha = vals[3];
+
+        if (alpha != null) {
+
+            a = (alpha.indexOf('%') >= 0) ? parseFloat(alpha) / 100 : parseFloat(alpha);
+        }
+        else a = 1;
+
+        [b, c, d] = this.convertHWBtoRGB(hue, white, black);
+
+        b = Math.floor(b * 256);
+        if (b > 255) b = 255;
+        if (b < 0) b = 0;
+
+        c = Math.floor(c * 256);
+        if (c > 255) c = 255;
+        if (c < 0) c = 0;
+
+        d = Math.floor(d * 256);
+        if (d > 255) d = 255;
+        if (d < 0) d = 0;
+
+        return [b, c, d, a];
+    } 
+    else if (color.includes('xyz')) {
+        
+        color = color.replace('xyz', '');
+        color = color.replace('(', '');
+        color = color.replace(')', '');
+        color = color.replace('/', '');
+
+        vals = color.split(' ').filter(e => e != null && e !== '');
+
+        b = parseFloat(vals[0]);
+        c = parseFloat(vals[1]);
+        d = parseFloat(vals[2]);
+        alpha = vals[3];
+
+        a = (alpha != null) ? parseFloat(alpha) : 1;
+
+        return [...this.convertXYZtoRGB(b, c, d), a];
+    }
+    else if (color.includes('lab') && !supportsLAB) {
+
+        color = color.replace('lab', '');
+        color = color.replace('(', '');
+        color = color.replace(')', '');
+        color = color.replace('/', '');
+
+        vals = color.split(' ').filter(e => e != null && e !== '');
+
+        b = parseFloat(vals[0]);
+        c = parseFloat(vals[1]);
+        d = parseFloat(vals[2]);
+        alpha = vals[3];
+
+        a = (alpha != null) ? parseFloat(alpha) : 1;
+
+        return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(b, c, d)), a]; 
+    }
+    else if (color.indexOf('lch') >= 0 && !supportsLCH) {
+
+        color = color.replace('lch', '');
+        color = color.replace('(', '');
+        color = color.replace(')', '');
+        color = color.replace('/', '');
+
+        vals = color.split(' ').filter(e => e != null && e !== '');
+
+        b = parseFloat(vals[0]);
+        c = parseFloat(vals[1]);
+        d = parseFloat(vals[2]);
+        alpha = vals[3];
+
+        a = (alpha != null) ? parseFloat(alpha) : 1;
+
+        return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(...this.convertLCHtoLAB(b, c, d))), a]; 
+    }
+    else {
+
+        return this.getColorFromCanvas(color);
+    }
+};
+
+// `convertRGBtoHex` - takes 3 rgb color values (range 0-255) and returns a #hex string:
+P.convertRGBtoHex = function (red, green, blue) {
+
+    if (red.substring) red = parseInt(red, 10);
+    if (green.substring) green = parseInt(green, 10);
+    if (blue.substring) blue = parseInt(blue, 10);
+
+    if (!isNaN(red) && !isNaN(green) && !isNaN(blue)) {
+
+        const r = ("0"+(red).toString(16)).slice(-2),
+            g = ("0"+(green).toString(16)).slice(-2),
+            b = ("0"+(blue).toString(16)).slice(-2);
+
+        return `#${r}${g}${b}`;
+    }
+    return '#000000';
+};
+
 P.getColorFromCanvas = function (color) {
 
     let r = 0,

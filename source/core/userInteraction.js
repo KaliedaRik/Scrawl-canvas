@@ -567,6 +567,9 @@ const applyCoreScrollListener = function () {
 //
 //     // A callback function to be performed after any attributes updates
 //     callback: () => myLoom.update(),
+//
+//     // Similarly, we can invoke a function to run before performing the updates
+//     setup: () => myLoom.update(),
 // });
 // ```
 
@@ -597,6 +600,8 @@ const observeAndUpdate = function (items = Ωempty) {
         };
     }
 
+    let setup = (isa_fn(items.setup)) ? items.setup : λnull;
+
     let callback = (isa_fn(items.callback)) ? items.callback : λnull;
 
     let func = function (e) {
@@ -611,6 +616,8 @@ const observeAndUpdate = function (items = Ωempty) {
                 actionArray = updates[id];
 
             if (actionArray) {
+
+                setup();
 
                 let actionAttribute = actionArray[0],
                     action = actionArray[1],

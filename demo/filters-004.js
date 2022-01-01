@@ -74,11 +74,6 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-// Use a color object to convert between CSS hexadecimal and RGB decimal colors
-const converter = scrawl.makeColor({
-    name: 'converter',
-});
-
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -92,6 +87,8 @@ scrawl.observeAndUpdate({
     updates: {
         opacity: ['opacity', 'float'],
         level: ['level', 'round'],
+        lowColor: ['lowColor', 'raw'],
+        highColor: ['highColor', 'raw'],
         red: ['red', 'round'],
         green: ['green', 'round'],
         blue: ['blue', 'round'],
@@ -103,34 +100,6 @@ scrawl.observeAndUpdate({
         useMixedChannel: ['useMixedChannel', 'boolean'],
     },
 });
-
-scrawl.addNativeListener(
-    ['input', 'change'], 
-    (e) => {
-
-        converter.convert(e.target.value);
-
-        myFilter.set({ 
-            lowRed: converter.r,
-            lowGreen: converter.g,
-            lowBlue: converter.b,
-        });
-    }, 
-    '#lowColor');
-
-scrawl.addNativeListener(
-    ['input', 'change'], 
-    (e) => {
-
-        converter.convert(e.target.value);
-
-        myFilter.set({ 
-            highRed: converter.r,
-            highGreen: converter.g,
-            highBlue: converter.b,
-        });
-    }, 
-    '#highColor');
 
 // Setup form
 const lowCol = document.querySelector('#lowColor'),

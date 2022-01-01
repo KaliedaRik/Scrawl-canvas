@@ -59,7 +59,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Key color: ${color.value}
+    return `    Reference color: ${reference.value}
     Transparent at: ${transparentAt.value}, Opaque at: ${opaqueAt.value}
     Opacity: ${opacity.value}`;
 });
@@ -76,27 +76,6 @@ const demoAnimation = scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-const interpretColors = function () {
-
-    const converter = scrawl.makeColor({
-        name: 'converter',
-    });
-
-    const color = document.querySelector('#color');
-
-    return function () {
-
-        converter.convert(color.value);
-
-        myFilter.set({
-            red: converter.r,
-            green: converter.g,
-            blue: converter.b,
-        });
-    }
-}();
-scrawl.addNativeListener(['input', 'change'], interpretColors, '.controlItem');
-
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -111,17 +90,18 @@ scrawl.observeAndUpdate({
         transparentAt: ['transparentAt', 'float'],
         opaqueAt: ['opaqueAt', 'float'],
         opacity: ['opacity', 'float'],
+        reference: ['reference', 'raw'],
     },
 });
 
 
 // Setup form
-const color = document.querySelector('#color'),
+const reference = document.querySelector('#reference'),
     opaqueAt = document.querySelector('#opaqueAt'),
     transparentAt = document.querySelector('#transparentAt'),
     opacity = document.querySelector('#opacity');
 
-color.value = '#007700';
+reference.value = '#007700';
 opaqueAt.value = 1;
 transparentAt.value = 0;
 opacity.value = 1;

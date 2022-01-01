@@ -51,7 +51,7 @@ const piccy = scrawl.makePicture({
 const report = reportSpeed('#reportmessage', function () {
 
     return `    (Low color: ${lowCol.value}, High color: ${highCol.value})
-    Range: [${myFilter.ranges}]
+    Range: [${myFilter.ranges}] → [${myFilter.actions[0].ranges}]
     Opacity: ${opacity.value}`;
 });
 
@@ -69,9 +69,9 @@ const demoAnimation = scrawl.makeRender({
 // Setup form observer functionality
 const interpretColors = function () {
 
-    const converter = scrawl.makeColor({
-        name: 'converter',
-    });
+    // const converter = scrawl.makeColor({
+    //     name: 'converter',
+    // });
 
     const lowColor = document.querySelector('#lowColor');
     const highColor = document.querySelector('#highColor');
@@ -85,21 +85,9 @@ const interpretColors = function () {
 
     return function () {
 
-        converter.convert(lowColor.value);
-
-        lowRed = converter.r;
-        lowGreen = converter.g;
-        lowBlue = converter.b;
-
-        converter.convert(highColor.value);
-
-        highRed = converter.r;
-        highGreen = converter.g;
-        highBlue = converter.b;
-
         myFilter.set({
 
-            ranges: [[lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue]],
+            ranges: [[lowColor.value, highColor.value]],
         })
     }
 }();
