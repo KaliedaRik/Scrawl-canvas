@@ -90,8 +90,6 @@ scrawl.addNativeListener(['change'], (e) => {
         g /= 255;
         b /= 255;
 
-        console.log(target, val);
-
         if ('redColor' === target) {
 
             myFilter.set({ redColor: val });

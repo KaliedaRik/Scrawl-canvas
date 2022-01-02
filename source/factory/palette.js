@@ -292,7 +292,7 @@ P.recalculate = function () {
     colorKeys.sort((a, b) => a - b);
 
     let currentKey = colorKeys[0], 
-        nextKey, currentVals, nextVals, dA, dB, dC, dD, diff;
+        nextKey, currentVals, nextVals, diff;
 
     let [b, c, d, a] = colors[`${currentKey} `];
 
@@ -305,23 +305,16 @@ P.recalculate = function () {
         currentVals = colors[`${currentKey} `];
         nextVals = colors[`${nextKey} `];
 
-        diff = nextKey - currentKey;
-        dB = (nextVals[0] - currentVals[0]) / diff;
-        dC = (nextVals[1] - currentVals[1]) / diff;
-        dD = (nextVals[2] - currentVals[2]) / diff;
-        dA = (nextVals[3] - currentVals[3]) / diff;
-
         factory.setMinimumColor(factory.buildColorString(...currentVals, colorSpace));
         factory.setMaximumColor(factory.buildColorString(...nextVals, colorSpace));
 
+        // There's a bug with getting over-vibrant range colors in the HSL/HWB/LCH color spaces
+
+        diff = nextKey - currentKey;
+
         for (let j = currentKey + 1; j <= nextKey; j++) {
 
-            b += dB;
-            c += dC;
-            d += dD;
-            a += dA;
-
-            stops[j] = factory.returnColorFromValues(b, c, d, a);
+            stops[j] = factory.getRangeColor((j - currentKey) / diff, true);
         }
     }
 };

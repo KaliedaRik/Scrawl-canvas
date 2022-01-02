@@ -90,6 +90,26 @@ const convertTime = (item) => {
 };
 
 
+// __correctAngle__ makes sure any degree-based angle is in the range `0-360`
+const correctAngle = (item) => {
+
+    if (!item.toFixed || isNaN(item)) {
+
+        console.log(`${item} is not a valid number`);
+        return item;
+    }
+
+    if (item >= 0 && item < 360) return item;
+
+    while (item < 0 || item >= 360) {
+
+        if (item < 0) item += 360;
+        else item -= 360;
+    }
+    return item;
+}
+
+
 // __correctForZero__ checks and corrects for minor deviations from zero (eNumbers)
 const correctForZero = (item) => {
 
@@ -528,6 +548,7 @@ const detectBrowser = function () {
 export {
     addStrings,
     convertTime,
+    correctAngle,
     correctForZero,
     λnull,
     λfirstArg,

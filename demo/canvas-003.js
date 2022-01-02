@@ -54,6 +54,7 @@ scrawl.makeBlock({
     startY: '5%',
 
     fillStyle: graddy,
+    lockFillStyleToEntity: true,
     strokeStyle: 'coral',
     lineWidth: 2,
     method: 'fillAndDraw',

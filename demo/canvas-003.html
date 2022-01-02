@@ -13,6 +13,32 @@
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
+
+    .css-gradients {
+      width: 510px;
+      margin-left: 30px;
+      color: white;
+      padding: 1em;
+      margin-bottom: 0.25em;
+      border: 1px solid black;
+      text-shadow: 0 0 2px black;
+    }
+
+    #rgb {
+      background: linear-gradient(0.25turn, rgb(0 0 0), rgb(255 0 0) 35%, rgb(0 0 255) 65%, rgb(255 255 255));
+    }
+    #hsl {
+      background: linear-gradient(0.25turn, hsl(0 0% 0%), hsl(0 100% 50%) 35%, hsl(240 100% 50%) 65%, hsl(0 0% 100%));
+    }
+    #hwb {
+      background: linear-gradient(0.25turn, hwb(0 0% 100%), hwb(0 0% 0%) 35%, hwb(240 0% 0%) 65%, hwb(0 100% 0%));
+    }
+    #lab {
+      background: linear-gradient(0.25turn, lab(0% 0 0), lab(53.23288178584245% 80.10930952982204 67.22006831026425) 35%, lab(32.302586667249486% 79.19666178930935 -107.86368104495168) 65%, lab(100% 0.00526049995830391 -0.010408184525267927));
+    }
+    #lch {
+      background: linear-gradient(0.25turn, lch(0% 0 0), lch(53.23288178584245% 104.57551843993618 40.00015790646365) 35%, lch(32.302586667249486% 133.81586201619493 306.2872015643272) 65%, lch(100% 0.011662039483869973 296.81292623674057));
+    }
   </style>
 
 </head>
@@ -162,6 +188,12 @@
   </div>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <div class="css-gradients" id="rgb">RGB</div>
+  <div class="css-gradients" id="hsl">HSL</div>
+  <div class="css-gradients" id="hwb">HWB</div>
+  <div class="css-gradients" id="lab">LAB</div>
+  <div class="css-gradients" id="lch">LCH</div>
 
   <p id="reportmessage"></p>
 

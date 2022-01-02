@@ -3531,6 +3531,11 @@ P.theBigActionsObject = {
     },
 
 // __step-channels__ - Takes three divisor values - "red", "green", "blue". For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of '50' applied to a channel value of '120' will give a result of '100'. The output is a form of posterization.
+//
+// A new `clamp` attribute was added in v8.7.0, which can take the following String values:
+// + `down` (default) - uses `Math.floor()` for the calculation
+// + `up` (default) - uses `Math.ceil()` for the calculation
+// + `round` (default) - uses `Math.round()` for the calculation
     'step-channels': function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
@@ -3539,14 +3544,17 @@ P.theBigActionsObject = {
             oData = output.data,
             len = iData.length,
             floor = Math.floor,
+            ceil = Math.ceil,
+            round = Math.round,
             r, g, b, a, i;
 
-        let {opacity, red, green, blue, lineOut} = requirements;
+        let {opacity, red, green, blue, clamp, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == red) red = 1;
         if (null == green) green = 1;
         if (null == blue) blue = 1;
+        if (null == clamp) clamp = 'down';
 
         for (i = 0; i < len; i += 4) {
 
@@ -3555,9 +3563,26 @@ P.theBigActionsObject = {
             b = g + 1;
             a = b + 1;
 
-            oData[r] = floor(iData[r] / red) * red;
-            oData[g] = floor(iData[g] / green) * green;
-            oData[b] = floor(iData[b] / blue) * blue;
+            switch (clamp) {
+
+                case 'up' :
+                    oData[r] = ceil(iData[r] / red) * red;
+                    oData[g] = ceil(iData[g] / green) * green;
+                    oData[b] = ceil(iData[b] / blue) * blue;
+                    break;
+
+                case 'round' :
+                    oData[r] = round(iData[r] / red) * red;
+                    oData[g] = round(iData[g] / green) * green;
+                    oData[b] = round(iData[b] / blue) * blue;
+                    break;
+
+                default :
+                    oData[r] = floor(iData[r] / red) * red;
+                    oData[g] = floor(iData[g] / green) * green;
+                    oData[b] = floor(iData[b] / blue) * blue;
+                    break;
+            }
             oData[a] = iData[a];
         }
 

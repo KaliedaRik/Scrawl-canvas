@@ -21,7 +21,7 @@
 
 // #### Imports
 import { constructors, entity, radian } from '../core/library.js';
-import { mergeOver, xt, xtGet, isa_obj, isa_fn, easeEngines, Ωempty, λfirstArg, pushUnique, interpolate } from '../core/utilities.js';
+import { mergeOver, xt, xtGet, isa_obj, isa_fn, easeEngines, Ωempty, λfirstArg, pushUnique, interpolate, correctAngle } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -543,15 +543,18 @@ P.checkColor = function (item) {
 // + when the argument is `1` the maximum color is returned; values above 1 are rounded down to 1
 // + values between `0` and `1` will return a blended color between the minimum and maximum colors
 // + non-Number arguments should return the Color's current color value
-P.getRangeColor = function (item) {
+P.getRangeColor = function (item, internalGradientBuild = false) {
 
     if (xt(item) && item.toFixed) {
 
-        // const { calculateRangeColorValues, buildColorString, setColor, getCurrentColor, colorSpace } = this;
+        let col = this.colorSpace;
 
-        const vals = this.calculateRangeColorValues(item);
+        // KNOWN issue with HSL/HWB/LCH gradients which this line attempts to fix
+        if (internalGradientBuild && ['HSL', 'HWB'].includes(col)) col = 'RGB';
+        else if (internalGradientBuild && 'LCH' === col) col = 'LAB';
 
-        const res = this.buildColorString(...vals, this.colorSpace);
+        const vals = this.calculateRangeColorValues(item, internalGradientBuild),
+            res = this.buildColorString(...vals, col);
 
         this.setColor(res);
     }
@@ -559,35 +562,101 @@ P.getRangeColor = function (item) {
 };
 
 // `calculateRangeColorValues` - internal helper function
-P.calculateRangeColorValues = function (item) {
+P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
 
     const { colorSpace, easing, easingFunction } = this;
 
-    let a, b, c, d;
+    let a, b, c, d, test;
 
-    const col = colorSpace.toLowerCase();
+    let col = colorSpace.toLowerCase();
+
+    // KNOWN issue with HSL/HWB/LCH gradients which this line attempts to fix
+    if (internalGradientBuild && ['HSL', 'HWB'].includes(colorSpace)) col = 'rgb';
+    else if (internalGradientBuild && 'LCH' === colorSpace) col = 'lab';
 
     const [bMin, cMin, dMin, aMin] = this[`${col}_min`];
     const [bMax, cMax, dMax, aMax] = this[`${col}_max`];
 
     let engine = easingFunction;
-    if (easing !== 'function' && easeEngines[easing]) engine = easeEngines[easing];
 
-    const val = engine(item);
+    if (!internalGradientBuild && easing !== 'function' && easeEngines[easing]) engine = easeEngines[easing];
 
-    if (aMin === aMax) a = aMin;
-    else a = interpolate(val, aMin, aMax);
+    const val = (internalGradientBuild) ? item : engine(item);
 
-    if (bMin === bMax) b = bMin;
-    else b = interpolate(val, bMin, bMax);
+    switch (col) {
 
-    if (cMin === cMax) c = cMin;
-    else c = interpolate(val, cMin, cMax);
+        // These aren't producing colors like CSS gradients - something wierd about seeing bright violet between red/blue, instead of a more muddy purple (matching what gets presented in the RGB color space) which CSS gradients present.
+        case 'hsl' :
+        case 'hwb' :
 
-    if (dMin === dMax) d = dMin;
-    else d = interpolate(val, dMin, dMax);
+            test = bMax - bMin;
 
-    return [b, c, d, a];
+            if (bMin === bMax) b = bMin;
+            else if (test > 180 || test < -180) {
+
+                b = (test > 0) ? 
+                    interpolate(val, bMin + 360, bMax) :
+                    interpolate(val, bMin - 360, bMax);
+            }
+            else {
+                b = interpolate(val, bMin, bMax);
+            }
+
+            if (aMin === aMax) a = aMin;
+            else a = interpolate(val, aMin, aMax);
+
+            if (cMin === cMax) c = cMin;
+            else c = interpolate(val, cMin, cMax);
+
+            if (dMin === dMax) d = dMin;
+            else d = interpolate(val, dMin, dMax);
+
+            return [b, c, d, a];
+
+        // LCH also has the HSL/HWB issue, but not as pronounced
+        case 'lch' :
+
+            test = dMax - dMin;
+
+            if (dMin === dMax) d = dMin;
+            else if (test > 180 || test < -180) {
+
+                d = (test > 0) ? 
+                    interpolate(val, dMin + 360, dMax) :
+                    interpolate(val, dMin - 360, dMax);
+            }
+            else {
+                d = interpolate(val, dMin, dMax);
+            }
+
+            if (aMin === aMax) a = aMin;
+            else a = interpolate(val, aMin, aMax);
+
+            if (cMin === cMax) c = cMin;
+            else c = interpolate(val, cMin, cMax);
+
+            if (bMin === bMax) b = bMin;
+            else b = interpolate(val, bMin, bMax);
+
+            return [b, c, d, a];
+
+        // RGB/LAB generate color gradients matching CSS. XYZ also looks good.
+        default : 
+
+            if (aMin === aMax) a = aMin;
+            else a = interpolate(val, aMin, aMax);
+
+            if (bMin === bMax) b = bMin;
+            else b = interpolate(val, bMin, bMax);
+
+            if (cMin === cMax) c = cMin;
+            else c = interpolate(val, cMin, cMax);
+
+            if (dMin === dMax) d = dMin;
+            else d = interpolate(val, dMin, dMax);
+
+            return [b, c, d, a];
+    }
 };
 
 // `convert` - internal function. Takes a color string and converts it into a variety of color space values. Makes use of the following functions:
@@ -642,6 +711,8 @@ P.convert = function (color, suffix = '') {
         else if (hue.indexOf('turn') >= 0) hue = parseFloat(hue) * 360;
         else hue = parseFloat(hue);
 
+        hue = correctAngle(hue);
+
        let white = parseFloat(vals[1]),
            black = parseFloat(vals[2]),
            alpha = vals[3];
@@ -654,15 +725,15 @@ P.convert = function (color, suffix = '') {
 
         let [b, c, d] = this.convertHWBtoRGB(hue, white, black);
 
-        b = Math.floor(b * 256);
+        b = Math.floor(b * 255);
         if (b > 255) b = 255;
         if (b < 0) b = 0;
 
-        c = Math.floor(c * 256);
+        c = Math.floor(c * 255);
         if (c > 255) c = 255;
         if (c < 0) c = 0;
 
-        d = Math.floor(d * 256);
+        d = Math.floor(d * 255);
         if (d > 255) d = 255;
         if (d < 0) d = 0;
 
@@ -783,9 +854,11 @@ P.extractRGBfromColor = function (color) {
         else if (hue.indexOf('turn') >= 0) hue = parseFloat(hue) * 360;
         else hue = parseFloat(hue);
 
-       white = parseFloat(vals[1]);
-       black = parseFloat(vals[2]);
-       alpha = vals[3];
+        hue = correctAngle(hue);
+
+        white = parseFloat(vals[1]);
+        black = parseFloat(vals[2]);
+        alpha = vals[3];
 
         if (alpha != null) {
 

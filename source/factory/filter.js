@@ -638,11 +638,17 @@ const setActionsArray = {
 
 // __channelstep__ - restrict the number of color values that each channel can set by imposing regular bands on each channel
     channelstep: function (f) {
+
+        let clamp = (f.clamp != null) ? f.clamp : 'down'
+
+        if (!['down', 'round', 'up'].includes(clamp)) clamp = 'down';
+
         f.actions = [{
             action: 'step-channels',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
+            clamp,
             red: (f.red != null) ? f.red : 1,
             green: (f.green != null) ? f.green : 1,
             blue: (f.blue != null) ? f.blue : 1,

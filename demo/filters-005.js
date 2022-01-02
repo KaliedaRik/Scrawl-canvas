@@ -83,6 +83,7 @@ scrawl.observeAndUpdate({
         green: ['green', 'float'],
         blue: ['blue', 'float'],
         opacity: ['opacity', 'float'],
+        clamp: ['clamp', 'raw'],
     },
 });
 
@@ -96,6 +97,8 @@ red.value = 1;
 green.value = 1;
 blue.value = 1;
 opacity.value = 1;
+
+document.querySelector('#clamp').options.selectedIndex = 0;
 
 
 // #### Drag-and-Drop image loading functionality
