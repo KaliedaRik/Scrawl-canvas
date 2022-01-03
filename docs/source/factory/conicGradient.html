@@ -631,7 +631,7 @@ P = <span class="hljs-title function_">stylesMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">startAngle</span>: <span class="hljs-number">0</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">angle</span>: <span class="hljs-number">0</span>,
 };
 P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
@@ -788,13 +788,13 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
     <span class="hljs-keyword">let</span> gradientArgs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">gradientArgs</span>,
         currentStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStart</span>,
-        startAngle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startAngle</span> * radian;
+        angle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">angle</span> * radian;
 
     <span class="hljs-keyword">let</span> sx = currentStart[<span class="hljs-number">0</span>] + x,
         sy = currentStart[<span class="hljs-number">1</span>] + y;
 
     gradientArgs.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
-    gradientArgs.<span class="hljs-title function_">push</span>(startAngle, sx, sy);
+    gradientArgs.<span class="hljs-title function_">push</span>(angle, sx, sy);
 };</pre></div></div>
             
         </li>
@@ -813,7 +813,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-    <span class="hljs-attr">startAngle</span>: <span class="hljs-number">90</span>,
+    <span class="hljs-attr">angle</span>: <span class="hljs-number">90</span>,
 });
 
 scrawl.<span class="hljs-title function_">makeBlock</span>({

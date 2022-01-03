@@ -1481,6 +1481,9 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
 
     <span class="hljs-comment">// A callback function to be performed after any attributes updates</span>
     <span class="hljs-attr">callback</span>: <span class="hljs-function">() =&gt;</span> myLoom.<span class="hljs-title function_">update</span>(),
+
+    <span class="hljs-comment">// Similarly, we can invoke a function to run before performing the updates</span>
+    <span class="hljs-attr">setup</span>: <span class="hljs-function">() =&gt;</span> myLoom.<span class="hljs-title function_">update</span>(),
 });
 </code></pre>
 
@@ -1514,6 +1517,8 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         };
     }
 
+    <span class="hljs-keyword">let</span> setup = (<span class="hljs-title function_">isa_fn</span>(items.<span class="hljs-property">setup</span>)) ? items.<span class="hljs-property">setup</span> : λ<span class="hljs-literal">null</span>;
+
     <span class="hljs-keyword">let</span> callback = (<span class="hljs-title function_">isa_fn</span>(items.<span class="hljs-property">callback</span>)) ? items.<span class="hljs-property">callback</span> : λ<span class="hljs-literal">null</span>;
 
     <span class="hljs-keyword">let</span> func = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
@@ -1528,6 +1533,8 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
                 actionArray = updates[id];
 
             <span class="hljs-keyword">if</span> (actionArray) {
+
+                <span class="hljs-title function_">setup</span>();
 
                 <span class="hljs-keyword">let</span> actionAttribute = actionArray[<span class="hljs-number">0</span>],
                     action = actionArray[<span class="hljs-number">1</span>],

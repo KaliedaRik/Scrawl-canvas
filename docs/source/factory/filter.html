@@ -502,6 +502,7 @@
 <p><code>compose</code> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the “compose” argument; permitted values are: ‘destination-only’, ‘destination-over’, ‘destination-in’, ‘destination-out’, ‘destination-atop’, ‘source-only’, ‘source-over’ (default), ‘source-in’, ‘source-out’, ‘source-atop’, ‘clear’, ‘xor’, or ‘lighter’. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the “offsetX” and “offsetY” arguments. Object attributes: <code>action, lineIn, lineOut, lineMix, opacity, compose, offsetX, offsetY</code></p>
 <p><code>corrode</code> - Performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The operation will set the pixel’s channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the “level” attribute. Channels can be selected by setting the “includeRed”, “includeGreen”, “includeBlue” (all false by default) and “includeAlpha” (default: true) flags. Object attributes: <code>action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation</code></p>
 <p><code>displace</code> - Shift pixels around the image, based on the values supplied in a displacement process-image. Object attributes: <code>action, lineIn, lineOut, lineMix, opacity, channelX, channelY, scaleX, scaleY, transparentEdges, offsetX, offsetY</code></p>
+<p><code>reducePalette</code> - Reduce the number of colors in an image palette. The palette attribute can be: a Number (for the commonest colors); an Array of CSS color Strings to use as the palette; or the String name of a pre-defined palette - default: ‘black-white’.Object attributes: <code>action, lineIn, lineOut, lineMix, opacity, palette</code></p>
 <p><code>emboss</code> - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: “strength”, and “angle” - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action. Object attributes: <code>action, lineIn, lineOut, opacity, strength, angle, tolerance, keepOnlyChangedAreas, postProcessResults</code>; pseudo-arguments for the convenience method include <code>useNaturalGrayscale, clamp, smoothing</code></p>
 <p><code>flood</code> - Set all pixels to the channel values supplied in the “red”, “green”, “blue” and “alpha” arguments. Object attributes: <code>action, lineIn, lineOut, opacity, red, green, blue, alpha</code></p>
 <p><code>gaussianblur</code> - from this GitHub repository: <a href="https://github.com/nodeca/glur/blob/master/index.js">https://github.com/nodeca/glur/blob/master/index.js</a> (code accessed 1 June 2021). Object attributes: <code>action, lineIn, lineOut, opacity, radius</code></p>
@@ -819,6 +820,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">blend</span>: <span class="hljs-string">&#x27;normal&#x27;</span>,
     <span class="hljs-attr">blue</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">blueInBlue</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">blueColor</span>: <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>,
     <span class="hljs-attr">blueInGreen</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">blueInRed</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">channelX</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
@@ -839,6 +841,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">gradient</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">green</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">greenInBlue</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">greenColor</span>: <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>,
     <span class="hljs-attr">greenInGreen</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">greenInRed</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">gutterHeight</span>: <span class="hljs-number">1</span>,
@@ -846,6 +849,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">height</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">highAlpha</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">highBlue</span>: <span class="hljs-number">255</span>,
+    <span class="hljs-attr">highColor</span>: <span class="hljs-string">&#x27;rgba(255 255 255 / 1)&#x27;</span>,
     <span class="hljs-attr">highGreen</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">highRed</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">includeAlpha</span>: <span class="hljs-literal">false</span>, 
@@ -857,6 +861,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">level</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">lowAlpha</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">lowBlue</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">lowColor</span>: <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>,
     <span class="hljs-attr">lowGreen</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">lowRed</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">offsetAlphaX</span>: <span class="hljs-number">0</span>,
@@ -882,6 +887,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">opaqueAt</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">operation</span>: <span class="hljs-string">&#x27;mean&#x27;</span>,
     <span class="hljs-attr">outerRadius</span>: <span class="hljs-string">&#x27;30%&#x27;</span>,
+    <span class="hljs-attr">palette</span>: <span class="hljs-string">&#x27;black-white&#x27;</span>, 
     <span class="hljs-attr">passes</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">postProcessResults</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">processHorizontal</span>: <span class="hljs-literal">true</span>,
@@ -890,8 +896,10 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">ranges</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">red</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">redInBlue</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">redColor</span>: <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>,
     <span class="hljs-attr">redInGreen</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">redInRed</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">reference</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
     <span class="hljs-attr">scaleX</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">scaleY</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">seed</span>: <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
@@ -1234,7 +1242,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p>DEPRECATED! <strong>binary</strong> - use the updated threshold filter instead</p>
+              <p>DEPRECATED! <strong>binary</strong> - use the updated threshold filter instead, as this functionality has been added to it.</p>
 
             </div>
             
@@ -1331,9 +1339,10 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
-              <p><strong>blur</strong> - blurs the image</p>
+              <p><strong>blur</strong> - blurs the image
+A bespoke blur function. Creates visual artefacts with various settings that might be useful. Strongly advise to memoize the results from this filter as it is resource-intensive.</p>
 <ul>
-<li>Use the gaussian blur filter instead. This is being retained only for backwards compatibility and will be removed in a future major release</li>
+<li>Use the gaussian blur filter for a smoother result.</li>
 </ul>
 
             </div>
@@ -1394,6 +1403,10 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
                 <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><strong>channelLevels</strong> (new in v8.4.0) - produces a posterize effect. Takes in four arguments - <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel’s channel value and determines which of the corresponding Array’s Number values it is closest to; it then sets the channel value to that Number value</p>
+<ul>
+<li>TODO - add in a <code>reference</code> attribute, which will be an Array of CSS color strings. Use these colors to generate the red, green and blue Arrays. </li>
+<li>This idea might be better suited to a new <code>posterize</code> or <code>dither</code> filter, where pixels update themselves to the closest reference color, using a more sophisticated color distance measurement</li>
+</ul>
 
             </div>
             
@@ -1450,11 +1463,17 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">channelstep</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+
+        <span class="hljs-keyword">let</span> clamp = (f.<span class="hljs-property">clamp</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">clamp</span> : <span class="hljs-string">&#x27;down&#x27;</span>
+
+        <span class="hljs-keyword">if</span> (![<span class="hljs-string">&#x27;down&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>, <span class="hljs-string">&#x27;up&#x27;</span>].<span class="hljs-title function_">includes</span>(clamp)) clamp = <span class="hljs-string">&#x27;down&#x27;</span>;
+
         f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;step-channels&#x27;</span>,
             <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            clamp,
             <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">blue</span>: (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">1</span>,
@@ -1496,16 +1515,45 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
                 <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><strong>chroma</strong> - using an array of <code>range</code> arrays, determine whether a pixel’s values lie entirely within a range’s values and, if true, sets that pixel’s alpha channel value to zero. Each range array comprises six Numbers representing <code>[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]</code> values.</p>
+<ul>
+<li>Since v8.7.0 we can also define range Arrays as <code>[color-string, color-string]</code></li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">chroma</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+
+    	<span class="hljs-keyword">const</span> processedRanges = [],
+            res = [];
+
+        <span class="hljs-keyword">if</span> ((f.<span class="hljs-property">ranges</span> != <span class="hljs-literal">null</span>)) {
+
+            f.<span class="hljs-property">ranges</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">range</span> =&gt;</span> {
+
+                <span class="hljs-keyword">if</span> (range.<span class="hljs-property">length</span> === <span class="hljs-number">6</span>) processedRanges.<span class="hljs-title function_">push</span>(range);
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (range.<span class="hljs-property">length</span> === <span class="hljs-number">2</span>) {
+
+                    <span class="hljs-keyword">if</span> (range[<span class="hljs-number">0</span>].<span class="hljs-property">substring</span> &amp;&amp; range[<span class="hljs-number">1</span>].<span class="hljs-property">substring</span>) {
+
+                        res.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+
+                        range.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">col</span> =&gt;</span> {
+
+                            <span class="hljs-keyword">let</span> [r, g, b] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(col);
+                            res.<span class="hljs-title function_">push</span>(r, g, b);
+                        });
+                    }
+                    processedRanges.<span class="hljs-title function_">push</span>(res);
+                } 
+            })
+        }
+
         f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;chroma&#x27;</span>,
             <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">ranges</span>: (f.<span class="hljs-property">ranges</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">ranges</span> : [],
+            <span class="hljs-attr">ranges</span>: processedRanges,
         }];
     },</pre></div></div>
             
@@ -1519,18 +1567,37 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><strong>chromakey</strong> (new in v8.4.0) - determine the alpha channel value for each pixel depending on the closeness to that pixel’s color channel values to a reference color supplied in the <code>red</code>, <code>green</code> and <code>blue</code> arguments. The sensitivity of the effect can be manipulated using the <code>transparentAt</code> and <code>opaqueAt</code> values, both of which lie in the range 0-1.</p>
+<ul>
+<li>Since v8.7.0, this filter also accepts a <code>reference</code> color string in place of the <code>red, green, blue</code> values</li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">chromakey</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+
+        <span class="hljs-keyword">let</span> red = (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">0</span>,
+            green = (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">255</span>,
+            blue = (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">reference</span> != <span class="hljs-literal">null</span>) {
+
+            [red, green, blue] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">reference</span>);
+
+            f.<span class="hljs-property">red</span> = red;
+            f.<span class="hljs-property">green</span> = green;
+            f.<span class="hljs-property">blue</span> = blue;
+
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">reference</span>;
+        }
+
         f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;colors-to-alpha&#x27;</span>,
             <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">255</span>,
-            <span class="hljs-attr">blue</span>: (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">0</span>,
+            red,
+            green,
+            blue,
             <span class="hljs-attr">transparentAt</span>: (f.<span class="hljs-property">transparentAt</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">transparentAt</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">opaqueAt</span>: (f.<span class="hljs-property">opaqueAt</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opaqueAt</span> : <span class="hljs-number">1</span>,
         }];
@@ -1546,21 +1613,54 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
                 <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><strong>clampChannels</strong> (new in v8.4.0) - clamp each color channel to a range set by <code>lowColor</code> and <code>highColor</code> values</p>
+<ul>
+<li>Since v8.7.0, this filter also accepts <code>lowColor</code> and <code>highColor</code> CSS color Strings in place of the <code>lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue</code> values</li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">clampChannels</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+
+        <span class="hljs-keyword">let</span> lowRed = (f.<span class="hljs-property">lowRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowRed</span> : <span class="hljs-number">0</span>,
+            lowGreen = (f.<span class="hljs-property">lowGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowGreen</span> : <span class="hljs-number">0</span>,
+            lowBlue = (f.<span class="hljs-property">lowBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowBlue</span> : <span class="hljs-number">0</span>,
+            highRed = (f.<span class="hljs-property">highRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highRed</span> : <span class="hljs-number">255</span>,
+            highGreen = (f.<span class="hljs-property">highGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highGreen</span> : <span class="hljs-number">255</span>,
+            highBlue = (f.<span class="hljs-property">highBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highBlue</span> : <span class="hljs-number">255</span>;
+
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">lowColor</span> != <span class="hljs-literal">null</span>) {
+
+            [lowRed, lowGreen, lowBlue] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">lowColor</span>);
+
+            f.<span class="hljs-property">lowRed</span> = lowRed;
+            f.<span class="hljs-property">lowGreen</span> = lowGreen;
+            f.<span class="hljs-property">lowBlue</span> = lowBlue;
+
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">lowColor</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">highColor</span> != <span class="hljs-literal">null</span>) {
+            
+            [highRed, highGreen, highBlue] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">highColor</span>);
+
+            f.<span class="hljs-property">highRed</span> = highRed;
+            f.<span class="hljs-property">highGreen</span> = highGreen;
+            f.<span class="hljs-property">highBlue</span> = highBlue;
+
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">highColor</span>;
+        }
+
         f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;clamp-channels&#x27;</span>,
             <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">lowRed</span>: (f.<span class="hljs-property">lowRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowRed</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">lowGreen</span>: (f.<span class="hljs-property">lowGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowGreen</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">lowBlue</span>: (f.<span class="hljs-property">lowBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowBlue</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">highRed</span>: (f.<span class="hljs-property">highRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highRed</span> : <span class="hljs-number">255</span>,
-            <span class="hljs-attr">highGreen</span>: (f.<span class="hljs-property">highGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highGreen</span> : <span class="hljs-number">255</span>,
-            <span class="hljs-attr">highBlue</span>: (f.<span class="hljs-property">highBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highBlue</span> : <span class="hljs-number">255</span>,
+            lowRed,
+            lowGreen,
+            lowBlue,
+            highRed,
+            highGreen,
+            highBlue,
         }];
     },</pre></div></div>
             
@@ -1599,7 +1699,13 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
-              <p><strong>corrode</strong> (new in v8.5.2) - performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the <code>width</code> and <code>height</code> arguments, while setting the home pixel’s position within the matrix can be set using the <code>offsetX</code> and <code>offsetY</code> arguments. The operation will set the pixel’s channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the <code>level</code> attribute. Channels can be selected by setting the <code>includeRed</code>, <code>includeGreen</code>, <code>includeBlue</code> (all false by default) and <code>includeAlpha</code> (default: true) flags.</p>
+              <p><strong>corrode</strong> (new in v8.5.2) - performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values. </p>
+<ul>
+<li>Note that this filter is expensive, thus much slower to complete compared to other filter effects. Memoization is strongly advised!</li>
+<li>The matrix dimensions can be set using the <code>width</code> and <code>height</code> arguments, while setting the home pixel’s position within the matrix can be set using the <code>offsetX</code> and <code>offsetY</code> arguments. </li>
+<li>The operation will set the pixel’s channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the <code>level</code> attribute. </li>
+<li>Channels can be selected by setting the <code>includeRed</code>, <code>includeGreen</code>, <code>includeBlue</code> (all false by default) and <code>includeAlpha</code> (default: true) flags.</li>
+</ul>
 
             </div>
             
@@ -1808,19 +1914,43 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
                 <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><strong>flood</strong> (new in v8.4.0) - creates a uniform sheet of the required color, which can then be used by other filter actions</p>
+<ul>
+<li>Note that the <code>alpha</code> value is given in the range <code>0-255</code> (like the color channels), not <code>0-1</code> or <code>0%-100%</code> (as is expected in various CSS color String definitions)</li>
+<li>Since v8.7.0, this filter also accepts a <code>reference</code> color string in place of the <code>red, green, blue, alpha</code> values</li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">flood</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+
+        <span class="hljs-keyword">let</span> red = (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">0</span>,
+            green = (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">0</span>,
+            blue = (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">0</span>,
+            alpha = (f.<span class="hljs-property">alpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">alpha</span> : <span class="hljs-number">255</span>;
+
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">reference</span> != <span class="hljs-literal">null</span>) {
+
+            [red, green, blue, alpha] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">reference</span>);
+
+            alpha = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(alpha * <span class="hljs-number">255</span>);
+
+            f.<span class="hljs-property">red</span> = red;
+            f.<span class="hljs-property">green</span> = green;
+            f.<span class="hljs-property">blue</span> = blue;
+            f.<span class="hljs-property">alpha</span> = alpha;
+
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">reference</span>;
+        }
+
         f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;flood&#x27;</span>,
             <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">blue</span>: (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">alpha</span>: (f.<span class="hljs-property">alpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">alpha</span> : <span class="hljs-number">255</span>,
+            red,
+            green,
+            blue,
+            alpha,
         }];
     },</pre></div></div>
             
@@ -2348,6 +2478,52 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
+              <p><strong>reducePalette</strong> - reduce the number of colors in its palette</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">reducePalette</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+    	
+    	<span class="hljs-keyword">let</span> palette = (f.<span class="hljs-property">palette</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">palette</span> : <span class="hljs-string">&#x27;black-white&#x27;</span>;
+
+        f.<span class="hljs-property">actions</span> = [];
+
+    	<span class="hljs-keyword">if</span> (palette.<span class="hljs-property">substring</span>) {
+
+    		<span class="hljs-keyword">if</span> (palette.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;,&#x27;</span>)) {
+
+    			palette = palette.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);
+    		    palette.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">trim</span>());
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;black-white&#x27;</span>, <span class="hljs-string">&#x27;monochrome-8&#x27;</span>, <span class="hljs-string">&#x27;monochrome-16&#x27;</span>].<span class="hljs-title function_">includes</span>(palette)) {
+
+                f.<span class="hljs-property">actions</span>.<span class="hljs-title function_">push</span>({
+                    <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
+                    <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+                    <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+                    <span class="hljs-attr">opacity</span>: <span class="hljs-number">1</span>,
+                });
+            }
+    	}
+        f.<span class="hljs-property">actions</span>.<span class="hljs-title function_">push</span>({
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;reduce-palette&#x27;</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
+            palette,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+        });
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-65">&#x00a7;</a>
+              </div>
               <p><strong>saturation</strong> - alters the saturation level of the image</p>
 
             </div>
@@ -2370,11 +2546,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><strong>sepia</strong> - recalculates the values of each color channel (a tint action) to create a more ‘antique’ version of the image</p>
 
@@ -2401,11 +2577,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><strong>sharpen</strong> (new in v8.4.0) - applies a preset 3x3 sharpen matrix to the image</p>
 
@@ -2432,11 +2608,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><strong>swirl</strong> - for each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.</p>
 <ul>
@@ -2469,13 +2645,16 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><strong>threshold</strong> - creates a duotone effect - grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color.</p>
+<ul>
+<li>Since v8.7.0, this filter also accepts <code>lowColor</code> and <code>highColor</code> CSS color Strings in place of the <code>lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue</code> values</li>
+</ul>
 
             </div>
             
@@ -2489,6 +2668,37 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             highBlue = (f.<span class="hljs-property">highBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highBlue</span> : <span class="hljs-number">255</span>,
             highAlpha = (f.<span class="hljs-property">highAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highAlpha</span> : <span class="hljs-number">255</span>;
             
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">lowColor</span> != <span class="hljs-literal">null</span>) {
+
+            [lowRed, lowGreen, lowBlue, lowAlpha] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">lowColor</span>);
+
+            lowAlpha = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(lowAlpha * <span class="hljs-number">255</span>);
+
+            f.<span class="hljs-property">lowRed</span> = lowRed;
+            f.<span class="hljs-property">lowGreen</span> = lowGreen;
+            f.<span class="hljs-property">lowBlue</span> = lowBlue;
+            f.<span class="hljs-property">lowAlpha</span> = lowAlpha;
+
+            f.<span class="hljs-property">low</span> = [lowRed, lowGreen, lowBlue, lowAlpha];
+
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">lowColor</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">highColor</span> != <span class="hljs-literal">null</span>) {
+            
+            [highRed, highGreen, highBlue, highAlpha] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">highColor</span>);
+
+            highAlpha = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(highAlpha * <span class="hljs-number">255</span>);
+
+            f.<span class="hljs-property">highRed</span> = highRed;
+            f.<span class="hljs-property">highGreen</span> = highGreen;
+            f.<span class="hljs-property">highBlue</span> = highBlue;
+            f.<span class="hljs-property">highAlpha</span> = highAlpha;
+
+            f.<span class="hljs-property">high</span> = [highRed, highGreen, highBlue, highAlpha];
+
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">highColor</span>;
+        }
 
         <span class="hljs-keyword">let</span> low = (f.<span class="hljs-property">low</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">low</span> : [lowRed, lowGreen, lowBlue, lowAlpha],
             high = (f.<span class="hljs-property">high</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">high</span> : [highRed, highGreen, highBlue, highAlpha];
@@ -2516,42 +2726,98 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><strong>tint</strong> - has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">tint</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+
+        <span class="hljs-keyword">let</span> redInRed = (f.<span class="hljs-property">redInRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">redInRed</span> : <span class="hljs-number">1</span>,
+            redInGreen = (f.<span class="hljs-property">redInGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">redInGreen</span> : <span class="hljs-number">0</span>,
+            redInBlue = (f.<span class="hljs-property">redInBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">redInBlue</span> : <span class="hljs-number">0</span>,
+            greenInRed = (f.<span class="hljs-property">greenInRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">greenInRed</span> : <span class="hljs-number">0</span>,
+            greenInGreen = (f.<span class="hljs-property">greenInGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">greenInGreen</span> : <span class="hljs-number">1</span>,
+            greenInBlue = (f.<span class="hljs-property">greenInBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">greenInBlue</span> : <span class="hljs-number">0</span>,
+            blueInRed = (f.<span class="hljs-property">blueInRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blueInRed</span> : <span class="hljs-number">0</span>,
+            blueInGreen = (f.<span class="hljs-property">blueInGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blueInGreen</span> : <span class="hljs-number">0</span>,
+            blueInBlue = (f.<span class="hljs-property">blueInBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blueInBlue</span> : <span class="hljs-number">1</span>;
+            
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">redColor</span> != <span class="hljs-literal">null</span>) {
+
+            [redInRed, greenInRed, blueInRed] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">redColor</span>);
+
+            redInRed /= <span class="hljs-number">255</span>;
+            greenInRed /= <span class="hljs-number">255</span>;
+            blueInRed /= <span class="hljs-number">255</span>;
+
+            f.<span class="hljs-property">redInRed</span> = redInRed;
+            f.<span class="hljs-property">greenInRed</span> = greenInRed;
+            f.<span class="hljs-property">blueInRed</span> = blueInRed;
+
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">redColor</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">greenColor</span> != <span class="hljs-literal">null</span>) {
+            
+            [redInGreen, greenInGreen, blueInGreen] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">greenColor</span>);
+
+            redInGreen /= <span class="hljs-number">255</span>;
+            greenInGreen /= <span class="hljs-number">255</span>;
+            blueInGreen /= <span class="hljs-number">255</span>;
+
+            f.<span class="hljs-property">redInGreen</span> = redInGreen;
+            f.<span class="hljs-property">greenInGreen</span> = greenInGreen;
+            f.<span class="hljs-property">blueInGreen</span> = blueInGreen;
+
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">greenColor</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">blueColor</span> != <span class="hljs-literal">null</span>) {
+            
+            [redInBlue, greenInBlue, blueInBlue] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">blueColor</span>);
+
+            redInBlue /= <span class="hljs-number">255</span>;
+            greenInBlue /= <span class="hljs-number">255</span>;
+            blueInBlue /= <span class="hljs-number">255</span>;
+
+            f.<span class="hljs-property">redInBlue</span> = redInBlue;
+            f.<span class="hljs-property">greenInBlue</span> = greenInBlue;
+            f.<span class="hljs-property">blueInBlue</span> = blueInBlue;
+
+            <span class="hljs-keyword">delete</span> f.<span class="hljs-property">blueColor</span>;
+        }
+
         f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;tint-channels&#x27;</span>,
             <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">redInRed</span>: (f.<span class="hljs-property">redInRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">redInRed</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">redInGreen</span>: (f.<span class="hljs-property">redInGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">redInGreen</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">redInBlue</span>: (f.<span class="hljs-property">redInBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">redInBlue</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">greenInRed</span>: (f.<span class="hljs-property">greenInRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">greenInRed</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">greenInGreen</span>: (f.<span class="hljs-property">greenInGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">greenInGreen</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">greenInBlue</span>: (f.<span class="hljs-property">greenInBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">greenInBlue</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">blueInRed</span>: (f.<span class="hljs-property">blueInRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blueInRed</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">blueInGreen</span>: (f.<span class="hljs-property">blueInGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blueInGreen</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">blueInBlue</span>: (f.<span class="hljs-property">blueInBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blueInBlue</span> : <span class="hljs-number">1</span>,
+            redInRed,
+            redInGreen,
+            redInBlue,
+            greenInRed,
+            greenInGreen,
+            greenInBlue,
+            blueInRed,
+            blueInGreen,
+            blueInBlue,
         }];
     },</pre></div></div>
             
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><strong>userDefined</strong> - DEPRECATED - this filter method no longer has any effect, returning an unchanged image</p>
 
@@ -2569,11 +2835,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><strong>yellow</strong> - removes blue channel color from the image, and averages the remaining channel colors</p>
 
@@ -2595,11 +2861,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>No additional prototype functions defined</p>
@@ -2609,11 +2875,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2630,11 +2896,11 @@ constructors.<span class="hljs-property">Filter</span> = <span class="hljs-title
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

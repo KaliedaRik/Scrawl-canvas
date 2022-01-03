@@ -555,6 +555,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-027.html">
+                  ./demo/filters-027.js
+                </a>
+              
+                
                 <a class="source" href="filters-501.html">
                   ./demo/filters-501.js
                 </a>
@@ -910,6 +915,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-035.html">
+                  ./demo/temp-035.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -1021,10 +1031,22 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Create the filter</p>
 
-
-<span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;clamp&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;clampChannels&#x27;</span>,
@@ -1036,16 +1058,20 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
     <span class="hljs-attr">highGreen</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">highBlue</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">opacity</span>: <span class="hljs-number">1</span>,
+});
+
+<span class="hljs-keyword">const</span> colorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-color-factory&#x27;</span>,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Create the target entity</p>
 
@@ -1071,11 +1097,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1084,20 +1110,21 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Red: <span class="hljs-subst">${lowRed.value}</span> - <span class="hljs-subst">${highRed.value}</span>
-    Green: <span class="hljs-subst">${lowGreen.value}</span> - <span class="hljs-subst">${highGreen.value}</span>
-    Blue: <span class="hljs-subst">${lowBlue.value}</span> - <span class="hljs-subst">${highBlue.value}</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Red - low: <span class="hljs-subst">${lowRed.value}</span>; high - <span class="hljs-subst">${highRed.value}</span>
+    Green - low: <span class="hljs-subst">${lowGreen.value}</span>; high - <span class="hljs-subst">${highGreen.value}</span>
+    Blue - low: <span class="hljs-subst">${lowBlue.value}</span>; high - <span class="hljs-subst">${highBlue.value}</span>
+    Color - low: <span class="hljs-subst">${lowColor.value}</span>; high: <span class="hljs-subst">${highColor.value}</span>
     Opacity - <span class="hljs-subst">${opacity.value}</span>`</span>;
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1113,11 +1140,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Setup form observer functionality</p>
@@ -1144,16 +1171,50 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         <span class="hljs-string">&#x27;high-blue&#x27;</span>: [<span class="hljs-string">&#x27;highBlue&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-string">&#x27;opacity&#x27;</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
     },
-});</pre></div></div>
+
+    <span class="hljs-attr">callback</span>: <span class="hljs-function">() =&gt;</span> {
+
+        lowColor.<span class="hljs-property">value</span> = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(lowRed.<span class="hljs-property">value</span>, lowGreen.<span class="hljs-property">value</span>, lowBlue.<span class="hljs-property">value</span>);
+        highColor.<span class="hljs-property">value</span> = colorFactory.<span class="hljs-title function_">convertRGBtoHex</span>(highRed.<span class="hljs-property">value</span>, highGreen.<span class="hljs-property">value</span>, highBlue.<span class="hljs-property">value</span>);
+    },
+});
+
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">if</span> (e &amp;&amp; e.<span class="hljs-property">target</span>) {
+
+        <span class="hljs-keyword">const</span> target = e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>,
+            val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+
+        <span class="hljs-keyword">let</span> [r, g, b] = colorFactory.<span class="hljs-title function_">extractRGBfromColor</span>(val)
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;low-color&#x27;</span> === target) {
+
+            myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">lowColor</span>: val });
+
+            lowRed.<span class="hljs-property">value</span> = r;
+            lowGreen.<span class="hljs-property">value</span> = g;
+            lowBlue.<span class="hljs-property">value</span> = b;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;high-color&#x27;</span> === target) {
+            
+            myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">highColor</span>: val });
+
+            highRed.<span class="hljs-property">value</span> = r;
+            highGreen.<span class="hljs-property">value</span> = g;
+            highBlue.<span class="hljs-property">value</span> = b;
+        }
+    }
+}, <span class="hljs-string">&#x27;.colorSelector&#x27;</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Setup form</p>
 
@@ -1165,6 +1226,8 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
     highRed = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#high-red&#x27;</span>),
     highGreen = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#high-green&#x27;</span>),
     highBlue = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#high-blue&#x27;</span>),
+    lowColor = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#low-color&#x27;</span>),
+    highColor = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#high-color&#x27;</span>),
     opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
 
 lowRed.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
@@ -1173,16 +1236,18 @@ lowBlue.<span class="hljs-property">value</span> = <span class="hljs-number">0</
 highRed.<span class="hljs-property">value</span> = <span class="hljs-number">255</span>;
 highGreen.<span class="hljs-property">value</span> = <span class="hljs-number">255</span>;
 highBlue.<span class="hljs-property">value</span> = <span class="hljs-number">255</span>;
+lowColor.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#000000&#x27;</span>;
+highColor.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#ffffff&#x27;</span>;
 opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
 
@@ -1193,11 +1258,11 @@ opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

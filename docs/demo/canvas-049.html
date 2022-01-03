@@ -555,6 +555,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-027.html">
+                  ./demo/filters-027.js
+                </a>
+              
+                
                 <a class="source" href="filters-501.html">
                   ./demo/filters-501.js
                 </a>
@@ -910,6 +915,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-035.html">
+                  ./demo/temp-035.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -1118,13 +1128,9 @@ canvas.<span class="hljs-title function_">set</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> [startX, startY] = graddy.<span class="hljs-property">start</span>;
-
-    <span class="hljs-keyword">let</span> {paletteStart, paletteEnd, startAngle} = graddy;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Palette - start: <span class="hljs-subst">${paletteStart}</span>; end: <span class="hljs-subst">${paletteEnd}</span>
-    Start - x: <span class="hljs-subst">${startX}</span>; y: <span class="hljs-subst">${startY}</span>
-    Angle - <span class="hljs-subst">${startAngle}</span>°`</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Palette - start: <span class="hljs-subst">${paletteStart.value}</span>; end: <span class="hljs-subst">${paletteEnd.value}</span>
+    Start - x: <span class="hljs-subst">${startX.value}</span>%; y: <span class="hljs-subst">${startY.value}</span>%
+    Angle - <span class="hljs-subst">${angle.value}</span>°`</span>;
 });</pre></div></div>
             
         </li>
@@ -1179,7 +1185,7 @@ canvas.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">startX</span>: [<span class="hljs-string">&#x27;startX&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
         <span class="hljs-attr">startY</span>: [<span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
 
-        <span class="hljs-attr">startAngle</span>: [<span class="hljs-string">&#x27;startAngle&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+        <span class="hljs-attr">angle</span>: [<span class="hljs-string">&#x27;angle&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
 
         <span class="hljs-attr">precision</span>: [<span class="hljs-string">&#x27;precision&#x27;</span>, <span class="hljs-string">&#x27;int&#x27;</span>],
 
@@ -1261,11 +1267,26 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteStart&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteEnd&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">999</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#startX&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#startY&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#startAngle&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> paletteStart = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteStart&#x27;</span>);
+<span class="hljs-keyword">const</span> paletteEnd = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteEnd&#x27;</span>);
+<span class="hljs-keyword">const</span> startX = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#startX&#x27;</span>);
+<span class="hljs-keyword">const</span> startY = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#startY&#x27;</span>);
+<span class="hljs-keyword">const</span> angle = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#angle&#x27;</span>);
+<span class="hljs-keyword">const</span> precision = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#precision&#x27;</span>);
+
+paletteStart.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+paletteEnd.<span class="hljs-property">value</span> = <span class="hljs-number">999</span>;
+startX.<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+startY.<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+angle.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+precision.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#red&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#blue&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#easing&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#cyclePalette&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#colorSpace&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#returnColorAs&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         

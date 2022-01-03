@@ -555,6 +555,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-027.html">
+                  ./demo/filters-027.js
+                </a>
+              
+                
                 <a class="source" href="filters-501.html">
                   ./demo/filters-501.js
                 </a>
@@ -910,6 +915,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-035.html">
+                  ./demo/temp-035.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -970,7 +980,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-filters-019">Demo Filters 019</h1>
-<p>Filter parameters: emboss</p>
+<p>Filter parameters: edgeDetect, sharpen</p>
 
             </div>
             
@@ -1019,13 +1029,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>,
+    entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>,
+    filter = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">filter</span>;
 
-scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
-
-canvas.<span class="hljs-title function_">setBase</span>({
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-});</pre></div></div>
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1036,14 +1044,16 @@ canvas.<span class="hljs-title function_">setBase</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Create the filter</p>
+              <p>Create the filters</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;dither&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;dither&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;edgeDetect&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;edgeDetect&#x27;</span>,
+}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;sharpen&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;sharpen&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -1059,22 +1069,52 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
-
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;edgeDetect-filter&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
 
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">300</span>, <span class="hljs-number">300</span>],
 
     <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;dither&#x27;</span>],
-});</pre></div></div>
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;edgeDetect&#x27;</span>],
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;sharpen-filter&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">300</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;sharpen&#x27;</span>],
+});
+
+
+scrawl.<span class="hljs-title function_">makePhrase</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;edgeDetect-label&#x27;</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Edge detect&#x27;</span>,
+
+    <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
+
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;drawThenFill&#x27;</span>,
+
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;edgeDetect-filter&#x27;</span>,
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+    <span class="hljs-attr">offset</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">5</span>],
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;sharpen-label&#x27;</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Sharpen&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;sharpen-filter&#x27;</span>,
+
+})</pre></div></div>
             
         </li>
         
@@ -1129,21 +1169,29 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilters = [
+    filter.<span class="hljs-property">edgeDetect</span>,
+    filter.<span class="hljs-property">sharpen</span>
+];
 
-    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
-    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
+<span class="hljs-keyword">const</span> myPictures = [
+    entity[<span class="hljs-string">&#x27;edgeDetect-filter&#x27;</span>],
+    entity[<span class="hljs-string">&#x27;sharpen-filter&#x27;</span>]
+];
 
-    <span class="hljs-attr">target</span>: myFilter,
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+    myFilters.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> f.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">opacity</span>: <span class="hljs-built_in">parseFloat</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>) }));
 
-    <span class="hljs-attr">updates</span>: {
+}, <span class="hljs-string">&#x27;#opacity&#x27;</span>);
 
-        <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-    },
-});</pre></div></div>
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">const</span> val = (e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;0&#x27;</span>) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;
+
+    myPictures.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">memoizeFilterOutput</span>: val }));
+
+}, <span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1158,7 +1206,9 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">let</span> opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
 
 opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
             
@@ -1175,7 +1225,7 @@ opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, myPictures);</pre></div></div>
             
         </li>
         

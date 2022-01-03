@@ -1083,7 +1083,7 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
     colorKeys.<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a - b);
 
     <span class="hljs-keyword">let</span> currentKey = colorKeys[<span class="hljs-number">0</span>], 
-        nextKey, currentVals, nextVals, dA, dB, dC, dD, diff;
+        nextKey, currentVals, nextVals, diff;
 
     <span class="hljs-keyword">let</span> [b, c, d, a] = colors[<span class="hljs-string">`<span class="hljs-subst">${currentKey}</span> `</span>];
 
@@ -1096,26 +1096,8 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         currentVals = colors[<span class="hljs-string">`<span class="hljs-subst">${currentKey}</span> `</span>];
         nextVals = colors[<span class="hljs-string">`<span class="hljs-subst">${nextKey}</span> `</span>];
 
-        diff = nextKey - currentKey;
-        dB = (nextVals[<span class="hljs-number">0</span>] - currentVals[<span class="hljs-number">0</span>]) / diff;
-        dC = (nextVals[<span class="hljs-number">1</span>] - currentVals[<span class="hljs-number">1</span>]) / diff;
-        dD = (nextVals[<span class="hljs-number">2</span>] - currentVals[<span class="hljs-number">2</span>]) / diff;
-        dA = (nextVals[<span class="hljs-number">3</span>] - currentVals[<span class="hljs-number">3</span>]) / diff;
-
         factory.<span class="hljs-title function_">setMinimumColor</span>(factory.<span class="hljs-title function_">buildColorString</span>(...currentVals, colorSpace));
-        factory.<span class="hljs-title function_">setMaximumColor</span>(factory.<span class="hljs-title function_">buildColorString</span>(...nextVals, colorSpace));
-
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = currentKey + <span class="hljs-number">1</span>; j &lt;= nextKey; j++) {
-
-            b += dB;
-            c += dC;
-            d += dD;
-            a += dA;
-
-            stops[j] = factory.<span class="hljs-title function_">returnColorFromValues</span>(b, c, d, a);
-        }
-    }
-};</pre></div></div>
+        factory.<span class="hljs-title function_">setMaximumColor</span>(factory.<span class="hljs-title function_">buildColorString</span>(...nextVals, colorSpace));</pre></div></div>
             
         </li>
         
@@ -1125,6 +1107,29 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p>There’s a bug with getting over-vibrant range colors in the HSL/HWB/LCH color spaces</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        diff = nextKey - currentKey;
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = currentKey + <span class="hljs-number">1</span>; j &lt;= nextKey; j++) {
+
+            stops[j] = factory.<span class="hljs-title function_">getRangeColor</span>((j - currentKey) / diff, <span class="hljs-literal">true</span>);
+        }
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>makeColorString</code> - internal helper function</p>
 
@@ -1139,11 +1144,11 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>updateColor</code> - add or update a gradient-type style’s Palette object with a color.</p>
 <ul>
@@ -1175,11 +1180,11 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>removeColor</code> - remove a gradient-type style’s Palette object color from a specified index</p>
 <ul>
@@ -1206,11 +1211,11 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><code>addStopsToGradient</code> - complete the construction of the Canvas API CanvasGradient object</p>
 
@@ -1221,11 +1226,11 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>It’s at this point that we apply the easing function</p>
 
@@ -1253,11 +1258,11 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Option 1 start == end, cycle irrelevant</p>
 
@@ -1268,11 +1273,11 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Option 2: start &lt; end, cycle irrelevant</p>
 
@@ -1329,11 +1334,11 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Option 3: start &gt; end, cycle = true</p>
 
@@ -1384,11 +1389,11 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Option 4: start &gt; end, cycle = false</p>
 
@@ -1435,11 +1440,11 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>No gradient: no colors</p>
 
@@ -1451,11 +1456,11 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -1474,11 +1479,11 @@ constructors.<span class="hljs-property">Palette</span> = <span class="hljs-titl
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
