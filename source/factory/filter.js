@@ -32,6 +32,8 @@
 // 
 // `displace` - Shift pixels around the image, based on the values supplied in a displacement process-image. Object attributes: `action, lineIn, lineOut, lineMix, opacity, channelX, channelY, scaleX, scaleY, transparentEdges, offsetX, offsetY`
 // 
+// `reducePalette` - Reduce the number of colors in an image palette. The palette attribute can be: a Number (for the commonest colors); an Array of CSS color Strings to use as the palette; or the String name of a pre-defined palette - default: 'black-white'.Object attributes: `action, lineIn, lineOut, lineMix, opacity, palette`
+// 
 // `emboss` - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action. Object attributes: `action, lineIn, lineOut, opacity, strength, angle, tolerance, keepOnlyChangedAreas, postProcessResults`; pseudo-arguments for the convenience method include `useNaturalGrayscale, clamp, smoothing`
 // 
 // `flood` - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments. Object attributes: `action, lineIn, lineOut, opacity, red, green, blue, alpha`
@@ -298,6 +300,7 @@ let defaultAttributes = {
     opaqueAt: 1,
     operation: 'mean',
     outerRadius: '30%',
+    palette: 'black-white', 
     passes: 1,
     postProcessResults: true,
     processHorizontal: true,
@@ -1260,6 +1263,40 @@ const setActionsArray = {
             excludeGreen: true,
             excludeBlue: true,
         }];
+    },
+
+// __reducePalette__ - reduce the number of colors in its palette
+    reducePalette: function (f) {
+    	
+    	let palette = (f.palette != null) ? f.palette : 'black-white';
+
+        f.actions = [];
+
+    	if (palette.substring) {
+
+    		if (palette.includes(',')) {
+
+    			palette = palette.split(',');
+    		    palette.forEach(p => p.trim());
+            }
+            else if (['black-white', 'monochrome-8', 'monochrome-16'].includes(palette)) {
+
+                f.actions.push({
+                    action: 'grayscale',
+                    lineIn: (f.lineIn != null) ? f.lineIn : '',
+                    lineOut: (f.lineIn != null) ? f.lineIn : '',
+                    opacity: 1,
+                });
+            }
+    	}
+        f.actions.push({
+            action: 'reduce-palette',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            seed: (f.seed != null) ? f.seed : 'some-random-string-or-other',
+            palette,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+        });
     },
 
 // __saturation__ - alters the saturation level of the image
