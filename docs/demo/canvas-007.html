@@ -745,6 +745,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-001a.html">
+                  ./demo/temp-001a.js
+                </a>
+              
+                
                 <a class="source" href="temp-002.html">
                   ./demo/temp-002.js
                 </a>
@@ -1037,7 +1042,7 @@ canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;beige&#x27;</span>,
     <span class="hljs-attr">css</span>: {
-        <span class="hljs-attr">border</span>: <span class="hljs-string">&#x27;1px solid black&#x27;</span>
+        <span class="hljs-attr">border</span>: <span class="hljs-string">&#x27;1px solid black&#x27;</span>,
     }
 });
 
@@ -1093,6 +1098,7 @@ canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>,
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
+    <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">true</span>,
 });
 
 <span class="hljs-keyword">let</span> block2 = block1.<span class="hljs-title function_">clone</span>({
@@ -1108,6 +1114,7 @@ canvas.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">roll</span>: -<span class="hljs-number">0.5</span>
     },
     <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">false</span>,
 });
 
 <span class="hljs-keyword">let</span> wheel1 = scrawl.<span class="hljs-title function_">makeWheel</span>({
@@ -1122,6 +1129,7 @@ canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
+    <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">true</span>,
 });
 
 <span class="hljs-keyword">let</span> wheel2 = wheel1.<span class="hljs-title function_">clone</span>({
@@ -1137,6 +1145,7 @@ canvas.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">roll</span>: <span class="hljs-number">1</span>
     },
     <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">false</span>,
 });</pre></div></div>
             
         </li>
@@ -1969,14 +1978,6 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
 });
 
 scrawl.<span class="hljs-title function_">makeFilter</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;binary&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;binary&#x27;</span>,
-    <span class="hljs-attr">red</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">green</span>: <span class="hljs-number">100</span>,
-    <span class="hljs-attr">blue</span>: <span class="hljs-number">200</span>,
-});
-
-scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;channelsToAlpha&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;channelsToAlpha&#x27;</span>,
 });
@@ -2019,6 +2020,12 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-number">10</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">10</span>,
     <span class="hljs-attr">level</span>: <span class="hljs-number">0.7</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;reducePalette&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;reducePalette&#x27;</span>,
+    <span class="hljs-attr">useBluenoise</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
         </li>

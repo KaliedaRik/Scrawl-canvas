@@ -140,6 +140,11 @@
                 </a>
               
                 
+                <a class="source" href="filterEngine-bluenoiseData.html">
+                  ./source/factory/filterEngine-bluenoiseData.js
+                </a>
+              
+                
                 <a class="source" href="filterEngine.html">
                   ./source/factory/filterEngine.js
                 </a>
@@ -501,7 +506,9 @@
 <span class="hljs-keyword">import</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./animation.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { requestCoordinate, releaseCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./color.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./color.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { bluenoise } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filterEngine-bluenoiseData.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -560,8 +567,6 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">actions</span> = [];
-
-    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">this</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -827,9 +832,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getRandomNumbers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">seed, length</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getRandomNumbers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">seed, length, useBluenoise = <span class="hljs-literal">false</span></span>) {
 
-    <span class="hljs-keyword">const</span> name = <span class="hljs-string">`random-<span class="hljs-subst">${seed}</span>-<span class="hljs-subst">${length}</span>`</span>
+    <span class="hljs-keyword">let</span> name = <span class="hljs-string">`random-<span class="hljs-subst">${seed}</span>-<span class="hljs-subst">${length}</span>`</span>;
+
+    <span class="hljs-keyword">if</span> (useBluenoise) name += <span class="hljs-string">&#x27;-bluenoise&#x27;</span>;
 
     <span class="hljs-keyword">const</span> { workstore, workstoreLastAccessed } = <span class="hljs-variable language_">this</span>;
 
@@ -840,11 +847,34 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
     <span class="hljs-keyword">const</span> vals = [];
 
-    <span class="hljs-keyword">const</span> engine = <span class="hljs-title function_">seededRandomNumberGenerator</span>(seed);
+    <span class="hljs-keyword">if</span> (useBluenoise) {
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; length; i++) {
+        <span class="hljs-keyword">const</span> bLen = bluenoise.<span class="hljs-property">length</span>;
 
-        vals.<span class="hljs-title function_">push</span>(engine.<span class="hljs-title function_">random</span>());
+        <span class="hljs-keyword">let</span> counter = length,
+            loops = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(length / bLen);
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; loops; i++) {
+
+            <span class="hljs-keyword">if</span> (counter &lt; bLen) {
+
+                vals.<span class="hljs-title function_">push</span>(...bluenoise.<span class="hljs-title function_">slice</span>(<span class="hljs-number">0</span>, counter));
+            }
+            <span class="hljs-keyword">else</span> {
+
+                vals.<span class="hljs-title function_">push</span>(...bluenoise);
+                counter -= bLen;
+            }
+        }
+    }
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">const</span> engine = <span class="hljs-title function_">seededRandomNumberGenerator</span>(seed);
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; length; i++) {
+
+            vals.<span class="hljs-title function_">push</span>(engine.<span class="hljs-title function_">random</span>());
+        }
     }
 
     workstore[name] = vals;
@@ -1594,9 +1624,6 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
     <span class="hljs-keyword">const</span> rnd = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getRandomNumbers</span>(seed, noOfColors);
     <span class="hljs-keyword">let</span> rndCursor = -<span class="hljs-number">1</span>;
 
-<span class="hljs-comment">/*
-                test = rnd[++rndCursor];
-*/</span>
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) {
 
         c = i;
@@ -1798,7 +1825,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = data.<span class="hljs-property">length</span>; i &lt; iz; i += <span class="hljs-number">4</span>) {
 
-        <span class="hljs-keyword">if</span> (!data[i + <span class="hljs-number">3</span>]) dataRes.<span class="hljs-title function_">push</span>([]);
+        <span class="hljs-keyword">if</span> (!data[i + <span class="hljs-number">3</span>]) {
+
+            dataRes.<span class="hljs-title function_">push</span>([]);
+            <span class="hljs-keyword">continue</span>;
+        }
 
         dc = i;
         dl = data[dc];
@@ -1816,14 +1847,7 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
 
             l = rl - dl;
             a = ra - da;
-            b = rb - db;
-
-            pixelRes.<span class="hljs-title function_">push</span>((l * l) + (a * a) + (b * b));
-        }
-        dataRes.<span class="hljs-title function_">push</span>(pixelRes);
-    }
-    <span class="hljs-keyword">return</span> dataRes;
-};</pre></div></div>
+            b = rb - db;</pre></div></div>
             
         </li>
         
@@ -1833,6 +1857,26 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
               
               <div class="sswrap ">
                 <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <p>pixelRes.push(Math.sqrt((l * l) + (a * a) + (b * b)));</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            pixelRes.<span class="hljs-title function_">push</span>((l * l) + (a * a) + (b * b));
+        }
+        dataRes.<span class="hljs-title function_">push</span>(pixelRes);
+    }
+    <span class="hljs-keyword">return</span> dataRes;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><code>selectClosestColors</code> - Returns a propensity model of the liklihood of the pixel taking the closest colors to it. The model is an Array of Arrays (one per pixel), with the sub-arrays taking the form of <code>[palette-index-color, propensity, palette-index-color, propensity, etc]</code> to a maximum of four colors.</p>
 <ul>
@@ -1904,11 +1948,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><code>getGradientData</code> - create an imageData object containing the 256 values from a gradient that we require for doing filters work</p>
 
@@ -1942,11 +1986,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <h2 id="filter-action-functions">Filter action functions</h2>
 <p>Each function is held in the <code>theBigActionsObject</code> object, for convenience</p>
@@ -1958,11 +2002,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><strong>alpha-to-channels</strong> - Copies the alpha channel value over to the selected value or, alternatively, sets that channel’s value to zero, or leaves the channel’s value unchanged. Setting the appropriate “includeChannel” flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate “excludeChannel” flag will set that channel’s value to zero.</p>
 
@@ -2011,11 +2055,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><strong>area-alpha</strong> - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.</p>
 
@@ -2072,11 +2116,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><strong>average-channels</strong> - Calculates an average value from each pixel’s included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0.</p>
 
@@ -2154,11 +2198,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>DEPRECATED! <strong>binary</strong> - use the updated <code>threshold</code> filter instead, which now incorporates binary filter functionality</p>
 <p><strong>blend</strong> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations. </p>
@@ -2227,11 +2271,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>const { getHSLfromRGB, getRGBfromHSL } = this.colorEngine;</p>
 
@@ -2842,11 +2886,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><strong>blur</strong> - Performs a multi-loop, two-step ‘horizontal-then-vertical averaging sweep’ calculation across all pixels to create a blur effect. 
 Note that this filter is expensive, thus much slower to complete compared to other filter effects. Where possible, memoize the results this filter produces.</p>
@@ -3005,11 +3049,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><strong>channels-to-alpha</strong> - Calculates an average value from each pixel’s included channels and applies that value to the alpha channel.</p>
 
@@ -3071,11 +3115,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><strong>chroma</strong> - Using an array of ‘range’ arrays, determine whether a pixel’s values lie entirely within a range’s values and, if true, sets that pixel’s alpha channel value to zero. Each ‘range’ array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.</p>
 
@@ -3131,11 +3175,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><strong>clamp-channels</strong> - Clamp each color channel to a range set by lowColor and highColor values</p>
 
@@ -3202,11 +3246,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><strong>colors-to-alpha</strong> - Determine the alpha channel value for each pixel depending on the closeness to that pixel’s color channel values to a reference color supplied in the “red”, “green” and “blue” arguments. The sensitivity of the effect can be manipulated using the “transparentAt” and “opaqueAt” values, both of which lie in the range 0-1.</p>
 
@@ -3271,11 +3315,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>compose</strong> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the “compose” argument; permitted values are: ‘destination-only’, ‘destination-over’, ‘destination-in’, ‘destination-out’, ‘destination-atop’, ‘source-only’, ‘source-over’ (default), ‘source-in’, ‘source-out’, ‘source-atop’, ‘clear’, ‘xor’, or ‘lighter’. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the “offsetX” and “offsetY” arguments.</p>
 
@@ -3618,11 +3662,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>corrode</strong> - Performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The operation will set the pixel’s channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the “level” attribute. Channels can be selected by setting the “includeRed”, “includeGreen”, “includeBlue” (all false by default) and “includeAlpha” (default: true) flags.</p>
 
@@ -3641,11 +3685,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>need to remove the pixel’s own value?</p>
 
@@ -3723,11 +3767,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>displace</strong> - Shift pixels around the image, based on the values supplied in a displacement image</p>
 
@@ -3837,11 +3881,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><strong>emboss</strong> - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: “strength”, and “angle” - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action</p>
 
@@ -3993,11 +4037,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><strong>flood</strong> - Set all pixels to the channel values supplied in the “red”, “green”, “blue” and “alpha” arguments</p>
 
@@ -4045,11 +4089,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><strong>gaussian-blur</strong> - from this GitHub repository: <a href="https://github.com/nodeca/glur/blob/master/index.js">https://github.com/nodeca/glur/blob/master/index.js</a> (code accessed 1 June 2021)</p>
 
@@ -4080,11 +4124,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p>Attempt to force type to FP32.</p>
 
@@ -4098,11 +4142,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p>takes src image and writes the blurred and transposed result into out</p>
 
@@ -4129,11 +4173,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>left to right</p>
 
@@ -4204,11 +4248,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p>right to left</p>
 
@@ -4314,11 +4358,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><strong>glitch</strong> - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels</p>
 
@@ -4449,11 +4493,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><strong>grayscale</strong> - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.</p>
 
@@ -4469,11 +4513,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>len = iData.length,
 r, g, b, a, i, gray;</p>
@@ -4511,11 +4555,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><strong>invert-channels</strong> - For each pixel, subtracts its current channel values - when included - from 255.</p>
 
@@ -4558,11 +4602,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><strong>lock-channels-to-levels</strong> - Produces a posterize effect. Takes in four arguments - “red”, “green”, “blue” and “alpha” - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel’s channel value and determines which of the corresponding Array’s Number values it is closest to; it then sets the channel value to that Number value.</p>
 
@@ -4618,11 +4662,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><strong>map-to-gradient</strong> - maps the colors in the supplied (complex) gradient to a grayscaled input.</p>
 
@@ -4692,11 +4736,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><strong>matrix</strong> - Performs a matrix operation on each pixel’s channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The weights to be applied need to be supplied in the “weights” argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The ‘edgeDetect’, ‘emboss’ and ‘sharpen’ convenience filter methods all use the matrix action, pre-setting the required weights.</p>
 
@@ -4771,11 +4815,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><strong>modulate-channels</strong> - Multiplies each channel’s value by the supplied argument value. A channel-argument’s value of ‘0’ will set that channel’s value to zero; a value of ‘1’ will leave the channel value unchanged. If the “saturation” flag is set to ‘true’ the calculation changes to start at that pixel’s grayscale values. The ‘brightness’ and ‘saturation’ filters are special forms of the ‘channels’ filter which use a single “levels” argument to set all three color channel arguments to the same value.</p>
 
@@ -4845,11 +4889,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><strong>offset</strong> - Offset the input image in the output image.</p>
 
@@ -4951,11 +4995,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><strong>pixelate</strong> - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the “tileWidth”, “tileHeight”, “offsetX” and “offsetY” arguments.</p>
 
@@ -5027,11 +5071,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><strong>process-image</strong> - Add an asset image to the filter process chain. The asset - the String name of the asset object - must be pre-loaded before it can be included in the filter. The “width” and “height” arguments are measured in integer Number pixels; the “copy” arguments can be either percentage Strings (relative to the asset’s natural dimensions) or absolute Number values (in pixels). The “lineOut” argument is required - be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset’s data.</p>
 
@@ -5055,11 +5099,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><strong>random-noise</strong> - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels</p>
 
@@ -5144,11 +5188,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><strong>reducePalette</strong> - Reduce the number of colors in its palette. The <code>palette</code> attribute can be: a Number (for the commonest colors);  an Array of CSS color Strings to use as the palette; or  the String name of a pre-defined palette - default: ‘black-white’</p>
 
@@ -5165,13 +5209,14 @@ r, g, b, a, i, gray;</p>
             len = iData.<span class="hljs-property">length</span>,
             i, iz, j, jz, r, g, b, a, diff, diffLen, index, colIndex, propensity, p, total, test;
 
-        <span class="hljs-keyword">let</span> {opacity, palette, seed, lineOut} = requirements;
+        <span class="hljs-keyword">let</span> {opacity, palette, seed, useBluenoise, lineOut} = requirements;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == seed) seed = <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == useBluenoise) useBluenoise = <span class="hljs-literal">false</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == palette) palette = <span class="hljs-string">&#x27;black-white&#x27;</span>;
 
-        <span class="hljs-keyword">const</span> rnd = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getRandomNumbers</span>(seed, len / <span class="hljs-number">4</span>);
+        <span class="hljs-keyword">const</span> rnd = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getRandomNumbers</span>(seed, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(len / <span class="hljs-number">3</span>), useBluenoise);
         <span class="hljs-keyword">let</span> rndCursor = -<span class="hljs-number">1</span>;
 
         <span class="hljs-keyword">let</span> rgbPalette, labPalette;</pre></div></div>
@@ -5179,11 +5224,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p>For pre-defined palettes: <code>black-white</code>, <code>monochrome</code>, <code>RGBK</code>, <code>YMCK</code>, ‘basic’</p>
 
@@ -5197,11 +5242,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p>User has supplied an Array of CSS color Strings, for processing</p>
 
@@ -5215,11 +5260,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p>User has requested a given sized palette be generated from the most popular colors in the image</p>
 
@@ -5233,11 +5278,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p>In case of error, default to ‘black-white’</p>
 
@@ -5269,6 +5314,8 @@ r, g, b, a, i, gray;</p>
                 oData[g] = iData[g];
                 oData[b] = iData[b];
                 oData[a] = iData[a];
+
+                ++rndCursor;
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">2</span> === diffLen) {
 
@@ -5278,6 +5325,8 @@ r, g, b, a, i, gray;</p>
                 oData[g] = rgbPalette[++index];
                 oData[b] = rgbPalette[++index];
                 oData[a] = iData[a];
+
+                ++rndCursor;
             }
             <span class="hljs-keyword">else</span> {
 
@@ -5325,11 +5374,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><strong>set-channel-to-level</strong> - Sets the value of each pixel’s included channel to the value supplied in the “level” argument.</p>
 
@@ -5373,11 +5422,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><strong>step-channels</strong> - Takes three divisor values - “red”, “green”, “blue”. For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of ‘50’ applied to a channel value of ‘120’ will give a result of ‘100’. The output is a form of posterization.</p>
 <p>A new <code>clamp</code> attribute was added in v8.7.0, which can take the following String values:</p>
@@ -5446,11 +5495,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><strong>swirl</strong> - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.</p>
 <ul>
@@ -5658,11 +5707,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><strong>threshold</strong> - performs a binary check on each pixel and, according to the result, assigns the pixel to a defined high or low color</p>
 <ul>
@@ -5766,11 +5815,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p><strong>tint-channels</strong> - Has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The ‘sepia’ convenience filter presets these values to create a sepia effect.</p>
 
@@ -5822,11 +5871,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p><strong>user-defined-legacy</strong> - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter engine, which the engine would then run against the source input image as-and-when required. This functionality has been removed from the new filter functionality. All such filters will now return the input image unchanged.</p>
 
@@ -5850,11 +5899,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-81">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><strong>vary-channels-by-weights</strong> - manipulate colors using a set of channel curve arrays.</p>
 <ul>
@@ -5932,11 +5981,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-82">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p>We need an animation object to go through all the filters at the very end of the Display cycle RAF (request animation frame) and reset their <code>dirtyFilterIdentifier</code> flag to false.</p>
 
@@ -5967,11 +6016,11 @@ r, g, b, a, i, gray;</p>
         </li>
         
         
-        <li id="section-83">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -5987,11 +6036,11 @@ constructors.<span class="hljs-property">FilterEngine</span> = <span class="hljs
         </li>
         
         
-        <li id="section-84">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-84">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <p>Create a singleton filter engine, for export and use within this code base</p>
 
@@ -6002,11 +6051,11 @@ constructors.<span class="hljs-property">FilterEngine</span> = <span class="hljs
         </li>
         
         
-        <li id="section-85">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-85">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

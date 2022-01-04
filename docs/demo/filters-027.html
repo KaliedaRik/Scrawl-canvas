@@ -745,6 +745,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-001a.html">
+                  ./demo/temp-001a.js
+                </a>
+              
+                
                 <a class="source" href="temp-002.html">
                   ./demo/temp-002.js
                 </a>
@@ -1160,6 +1165,7 @@ scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
         <span class="hljs-attr">paletteString</span>: [<span class="hljs-string">&#x27;palette&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
         <span class="hljs-attr">paletteNumber</span>: [<span class="hljs-string">&#x27;palette&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">seed</span>: [<span class="hljs-string">&#x27;seed&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+        <span class="hljs-attr">useBluenoise</span>: [<span class="hljs-string">&#x27;useBluenoise&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
         <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
     },
 });
@@ -1192,7 +1198,8 @@ opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteString&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;red, blue, green, yellow, orange, brown, black, white&#x27;</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteNumber&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">32</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#seed&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>;</pre></div></div>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#seed&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#useBluenoise&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
