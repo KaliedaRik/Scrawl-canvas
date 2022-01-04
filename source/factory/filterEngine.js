@@ -23,8 +23,6 @@ const FilterEngine = function () {
     // __actions__ - the Array of action objects that the engine needs to process - data supplied by the main thread in its message's `packetFiltersArray` attribute.
     this.actions = [];
 
-    console.log(this);
-
     return this;
 };
 
@@ -768,9 +766,6 @@ P.createCommonestColorsPalette = function (noOfColors, data, seed) {
     const rnd = this.getRandomNumbers(seed, noOfColors);
     let rndCursor = -1;
 
-/*
-                test = rnd[++rndCursor];
-*/
     for (i = 0; i < len; i++) {
 
         c = i;
@@ -920,7 +915,11 @@ P.getColorDistanceData = function (data, ref) {
 
     for (i = 0, iz = data.length; i < iz; i += 4) {
 
-        if (!data[i + 3]) dataRes.push([]);
+        if (!data[i + 3]) {
+
+            dataRes.push([]);
+            continue;
+        }
 
         dc = i;
         dl = data[dc];
@@ -940,6 +939,7 @@ P.getColorDistanceData = function (data, ref) {
             a = ra - da;
             b = rb - db;
 
+            // pixelRes.push(Math.sqrt((l * l) + (a * a) + (b * b)));
             pixelRes.push((l * l) + (a * a) + (b * b));
         }
         dataRes.push(pixelRes);
@@ -3844,7 +3844,7 @@ P.theBigActionsObject = {
         if (null == seed) seed = 'some-random-string-or-other';
         if (null == palette) palette = 'black-white';
 
-        const rnd = this.getRandomNumbers(seed, len / 4);
+        const rnd = this.getRandomNumbers(seed, Math.floor(len / 3));
         let rndCursor = -1;
 
         let rgbPalette, labPalette;
@@ -3891,6 +3891,8 @@ P.theBigActionsObject = {
                 oData[g] = iData[g];
                 oData[b] = iData[b];
                 oData[a] = iData[a];
+
+                ++rndCursor;
             }
             else if (2 === diffLen) {
 
@@ -3900,6 +3902,8 @@ P.theBigActionsObject = {
                 oData[g] = rgbPalette[++index];
                 oData[b] = rgbPalette[++index];
                 oData[a] = iData[a];
+
+                ++rndCursor;
             }
             else {
 

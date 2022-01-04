@@ -29,23 +29,8 @@ let mygradient = scrawl.makeGradient({
 // Setup Color style
 let mycolor = scrawl.makeColor({
     name: 'myColorObject',
-    r: 100,
-    g: 50,
-    b: 10,
-
-    rShift: 0.1,
-    gShift: 1,
-    bShift: -1.3,
-
-    rBounce: true,
-    gBounce: true,
-    bBounce: true,
-
-    rMax: 160,
-    gMax: 180,
-    bMax: 150,
-
-    autoUpdate: true,
+    minimumColor: 'red',
+    maximumColor: 'green',
 });
 
 // Setup Filter
@@ -67,7 +52,6 @@ let myfilter = scrawl.makeFilter({
 let myblock = scrawl.makeBlock({
 
     name: 'block-tester',
-    collides: true,
 
     width: 120,
     height: 40,
@@ -75,9 +59,37 @@ let myblock = scrawl.makeBlock({
     startX: 60,
     startY: 60,
 
-    fillStyle: 'myColorObject',
+    fillStyle: mycolor.getRangeColor(0),
     method: 'fill',
 });
+
+scrawl.makeTween({
+
+    name: 'block-color-animation',
+    duration: 2500,
+    targets: myblock,
+
+    cycles: 0,
+    reverseOnCycleEnd: true,
+
+    definitions: [{
+        
+        attribute: 'fillStyle',
+        start: 0,
+        end: 1,
+        engine: function (start, change, position) {
+           let temp = 1 - position,
+                val;
+
+            val = (position < 0.5) ?
+                start + ((position * position) * change * 2) :
+                (start + change) + ((temp * temp) * -change * 2);
+
+            return mycolor.getRangeColor(val);
+        },
+    }],
+
+}).run();
 
 // Test Picture entity
 let mypicture = scrawl.makePicture({

@@ -145,6 +145,7 @@ export default function (P = Ωempty) {
 
         this.dirtyFilters = true;
         this.dirtyImageSubscribers = true;
+        this.dirtyFilterIdentifier = true;
 
         return this;
     };
@@ -162,6 +163,7 @@ export default function (P = Ωempty) {
 
         this.dirtyFilters = true;
         this.dirtyImageSubscribers = true;
+        this.dirtyFilterIdentifier = true;
         
         return this;
     };
@@ -175,6 +177,7 @@ export default function (P = Ωempty) {
 
         this.dirtyFilters = true;
         this.dirtyImageSubscribers = true;
+        this.dirtyFilterIdentifier = true;
         
         return this;
     };

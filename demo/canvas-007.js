@@ -64,6 +64,7 @@ let block1 = scrawl.makeBlock({
     strokeStyle: 'coral',
     lineWidth: 4,
     method: 'fillAndDraw',
+    memoizeFilterOutput: true,
 });
 
 let block2 = block1.clone({
@@ -79,6 +80,7 @@ let block2 = block1.clone({
         roll: -0.5
     },
     order: 1,
+    memoizeFilterOutput: false,
 });
 
 let wheel1 = scrawl.makeWheel({
@@ -93,6 +95,7 @@ let wheel1 = scrawl.makeWheel({
     strokeStyle: 'orange',
     lineWidth: 4,
     method: 'fillAndDraw',
+    memoizeFilterOutput: true,
 });
 
 let wheel2 = wheel1.clone({
@@ -108,6 +111,7 @@ let wheel2 = wheel1.clone({
         roll: 1
     },
     order: 1,
+    memoizeFilterOutput: false,
 });
 
 
@@ -485,14 +489,6 @@ scrawl.makeFilter({
 });
 
 scrawl.makeFilter({
-    name: 'binary',
-    method: 'binary',
-    red: 0,
-    green: 100,
-    blue: 200,
-});
-
-scrawl.makeFilter({
     name: 'channelsToAlpha',
     method: 'channelsToAlpha',
 });
@@ -535,6 +531,11 @@ scrawl.makeFilter({
     width: 10,
     height: 10,
     level: 0.7,
+});
+
+scrawl.makeFilter({
+    name: 'reducePalette',
+    method: 'reducePalette',
 });
 
 // <option value="mapToGradient">mapToGradient</option>
