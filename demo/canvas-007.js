@@ -19,7 +19,7 @@ canvas.set({
     fit: 'fill',
     backgroundColor: 'beige',
     css: {
-        border: '1px solid black'
+        border: '1px solid black',
     }
 });
 
@@ -536,6 +536,7 @@ scrawl.makeFilter({
 scrawl.makeFilter({
     name: 'reducePalette',
     method: 'reducePalette',
+    useBluenoise: true,
 });
 
 // <option value="mapToGradient">mapToGradient</option>

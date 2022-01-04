@@ -47,8 +47,13 @@
     <div class="yellow label">Random seed</div>
     <div class="yellow"><input class="controlItem" id="seed" type="text" value="some-random-string-or-other" /></div>
 
-    <div class="lavender label">Opacity</div>
-    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+    <div class="yellow label">Use bluenoise</div>
+    <div class="yellow">
+      <select class="controlItem" id="useBluenoise">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
 
     <div class="pink label">Memoize filter</div>
     <div class="pink">
@@ -57,6 +62,9 @@
         <option value="1">true</option>
       </select>
     </div>
+
+    <div class="lavender label">Opacity</div>
+    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
   </div>
 

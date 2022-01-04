@@ -12,6 +12,8 @@ import { requestCell, releaseCell } from './cell.js';
 import { requestCoordinate, releaseCoordinate } from './coordinate.js';
 import { makeColor } from './color.js';
 
+import { bluenoise } from './filterEngine-bluenoiseData.js';
+
 // #### FilterEngine constructor
 const FilterEngine = function () {
 
@@ -197,9 +199,11 @@ P.getOrAddWorkstore = function (name) {
 };
 
 // `getRandomNumbers` creates an Array and populates it with random numbers
-P.getRandomNumbers = function (seed, length) {
+P.getRandomNumbers = function (seed, length, useBluenoise = false) {
 
-    const name = `random-${seed}-${length}`
+    let name = `random-${seed}-${length}`;
+
+    if (useBluenoise) name += '-bluenoise';
 
     const { workstore, workstoreLastAccessed } = this;
 
@@ -210,11 +214,34 @@ P.getRandomNumbers = function (seed, length) {
 
     const vals = [];
 
-    const engine = seededRandomNumberGenerator(seed);
+    if (useBluenoise) {
 
-    for (let i = 0; i < length; i++) {
+        const bLen = bluenoise.length;
 
-        vals.push(engine.random());
+        let counter = length,
+            loops = Math.ceil(length / bLen);
+
+        for (let i = 0; i < loops; i++) {
+
+            if (counter < bLen) {
+
+                vals.push(...bluenoise.slice(0, counter));
+            }
+            else {
+
+                vals.push(...bluenoise);
+                counter -= bLen;
+            }
+        }
+    }
+    else {
+
+        const engine = seededRandomNumberGenerator(seed);
+
+        for (let i = 0; i < length; i++) {
+
+            vals.push(engine.random());
+        }
     }
 
     workstore[name] = vals;
@@ -3838,13 +3865,14 @@ P.theBigActionsObject = {
             len = iData.length,
             i, iz, j, jz, r, g, b, a, diff, diffLen, index, colIndex, propensity, p, total, test;
 
-        let {opacity, palette, seed, lineOut} = requirements;
+        let {opacity, palette, seed, useBluenoise, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == seed) seed = 'some-random-string-or-other';
+        if (null == useBluenoise) useBluenoise = false;
         if (null == palette) palette = 'black-white';
 
-        const rnd = this.getRandomNumbers(seed, Math.floor(len / 3));
+        const rnd = this.getRandomNumbers(seed, Math.floor(len / 3), useBluenoise);
         let rndCursor = -1;
 
         let rgbPalette, labPalette;

@@ -87,6 +87,7 @@ scrawl.observeAndUpdate({
         paletteString: ['palette', 'raw'],
         paletteNumber: ['palette', 'round'],
         seed: ['seed', 'raw'],
+        useBluenoise: ['useBluenoise', 'boolean'],
         opacity: ['opacity', 'float'],
     },
 });
@@ -109,6 +110,7 @@ document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 document.querySelector('#paletteString').value = 'red, blue, green, yellow, orange, brown, black, white';
 document.querySelector('#paletteNumber').value = 32;
 document.querySelector('#seed').value = 'some-random-string-or-other';
+document.querySelector('#useBluenoise').options.selectedIndex = 0;
 
 
 // #### Drag-and-Drop image loading functionality
