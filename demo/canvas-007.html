@@ -117,8 +117,8 @@
     <h4>Notes</h4>
     <ul>
       <li>The gray areas when chroma filter is applied at the group level is expected behaviour - all entitys get filtered at the same time, thus when a pixel is removed the underlying color will be the cell's background color</li>
-      <li>The blur filter is generally much slower than other filters, particularly in Edge. Entitys and groups that need to be blurred will be more efficient if blurred once and the result captured as an image for use in a Picture entity.</li>
-      <li>Similarly with the matrix filters (though they are a lot faster than blur)</li>
+      <li>The blur filter is generally much slower than other filters. Unless we specifically need some of the additional features offered by the blur filter, use gaussianBlur instead.</li>
+      <li>Other slower filters include matrix5, reducePalette.</li>
     </ul>
 
     <p><b>Touch test:</b> not required</p>

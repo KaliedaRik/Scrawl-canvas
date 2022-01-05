@@ -1280,7 +1280,7 @@ const setActionsArray = {
     			palette = palette.split(',');
     		    palette.forEach(p => p.trim());
             }
-            else if (['black-white', 'monochrome-8', 'monochrome-16'].includes(palette)) {
+            else if (['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'].includes(palette)) {
 
                 f.actions.push({
                     action: 'grayscale',

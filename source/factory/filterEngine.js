@@ -714,6 +714,7 @@ P.initiateDithering = function () {
     this.predefinedPalette = {};
 
     this.createPalette('black-white', ['#000', '#fff']);
+    this.createPalette('monochrome-4', ['#000', '#555', '#aaa', '#fff']);
     this.createPalette('monochrome-8', ['#000', '#333', '#555', '#777', '#999', '#bbb', '#ddd', '#fff']);
     this.createPalette('monochrome-16', ['#000', '#111', '#222', '#333', '#444', '#555', '#666', '#777', '#888', '#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee', '#fff']);
     this.createPalette('RGBK-32', [
@@ -966,7 +967,6 @@ P.getColorDistanceData = function (data, ref) {
             a = ra - da;
             b = rb - db;
 
-            // pixelRes.push(Math.sqrt((l * l) + (a * a) + (b * b)));
             pixelRes.push((l * l) + (a * a) + (b * b));
         }
         dataRes.push(pixelRes);
@@ -1014,6 +1014,86 @@ P.selectClosestColors = function (data, ref) {
                 temp = [...dist];
 
                 while (temp.length > 4) {
+
+                    val = max(...temp);
+                    index = temp.indexOf(val);
+                    temp.splice(index, 1);
+                }
+
+                total = temp.reduce((p, c) => p + c);
+                res = [];
+
+                temp.forEach(d => {
+
+                    res.push(dist.indexOf(d), d / total);
+                });
+
+                final.push(res);
+            }
+        }
+        else final.push([]);
+    }
+    return final;
+};
+
+// `getGrayscaleDistanceData` - Measures the Rgba data for an image against the Rgb data in a palette
+// + data: Array of imageData.data values in RGBA color space
+// + ref: Array of palette values in RGB color space
+// + Returns an Array of Arrays containing all the measurements for each image pixel
+P.getGrayscaleDistanceData = function (data, ref) {
+
+    let dataGray, refGray, gray, i, iz, j, jz;
+
+    const dataRes = [];
+
+    for (i = 0, iz = data.length; i < iz; i += 4) {
+
+        if (!data[i + 3]) {
+
+            dataRes.push([]);
+            continue;
+        }
+
+        dataGray = data[i];
+
+        const pixelRes = [];
+
+        for (j = 0, jz = ref.length; j < jz; j += 4) {
+
+            refGray = ref[j];
+
+            gray = refGray - dataGray
+
+            pixelRes.push(gray * gray);
+        }
+        dataRes.push(pixelRes);
+    }
+    return dataRes;
+};
+
+P.selectClosestGrays = function (data, ref) {
+
+    const colDistances = this.getGrayscaleDistanceData(data, ref);
+
+    let val, dist, i, iz, len, total, res, index, temp;
+    
+    const final = [],
+        max = Math.max;
+
+    for (i = 0, iz = colDistances.length; i < iz; i++) {
+
+        dist = colDistances[i];
+
+        len = dist.length;
+
+        if (len) {
+
+            if (len === 1) res.push([0, 1]);
+            else {
+
+                temp = [...dist];
+
+                while (temp.length > 3) {
 
                     val = max(...temp);
                     index = temp.indexOf(val);
@@ -3877,7 +3957,7 @@ P.theBigActionsObject = {
 
         let rgbPalette, labPalette;
 
-        // For pre-defined palettes: `black-white`, `monochrome`, `RGBK`, `YMCK`, 'basic'
+        // For pre-defined palettes: `black-white`, `RGBK`, etc
         if (palette.substring) {
 
             [rgbPalette, labPalette] = this.createPalette(palette, []);
@@ -3899,9 +3979,18 @@ P.theBigActionsObject = {
             [rgbPalette, labPalette] = this.createPalette(palette, []);
         }
 
-        const labData = this.convertToLabData(iData);
+        const isGray = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'].includes(palette);
 
-        const diffData = this.selectClosestColors(labData, labPalette);
+        let labData, diffData;
+        if (isGray) {
+
+            diffData = this.selectClosestGrays(iData, rgbPalette);
+        }
+        else {
+
+            labData = this.convertToLabData(iData);
+            diffData = this.selectClosestColors(labData, labPalette);
+        }
 
         for (i = 0, iz = diffData.length; i < iz; i++) {
 
@@ -3949,7 +4038,7 @@ P.theBigActionsObject = {
                 for (j = 0, jz = propensity.length; j < jz; j++) {
 
                     p += (1 - propensity[j]);
-                    propensity[j] = p;
+                    propensity[j] = p / (jz - 1);
                 }
 
                 test = rnd[++rndCursor];
