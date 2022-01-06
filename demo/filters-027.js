@@ -30,13 +30,13 @@ const myFilter = scrawl.makeFilter({
 
 
 // Create the target entity
-const piccy = scrawl.makePicture({
+const dithered = scrawl.makePicture({
 
-    name: 'filtered-piccy',
+    name: 'dithered-image',
 
     asset: 'iris',
 
-    width: '100%',
+    width: '50%',
     height: '100%',
 
     copyWidth: '100%',
@@ -45,6 +45,13 @@ const piccy = scrawl.makePicture({
     method: 'fill',
 
     filters: ['reducePalette'],
+});
+
+const original = dithered.clone({
+
+    name: 'original-image',
+    startX: '50%',
+    filters: [],
 });
 
 
@@ -96,7 +103,7 @@ scrawl.addNativeListener('change', (e) => {
 
     const val = (e.target.value === '0') ? false : true;
 
-    piccy.set({ memoizeFilterOutput: val });
+    dithered.set({ memoizeFilterOutput: val });
 
 }, '#memoizeFilterOutput');
 
@@ -114,7 +121,7 @@ document.querySelector('#useBluenoise').options.selectedIndex = 0;
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, '#my-image-store', [dithered, original]);
 
 
 // #### Development and testing

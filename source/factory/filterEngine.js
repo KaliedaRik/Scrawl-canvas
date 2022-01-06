@@ -199,11 +199,11 @@ P.getOrAddWorkstore = function (name) {
 };
 
 // `getRandomNumbers` creates an Array and populates it with random numbers
-P.getRandomNumbers = function (seed, length, useBluenoise = false) {
+P.getRandomNumbers = function (seed, length, imgWidth = 0) {
 
     let name = `random-${seed}-${length}`;
 
-    if (useBluenoise) name += '-bluenoise';
+    if (imgWidth) name += '-bluenoise';
 
     const { workstore, workstoreLastAccessed } = this;
 
@@ -214,23 +214,31 @@ P.getRandomNumbers = function (seed, length, useBluenoise = false) {
 
     const vals = [];
 
-    if (useBluenoise) {
+    if (imgWidth) {
 
-        const bLen = bluenoise.length;
+        const bLen = bluenoise.length,
+            blueDims = Math.sqrt(bLen),
+            imgHeight = length / imgWidth,
+            bLines = [],
+            blockArea = imgWidth * blueDims;
 
-        let counter = length,
-            loops = Math.ceil(length / bLen);
+        for (let i = 0; i < bLen; i += blueDims) {
 
-        for (let i = 0; i < loops; i++) {
+            let temp = bluenoise.slice(i, i + blueDims);
+            bLines.push(temp);
+        }
 
-            if (counter < bLen) {
+        for (let bigRows = imgHeight; bigRows > 0; bigRows -= blueDims) {
 
-                vals.push(...bluenoise.slice(0, counter));
-            }
-            else {
+            for (let bRow = 0; bRow < blueDims; bRow++) {
 
-                vals.push(...bluenoise);
-                counter -= bLen;
+                let currentRow = bLines[bRow];
+
+                for (let bCol = imgWidth; bCol > 0; bCol -= blueDims) {
+
+                    if (bCol < blueDims) vals.push(...currentRow.slice(0, bCol));
+                    else vals.push(...currentRow);
+                }
             }
         }
     }
@@ -246,6 +254,7 @@ P.getRandomNumbers = function (seed, length, useBluenoise = false) {
 
     workstore[name] = vals;
     workstoreLastAccessed[name] = Date.now();
+
     return workstore[name];
 };
 
@@ -717,18 +726,6 @@ P.initiateDithering = function () {
     this.createPalette('monochrome-4', ['#000', '#555', '#aaa', '#fff']);
     this.createPalette('monochrome-8', ['#000', '#333', '#555', '#777', '#999', '#bbb', '#ddd', '#fff']);
     this.createPalette('monochrome-16', ['#000', '#111', '#222', '#333', '#444', '#555', '#666', '#777', '#888', '#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee', '#fff']);
-    this.createPalette('RGBK-32', [
-        '#000', '#fff',
-        '#300', '#700', '#733', '#a00', '#a33', '#a77', '#f00', '#f33', '#f77', '#faa',
-        '#030', '#070', '#373', '#0a0', '#3a3', '#7a7', '#0f0', '#3f3', '#7f7', 'a#fa',
-        '#003', '#007', '#337', '#00a', '#33a', '#77a', '#00f', '#33f', '#77f', '#aaf',
-    ]);
-    this.createPalette('CMYK-32', [
-        '#000', '#fff',
-        '#033', '#077', '#377', '#0aa', '#3aa', '#7aa', '#0ff', '#3ff', '#7ff', '#aff',
-        '#303', '#707', '#737', '#a0a', '#a3a', '#a7a', '#f0f', '#f3f', '#f7f', '#faf',
-        '#330', '#770', '#733', '#aa0', '#aa3', '#aa7', '#ff0', '#ff3', '#ff7', '#ffa',
-    ]);
     this.createPalette('basic-62', [
         '#000', '#fff',
         '#033', '#077', '#377', '#0aa', '#3aa', '#7aa', '#0ff', '#3ff', '#7ff', '#aff',
@@ -788,7 +785,7 @@ P.createCommonestColorsPalette = function (noOfColors, data, seed) {
         dataPalette = [],
         // distance will vary between 1 (`rgb(0 0 0)` and `rgb(0 0 1)`) and 195075 (`rgb(0 0 0)` and `rgb(255 255 255)`); we want to exclude colors that are too close to each other.
         // + I'm making these numbers up as I experiment!
-        distance = 512,
+        distance = 1024,
         popularityCutoff = 0.75;
 
     const rnd = this.getRandomNumbers(seed, noOfColors);
@@ -936,7 +933,6 @@ P.convertToLabData = function (data) {
 // + Returns an Array of Arrays containing all the measurements for each image pixel
 P.getColorDistanceData = function (data, ref) {
 
-
     let l, a, b, dl, da, db, dc, rl, ra, rb, rc, i, iz, j, jz;
 
     const dataRes = [];
@@ -1027,7 +1023,6 @@ P.selectClosestColors = function (data, ref) {
 
                     res.push(dist.indexOf(d), d / total);
                 });
-
                 final.push(res);
             }
         }
@@ -1088,7 +1083,7 @@ P.selectClosestGrays = function (data, ref) {
 
         if (len) {
 
-            if (len === 1) res.push([0, 1]);
+            if (len === 1) res.push(0, 1);
             else {
 
                 temp = [...dist];
@@ -3952,7 +3947,11 @@ P.theBigActionsObject = {
         if (null == useBluenoise) useBluenoise = false;
         if (null == palette) palette = 'black-white';
 
-        const rnd = this.getRandomNumbers(seed, Math.floor(len / 3), useBluenoise);
+        // const rnd = this.getRandomNumbers(seed, Math.floor(len / 3), useBluenoise);
+        const rnd = (useBluenoise) ?
+            this.getRandomNumbers(seed, len / 4, input.width) :
+            this.getRandomNumbers(seed, len / 4);
+
         let rndCursor = -1;
 
         let rgbPalette, labPalette;
