@@ -26,8 +26,8 @@
 
   <div class="controls">
 
-    <div class="yellow label">Predefined palette</div>
-    <div class="yellow">
+    <div class="green label">Predefined palette</div>
+    <div class="green">
       <select class="controlItem" id="palette">
         <option value="black-white">black-white</option>
         <option value="monochrome-4">monochrome-4</option>
@@ -37,11 +37,26 @@
       </select>
     </div>
 
-    <div class="yellow label">String of colors</div>
-    <div class="yellow"><input class="controlItem" id="paletteString" type="text" value="red, blue, green, yellow, orange, brown, black, white" /></div>
+    <div class="green label">String of colors</div>
+    <div class="green"><input class="controlItem" id="paletteString" type="text" value="" /></div>
 
-    <div class="yellow label">Commonest colors</div>
-    <div class="yellow"><input class="controlItem" id="paletteNumber" type="number" min="4" max="64" step="1" value="32" /></div>
+    <div class="blue label">Commonest colors</div>
+    <div class="blue">
+      <select class="controlItem" id="paletteNumber">
+        <option value="2">2</option>
+        <option value="4">4</option>
+        <option value="8">8</option>
+        <option value="16">16</option>
+        <option value="32">32</option>
+        <option value="64">64</option>
+        <option value="128">128</option>
+        <option value="256">256</option>
+        <option value="512">512</option>
+      </select>
+    </div>
+
+    <div class="blue label">Min color distance</div>
+    <div class="blue"><input class="controlItem" id="minimumColorDistance" type="range" value="1000" min="400" max="2000" step="200" /></div>
 
     <div class="yellow label">Random seed</div>
     <div class="yellow"><input class="controlItem" id="seed" type="text" value="some-random-string-or-other" /></div>
@@ -54,6 +69,9 @@
       </select>
     </div>
 
+    <div class="lavender label">Opacity</div>
+    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
     <div class="pink label">Memoize filter</div>
     <div class="pink">
       <select class="controlItem" id="memoizeFilterOutput">
@@ -61,9 +79,6 @@
         <option value="1">true</option>
       </select>
     </div>
-
-    <div class="lavender label">Opacity</div>
-    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
   </div>
 

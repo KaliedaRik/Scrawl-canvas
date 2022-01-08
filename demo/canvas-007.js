@@ -536,7 +536,6 @@ scrawl.makeFilter({
 scrawl.makeFilter({
     name: 'reducePalette',
     method: 'reducePalette',
-    useBluenoise: true,
 });
 
 // <option value="mapToGradient">mapToGradient</option>

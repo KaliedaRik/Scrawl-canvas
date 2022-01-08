@@ -59,7 +59,8 @@ const original = dithered.clone({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Opacity: ${opacity.value}`;
+    return `    Minimum color distance: ${minimumColorDistance.value}
+    Opacity: ${opacity.value}`;
 });
 
 
@@ -93,6 +94,7 @@ scrawl.observeAndUpdate({
         palette: ['palette', 'raw'],
         paletteString: ['palette', 'raw'],
         paletteNumber: ['palette', 'round'],
+        minimumColorDistance: ['minimumColorDistance', 'round'],
         seed: ['seed', 'raw'],
         useBluenoise: ['useBluenoise', 'boolean'],
         opacity: ['opacity', 'float'],
@@ -110,12 +112,15 @@ scrawl.addNativeListener('change', (e) => {
 
 // Setup form
 const opacity = document.querySelector('#opacity');
+const minimumColorDistance = document.querySelector('#minimumColorDistance');
+
 opacity.value = 1;
+minimumColorDistance.value = 1000;
 
 document.querySelector('#palette').options.selectedIndex = 0;
 document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
-document.querySelector('#paletteString').value = 'red, blue, green, yellow, orange, brown, black, white';
-document.querySelector('#paletteNumber').value = 32;
+document.querySelector('#paletteString').value = 'yellow, green, darkgreen, limegreen, olivedrab, mediumseagreen, seagreen, lightblue, darkslategray, lavender, slateblue, mediumslateblue, black, indigo, brown, antiquewhite';
+document.querySelector('#paletteNumber').options.selectedIndex = 1;
 document.querySelector('#seed').value = 'some-random-string-or-other';
 document.querySelector('#useBluenoise').options.selectedIndex = 0;
 

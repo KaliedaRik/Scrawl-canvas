@@ -219,8 +219,7 @@ P.getRandomNumbers = function (seed, length, imgWidth = 0) {
         const bLen = bluenoise.length,
             blueDims = Math.sqrt(bLen),
             imgHeight = length / imgWidth,
-            bLines = [],
-            blockArea = imgWidth * blueDims;
+            bLines = [];
 
         for (let i = 0; i < bLen; i += blueDims) {
 
@@ -774,24 +773,16 @@ P.createPalette = function (name, items) {
 };
 
 // `createPopularColorsPalette` - separated out because requires a lot more work to generate the palette
-// + For now, we return the 'black-white' palette
-P.createCommonestColorsPalette = function (noOfColors, data, seed) {
+P.createCommonestColorsPalette = function (noOfColors, data, minimumColorDistance) {
 
-    let r, g, b, a, tr, tg, tb, dr, dg, db, i, iz, c, name, element, val, tallyNames, tallyLen, distanceFlag, test, selection;
+    let r, g, b, a, tr, tg, tb, dr, dg, db, i, iz, c, name, element, val, tallyNames, tallyLen, distanceFlag, test, selection, pName;
 
     const len = data.length,
         tally = {},
         finalPalette = [],
-        dataPalette = [],
-        // distance will vary between 1 (`rgb(0 0 0)` and `rgb(0 0 1)`) and 195075 (`rgb(0 0 0)` and `rgb(255 255 255)`); we want to exclude colors that are too close to each other.
-        // + I'm making these numbers up as I experiment!
-        distance = 1024,
-        popularityCutoff = 0.75;
+        dataPalette = [];
 
-    const rnd = this.getRandomNumbers(seed, noOfColors);
-    let rndCursor = -1;
-
-    for (i = 0; i < len; i++) {
+    for (i = 0; i < len; i += 4) {
 
         c = i;
 
@@ -816,7 +807,7 @@ P.createCommonestColorsPalette = function (noOfColors, data, seed) {
     tallyLen = tallyNames.length;
     c = 0;
 
-    tallyNames.sort((a, b) => b[3] > a[3]);
+    tallyNames.sort((a, b) => tally[b][3] - tally[a][3]);
 
     while (c < tallyLen && finalPalette.length < noOfColors) {
 
@@ -825,10 +816,7 @@ P.createCommonestColorsPalette = function (noOfColors, data, seed) {
             finalPalette.push(tallyNames[c]);
             dataPalette.push(tally[tallyNames[c]]);
         }
-
-        c++;
-
-        if (c < noOfColors * popularityCutoff) {
+        else {
 
             distanceFlag = true;
 
@@ -843,7 +831,7 @@ P.createCommonestColorsPalette = function (noOfColors, data, seed) {
                 dg = g - tg;
                 db = b - tb;
 
-                if ((dr * dr) + (dg * dg) + (db * db) < distance) {
+                if ((dr * dr) + (dg * dg) + (db * db) < minimumColorDistance) {
 
                     distanceFlag = false;
                     break;
@@ -856,15 +844,7 @@ P.createCommonestColorsPalette = function (noOfColors, data, seed) {
                 dataPalette.push(tally[tallyNames[c]]);
             }
         }
-        else {
-
-            // In an effort to get some of the less popular colors to show up, we'll try including them at random
-            test = rnd[++rndCursor];
-            selection = Math.floor(c + ((tallyLen - c) * test));
-
-            finalPalette.push(tallyNames[selection]);
-            dataPalette.push(tally[tallyNames[selection]]);
-        }
+        c++;
     }
     return this.createPalette('', finalPalette);
 };
@@ -974,59 +954,57 @@ P.getColorDistanceData = function (data, ref) {
 // + data: Array of imageData.data values in LAB color space
 // + ref: Array of palette values in LAB color space
 // + Invokes `getColorDistanceData` internally 
-// + Transparent pixels are recorded as `[]`
+// + Transparent pixels are recorded as `-1`
 P.selectClosestColors = function (data, ref) {
 
-    const colDistances = this.getColorDistanceData(data, ref);
+    const colDistances = this.getColorDistanceData(data, ref),
+        refLen = ref.length / 4,
+        refMax = (refLen < 3) ? 2 : 3,
+        temp = [],
+        dist = [],
+        hold = [],
+        res = [],
+        final = [],
+        min = Math.min;
 
-    let val, dist, i, iz, len, total, res, index, temp;
-    
-    const final = [],
-        max = Math.max;
+    let val, i, iz, total, index, cd;
 
     for (i = 0, iz = colDistances.length; i < iz; i++) {
 
-        dist = colDistances[i];
+        cd = colDistances[i];
+        dist.length = 0;
+        dist.push(...cd);
 
-        len = dist.length;
+        if (dist.length) {
 
-        if (len) {
-
-            if (len === 1) res.push([0, 1]);
-            else if (len < 5) {
-
-                total = dist.reduce((p, c) => p + c);
-                res = [];
-
-                dist.forEach(d => {
-
-                    res.push(dist.indexOf(d), d / total);
-                });
-
-                final.push(res);
-            }
+            if (refLen === 1) final.push(0, 0, 0, 0, 0, 0);
             else {
 
-                temp = [...dist];
+                temp.length = 0;
+                hold.length = 0;
+                hold.push(...dist);
 
-                while (temp.length > 4) {
+                while (temp.length < refMax) {
 
-                    val = max(...temp);
-                    index = temp.indexOf(val);
-                    temp.splice(index, 1);
+                    val = min(...hold);
+                    index = hold.indexOf(val);
+                    temp.push(...hold.splice(index, 1));
                 }
 
                 total = temp.reduce((p, c) => p + c);
-                res = [];
 
-                temp.forEach(d => {
+                res.length = 0;
 
-                    res.push(dist.indexOf(d), d / total);
-                });
-                final.push(res);
+                temp.forEach(d => res.push(dist.indexOf(d), d / total));
+
+                while (res.length < 6) res.push(0, 0);
+
+                res.length = 6;
+
+                final.push(...res);
             }
         }
-        else final.push([]);
+        else final.push(-1, 0, 0, 0, 0, 0);
     }
     return final;
 };
@@ -1034,24 +1012,26 @@ P.selectClosestColors = function (data, ref) {
 // `getGrayscaleDistanceData` - Measures the Rgba data for an image against the Rgb data in a palette
 // + data: Array of imageData.data values in RGBA color space
 // + ref: Array of palette values in RGB color space
-// + Returns an Array of Arrays containing all the measurements for each image pixel
 P.getGrayscaleDistanceData = function (data, ref) {
 
     let dataGray, refGray, gray, i, iz, j, jz;
 
-    const dataRes = [];
+    const dataRes = [],
+        refLen = ref.length / 4;
 
     for (i = 0, iz = data.length; i < iz; i += 4) {
 
         if (!data[i + 3]) {
 
-            dataRes.push([]);
+            dataRes.push(-1);
+            for (j = 1; j < refLen; j++) {
+
+                dataRes.push(0);
+            }
             continue;
         }
 
         dataGray = data[i];
-
-        const pixelRes = [];
 
         for (j = 0, jz = ref.length; j < jz; j += 4) {
 
@@ -1059,54 +1039,65 @@ P.getGrayscaleDistanceData = function (data, ref) {
 
             gray = refGray - dataGray
 
-            pixelRes.push(gray * gray);
+            dataRes.push(gray * gray);
         }
-        dataRes.push(pixelRes);
     }
     return dataRes;
 };
 
 P.selectClosestGrays = function (data, ref) {
 
-    const colDistances = this.getGrayscaleDistanceData(data, ref);
+    const colDistances = this.getGrayscaleDistanceData(data, ref),
+        min = Math.min,
+        refLen = ref.length / 4,
+        refMax = (refLen < 3) ? 2 : 3,
+        final = [],
+        temp = [],
+        dist = [],
+        hold = [],
+        res = [];
 
-    let val, dist, i, iz, len, total, res, index, temp;
+    let val, i, iz, j, jz, total, index;
     
-    const final = [],
-        max = Math.max;
+    for (i = 0, iz = colDistances.length; i < iz; i += refLen) {
 
-    for (i = 0, iz = colDistances.length; i < iz; i++) {
+        dist.length = 0;
 
-        dist = colDistances[i];
+        for (j = i, jz = i + refLen; j < jz; j++) {
 
-        len = dist.length;
+            dist.push(colDistances[j]);
+        }
 
-        if (len) {
+        if (dist[0] >= 0) {
 
-            if (len === 1) res.push(0, 1);
+            if (refLen === 1) final.push(0, 0, 0, 0, 0, 0);
             else {
 
-                temp = [...dist];
+                temp.length = 0;
+                hold.length = 0;
+                hold.push(...dist);
 
-                while (temp.length > 3) {
+                while (temp.length < refMax) {
 
-                    val = max(...temp);
-                    index = temp.indexOf(val);
-                    temp.splice(index, 1);
+                    val = min(...hold);
+                    index = hold.indexOf(val);
+
+                    if (index < 0) break;
+
+                    temp.push(...hold.splice(index, 1));
                 }
 
                 total = temp.reduce((p, c) => p + c);
-                res = [];
+                res.length = 0;
 
-                temp.forEach(d => {
+                temp.forEach(d => res.push(dist.indexOf(d), d / total));
 
-                    res.push(dist.indexOf(d), d / total);
-                });
+                while (res.length < 6) res.push(0, 1);
 
-                final.push(res);
+                final.push(...res);
             }
         }
-        else final.push([]);
+        else final.push(-1, 0, 0, 0, 0, 0);
     }
     return final;
 };
@@ -3938,23 +3929,24 @@ P.theBigActionsObject = {
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            i, iz, j, jz, r, g, b, a, diff, diffLen, index, colIndex, propensity, p, total, test;
+            i, iz, j, r, g, b, a, index, p, test, c0, c1, c2, p0, p1, p2, cd0, pd0, rndCursor, labData, diffData, isGray, rgbPalette, labPalette;
 
-        let {opacity, palette, seed, useBluenoise, lineOut} = requirements;
+        const colIndex = [],
+            propensity = [];
+
+        let {opacity, palette, seed, useBluenoise, minimumColorDistance, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == seed) seed = 'some-random-string-or-other';
         if (null == useBluenoise) useBluenoise = false;
         if (null == palette) palette = 'black-white';
+        if (null == minimumColorDistance) minimumColorDistance = 1000;
 
-        // const rnd = this.getRandomNumbers(seed, Math.floor(len / 3), useBluenoise);
         const rnd = (useBluenoise) ?
             this.getRandomNumbers(seed, len / 4, input.width) :
             this.getRandomNumbers(seed, len / 4);
 
-        let rndCursor = -1;
-
-        let rgbPalette, labPalette;
+        rndCursor = -1;
 
         // For pre-defined palettes: `black-white`, `RGBK`, etc
         if (palette.substring) {
@@ -3969,7 +3961,7 @@ P.theBigActionsObject = {
         // User has requested a given sized palette be generated from the most popular colors in the image
         else if (palette.toFixed) {
 
-            [rgbPalette, labPalette] = this.createCommonestColorsPalette(palette, iData, seed);
+            [rgbPalette, labPalette] = this.createCommonestColorsPalette(palette, iData, minimumColorDistance);
         }
         // In case of error, default to 'black-white'
         else  {
@@ -3978,9 +3970,8 @@ P.theBigActionsObject = {
             [rgbPalette, labPalette] = this.createPalette(palette, []);
         }
 
-        const isGray = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'].includes(palette);
+        isGray = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'].includes(palette);
 
-        let labData, diffData;
         if (isGray) {
 
             diffData = this.selectClosestGrays(iData, rgbPalette);
@@ -3990,18 +3981,26 @@ P.theBigActionsObject = {
             labData = this.convertToLabData(iData);
             diffData = this.selectClosestColors(labData, labPalette);
         }
+        const pLen = rgbPalette.length / 4;
 
-        for (i = 0, iz = diffData.length; i < iz; i++) {
-
-            diff = diffData[i];
-            diffLen = diff.length;
+        for (i = 0, iz = len / 4; i < iz; i++) {
 
             r = i * 4;
             g = r + 1;
             b = g + 1;
             a = b + 1;
 
-            if (!diffLen) {
+            c0 = i * 6;
+            c1 = c0 + 2;
+            c2 = c1 + 2;
+            p0 = c0 + 1;
+            p1 = p0 + 2;
+            p2 = p1 + 2;
+
+            cd0 = diffData[c0];
+            pd0 = diffData[p0]
+
+            if (!pLen || cd0 < 0) {
 
                 oData[r] = iData[r];
                 oData[g] = iData[g];
@@ -4010,56 +4009,58 @@ P.theBigActionsObject = {
 
                 ++rndCursor;
             }
-            else if (2 === diffLen) {
+            else if (!cd0 && !pd0) {
 
-                index = diff[0] * 4;
-
-                oData[r] = rgbPalette[index];
-                oData[g] = rgbPalette[++index];
-                oData[b] = rgbPalette[++index];
+                oData[r] = rgbPalette[0];
+                oData[g] = rgbPalette[1];
+                oData[b] = rgbPalette[2];
                 oData[a] = iData[a];
 
                 ++rndCursor;
             }
             else {
 
-                colIndex = [];
-                propensity = [];
-
-                for (j = 0; j < diffLen; j += 2) {
-
-                    colIndex.push(diff[j]);
-                    propensity.push(diff[j + 1]);
-                }
+                colIndex.length = 0;
+                propensity.length = 0;
+                colIndex.push(diffData[c0], diffData[c1], diffData[c2]);
+                propensity.push(diffData[p0], diffData[p1], diffData[p2]);
 
                 p = 0;
 
-                for (j = 0, jz = propensity.length; j < jz; j++) {
+                if (pLen < 3) {
 
-                    p += (1 - propensity[j]);
-                    propensity[j] = p / (jz - 1);
+                    for (j = 0; j < 2; j++) {
+
+                        p += (1 - propensity[j]);
+                        propensity[j] = p;
+                    }
+                }
+                else {
+
+                    for (j = 0; j < 3; j++) {
+
+                        p += (1 - propensity[j]);
+                        propensity[j] = p / 2;
+                    }
                 }
 
                 test = rnd[++rndCursor];
 
-                for (j = 0, jz = propensity.length; j < jz; j++) {
+                for (j = 0; j < 3; j++) {
 
-                    if (test > propensity[j]) continue;
-                    else {
+                    if (test > propensity[j] && j < 2) continue;
 
-                        index = colIndex[j] * 4;
+                    index = colIndex[j] * 4;
 
-                        oData[r] = rgbPalette[index];
-                        oData[g] = rgbPalette[++index];
-                        oData[b] = rgbPalette[++index];
-                        oData[a] = iData[a];
+                    oData[r] = rgbPalette[index];
+                    oData[g] = rgbPalette[++index];
+                    oData[b] = rgbPalette[++index];
+                    oData[a] = iData[a];
 
-                        break;
-                    }
+                    break;
                 }
             }
         }
-
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
