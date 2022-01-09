@@ -593,8 +593,8 @@ P.addParticles = function (req) {
 
                     mass: calc(mass, massVariation), 
 
-                    fill: fillColorFactory.get('random'),
-                    stroke: strokeColorFactory.get('random'),
+                    fill: fillColorFactory.getRangeColor(Math.random()),
+                    stroke: strokeColorFactory.getRangeColor(Math.random()),
                 });
 
                 let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
@@ -647,8 +647,8 @@ P.addParticles = function (req) {
 
                     mass: calc(mass, massVariation), 
  
-                    fill: fillColorFactory.get('random'),
-                    stroke: strokeColorFactory.get('random'),
+                    fill: fillColorFactory.getRangeColor(Math.random()),
+                    stroke: strokeColorFactory.getRangeColor(Math.random()),
                 });
 
                 let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
@@ -697,8 +697,8 @@ P.addParticles = function (req) {
 
                 mass: calc(mass, massVariation), 
 
-                fill: fillColorFactory.get('random'),
-                stroke: strokeColorFactory.get('random'),
+                fill: fillColorFactory.getRangeColor(Math.random()),
+                stroke: strokeColorFactory.getRangeColor(Math.random()),
             });
 
             if (limitDirectionToAngleMultiples) {
@@ -763,8 +763,8 @@ P.addParticles = function (req) {
 
                 mass: calc(mass, massVariation), 
 
-                fill: fillColorFactory.get('random'),
-                stroke: strokeColorFactory.get('random'),
+                fill: fillColorFactory.getRangeColor(Math.random()),
+                stroke: strokeColorFactory.getRangeColor(Math.random()),
             });
 
             if (limitDirectionToAngleMultiples) {
@@ -824,8 +824,8 @@ P.addParticles = function (req) {
 
                 mass: calc(mass, massVariation), 
 
-                fill: fillColorFactory.get('random'),
-                stroke: strokeColorFactory.get('random'),
+                fill: fillColorFactory.getRangeColor(Math.random()),
+                stroke: strokeColorFactory.getRangeColor(Math.random()),
             });
 
             p.velocity.rotate(currentRotation);

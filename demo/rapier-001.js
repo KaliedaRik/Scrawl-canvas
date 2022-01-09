@@ -67,7 +67,7 @@ for (let y = 0; y < rows; y++) {
             handle: ["center", "center"],
             width: thirdUnit + parseInt(Math.random() * halfUnit, 10),
             height: thirdUnit + parseInt(Math.random() * halfUnit, 10),
-            fillStyle: colorMaker.get("random"),
+            fillStyle: colorMaker.getRangeColor(Math.random()),
             method: "fillThenDraw"
         });
     }

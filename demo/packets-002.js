@@ -19,11 +19,13 @@ canvas.set({
 let mygradient = scrawl.makeGradient({
     name: 'blue-green',
     endX: '100%',
-    colors: {
-        '0 ': 'blue',
-        '500 ': 'gold',
-        '999 ': 'green'
-    },
+    colors: [
+        [0, 'blue'],
+        [495, 'red'],
+        [500, 'yellow'],
+        [505, 'red'],
+        [999, 'green']
+    ],
 });
 
 // Setup Color style

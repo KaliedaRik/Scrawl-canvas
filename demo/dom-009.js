@@ -29,9 +29,8 @@ let getRandom = (n) => Math.round(Math.random() * n);
 // Using a color factory object to generate random colors within a restricted palette
 let colorFactory = scrawl.makeColor({
     name: 'myColorObject',
-    rMax: 200,
-    gMax: 50,
-    bMax: 10,
+    minimumColor: 'maroon',
+    maximumColor: 'darkgreen',
 });
 
 circleGroup.artefacts.forEach(name => {
@@ -57,7 +56,7 @@ circleGroup.artefacts.forEach(name => {
         },
 
         css: {
-            backgroundColor: colorFactory.get('random'),
+            backgroundColor: colorFactory.getRangeColor(Math.random()),
             border: '1px solid black',
         }
     });

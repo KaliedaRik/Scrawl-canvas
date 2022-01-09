@@ -80,9 +80,8 @@ let controls = function () {
     // Using a color factory object to generate random colors within a restricted palette
     scrawl.makeColor({
         name: 'templateColor',
-        rMax: 200,
-        gMax: 50,
-        bMax: 10,
+        minimumColor: 'maroon',
+        maximumColor: 'darkgreen',
     });
 
     // Test color packet and clone functionality
@@ -99,9 +98,25 @@ let controls = function () {
     //     "styles",
     //     {
     //         "name":"myColorObject",
-    //         "rMax":200,
-    //         "gMax":50,
-    //         "bMax":10
+    //         "easingFunction":"a~~~ return a; ",
+    //         "rgb":[0,0,0,0],
+    //         "rgb_max":[0,100,0,1],
+    //         "rgb_min":[128,0,0,1],
+    //         "hsl":[0,0,0,0],
+    //         "hsl_max":[120,100,19.53125,1],
+    //         "hsl_min":[0,100,25,1],
+    //         "hwb":[0,0,100,0],
+    //         "hwb_max":[120,0,60.9375,1],
+    //         "hwb_min":[0,0,50,1],
+    //         "xyz":[0,0,0,0],
+    //         "xyz_max":[4.557171452378752,9.114342904757503,1.5190571507929174,1],
+    //         "xyz_min":[8.902087024697204,4.589194232421498,0.4166107652198255,1],
+    //         "lab":[0,0,0,0],
+    //         "lab_max":[36.20351872497332,-43.3725486689954,41.861707982223464,1],
+    //         "lab_min":[25.530784572416167,48.05284709622495,38.06053447826044,1],
+    //         "lch":[0,0,0,0],
+    //         "lch_max":[36.20351872497332,60.27918855818587,136.01550402033251,1],
+    //         "lch_min":[25.530784572416167,61.29992168693225,38.381187278486735,1]
     //     }
     // ]
     // ```
@@ -157,7 +172,7 @@ let controls = function () {
                     host: (Math.random() > 0.5) ? '#not-a-stack' : '',
                     width: 300,
                     height: 50,
-                    backgroundColor: colorFactory.get('random'),
+                    backgroundColor: colorFactory.getRangeColor(Math.random()),
                 });
 
                 break;

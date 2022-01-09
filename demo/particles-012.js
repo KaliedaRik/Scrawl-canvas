@@ -296,6 +296,8 @@ scrawl.makeBezier({
     endParticle: 'test-net-9-11',
 });
 
+// Temporarily removing particle-based entitys as they are too memory intensive and lead to Net entity devolving into chaos
+/*
 scrawl.makeTracer({
 
     name: 'trace-1',
@@ -414,7 +416,8 @@ scrawl.makeEmitter({
                         engine.beginPath();
                         engine.moveTo(x, y);
                         engine.arc(x, y, radius, 0, endRad);
-                        engine.fillStyle = colorFactory.get(1 - (index / len));
+                        engine.fillStyle = colorFactory.getRangeColor(1 - (index / len));
+                        // engine.fillStyle = colorFactory.get(1 - (index / len));
                         engine.fill();
                     }
                 });
@@ -423,6 +426,7 @@ scrawl.makeEmitter({
         engine.restore();
     },
 });
+*/
 
 scrawl.makePolyline({
 

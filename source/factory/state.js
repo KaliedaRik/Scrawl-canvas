@@ -243,10 +243,8 @@ S.fillStyle = function (item) {
         temp = styles[item];
 
         if (temp) this.fillStyle = temp;
-        else {
-            temp = window.SC_colorChecker.checkColor(item);
-            this.fillStyle = temp;
-        }
+        else if (item.includes('rgb') || item.includes('hsl') || item.includes('#')) this.fillStyle = item;
+        else this.fillStyle = window.SC_colorChecker.checkColor(item);
     }
 };
 
@@ -260,13 +258,15 @@ S.strokeStyle = function (item) {
         temp = styles[item];
 
         if (temp) this.strokeStyle = temp;
+        else if (item.includes('rgb') || item.includes('hsl') || item.includes('#')) this.strokeStyle = item;
         else this.strokeStyle = window.SC_colorChecker.checkColor(item);
     }
 };
 
 S.shadowColor = function (item) {
 
-    this.shadowColor = window.SC_colorChecker.checkColor(item);
+    if (item.includes('rgb') || item.includes('hsl') || item.includes('#')) this.shadowColor = item;
+    else this.shadowColor = window.SC_colorChecker.checkColor(item);
 };
 
 

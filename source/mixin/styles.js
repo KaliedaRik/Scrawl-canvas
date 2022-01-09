@@ -78,8 +78,8 @@ export default function (P = Ωempty) {
     P.finalizePacketOut = function (copy, items) {
 
         if (items.colors) copy.colors = items.colors;
-        else if (this.palette && this.palette.colors) copy.colors = this.palette.colors;
-        else copy.colors = {'0 ': [0,0,0,1], '999 ': [255,255,255,1]};
+        else if (this.palette) copy.colors = this.palette.get('colors');
+        else copy.colors = [[0, 'rgba(0 0 0 / 1)'], [999, 'rgba(255 255 255 / 1)']];
 
         if (items.easing) copy.easing = items.easing;
         else if (this.palette && this.palette.easing) copy.easing = this.palette.easing;

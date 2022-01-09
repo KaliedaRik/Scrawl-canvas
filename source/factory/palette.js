@@ -161,6 +161,25 @@ let G = P.getters,
 // __colors__ - an array of arrays, each sub-array being in the form `[Number, String]` where:
 // + Number is a positive integer in the range 0-999
 // + String is any legitimate CSS color string value (rgb-key, rgb-hex, `rgb()`, `rgba()`, `hsl()`, `hsla()`, `hwb()`, `lch()`, `lab()`). Also accepts xyz color space colors in the format `xyz(x-value y-value z-value)` or `xyz(x-value y-value z-value / alpha-value)`
+G.colors = function () {
+
+    const f = this.factory,
+        res = [];
+
+    if (f) {
+
+        const colorSpace = f.colorSpace;
+
+        for (const [key, value] of Object.entries(this.colors)) {
+
+            res.push([parseInt(key, 10), f.buildColorString(...value, colorSpace)]);
+        }
+    }
+    else res.push([0, 'rgba(0 0 0 / 1)'], [999, 'rgba(255 255 255 / 1)']);
+
+    return res;
+};
+
 S.colors = function (item) {
 
     if (Array.isArray(item)) {
