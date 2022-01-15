@@ -118,7 +118,7 @@ let defaultAttributes = {
     easingFunction: null,
 
 // The __precision__ value - higher values lead to fewer stops being added to the gradient; setting the value to `0` forces the palette to skip setting the stops between defined colors in the `colors` Array
-    precision: 1,
+    precision: 0,
 
 // ##### Non-retained argument attributes (for factory, clone, set functions) - these attributes get passed on to the Palette's Color object
 
@@ -338,13 +338,6 @@ P.recalculate = function () {
     }
 };
 
-// `makeColorString` - internal helper function
-P.makeColorString = function (a, b, c, d) {
-
-    if (this && this.factory) return this.factory.buildColorString(a, b, c, d);
-    return 'rgba(0 0 0 / 0)';
-};
-
 // `updateColor` - add or update a gradient-type style's Palette object with a color.
 // + __index__ - positive integer Number between 0 and 999 inclusive
 // + __color__ - CSS color String
@@ -407,8 +400,10 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
         let engine = easingFunction;
         if (easing !== 'function' && easeEngines[easing]) engine = easeEngines[easing];
 
+        const precisionTest = (!precision || easing === 'linear') ? false : true;
+
         // Option 1 start == end, cycle irrelevant
-        if (start === end) return stops[start] || 'rgba(0,0,0,0)';
+        if (start === end) return stops[start] || 'rgba(0 0 0 / 0)';
 
         // Option 2: start < end, cycle irrelevant
         else if (start < end) {
@@ -418,7 +413,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
         
             spread = end - start;
 
-            if (precision) {
+            if (precisionTest) {
 
                 for (i = start + 1; i < end; i += precision) {
 
@@ -468,7 +463,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
                 n = 999 - start;
                 spread = n + end;
 
-                if (precision) {
+                if (precisionTest) {
 
                     for (i = 0; i < spread; i += precision) {
 
@@ -509,7 +504,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
             
                 spread = start - end;
 
-                if (precision) {
+                if (precisionTest) {
 
                     for (i = end + 1; i < start; i += precision) {
 
@@ -541,7 +536,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
     }
 
     // No gradient: no colors
-    else return 'rgba(0,0,0,0)';
+    else return 'rgba(0 0 0 / 0)';
 };
 
 

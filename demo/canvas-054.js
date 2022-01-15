@@ -35,6 +35,8 @@ const myNoise = scrawl.makeNoiseAsset({
         paletteEnd: -1,
     },
 
+    cyclePalette: true,
+
     colorSpace: 'LAB',
 
     colors: [
