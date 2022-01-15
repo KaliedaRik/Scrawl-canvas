@@ -851,6 +851,7 @@
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">setPixelRatioChangeAction</span> = (<span class="hljs-params">func</span>) =&gt; dpr_changeAction = func;
 
 <span class="hljs-keyword">const</span> browserIs = <span class="hljs-title function_">detectBrowser</span>();
+<span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentBrowserDetection</span> = browserIs;
 
 <span class="hljs-keyword">let</span> dpr = <span class="hljs-number">0</span>;
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">getPixelRatio</span> = (<span class="hljs-params"></span>) =&gt; dpr;
@@ -863,7 +864,7 @@
 
     <span class="hljs-keyword">if</span> (browserIs.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;safari&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
 
-        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;safari browser detected, switching off DPR&#x27;</span>);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;safari browser detected. Switching off DPR functionality, and filter memoization&#x27;</span>);
 
         ignorePixelRatio = <span class="hljs-literal">true</span>;
         dpr = <span class="hljs-number">1</span>;

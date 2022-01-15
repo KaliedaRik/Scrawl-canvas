@@ -1159,9 +1159,8 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
             
             <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makeColor</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;templateColor&#x27;</span>,
-        <span class="hljs-attr">rMax</span>: <span class="hljs-number">200</span>,
-        <span class="hljs-attr">gMax</span>: <span class="hljs-number">50</span>,
-        <span class="hljs-attr">bMax</span>: <span class="hljs-number">10</span>,
+        <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;maroon&#x27;</span>,
+        <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;darkgreen&#x27;</span>,
     });</pre></div></div>
             
         </li>
@@ -1199,9 +1198,25 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
     <span class="hljs-string">&quot;styles&quot;</span>,
     {
         <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;myColorObject&quot;</span>,
-        <span class="hljs-string">&quot;rMax&quot;</span>:<span class="hljs-number">200</span>,
-        <span class="hljs-string">&quot;gMax&quot;</span>:<span class="hljs-number">50</span>,
-        <span class="hljs-string">&quot;bMax&quot;</span>:<span class="hljs-number">10</span>
+        <span class="hljs-string">&quot;easingFunction&quot;</span>:<span class="hljs-string">&quot;a~~~ return a; &quot;</span>,
+        <span class="hljs-string">&quot;rgb&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
+        <span class="hljs-string">&quot;rgb_max&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">100</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;rgb_min&quot;</span>:[<span class="hljs-number">128</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;hsl&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
+        <span class="hljs-string">&quot;hsl_max&quot;</span>:[<span class="hljs-number">120</span>,<span class="hljs-number">100</span>,<span class="hljs-number">19.53125</span>,<span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;hsl_min&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">100</span>,<span class="hljs-number">25</span>,<span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;hwb&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">100</span>,<span class="hljs-number">0</span>],
+        <span class="hljs-string">&quot;hwb_max&quot;</span>:[<span class="hljs-number">120</span>,<span class="hljs-number">0</span>,<span class="hljs-number">60.9375</span>,<span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;hwb_min&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">50</span>,<span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;xyz&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
+        <span class="hljs-string">&quot;xyz_max&quot;</span>:[<span class="hljs-number">4.557171452378752</span>,<span class="hljs-number">9.114342904757503</span>,<span class="hljs-number">1.5190571507929174</span>,<span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;xyz_min&quot;</span>:[<span class="hljs-number">8.902087024697204</span>,<span class="hljs-number">4.589194232421498</span>,<span class="hljs-number">0.4166107652198255</span>,<span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;lab&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
+        <span class="hljs-string">&quot;lab_max&quot;</span>:[<span class="hljs-number">36.20351872497332</span>,-<span class="hljs-number">43.3725486689954</span>,<span class="hljs-number">41.861707982223464</span>,<span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;lab_min&quot;</span>:[<span class="hljs-number">25.530784572416167</span>,<span class="hljs-number">48.05284709622495</span>,<span class="hljs-number">38.06053447826044</span>,<span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;lch&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
+        <span class="hljs-string">&quot;lch_max&quot;</span>:[<span class="hljs-number">36.20351872497332</span>,<span class="hljs-number">60.27918855818587</span>,<span class="hljs-number">136.01550402033251</span>,<span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;lch_min&quot;</span>:[<span class="hljs-number">25.530784572416167</span>,<span class="hljs-number">61.29992168693225</span>,<span class="hljs-number">38.381187278486735</span>,<span class="hljs-number">1</span>]
     }
 ]
 </code></pre>
@@ -1272,7 +1287,7 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
                     <span class="hljs-attr">host</span>: (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() &gt; <span class="hljs-number">0.5</span>) ? <span class="hljs-string">&#x27;#not-a-stack&#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>,
                     <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
                     <span class="hljs-attr">height</span>: <span class="hljs-number">50</span>,
-                    <span class="hljs-attr">backgroundColor</span>: colorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
+                    <span class="hljs-attr">backgroundColor</span>: colorFactory.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>()),
                 });
 
                 <span class="hljs-keyword">break</span>;

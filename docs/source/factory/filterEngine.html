@@ -611,9 +611,25 @@ P.<span class="hljs-property">action</span> = <span class="hljs-keyword">functio
             <span class="hljs-keyword">delete</span> workstore[s];
             <span class="hljs-keyword">delete</span> workstoreLastAccessed[s];
         }
-    }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>TODO: work out why filter memoization destroys Safari-based browser performance</p>
+<ul>
+<li>For now, we disable memoization for Safari-based browsers</li>
+</ul>
 
-    <span class="hljs-keyword">if</span> (identifier &amp;&amp; workstore[identifier]) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (identifier &amp;&amp; workstore[identifier] &amp;&amp; !<span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentBrowserDetection</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;safari&#x27;</span>)) {
 
         workstoreLastAccessed[identifier] = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         <span class="hljs-keyword">return</span> workstore[identifier];
@@ -638,9 +654,24 @@ P.<span class="hljs-property">action</span> = <span class="hljs-keyword">functio
             a = theBigActionsObject[actData.<span class="hljs-property">action</span>];
 
             <span class="hljs-keyword">if</span> (a) a.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, actData);
-        }
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <ul>
+<li>For now, we disable memoization for Safari-based browsers</li>
+</ul>
 
-        <span class="hljs-keyword">if</span> (identifier) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (identifier &amp;&amp; !<span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentBrowserDetection</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;safari&#x27;</span>)) {
 
             workstore[identifier] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>;
             workstoreLastAccessed[identifier] = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
@@ -654,11 +685,11 @@ P.<span class="hljs-property">action</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h3 id="permanent-variables">Permanent variables</h3>
 
@@ -667,11 +698,11 @@ P.<span class="hljs-property">action</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>The filter engine maintains a semi-permanent storage space - the <strong>workstore</strong> - for some processing objects that are computationally expensive, for instance grids, matrix reference data objects, etc. The engine also maintains a record of when each of these processing objects was last accessed and will remove objects if they have not been accessed in the last three seconds.</p>
 
@@ -683,11 +714,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><code>unknit</code> - called at the start of each new message action chain. Creates and populates the <strong>source</strong> and <strong>work</strong> objects from the image data supplied in the message</p>
 
@@ -710,11 +741,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><code>getAlphaData</code> - extract alpha channel data from (usually the source) ImageData object and populate the color channels of a new ImageData object with that data</p>
 
@@ -744,11 +775,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h3 id="functions-invoked-by-a-range-of-different-action-functions">Functions invoked by a range of different action functions</h3>
 <p><code>buildImageGrid</code> creates an Array of Arrays which contain the indexes of each pixel in the image channel Arrays</p>
@@ -795,11 +826,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><code>getOrAddWorkstore</code> creates an Array which can be populated by swirl-related coordinates</p>
 
@@ -822,21 +853,21 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><code>getRandomNumbers</code> creates an Array and populates it with random numbers</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getRandomNumbers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">seed, length, useBluenoise = <span class="hljs-literal">false</span></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getRandomNumbers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">seed, length, imgWidth = <span class="hljs-number">0</span></span>) {
 
     <span class="hljs-keyword">let</span> name = <span class="hljs-string">`random-<span class="hljs-subst">${seed}</span>-<span class="hljs-subst">${length}</span>`</span>;
 
-    <span class="hljs-keyword">if</span> (useBluenoise) name += <span class="hljs-string">&#x27;-bluenoise&#x27;</span>;
+    <span class="hljs-keyword">if</span> (imgWidth) name += <span class="hljs-string">&#x27;-bluenoise&#x27;</span>;
 
     <span class="hljs-keyword">const</span> { workstore, workstoreLastAccessed } = <span class="hljs-variable language_">this</span>;
 
@@ -847,23 +878,30 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
     <span class="hljs-keyword">const</span> vals = [];
 
-    <span class="hljs-keyword">if</span> (useBluenoise) {
+    <span class="hljs-keyword">if</span> (imgWidth) {
 
-        <span class="hljs-keyword">const</span> bLen = bluenoise.<span class="hljs-property">length</span>;
+        <span class="hljs-keyword">const</span> bLen = bluenoise.<span class="hljs-property">length</span>,
+            blueDims = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(bLen),
+            imgHeight = length / imgWidth,
+            bLines = [];
 
-        <span class="hljs-keyword">let</span> counter = length,
-            loops = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(length / bLen);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; bLen; i += blueDims) {
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; loops; i++) {
+            <span class="hljs-keyword">let</span> temp = bluenoise.<span class="hljs-title function_">slice</span>(i, i + blueDims);
+            bLines.<span class="hljs-title function_">push</span>(temp);
+        }
 
-            <span class="hljs-keyword">if</span> (counter &lt; bLen) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> bigRows = imgHeight; bigRows &gt; <span class="hljs-number">0</span>; bigRows -= blueDims) {
 
-                vals.<span class="hljs-title function_">push</span>(...bluenoise.<span class="hljs-title function_">slice</span>(<span class="hljs-number">0</span>, counter));
-            }
-            <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> bRow = <span class="hljs-number">0</span>; bRow &lt; blueDims; bRow++) {
 
-                vals.<span class="hljs-title function_">push</span>(...bluenoise);
-                counter -= bLen;
+                <span class="hljs-keyword">let</span> currentRow = bLines[bRow];
+
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> bCol = imgWidth; bCol &gt; <span class="hljs-number">0</span>; bCol -= blueDims) {
+
+                    <span class="hljs-keyword">if</span> (bCol &lt; blueDims) vals.<span class="hljs-title function_">push</span>(...currentRow.<span class="hljs-title function_">slice</span>(<span class="hljs-number">0</span>, bCol));
+                    <span class="hljs-keyword">else</span> vals.<span class="hljs-title function_">push</span>(...currentRow);
+                }
             }
         }
     }
@@ -879,6 +917,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
     workstore[name] = vals;
     workstoreLastAccessed[name] = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
+
     <span class="hljs-keyword">return</span> workstore[name];
 };
 
@@ -918,11 +957,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><code>buildAlphaTileSets</code> - creates a record of which pixels belong to which tile - used for manipulating alpha channel values. Resulting object will be cached in the store</p>
 
@@ -1028,11 +1067,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>buildImageTileSets</code> - creates a record of which pixels belong to which tile - used for manipulating color channels values. Resulting object will be cached in the store</p>
 
@@ -1100,11 +1139,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>buildHorizontalBlur</code> - creates an Array of Arrays detailing which pixels contribute to the horizontal part of each pixel’s blur calculation. Resulting object will be cached in the store</p>
 
@@ -1150,11 +1189,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>buildVerticalBlur</code> - creates an Array of Arrays detailing which pixels contribute to the vertical part of each pixel’s blur calculation. Resulting object will be cached in the store</p>
 
@@ -1200,11 +1239,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>buildMatrixGrid</code> - creates an Array of Arrays detailing which pixels contribute to each pixel’s matrix calculation. Resulting object will be cached in the store</p>
 
@@ -1274,11 +1313,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>checkChannelLevelsParameters</code> - divide each channel into discrete sequences of pixels</p>
 
@@ -1334,11 +1373,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>cacheOutput</code> - insert an action function’s output into the filter engine’s cache</p>
 
@@ -1352,11 +1391,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><code>getInputAndOutputLines</code> - determine, and return, the appropriate results object for the lineIn, lineMix and lineOut values supplied to each action function when it gets invoked</p>
 
@@ -1402,11 +1441,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>getGrayscaleValue</code> - put here because this calculation is used in several different filters</p>
 
@@ -1420,11 +1459,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>processResults</code> - at the conclusion of each action function, combine the results of the function’s manipulations back into the data supplied for manipulation, in line with the value of the action object’s <code>opacity</code> attribute</p>
 
@@ -1456,11 +1495,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>The filter Color object - used by various filters</p>
 
@@ -1473,11 +1512,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h5 id="dithering-related-functions">Dithering-related functions</h5>
 
@@ -1486,11 +1525,11 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>initiateDithering</code> - internal function that initializes dithering-related objects and palettes</p>
 
@@ -1502,39 +1541,61 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">predefinedPalette</span> = {};
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;black-white&#x27;</span>, [<span class="hljs-string">&#x27;#000&#x27;</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;monochrome-4&#x27;</span>, [<span class="hljs-string">&#x27;#000&#x27;</span>, <span class="hljs-string">&#x27;#555&#x27;</span>, <span class="hljs-string">&#x27;#aaa&#x27;</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>]);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;monochrome-8&#x27;</span>, [<span class="hljs-string">&#x27;#000&#x27;</span>, <span class="hljs-string">&#x27;#333&#x27;</span>, <span class="hljs-string">&#x27;#555&#x27;</span>, <span class="hljs-string">&#x27;#777&#x27;</span>, <span class="hljs-string">&#x27;#999&#x27;</span>, <span class="hljs-string">&#x27;#bbb&#x27;</span>, <span class="hljs-string">&#x27;#ddd&#x27;</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>]);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;monochrome-16&#x27;</span>, [<span class="hljs-string">&#x27;#000&#x27;</span>, <span class="hljs-string">&#x27;#111&#x27;</span>, <span class="hljs-string">&#x27;#222&#x27;</span>, <span class="hljs-string">&#x27;#333&#x27;</span>, <span class="hljs-string">&#x27;#444&#x27;</span>, <span class="hljs-string">&#x27;#555&#x27;</span>, <span class="hljs-string">&#x27;#666&#x27;</span>, <span class="hljs-string">&#x27;#777&#x27;</span>, <span class="hljs-string">&#x27;#888&#x27;</span>, <span class="hljs-string">&#x27;#999&#x27;</span>, <span class="hljs-string">&#x27;#aaa&#x27;</span>, <span class="hljs-string">&#x27;#bbb&#x27;</span>, <span class="hljs-string">&#x27;#ccc&#x27;</span>, <span class="hljs-string">&#x27;#ddd&#x27;</span>, <span class="hljs-string">&#x27;#eee&#x27;</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>]);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;RGBK-32&#x27;</span>, [
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;RGBK-extended&#x27;</span>, [
         <span class="hljs-string">&#x27;#000&#x27;</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>,
-        <span class="hljs-string">&#x27;#300&#x27;</span>, <span class="hljs-string">&#x27;#700&#x27;</span>, <span class="hljs-string">&#x27;#733&#x27;</span>, <span class="hljs-string">&#x27;#a00&#x27;</span>, <span class="hljs-string">&#x27;#a33&#x27;</span>, <span class="hljs-string">&#x27;#a77&#x27;</span>, <span class="hljs-string">&#x27;#f00&#x27;</span>, <span class="hljs-string">&#x27;#f33&#x27;</span>, <span class="hljs-string">&#x27;#f77&#x27;</span>, <span class="hljs-string">&#x27;#faa&#x27;</span>,
-        <span class="hljs-string">&#x27;#030&#x27;</span>, <span class="hljs-string">&#x27;#070&#x27;</span>, <span class="hljs-string">&#x27;#373&#x27;</span>, <span class="hljs-string">&#x27;#0a0&#x27;</span>, <span class="hljs-string">&#x27;#3a3&#x27;</span>, <span class="hljs-string">&#x27;#7a7&#x27;</span>, <span class="hljs-string">&#x27;#0f0&#x27;</span>, <span class="hljs-string">&#x27;#3f3&#x27;</span>, <span class="hljs-string">&#x27;#7f7&#x27;</span>, <span class="hljs-string">&#x27;a#fa&#x27;</span>,
         <span class="hljs-string">&#x27;#003&#x27;</span>, <span class="hljs-string">&#x27;#007&#x27;</span>, <span class="hljs-string">&#x27;#337&#x27;</span>, <span class="hljs-string">&#x27;#00a&#x27;</span>, <span class="hljs-string">&#x27;#33a&#x27;</span>, <span class="hljs-string">&#x27;#77a&#x27;</span>, <span class="hljs-string">&#x27;#00f&#x27;</span>, <span class="hljs-string">&#x27;#33f&#x27;</span>, <span class="hljs-string">&#x27;#77f&#x27;</span>, <span class="hljs-string">&#x27;#aaf&#x27;</span>,
+        <span class="hljs-string">&#x27;#030&#x27;</span>, <span class="hljs-string">&#x27;#070&#x27;</span>, <span class="hljs-string">&#x27;#373&#x27;</span>, <span class="hljs-string">&#x27;#0a0&#x27;</span>, <span class="hljs-string">&#x27;#3a3&#x27;</span>, <span class="hljs-string">&#x27;#7a7&#x27;</span>, <span class="hljs-string">&#x27;#0f0&#x27;</span>, <span class="hljs-string">&#x27;#3f3&#x27;</span>, <span class="hljs-string">&#x27;#7f7&#x27;</span>, <span class="hljs-string">&#x27;#afa&#x27;</span>,
+        <span class="hljs-string">&#x27;#300&#x27;</span>, <span class="hljs-string">&#x27;#700&#x27;</span>, <span class="hljs-string">&#x27;#733&#x27;</span>, <span class="hljs-string">&#x27;#a00&#x27;</span>, <span class="hljs-string">&#x27;#a33&#x27;</span>, <span class="hljs-string">&#x27;#a77&#x27;</span>, <span class="hljs-string">&#x27;#f00&#x27;</span>, <span class="hljs-string">&#x27;#f33&#x27;</span>, <span class="hljs-string">&#x27;#f77&#x27;</span>, <span class="hljs-string">&#x27;#faa&#x27;</span>,
     ]);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;CMYK-32&#x27;</span>, [
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;CMYK-extended&#x27;</span>, [
         <span class="hljs-string">&#x27;#000&#x27;</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>,
         <span class="hljs-string">&#x27;#033&#x27;</span>, <span class="hljs-string">&#x27;#077&#x27;</span>, <span class="hljs-string">&#x27;#377&#x27;</span>, <span class="hljs-string">&#x27;#0aa&#x27;</span>, <span class="hljs-string">&#x27;#3aa&#x27;</span>, <span class="hljs-string">&#x27;#7aa&#x27;</span>, <span class="hljs-string">&#x27;#0ff&#x27;</span>, <span class="hljs-string">&#x27;#3ff&#x27;</span>, <span class="hljs-string">&#x27;#7ff&#x27;</span>, <span class="hljs-string">&#x27;#aff&#x27;</span>,
         <span class="hljs-string">&#x27;#303&#x27;</span>, <span class="hljs-string">&#x27;#707&#x27;</span>, <span class="hljs-string">&#x27;#737&#x27;</span>, <span class="hljs-string">&#x27;#a0a&#x27;</span>, <span class="hljs-string">&#x27;#a3a&#x27;</span>, <span class="hljs-string">&#x27;#a7a&#x27;</span>, <span class="hljs-string">&#x27;#f0f&#x27;</span>, <span class="hljs-string">&#x27;#f3f&#x27;</span>, <span class="hljs-string">&#x27;#f7f&#x27;</span>, <span class="hljs-string">&#x27;#faf&#x27;</span>,
         <span class="hljs-string">&#x27;#330&#x27;</span>, <span class="hljs-string">&#x27;#770&#x27;</span>, <span class="hljs-string">&#x27;#733&#x27;</span>, <span class="hljs-string">&#x27;#aa0&#x27;</span>, <span class="hljs-string">&#x27;#aa3&#x27;</span>, <span class="hljs-string">&#x27;#aa7&#x27;</span>, <span class="hljs-string">&#x27;#ff0&#x27;</span>, <span class="hljs-string">&#x27;#ff3&#x27;</span>, <span class="hljs-string">&#x27;#ff7&#x27;</span>, <span class="hljs-string">&#x27;#ffa&#x27;</span>,
     ]);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;basic-62&#x27;</span>, [
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;extended&#x27;</span>, [
         <span class="hljs-string">&#x27;#000&#x27;</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>,
+        <span class="hljs-string">&#x27;#003&#x27;</span>, <span class="hljs-string">&#x27;#007&#x27;</span>, <span class="hljs-string">&#x27;#337&#x27;</span>, <span class="hljs-string">&#x27;#00a&#x27;</span>, <span class="hljs-string">&#x27;#33a&#x27;</span>, <span class="hljs-string">&#x27;#77a&#x27;</span>, <span class="hljs-string">&#x27;#00f&#x27;</span>, <span class="hljs-string">&#x27;#33f&#x27;</span>, <span class="hljs-string">&#x27;#77f&#x27;</span>, <span class="hljs-string">&#x27;#aaf&#x27;</span>,
+        <span class="hljs-string">&#x27;#030&#x27;</span>, <span class="hljs-string">&#x27;#070&#x27;</span>, <span class="hljs-string">&#x27;#373&#x27;</span>, <span class="hljs-string">&#x27;#0a0&#x27;</span>, <span class="hljs-string">&#x27;#3a3&#x27;</span>, <span class="hljs-string">&#x27;#7a7&#x27;</span>, <span class="hljs-string">&#x27;#0f0&#x27;</span>, <span class="hljs-string">&#x27;#3f3&#x27;</span>, <span class="hljs-string">&#x27;#7f7&#x27;</span>, <span class="hljs-string">&#x27;#afa&#x27;</span>,
+        <span class="hljs-string">&#x27;#300&#x27;</span>, <span class="hljs-string">&#x27;#700&#x27;</span>, <span class="hljs-string">&#x27;#733&#x27;</span>, <span class="hljs-string">&#x27;#a00&#x27;</span>, <span class="hljs-string">&#x27;#a33&#x27;</span>, <span class="hljs-string">&#x27;#a77&#x27;</span>, <span class="hljs-string">&#x27;#f00&#x27;</span>, <span class="hljs-string">&#x27;#f33&#x27;</span>, <span class="hljs-string">&#x27;#f77&#x27;</span>, <span class="hljs-string">&#x27;#faa&#x27;</span>,
         <span class="hljs-string">&#x27;#033&#x27;</span>, <span class="hljs-string">&#x27;#077&#x27;</span>, <span class="hljs-string">&#x27;#377&#x27;</span>, <span class="hljs-string">&#x27;#0aa&#x27;</span>, <span class="hljs-string">&#x27;#3aa&#x27;</span>, <span class="hljs-string">&#x27;#7aa&#x27;</span>, <span class="hljs-string">&#x27;#0ff&#x27;</span>, <span class="hljs-string">&#x27;#3ff&#x27;</span>, <span class="hljs-string">&#x27;#7ff&#x27;</span>, <span class="hljs-string">&#x27;#aff&#x27;</span>,
         <span class="hljs-string">&#x27;#303&#x27;</span>, <span class="hljs-string">&#x27;#707&#x27;</span>, <span class="hljs-string">&#x27;#737&#x27;</span>, <span class="hljs-string">&#x27;#a0a&#x27;</span>, <span class="hljs-string">&#x27;#a3a&#x27;</span>, <span class="hljs-string">&#x27;#a7a&#x27;</span>, <span class="hljs-string">&#x27;#f0f&#x27;</span>, <span class="hljs-string">&#x27;#f3f&#x27;</span>, <span class="hljs-string">&#x27;#f7f&#x27;</span>, <span class="hljs-string">&#x27;#faf&#x27;</span>,
         <span class="hljs-string">&#x27;#330&#x27;</span>, <span class="hljs-string">&#x27;#770&#x27;</span>, <span class="hljs-string">&#x27;#733&#x27;</span>, <span class="hljs-string">&#x27;#aa0&#x27;</span>, <span class="hljs-string">&#x27;#aa3&#x27;</span>, <span class="hljs-string">&#x27;#aa7&#x27;</span>, <span class="hljs-string">&#x27;#ff0&#x27;</span>, <span class="hljs-string">&#x27;#ff3&#x27;</span>, <span class="hljs-string">&#x27;#ff7&#x27;</span>, <span class="hljs-string">&#x27;#ffa&#x27;</span>,
-        <span class="hljs-string">&#x27;#033&#x27;</span>, <span class="hljs-string">&#x27;#077&#x27;</span>, <span class="hljs-string">&#x27;#377&#x27;</span>, <span class="hljs-string">&#x27;#0aa&#x27;</span>, <span class="hljs-string">&#x27;#3aa&#x27;</span>, <span class="hljs-string">&#x27;#7aa&#x27;</span>, <span class="hljs-string">&#x27;#0ff&#x27;</span>, <span class="hljs-string">&#x27;#3ff&#x27;</span>, <span class="hljs-string">&#x27;#7ff&#x27;</span>, <span class="hljs-string">&#x27;#aff&#x27;</span>,
-        <span class="hljs-string">&#x27;#303&#x27;</span>, <span class="hljs-string">&#x27;#707&#x27;</span>, <span class="hljs-string">&#x27;#737&#x27;</span>, <span class="hljs-string">&#x27;#a0a&#x27;</span>, <span class="hljs-string">&#x27;#a3a&#x27;</span>, <span class="hljs-string">&#x27;#a7a&#x27;</span>, <span class="hljs-string">&#x27;#f0f&#x27;</span>, <span class="hljs-string">&#x27;#f3f&#x27;</span>, <span class="hljs-string">&#x27;#f7f&#x27;</span>, <span class="hljs-string">&#x27;#faf&#x27;</span>,
-        <span class="hljs-string">&#x27;#330&#x27;</span>, <span class="hljs-string">&#x27;#770&#x27;</span>, <span class="hljs-string">&#x27;#733&#x27;</span>, <span class="hljs-string">&#x27;#aa0&#x27;</span>, <span class="hljs-string">&#x27;#aa3&#x27;</span>, <span class="hljs-string">&#x27;#aa7&#x27;</span>, <span class="hljs-string">&#x27;#ff0&#x27;</span>, <span class="hljs-string">&#x27;#ff3&#x27;</span>, <span class="hljs-string">&#x27;#ff7&#x27;</span>, <span class="hljs-string">&#x27;#ffa&#x27;</span>,
+    ]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;RGBK&#x27;</span>, [
+        <span class="hljs-string">&#x27;#000&#x27;</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>,
+        <span class="hljs-string">&#x27;#007&#x27;</span>, <span class="hljs-string">&#x27;#00f&#x27;</span>, <span class="hljs-string">&#x27;#77f&#x27;</span>,
+        <span class="hljs-string">&#x27;#070&#x27;</span>, <span class="hljs-string">&#x27;#0f0&#x27;</span>, <span class="hljs-string">&#x27;#7f7&#x27;</span>,
+        <span class="hljs-string">&#x27;#700&#x27;</span>, <span class="hljs-string">&#x27;#f00&#x27;</span>, <span class="hljs-string">&#x27;#f77&#x27;</span>,
+    ]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;CMYK&#x27;</span>, [
+        <span class="hljs-string">&#x27;#000&#x27;</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>,
+        <span class="hljs-string">&#x27;#077&#x27;</span>, <span class="hljs-string">&#x27;#0ff&#x27;</span>, <span class="hljs-string">&#x27;#7ff&#x27;</span>,
+        <span class="hljs-string">&#x27;#707&#x27;</span>, <span class="hljs-string">&#x27;#f0f&#x27;</span>, <span class="hljs-string">&#x27;#f7f&#x27;</span>,
+        <span class="hljs-string">&#x27;#770&#x27;</span>, <span class="hljs-string">&#x27;#ff0&#x27;</span>, <span class="hljs-string">&#x27;#ff7&#x27;</span>,
+    ]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;basic&#x27;</span>, [
+        <span class="hljs-string">&#x27;#000&#x27;</span>, <span class="hljs-string">&#x27;#fff&#x27;</span>,
+        <span class="hljs-string">&#x27;#007&#x27;</span>, <span class="hljs-string">&#x27;#00f&#x27;</span>, <span class="hljs-string">&#x27;#77f&#x27;</span>,
+        <span class="hljs-string">&#x27;#070&#x27;</span>, <span class="hljs-string">&#x27;#0f0&#x27;</span>, <span class="hljs-string">&#x27;#7f7&#x27;</span>,
+        <span class="hljs-string">&#x27;#700&#x27;</span>, <span class="hljs-string">&#x27;#f00&#x27;</span>, <span class="hljs-string">&#x27;#f77&#x27;</span>,
+        <span class="hljs-string">&#x27;#077&#x27;</span>, <span class="hljs-string">&#x27;#0ff&#x27;</span>, <span class="hljs-string">&#x27;#7ff&#x27;</span>,
+        <span class="hljs-string">&#x27;#707&#x27;</span>, <span class="hljs-string">&#x27;#f0f&#x27;</span>, <span class="hljs-string">&#x27;#f7f&#x27;</span>,
+        <span class="hljs-string">&#x27;#770&#x27;</span>, <span class="hljs-string">&#x27;#ff0&#x27;</span>, <span class="hljs-string">&#x27;#ff7&#x27;</span>,
     ]);
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>createPalette</code> - Returns two palette Arrays, the first containing RGB values for each palette element, the second holding the LAB values for each element</p>
 <ul>
@@ -1580,51 +1641,26 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>createPopularColorsPalette</code> - separated out because requires a lot more work to generate the palette</p>
-<ul>
-<li>For now, we return the ‘black-white’ palette</li>
-</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">createCommonestColorsPalette</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">noOfColors, data, seed</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">createCommonestColorsPalette</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">noOfColors, data, minimumColorDistance</span>) {
 
-    <span class="hljs-keyword">let</span> r, g, b, a, tr, tg, tb, dr, dg, db, i, iz, c, name, element, val, tallyNames, tallyLen, distanceFlag, test, selection;
+    <span class="hljs-keyword">let</span> r, g, b, a, tr, tg, tb, dr, dg, db, i, iz, c, name, element, val, tallyNames, tallyLen, distanceFlag, test, selection, pName;
 
     <span class="hljs-keyword">const</span> len = data.<span class="hljs-property">length</span>,
         tally = {},
         finalPalette = [],
-        dataPalette = [],</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p>distance will vary between 1 (<code>rgb(0 0 0)</code> and <code>rgb(0 0 1)</code>) and 195075 (<code>rgb(0 0 0)</code> and <code>rgb(255 255 255)</code>); we want to exclude colors that are too close to each other.</p>
-<ul>
-<li>I’m making these numbers up as I experiment!</li>
-</ul>
+        dataPalette = [];
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        distance = <span class="hljs-number">512</span>,
-        popularityCutoff = <span class="hljs-number">0.75</span>;
-
-    <span class="hljs-keyword">const</span> rnd = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getRandomNumbers</span>(seed, noOfColors);
-    <span class="hljs-keyword">let</span> rndCursor = -<span class="hljs-number">1</span>;
-
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
         c = i;
 
@@ -1649,7 +1685,7 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
     tallyLen = tallyNames.<span class="hljs-property">length</span>;
     c = <span class="hljs-number">0</span>;
 
-    tallyNames.<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> b[<span class="hljs-number">3</span>] &gt; a[<span class="hljs-number">3</span>]);
+    tallyNames.<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> tally[b][<span class="hljs-number">3</span>] - tally[a][<span class="hljs-number">3</span>]);
 
     <span class="hljs-keyword">while</span> (c &lt; tallyLen &amp;&amp; finalPalette.<span class="hljs-property">length</span> &lt; noOfColors) {
 
@@ -1658,10 +1694,7 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
             finalPalette.<span class="hljs-title function_">push</span>(tallyNames[c]);
             dataPalette.<span class="hljs-title function_">push</span>(tally[tallyNames[c]]);
         }
-
-        c++;
-
-        <span class="hljs-keyword">if</span> (c &lt; noOfColors * popularityCutoff) {
+        <span class="hljs-keyword">else</span> {
 
             distanceFlag = <span class="hljs-literal">true</span>;
 
@@ -1676,7 +1709,7 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
                 dg = g - tg;
                 db = b - tb;
 
-                <span class="hljs-keyword">if</span> ((dr * dr) + (dg * dg) + (db * db) &lt; distance) {
+                <span class="hljs-keyword">if</span> ((dr * dr) + (dg * dg) + (db * db) &lt; minimumColorDistance) {
 
                     distanceFlag = <span class="hljs-literal">false</span>;
                     <span class="hljs-keyword">break</span>;
@@ -1689,27 +1722,7 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
                 dataPalette.<span class="hljs-title function_">push</span>(tally[tallyNames[c]]);
             }
         }
-        <span class="hljs-keyword">else</span> {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
-              </div>
-              <p>In an effort to get some of the less popular colors to show up, we’ll try including them at random</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            test = rnd[++rndCursor];
-            selection = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(c + ((tallyLen - c) * test));
-
-            finalPalette.<span class="hljs-title function_">push</span>(tallyNames[selection]);
-            dataPalette.<span class="hljs-title function_">push</span>(tally[tallyNames[selection]]);
-        }
+        c++;
     }
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(<span class="hljs-string">&#x27;&#x27;</span>, finalPalette);
 };</pre></div></div>
@@ -1818,7 +1831,6 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getColorDistanceData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">data, ref</span>) {
 
-
     <span class="hljs-keyword">let</span> l, a, b, dl, da, db, dc, rl, ra, rb, rc, i, iz, j, jz;
 
     <span class="hljs-keyword">const</span> dataRes = [];
@@ -1847,7 +1859,14 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
 
             l = rl - dl;
             a = ra - da;
-            b = rb - db;</pre></div></div>
+            b = rb - db;
+
+            pixelRes.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>((l * l) + (a * a) + (b * b)));
+        }
+        dataRes.<span class="hljs-title function_">push</span>(pixelRes);
+    }
+    <span class="hljs-keyword">return</span> dataRes;
+};</pre></div></div>
             
         </li>
         
@@ -1858,15 +1877,68 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
               <div class="sswrap ">
                 <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
-              <p>pixelRes.push(Math.sqrt((l * l) + (a * a) + (b * b)));</p>
+              <p><code>selectClosestColors</code> - Returns a propensity model of the liklihood of the pixel taking the closest colors to it. The model is an Array of Arrays (one per pixel), with the sub-arrays taking the form of <code>[palette-index-color, propensity, palette-index-color, propensity, etc]</code> to a maximum of four colors.</p>
+<ul>
+<li>data: Array of imageData.data values in LAB color space</li>
+<li>ref: Array of palette values in LAB color space</li>
+<li>Invokes <code>getColorDistanceData</code> internally </li>
+<li>Transparent pixels are recorded as <code>-1</code></li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            pixelRes.<span class="hljs-title function_">push</span>((l * l) + (a * a) + (b * b));
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">selectClosestColors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">data, ref</span>) {
+
+    <span class="hljs-keyword">const</span> colDistances = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getColorDistanceData</span>(data, ref),
+        refLen = ref.<span class="hljs-property">length</span> / <span class="hljs-number">4</span>,
+        refMax = (refLen &lt; <span class="hljs-number">3</span>) ? <span class="hljs-number">2</span> : <span class="hljs-number">3</span>,
+        temp = [],
+        dist = [],
+        hold = [],
+        res = [],
+        final = [],
+        min = <span class="hljs-title class_">Math</span>.<span class="hljs-property">min</span>;
+
+    <span class="hljs-keyword">let</span> val, i, iz, total, index, cd;
+
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = colDistances.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+        cd = colDistances[i];
+        dist.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        dist.<span class="hljs-title function_">push</span>(...cd);
+
+        <span class="hljs-keyword">if</span> (dist.<span class="hljs-property">length</span>) {
+
+            <span class="hljs-keyword">if</span> (refLen === <span class="hljs-number">1</span>) final.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            <span class="hljs-keyword">else</span> {
+
+                temp.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+                hold.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+                hold.<span class="hljs-title function_">push</span>(...dist);
+
+                <span class="hljs-keyword">while</span> (temp.<span class="hljs-property">length</span> &lt; refMax) {
+
+                    val = <span class="hljs-title function_">min</span>(...hold);
+                    index = hold.<span class="hljs-title function_">indexOf</span>(val);
+                    temp.<span class="hljs-title function_">push</span>(...hold.<span class="hljs-title function_">splice</span>(index, <span class="hljs-number">1</span>));
+                }
+
+                total = temp.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">p, c</span>) =&gt;</span> p + c);
+
+                res.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+
+                temp.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> res.<span class="hljs-title function_">push</span>(dist.<span class="hljs-title function_">indexOf</span>(d), d / total));
+
+                <span class="hljs-keyword">while</span> (res.<span class="hljs-property">length</span> &lt; <span class="hljs-number">6</span>) res.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+                res.<span class="hljs-property">length</span> = <span class="hljs-number">6</span>;
+
+                final.<span class="hljs-title function_">push</span>(...res);
+            }
         }
-        dataRes.<span class="hljs-title function_">push</span>(pixelRes);
+        <span class="hljs-keyword">else</span> final.<span class="hljs-title function_">push</span>(-<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
     }
-    <span class="hljs-keyword">return</span> dataRes;
+    <span class="hljs-keyword">return</span> final;
 };</pre></div></div>
             
         </li>
@@ -1878,69 +1950,100 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
-              <p><code>selectClosestColors</code> - Returns a propensity model of the liklihood of the pixel taking the closest colors to it. The model is an Array of Arrays (one per pixel), with the sub-arrays taking the form of <code>[palette-index-color, propensity, palette-index-color, propensity, etc]</code> to a maximum of four colors.</p>
+              <p><code>getGrayscaleDistanceData</code> - Measures the Rgba data for an image against the Rgb data in a palette</p>
 <ul>
-<li>data: Array of imageData.data values in LAB color space</li>
-<li>ref: Array of palette values in LAB color space</li>
-<li>Invokes <code>getColorDistanceData</code> internally </li>
-<li>Transparent pixels are recorded as <code>[]</code></li>
+<li>data: Array of imageData.data values in RGBA color space</li>
+<li>ref: Array of palette values in RGB color space</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">selectClosestColors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">data, ref</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getGrayscaleDistanceData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">data, ref</span>) {
 
-    <span class="hljs-keyword">const</span> colDistances = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getColorDistanceData</span>(data, ref);
+    <span class="hljs-keyword">let</span> dataGray, refGray, gray, i, iz, j, jz;
 
-    <span class="hljs-keyword">let</span> val, dist, i, iz, len, total, res, index, temp;
-    
-    <span class="hljs-keyword">const</span> final = [],
-        max = <span class="hljs-title class_">Math</span>.<span class="hljs-property">max</span>;
+    <span class="hljs-keyword">const</span> dataRes = [],
+        refLen = ref.<span class="hljs-property">length</span> / <span class="hljs-number">4</span>;
 
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = colDistances.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = data.<span class="hljs-property">length</span>; i &lt; iz; i += <span class="hljs-number">4</span>) {
 
-        dist = colDistances[i];
+        <span class="hljs-keyword">if</span> (!data[i + <span class="hljs-number">3</span>]) {
 
-        len = dist.<span class="hljs-property">length</span>;
+            dataRes.<span class="hljs-title function_">push</span>(-<span class="hljs-number">1</span>);
+            <span class="hljs-keyword">for</span> (j = <span class="hljs-number">1</span>; j &lt; refLen; j++) {
 
-        <span class="hljs-keyword">if</span> (len) {
-
-            <span class="hljs-keyword">if</span> (len === <span class="hljs-number">1</span>) res.<span class="hljs-title function_">push</span>([<span class="hljs-number">0</span>, <span class="hljs-number">1</span>]);
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (len &lt; <span class="hljs-number">5</span>) {
-
-                total = dist.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">p, c</span>) =&gt;</span> p + c);
-                res = [];
-
-                dist.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> {
-
-                    res.<span class="hljs-title function_">push</span>(dist.<span class="hljs-title function_">indexOf</span>(d), d / total);
-                });
-
-                final.<span class="hljs-title function_">push</span>(res);
+                dataRes.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>);
             }
+            <span class="hljs-keyword">continue</span>;
+        }
+
+        dataGray = data[i];
+
+        <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = ref.<span class="hljs-property">length</span>; j &lt; jz; j += <span class="hljs-number">4</span>) {
+
+            refGray = ref[j];
+
+            gray = refGray - dataGray
+
+            dataRes.<span class="hljs-title function_">push</span>(gray * gray);
+        }
+    }
+    <span class="hljs-keyword">return</span> dataRes;
+};
+
+P.<span class="hljs-property">selectClosestGrays</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">data, ref</span>) {
+
+    <span class="hljs-keyword">const</span> colDistances = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getGrayscaleDistanceData</span>(data, ref),
+        min = <span class="hljs-title class_">Math</span>.<span class="hljs-property">min</span>,
+        refLen = ref.<span class="hljs-property">length</span> / <span class="hljs-number">4</span>,
+        refMax = (refLen &lt; <span class="hljs-number">3</span>) ? <span class="hljs-number">2</span> : <span class="hljs-number">3</span>,
+        final = [],
+        temp = [],
+        dist = [],
+        hold = [],
+        res = [];
+
+    <span class="hljs-keyword">let</span> val, i, iz, j, jz, total, index;
+    
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = colDistances.<span class="hljs-property">length</span>; i &lt; iz; i += refLen) {
+
+        dist.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">for</span> (j = i, jz = i + refLen; j &lt; jz; j++) {
+
+            dist.<span class="hljs-title function_">push</span>(colDistances[j]);
+        }
+
+        <span class="hljs-keyword">if</span> (dist[<span class="hljs-number">0</span>] &gt;= <span class="hljs-number">0</span>) {
+
+            <span class="hljs-keyword">if</span> (refLen === <span class="hljs-number">1</span>) final.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
             <span class="hljs-keyword">else</span> {
 
-                temp = [...dist];
+                temp.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+                hold.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+                hold.<span class="hljs-title function_">push</span>(...dist);
 
-                <span class="hljs-keyword">while</span> (temp.<span class="hljs-property">length</span> &gt; <span class="hljs-number">4</span>) {
+                <span class="hljs-keyword">while</span> (temp.<span class="hljs-property">length</span> &lt; refMax) {
 
-                    val = <span class="hljs-title function_">max</span>(...temp);
-                    index = temp.<span class="hljs-title function_">indexOf</span>(val);
-                    temp.<span class="hljs-title function_">splice</span>(index, <span class="hljs-number">1</span>);
+                    val = <span class="hljs-title function_">min</span>(...hold);
+                    index = hold.<span class="hljs-title function_">indexOf</span>(val);
+
+                    <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">break</span>;
+
+                    temp.<span class="hljs-title function_">push</span>(...hold.<span class="hljs-title function_">splice</span>(index, <span class="hljs-number">1</span>));
                 }
 
                 total = temp.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">p, c</span>) =&gt;</span> p + c);
-                res = [];
+                res.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
-                temp.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> {
+                temp.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> res.<span class="hljs-title function_">push</span>(dist.<span class="hljs-title function_">indexOf</span>(d), d / total));
 
-                    res.<span class="hljs-title function_">push</span>(dist.<span class="hljs-title function_">indexOf</span>(d), d / total);
-                });
+                <span class="hljs-keyword">while</span> (res.<span class="hljs-property">length</span> &lt; <span class="hljs-number">6</span>) res.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
 
-                final.<span class="hljs-title function_">push</span>(res);
+                final.<span class="hljs-title function_">push</span>(...res);
             }
         }
-        <span class="hljs-keyword">else</span> final.<span class="hljs-title function_">push</span>([]);
+        <span class="hljs-keyword">else</span> final.<span class="hljs-title function_">push</span>(-<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
     }
     <span class="hljs-keyword">return</span> final;
 };</pre></div></div>
@@ -5207,19 +5310,24 @@ r, g, b, a, i, gray;</p>
         <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>,
-            i, iz, j, jz, r, g, b, a, diff, diffLen, index, colIndex, propensity, p, total, test;
+            i, iz, j, r, g, b, a, index, p, test, c0, c1, c2, p0, p1, p2, cd0, pd0, rndCursor, labData, diffData, isGray, rgbPalette, labPalette;
 
-        <span class="hljs-keyword">let</span> {opacity, palette, seed, useBluenoise, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> colIndex = [],
+            propensity = [];
+
+        <span class="hljs-keyword">let</span> {opacity, palette, seed, useBluenoise, minimumColorDistance, lineOut} = requirements;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == seed) seed = <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == useBluenoise) useBluenoise = <span class="hljs-literal">false</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == palette) palette = <span class="hljs-string">&#x27;black-white&#x27;</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == minimumColorDistance) minimumColorDistance = <span class="hljs-number">1000</span>;
 
-        <span class="hljs-keyword">const</span> rnd = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getRandomNumbers</span>(seed, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(len / <span class="hljs-number">3</span>), useBluenoise);
-        <span class="hljs-keyword">let</span> rndCursor = -<span class="hljs-number">1</span>;
+        <span class="hljs-keyword">const</span> rnd = (useBluenoise) ?
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getRandomNumbers</span>(seed, len / <span class="hljs-number">4</span>, input.<span class="hljs-property">width</span>) :
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getRandomNumbers</span>(seed, len / <span class="hljs-number">4</span>);
 
-        <span class="hljs-keyword">let</span> rgbPalette, labPalette;</pre></div></div>
+        rndCursor = -<span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         
@@ -5230,7 +5338,7 @@ r, g, b, a, i, gray;</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
-              <p>For pre-defined palettes: <code>black-white</code>, <code>monochrome</code>, <code>RGBK</code>, <code>YMCK</code>, ‘basic’</p>
+              <p>For pre-defined palettes: <code>black-white</code>, <code>RGBK</code>, etc</p>
 
             </div>
             
@@ -5272,7 +5380,7 @@ r, g, b, a, i, gray;</p>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (palette.<span class="hljs-property">toFixed</span>) {
 
-            [rgbPalette, labPalette] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createCommonestColorsPalette</span>(palette, iData, seed);
+            [rgbPalette, labPalette] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createCommonestColorsPalette</span>(palette, iData, minimumColorDistance);
         }</pre></div></div>
             
         </li>
@@ -5294,21 +5402,37 @@ r, g, b, a, i, gray;</p>
             [rgbPalette, labPalette] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">createPalette</span>(palette, []);
         }
 
-        <span class="hljs-keyword">const</span> labData = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertToLabData</span>(iData);
+        isGray = [<span class="hljs-string">&#x27;black-white&#x27;</span>, <span class="hljs-string">&#x27;monochrome-4&#x27;</span>, <span class="hljs-string">&#x27;monochrome-8&#x27;</span>, <span class="hljs-string">&#x27;monochrome-16&#x27;</span>].<span class="hljs-title function_">includes</span>(palette);
 
-        <span class="hljs-keyword">const</span> diffData = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectClosestColors</span>(labData, labPalette);
+        <span class="hljs-keyword">if</span> (isGray) {
 
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = diffData.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+            diffData = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectClosestGrays</span>(iData, rgbPalette);
+        }
+        <span class="hljs-keyword">else</span> {
 
-            diff = diffData[i];
-            diffLen = diff.<span class="hljs-property">length</span>;
+            labData = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertToLabData</span>(iData);
+            diffData = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">selectClosestColors</span>(labData, labPalette);
+        }
+        <span class="hljs-keyword">const</span> pLen = rgbPalette.<span class="hljs-property">length</span> / <span class="hljs-number">4</span>;
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = len / <span class="hljs-number">4</span>; i &lt; iz; i++) {
 
             r = i * <span class="hljs-number">4</span>;
             g = r + <span class="hljs-number">1</span>;
             b = g + <span class="hljs-number">1</span>;
             a = b + <span class="hljs-number">1</span>;
 
-            <span class="hljs-keyword">if</span> (!diffLen) {
+            c0 = i * <span class="hljs-number">6</span>;
+            c1 = c0 + <span class="hljs-number">2</span>;
+            c2 = c1 + <span class="hljs-number">2</span>;
+            p0 = c0 + <span class="hljs-number">1</span>;
+            p1 = p0 + <span class="hljs-number">2</span>;
+            p2 = p1 + <span class="hljs-number">2</span>;
+
+            cd0 = diffData[c0];
+            pd0 = diffData[p0]
+
+            <span class="hljs-keyword">if</span> (!pLen || cd0 &lt; <span class="hljs-number">0</span>) {
 
                 oData[r] = iData[r];
                 oData[g] = iData[g];
@@ -5317,56 +5441,58 @@ r, g, b, a, i, gray;</p>
 
                 ++rndCursor;
             }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">2</span> === diffLen) {
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!cd0 &amp;&amp; !pd0) {
 
-                index = diff[<span class="hljs-number">0</span>] * <span class="hljs-number">4</span>;
-
-                oData[r] = rgbPalette[index];
-                oData[g] = rgbPalette[++index];
-                oData[b] = rgbPalette[++index];
+                oData[r] = rgbPalette[<span class="hljs-number">0</span>];
+                oData[g] = rgbPalette[<span class="hljs-number">1</span>];
+                oData[b] = rgbPalette[<span class="hljs-number">2</span>];
                 oData[a] = iData[a];
 
                 ++rndCursor;
             }
             <span class="hljs-keyword">else</span> {
 
-                colIndex = [];
-                propensity = [];
-
-                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; diffLen; j += <span class="hljs-number">2</span>) {
-
-                    colIndex.<span class="hljs-title function_">push</span>(diff[j]);
-                    propensity.<span class="hljs-title function_">push</span>(diff[j + <span class="hljs-number">1</span>]);
-                }
+                colIndex.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+                propensity.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+                colIndex.<span class="hljs-title function_">push</span>(diffData[c0], diffData[c1], diffData[c2]);
+                propensity.<span class="hljs-title function_">push</span>(diffData[p0], diffData[p1], diffData[p2]);
 
                 p = <span class="hljs-number">0</span>;
 
-                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = propensity.<span class="hljs-property">length</span>; j &lt; jz; j++) {
+                <span class="hljs-keyword">if</span> (pLen &lt; <span class="hljs-number">3</span>) {
 
-                    p += (<span class="hljs-number">1</span> - propensity[j]);
-                    propensity[j] = p;
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">2</span>; j++) {
+
+                        p += (<span class="hljs-number">1</span> - propensity[j]);
+                        propensity[j] = p;
+                    }
+                }
+                <span class="hljs-keyword">else</span> {
+
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">3</span>; j++) {
+
+                        p += (<span class="hljs-number">1</span> - propensity[j]);
+                        propensity[j] = p / <span class="hljs-number">2</span>;
+                    }
                 }
 
                 test = rnd[++rndCursor];
 
-                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = propensity.<span class="hljs-property">length</span>; j &lt; jz; j++) {
+                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">3</span>; j++) {
 
-                    <span class="hljs-keyword">if</span> (test &gt; propensity[j]) <span class="hljs-keyword">continue</span>;
-                    <span class="hljs-keyword">else</span> {
+                    <span class="hljs-keyword">if</span> (test &gt; propensity[j] &amp;&amp; j &lt; <span class="hljs-number">2</span>) <span class="hljs-keyword">continue</span>;
 
-                        index = colIndex[j] * <span class="hljs-number">4</span>;
+                    index = colIndex[j] * <span class="hljs-number">4</span>;
 
-                        oData[r] = rgbPalette[index];
-                        oData[g] = rgbPalette[++index];
-                        oData[b] = rgbPalette[++index];
-                        oData[a] = iData[a];
+                    oData[r] = rgbPalette[index];
+                    oData[g] = rgbPalette[++index];
+                    oData[b] = rgbPalette[++index];
+                    oData[a] = iData[a];
 
-                        <span class="hljs-keyword">break</span>;
-                    }
+                    <span class="hljs-keyword">break</span>;
                 }
             }
         }
-
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
         <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
     },</pre></div></div>

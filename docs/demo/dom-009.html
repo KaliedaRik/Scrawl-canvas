@@ -1075,9 +1075,8 @@ stack.<span class="hljs-title function_">set</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> colorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myColorObject&#x27;</span>,
-    <span class="hljs-attr">rMax</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">gMax</span>: <span class="hljs-number">50</span>,
-    <span class="hljs-attr">bMax</span>: <span class="hljs-number">10</span>,
+    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;maroon&#x27;</span>,
+    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;darkgreen&#x27;</span>,
 });
 
 circleGroup.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
@@ -1103,7 +1102,7 @@ circleGroup.<span class="hljs-property">artefacts</span>.<span class="hljs-title
         },
 
         <span class="hljs-attr">css</span>: {
-            <span class="hljs-attr">backgroundColor</span>: colorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
+            <span class="hljs-attr">backgroundColor</span>: colorFactory.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>()),
             <span class="hljs-attr">border</span>: <span class="hljs-string">&#x27;1px solid black&#x27;</span>,
         }
     });

@@ -1047,7 +1047,7 @@ P.<span class="hljs-property">get</span> = <span class="hljs-keyword">function</
               <div class="sswrap ">
                 <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
-              <p>The following setters use the <code>window.SC_colorChecker</code> Color factory. This factory gets created and attached to the window object during Scrawl-canvas initialization. Code for creating the factory can be found in the <code>core/init.js</code> module</p>
+              <p>The following setters use the <code>window.scrawlEnvironmentColorChecker</code> Color factory. This factory gets created and attached to the window object during Scrawl-canvas initialization. Code for creating the factory can be found in the <code>core/init.js</code> module</p>
 
             </div>
             
@@ -1061,10 +1061,8 @@ P.<span class="hljs-property">get</span> = <span class="hljs-keyword">function</
         temp = styles[item];
 
         <span class="hljs-keyword">if</span> (temp) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillStyle</span> = temp;
-        <span class="hljs-keyword">else</span> {
-            temp = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">checkColor</span>(item);
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillStyle</span> = temp;
-        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;rgb&#x27;</span>) || item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;hsl&#x27;</span>) || item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;#&#x27;</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillStyle</span> = item;
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">checkColor</span>(item);
     }
 };
 
@@ -1078,13 +1076,15 @@ S.<span class="hljs-property">strokeStyle</span> = <span class="hljs-keyword">fu
         temp = styles[item];
 
         <span class="hljs-keyword">if</span> (temp) <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeStyle</span> = temp;
-        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">checkColor</span>(item);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;rgb&#x27;</span>) || item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;hsl&#x27;</span>) || item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;#&#x27;</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeStyle</span> = item;
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">checkColor</span>(item);
     }
 };
 
 S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">shadowColor</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">SC_colorChecker</span>.<span class="hljs-title function_">checkColor</span>(item);
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;rgb&#x27;</span>) || item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;hsl&#x27;</span>) || item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;#&#x27;</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">shadowColor</span> = item;
+    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">shadowColor</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">checkColor</span>(item);
 };</pre></div></div>
             
         </li>

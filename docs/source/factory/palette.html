@@ -873,7 +873,26 @@ P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">colors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">colors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">const</span> f = <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>,
+        res = [];
+
+    <span class="hljs-keyword">if</span> (f) {
+
+        <span class="hljs-keyword">const</span> colorSpace = f.<span class="hljs-property">colorSpace</span>;
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>)) {
+
+            res.<span class="hljs-title function_">push</span>([<span class="hljs-built_in">parseInt</span>(key, <span class="hljs-number">10</span>), f.<span class="hljs-title function_">buildColorString</span>(...value, colorSpace)]);
+        }
+    }
+    <span class="hljs-keyword">else</span> res.<span class="hljs-title function_">push</span>([<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>], [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;rgba(255 255 255 / 1)&#x27;</span>]);
+
+    <span class="hljs-keyword">return</span> res;
+};
+
+S.<span class="hljs-property">colors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item)) {
 

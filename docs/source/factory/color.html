@@ -2437,7 +2437,8 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
         g = <span class="hljs-number">0</span>,
         b = <span class="hljs-number">0</span>,
         a = <span class="hljs-number">0</span>,
-        image;
+        image,
+        col = <span class="hljs-string">&#x27;#ffffff00&#x27;</span>;
 
     <span class="hljs-keyword">const</span> cell = <span class="hljs-title function_">requestCell</span>();
 
@@ -2483,6 +2484,25 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
+              <p>Firefox (v96.0.1) fails silently when setting engine to unsupported color, leaving engine value unchanged, which in turn leaves our test rgb values unchanged, thus giving us a false positive for the test</p>
+<ul>
+<li>This additional safety net test identifies and corrects for that bug</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (supportsHWB &amp;&amp; col === engine.<span class="hljs-property">fillStyle</span>) supportsHWB = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">else</span> col = engine.<span class="hljs-property">fillStyle</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
+              </div>
               <p>Test for LAB support</p>
 
             </div>
@@ -2502,17 +2522,33 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
+              </div>
+              <p>Firefox safety net</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (supportsLAB &amp;&amp; col === engine.<span class="hljs-property">fillStyle</span>) supportsLAB = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">else</span> col = engine.<span class="hljs-property">fillStyle</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>Test for LCH support</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;lch(29.2345% 44.2 27)&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;lch(52.2345% 72.2 56.2)&#x27;</span>;
     engine.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
     engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
 
@@ -2522,7 +2558,23 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
 
         [r, g, b, a] = image.<span class="hljs-property">data</span>;
     }
-    <span class="hljs-keyword">if</span> (r || g || b) supportsLCH = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (r || g || b) supportsLCH = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-63">&#x00a7;</a>
+              </div>
+              <p>Firefox safety net</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (supportsLCH &amp;&amp; col === engine.<span class="hljs-property">fillStyle</span>) supportsLCH = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">else</span> col = engine.<span class="hljs-property">fillStyle</span>;
 
     engine.<span class="hljs-title function_">restore</span>();
     <span class="hljs-title function_">releaseCell</span>(cell);
@@ -2532,34 +2584,19 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
         </li>
         
         
-        <li id="section-61">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeColor</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myColorObject&#x27;</span>,
 
-    <span class="hljs-attr">r</span>: <span class="hljs-number">100</span>,
-    <span class="hljs-attr">g</span>: <span class="hljs-number">50</span>,
-    <span class="hljs-attr">b</span>: <span class="hljs-number">10</span>,
-
-    <span class="hljs-attr">rShift</span>: <span class="hljs-number">0.1</span>,
-    <span class="hljs-attr">gShift</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">bShift</span>: -<span class="hljs-number">1.3</span>,
-
-    <span class="hljs-attr">rBounce</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">gBounce</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">bBounce</span>: <span class="hljs-literal">true</span>,
-
-    <span class="hljs-attr">rMax</span>: <span class="hljs-number">160</span>,
-    <span class="hljs-attr">gMax</span>: <span class="hljs-number">180</span>,
-    <span class="hljs-attr">bMax</span>: <span class="hljs-number">150</span>,
-
-    <span class="hljs-attr">autoUpdate</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
 });
 
 scrawl.<span class="hljs-title function_">makeBlock</span>({
@@ -2572,7 +2609,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">startX</span>: <span class="hljs-number">60</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">60</span>,
 
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;myColorObject&#x27;</span>,
+    <span class="hljs-attr">fillStyle</span>: myColorObject.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>()),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 });
 </code></pre>
@@ -2590,11 +2627,11 @@ constructors.<span class="hljs-property">Color</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-62">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

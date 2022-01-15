@@ -1054,11 +1054,13 @@ canvas.<span class="hljs-title function_">set</span>({
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mygradient = scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blue-green&#x27;</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">colors</span>: {
-        <span class="hljs-string">&#x27;0 &#x27;</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
-        <span class="hljs-string">&#x27;500 &#x27;</span>: <span class="hljs-string">&#x27;gold&#x27;</span>,
-        <span class="hljs-string">&#x27;999 &#x27;</span>: <span class="hljs-string">&#x27;green&#x27;</span>
-    },
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;blue&#x27;</span>],
+        [<span class="hljs-number">495</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
+        [<span class="hljs-number">500</span>, <span class="hljs-string">&#x27;yellow&#x27;</span>],
+        [<span class="hljs-number">505</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;green&#x27;</span>]
+    ],
 });</pre></div></div>
             
         </li>
