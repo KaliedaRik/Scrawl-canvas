@@ -1,5 +1,5 @@
 # Welcome to the Scrawl-canvas Library
-Version: `8.7.0 - 4 Jan 2022` 
+Version: `8.7.0 - 15 Jan 2022` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 + learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
