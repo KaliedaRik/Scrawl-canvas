@@ -599,7 +599,7 @@
 
     P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
 
-        <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
+        <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
         copy = <span class="hljs-title function_">mergeOver</span>(copy, stateCopy);
 
         copy = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handlePacketAnchor</span>(copy, items);
@@ -1336,7 +1336,7 @@
 
             <span class="hljs-keyword">let</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>;
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D(<span class="hljs-string">`m<span class="hljs-subst">${-handle[<span class="hljs-number">0</span>]}</span>,<span class="hljs-subst">${-handle[<span class="hljs-number">1</span>]}</span><span class="hljs-subst">${<span class="hljs-variable language_">this</span>.localPath}</span>`</span>);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D(<span class="hljs-string">`m<span class="hljs-subst">${-handle[<span class="hljs-number">0</span>]}</span>,<span class="hljs-subst">${-handle[<span class="hljs-number">1</span>]}</span><span class="hljs-subst">${<span class="hljs-variable language_">this</span>.localPath}</span>`</span>);
         }
     };</pre></div></div>
             

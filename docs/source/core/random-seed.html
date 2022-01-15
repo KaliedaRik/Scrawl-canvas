@@ -993,7 +993,7 @@ using any of these functions.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">function</span> <span class="hljs-title function_">stringify</span>(<span class="hljs-params">obj, replacer, spaces, cycleReplacer</span>) {
-    <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">stringify</span>(obj, <span class="hljs-title function_">serializer</span>(replacer, cycleReplacer), spaces)
+    <span class="hljs-keyword">return</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(obj, <span class="hljs-title function_">serializer</span>(replacer, cycleReplacer), spaces)
 }
 
 <span class="hljs-keyword">function</span> <span class="hljs-title function_">serializer</span>(<span class="hljs-params">replacer, cycleReplacer</span>) {

@@ -737,7 +737,7 @@ P = <span class="hljs-title function_">anchorMix</span>(P);</pre></div></div>
               </div>
               <p><strong>isHorizontalCopy</strong> - Boolean flag - Copying the source image to the output happens, by default, by rows - which effectively means the struts are on the left-hand and right-hand edges of the image. </p>
 <ul>
-<li>To change this to columns (which sets the struts to the top and bottom edges of the image) set the attribute to <code>false</code> </li>
+<li>To change this to columns (which sets the struts to the top and bottom edges of the image) set the attribute to <code>false</code></li>
 </ul>
 
             </div>
@@ -967,7 +967,7 @@ P = <span class="hljs-title function_">anchorMix</span>(P);</pre></div></div>
               </div>
               <p>Loom entitys support appropriate styling attributes, mainly for their stroke styles (used with the <code>draw</code>, <code>drawAndFill</code>, <code>fillAndDraw</code>, <code>drawThenFill</code> and <code>fillThenDraw</code> stamping methods). </p>
 <ul>
-<li>These <em><strong>state</strong></em> attributes are stored directly on the object, rather than in a separate <a href="./state.html">State</a> object. </li>
+<li>These <em><strong>state</strong></em> attributes are stored directly on the object, rather than in a separate <a href="./state.html">State</a> object.</li>
 </ul>
 <p>The following attributes are thus supported:</p>
 <p>Alpha and Composite operations will be applied to both the Loom entity’s border (the Shape entitys, with connecting lines between their paths’ start and end points) and fill (the image displayed between the Loom’s struts)</p>
@@ -1031,7 +1031,7 @@ P.<span class="hljs-property">processPacketOut</span> = <span class="hljs-keywor
 
 P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
 
-    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
+    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
     copy = <span class="hljs-title function_">mergeOver</span>(copy, stateCopy);
 
     copy = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handlePacketAnchor</span>(copy, items);
@@ -1043,7 +1043,7 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>) {
 
-        <span class="hljs-keyword">let</span> a = <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
+        <span class="hljs-keyword">let</span> a = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
         copy.<span class="hljs-property">anchor</span> = a;
     }
     <span class="hljs-keyword">return</span> copy;
@@ -2082,7 +2082,7 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
               <p>if other functions call setSourceDimension, they will do it without supplying a new value</p>
 <ul>
 <li>in which case we can calculate and update it here</li>
-<li>other functions do it as a sanity check </li>
+<li>other functions do it as a sanity check</li>
 </ul>
 
             </div>

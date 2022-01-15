@@ -790,7 +790,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(copy.<span class="hljs-property">gutterColor</span>)) copy.<span class="hljs-property">gutterColor</span> = copy.<span class="hljs-property">gutterColor</span>.<span class="hljs-property">name</span>;
 
-    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
+    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
     copy = <span class="hljs-title function_">mergeOver</span>(copy, stateCopy);
 
     copy = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handlePacketAnchor</span>(copy, items);
@@ -1145,9 +1145,9 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noPathUpdates</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>) {
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D(),
-            rowLines = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D(),
-            colLines = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D();
+        <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D(),
+            rowLines = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D(),
+            colLines = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
         
         <span class="hljs-keyword">let</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
             scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>,
@@ -1201,7 +1201,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
             <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; cols; j++) {
 
-                <span class="hljs-keyword">let</span> path = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D();
+                <span class="hljs-keyword">let</span> path = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
 
                 cx = j * colWidth;
                 cy = i * rowHeight;

@@ -1012,7 +1012,7 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
 
         <span class="hljs-keyword">let</span> { <span class="hljs-attr">currentStampHandlePosition</span>:handle, <span class="hljs-attr">currentScale</span>:scale, <span class="hljs-attr">currentOuterRadius</span>:oR, <span class="hljs-attr">currentInnerRadius</span>:iR, <span class="hljs-attr">outerCircleStart</span>:ocs, <span class="hljs-attr">outerCircleEnd</span>:oce, <span class="hljs-attr">innerCircleStart</span>:ics, <span class="hljs-attr">innerCircleEnd</span>:ice, drawOuterCircle, <span class="hljs-attr">currentDisplacement</span>:disp, displayIntersect } = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D();
+        <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
 
         oR *= scale;
         iR *= scale;
@@ -1032,8 +1032,8 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> pOuter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D();
-            <span class="hljs-keyword">let</span> pInner = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectInner</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D();
+            <span class="hljs-keyword">let</span> pOuter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
+            <span class="hljs-keyword">let</span> pInner = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectInner</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
         
             <span class="hljs-keyword">if</span> (displayIntersect) p.<span class="hljs-title function_">arc</span>(x, y, oR, ocs, oce);
             <span class="hljs-keyword">else</span> p.<span class="hljs-title function_">arc</span>(x, y, oR, ocs, oce, <span class="hljs-literal">true</span>);

@@ -1820,7 +1820,7 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
                 cornerData.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
                 cornerData.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkCornerPositions</span>());
 
-                <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D();
+                <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
                 p.<span class="hljs-title function_">moveTo</span>(cornerData[<span class="hljs-number">0</span>], cornerData[<span class="hljs-number">1</span>]);
                 p.<span class="hljs-title function_">lineTo</span>(cornerData[<span class="hljs-number">2</span>], cornerData[<span class="hljs-number">3</span>]);
                 p.<span class="hljs-title function_">lineTo</span>(cornerData[<span class="hljs-number">4</span>], cornerData[<span class="hljs-number">5</span>]);
@@ -1828,7 +1828,7 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
                 p.<span class="hljs-title function_">closePath</span>();
             }
             <span class="hljs-keyword">else</span> {
-                <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D();
+                <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
                 p.<span class="hljs-title function_">moveTo</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
                 p.<span class="hljs-title function_">lineTo</span>(<span class="hljs-number">10</span>, <span class="hljs-number">0</span>);
                 p.<span class="hljs-title function_">lineTo</span>(<span class="hljs-number">0</span>, <span class="hljs-number">10</span>);

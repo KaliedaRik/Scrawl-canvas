@@ -1025,7 +1025,7 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
             }
 
             <span class="hljs-keyword">let</span> intrinsics = item.<span class="hljs-property">dataset</span>.<span class="hljs-property">dimensions</span> || {};
-            <span class="hljs-keyword">if</span> (intrinsics.<span class="hljs-property">substring</span>) intrinsics = <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">parse</span>(intrinsics);
+            <span class="hljs-keyword">if</span> (intrinsics.<span class="hljs-property">substring</span>) intrinsics = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(intrinsics);
 
             <span class="hljs-keyword">let</span> image = <span class="hljs-title function_">makeImageAsset</span>({
                 <span class="hljs-attr">name</span>: name,

@@ -3097,7 +3097,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
         oData.<span class="hljs-title function_">set</span>(iData);
 
-        <span class="hljs-keyword">const</span> hold = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint</span>8ClampedArray(iData);
+        <span class="hljs-keyword">const</span> hold = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint8ClampedArray</span>(iData);
 
         <span class="hljs-keyword">const</span> selectedMethod = (excludeTransparentPixels) ? getCheckedValue : getUncheckedValue;
 
@@ -4237,7 +4237,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float</span>32<span class="hljs-built_in">Array</span>([ a0, a1, a2, a3, b1, b2, left_corner, right_corner ]);
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float32Array</span>([ a0, a1, a2, a3, b1, b2, left_corner, right_corner ]);
         }
 
         <span class="hljs-keyword">const</span> convolveRGBA = <span class="hljs-keyword">function</span> (<span class="hljs-params">src, out, line, coeff, width, height</span>) {</pre></div></div>
@@ -4440,12 +4440,12 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == radius) radius = <span class="hljs-number">1</span>;
 
-        <span class="hljs-keyword">const</span> hold = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint</span>8ClampedArray(iData);
+        <span class="hljs-keyword">const</span> hold = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint8ClampedArray</span>(iData);
 
-        <span class="hljs-keyword">const</span> src32 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint</span>32<span class="hljs-built_in">Array</span>(hold.<span class="hljs-property">buffer</span>);
+        <span class="hljs-keyword">const</span> src32 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(hold.<span class="hljs-property">buffer</span>);
 
-        <span class="hljs-keyword">const</span> out = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint</span>32<span class="hljs-built_in">Array</span>(src32.<span class="hljs-property">length</span>),
-            tmp_line = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float</span>32<span class="hljs-built_in">Array</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(width, height) * <span class="hljs-number">4</span>);
+        <span class="hljs-keyword">const</span> out = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(src32.<span class="hljs-property">length</span>),
+            tmp_line = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float32Array</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(width, height) * <span class="hljs-number">4</span>);
 
         <span class="hljs-keyword">const</span> coeff = <span class="hljs-title function_">gaussCoef</span>(radius);
 

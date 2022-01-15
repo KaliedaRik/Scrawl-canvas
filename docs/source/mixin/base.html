@@ -990,7 +990,7 @@ box.<span class="hljs-title function_">kill</span>()
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">stringify</span>([<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">lib</span>, copy]);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>([<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">lib</span>, copy]);
     };</pre></div></div>
             
         </li>
@@ -1094,7 +1094,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
               <p><code>importPacket</code> - Import and unpack a string representation of a factory object using the <strong>saveAsPacket</strong> function.</p>
 <ul>
 <li>Uses <strong>fetch</strong>, thus is an asynchronous process and returns a promise</li>
-<li>Once we have the packet, we can further action it using actionPacket() </li>
+<li>Once we have the packet, we can further action it using actionPacket()</li>
 </ul>
 
             </div>
@@ -1244,7 +1244,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
                     <span class="hljs-keyword">try</span> {
 
-                        [name, type, lib, update] = <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">parse</span>(packet);
+                        [name, type, lib, update] = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(packet);
                     }
                     <span class="hljs-keyword">catch</span> (e) {
 

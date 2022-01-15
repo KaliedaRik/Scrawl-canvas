@@ -610,7 +610,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 </ul>
 <p>These <strong>euler</strong> attributes are named after the <a href="https://en.wikipedia.org/wiki/Aircraft_principal_axes">Aircraft principal axes</a> - mainly because I find it difficult to keep the mathematical representations in my head when thinking about rotations in 3 dimensions, but an image of an aircraft is a lot easier to visualize.</p>
 <ul>
-<li>Internally, Scrawl-canvas stores rotational data in <a href="../factory/quaternion.html">Quaternion objects</a> rather than in matrices. </li>
+<li>Internally, Scrawl-canvas stores rotational data in <a href="../factory/quaternion.html">Quaternion objects</a> rather than in matrices.</li>
 </ul>
 <p>Instead of 3D rotations, entity artefacts have two Boolean flags - <strong>flipReverse</strong>, <strong>flipUpend</strong> - which determine the orientation of the entity when it stamps itself on the display. </p>
 <ul>
@@ -1084,7 +1084,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>) {
 
-            <span class="hljs-keyword">let</span> a = <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
+            <span class="hljs-keyword">let</span> a = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
             copy.<span class="hljs-property">anchor</span> = a;
         }
         <span class="hljs-keyword">return</span> copy;
@@ -1856,7 +1856,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
               <p><code>initializePositions</code> - Internal function called by all artefact factories </p>
 <ul>
 <li>Setup initial Arrays and Objects, including <code>current...</code> and <code>...Subscriber</code> Arrays.</li>
-<li>Create a variety of <code>dirty...</code> flags, setting them all to true. </li>
+<li>Create a variety of <code>dirty...</code> flags, setting them all to true.</li>
 </ul>
 
             </div>
