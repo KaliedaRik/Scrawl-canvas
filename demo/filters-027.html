@@ -33,7 +33,12 @@
         <option value="monochrome-4">monochrome-4</option>
         <option value="monochrome-8">monochrome-8</option>
         <option value="monochrome-16">monochrome-16</option>
-        <option value="basic-62">basic-62</option>
+        <option value="RGBK">RGBK</option>
+        <option value="CMYK">CMYK</option>
+        <option value="basic">basic</option>
+        <option value="RGBK-extended">RGBK-extended</option>
+        <option value="CMYK-extended">CMYK-extended</option>
+        <option value="extended">extended</option>
       </select>
     </div>
 
@@ -56,7 +61,7 @@
     </div>
 
     <div class="blue label">Min color distance</div>
-    <div class="blue"><input class="controlItem" id="minimumColorDistance" type="range" value="1000" min="400" max="2000" step="200" /></div>
+    <div class="blue"><input class="controlItem" id="minimumColorDistance" type="range" value="1000" min="50" max="2000" step="50" /></div>
 
     <div class="yellow label">Random seed</div>
     <div class="yellow"><input class="controlItem" id="seed" type="text" value="some-random-string-or-other" /></div>
@@ -97,7 +102,7 @@
 
     <p>Note that this is a resource-intensive filter. Memoization is strongly advised!</p>
 
-    <p>In particular the 'commonest colors' method of generating a palette is experimental, and it's algorithm will take dozens of seconds to generate a larger palettes (for example, greater than 32 colors). There is also an element of randomness involved in the palette generated, which impacts on the filter's result for particular images. TIP: if the 'commonest colors' method is not producing the results you want for a given image, try changing the 'random seed' attribute to see if the output can be improved.</p>
+    <p><b>Known issue:</b> Filter memoization will, sometimes, kill Safari-based browsers for as-yet-unknown reasons - see demo Filters-001 for details. For now, if Scrawl-canvas detects that the user is viewing the canvas in a Safari-based browser, it will ignore requests to memoize filters.</p>
 
     <p><b>Touch test:</b> not required</p>
 

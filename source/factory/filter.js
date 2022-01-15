@@ -693,7 +693,7 @@ const setActionsArray = {
 
                         range.forEach(col => {
 
-                            let [r, g, b] = window.SC_colorChecker.extractRGBfromColor(col);
+                            let [r, g, b] = window.scrawlEnvironmentColorChecker.extractRGBfromColor(col);
                             res.push(r, g, b);
                         });
                     }
@@ -721,7 +721,7 @@ const setActionsArray = {
 
         if (f.reference != null) {
 
-            [red, green, blue] = window.SC_colorChecker.extractRGBfromColor(f.reference);
+            [red, green, blue] = window.scrawlEnvironmentColorChecker.extractRGBfromColor(f.reference);
 
             f.red = red;
             f.green = green;
@@ -756,7 +756,7 @@ const setActionsArray = {
 
         if (f.lowColor != null) {
 
-            [lowRed, lowGreen, lowBlue] = window.SC_colorChecker.extractRGBfromColor(f.lowColor);
+            [lowRed, lowGreen, lowBlue] = window.scrawlEnvironmentColorChecker.extractRGBfromColor(f.lowColor);
 
             f.lowRed = lowRed;
             f.lowGreen = lowGreen;
@@ -767,7 +767,7 @@ const setActionsArray = {
 
         if (f.highColor != null) {
             
-            [highRed, highGreen, highBlue] = window.SC_colorChecker.extractRGBfromColor(f.highColor);
+            [highRed, highGreen, highBlue] = window.scrawlEnvironmentColorChecker.extractRGBfromColor(f.highColor);
 
             f.highRed = highRed;
             f.highGreen = highGreen;
@@ -956,7 +956,7 @@ const setActionsArray = {
 
         if (f.reference != null) {
 
-            [red, green, blue, alpha] = window.SC_colorChecker.extractRGBfromColor(f.reference);
+            [red, green, blue, alpha] = window.scrawlEnvironmentColorChecker.extractRGBfromColor(f.reference);
 
             alpha = Math.round(alpha * 255);
 
@@ -1394,7 +1394,7 @@ const setActionsArray = {
             
         if (f.lowColor != null) {
 
-            [lowRed, lowGreen, lowBlue, lowAlpha] = window.SC_colorChecker.extractRGBfromColor(f.lowColor);
+            [lowRed, lowGreen, lowBlue, lowAlpha] = window.scrawlEnvironmentColorChecker.extractRGBfromColor(f.lowColor);
 
             lowAlpha = Math.round(lowAlpha * 255);
 
@@ -1410,7 +1410,7 @@ const setActionsArray = {
 
         if (f.highColor != null) {
             
-            [highRed, highGreen, highBlue, highAlpha] = window.SC_colorChecker.extractRGBfromColor(f.highColor);
+            [highRed, highGreen, highBlue, highAlpha] = window.scrawlEnvironmentColorChecker.extractRGBfromColor(f.highColor);
 
             highAlpha = Math.round(highAlpha * 255);
 
@@ -1462,7 +1462,7 @@ const setActionsArray = {
             
         if (f.redColor != null) {
 
-            [redInRed, greenInRed, blueInRed] = window.SC_colorChecker.extractRGBfromColor(f.redColor);
+            [redInRed, greenInRed, blueInRed] = window.scrawlEnvironmentColorChecker.extractRGBfromColor(f.redColor);
 
             redInRed /= 255;
             greenInRed /= 255;
@@ -1477,7 +1477,7 @@ const setActionsArray = {
 
         if (f.greenColor != null) {
             
-            [redInGreen, greenInGreen, blueInGreen] = window.SC_colorChecker.extractRGBfromColor(f.greenColor);
+            [redInGreen, greenInGreen, blueInGreen] = window.scrawlEnvironmentColorChecker.extractRGBfromColor(f.greenColor);
 
             redInGreen /= 255;
             greenInGreen /= 255;
@@ -1492,7 +1492,7 @@ const setActionsArray = {
 
         if (f.blueColor != null) {
             
-            [redInBlue, greenInBlue, blueInBlue] = window.SC_colorChecker.extractRGBfromColor(f.blueColor);
+            [redInBlue, greenInBlue, blueInBlue] = window.scrawlEnvironmentColorChecker.extractRGBfromColor(f.blueColor);
 
             redInBlue /= 255;
             greenInBlue /= 255;

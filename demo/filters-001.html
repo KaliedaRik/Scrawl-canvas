@@ -125,6 +125,10 @@
       <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
 
+    <p><b>Known issue:</b> Filter memoization will, sometimes, kill Safari-based browsers for as-yet-unknown reasons - it appears to cause the the getImageData() invocation on line 595 in mixin/entity.js to go from taking a a handful of milliseconds to over 5 seconds, but only after an element's <i>memoizeFilterOutput</i> flag has been set to true.</p>
+
+    <p>For now, if Scrawl-canvas detects that the user is viewing the canvas in a Safari-based browser, it will ignore requests to memoize filters. Use cache output functionality instead to improve render speeds.</p>
+
     <p><b>Touch test:</b> not required</p>
 
     <p><a href="../docs/demo/filters-001.html">Annotated code</a></p>

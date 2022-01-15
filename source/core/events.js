@@ -241,6 +241,7 @@ let dpr_changeAction = λnull;
 const setPixelRatioChangeAction = (func) => dpr_changeAction = func;
 
 const browserIs = detectBrowser();
+window.scrawlEnvironmentBrowserDetection = browserIs;
 
 let dpr = 0;
 const getPixelRatio = () => dpr;
@@ -253,7 +254,7 @@ const updatePixelRatio = () => {
 
     if (browserIs.indexOf('safari') >= 0) {
 
-        console.log('safari browser detected, switching off DPR');
+        console.log('safari browser detected. Switching off DPR functionality, and filter memoization');
 
         ignorePixelRatio = true;
         dpr = 1;

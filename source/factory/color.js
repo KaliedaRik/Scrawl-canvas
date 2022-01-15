@@ -1265,7 +1265,8 @@ const browserChecker = function () {
         g = 0,
         b = 0,
         a = 0,
-        image;
+        image,
+        col = '#ffffff00';
 
     const cell = requestCell();
 
@@ -1290,6 +1291,11 @@ const browserChecker = function () {
     }
     if (r || g || b) supportsHWB = true;
 
+    // Firefox (v96.0.1) fails silently when setting engine to unsupported color, leaving engine value unchanged, which in turn leaves our test rgb values unchanged, thus giving us a false positive for the test
+    // - This additional safety net test identifies and corrects for that bug
+    if (supportsHWB && col === engine.fillStyle) supportsHWB = false;
+    else col = engine.fillStyle;
+
     // Test for LAB support
     engine.fillStyle = 'lab(29.2345% 39.3825 20.0664)';
     engine.clearRect(0, 0, 1, 1);
@@ -1303,8 +1309,12 @@ const browserChecker = function () {
     }
     if (r || g || b) supportsLAB = true;
 
+    // Firefox safety net
+    if (supportsLAB && col === engine.fillStyle) supportsLAB = false;
+    else col = engine.fillStyle;
+
     // Test for LCH support
-    engine.fillStyle = 'lch(29.2345% 44.2 27)';
+    engine.fillStyle = 'lch(52.2345% 72.2 56.2)';
     engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
 
@@ -1315,6 +1325,10 @@ const browserChecker = function () {
         [r, g, b, a] = image.data;
     }
     if (r || g || b) supportsLCH = true;
+
+    // Firefox safety net
+    if (supportsLCH && col === engine.fillStyle) supportsLCH = false;
+    else col = engine.fillStyle;
 
     engine.restore();
     releaseCell(cell);
@@ -1327,23 +1341,8 @@ browserChecker();
 //
 //     name: 'myColorObject',
 //
-//     r: 100,
-//     g: 50,
-//     b: 10,
-//
-//     rShift: 0.1,
-//     gShift: 1,
-//     bShift: -1.3,
-//
-//     rBounce: true,
-//     gBounce: true,
-//     bBounce: true,
-//
-//     rMax: 160,
-//     gMax: 180,
-//     bMax: 150,
-//
-//     autoUpdate: true,
+//     minimumColor: 'red',
+//     maximumColor: 'green',
 // });
 //
 // scrawl.makeBlock({
@@ -1356,7 +1355,7 @@ browserChecker();
 //     startX: 60,
 //     startY: 60,
 //
-//     fillStyle: 'myColorObject',
+//     fillStyle: myColorObject.getRangeColor(Math.random()),
 //     method: 'fill',
 // });
 // ```

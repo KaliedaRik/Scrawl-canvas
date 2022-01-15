@@ -4,7 +4,7 @@
 // [Run code](../../demo/particles-016.html)
 import scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -162,6 +162,10 @@ scrawl.makeDragZone({
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
 });
+
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, '#my-image-store', [myPicture]);
 
 
 // #### Development and testing

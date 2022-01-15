@@ -232,7 +232,7 @@ let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// The following setters use the `window.SC_colorChecker` Color factory. This factory gets created and attached to the window object during Scrawl-canvas initialization. Code for creating the factory can be found in the `core/init.js` module
+// The following setters use the `window.scrawlEnvironmentColorChecker` Color factory. This factory gets created and attached to the window object during Scrawl-canvas initialization. Code for creating the factory can be found in the `core/init.js` module
 S.fillStyle = function (item) {
 
     let temp;
@@ -244,7 +244,7 @@ S.fillStyle = function (item) {
 
         if (temp) this.fillStyle = temp;
         else if (item.includes('rgb') || item.includes('hsl') || item.includes('#')) this.fillStyle = item;
-        else this.fillStyle = window.SC_colorChecker.checkColor(item);
+        else this.fillStyle = window.scrawlEnvironmentColorChecker.checkColor(item);
     }
 };
 
@@ -259,14 +259,14 @@ S.strokeStyle = function (item) {
 
         if (temp) this.strokeStyle = temp;
         else if (item.includes('rgb') || item.includes('hsl') || item.includes('#')) this.strokeStyle = item;
-        else this.strokeStyle = window.SC_colorChecker.checkColor(item);
+        else this.strokeStyle = window.scrawlEnvironmentColorChecker.checkColor(item);
     }
 };
 
 S.shadowColor = function (item) {
 
     if (item.includes('rgb') || item.includes('hsl') || item.includes('#')) this.shadowColor = item;
-    else this.shadowColor = window.SC_colorChecker.checkColor(item);
+    else this.shadowColor = window.scrawlEnvironmentColorChecker.checkColor(item);
 };
 
 

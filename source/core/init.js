@@ -36,7 +36,7 @@ const init = function () {
 
 	// Dedicated entity state color engine - this allows the user to set a fillStyle, strokeStyle or shadowColor attribute to any CSS color string
 	// + Can't set this as part of the State factory initialization as it appears to run before the Color factory initializes
-	window.SC_colorChecker = makeColor({
+	window.scrawlEnvironmentColorChecker = makeColor({
 	    name: 'entity-colorEngine-do-not-overwrite',
 	});
 

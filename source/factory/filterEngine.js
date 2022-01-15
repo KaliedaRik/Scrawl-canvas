@@ -59,7 +59,9 @@ P.action = function (packet) {
         }
     }
 
-    if (identifier && workstore[identifier]) {
+    // TODO: work out why filter memoization destroys Safari-based browser performance
+    // + For now, we disable memoization for Safari-based browsers
+    if (identifier && workstore[identifier] && !window.scrawlEnvironmentBrowserDetection.includes('safari')) {
 
         workstoreLastAccessed[identifier] = Date.now();
         return workstore[identifier];
@@ -86,7 +88,8 @@ P.action = function (packet) {
             if (a) a.call(this, actData);
         }
 
-        if (identifier) {
+        // + For now, we disable memoization for Safari-based browsers
+        if (identifier && !window.scrawlEnvironmentBrowserDetection.includes('safari')) {
 
             workstore[identifier] = this.cache.work;
             workstoreLastAccessed[identifier] = Date.now();
@@ -725,14 +728,47 @@ P.initiateDithering = function () {
     this.createPalette('monochrome-4', ['#000', '#555', '#aaa', '#fff']);
     this.createPalette('monochrome-8', ['#000', '#333', '#555', '#777', '#999', '#bbb', '#ddd', '#fff']);
     this.createPalette('monochrome-16', ['#000', '#111', '#222', '#333', '#444', '#555', '#666', '#777', '#888', '#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee', '#fff']);
-    this.createPalette('basic-62', [
+    this.createPalette('RGBK-extended', [
+        '#000', '#fff',
+        '#003', '#007', '#337', '#00a', '#33a', '#77a', '#00f', '#33f', '#77f', '#aaf',
+        '#030', '#070', '#373', '#0a0', '#3a3', '#7a7', '#0f0', '#3f3', '#7f7', '#afa',
+        '#300', '#700', '#733', '#a00', '#a33', '#a77', '#f00', '#f33', '#f77', '#faa',
+    ]);
+    this.createPalette('CMYK-extended', [
         '#000', '#fff',
         '#033', '#077', '#377', '#0aa', '#3aa', '#7aa', '#0ff', '#3ff', '#7ff', '#aff',
         '#303', '#707', '#737', '#a0a', '#a3a', '#a7a', '#f0f', '#f3f', '#f7f', '#faf',
         '#330', '#770', '#733', '#aa0', '#aa3', '#aa7', '#ff0', '#ff3', '#ff7', '#ffa',
+    ]);
+    this.createPalette('extended', [
+        '#000', '#fff',
+        '#003', '#007', '#337', '#00a', '#33a', '#77a', '#00f', '#33f', '#77f', '#aaf',
+        '#030', '#070', '#373', '#0a0', '#3a3', '#7a7', '#0f0', '#3f3', '#7f7', '#afa',
+        '#300', '#700', '#733', '#a00', '#a33', '#a77', '#f00', '#f33', '#f77', '#faa',
         '#033', '#077', '#377', '#0aa', '#3aa', '#7aa', '#0ff', '#3ff', '#7ff', '#aff',
         '#303', '#707', '#737', '#a0a', '#a3a', '#a7a', '#f0f', '#f3f', '#f7f', '#faf',
         '#330', '#770', '#733', '#aa0', '#aa3', '#aa7', '#ff0', '#ff3', '#ff7', '#ffa',
+    ]);
+    this.createPalette('RGBK', [
+        '#000', '#fff',
+        '#007', '#00f', '#77f',
+        '#070', '#0f0', '#7f7',
+        '#700', '#f00', '#f77',
+    ]);
+    this.createPalette('CMYK', [
+        '#000', '#fff',
+        '#077', '#0ff', '#7ff',
+        '#707', '#f0f', '#f7f',
+        '#770', '#ff0', '#ff7',
+    ]);
+    this.createPalette('basic', [
+        '#000', '#fff',
+        '#007', '#00f', '#77f',
+        '#070', '#0f0', '#7f7',
+        '#700', '#f00', '#f77',
+        '#077', '#0ff', '#7ff',
+        '#707', '#f0f', '#f7f',
+        '#770', '#ff0', '#ff7',
     ]);
 };
 
@@ -943,7 +979,7 @@ P.getColorDistanceData = function (data, ref) {
             a = ra - da;
             b = rb - db;
 
-            pixelRes.push((l * l) + (a * a) + (b * b));
+            pixelRes.push(Math.sqrt((l * l) + (a * a) + (b * b)));
         }
         dataRes.push(pixelRes);
     }
