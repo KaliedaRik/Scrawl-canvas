@@ -748,7 +748,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">precision</span>: <span class="hljs-number">1</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">precision</span>: <span class="hljs-number">25</span>,</pre></div></div>
             
         </li>
         
@@ -975,7 +975,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">colorSpace</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">colorSpace</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getColorSpace</span>();
+};
+S.<span class="hljs-property">colorSpace</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
@@ -1004,6 +1008,10 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
     }
 }
 
+G.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getReturnColorAs</span>();
+};
 S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
     
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-title function_">set</span>({
@@ -1073,11 +1081,21 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p><code>recalculateHold</code> - internal variable</p>
+              <p><code>getColorSpace</code> - returns the color factory’s current colorSpace value</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">recalculateHold</span> = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getColorSpace</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-property">colorSpace</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;RGB&#x27;</span>;
+};
+
+P.<span class="hljs-property">getReturnColorAs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-property">returnColorAs</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;RGB&#x27;</span>;
+};</pre></div></div>
             
         </li>
         
@@ -1087,6 +1105,21 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p><code>recalculateHold</code> - internal variable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">recalculateHold</span> = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>recalculate</code> - populate the stops Array with CSS color Strings, as determined by colors stored in the <code>colors</code> object</p>
 
@@ -1126,11 +1159,11 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>There’s a bug with getting over-vibrant range colors in the HSL/HWB/LCH color spaces</p>
 
@@ -1144,25 +1177,6 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
             stops[j] = factory.<span class="hljs-title function_">getRangeColor</span>((j - currentKey) / diff, <span class="hljs-literal">true</span>);
         }
     }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p><code>makeColorString</code> - internal helper function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">a, b, c, d</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-title function_">buildColorString</span>(a, b, c, d);
-    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>;
 };</pre></div></div>
             
         </li>
@@ -1277,7 +1291,11 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         }
 
         <span class="hljs-keyword">let</span> engine = easingFunction;
-        <span class="hljs-keyword">if</span> (easing !== <span class="hljs-string">&#x27;function&#x27;</span> &amp;&amp; easeEngines[easing]) engine = easeEngines[easing];</pre></div></div>
+        <span class="hljs-keyword">if</span> (easing !== <span class="hljs-string">&#x27;function&#x27;</span> &amp;&amp; easeEngines[easing]) engine = easeEngines[easing];
+
+        <span class="hljs-keyword">const</span> colorSpace = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getColorSpace</span>();
+
+        <span class="hljs-keyword">const</span> precisionTest = (!precision || (easing === <span class="hljs-string">&#x27;linear&#x27;</span> &amp;&amp; colorSpace === <span class="hljs-string">&#x27;RGB&#x27;</span>)) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -1292,7 +1310,7 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (start === end) <span class="hljs-keyword">return</span> stops[start] || <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (start === end) <span class="hljs-keyword">return</span> stops[start] || <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1314,7 +1332,7 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
         
             spread = end - start;
 
-            <span class="hljs-keyword">if</span> (precision) {
+            <span class="hljs-keyword">if</span> (precisionTest) {
 
                 <span class="hljs-keyword">for</span> (i = start + <span class="hljs-number">1</span>; i &lt; end; i += precision) {
 
@@ -1377,7 +1395,7 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
                 n = <span class="hljs-number">999</span> - start;
                 spread = n + end;
 
-                <span class="hljs-keyword">if</span> (precision) {
+                <span class="hljs-keyword">if</span> (precisionTest) {
 
                     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; spread; i += precision) {
 
@@ -1430,7 +1448,7 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
             
                 spread = start - end;
 
-                <span class="hljs-keyword">if</span> (precision) {
+                <span class="hljs-keyword">if</span> (precisionTest) {
 
                     <span class="hljs-keyword">for</span> (i = end + <span class="hljs-number">1</span>; i &lt; start; i += precision) {
 
@@ -1474,7 +1492,7 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>;
 };</pre></div></div>
             
         </li>

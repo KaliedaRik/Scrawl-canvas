@@ -151,10 +151,11 @@
       <li>They can take <strong>Color</strong>, <strong>Gradient</strong>, <strong>RadialGradient</strong>, and <strong>ConicGradient</strong> (where the browser supports it) styles for both their fill and stroke styling.</li>
       <ul>
         <li>All gradient styles can be bound to their containing cell, or to particular entitys.</li>
-        <li>Color factories can accept both RGB and HSL color strings, and support <strong>color ranges</strong>.</li> 
-        <li>Colors, and gradient styles, can have easing algorithms applied to them &mdash; <strong>non-linear gradients</strong>.</li>
+        <li>Entitys can accept all legitimate CSS color strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab() - for their fillStyle, strokeStyle and shadowColor input.</li>
+        <li>Color factories (and thus gradient styles) can work with RGB, HSL, HWB, LAB and LCH <strong>color spaces</strong> internally, and export CSS color strings for each of those spaces; Color factories support <strong>color ranges</strong>.</li> 
+        <li>Color factories, and gradient styles, can have easing algorithms applied to them &mdash; <strong>non-linear gradients</strong>.</li>
       </ul>
-      <li>They can also take <strong>Pattern</strong> styles which may contain a variety of image-based assets; patterns can be scaled, skewed and positioned as requested.</li>
+      <li>They can also take <strong>Pattern</strong> styles which may contain a variety of image-based assets; patterns can be scaled, skewed and positioned as required.</li>
       <li>Entitys can also act as <strong>clipping zones</strong> for subesequent drawing activities.</li>
       <li>The visual assets used by Picture entitys and Pattern styles can include fully responsive <strong>&lt;img></strong> elements (with a <strong>srcset</strong> attribute), or image files.</li>
       <li><strong>&lt;video></strong> and <strong>&lt;canvas></strong> element assets are also supported, as are <strong>spritesheet animations</strong>.</li>
@@ -888,7 +889,7 @@
       <ul>
         <li>All canvases have appropriate <strong>ARIA tags</strong> added to them &mdash; including ARIA labels and descriptions.</li>
         <li><strong>Graphical text</strong> is automatically exposed to the DOM, to make it readable to assistive technology</li>
-        <li><strong>Graphical navigation</strong> is automatically reflected into the DOM via &lt;a> anchor elements which can be triggered via the keyboard. This extends to responding visually to keyboard-driven <strong>focus/blur</strong> events.</li>
+        <li><strong>Graphical navigation</strong> is automatically reflected into the DOM via &lt;a> anchor elements which can be triggered using the keyboard. This extends to responding visually to keyboard-driven <strong>focus/blur</strong> events.</li>
         <li>Canvases can adapt to <strong>user preferences</strong>, for instance <strong>prefers-reduced-motion</strong> and <strong>prefers-color-scheme</strong>.</li>
       </ul>
       <li>Scrawl canvas treats <strong>responsiveness as a First Class Requirement:</strong></li>
@@ -1042,13 +1043,13 @@
 
     <h2>Snippet code tests</h2>
 
-    <p>Scrawl-canvas snippets are <strong>module-based functions</strong> which can be <strong>imported</strong> into any other code and <strong>applied to DOM elements</strong>. The functions add a canvas to the DOM element to act as its background, allowing complex displays and animations to be added to the element.</p>
+    <p>Scrawl-canvas snippets (warning: experimental!) are <strong>module-based functions</strong> which can be <strong>imported</strong> into any other code and <strong>applied to DOM elements</strong>. The functions add a canvas to the DOM element to act as its background, allowing complex displays and animations to be added to the element.</p>
 
     <p>The results are similar to the <a href="https://ishoudinireadyyet.com/">Houdini</a> <a href="https://developers.google.com/web/updates/2018/01/paintapi">CSS Paint API</a>, though the path to achieving those results is different.</p>
 
     <p><strong>Snippet canvases are responsive:</strong> a well-written snippet will be able to adapt to changes in its host element's position, dimensions and styling attributes in real time, and should be able to tidy up after itself if its host element gets removed from the web page (for instance when it is part of a component).</p>
 
-    <p>The idea behind the snippets functionality is to allow third party developers to develop code Snippets which other developers can then import and apply in their own sites. Note that there are inherent dangers in this approach: <b><i>it is always safer to host and review snippets code yourselves, to minimize the opportunities for third parties to inject malignant code into unsuspecting websites!</i></b></p>
+    <p>The idea behind the snippets functionality is to allow third party developers to develop code Snippets which other developers can then import and apply in their own sites. Note that there are inherent dangers in this approach: <b><i>it is always safer to host and review snippets code yourselves, to minimize the opportunities for third parties to inject malicious code into unsuspecting websites!</i></b></p>
 
     <div class="container">
 
