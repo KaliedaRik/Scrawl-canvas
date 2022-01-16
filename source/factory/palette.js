@@ -118,7 +118,7 @@ let defaultAttributes = {
     easingFunction: null,
 
 // The __precision__ value - higher values lead to fewer stops being added to the gradient; setting the value to `0` forces the palette to skip setting the stops between defined colors in the `colors` Array
-    precision: 0,
+    precision: 25,
 
 // ##### Non-retained argument attributes (for factory, clone, set functions) - these attributes get passed on to the Palette's Color object
 
@@ -237,6 +237,10 @@ P.setEasingHelper = function (item) {
 };
 
 // The __colorSpace__ and __returnColorAs__ attributes get passed through to the Palette's Color object
+G.colorSpace = function () {
+
+    return this.getColorSpace();
+};
 S.colorSpace = function (item) {
 
     if (item.substring) {
@@ -266,6 +270,10 @@ S.colorSpace = function (item) {
     }
 }
 
+G.returnColorAs = function () {
+
+    return this.getReturnColorAs();
+};
 S.returnColorAs = function (item) {
     
     this.factory.set({
@@ -291,6 +299,19 @@ S.stops = λnull;
 
 
 // #### Prototype functions
+
+// `getColorSpace` - returns the color factory's current colorSpace value
+P.getColorSpace = function () {
+
+    if (this.factory) return this.factory.colorSpace;
+    return 'RGB';
+};
+
+P.getReturnColorAs = function () {
+
+    if (this.factory) return this.factory.returnColorAs;
+    return 'RGB';
+};
 
 // `recalculateHold` - internal variable
 P.recalculateHold = [];
@@ -400,7 +421,9 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
         let engine = easingFunction;
         if (easing !== 'function' && easeEngines[easing]) engine = easeEngines[easing];
 
-        const precisionTest = (!precision || easing === 'linear') ? false : true;
+        const colorSpace = this.getColorSpace();
+
+        const precisionTest = (!precision || (easing === 'linear' && colorSpace === 'RGB')) ? false : true;
 
         // Option 1 start == end, cycle irrelevant
         if (start === end) return stops[start] || 'rgba(0 0 0 / 0)';

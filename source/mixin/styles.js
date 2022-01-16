@@ -81,6 +81,7 @@ export default function (P = Ωempty) {
         else if (this.palette) copy.colors = this.palette.get('colors');
         else copy.colors = [[0, 'rgba(0 0 0 / 1)'], [999, 'rgba(255 255 255 / 1)']];
 
+        // TODO: don't think this will return bespoke easing functions - need to think further on how to accomplish this
         if (items.easing) copy.easing = items.easing;
         else if (this.palette && this.palette.easing) copy.easing = this.palette.easing;
         else copy.easing = 'linear';
@@ -90,11 +91,11 @@ export default function (P = Ωempty) {
         else copy.precision = 0;
 
         if (items.colorSpace) copy.colorSpace = items.colorSpace;
-        else if (this.palette && this.palette.colorSpace) copy.colorSpace = this.palette.colorSpace;
+        else if (this.palette) copy.colorSpace = this.palette.getColorSpace();
         else copy.colorSpace = 'RGB';
 
         if (items.returnColorAs) copy.returnColorAs = items.returnColorAs;
-        else if (this.palette && this.palette.returnColorAs) copy.returnColorAs = this.palette.returnColorAs;
+        else if (this.palette) copy.returnColorAs = this.palette.getReturnColorAs();
         else copy.returnColorAs = 'RGB';
 
         return copy;
