@@ -2,16 +2,25 @@
 // Canvas tween stress test
 
 // [Run code](../../demo/canvas-006.html)
-import scrawl from '../source/scrawl.js'
+import {
+    addNativeListener,
+    library as L,
+    makeRender,
+    makeTween,
+    makeWheel,
+    releaseVector,
+    requestVector,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let porthole = scrawl.library.artefact.porthole;
+let porthole = L.artefact.porthole;
 
 porthole.set({
     backgroundColor: 'black',
@@ -24,7 +33,7 @@ porthole.set({
 // ##### Star generation functionality
 
 // We use this entity as a template for cloning new stars
-let starling = scrawl.makeWheel({
+let starling = makeWheel({
 
     name: 'starling',
 
@@ -51,7 +60,7 @@ let starCount = 0,
 let makeStars = function (buildNumber) {
 
     // We use a Vector for calculating the new star's direction
-    let v = scrawl.requestVector(),
+    let v = requestVector(),
         star, i, myRandom;
 
     for (i = 0; i < buildNumber; i++) {
@@ -76,7 +85,7 @@ let makeStars = function (buildNumber) {
 
         // Every star gets its own Tween object
         // + And each Tween generates its own Ticker timeline object
-        scrawl.makeTween({
+        makeTween({
 
             name: star.name,
 
@@ -110,7 +119,7 @@ let makeStars = function (buildNumber) {
 
     // We need to release our Vector back to its vector pool
     // + Failure to release pool objects can lead to memory leaks.
-    scrawl.releaseVector(v);
+    releaseVector(v);
 
     // Change the color of the stars each time the user clicks on the porthole
     starling.set({
@@ -130,7 +139,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: porthole,
@@ -147,4 +156,4 @@ let addStars = (e) => {
 
     makeStars(addNumber);
 };
-scrawl.addNativeListener('click', addStars, porthole.domElement);
+addNativeListener('click', addStars, porthole.domElement);

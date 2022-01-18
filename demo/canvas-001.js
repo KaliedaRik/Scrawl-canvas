@@ -2,7 +2,10 @@
 // Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys
 
 // [Run code](../../demo/canvas-001.html)
-import scrawl from '../source/scrawl.js';
+import scrawl, {
+    makeBlock,
+    makeWheel
+} from '../source/scrawl.js';
 // import scrawl from '../min/scrawl.js'
 
 import { reportSpeed, killArtefact } from './utilities.js';
@@ -20,7 +23,7 @@ canvas.setBase({
 
 
 // Create and clone block entitys
-scrawl.makeBlock({
+makeBlock({
     name: 'myblock-fill',
     width: 100,
     height: 100,
@@ -73,7 +76,7 @@ scrawl.makeBlock({
 
 
 // Create and clone Wheel entitys
-scrawl.makeWheel({
+makeWheel({
     name: 'mywheel-fill',
     radius: 50,
     startAngle: 15,

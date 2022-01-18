@@ -2,16 +2,24 @@
 // Linear gradients
 
 // [Run code](../../demo/canvas-003.html)
-import scrawl from '../source/scrawl.js'
+import {
+    addNativeListener,
+    library as L,
+    makeBlock,
+    makeGradient,
+    makeRender,
+    observeAndUpdate,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed, killStyle } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
 canvas.set({
     backgroundColor: 'blanchedalmond',
@@ -23,7 +31,7 @@ canvas.set({
 
 // Create the linear gradient - we will kill and resurrect it as the demo runs
 // + Needs to be a let, not a const, because we're going to kill/resurrect this gradient
-let graddy = scrawl.makeGradient({
+let graddy = makeGradient({
     name: 'mygradient',
     endX: '100%',
 
@@ -46,7 +54,7 @@ const bespokeEasings = {
 };
 
 // Create a block entity which will use the gradient
-scrawl.makeBlock({
+makeBlock({
     name: 'myblock',
     width: '90%',
     height: '90%',
@@ -71,7 +79,7 @@ const report = reportSpeed('#reportmessage', function () {
 });
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -83,7 +91,7 @@ scrawl.makeRender({
 // Setup form observer functionality. We're doing it this way (wrapped in a function) so we can test that it can be killed, and then recreated, later
 let makeObserver = () => {
 
-    return scrawl.observeAndUpdate({
+    return observeAndUpdate({
 
         event: ['input', 'change'],
         origin: '.controlItem',
@@ -124,7 +132,7 @@ const events = (e) => {
     e.returnValue = false;
 };
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
+addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
@@ -144,7 +152,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
     }
 }, '.colorItems');
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
+addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
@@ -188,17 +196,17 @@ document.querySelector('#colorSpace').options.selectedIndex = 0;
 document.querySelector('#returnColorAs').options.selectedIndex = 0;
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);
 
 console.log('Performing tests ...');
 
 killStyle(canvas, 'mygradient', 3000, () => {
 
     // Repopulate the graddy variable
-    graddy = scrawl.library.styles['mygradient'];
+    graddy = L.styles['mygradient'];
 
     // Reset the block fillStyle to the gradient
-    scrawl.library.entity['myblock'].set({
+    L.entity['myblock'].set({
         fillStyle: 'mygradient',
     });
 

@@ -2,16 +2,24 @@
 // Block and wheel entity positioning (start, pivot, mimic, mouse)
 
 // [Run code](../../demo/canvas-002.html)
-import scrawl from '../source/scrawl.js'
+import {
+    addNativeListener,
+    library as L,
+    makeBlock,
+    makeRender,
+    makeWheel,
+    observeAndUpdate,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed, killArtefact } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
 canvas.setBase({
     clearAlpha: 0.9,
@@ -21,7 +29,7 @@ canvas.setBase({
 // Create and clone block and wheel entitys. For the sake of safety and sanity, create the (reference) entitys on which other artefacts will pivot and mimic first. Then create those other artefacts.
 //
 // Note: setting this entity's `method` value to __none__ means that while it will perform all necessary calculations as part of the Display cycle, it will not complete its stamp action, thus will not appear on the display. This differs from setting its `visibility` attribute to false, which will make the entity skip both calculation and stamp operations
-let myPivot = scrawl.makeWheel({
+let myPivot = makeWheel({
     name: 'mouse-pivot',
     method: 'none',
 
@@ -29,7 +37,7 @@ let myPivot = scrawl.makeWheel({
     startY: 'center',
 });
 
-let myblock = scrawl.makeBlock({
+let myblock = makeBlock({
     name: 'base-block',
 
     width: 150,
@@ -57,7 +65,7 @@ let myblock = scrawl.makeBlock({
     },
 });
 
-let mywheel = scrawl.makeWheel({
+let mywheel = makeWheel({
     name: 'base-wheel',
 
     radius: 60,
@@ -194,7 +202,7 @@ let mouseCheck = function () {
 }();
 
 // For this demo we will suppress touchmove functionality over the canvas
-scrawl.addNativeListener('touchmove', (e) => {
+addNativeListener('touchmove', (e) => {
 
     e.preventDefault();
     e.returnValue = false;
@@ -202,7 +210,7 @@ scrawl.addNativeListener('touchmove', (e) => {
 }, canvas.domElement);
 
 // Setup form observer functionality.
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -233,7 +241,7 @@ const report = reportSpeed('#reportmessage', function () {
 });
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -243,21 +251,21 @@ scrawl.makeRender({
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);
 
 console.log('Performing tests ...');
 
 killArtefact(canvas, 'mouse-pivot', 4000, () => {
 
-    myPivot = scrawl.library.entity['mouse-pivot'];
+    myPivot = L.entity['mouse-pivot'];
 
-    scrawl.library.entity['base-block'].set({
+    L.entity['base-block'].set({
 
         pivot: myPivot,
         lockTo: 'pivot',
     });
 
-    scrawl.library.entity['base-wheel'].set({
+    L.entity['base-wheel'].set({
 
         pivot: myPivot,
         lockTo: 'pivot',

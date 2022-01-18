@@ -2,12 +2,20 @@
 // Pattern styles; Entity web link anchors; Dynamic accessibility
 
 // [Run code](../../demo/canvas-009.html)
-import scrawl from '../source/scrawl.js'
+import {
+    addListener,
+    importDomImage,
+    library as L,
+    makeBlock,
+    makePattern,
+    makeRender,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed, killArtefactAndAnchor, killStyle } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Google Analytics
@@ -33,15 +41,15 @@ ga(function() {
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
 
 // Get images from DOM
-scrawl.importDomImage('.mypatterns');
+importDomImage('.mypatterns');
 
 
 // Create Pattern styles using imported images
-scrawl.makePattern({
+makePattern({
 
     name: 'brick-pattern',
     asset: 'brick',
@@ -54,7 +62,7 @@ scrawl.makePattern({
 });
 
 // Create Pattern styles dynamically
-scrawl.makePattern({
+makePattern({
 
     name: 'water-pattern',
     imageSource: 'img/water.png',
@@ -86,7 +94,7 @@ canvas.base.set({
 });
 
 // Create a Block entity to display in the new Cell pattern
-scrawl.makeBlock({
+makeBlock({
 
     name: 'cell-pattern-block',
     group: 'cell-pattern',
@@ -111,7 +119,7 @@ scrawl.makeBlock({
 
 
 // Main canvas display - create Block entitys which will use the patterns defined above
-scrawl.makeBlock({
+makeBlock({
 
     name: 'water-in-leaves',
     group: canvas.base.name,
@@ -266,7 +274,7 @@ let interactions = function () {
     if (canvas.here.active) interactionResults = canvas.cascadeEventAction('move');
     else interactionResults = '';
 };
-scrawl.addListener('move', interactions, canvas.domElement);
+addListener('move', interactions, canvas.domElement);
 
 // To capture other user interaction with the &lt;a> DOM elements which, while being visually hidden, are still accessible - for instance when a user keyboard-tabs through the web page
 //
@@ -275,7 +283,7 @@ let mylinks = function () {
 
     if (canvas.here.active) canvas.cascadeEventAction('up');
 };
-scrawl.addListener('up', mylinks, canvas.domElement);
+addListener('up', mylinks, canvas.domElement);
 
 
 // #### Scene animation
@@ -286,7 +294,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -295,14 +303,14 @@ scrawl.makeRender({
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);
 
 console.log('Performing tests ...');
 
 // We use the __canvas__ and __myTracker__ variables in our blocks' onEnter, onLeave and onUp functions. While this works fine for the blocks created in the scope of this module file's code, it will fail when we kill and resurrect a block - in the resurrected block the canvas and myTracker variables will be 'undefined'. So we need to reset the block's 'on...' functions (in this module file's code) after the block has resurrected
 killArtefactAndAnchor(canvas, 'brick-in-marble', 'wikipedia-brick-link', 2000, () => {
 
-    scrawl.library.artefact['brick-in-marble'].set({
+    L.artefact['brick-in-marble'].set({
 
         onEnter: function () {
             this.set({ lineWidth: 30 });
@@ -330,11 +338,11 @@ killArtefactAndAnchor(canvas, 'brick-in-marble', 'wikipedia-brick-link', 2000, (
 killStyle(canvas, 'marble-pattern', 3000, () => {
 
     // Reset entitys, whose fill/strokeStyles will have been set to default values when the Pattern died
-    scrawl.library.entity['brick-in-marble'].set({
+    L.entity['brick-in-marble'].set({
         strokeStyle: 'marble-pattern',
     });
 
-    scrawl.library.entity['marble-in-water'].set({
+    L.entity['marble-in-water'].set({
         fillStyle: 'marble-pattern',
     });
 });

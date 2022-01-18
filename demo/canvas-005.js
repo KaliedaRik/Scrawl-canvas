@@ -2,16 +2,26 @@
 // Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
 
 // [Run code](../../demo/canvas-005.html)
-import scrawl from '../source/scrawl.js'
+import {
+    library as L,
+    makeBlock,
+    makeDragZone,
+    makeGradient,
+    makeRadialGradient,
+    makeRender,
+    makeTween,
+    makeWheel,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
 canvas.set({
     css: {
@@ -21,7 +31,7 @@ canvas.set({
 
 
 // Build the gradient objects
-let myRadial = scrawl.makeRadialGradient({
+let myRadial = makeRadialGradient({
     name: 'circle-waves',
 
     startX: '30%',
@@ -56,7 +66,7 @@ let myRadial = scrawl.makeRadialGradient({
     ],
 });
 
-scrawl.makeGradient({
+makeGradient({
     name: 'colored-pipes',
     endX: '100%',
     cyclePalette: true,
@@ -89,7 +99,7 @@ scrawl.makeGradient({
     ],
 });
 
-scrawl.makeGradient({
+makeGradient({
     name: 'linear',
     endX: '100%',
 
@@ -104,7 +114,7 @@ scrawl.makeGradient({
 
 
 // Build the block and wheel entitys
-scrawl.makeBlock({
+makeBlock({
     name: 'cell-locked-block',
 
     width: 150,
@@ -150,7 +160,7 @@ scrawl.makeBlock({
     },
 });
 
-scrawl.makeWheel({
+makeWheel({
     name: 'cell-locked-wheel',
 
     radius: 75,
@@ -197,7 +207,7 @@ scrawl.makeWheel({
 
 // #### User interaction
 // Create the drag-and-drop zone
-let current = scrawl.makeDragZone({
+let current = makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],
@@ -222,7 +232,7 @@ let tweenEngine = (start, change, position) => {
     return val % 1000;
 };
 
-let tweeny = scrawl.makeTween({
+let tweeny = makeTween({
     name: 'mytween',
     targets: 'colored-pipes',
     duration: 5000,
@@ -266,7 +276,7 @@ let animateGradients = function () {
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -276,4 +286,4 @@ scrawl.makeRender({
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);

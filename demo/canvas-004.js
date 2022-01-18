@@ -2,16 +2,24 @@
 // Radial gradients
 
 // [Run code](../../demo/canvas-004.html)
-import scrawl from '../source/scrawl.js'
+import {
+    addNativeListener,
+    library as L,
+    makeBlock,
+    makeRadialGradient,
+    makeRender,
+    observeAndUpdate,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
 canvas.set({
     backgroundColor: 'blanchedalmond',
@@ -25,7 +33,7 @@ canvas.set({
 
 
 // Create the radial gradient
-let graddy = scrawl.makeRadialGradient({
+let graddy = makeRadialGradient({
     name: 'mygradient',
     startX: '50%',
     startY: '50%',
@@ -52,7 +60,7 @@ const bespokeEasings = {
 };
 
 // Create a block entity which will use the gradient
-scrawl.makeBlock({
+makeBlock({
     name: 'myblock',
     width: '90%',
     height: '90%',
@@ -76,7 +84,7 @@ const report = reportSpeed('#reportmessage', function () {
 });
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -86,7 +94,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -124,7 +132,7 @@ const events = (e) => {
     e.returnValue = false;
 };
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
+addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
@@ -144,7 +152,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
     }
 }, '.colorItems');
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
+addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
@@ -194,4 +202,4 @@ document.querySelector('#returnColorAs').options.selectedIndex = 0;
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);

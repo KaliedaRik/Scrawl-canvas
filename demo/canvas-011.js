@@ -2,18 +2,25 @@
 // Shape entity (make, clone, method); drag and drop shape entitys
 
 // [Run code](../../demo/canvas-011.html)
-import scrawl from '../source/scrawl.js'
+import {
+    library as L,
+    makeDragZone,
+    makeRender,
+    makeShape,
+    makeWheel,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed, killArtefact } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
-scrawl.library.canvas.mycanvas.set({
+L.canvas.mycanvas.set({
     backgroundColor: 'lightblue',
     css: {
         border: '1px solid black'
@@ -22,7 +29,7 @@ scrawl.library.canvas.mycanvas.set({
 
 
 // Japan outline
-scrawl.makeShape({
+makeShape({
     name: 'japan_fill',
 
     startX: 50,
@@ -387,12 +394,12 @@ scrawl.makeShape({
 });
 
 // Change the fill and stroke styles on one of the blocks, and any block sharing that block's state
-scrawl.library.artefact.japan_fillAndDraw.set({
+L.artefact.japan_fillAndDraw.set({
     fillStyle: 'blue',
     strokeStyle: 'coral',
 });
 
-scrawl.makeWheel({
+makeWheel({
     name: 'pin',
     pivot: 'japan_draw',
     lockTo: 'pivot',
@@ -404,7 +411,7 @@ scrawl.makeWheel({
 
 // #### User interaction
 // Create the drag-and-drop zone
-let current = scrawl.makeDragZone({
+let current = makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],
@@ -422,7 +429,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -431,7 +438,7 @@ scrawl.makeRender({
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);
 
 console.log('Performing tests ...');
 killArtefact(canvas, 'japan_fill', 4000);

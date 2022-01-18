@@ -2,16 +2,25 @@
 // Use video sources and media streams for Picture entitys
 
 // [Run code](../../demo/canvas-010.html)
-import scrawl from '../source/scrawl.js'
+import {
+    addListener,
+    importDomVideo,
+    importMediaStream,
+    library as L,
+    makePicture,
+    makeRender,
+    observeAndUpdate,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
 
 // ##### Importing video sources
@@ -20,11 +29,11 @@ let canvas = scrawl.library.artefact.mycanvas;
 // + When loading video assets from the DOM, note that Scrawl-canvas has to deal with the &lt;video> element operating under normal DOM rules. This means that (in most modern browsers) the video will not fetch anything beyond its metadata until at least 1px height of the video is displayed in the viewport (videos hidden by any CSS rules will not fetch anything until they are made visible).
 // + The practical implications of this is that any Picture entitys relying on the video as their asset will not display an image until the DOM video element appears in the user's viewport.
 // + To make sure the Picture entity displays the video's first frame, we need to explicitly set the DOM element's preload attribute to __auto__ 
-scrawl.importDomVideo('.myvideo');
+importDomVideo('.myvideo');
 
 
 // __Create Picture entity__ from video entity included in the DOM
-let viddyOne = scrawl.makePicture({
+let viddyOne = makePicture({
 
     name: 'first-video',
     asset: 'waves',
@@ -51,7 +60,7 @@ let viddyOne = scrawl.makePicture({
 });
 
 // __Import a video from a remote server__
-let viddyTwo = scrawl.makePicture({
+let viddyTwo = makePicture({
 
     name: 'second-video',
     videoSource: 'img/Motion - 18249.mp4',
@@ -72,12 +81,12 @@ let viddyTwo = scrawl.makePicture({
 // + Note 2: importMediaStream returns a Promise!
 let viddyThree;
 
-scrawl.importMediaStream({
+importMediaStream({
     audio: false,
 })
 .then(myface => {
 
-    viddyThree = scrawl.makePicture({
+    viddyThree = makePicture({
 
         name: 'mediastream-video',
         asset: myface.name,
@@ -102,7 +111,7 @@ scrawl.importMediaStream({
 
     // Adding some controls to manipulate the media stream's display
     // + For this demo, we'll use the existing controls setup for manipulating the DOM video
-    scrawl.observeAndUpdate({
+    observeAndUpdate({
 
         event: ['input', 'change'],
         origin: '.controlItem',
@@ -154,7 +163,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -164,7 +173,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -220,7 +229,7 @@ scrawl.observeAndUpdate({
 
 // Add an additional click event listener
 // + Because many browsers/devices will not allow video to be played until a user interacts with it in some way
-scrawl.addListener('up', function () {
+addListener('up', function () {
 
     viddyOne.set({
         video_muted: true,

@@ -2,18 +2,25 @@
 // Shape entity position; shape entity as a path for other artefacts to follow
 
 // [Run code](../../demo/canvas-012.html)
-import scrawl from '../source/scrawl.js'
+import {
+    library as L,
+    makeRender,
+    makeShape,
+    makeWheel,
+    observeAndUpdate,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
 
 // Create Shape entity
-let arrow = scrawl.makeShape({
+let arrow = makeShape({
 
     name: 'myArrow',
 
@@ -46,7 +53,7 @@ let arrow = scrawl.makeShape({
 });
 
 // Create Wheel entity to pivot to the arrow
-scrawl.makeWheel({
+makeWheel({
 
     // We don't need to give artefacts a `name` attribute - it's just a lot more convenient if we do.
 
@@ -61,7 +68,7 @@ scrawl.makeWheel({
 
 // Create the Wheel entitys that will use the arrow as their path
 // + This Wheel is a template from which we clone the other Wheels
-let myWheel = scrawl.makeWheel({
+let myWheel = makeWheel({
 
     fillStyle: 'red',
     radius: 3,
@@ -123,17 +130,17 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
-    target: scrawl.library.artefact.mycanvas,
+    target: L.artefact.mycanvas,
     afterShow: report,
 });
 
 
 // #### User interaction
 // Setup form observer functionality
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -197,4 +204,4 @@ document.querySelector('#scale').value = 0.2;
 document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
 
-console.log(scrawl.library.entity.myArrow);
+console.log(L.entity.myArrow);

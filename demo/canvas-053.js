@@ -2,16 +2,27 @@
 // Display output from a Reaction-Diffusion asset
 
 // [Run code](../../demo/canvas-053.html)
-import scrawl from '../source/scrawl.js'
+import {
+    addNativeListener,
+    library as L,
+    makeBlock,
+    makePattern,
+    makeReactionDiffusionAsset,
+    makeRender,
+    makeSpiral,
+    makeWheel,
+    observeAndUpdate,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
 // Magic numbers
 const canvasDimension = 400,
@@ -72,7 +83,7 @@ const bespokeEasings = {
     'user-repeat': (val) => (val * 4) % 1,
 };
 
-const reactionAsset = scrawl.makeReactionDiffusionAsset({
+const reactionAsset = makeReactionDiffusionAsset({
 
     name: 'reaction-diffusion-asset',
     width: assetDimension,
@@ -82,7 +93,7 @@ const reactionAsset = scrawl.makeReactionDiffusionAsset({
 });
 
 // Test that the RD asset output is always tileable by displaying it via a Pattern style
-const myPattern = scrawl.makePattern({
+const myPattern = makePattern({
 
     name: 'rd-pattern',
     asset: reactionAsset,
@@ -90,7 +101,7 @@ const myPattern = scrawl.makePattern({
 
 // Display the RD asset output in a block
 // + We could also display it in a Picture entity, or use it in a Filter object
-scrawl.makeBlock({
+makeBlock({
 
     name: 'rd-block',
     dimensions: ['100%', '100%'],
@@ -106,13 +117,13 @@ scrawl.makeBlock({
 //     strokeStyle: 'white',
 // });
 // ```
-scrawl.makeBlock({
+makeBlock({
     name: 'initial-square',
     dimensions: [30, 30],
     visibility: false,
 });
 
-scrawl.makeWheel({
+makeWheel({
     name: 'initial-circle',
     start: [4, 4],
     radius: 15,
@@ -121,7 +132,7 @@ scrawl.makeWheel({
     visibility: false,
 });
 
-scrawl.makeSpiral({
+makeSpiral({
     name: 'initial-spiral',
     loops: 5,
     loopIncrement: 8,
@@ -154,7 +165,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -166,7 +177,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-scrawl.addNativeListener('input', (e) => {
+addNativeListener('input', (e) => {
 
     e.preventDefault();
 
@@ -205,7 +216,7 @@ scrawl.addNativeListener('input', (e) => {
     }
 }, '#initialSettingPreference');
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
+addNativeListener(['input', 'change'], (e) => {
 
     e.preventDefault();
 
@@ -219,7 +230,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
     }
 }, '#colorStops');
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
+addNativeListener(['input', 'change'], (e) => {
 
     e.preventDefault();
 
@@ -238,7 +249,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
 }, '#easing');
 
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -258,7 +269,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -291,7 +302,7 @@ scrawl.observeAndUpdate({
 });
 
 // This listener updates the RD asset with the selected preset value. Most of the following code is to update the the Demo's user interface
-scrawl.addNativeListener(['change', 'input'], (e) => {
+addNativeListener(['change', 'input'], (e) => {
 
     e.preventDefault();
 
@@ -580,4 +591,4 @@ qs_colorSpace.options.selectedIndex = 0;
 qs_returnColorAs.options.selectedIndex = 0;
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);

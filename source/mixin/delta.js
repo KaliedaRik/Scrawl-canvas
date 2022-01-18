@@ -140,7 +140,7 @@ export default function (P = Ωempty) {
 
                     if (isString) {
 
-                        keyIndex = ['startX', 'startY', 'handleX', 'handleY', 'offsetX', 'offsetY'].indexOf(key);
+                        keyIndex = ['startX', 'startY', 'handleX', 'handleY', 'offsetX', 'offsetY', 'width', 'height'].indexOf(key);
                         valArray = false;
                         valIndex = 0;
 
@@ -148,9 +148,10 @@ export default function (P = Ωempty) {
 
                             if (keyIndex < 2) valArray = this.start;
                             else if (keyIndex < 4) valArray = this.handle;
-                            else if (keyIndex < 2) valArray = this.offset;
+                            else if (keyIndex < 6) valArray = this.offset;
+                            else if (keyIndex < 6) valArray = this.dimensions;
 
-                            if (['startY', 'handleY', 'offsetY'].indexOf(key) >= 0) valIndex = 1;
+                            if (['startY', 'handleY', 'offsetY', 'height'].indexOf(key) >= 0) valIndex = 1;
 
                             val = valArray[valIndex];
                         }

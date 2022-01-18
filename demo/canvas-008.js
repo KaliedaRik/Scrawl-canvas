@@ -2,22 +2,29 @@
 // Picture entity position; manipulate copy attributes
 
 // [Run code](../../demo/canvas-008.html)
-import scrawl from '../source/scrawl.js'
+import {
+    importDomImage,
+    library as L,
+    makePicture,
+    makeRender,
+    observeAndUpdate,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
 
 // Import image from DOM, and create Picture entity using it
-scrawl.importDomImage('.flowers');
+importDomImage('.flowers');
 
-let piccy = scrawl.makePicture({
+let piccy = makePicture({
 
     name: 'myFlower',
     asset: 'iris',
@@ -87,7 +94,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -97,7 +104,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -182,4 +189,4 @@ document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);
