@@ -1007,7 +1007,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
+    library <span class="hljs-keyword">as</span> L,
+    makeRender,
+    makeShape,
+    makeWheel,
+    observeAndUpdate,
+    setIgnorePixelRatio,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
 
 <span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
@@ -1024,7 +1031,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
             
         </li>
         
@@ -1052,7 +1059,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> arrow = scrawl.<span class="hljs-title function_">makeShape</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> arrow = <span class="hljs-title function_">makeShape</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myArrow&#x27;</span>,
 
@@ -1133,7 +1140,7 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeWheel</span>({</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeWheel</span>({</pre></div></div>
             
         </li>
         
@@ -1174,7 +1181,7 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWheel = scrawl.<span class="hljs-title function_">makeWheel</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWheel = <span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">3</span>,</pre></div></div>
@@ -1294,10 +1301,10 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-    <span class="hljs-attr">target</span>: scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>,
+    <span class="hljs-attr">target</span>: L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             
@@ -1315,7 +1322,7 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -1391,7 +1398,7 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#upend&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reverse&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
 
-<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>.<span class="hljs-property">myArrow</span>);</pre></div></div>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(L.<span class="hljs-property">entity</span>.<span class="hljs-property">myArrow</span>);</pre></div></div>
             
         </li>
         

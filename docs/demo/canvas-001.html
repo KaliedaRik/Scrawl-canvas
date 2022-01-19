@@ -1007,7 +1007,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl, {
+    makeBlock,
+    makeWheel
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1072,7 +1075,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myblock-fill&#x27;</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-number">100</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">100</span>,
@@ -1136,7 +1139,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeWheel</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mywheel-fill&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">50</span>,
     <span class="hljs-attr">startAngle</span>: <span class="hljs-number">15</span>,

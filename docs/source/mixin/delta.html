@@ -775,7 +775,7 @@
 
                     <span class="hljs-keyword">if</span> (isString) {
 
-                        keyIndex = [<span class="hljs-string">&#x27;startX&#x27;</span>, <span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;handleX&#x27;</span>, <span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;offsetY&#x27;</span>].<span class="hljs-title function_">indexOf</span>(key);
+                        keyIndex = [<span class="hljs-string">&#x27;startX&#x27;</span>, <span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;handleX&#x27;</span>, <span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;width&#x27;</span>, <span class="hljs-string">&#x27;height&#x27;</span>].<span class="hljs-title function_">indexOf</span>(key);
                         valArray = <span class="hljs-literal">false</span>;
                         valIndex = <span class="hljs-number">0</span>;
 
@@ -783,9 +783,10 @@
 
                             <span class="hljs-keyword">if</span> (keyIndex &lt; <span class="hljs-number">2</span>) valArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">start</span>;
                             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (keyIndex &lt; <span class="hljs-number">4</span>) valArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">handle</span>;
-                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (keyIndex &lt; <span class="hljs-number">2</span>) valArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">offset</span>;
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (keyIndex &lt; <span class="hljs-number">6</span>) valArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">offset</span>;
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (keyIndex &lt; <span class="hljs-number">6</span>) valArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
 
-                            <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;offsetY&#x27;</span>].<span class="hljs-title function_">indexOf</span>(key) &gt;= <span class="hljs-number">0</span>) valIndex = <span class="hljs-number">1</span>;
+                            <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;height&#x27;</span>].<span class="hljs-title function_">indexOf</span>(key) &gt;= <span class="hljs-number">0</span>) valIndex = <span class="hljs-number">1</span>;
 
                             val = valArray[valIndex];
                         }
