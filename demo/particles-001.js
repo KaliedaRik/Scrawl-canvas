@@ -2,16 +2,24 @@
 // Emitter entity, and Particle World, basic functionality
 
 // [Run code](../../demo/particles-001.html)
-import scrawl from '../source/scrawl.js'
+import {
+    addNativeListener,
+    library as L,
+    makeEmitter,
+    makeRender,
+    makeWorld,
+    observeAndUpdate,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
 // Initial canvas background color - we will also allow the user to control this attribute's value
 canvas.setBase({
@@ -22,7 +30,7 @@ canvas.setBase({
 // #### Particle physics animation scene
 
 // Create a World object which we can then assign to the Emitter entity
-let myWorld = scrawl.makeWorld({
+let myWorld = makeWorld({
 
     name: 'demo-world',
 
@@ -64,7 +72,7 @@ console.log(myWorld.get('testCoordinate'));
 
 
 // Define an Emitter entity
-const myEmitter = scrawl.makeEmitter({
+const myEmitter = makeEmitter({
 
     name: 'use-raw-2d-context',
 
@@ -185,8 +193,8 @@ const myEmitter = scrawl.makeEmitter({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-const particlenames = scrawl.library.particlenames,
-    particle = scrawl.library.particle;
+const particlenames = L.particlenames,
+    particle = L.particle;
 
 const report = reportSpeed('#reportmessage', function () {
 
@@ -232,7 +240,7 @@ let mouseCheck = function () {
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -243,7 +251,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // For this demo we will suppress touchmove functionality over the canvas
-scrawl.addNativeListener('touchmove', (e) => {
+addNativeListener('touchmove', (e) => {
 
     e.preventDefault();
     e.returnValue = false;
@@ -251,7 +259,7 @@ scrawl.addNativeListener('touchmove', (e) => {
 }, canvas.domElement);
 
 // Setup form observer functionality
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -268,7 +276,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -294,7 +302,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -330,7 +338,7 @@ const useGravity = function () {
         }
     }
 }();
-scrawl.addNativeListener(['input', 'change'], useGravity, '#gravity');
+addNativeListener(['input', 'change'], useGravity, '#gravity');
 
 
 const worldSpeed = document.querySelector('#world-speed'),
@@ -373,4 +381,4 @@ killAfterTimeVariation.value = 0.1;
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);

@@ -6,12 +6,16 @@
 
 // #### Imports
 // Import Scrawl-canvas. It will auto-initialize the page as soon as it loads.
-import scrawl from '../source/scrawl.js';
+import {
+    library as L,
+    makeAnimation,
+    render,
+} from '../source/scrawl.js';
 
 
 // #### Scene setup
 // Define some demo variables. All Scrawl-canvas wrappers for DOM elements can be found in the __scrawl.library.artefact__ section of the Scrawl-canvas library. The elements themselves are held in the __domElement__ attribute of the wrapper. 
-let artefact = scrawl.library.artefact,
+let artefact = L.artefact,
     myStack = artefact.mystack,
     report = artefact.reportmessage;
 
@@ -42,7 +46,7 @@ report.set({
 // The animation loop updates the output with details of the stack's dimensions and positioning, and details of the mouse cursor's position in relation to the stack's top-left hand corner.
 //
 // Much of the data required for the information panel is contained in the stack wrapper's __here__ object. This data is updated every time Scrawl-canvas detects some sort of user interaction such as a mouse/pointer cursor movement, page scrolling, or when the browser window resizes.
-scrawl.makeAnimation({
+makeAnimation({
 
 
     // Giving the animation object a name will make it easy to find in the Scrawl-canvas library object
@@ -53,7 +57,7 @@ scrawl.makeAnimation({
     // This is because some animation functions (for instance: canvas filters) rely on web workers to speed up their calculations which are - by definition - asynchronous. The promise should resolve as true if all is well; false otherwise
     fn: function () {
 
-        scrawl.render()
+        render()
 
         let here = myStack.here || {};
 
@@ -68,7 +72,7 @@ scrawl.makeAnimation({
 
 // #### Development and testing
 // Because the code has been loaded as a __module__, Scrawl-canvas attributes and functions do not get added to the global namespace. For development work, we can overcome this issue (to a small extent) by console logging the scrawl library, so we can check internal attribute values and calculation results.
-console.log(scrawl.library);
+console.log(L);
 
 // A more interactive method is to assign the scrawl object to a window global variable - this then allows us to access all of the objects created by Scrawl-canvas and interact with them in the browser console:
 //

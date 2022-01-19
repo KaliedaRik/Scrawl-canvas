@@ -2,16 +2,25 @@
 // Parameters for: Blur, Gaussianblur filters; filter memoization
 
 // [Run code](../../demo/filters-001.html)
-import scrawl from '../source/scrawl.js';
+import {
+    addNativeListener,
+    importDomImage,
+    library as L,
+    makeFilter,
+    makePicture,
+    makeRender,
+    observeAndUpdate,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = L.canvas.mycanvas;
 
 canvas.set({
     css: {
@@ -21,13 +30,13 @@ canvas.set({
     compileOrder: 1,
 });
 
-scrawl.importDomImage('.flowers');
+importDomImage('.flowers');
 
 
 // Create the filters
 const blurFilters = {
 
-    blurFilter: scrawl.makeFilter({
+    blurFilter: makeFilter({
 
         name: 'blur',
         method: 'blur',
@@ -37,7 +46,7 @@ const blurFilters = {
         step: 1,
     }),
 
-    gaussianBlurFilter: scrawl.makeFilter({
+    gaussianBlurFilter: makeFilter({
 
         name: 'gaussian-blur',
         method: 'gaussianBlur',
@@ -47,7 +56,7 @@ const blurFilters = {
 
 
 // Create the target entity
-const piccy = scrawl.makePicture({
+const piccy = makePicture({
 
     asset: 'iris',
 
@@ -73,7 +82,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+const demoAnimation = makeRender({
 
     name: "demo-animation",
     target: canvas,
@@ -83,7 +92,7 @@ const demoAnimation = scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -111,7 +120,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.addNativeListener(['update', 'change'], (e) => {
+addNativeListener(['update', 'change'], (e) => {
 
     e.preventDefault();
     e.stopPropagation();
@@ -122,7 +131,7 @@ scrawl.addNativeListener(['update', 'change'], (e) => {
 
 }, '#blurFilter');
 
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '#memoizeFilterOutput',
@@ -137,7 +146,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.addNativeListener(['update', 'change'], (e) => {
+addNativeListener(['update', 'change'], (e) => {
 
     e.preventDefault();
     e.stopPropagation();
@@ -151,7 +160,7 @@ scrawl.addNativeListener(['update', 'change'], (e) => {
 
 }, '#radius');
 
-scrawl.addNativeListener(['update', 'change'], (e) => {
+addNativeListener(['update', 'change'], (e) => {
 
     e.preventDefault();
     e.stopPropagation();
@@ -192,4 +201,4 @@ addImageDragAndDrop(canvas, '#my-image-store', piccy);
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);
