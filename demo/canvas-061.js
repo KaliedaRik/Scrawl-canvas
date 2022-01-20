@@ -14,6 +14,8 @@ scrawl.setIgnorePixelRatio(false);
 const canvas = scrawl.library.canvas.mycanvas,
     styles = scrawl.library.styles;
 
+const [width, height] = canvas.get('dimensions');
+
 
 // Build and display the reaction-diffusion asset
 
@@ -101,6 +103,8 @@ const generateBlocks = (numRequired) => {
 
     const ease = (bespokeEasings[easing.value]) ? bespokeEasings[easing.value] : easing.value;
     const p = parseInt(precision.value, 10);
+    const maxWidth = width - 60;
+    const maxHeight = height - 60;
 
     for (let i = 0; i < numRequired; i++) {
 
@@ -119,8 +123,8 @@ const generateBlocks = (numRequired) => {
 
             width: Math.floor(10 + (Math.random() * 50)),
             height: Math.floor(10 + (Math.random() * 50)),
-            startX: Math.floor(30 + (Math.random() * 540)),
-            startY: Math.floor(30 + (Math.random() * 540)),
+            startX: Math.floor(30 + (Math.random() * maxWidth)),
+            startY: Math.floor(30 + (Math.random() * maxHeight)),
 
             handle: ['center', 'center'],
 
