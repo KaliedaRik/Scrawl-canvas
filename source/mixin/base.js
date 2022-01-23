@@ -153,6 +153,18 @@ export default function (P = Ωempty) {
     P.defs = mergeOver(P.defs, defaultAttributes);
 
 
+    let G = P.getters;
+
+    G.type = function () {
+        return this.type;
+    };
+    G.isArtefact = function () {
+        return this.isArtefact;
+    };
+    G.isAsset = function () {
+        return this.isAsset;
+    };
+
 // #### Packet management
 // __Packets__ are Scrawl-canvas's way of generating and consuming SC object data, both locally and over a network. A packet is a formatted JSON String which can be captured in a variable or saved to a text file.
 //

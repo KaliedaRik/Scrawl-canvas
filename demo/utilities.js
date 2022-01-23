@@ -1,8 +1,12 @@
-import scrawl from '../source/scrawl.js';
+import {
+    library as L,
+    addNativeListener,
+    importDomImage,
+} from '../source/scrawl.js';
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
-const reportSpeed = function (output = '', xtra = false) {
+const reportSpeed = function (output = '', xtra = () => '') {
 
     if (!output) return function () {};
 
@@ -34,7 +38,7 @@ ${xtra()}`;
 
 
 // Test to check that artefacts are properly killed and resurrected
-const killArtefact = (canvas, name, time, finishResurrection) => {
+const killArtefact = (canvas, name, time, finishResurrection = () => {}) => {
 
     if (canvas && canvas.base && name && time) {
 
@@ -43,32 +47,32 @@ const killArtefact = (canvas, name, time, finishResurrection) => {
 
         let checkGroupBucket = (name, groupname) => {
 
-            let res = scrawl.library.group[groupname].artefactBuckets.filter(e => e.name === name );
+            let res = L.group[groupname].artefactBuckets.filter(e => e.name === name );
             return (res.length) ? 'no' : 'yes';
         };
 
         setTimeout(() => {
 
             console.log(`${name} alive
-        removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-        removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-        removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-        removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-        removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+        removed from artefact: ${(L.artefact[name]) ? 'no' : 'yes'}
+        removed from artefactnames: ${(L.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+        removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
+        removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+        removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
         removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
 
-            packet = scrawl.library.artefact[name].saveAsPacket();
+            packet = L.artefact[name].saveAsPacket();
 
-            scrawl.library.artefact[name].kill();
+            L.artefact[name].kill();
 
             setTimeout(() => {
 
                 console.log(`${name} killed
-        removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-        removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-        removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-        removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-        removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+        removed from artefact: ${(L.artefact[name]) ? 'no' : 'yes'}
+        removed from artefactnames: ${(L.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+        removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
+        removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+        removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
         removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
 
                 canvas.actionPacket(packet);
@@ -76,11 +80,11 @@ const killArtefact = (canvas, name, time, finishResurrection) => {
                 setTimeout(() => {
 
                     console.log(`${name} resurrected
-        removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-        removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-        removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-        removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-        removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+        removed from artefact: ${(L.artefact[name]) ? 'no' : 'yes'}
+        removed from artefactnames: ${(L.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+        removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
+        removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+        removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
         removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
 
                     if (finishResurrection) finishResurrection();
@@ -94,7 +98,7 @@ const killArtefact = (canvas, name, time, finishResurrection) => {
 
 
 // To test styles (Gradient) kill functionality
-const killStyle = (canvas, name, time, finishResurrection) => {
+const killStyle = (canvas, name, time, finishResurrection = () => {}) => {
 
     if (canvas && canvas.base && name && time) {
 
@@ -103,26 +107,26 @@ const killStyle = (canvas, name, time, finishResurrection) => {
         setTimeout(() => {
 
             console.log(`${name} alive
-        removed from styles: ${(scrawl.library.styles[name]) ? 'no' : 'yes'}
-        removed from stylesnames: ${(scrawl.library.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
+        removed from styles: ${(L.styles[name]) ? 'no' : 'yes'}
+        removed from stylesnames: ${(L.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
 
-            packet = scrawl.library.styles[name].saveAsPacket();
+            packet = L.styles[name].saveAsPacket();
 
-            scrawl.library.styles[name].kill();
+            L.styles[name].kill();
 
             setTimeout(() => {
 
                 console.log(`${name} killed
-        removed from styles: ${(scrawl.library.styles[name]) ? 'no' : 'yes'}
-        removed from stylesnames: ${(scrawl.library.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
+        removed from styles: ${(L.styles[name]) ? 'no' : 'yes'}
+        removed from stylesnames: ${(L.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
 
                 canvas.actionPacket(packet);
 
                 setTimeout(() => {
 
                     console.log(`${name} resurrected
-        removed from styles: ${(scrawl.library.styles[name]) ? 'no' : 'yes'}
-        removed from stylesnames: ${(scrawl.library.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
+        removed from styles: ${(L.styles[name]) ? 'no' : 'yes'}
+        removed from stylesnames: ${(L.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
 
                     finishResurrection();
 
@@ -134,55 +138,55 @@ const killStyle = (canvas, name, time, finishResurrection) => {
 };
 
 // To test artefact + anchor kill functionality
-const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrection) => {
+const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrection = () => {}) => {
 
     let groupname = 'mycanvas_base',
         packet;
 
     let checkGroupBucket = (name, groupname) => {
 
-        let res = scrawl.library.group[groupname].artefactBuckets.filter(e => e.name === name );
+        let res = L.group[groupname].artefactBuckets.filter(e => e.name === name );
         return (res.length) ? 'no' : 'yes';
     };
 
     setTimeout(() => {
 
         console.log(`${name} alive
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from artefact: ${(L.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(L.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}
-    anchor removed: ${(scrawl.library.anchor[anchorname]) ? 'no' : 'yes'}`);
+    anchor removed: ${(L.anchor[anchorname]) ? 'no' : 'yes'}`);
 
-        packet = scrawl.library.artefact[name].saveAsPacket();
+        packet = L.artefact[name].saveAsPacket();
 
-        scrawl.library.artefact[name].kill();
+        L.artefact[name].kill();
 
         setTimeout(() => {
 
             console.log(`${name} killed
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from artefact: ${(L.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(L.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}
-    anchor removed: ${(scrawl.library.anchor[anchorname]) ? 'no' : 'yes'}`);
+    anchor removed: ${(L.anchor[anchorname]) ? 'no' : 'yes'}`);
 
             canvas.actionPacket(packet);
 
             setTimeout(() => {
 
                 console.log(`${name} resurrected
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from artefact: ${(L.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(L.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}
-    anchor removed: ${(scrawl.library.anchor[anchorname]) ? 'no' : 'yes'}`);
+    anchor removed: ${(L.anchor[anchorname]) ? 'no' : 'yes'}`);
 
                 finishResurrection();
 
@@ -192,14 +196,14 @@ const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrectio
 };
 
 // To test Polyline artefact kill functionality
-const killPolylineArtefact = (canvas, name, time, myline, restore) => {
+const killPolylineArtefact = (canvas, name, time, myline, restore = () => {}) => {
 
     let groupname = 'mycanvas_base',
         packet;
 
     let checkGroupBucket = (name, groupname) => {
 
-        let res = scrawl.library.group[groupname].artefactBuckets.filter(e => e.name === name );
+        let res = L.group[groupname].artefactBuckets.filter(e => e.name === name );
         return (res.length) ? 'no' : 'yes';
     };
 
@@ -214,27 +218,27 @@ const killPolylineArtefact = (canvas, name, time, myline, restore) => {
     setTimeout(() => {
 
         console.log(`${name} alive
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from artefact: ${(L.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(L.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from polyline pins array: ${checkPinsArray(name)}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
 
-        packet = scrawl.library.artefact[name].saveAsPacket();
+        packet = L.artefact[name].saveAsPacket();
 
-        scrawl.library.artefact[name].kill();
+        L.artefact[name].kill();
 
         setTimeout(() => {
 
             console.log(`${name} killed
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from artefact: ${(L.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(L.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from polyline pins array: ${checkPinsArray(name)}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
 
             canvas.actionPacket(packet);
@@ -244,12 +248,12 @@ const killPolylineArtefact = (canvas, name, time, myline, restore) => {
                 if (restore) restore();
 
                 console.log(`${name} resurrected
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from artefact: ${(L.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(L.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from polyline pins array: ${checkPinsArray(name)}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
 
                 console.log(myline.saveAsPacket());
@@ -266,29 +270,29 @@ const killTicker = (stack, name, time) => {
     setTimeout(() => {
 
         console.log(`${name} alive
-    removed from tickers: ${(scrawl.library.animationtickers[name]) ? 'no' : 'yes'}`);
+    removed from tickers: ${(L.animationtickers[name]) ? 'no' : 'yes'}`);
 
-        packet = scrawl.library.animationtickers[name].saveAsPacket();
+        packet = L.animationtickers[name].saveAsPacket();
 
-        scrawl.library.animationtickers[name].kill();
+        L.animationtickers[name].kill();
 
         setTimeout(() => {
 
             console.log(`${name} killed
-    removed from tickers: ${(scrawl.library.animationtickers[name]) ? 'no' : 'yes'}`);
+    removed from tickers: ${(L.animationtickers[name]) ? 'no' : 'yes'}`);
 
             stack.actionPacket(packet);
 
             setTimeout(() => {
 
                 console.log(`${name} resurrected
-    removed from tickers: ${(scrawl.library.animationtickers[name]) ? 'no' : 'yes'}`);
+    removed from tickers: ${(L.animationtickers[name]) ? 'no' : 'yes'}`);
             }, 100);
         }, 100);
     }, time);
 };
 
-const addImageDragAndDrop = (canvas, selector, targets, callback) => {
+const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => {
 
     // #### Drag-and-Drop image loading functionality
     const store = document.querySelector(selector);
@@ -298,14 +302,14 @@ const addImageDragAndDrop = (canvas, selector, targets, callback) => {
 
     if (!Array.isArray(targets)) targets = [targets];
 
-    scrawl.addNativeListener(['dragenter', 'dragover', 'dragleave'], (e) => {
+    addNativeListener(['dragenter', 'dragover', 'dragleave'], (e) => {
 
         e.preventDefault();
         e.stopPropagation();
 
     }, canvas.domElement);
 
-    scrawl.addNativeListener('drop', (e) => {
+    addNativeListener('drop', (e) => {
 
         e.preventDefault();
         e.stopPropagation();
@@ -332,11 +336,13 @@ const addImageDragAndDrop = (canvas, selector, targets, callback) => {
 
                 // Add the image to the DOM and create our asset from it
                 const img = document.createElement('img');
+
+                // @ts-expect-error
                 img.src = reader.result;
                 img.id = name;
                 store.appendChild(img);
 
-                scrawl.importDomImage(`#${name}`);
+                importDomImage(`#${name}`);
 
                 // Update our Picture entity's asset attribute so it displays the new image
                 targets.forEach(target => {
@@ -351,7 +357,7 @@ const addImageDragAndDrop = (canvas, selector, targets, callback) => {
                 // + The Picture entity copies (for the sake of our sanity) a square part of the image. Thus we shall use the new image's shorter dimension as the copy dimension and offset the longer copy start so we are viewing the middle of it
                 setTimeout(() => {
 
-                    const asset = scrawl.library.asset[name];
+                    const asset = L.asset[name];
 
                     const width = asset.get('width'),
                         height = asset.get('height');

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "target": "esnext",
+    "module": "esnext",
+    "strict": false
+  },
+  "include": [
+    "source/scrawl.d.ts",
+    "demo/canvas-020.js"
+  ]
+}

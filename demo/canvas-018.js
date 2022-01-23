@@ -2,20 +2,29 @@
 // Phrase entity - text along a path
 
 // [Run code](../../demo/canvas-018.html)
-import scrawl from '../source/scrawl.js';
+import {
+    library as L,
+    makeOval,
+    makePhrase,
+    makePicture,
+    makeRender,
+    makeSpiral,
+    observeAndUpdate,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
 
 // Create Shape entitys for paths
-scrawl.makeOval({
+makeOval({
 
     name: 'oval-path',
 
@@ -33,7 +42,7 @@ scrawl.makeOval({
     useAsPath: true,
 });
 
-let spiral = scrawl.makeSpiral({
+let spiral = makeSpiral({
 
     name: 'spiral-path',
 
@@ -60,7 +69,7 @@ let spiral = scrawl.makeSpiral({
 
 
 // Create Phrase entitys
-scrawl.makePhrase({
+makePhrase({
     name: 'label',
 
     text: 'H&epsilon;lj&ouml;!',
@@ -92,7 +101,7 @@ scrawl.makePhrase({
     }
 });
 
-let lorem = scrawl.makePhrase({
+let lorem = makePhrase({
 
     name: 'myPhrase',
 
@@ -125,7 +134,7 @@ lorem.addSectionClass('Red-Text', { fill: 'red' })
 
 
 // Create other entitys
-scrawl.makePicture({
+makePicture({
 
     name: 'bunny',
     imageSource: 'img/bunny.png',
@@ -156,7 +165,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -166,7 +175,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Observer functionality for the ___spiral___ Shape entity
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -191,7 +200,7 @@ scrawl.observeAndUpdate({
 });
 
 // Observer functionality for the ___lorem___ Phrase entity
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -214,17 +223,31 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#start_xAbsolute').value = 300;
+// @ts-expect-error
 document.querySelector('#start_yAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#handle_xAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#handle_yAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#roll').value = 0;
+// @ts-expect-error
 document.querySelector('#scale').value = 40;
+// @ts-expect-error
 document.querySelector('#upend').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#reverse').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#direction').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#justify').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#overline').value = 0.1;
+// @ts-expect-error
 document.querySelector('#letterSpacing').value = 0;
+// @ts-expect-error
 document.querySelector('#family').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#size_px').value = 16;

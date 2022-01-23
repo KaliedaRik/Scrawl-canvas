@@ -256,23 +256,30 @@ let tweeny = makeTween({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
     const dragging = current();
-    return `Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
+
+    if (typeof dragging !== 'boolean') {
+
+        if (dragging && dragging.artefact) return `Currently dragging: ${dragging.artefact.name}`
+    };
+    return 'Currently dragging: nothing';
 });
 
 
 // Function to animate the gradients
 let animateGradients = function () {
 
-    let dragging;
+    myRadial.updateByDelta();
 
-    return function () {
+    const dragging = current();
 
-        myRadial.updateByDelta();
-        dragging = current();
+    if (!tweeny.isRunning()) {
 
-        if (dragging && dragging.artefact.name === 'animated-block' && !tweeny.isRunning()) tweeny.run();
+        if (typeof dragging !== 'boolean' && dragging) {
+
+            if (dragging.artefact && dragging.artefact.name === 'animated-block') tweeny.run();
+        }
     }
-}();
+};
 
 
 // Create the Display cycle animation

@@ -77,10 +77,8 @@ makeBlock({
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
-    return `    Palette - start: ${paletteStart.value}; end: ${paletteEnd.value}
-    Start - x: ${startX.value}%; y: ${startY.value}%; radius: ${startRadius.value}
-    End - x: ${endX.value}%; y: ${endY.value}%; radius: ${endRadius.value}
-    Precision: ${precision.value}`;
+// @ts-expect-error
+    return `    Palette - start: ${paletteStart.value}; end: ${paletteEnd.value}\n    Start - x: ${startX.value}%; y: ${startY.value}%; radius: ${startRadius.value}\n    End - x: ${endX.value}%; y: ${endY.value}%; radius: ${endRadius.value}\n    Precision: ${precision.value}`;
 });
 
 // Create the Display cycle animation
@@ -183,21 +181,36 @@ const endY = document.querySelector('#endY');
 const endRadius = document.querySelector('#endRadius');
 const precision = document.querySelector('#precision');
 
+// @ts-expect-error
 paletteStart.value = 0;
+// @ts-expect-error
 paletteEnd.value = 999;
+// @ts-expect-error
 startX.value = 50;
+// @ts-expect-error
 startY.value = 50;
+// @ts-expect-error
 startRadius.value = 0;
+// @ts-expect-error
 endX.value = 50;
+// @ts-expect-error
 endY.value = 50;
+// @ts-expect-error
 endRadius.value = 500;
+// @ts-expect-error
 precision.value = 1;
 
+// @ts-expect-error
 document.querySelector('#red').value = 0;
+// @ts-expect-error
 document.querySelector('#blue').value = 0;
+// @ts-expect-error
 document.querySelector('#easing').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#cyclePalette').value = 0;
+// @ts-expect-error
 document.querySelector('#colorSpace').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#returnColorAs').options.selectedIndex = 0;
 
 

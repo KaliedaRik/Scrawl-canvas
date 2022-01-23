@@ -2,20 +2,27 @@
 // Phrase entity - test lineHeight, letterSpacing and justify attributes; setSectionStyles() functionality
 
 // [Run code](../../demo/canvas-017.html)
-import scrawl from '../source/scrawl.js';
+import {
+    library as L,
+    makePhrase,
+    makeRender,
+    makeWheel,
+    observeAndUpdate,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
 
 // Create Phrase entity
-let lorem = scrawl.makePhrase({
+let lorem = makePhrase({
 
     name: 'myPhrase',
 
@@ -45,7 +52,7 @@ lorem.addSectionClass('Red-Text', { fill: 'red' })
 
 
 // Add a pivoted Wheel entity
-scrawl.makeWheel({
+makeWheel({
 
     method: 'fillAndDraw',
     fillStyle: 'gold',
@@ -78,7 +85,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -88,7 +95,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-scrawl.observeAndUpdate({
+observeAndUpdate({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -137,31 +144,55 @@ scrawl.observeAndUpdate({
 
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#start_xPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#start_yPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#handle_xPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#handle_yPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#start_xAbsolute').value = 300;
+// @ts-expect-error
 document.querySelector('#start_yAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#handle_xAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#handle_yAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#start_xString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#start_yString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#handle_xString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#handle_yString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#roll').value = 0;
+// @ts-expect-error
 document.querySelector('#scale').value = 1;
+// @ts-expect-error
 document.querySelector('#upend').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#reverse').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#overline').value = 0.1;
+// @ts-expect-error
 document.querySelector('#absoluteWidth').value = 300;
+// @ts-expect-error
 document.querySelector('#lineHeight').value = 1.5;
+// @ts-expect-error
 document.querySelector('#letterSpacing').value = 0;
+// @ts-expect-error
 document.querySelector('#justify').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#family').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#size_px').value = 16;
+// @ts-expect-error
 document.querySelector('#size_string').options.selectedIndex = 0;
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);

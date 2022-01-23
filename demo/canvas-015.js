@@ -2,16 +2,22 @@
 // Phrase entity (make, clone, method, multiline)
 
 // [Run code](../../demo/canvas-015.html)
-import scrawl from '../source/scrawl.js'
+import {
+    library as L,
+    makeDragZone,
+    makePhrase,
+    makeRender,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed, killArtefact } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+let canvas = L.artefact.mycanvas;
 
 canvas.set({
     backgroundColor: 'aliceblue',
@@ -22,7 +28,7 @@ canvas.set({
 
 
 // Create and clone Phrase entitys
-scrawl.makePhrase({
+makePhrase({
     name: 'myphrase_fill',
 
     text: 'H&epsilon;lj&ouml;!',
@@ -99,7 +105,7 @@ scrawl.makePhrase({
 
 
 // Change the fill and stroke styles on one of the phrase entitys, and any entity sharing that phrase's state
-scrawl.library.artefact.myphrase_fillAndDraw.set({
+L.artefact.myphrase_fillAndDraw.set({
     fillStyle: 'blue',
     strokeStyle: 'coral'
 });
@@ -107,7 +113,7 @@ scrawl.library.artefact.myphrase_fillAndDraw.set({
 
 // #### User interaction
 // Create the drag-and-drop zone
-let current = scrawl.makeDragZone({
+let current = makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],
@@ -120,12 +126,12 @@ let current = scrawl.makeDragZone({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
     const dragging = current();
-    return `Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
+    return `Currently dragging: ${(typeof dragging !== 'boolean' && dragging) ? dragging.artefact.name : 'nothing'}`;
 });
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -134,7 +140,7 @@ scrawl.makeRender({
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);
 
 console.log('Performing tests ...');
 killArtefact(canvas, 'myphrase_fill', 4000);

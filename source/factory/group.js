@@ -678,6 +678,7 @@ P.setDeltaValues = function (items = Ωempty) {
 // We can add and remove filters to each of the Group's entity artefacts using the following functions. The argument for each function can be one or more Filter name-Strings, or the Filter objects themselves, separated by commas.
 
 // `addFiltersToEntitys`
+// TODO: don't think this is tested anywhere - build test!
 P.addFiltersToEntitys = function (...args) {
 
     this.artefacts.forEach(name => {
@@ -690,6 +691,7 @@ P.addFiltersToEntitys = function (...args) {
 };
 
 // `removeFiltersFromEntitys`
+// TODO: don't think this is tested anywhere - build test!
 P.removeFiltersFromEntitys = function (...args) {
 
     this.artefacts.forEach(name => {
@@ -702,6 +704,7 @@ P.removeFiltersFromEntitys = function (...args) {
 };
 
 // `clearFiltersFromEntitys` - clears all filters from all the Group's entity artefacts.
+// TODO: don't think this is tested anywhere - build test!
 P.clearFiltersFromEntitys = function () {
 
     this.artefacts.forEach(name => {

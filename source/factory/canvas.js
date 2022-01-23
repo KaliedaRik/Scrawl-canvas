@@ -476,7 +476,7 @@ P.updateCells = function (items = Ωempty) {
     }
 };
 
-// `buildCell` - internal helper function, called by the Canvas constructor
+// `buildCell` - create a Cell wrapper (wrapping a &lt;canvas> element not attached to the DOM) and add it to this Canvas wrapper's complement of Cells
 P.buildCell = function (items = Ωempty) {
 
     let host = items.host || false;

@@ -2,24 +2,35 @@
 // Gradient and Color factories - transparency
 
 // [Run code](../../demo/canvas-019.html)
-import scrawl from '../source/scrawl.js';
+import {
+    setIgnorePixelRatio,
+    library as L,
+    importDomImage,
+    makeFilter,
+    makePicture,
+    createImageFromEntity,
+    makeRadialGradient,
+    makeBlock,
+    makeRender,
+    addNativeListener,
+} from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-const canvases = scrawl.library.canvas,
-    entitys = scrawl.library.entity,
+const canvases = L.canvas,
+    entitys = L.entity,
     c1 = canvases['hackney'],
     c2 = canvases['heathrow'],
     c3 = canvases['kingston'],
     c4 = canvases['burglary'];
 
 // Import the images we defined in the DOM (in &lt;img> elements)
-scrawl.importDomImage('.places');
+importDomImage('.places');
 
 // For this scene, we'll build a data structure which we can iterate over, to build the entitys, assets and gradients required by the scene
 const data = [
@@ -50,7 +61,7 @@ const checkFunctions = [];
 
 // The blur filter is temporary - we use it once on each image to generate a blurred version of that image
 // + We do it this way because the blur filter is computationally very expensive - capturing a blurred version of the image is a lot better for end user power consumption
-scrawl.makeFilter({
+makeFilter({
     name: 'blur',
     method: 'gaussianBlur',
     radius: 20,
@@ -61,7 +72,7 @@ data.forEach(scene => {
 
     // The original picture, with the blur filter applied to it
     // - We will remove the filter in a later step
-    let entity = scrawl.makePicture({
+    let entity = makePicture({
 
         name: `${scene.image}-original`,
         group: scene.canvas.base.name,
@@ -76,10 +87,10 @@ data.forEach(scene => {
     });
 
     // A one-off instruction to tell Scrawl-canvas to create an image asset from our Picture entity the next time it performs a Display cycle
-    scrawl.createImageFromEntity(entity, true);
+    createImageFromEntity(entity, true);
 
     // The purpose of this demo is to test the various ways we can define 'transparency' in Scrawl-canvas Color objects and Gradients - tests a set of Color factory bugs uncovered and fixed in v8.3.2
-    scrawl.makeRadialGradient({
+    makeRadialGradient({
 
         name: `${scene.image}-gradient`,
         start: ['50%', '50%'],
@@ -94,7 +105,7 @@ data.forEach(scene => {
     });
 
     // Apply the gradient to the scene via a Block entity
-    const filterBlock = scrawl.makeBlock({
+    const filterBlock = makeBlock({
 
         name: `${scene.image}-block`,
         group: scene.canvas.base.name,
@@ -154,7 +165,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: [c1, c2, c3, c4],
@@ -166,7 +177,7 @@ scrawl.makeRender({
 
 
 // For this demo we will suppress touchmove functionality over the canvas
-scrawl.addNativeListener('touchmove', (e) => {
+addNativeListener('touchmove', (e) => {
 
     e.preventDefault();
     e.returnValue = false;
@@ -174,4 +185,4 @@ scrawl.addNativeListener('touchmove', (e) => {
 }, [c1.domElement, c2.domElement, c3.domElement, c4.domElement]);
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);

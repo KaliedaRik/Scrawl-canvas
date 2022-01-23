@@ -78,13 +78,15 @@ piccy.clone({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let [copyX, copyY] = piccy.copyStart;
-    let [copyW, copyH] = piccy.copyDimensions;
-    let [pasteX, pasteY] = piccy.start;
-    let [pasteW, pasteH] = piccy.dimensions;
-    let [handleX, handleY] = piccy.handle;
+    // Getting values using this approach allows us to see the raw, unprocessed values held by the entity. 
+    // + Use piccy.get('attributeName') to obtain the processed values being used by the entity
+    const [copyW, copyH] = piccy.copyDimensions;
+    const [copyX, copyY] = piccy.copyStart;
+    const [pasteX, pasteY] = piccy.start;
+    const [pasteW, pasteH] = piccy.dimensions;
+    const [handleX, handleY] = piccy.handle;
 
-    let {roll, scale} = piccy;
+    const {roll, scale} = piccy;
 
     return `    Copy - x: ${copyX}, y: ${copyY}, w: ${copyW}, h: ${copyH}
     Paste - x: ${pasteX}, y: ${pasteY}, w: ${pasteW}, h:${pasteH}
@@ -159,34 +161,63 @@ observeAndUpdate({
 });
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#copy_start_xPercent').value = 25;
+// @ts-expect-error
 document.querySelector('#copy_start_yPercent').value = 25;
+// @ts-expect-error
 document.querySelector('#copy_dims_widthPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#copy_dims_widthAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#copy_start_xAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#copy_start_yAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#copy_dims_heightPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#copy_dims_heightAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#paste_dims_widthPercent').value = 33;
+// @ts-expect-error
 document.querySelector('#paste_dims_widthAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#paste_dims_heightPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#paste_dims_heightAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#paste_start_xPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#paste_start_yPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#paste_handle_xPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#paste_handle_yPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#paste_start_xAbsolute').value = 300;
+// @ts-expect-error
 document.querySelector('#paste_start_yAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#paste_handle_xAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#paste_handle_yAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#paste_start_xString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#paste_start_yString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#paste_handle_xString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#paste_handle_yString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#roll').value = 0;
+// @ts-expect-error
 document.querySelector('#scale').value = 1;
+// @ts-expect-error
 document.querySelector('#upend').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#reverse').options.selectedIndex = 0;
+
 
 // #### Development and testing
 console.log(L);

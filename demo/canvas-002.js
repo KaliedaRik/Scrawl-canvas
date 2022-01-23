@@ -230,13 +230,16 @@ observeAndUpdate({
 const backgroundColorSelector = document.querySelector('#backgroundColor'),
     clearAlphaInput = document.querySelector('#clearAlpha');
 
+// @ts-expect-error
 backgroundColorSelector.value = '';
+// @ts-expect-error
 clearAlphaInput.value = 0.9;
 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
+// @ts-expect-error
     return `    clearAlpha: ${clearAlphaInput.value}`;
 });
 

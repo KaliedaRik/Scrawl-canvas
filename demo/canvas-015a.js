@@ -2,17 +2,25 @@
 // Phrase entity - cache output to improve render speeds
 
 // [Run code](../../demo/canvas-015a.html)
-import scrawl from '../source/scrawl.js';
+import {
+    createImageFromEntity,
+    library as L,
+    makeDragZone,
+    makePhrase,
+    makePicture,
+    makeRender,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas,
-    entitys = scrawl.library.entity;
+let canvas = L.artefact.mycanvas,
+    entitys = L.entity;
 
 canvas.set({
     backgroundColor: 'aliceblue',
@@ -23,7 +31,7 @@ canvas.set({
 
 
 // Create and clone Phrase entitys
-scrawl.makePhrase({
+makePhrase({
     name: 'myphrase_fill',
 
     text: 'H&epsilon;lj&ouml;!',
@@ -99,7 +107,7 @@ scrawl.makePhrase({
 
 
 // Change the fill and stroke styles on one of the phrase entitys, and any entity sharing that phrase's state
-scrawl.library.artefact.myphrase_fillAndDraw.set({
+L.artefact.myphrase_fillAndDraw.set({
     fillStyle: 'blue',
     strokeStyle: 'coral'
 });
@@ -109,19 +117,19 @@ scrawl.library.artefact.myphrase_fillAndDraw.set({
 // A one-off instruction to tell Scrawl-canvas to create image assets from our Phrase entitys the next time it performs a Display cycle
 // + By caching entity output in &lt;img> elements, we can then replace the Phrase entitys with Picture entitys that use the cached image as their asset source. As graphic text output is an expensive operation for the canvas element to perform - particularly when we apply a shadow blur to the text - it will often make sense to replace such Phrase entitys with Picture entitys.
 // + This approach is less useful for text that updates frequently, or uses dynamic fill/stroke styling
-scrawl.createImageFromEntity(entitys.myphrase_fill, true);
-scrawl.createImageFromEntity(entitys.myphrase_draw, true);
-scrawl.createImageFromEntity(entitys.myphrase_drawAndFill, true);
-scrawl.createImageFromEntity(entitys.myphrase_fillAndDraw, true);
-scrawl.createImageFromEntity(entitys.myphrase_drawThenFill, true);
-scrawl.createImageFromEntity(entitys.myphrase_fillThenDraw, true);
-scrawl.createImageFromEntity(entitys.myphrase_clear, true);
-scrawl.createImageFromEntity(entitys.myphrase_multiline, true);
+createImageFromEntity(entitys.myphrase_fill, true);
+createImageFromEntity(entitys.myphrase_draw, true);
+createImageFromEntity(entitys.myphrase_drawAndFill, true);
+createImageFromEntity(entitys.myphrase_fillAndDraw, true);
+createImageFromEntity(entitys.myphrase_drawThenFill, true);
+createImageFromEntity(entitys.myphrase_fillThenDraw, true);
+createImageFromEntity(entitys.myphrase_clear, true);
+createImageFromEntity(entitys.myphrase_multiline, true);
 
 
 // #### User interaction
 // Create the drag-and-drop zone
-let current = scrawl.makeDragZone({
+let current = makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],
@@ -134,12 +142,12 @@ let current = scrawl.makeDragZone({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
     const dragging = current();
-    return `Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
+    return `Currently dragging: ${(typeof dragging !== 'boolean' && dragging) ? dragging.artefact.name : 'nothing'}`;
 });
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
@@ -150,7 +158,7 @@ scrawl.makeRender({
     // + As the content and display of the text does not change (only their positions change when users drag-and-drop them), we can treat the creation of the cache images and associated entitys as a one-off job
     afterCreated: () => {
 
-        let g = scrawl.library.group[canvas.base.name];
+        let g = L.group[canvas.base.name];
 
         // Switch off the Phrase entitys via a set call to their Group (which, in this instance is the canvas.base Cell's default Group)
         g.setArtefacts({
@@ -166,7 +174,7 @@ scrawl.makeRender({
 
             if (e) {
 
-                scrawl.makePicture({
+                makePicture({
 
                     name: `${name}-cached`,
 
@@ -187,4 +195,4 @@ scrawl.makeRender({
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);

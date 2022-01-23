@@ -2,19 +2,30 @@
 // Gradient and Color factories - transparency - alternative approach using Cells instead of images
 
 // [Run code](../../demo/canvas-019a.html)
-import scrawl from '../source/scrawl.js';
+import {
+    setIgnorePixelRatio,
+    library as L,
+    importDomImage,
+    makeFilter,
+    makePicture,
+    createImageFromEntity,
+    makeRadialGradient,
+    makeBlock,
+    makeRender,
+    addNativeListener,
+} from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-const canvases = scrawl.library.canvas;
+const canvases = L.canvas;
 
 // Import the images we defined in the DOM (in &lt;img> elements)
-scrawl.importDomImage('.places');
+importDomImage('.places');
 
 // For this scene, we'll build a data structure which we can iterate over, to build the entitys, assets and gradients required by the scene
 const data = [
@@ -45,7 +56,7 @@ const checkFunctions = [];
 
 // The blur filter is temporary - we use it once on each image to generate a blurred version of that image
 // + We do it this way because the blur filter is computationally very expensive - capturing a blurred version of the image is a lot better for end user power consumption
-scrawl.makeFilter({
+makeFilter({
     name: 'blur',
     method: 'gaussianBlur',
     radius: 20,
@@ -65,7 +76,7 @@ data.forEach(scene => {
         shown: false,
     });
 
-    scrawl.makePicture({
+    makePicture({
 
         name: `${scene.image}-blurred-image`,
         group: `${scene.image}-blurred-cell`,
@@ -84,7 +95,7 @@ data.forEach(scene => {
 
 
     // Next, build a gradient using transparency and apply it in a second Block which displays in the original canvas
-    scrawl.makeRadialGradient({
+    makeRadialGradient({
 
         name: `${scene.image}-gradient`,
         start: ['50%', '50%'],
@@ -98,7 +109,7 @@ data.forEach(scene => {
         ],
     });
 
-    const gradientBlock = scrawl.makeBlock({
+    const gradientBlock = makeBlock({
 
         name: `${scene.image}-gradient-block`,
         group: scene.canvas.base.name,
@@ -113,7 +124,7 @@ data.forEach(scene => {
 
     // Now we can draw our blurred image into the scene 
     // + We use some compositing magic so it only appears where the gradient is not transparent
-    scrawl.makePicture({
+    makePicture({
 
         name: `${scene.image}-blurred-block`,
         group: scene.canvas.base.name,
@@ -129,7 +140,7 @@ data.forEach(scene => {
 
     // Lastly, display the original image in the canvas
     // + Again, we use compositing magic to draw on the bits missed by the blurred image
-    scrawl.makePicture({
+    makePicture({
 
         name: `${scene.image}-original-image`,
         group: scene.canvas.base.name,
@@ -164,7 +175,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: [canvases['hackney'], canvases['heathrow'], canvases['kingston'], canvases['burglary']],
@@ -175,7 +186,7 @@ scrawl.makeRender({
 
 
 // For this demo we will suppress touchmove functionality over the canvas
-scrawl.addNativeListener('touchmove', (e) => {
+addNativeListener('touchmove', (e) => {
 
     e.preventDefault();
     e.returnValue = false;
@@ -184,4 +195,4 @@ scrawl.addNativeListener('touchmove', (e) => {
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(L);

@@ -24,19 +24,22 @@ let ga = window[window['GoogleAnalyticsObject'] || 'ga'],
     myTracker;
 
 // Create a new tracker to handle tween and ticker action/progress, and set some attributes on it. 
+// @ts-expect-error
 ga('create', 'UA-000000-0', 'auto', 'demoCanvasTracker');
 
 // We can then incorporate the tracker's functionality in our various hook functions defined further down in this script
+// @ts-expect-error
 ga(function() {
 
     let ga = window[window['GoogleAnalyticsObject'] || 'ga'];
 
+// @ts-expect-error
     myTracker = ga.getByName('demoCanvasTracker');
     myTracker.set('transport', 'beacon');
     myTracker.set('campaignKeyword', 'Scrawl-canvas demo');
 
-    // Comment out the next line to send tracker packets (so they show up in the console)
-    myTracker.set('sendHitTask', null);
+    // Uncomment the next line to suppress tracker packets (so they don't show up in the console)
+    // myTracker.set('sendHitTask', null);
 });
 
 
@@ -168,26 +171,32 @@ makeBlock({
     },
 
     // Accessibility functionality to be used by event functions defined below in response to user activity - this time moving the mouse cursor across the &lt;canvas> element. Note that 'this' refers to the entity object, meaning the functions can be safely cloned into other entitys.
+    // + Scrawl-canvas TypeScript definitions don't (at this time) extend as far as identifying types within a function set up as part of an SC object instantiation; be prepared to include TS error suppression markup wherever justified (for instance, when using `this`).
     onEnter: function () {
 
         // Update the block entity's visual display
+// @ts-expect-error
         this.set({
             lineWidth: 30,
         });
 
         // This is where we update the accessibility information tied to the canvas element. We're using the anchor attribute object's description value to supply details of what actions will happen when the user clicks on the canvas while the mouse is over the block entity.
         canvas.set({
-            title: `${this.name} tile`,
+// @ts-expect-error
+            title: `${this.get('name')} tile`,
+// @ts-expect-error
             label: this.get('anchorDescription'),
         });
 
         // Track the action in Google Analytics
+// @ts-expect-error
         myTracker.send('event', 'Canvas Entity', 'hover start', `${this.name} ${this.type}`);
     },
 
     onLeave: function () {
 
         // Reset the block entity's visual display
+// @ts-expect-error
         this.set({
             lineWidth: 20,
         });
@@ -199,6 +208,7 @@ makeBlock({
         });
 
         // Track the action in Google Analytics
+// @ts-expect-error
         myTracker.send('event', 'Canvas Entity', 'hover end', `${this.name} ${this.type}`);
     },
 
@@ -206,9 +216,11 @@ makeBlock({
     onUp: function () {
 
         // Track the action in Google Analytics
-        myTracker.send('event', 'Canvas Entity Link', 'click', `${this.name} ${this.type} ${this.anchor.href}`);
+// @ts-expect-error
+        myTracker.send('event', 'Canvas Entity Link', 'click', `${this.name} ${this.type} ${this.get('anchorHref')}`);
 
         // Trigger the click event on the anchor element we added to the DOM
+// @ts-expect-error
         this.clickAnchor();
     },
 

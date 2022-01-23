@@ -2,16 +2,31 @@
 // Path-defined entitys: Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral, Cog
 
 // [Run code](../../demo/canvas-013.html)
-import scrawl from '../source/scrawl.js'
+import {
+    library as L,
+    makeBezier,
+    makeCog,
+    makeLine,
+    makeOval,
+    makePicture,
+    makePolygon,
+    makeQuadratic,
+    makeRectangle,
+    makeRender,
+    makeSpiral,
+    makeStar,
+    makeTetragon,
+    setIgnorePixelRatio,
+} from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
+setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.canvas.mycanvas
+let canvas = L.canvas.mycanvas
 
 canvas.set({
     backgroundColor: 'lightgray',
@@ -22,7 +37,7 @@ canvas.set({
 
 
 // ##### makeOval factory function 
-scrawl.makeOval({
+makeOval({
     name: 'circle',
     fillStyle: 'lightGreen',
     method: 'fillAndDraw',
@@ -61,7 +76,7 @@ scrawl.makeOval({
 });
 
 // ##### makeRectangle factory function 
-scrawl.makeRectangle({
+makeRectangle({
     name: 'ovalRectangle',
     startX: 20,
     startY: 200,
@@ -97,7 +112,7 @@ scrawl.makeRectangle({
 });
 
 // ##### makeLine factory function 
-scrawl.makeLine({
+makeLine({
     name: 'firstLine',
     startX: 20,
     startY: 320,
@@ -125,7 +140,7 @@ scrawl.makeLine({
 });
 
 // ##### makeQuadratic factory function 
-scrawl.makeQuadratic({
+makeQuadratic({
     name: 'firstQuad',
     startX: '5%',
     startY: '20%',
@@ -157,7 +172,7 @@ scrawl.makeQuadratic({
 });
 
 // ##### makeBezier factory function 
-scrawl.makeBezier({
+makeBezier({
     name: 'firstBezier',
     startX: '5%',
     startY: '27%',
@@ -191,7 +206,7 @@ scrawl.makeBezier({
 });
 
 // ##### makeTetragon factory function 
-scrawl.makeTetragon({
+makeTetragon({
     name: 'square',
     fillStyle: 'lightGreen',
     method: 'fillAndDraw',
@@ -228,7 +243,7 @@ scrawl.makeTetragon({
 });
 
 // ##### makePolygon factory function 
-scrawl.makePolygon({
+makePolygon({
     name: 'equiTriangle',
     startX: 20,
     startY: 935,
@@ -258,7 +273,7 @@ scrawl.makePolygon({
 });
 
 // ##### makeStar factory function 
-scrawl.makeStar({
+makeStar({
     name: '5star',
     startX: 20,
     startY: 1080,
@@ -284,7 +299,7 @@ scrawl.makeStar({
 });
 
 // ##### makeSpiral factory function 
-scrawl.makeSpiral({
+makeSpiral({
     name: 'spiral1',
     strokeStyle: 'darkgreen',
     method: 'draw',
@@ -318,7 +333,7 @@ scrawl.makeSpiral({
 });
 
 // ##### makeCog factory function 
-scrawl.makeCog({
+makeCog({
     name: 'tooth-cog',
     startX: 20,
     startY: 1790,
@@ -347,7 +362,7 @@ scrawl.makeCog({
     twist: 15,
 });
 
-scrawl.makeCog({
+makeCog({
     name: 'hill-cog',
     startX: 20,
     startY: 1980,
@@ -376,7 +391,7 @@ scrawl.makeCog({
     twist: 15,
 });
 
-scrawl.makeCog({
+makeCog({
     name: 'smooth-cog',
     startX: 20,
     startY: 2170,
@@ -407,7 +422,7 @@ scrawl.makeCog({
 
 // #### Development and testing
 // Create entitys to use the above Shape entitys as paths along which they can be animated
-scrawl.makePicture({
+makePicture({
 
     name: '_tab',
     imageSource: 'img/bunny.png',
@@ -648,11 +663,13 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-scrawl.makeRender({
+makeRender({
 
     name: 'demo-animation',
     target: canvas,
     afterShow: report,
 });
 
-console.log(scrawl.library.entity);
+
+// #### Development and testing
+console.log(L.entity);

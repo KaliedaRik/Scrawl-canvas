@@ -719,7 +719,9 @@ let events = function () {
 addNativeListener(['input', 'change'], events, '.controlItem');
 
 // Set DOM form initial input values
+// @ts-expect-error
 document.querySelector('#target').value = '';
+// @ts-expect-error
 document.querySelector('#filter').value = '';
 
 

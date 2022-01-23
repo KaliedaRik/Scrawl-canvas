@@ -56,7 +56,7 @@ P.set = function (obj = Ωempty) {
 
     if (isa_quaternion(obj)) return this.setFromQuaternion(obj);
 
-    if ((obj && obj.type && obj.type === 'Vector')) return this.setFromVector(obj);
+    /* if ((obj && obj.type && obj.type === 'Vector')) return this.setFromVector(obj); */
 
     if (xto(obj.pitch, obj.yaw, obj.roll)) return this.setFromEuler(obj);
 

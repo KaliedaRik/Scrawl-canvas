@@ -245,31 +245,59 @@ addListener('up', function () {
 
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#copy_start_xPercent').value = 25;
+// @ts-expect-error
 document.querySelector('#copy_start_yPercent').value = 25;
+// @ts-expect-error
 document.querySelector('#copy_dims_widthPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#copy_dims_widthAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#copy_start_xAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#copy_start_yAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#copy_dims_heightPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#copy_dims_heightAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#paste_dims_widthPercent').value = 33;
+// @ts-expect-error
 document.querySelector('#paste_dims_widthAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#paste_dims_heightPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#paste_dims_heightAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#paste_start_xPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#paste_start_yPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#paste_handle_xPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#paste_handle_yPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#paste_start_xAbsolute').value = 300;
+// @ts-expect-error
 document.querySelector('#paste_start_yAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#paste_handle_xAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#paste_handle_yAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#paste_start_xString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#paste_start_yString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#paste_handle_xString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#paste_handle_yString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#roll').value = 0;
+// @ts-expect-error
 document.querySelector('#scale').value = 1;
+// @ts-expect-error
 document.querySelector('#upend').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#reverse').options.selectedIndex = 0;

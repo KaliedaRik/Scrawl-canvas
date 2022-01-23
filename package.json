@@ -3,6 +3,7 @@
   "version": "8.7.1",
   "description": "Version 8.7.1 - 20 Jan 2022",
   "main": "min/scrawl.js",
+  "types": "./scrawl.d.ts",
   "scripts": {
     "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
     "dev": "light-server -p 8000 --serve . --open"

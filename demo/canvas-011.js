@@ -424,7 +424,7 @@ let current = makeDragZone({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
     const dragging = current();
-    return `Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
+    return `Currently dragging: ${(typeof dragging !== 'boolean' && dragging) ? dragging.artefact.name : 'nothing'}`;
 });
 
 
