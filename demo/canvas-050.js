@@ -2,7 +2,7 @@
 // Manipulate artefact delta animation values
 
 // [Run code](../../demo/canvas-050.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -221,8 +221,10 @@ scrawl.addNativeListener('click', (e) => {
 
 }, '#scaling');
 
+// @ts-expect-error
 document.querySelector('#scaling').value = '0';
 document.querySelector('#scaling').innerHTML = 'Add scaling';
+// @ts-expect-error
 document.querySelector('#constraintAction').value = 'reverse';
 
 

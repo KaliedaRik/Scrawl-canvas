@@ -2,7 +2,7 @@
 // Trace out a Shape path over time
 
 // [Run code](../../demo/canvas-040.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -410,6 +410,7 @@ const myWorld = scrawl.makeWorld({
                         lineDashOffset: balancePoint - Math.round(japan.length * (item / 270)),
                     });
 
+// @ts-expect-error
                     progressElement.value = item;
                 }
             },
@@ -428,6 +429,7 @@ const checkDirty = function () {
         dirty = false;
 
         myWorld.set({
+// @ts-expect-error
             progress: progressElement.value,
         });
     }
@@ -459,8 +461,8 @@ const myTween = scrawl.makeTween({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Arrow length: ${arrow.length}
-    Line progress: ${progressElement.value}`;
+// @ts-expect-error
+    return `    Arrow length: ${arrow.length}\n    Line progress: ${progressElement.value}`;
 });
 
 

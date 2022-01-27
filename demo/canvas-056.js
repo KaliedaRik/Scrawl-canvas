@@ -2,7 +2,7 @@
 // Seeded random number generator; point on path
 
 // [Run code](../../demo/canvas-056.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -43,6 +43,7 @@ for (let i = 0; i < noOfPins; i++) {
     scrawl.makeWheel({
         name: `pin-1-${i}`,
         group: 'first-pins',
+// @ts-expect-error
         start: [...coord],
         handle: ['center', 'center'],
         radius: 10,
@@ -138,6 +139,7 @@ const checkOutlines = function () {
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
+// @ts-expect-error
     return `    Rotation: ${rotation.value}; Length: ${length.value}; Density: ${density.value}`;
 });
 
@@ -165,10 +167,14 @@ const pathRotation = document.querySelector('#pathroll');
 
 scrawl.addNativeListener(['input', 'change'], () => {
 
+// @ts-expect-error
     rotationValue = rotation.value;
+// @ts-expect-error
     lengthValue = length.value;
+// @ts-expect-error
     densityValue = density.value;
 
+// @ts-expect-error
     pathrollValue = ('0' === pathroll.value) ? false : true;
 
     // Setting the `currentOutline` variable to a null string guarantees that the Shape entity's pathDefinition will be recalculated at the start of the next Display cycle
@@ -176,8 +182,11 @@ scrawl.addNativeListener(['input', 'change'], () => {
 
 }, '.controlItem');
 
+// @ts-expect-error
 rotation.value = 360;
+// @ts-expect-error
 length.value = 20;
+// @ts-expect-error
 density.value = 600;
 pathroll.options.selectedIndex = 0;
 

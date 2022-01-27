@@ -2,7 +2,7 @@
 // Image smoothing
 
 // [Run code](../../demo/canvas-058.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -162,8 +162,11 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
     }
 }, '#smoothFont')
 
+// @ts-expect-error
 document.querySelector('#smoothFont').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#imageSmoothingEnabled').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#imageSmoothingQuality').options.selectedIndex = 2;
 
 

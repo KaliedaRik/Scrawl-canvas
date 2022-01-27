@@ -2,7 +2,7 @@
 // Detecting mouse/pointer cursor movements across a non-base Cell
 
 // [Run code](../../demo/canvas-039.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -189,17 +189,29 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#start_x').value = 300;
+// @ts-expect-error
 document.querySelector('#start_y').value = 200;
+// @ts-expect-error
 document.querySelector('#handle_x').value = 300;
+// @ts-expect-error
 document.querySelector('#handle_y').value = 200;
+// @ts-expect-error
 document.querySelector('#offset_x').value = 0;
+// @ts-expect-error
 document.querySelector('#offset_y').value = 0;
+// @ts-expect-error
 document.querySelector('#roll').value = 0;
+// @ts-expect-error
 document.querySelector('#scale').value = 1;
+// @ts-expect-error
 document.querySelector('#upend').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#reverse').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#width').value = 600;
+// @ts-expect-error
 document.querySelector('#height').value = 400;
 
 

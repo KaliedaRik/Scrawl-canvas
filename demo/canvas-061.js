@@ -2,7 +2,7 @@
 // Gradients stress test
 
 // [Run code](../../demo/filters-019.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -101,7 +101,9 @@ const blockGroup = scrawl.makeGroup({
 let counter = 0;
 const generateBlocks = (numRequired) => {
 
+// @ts-expect-error
     const ease = (bespokeEasings[easing.value]) ? bespokeEasings[easing.value] : easing.value;
+// @ts-expect-error
     const p = parseInt(precision.value, 10);
     const maxWidth = width - 60;
     const maxHeight = height - 60;
@@ -113,12 +115,11 @@ const generateBlocks = (numRequired) => {
             name: `b-${counter}`,
             group: 'block-group',
 
+// @ts-expect-error
             fillStyle: gradient.value,
-            easing: ease,
-            precision: p,
-
             lockFillStyleToEntity: true,
 
+// @ts-expect-error
             method: method.value,
 
             width: Math.floor(10 + (Math.random() * 50)),
@@ -142,8 +143,8 @@ const generateBlocks = (numRequired) => {
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Precision: ${precision.value}
-    Boxes: ${counter}`;
+// @ts-expect-error
+    return `    Precision: ${precision.value}\n    Boxes: ${counter}`;
 });
 
 
@@ -162,6 +163,7 @@ scrawl.addNativeListener(['change'], (e) => {
 
     e.preventDefault();
 
+// @ts-expect-error
     blockGroup.setArtefacts({ fillStyle: gradient.value });
 
 }, '#colorStops');
@@ -170,6 +172,7 @@ scrawl.addNativeListener(['change'], (e) => {
 
     e.preventDefault();
 
+// @ts-expect-error
     blockGroup.setArtefacts({ method: method.value });
 
 }, '#method');
@@ -178,6 +181,7 @@ scrawl.addNativeListener(['change'], (e) => {
 
     e.preventDefault();
 
+// @ts-expect-error
     const ease = (bespokeEasings[easing.value]) ? bespokeEasings[easing.value] : easing.value;
     grads.forEach(g => g.set({ easing: ease}));
 
@@ -187,6 +191,7 @@ scrawl.addNativeListener(['change'], (e) => {
 
     e.preventDefault();
 
+// @ts-expect-error
     const p = parseInt(precision.value, 10);
     grads.forEach(g => g.set({ precision: p}));
 
@@ -205,9 +210,13 @@ const precision = document.querySelector('#precision'),
     gradient = document.querySelector('#colorStops'),
     method = document.querySelector('#method');
 
+// @ts-expect-error
 precision.value = 25;
+// @ts-expect-error
 easing.options.selectedIndex = 0;
+// @ts-expect-error
 gradient.options.selectedIndex = 0;
+// @ts-expect-error
 method.options.selectedIndex = 0;
 
 

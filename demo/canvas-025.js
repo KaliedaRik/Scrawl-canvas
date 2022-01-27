@@ -2,7 +2,7 @@
 // Various responsive and non-responsive canvases; responsive images
 
 // [Run code](../../demo/canvas-025.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 

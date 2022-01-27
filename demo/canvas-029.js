@@ -2,7 +2,7 @@
 // Phrase entitys and gradients
 
 // [Run code](../../demo/canvas-029.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -281,7 +281,9 @@ scrawl.addNativeListener('change', (e) => {
     }
 }, '#justify');
 
+// @ts-expect-error
 document.querySelector('#gradient').value = 'horizontal';
+// @ts-expect-error
 document.querySelector('#justify').value = 'left';
 
 

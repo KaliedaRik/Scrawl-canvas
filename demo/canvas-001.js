@@ -14,12 +14,16 @@
 // // If library is imported from a Content Distribution Network endpoint:
 // import scrawl from 'https://path/to/cdn/endpoint/scrawl-canvas';
 //
-// // If the library is to be used in a TypeScript project, or for tree-shaking, then functions need to be imported individually.
-// // (Tree-shaking functionality to help package managers reduce the size of the shipped library code is on the road map for delivery as part of SC version 9.0.0)
+// // If the library is to be used in a TypeScript project, or for tree-shaking[1], then functions need to be imported individually:
 // import {
 //     makeBlock,
 //     makeWheel,
 // } from 'relevant-library-path-source';
+//
+// // ...Or, alternatively, using the * notation:
+// import * as scrawl from 'relevant-library-path-source';
+//
+// // [1] - Tree-shaking functionality to help package managers reduce the size of the shipped library code is on the road map for delivery as part of SC version 9.0.0
 // ```
 //
 // + All testing Demos use the TS version for loading the library, so we can test the library's .d.ts TypeScript definitions file against them (SC doesn't use TS internally). Other approaches tend to generate a TypeScript error claiming (wrongly) that the library doesn't have a default export.

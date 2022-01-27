@@ -2,7 +2,7 @@
 // Canvas entity clip regions
 
 // [Run code](../../demo/canvas-042.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -173,6 +173,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 }, '#clip-entity')
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#clip-entity').options.selectedIndex = 0;
 
 

@@ -2,7 +2,7 @@
 // Tower of Hanoi
 
 // [Run code](../../demo/canvas-026.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -118,8 +118,7 @@ let dragActions = scrawl.makeDragZone({
 
 let checkPeg = function () {
 
-    let peg = false,
-        disc;
+    let peg, disc;
 
     let pegGroup = scrawl.makeGroup({
 
@@ -180,12 +179,12 @@ let checkPeg = function () {
 
         let hit = pegGroup.getArtefactAt(canvas.here);
 
-        if (hit) peg = hit.artefact;
+        if (typeof hit !== 'boolean' && hit) peg = hit.artefact;
         else peg = false;
 
         let checkDrag = dragActions();
 
-        if (checkDrag) disc = checkDrag.artefact;
+        if (typeof checkDrag !== 'boolean' && checkDrag) disc = checkDrag.artefact;
 
         else if (disc) {
 

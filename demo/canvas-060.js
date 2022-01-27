@@ -2,7 +2,7 @@
 // Noise asset functionality
 
 // [Run code](../../demo/filters-019.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -76,6 +76,7 @@ let noiseAsset = scrawl.makeNoiseAsset({
 
     noiseEngine: 'improved-perlin',
 
+// @ts-expect-error
     colors: bespokeColors['monochrome'],
 });
 
@@ -95,10 +96,8 @@ scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `Dimensions: width - ${width.value}, height - ${height.value}
-Scale: ${scale.value}; Size: ${size.value}
-Octaves: ${octaves.value}; Sine frequency coefficient: ${sineFrequencyCoeff.value}
-Persistence: ${persistence.value}; Lacunarity: ${lacunarity.value}; Sum amplitude: ${sumAmplitude.value}; Worley depth: ${worleyDepth.value}`;
+// @ts-expect-error
+    return `Dimensions: width - ${width.value}, height - ${height.value}\nScale: ${scale.value}; Size: ${size.value}\nOctaves: ${octaves.value}; Sine frequency coefficient: ${sineFrequencyCoeff.value}\nPersistence: ${persistence.value}; Lacunarity: ${lacunarity.value}; Sum amplitude: ${sumAmplitude.value}; Worley depth: ${worleyDepth.value}`;
 });
 
 
@@ -214,29 +213,53 @@ const width = document.querySelector('#width'),
     colorSpace = document.querySelector('#colorSpace'),
     returnColorAs = document.querySelector('#returnColorAs');
 
+// @ts-expect-error
 width.value = 400;
+// @ts-expect-error
 height.value = 400;
+// @ts-expect-error
 octaves.value = 1;
+// @ts-expect-error
 sineFrequencyCoeff.value = 1;
+// @ts-expect-error
 scale.value = 50;
+// @ts-expect-error
 size.value = 256;
+// @ts-expect-error
 persistence.value = 0.5;
+// @ts-expect-error
 lacunarity.value = 2;
+// @ts-expect-error
 sumAmplitude.value = 5;
+// @ts-expect-error
 worleyDepth.value = 0;
+// @ts-expect-error
 noiseEngine.options.selectedIndex = 1;
+// @ts-expect-error
 octaveFunction.options.selectedIndex = 0;
+// @ts-expect-error
 sumFunction.options.selectedIndex = 0;
+// @ts-expect-error
 smoothing.options.selectedIndex = 23;
+// @ts-expect-error
 seed.value = 'noize';
+// @ts-expect-error
 worleyOutput.options.selectedIndex = 0;
+// @ts-expect-error
 paletteStart.value = 0;
+// @ts-expect-error
 paletteEnd.value = 999;
+// @ts-expect-error
 precision.value = 1;
+// @ts-expect-error
 colorStops.options.selectedIndex = 0;
+// @ts-expect-error
 easing.options.selectedIndex = 0;
+// @ts-expect-error
 cyclePalette.options.selectedIndex = 0;
+// @ts-expect-error
 colorSpace.options.selectedIndex = 0;
+// @ts-expect-error
 returnColorAs.options.selectedIndex = 0;
 
 

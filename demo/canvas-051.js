@@ -2,7 +2,7 @@
 // Line Spirals
 
 // [Run code](../../demo/canvas-051.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -69,12 +69,19 @@ scrawl.observeAndUpdate({
     },
 });
 
+// @ts-expect-error
 document.querySelector('#startRadius').value = 0;
+// @ts-expect-error
 document.querySelector('#radiusIncrement').value = 0.1;
+// @ts-expect-error
 document.querySelector('#radiusIncrementAdjust').value = 1;
+// @ts-expect-error
 document.querySelector('#startAngle').value = 0;
+// @ts-expect-error
 document.querySelector('#angleIncrement').value = 5;
+// @ts-expect-error
 document.querySelector('#angleIncrementAdjust').value = 1;
+// @ts-expect-error
 document.querySelector('#stepLimit').value = 100;
 
 

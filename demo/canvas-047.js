@@ -2,7 +2,7 @@
 // Easing functions for Color and Tween factories
 
 // [Run code](../../demo/canvas-047.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 

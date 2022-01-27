@@ -2,7 +2,7 @@
 // Loom entity functionality
 
 // [Run code](../../demo/canvas-024.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -331,23 +331,41 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#fromStart').value = 0;
+// @ts-expect-error
 document.querySelector('#fromEnd').value = 1;
+// @ts-expect-error
 document.querySelector('#toStart').value = 0;
+// @ts-expect-error
 document.querySelector('#toEnd').value = 1;
+// @ts-expect-error
 document.querySelector('#sync').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#looping').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#rendering').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#animation').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#filter').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#method').options.selectedIndex = 4;
+// @ts-expect-error
 document.querySelector('#copy_start_xPercent').value = 0;
+// @ts-expect-error
 document.querySelector('#copy_start_yPercent').value = 0;
+// @ts-expect-error
 document.querySelector('#copy_dims_widthPercent').value = 100;
+// @ts-expect-error
 document.querySelector('#copy_dims_widthAbsolute').value = 400;
+// @ts-expect-error
 document.querySelector('#copy_start_xAbsolute').value = 0;
+// @ts-expect-error
 document.querySelector('#copy_start_yAbsolute').value = 0;
+// @ts-expect-error
 document.querySelector('#copy_dims_heightPercent').value = 100;
+// @ts-expect-error
 document.querySelector('#copy_dims_heightAbsolute').value = 400;
 
 

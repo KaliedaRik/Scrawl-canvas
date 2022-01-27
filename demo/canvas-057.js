@@ -2,7 +2,7 @@
 // Animation observer; animations controlled by scroll position
 
 // [Run code](../../demo/canvas-057.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -37,8 +37,8 @@ bc2.set(canvasSet);
 
 // #### Fixed canvas
 // Update the text values of three Phrase entitys based on the positions of the top, center and base of the canvas element in the viewport
-let fixedCanvasIsDisplaying = false;
-let fixedCanvasDragZone = false;
+let fixedCanvasIsDisplaying,
+    fixedCanvasDragZone;
 
 const fcAnimation = scrawl.makeRender({
 
@@ -298,6 +298,7 @@ scrawl.makeBlock({
 
         bc1.set({ css: { cursor: 'pointer' }});
         fc.set({ css: { cursor: 'pointer' }});
+// @ts-expect-error
         this.set({ 
             fillStyle: 'pink',
             lineWidth: 8,
@@ -308,6 +309,7 @@ scrawl.makeBlock({
 
         bc1.set({ css: { cursor: 'auto' }});
         fc.set({ css: { cursor: 'auto' }});
+// @ts-expect-error
         this.set({ 
             fillStyle: 'white',
             lineWidth: 4,
@@ -415,7 +417,8 @@ const updateBc1 = () => {
             });
         };
 
-        bc1ArrowProgress.set({ progress: inViewportTop * (-1 / 2) });
+ // @ts-expect-error
+       bc1ArrowProgress.set({ progress: inViewportTop * (-1 / 2) });
 
         bc1Cell.set({ startY: `${ (inViewportTop * -100) / 3 }%` });
     }

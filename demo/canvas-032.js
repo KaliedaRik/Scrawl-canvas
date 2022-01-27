@@ -3,7 +3,7 @@
 // + Note that the Polyline entity remains experimental technology and may be subject to breaking changes in future minor updates
 
 // [Run code](../../demo/canvas-032.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -30,7 +30,7 @@ canvas.set({
 
 
 // Internal state variables
-let currentLine = false,
+let currentLine,
     currentPins = [],
     lineHold = [],
     lineBin = [],
@@ -42,10 +42,8 @@ let currentLine = false,
 const myColorFactory = scrawl.makeColor({
 
     name: 'color-factory',
-
-    rMax: 160,
-    gMax: 160,
-    bMax: 160,
+    minimumColor: 'red',
+    maximumColor: 'green',
 });
 
 
@@ -69,7 +67,7 @@ let startLine = function () {
 
                 tension: 0.3,
 
-                strokeStyle: myColorFactory.get('random'),
+                strokeStyle: myColorFactory.getRangeColor(Math.random()),
                 lineWidth: 4 + Math.floor(Math.random() * 20),
 
                 lineCap: 'round',

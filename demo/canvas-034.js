@@ -2,7 +2,7 @@
 // Determine the displayed shape of the visible canvas; react to changes in the displayed shape
 
 // [Run code](../../demo/canvas-034.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 

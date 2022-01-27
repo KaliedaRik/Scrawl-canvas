@@ -2,7 +2,7 @@
 // Testing createImageFromXXX functionality
 
 // [Run code](../../demo/canvas-020.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -334,6 +334,7 @@ let events = function () {
 scrawl.addNativeListener(['input'], events, '.controlItem');
 
 // Set the DOM input values
+// @ts-expect-error
 document.querySelector('#target').value = '';
 
 

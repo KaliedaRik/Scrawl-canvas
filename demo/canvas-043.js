@@ -2,7 +2,7 @@
 // Test various clipping strategies
 
 // [Run code](../../demo/canvas-043.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);

@@ -2,7 +2,7 @@
 // Import and use spritesheets
 
 // [Run code](../../demo/canvas-021.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 

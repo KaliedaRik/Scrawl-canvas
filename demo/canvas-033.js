@@ -2,7 +2,7 @@
 // User preferences: prefers-color-scheme; prefers-reduced-motion
 
 // [Run code](../../demo/canvas-033.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 

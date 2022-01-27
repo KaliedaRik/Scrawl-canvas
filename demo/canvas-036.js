@@ -2,7 +2,7 @@
 // Cell functionality (functionality and associated tests needs to be expanded)
 
 // [Run code](../../demo/canvas-036.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 

@@ -2,7 +2,7 @@
 // Building more complex patterns
 
 // [Run code](../../demo/canvas-044.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 

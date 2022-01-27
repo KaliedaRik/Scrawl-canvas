@@ -2,7 +2,7 @@
 // Use clipping entitys as pivots; clipping entitys and cascade events
 
 // [Run code](../../demo/canvas-045.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 

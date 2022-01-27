@@ -2,7 +2,7 @@
 // Access and use a canvas context engine using the makeAnimation factory
 
 // [Run code](../../demo/canvas-041.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 

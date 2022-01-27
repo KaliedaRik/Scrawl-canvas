@@ -3,7 +3,7 @@
 // + Note that the Polyline entity remains experimental technology and may be subject to breaking changes in future minor updates
 
 // [Run code](../../demo/canvas-030.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed, killPolylineArtefact } from './utilities.js';
 
@@ -28,11 +28,14 @@ let relativeCoords = [['50%', 'center'], ['40%', '10%'], ['20%', '40%'], ['25%',
 // ... And a third coordinate array using Wheel entitys 
 absoluteCoords.forEach((item, index) => {
 
+    const [x, y] = item;
+
     scrawl.makeWheel({
 
         name: `pin-${index}`,
 
-        start: item,
+        startX: x,
+        startY: y,
 
         radius: 20,
 
@@ -264,15 +267,25 @@ scrawl.addNativeListener(['input', 'change'], updatePins, '#pins');
 
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#tension').value = 0;
+// @ts-expect-error
 document.querySelector('#pivot').value = 'start';
+// @ts-expect-error
 document.querySelector('#closed').value = 0;
+// @ts-expect-error
 document.querySelector('#path').value = 1;
+// @ts-expect-error
 document.querySelector('#map').value = 0;
+// @ts-expect-error
 document.querySelector('#pins').value = 'absolute';
+// @ts-expect-error
 document.querySelector('#reverse').value = 0;
+// @ts-expect-error
 document.querySelector('#upend').value = 0;
+// @ts-expect-error
 document.querySelector('#roll').value = 0;
+// @ts-expect-error
 document.querySelector('#scale').value = 1;
 
 

@@ -2,7 +2,7 @@
 // Grid entity - basic functionality (color, gradients)
 
 // [Run code](../../demo/canvas-022.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -314,36 +314,67 @@ scrawl.addNativeListener(['input', 'change'], updateGridStroke, '#gridStroke');
 
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#columns').value = 6;
+// @ts-expect-error
 document.querySelector('#rows').value = 6;
+// @ts-expect-error
 document.querySelector('#columnGutter').value = 1;
+// @ts-expect-error
 document.querySelector('#rowGutter').value = 1;
+// @ts-expect-error
 document.querySelector('#relativeWidth').value = 50;
+// @ts-expect-error
 document.querySelector('#absoluteWidth').value = 300;
+// @ts-expect-error
 document.querySelector('#relativeHeight').value = 50;
+// @ts-expect-error
 document.querySelector('#absoluteHeight').value = 200;
+// @ts-expect-error
 document.querySelector('#baseFill').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#highlightFill').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#gridStroke').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#start_xPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#start_yPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#handle_xPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#handle_yPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#start_xAbsolute').value = 300;
+// @ts-expect-error
 document.querySelector('#start_yAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#handle_xAbsolute').value = 150;
+// @ts-expect-error
 document.querySelector('#handle_yAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#start_xString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#start_yString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#handle_xString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#handle_yString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#offset_xPercent').value = 0;
+// @ts-expect-error
 document.querySelector('#offset_yPercent').value = 0;
+// @ts-expect-error
 document.querySelector('#offset_xAbsolute').value = 0;
+// @ts-expect-error
 document.querySelector('#offset_yAbsolute').value = 0;
+// @ts-expect-error
 document.querySelector('#roll').value = 0;
+// @ts-expect-error
 document.querySelector('#scale').value = 1;
+// @ts-expect-error
 document.querySelector('#upend').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#reverse').options.selectedIndex = 0;
 
 

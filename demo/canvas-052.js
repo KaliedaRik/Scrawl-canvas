@@ -2,7 +2,7 @@
 // Create and use a RawAsset object to modify an image asset
 
 // [Run code](../../demo/canvas-052.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -48,7 +48,6 @@ let noiseAsset = scrawl.makeNoiseAsset({
     width: dimension,
     height: dimension,
     noiseEngine: 'improved-perlin',
-    color: 'gradient',
     scale: 80,
 });
 
@@ -124,6 +123,7 @@ let impressionistAsset = scrawl.makeRawAsset({
 
                 this.dirtyBackground = false;
 
+// @ts-expect-error
                 const { element, engine, canvasWidth, canvasHeight, background } = this;
 
                 element.width = canvasWidth;
@@ -205,6 +205,7 @@ let impressionistAsset = scrawl.makeRawAsset({
 
                     engine.beginPath();
                     engine.moveTo(x, y);
+// @ts-expect-error
                     engine.lineTo(x + dx, y + dy);
                     engine.stroke();
                 }
@@ -308,16 +309,27 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#lineBlend').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#lineWidth').value = 4;
+// @ts-expect-error
 document.querySelector('#lineLengthMultiplier').value = 20;
+// @ts-expect-error
 document.querySelector('#lineLengthStart').value = 5;
+// @ts-expect-error
 document.querySelector('#linesToAdd').value = 50;
+// @ts-expect-error
 document.querySelector('#lineOpacity').value = 1;
+// @ts-expect-error
 document.querySelector('#noiseScale').value = 80;
+// @ts-expect-error
 document.querySelector('#offsetX').value = 0;
+// @ts-expect-error
 document.querySelector('#offsetY').value = 0;
+// @ts-expect-error
 document.querySelector('#rotationMultiplier').value = 90;
+// @ts-expect-error
 document.querySelector('#rotationStart').value = 0;
 
 

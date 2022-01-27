@@ -6,7 +6,7 @@
 // The code in this demo demonstrates how to capture user actions in events, which can then be used to build a "zoom and pan" experience. The demo uses a Picture entity, because that entity _does_ include functionality which prevents the entity from going beyond the borders of its image (or video) asset.
 //
 // [Run code](../../demo/canvas-037.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 

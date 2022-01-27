@@ -2,7 +2,7 @@
 // Cell generation and processing order - kaleidoscope clock
 
 // [Run code](../../demo/canvas-031.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -187,10 +187,6 @@ scrawl.makeWheel({
 let myColorFactory = scrawl.makeColor({
 
     name: `${namespace}-color-factory`,
-
-    rMax: 160,
-    gMax: 160,
-    bMax: 160,
 });
 
 // Add some blocks to create the animated background
@@ -214,7 +210,7 @@ for (let i = 0; i < 50; i++) {
 
         width: `${10 + (Math.random() * 15)}%`,
         height: `${2 + (Math.random() * 10)}%`,
-        roll: Math.floor(`${Math.random() * 360}`),
+        roll: Math.floor(Math.random() * 360),
 
         fillStyle: myColorFactory.get('random'),
 

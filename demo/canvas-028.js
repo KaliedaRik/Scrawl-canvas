@@ -2,7 +2,7 @@
 // Image magnifier; test some composite operations
 
 // [Run code](../../demo/canvas-028.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -186,6 +186,7 @@ scrawl.observeAndUpdate({
         composite: ['globalCompositeOperation', 'raw'],
     },
 });
+// @ts-expect-error
 document.querySelector('#composite').value = 'destination-over';
 
 

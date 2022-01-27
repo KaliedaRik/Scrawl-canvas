@@ -2,7 +2,7 @@
 // Conic gradients
 
 // [Run code](../../demo/canvas-049.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -26,7 +26,7 @@ let graddy = scrawl.makeConicGradient({
     name: 'mygradient',
     startX: '50%',
     startY: '50%',
-    startAngle: 0,
+    angle: 0,
     easing: 'linear',
     precision: 1,
 });
@@ -65,9 +65,8 @@ scrawl.makeBlock({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Palette - start: ${paletteStart.value}; end: ${paletteEnd.value}
-    Start - x: ${startX.value}%; y: ${startY.value}%
-    Angle - ${angle.value}°`;
+// @ts-expect-error
+    return `    Palette - start: ${paletteStart.value}; end: ${paletteEnd.value}\n    Start - x: ${startX.value}%; y: ${startY.value}%\n    Angle - ${angle.value}°`;
 });
 
 
@@ -167,18 +166,30 @@ const startY = document.querySelector('#startY');
 const angle = document.querySelector('#angle');
 const precision = document.querySelector('#precision');
 
+// @ts-expect-error
 paletteStart.value = 0;
+// @ts-expect-error
 paletteEnd.value = 999;
+// @ts-expect-error
 startX.value = 50;
+// @ts-expect-error
 startY.value = 50;
+// @ts-expect-error
 angle.value = 0;
+// @ts-expect-error
 precision.value = 1;
 
+// @ts-expect-error
 document.querySelector('#red').value = 0;
+// @ts-expect-error
 document.querySelector('#blue').value = 0;
+// @ts-expect-error
 document.querySelector('#easing').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#cyclePalette').value = 0;
+// @ts-expect-error
 document.querySelector('#colorSpace').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#returnColorAs').options.selectedIndex = 0;
 
 

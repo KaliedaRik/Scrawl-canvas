@@ -2,7 +2,7 @@
 // Animated contour lines: map a complex gradient to NoiseAsset output
 
 // [Run code](../../demo/canvas-054.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 

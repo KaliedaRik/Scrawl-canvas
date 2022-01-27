@@ -2,7 +2,7 @@
 // Video control and manipulation; chroma-based hit zone
 
 // [Run code](../../demo/canvas-027.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -18,7 +18,6 @@ canvas.set({
 
     checkForResize: true,
     fit: 'contain',
-    checkForResize: true,
     ignoreCanvasCssDimensions: true,
 
 }).setBase({
@@ -89,6 +88,7 @@ scrawl.makePhrase({
 
         // '§UNDERLINE§' is a section class marker which makes subsequent letters underlined
         // ___Note:___ - dynamic underlining is currently not triggering in Firefox browser
+// @ts-expect-error
         this.set({
             text: `§UNDERLINE§${this.text}`,
         });
@@ -102,6 +102,7 @@ scrawl.makePhrase({
             }
         });
 
+// @ts-expect-error
         this.set({
             text: this.text.replace('§UNDERLINE§', ''),
         });
@@ -111,6 +112,7 @@ scrawl.makePhrase({
 
         if (myvideo.get('video_paused')) {
 
+// @ts-expect-error
             this.set({
                 text: 'PAUSE',
             });
@@ -119,6 +121,7 @@ scrawl.makePhrase({
         }
         else {
 
+// @ts-expect-error
             this.set({
                 text: 'PLAY',
             });
@@ -139,6 +142,7 @@ scrawl.makePhrase({
 
         if (myvideo.get('video_muted')) {
 
+// @ts-expect-error
             this.set({
                 text: 'MUTE',
             });
@@ -149,6 +153,7 @@ scrawl.makePhrase({
         }
         else {
 
+// @ts-expect-error
             this.set({
                 text: 'LISTEN',
             });
@@ -202,6 +207,7 @@ scrawl.makePicture({
 
     onEnter: function () {
 
+// @ts-expect-error
         this.set({
             globalAlpha: 0.1,
         });
@@ -215,6 +221,7 @@ scrawl.makePicture({
 
     onLeave: function () {
 
+// @ts-expect-error
         this.set({
             globalAlpha: 0.01,
         });
@@ -228,6 +235,7 @@ scrawl.makePicture({
 
     onUp: function () {
 
+// @ts-expect-error
         this.clickAnchor();
     },
 
@@ -310,6 +318,7 @@ let mygoose = scrawl.makeBlock({
             }
         });
 
+// @ts-expect-error
         this.set({
             method: 'draw',
         });
@@ -323,6 +332,7 @@ let mygoose = scrawl.makeBlock({
             }
         });
 
+// @ts-expect-error
         this.set({
             method: 'none',
         });
@@ -330,6 +340,7 @@ let mygoose = scrawl.makeBlock({
 
     onUp: function () {
 
+// @ts-expect-error
         this.clickAnchor();
     },
 
@@ -437,7 +448,7 @@ let vtPhrase = scrawl.makePhrase({
 
     family: 'monospace',
     size: '1em',
-    weight: '700',
+    weight: 700,
 
     startX: '1%',
     startY: '4%',
