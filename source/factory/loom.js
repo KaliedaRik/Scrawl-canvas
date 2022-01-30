@@ -29,6 +29,7 @@ import { makeState, stateKeys } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 
 import baseMix from '../mixin/base.js';
+import deltaMix from '../mixin/delta.js';
 import anchorMix from '../mixin/anchor.js';
 
 
@@ -75,6 +76,7 @@ P.isAsset = false;
 
 // #### Mixins
 P = baseMix(P);
+P = deltaMix(P);
 P = anchorMix(P);
 
 
@@ -136,7 +138,7 @@ let defaultAttributes = {
 // It does, however, use these attributes (alongside their setters and getters): __visibility__, __order__, __delta__, __host__, __group__, __anchor__, __collides__.
     visibility: true,
     order: 0,
-    delta: null,
+    // delta: null,
     host: null,
     group: null,
     anchor: null,
@@ -645,87 +647,8 @@ P.getHost = function () {
     return currentCorePosition;
 };
 
-// `updateByDelta`, `reverseByDelta` - copied over from the position mixin.
-P.updateByDelta = function () {
-
-    this.setDelta(this.delta);
-
-    return this;
-};
-
-P.reverseByDelta = function () {
-
-    let temp = {};
-    
-    Object.entries(this.delta).forEach(([key, val]) => {
-
-        if (val.substring) val = -(parseFloat(val)) + '%';
-        else val = -val;
-
-        temp[key] = val;
-    });
-
-    this.setDelta(temp);
-
-    return this;
-};
-
-// `setDeltaValues` - copied over from the position mixin.
-P.setDeltaValues = function (items = Ωempty) {
-
-    let delta = this.delta, 
-        oldVal, action;
-
-    Object.entries(items).forEach(([key, requirement]) => {
-
-        if (xt(delta[key])) {
-
-            action = requirement;
-
-            oldVal = delta[key];
-
-            switch (action) {
-
-                case 'reverse' :
-                    if (oldVal.toFixed) delta[key] = -oldVal;
-                    // TODO: reverse String% (and em, etc) values
-                    break;
-
-                case 'zero' :
-                    if (oldVal.toFixed) delta[key] = 0;
-                    // TODO: zero String% (and em, etc) values
-                    break;
-
-                case 'add' :
-                    break;
-
-                case 'subtract' :
-                    break;
-
-                case 'multiply' :
-                    break;
-
-                case 'divide' :
-                    break;
-            }
-        }
-    })
-    return this;
-};
-
 // Invalidate mid-init functionality
 P.midInitActions = λnull;
-
-// Invalidating sensor functionality
-P.cleanCollisionData = function () {
-
-    return [0, []];
-};
-P.getSensors = function () {
-
-    return [];
-};
-
 
 // Force the Loom entity to update
 // + Because it doesn't automatically keep check of changes in its picture source
@@ -1311,9 +1234,9 @@ P.clear = function (engine) {
     }
 };
 
-// `none`
+// `none`, `clip`
 P.none = λnull;
-
+P.clip = λnull;
 
 // These __stroke__ and __fill__ functions handle most of the stuff that the method functions require to stamp the Loom entity onto a canvas cell.
 

@@ -13,6 +13,8 @@ import {
     makeWorld,
     setIgnorePixelRatio,
 } from '../source/scrawl.js';
+
+// @ts-expect-error
 import Delaunator from 'https://cdn.skypack.dev/delaunator@5.0.0';
 
 import { reportSpeed } from './utilities.js';
@@ -222,9 +224,11 @@ let myWorld = makeWorld({
         {
             key: 'coords', 
             defaultValue: [],
+// @ts-expect-error
             getter: function () { return [].concat(this.coords) },
             setter: function (emitter) {
 
+// @ts-expect-error
                 let { coords } = this;
                 coords.length = 0;
 
@@ -297,8 +301,10 @@ const myEmitter = makeEmitter({
 
 
         // generate coords
+// @ts-expect-error
         this.world.set({ coords: this });
 
+// @ts-expect-error
         let c = this.world.get('coords');
 
         // Build a new Delaunay object for each iteration (think of this as a stress test)
@@ -306,8 +312,10 @@ const myEmitter = makeEmitter({
 
         if (delaunay) {
 
+// @ts-expect-error
             let particles = this.particleStore,
                 engine = host.engine,
+// @ts-expect-error
                 radius = this.world.connectionRadius;
 
             engine.save();

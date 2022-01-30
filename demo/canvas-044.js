@@ -83,7 +83,7 @@ scrawl.makeNoiseAsset({
     height: 50,
     octaves: 5,
     scale: 2,
-    noiseFunction: 'simplex',
+    noiseEngine: 'simplex',
 });
 
 // TEST: see if we can load the Noise asset directly into a Picture entity, and into a Pattern style - we'll use these for background textures.

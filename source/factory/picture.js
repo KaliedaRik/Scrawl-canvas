@@ -434,7 +434,7 @@ P.cleanImage = function () {
     let natWidth = this.sourceNaturalWidth,
         natHeight = this.sourceNaturalHeight;
 
-    if (xta(natWidth, natHeight)) {
+    if (xta(natWidth, natHeight) && natWidth > 0 && natHeight > 0) {
 
         this.dirtyImage = false;
 
@@ -462,7 +462,7 @@ P.cleanCopyStart = function () {
     let width = this.sourceNaturalWidth,
         height = this.sourceNaturalHeight;
 
-    if (xta(width, height)) {
+    if (xta(width, height) && width > 0 && height > 0) {
 
         this.dirtyCopyStart = false;
 
@@ -493,7 +493,7 @@ P.cleanCopyDimensions = function () {
     let natWidth = this.sourceNaturalWidth,
         natHeight = this.sourceNaturalHeight;
 
-    if (xta(natWidth, natHeight)) {
+    if (xta(natWidth, natHeight) && natWidth > 0 && natHeight > 0) {
 
         this.dirtyCopyDimensions = false;
 

@@ -2,7 +2,7 @@
 // Element mouse, pivot and mimic functionality
 
 // [Run code](../../demo/dom-002.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -219,29 +219,53 @@ scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 
 // Housekeeping - set the DOM input values to their starting values on each page reload
+// @ts-expect-error
 document.querySelector('#dims_widthPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#dims_heightPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#dims_widthAbsolute').value = 250;
+// @ts-expect-error
 document.querySelector('#dims_heightAbsolute').value = 250;
+// @ts-expect-error
 document.querySelector('#start_xPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#start_yPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#start_xAbsolute').value = 250;
+// @ts-expect-error
 document.querySelector('#start_yAbsolute').value = 250;
+// @ts-expect-error
 document.querySelector('#start_xString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#start_yString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#handle_xPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#handle_yPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#handle_xAbsolute').value = 125;
+// @ts-expect-error
 document.querySelector('#handle_yAbsolute').value = 125;
+// @ts-expect-error
 document.querySelector('#handle_xString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#handle_yString').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#roll').value = 10;
+// @ts-expect-error
 document.querySelector('#pitch').value = 20;
+// @ts-expect-error
 document.querySelector('#yaw').value = 30;
+// @ts-expect-error
 document.querySelector('#scale').value = 1;
+// @ts-expect-error
 document.querySelector('#pivot_handle').value = 0;
+// @ts-expect-error
 document.querySelector('#pivot_rotation').value = 0;
+// @ts-expect-error
 document.querySelector('#mimic_dims').value = 10;
+// @ts-expect-error
 document.querySelector('#mimic_rotation').value = 0;
 
 

@@ -2,7 +2,7 @@
 // Canvas engine filter strings (based on CSS filters)
 
 // [Run code](../../demo/filters-501.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -98,6 +98,7 @@ let updateTarget = (e) => {
         canvas.setBase({ filter: 'none'});
 
         if (val === 'picture') filterTarget = piccy;
+// @ts-expect-error
         else if (val === 'phrase') filterTarget = text;
         else if (val === 'cell') filterTarget = canvas.base;
 
@@ -119,7 +120,9 @@ let updateFilter = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateFilter, '#filter');
 
+// @ts-expect-error
 document.querySelector('#filter').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#target').options.selectedIndex = 0;
 
 

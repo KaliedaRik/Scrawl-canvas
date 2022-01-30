@@ -26,7 +26,7 @@ Data format requirements - a Javascript object with structure:
 }
 */
 
-import scrawl from '../../source/scrawl.js';
+import * as scrawl from '../../source/scrawl.js';
 
 // We need to adapt the graph frame with data specific to this graph
 import * as frame from './simple-chart-frame.js';
@@ -120,6 +120,7 @@ const build = function (namespace, canvas, data) {
                         order: 0,
                     });
 
+// @ts-expect-error
                     this.set({
                         method: 'fillThenDraw',
                         order: 1,

@@ -11,7 +11,7 @@
 // + [Simple graph lines module](./simple-graph-lines.html)
 // + [Simple graph stacked bars module](./simple-graph-stacked-bars.html)
 
-import scrawl from './source/scrawl.js';
+import * as scrawl from './source/scrawl.js';
 
 import * as frame from './simple-chart-frame.js';
 

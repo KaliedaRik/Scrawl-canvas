@@ -76,8 +76,8 @@ const piccy = makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Radius: ${radius.value}, Step: ${step.value}, Passes: ${passes.value}
-    Opacity: ${opacity.value}`;
+// @ts-expect-error
+    return `    Radius: ${radius.value}, Step: ${step.value}, Passes: ${passes.value}\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -180,19 +180,32 @@ const passes = document.querySelector('#passes');
 const step = document.querySelector('#step');
 const opacity = document.querySelector('#opacity');
 
+// @ts-expect-error
 radius.value = 10;
+// @ts-expect-error
 passes.value = 1;
+// @ts-expect-error
 step.value = 1;
+// @ts-expect-error
 opacity.value = 1;
 
+// @ts-expect-error
 document.querySelector('#blurFilter').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeRed').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeGreen').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeBlue').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeAlpha').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#processHorizontal').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#processVertical').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#excludeTransparentPixels').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 
 

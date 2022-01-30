@@ -2,7 +2,7 @@
 // Filter parameters: chroma
 
 // [Run code](../../demo/filters-010.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -50,9 +50,8 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    (Low color: ${lowCol.value}, High color: ${highCol.value})
-    Range: [${myFilter.ranges}] → [${myFilter.actions[0].ranges}]
-    Opacity: ${opacity.value}`;
+// @ts-expect-error
+    return `    (Low color: ${lowCol.value}, High color: ${highCol.value})\n    Range: [${myFilter.ranges}] → [${myFilter.actions[0].ranges}]\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -69,10 +68,6 @@ const demoAnimation = scrawl.makeRender({
 // Setup form observer functionality
 const interpretColors = function () {
 
-    // const converter = scrawl.makeColor({
-    //     name: 'converter',
-    // });
-
     const lowColor = document.querySelector('#lowColor');
     const highColor = document.querySelector('#highColor');
 
@@ -87,6 +82,7 @@ const interpretColors = function () {
 
         myFilter.set({
 
+// @ts-expect-error
             ranges: [[lowColor.value, highColor.value]],
         })
     }
@@ -104,8 +100,11 @@ const lowCol = document.querySelector('#lowColor'),
     highCol = document.querySelector('#highColor'),
     opacity = document.querySelector('#opacity');
 
+// @ts-expect-error
 lowCol.value = '#000000';
+// @ts-expect-error
 highCol.value = '#5c7f5c';
+// @ts-expect-error
 opacity.value = 1;
 
 

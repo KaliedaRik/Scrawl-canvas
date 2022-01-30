@@ -435,7 +435,7 @@ const addCanvas = function (items = Ωempty) {
 const clear = function (...items) {
 
     displayCycleHelper(items);
-    return displayCycleBatchProcess('clear');
+    displayCycleBatchProcess('clear');
 };
 
 // ##### Compile
@@ -447,7 +447,7 @@ const clear = function (...items) {
 const compile = function (...items) {
 
     displayCycleHelper(items);
-    return displayCycleBatchProcess('compile');
+    displayCycleBatchProcess('compile');
 };
 
 // ##### Show
@@ -459,7 +459,7 @@ const compile = function (...items) {
 const show = function (...items) {
 
     displayCycleHelper(items);
-    return displayCycleBatchProcess('show');
+    displayCycleBatchProcess('show');
 };
 
 // ##### Render
@@ -470,7 +470,7 @@ const show = function (...items) {
 const render = function (...items) {
 
     displayCycleHelper(items);
-    return displayCycleBatchProcess('render');
+    displayCycleBatchProcess('render');
 };
 
 // Helper functions coordinate the actions required to complete a display cycle

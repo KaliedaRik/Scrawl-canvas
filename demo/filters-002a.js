@@ -2,7 +2,7 @@
 // Filters - cache output to improve render speeds
 
 // [Run code](../../demo/filters-002a.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -305,6 +305,7 @@ cacheAction();
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
+// @ts-expect-error
     return `    Opacity: ${opacity.value}`;
 });
 
@@ -364,6 +365,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
 // Setup form
 const opacity = document.querySelector('#opacity');
+// @ts-expect-error
 opacity.value = 1;
 
 

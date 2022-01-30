@@ -2,7 +2,7 @@
 // Filter parameters: emboss
 
 // [Run code](../../demo/filters-018.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -59,9 +59,8 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Angle - ${angle.value}°, Strength - ${strength.value}, Smoothing - ${smoothing.value}, Clamp - ${clamp.value}
-    Tolerance - ${tolerance.value}
-    Opacity: ${opacity.value}`;
+// @ts-expect-error
+    return `    Angle - ${angle.value}°, Strength - ${strength.value}, Smoothing - ${smoothing.value}, Clamp - ${clamp.value}\n    Tolerance - ${tolerance.value}\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -116,16 +115,26 @@ let strength = document.querySelector('#strength'),
     tolerance = document.querySelector('#tolerance'),
     opacity = document.querySelector('#opacity');
 
+// @ts-expect-error
 strength.value = 3;
+// @ts-expect-error
 angle.value = 225;
+// @ts-expect-error
 smoothing.value = 0;
+// @ts-expect-error
 tolerance.value = 0;
+// @ts-expect-error
 clamp.value = 0;
+// @ts-expect-error
 opacity.value = 1;
 
+// @ts-expect-error
 document.querySelector('#postProcessResults').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#useNaturalGrayscale').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#keepOnlyChangedAreas').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 
 

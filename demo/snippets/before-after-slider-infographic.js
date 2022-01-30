@@ -137,7 +137,7 @@
 // ### Snippet code
 // Import the Scrawl-canvas object 
 // + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import scrawl from '../../source/scrawl.js';
+import * as scrawl from '../../source/scrawl.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -205,7 +205,7 @@ const getNavigationData = function (el, store, canvas) {
 // The pin factory takes all the data about pins that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each pin
 const pinFactory = function (items, canvas, pinTextGroup, colors) {
 
-    const { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, labelbackground, shared, suppressAccessibleText } = items;
+    let { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, labelbackground, shared, suppressAccessibleText } = items;
 
     const coords = position.split(',');
 
@@ -280,8 +280,7 @@ const pinFactory = function (items, canvas, pinTextGroup, colors) {
     });
 
     // Generate the label associated with each pin (assuming it's been defined in the data)
-    let pinText = false,
-        pinBackground = false;
+    let pinText, pinBackground;
 
     if (labeltext) {
 
@@ -305,6 +304,7 @@ const pinFactory = function (items, canvas, pinTextGroup, colors) {
             lineHeight: 1.15,
 
             width: labelwidth,
+// @ts-expect-error
             handle,
 
             pivot: `${name}-pin`,
@@ -397,6 +397,7 @@ const linkFactory = function (items, canvas, linkTextGroup, colors) {
                 }
             });
 
+// @ts-expect-error
             this.set({
                 text: `§UNDERLINE§${this.text}`,
             });
@@ -410,6 +411,7 @@ const linkFactory = function (items, canvas, linkTextGroup, colors) {
                 }
             });
 
+// @ts-expect-error
             this.set({
                 text: this.text.replace('§UNDERLINE§', ''),
             });
@@ -417,6 +419,7 @@ const linkFactory = function (items, canvas, linkTextGroup, colors) {
 
         onUp: function () {
 
+// @ts-expect-error
             this.clickAnchor();
         },
 
@@ -483,9 +486,9 @@ export default function (el) {
         });
 
         // __1. Get all information required from the wrapper's panel &lt;div> child elements__
-        const leftPanel = getPanelData(element.querySelector('[data-frame="left"]'), {}, canvas, 'left');
+        const leftPanel = getPanelData(element.querySelector('[data-frame="left"]'), {}, canvas);
 
-        const rightPanel = getPanelData(element.querySelector('[data-frame="right"]'), {}, canvas, 'right');
+        const rightPanel = getPanelData(element.querySelector('[data-frame="right"]'), {}, canvas);
 
         // Snippet will fail if we don't have both panels to build
         if (leftPanel && rightPanel) {
@@ -764,6 +767,7 @@ export default function (el) {
 
                 updateOnStart: () => {
 
+// @ts-expect-error
                     dragBar.isBeingDragged = false;
                     dragBar.set({
                         lockXTo: 'mouse',

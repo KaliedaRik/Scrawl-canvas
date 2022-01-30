@@ -2,7 +2,7 @@
 // Filter parameters: randomNoise
 
 // [Run code](../../demo/filters-023.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -51,9 +51,8 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Width: ${width.value}, Height: ${height.value}
-    Level: ${level.value}
-    Opacity - ${opacity.value}`;
+// @ts-expect-error
+    return `    Width: ${width.value}, Height: ${height.value}\n    Level: ${level.value}\n    Opacity - ${opacity.value}`;
 });
 
 
@@ -96,14 +95,22 @@ const width = document.querySelector('#width'),
     level = document.querySelector('#level'),
     opacity = document.querySelector('#opacity');
 
+// @ts-expect-error
 width.value = 6;
+// @ts-expect-error
 height.value = 6;
+// @ts-expect-error
 level.value = 0.5;
+// @ts-expect-error
 opacity.value = 1;
 
+// @ts-expect-error
 document.querySelector('#includeRed').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeGreen').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeBlue').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeAlpha').options.selectedIndex = 1;
 
 

@@ -2,7 +2,7 @@
 // Mesh entitys
 
 // [Run code](../../demo/particles-016.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -37,6 +37,7 @@ const myNet = scrawl.makeNet({
 
     postGenerate: function () {
 
+// @ts-expect-error
         this.springs.forEach(s => {
 
             s.particleFromIsStatic = true;
@@ -121,7 +122,9 @@ let myMesh = scrawl.makeMesh({
 
     method: 'fillThenDraw',
 
+// @ts-expect-error
     onEnter: function () { this.set({ lineWidth: 6 }) },
+// @ts-expect-error
     onLeave: function () { this.set({ lineWidth: 2 }) },
 });
 

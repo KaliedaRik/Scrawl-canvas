@@ -2,7 +2,7 @@
 // Particle Force objects: generation and functionality
 
 // [Run code](../../demo/particles-007.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -96,6 +96,7 @@ scrawl.makeForce({
 
         let {load} = particle;
 
+// @ts-expect-error
         let intensity = world.brownianIntensity;
 
         load.vectorAdd({
@@ -254,8 +255,11 @@ const filterChoice = function (e) {
 scrawl.addNativeListener(['input', 'change'], filterChoice, '#filter');
 
 // Set DOM form initial input values
+// @ts-expect-error
 document.querySelector('#filter').value = '';
+// @ts-expect-error
 document.querySelector('#particleCount').value = 50;
+// @ts-expect-error
 document.querySelector('#brownianIntensity').value = 2;
 
 

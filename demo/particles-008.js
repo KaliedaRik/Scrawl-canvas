@@ -2,7 +2,7 @@
 // Net entity: generation and basic functionality, including Spring objects
 
 // [Run code](../../demo/particles-008.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -62,6 +62,7 @@ scrawl.makeForce({
     action: (particle, world, host) => {
 
         particle.load.vectorAdd({
+// @ts-expect-error
             x: world.wind,
             y: 0,
         });
@@ -70,12 +71,14 @@ scrawl.makeForce({
 
 let changeWind = function () {
 
+// @ts-expect-error
     let newWind = myWorld.wind + Math.random() - 0.5;
 
     if (newWind < -15) newWind = -15;
     if (newWind > 15) newWind = 15;
 
     myWorld.set({
+// @ts-expect-error
         wind: newWind,
     });
 };
@@ -105,6 +108,7 @@ const myNet = scrawl.makeNet({
         // Names for 'weak-net' and 'strong-net' Particles are consistent: `${Net-entity-name}-${row-number}-${column-number}`
         const regex = RegExp('.*(-0-0|-4-0|-9-0)$');
 
+// @ts-expect-error
         this.particleStore.forEach(p => {
 
             if (regex.test(p.name)) {
@@ -117,6 +121,7 @@ const myNet = scrawl.makeNet({
                 });
 
                 // Prevent Springs associated with the selected Particles from moving them
+// @ts-expect-error
                 this.springs.forEach(s => {
 
                     if (s && s.particleFrom && s.particleFrom.name === p.name) {
@@ -204,12 +209,8 @@ scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Tick multiplier: ${tickMultiplier.value}
-    Particle mass: ${mass.value}
-    Rest length multiplier: ${restLength.value}
-    Wind speed: ${myWorld.wind.toFixed(2)}
-    Spring constant: ${springConst.value}
-    Damper constant: ${damperConst.value}`;
+// @ts-expect-error
+    return `    Tick multiplier: ${tickMultiplier.value}\n    Particle mass: ${mass.value}\n    Rest length multiplier: ${restLength.value}\n    Wind speed: ${myWorld.wind.toFixed(2)}\n    Spring constant: ${springConst.value}\n    Damper constant: ${damperConst.value}`;
 });
 
 // Create the Display cycle animation
@@ -247,13 +248,20 @@ const springConst = document.querySelector('#springConstant'),
     tickMultiplier = document.querySelector('#tickMultiplier'),
     damperConst = document.querySelector('#damperConstant');
 
+// @ts-expect-error
 springConst.value = 50;
+// @ts-expect-error
 damperConst.value = 5;
+// @ts-expect-error
 restLength.value = 1;
+// @ts-expect-error
 mass.value = 1;
+// @ts-expect-error
 tickMultiplier.value = 2;
 
+// @ts-expect-error
 document.querySelector('#generate').value = 'weak-net';
+// @ts-expect-error
 document.querySelector('#engine').value = 'runge-kutta';
 
 

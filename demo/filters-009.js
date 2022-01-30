@@ -2,7 +2,7 @@
 // Filter parameters: pixelate
 
 // [Run code](../../demo/filters-009.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -52,9 +52,8 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}
-    Offset - x: ${offset_x.value} y: ${offset_y.value}
-    Opacity: ${opacity.value}`;
+// @ts-expect-error
+    return `    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}\n    Offset - x: ${offset_x.value} y: ${offset_y.value}\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -102,15 +101,24 @@ const tile_width = document.querySelector('#tile_width'),
     offset_y = document.querySelector('#offset_y'),
     opacity = document.querySelector('#opacity');
 
+// @ts-expect-error
 tile_width.value = 10;
+// @ts-expect-error
 tile_height.value = 10;
+// @ts-expect-error
 offset_x.value = 0;
+// @ts-expect-error
 offset_y.value = 0;
+// @ts-expect-error
 opacity.value = 1;
 
+// @ts-expect-error
 document.querySelector('#includeRed').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeGreen').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeBlue').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeAlpha').options.selectedIndex = 0;
 
 

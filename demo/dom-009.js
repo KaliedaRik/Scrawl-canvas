@@ -2,7 +2,7 @@
 // Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate
 
 // [Run code](../../demo/dom-009.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -161,6 +161,7 @@ let reviewCircleClasses = function () {
         let targets = circleGroup.getAllArtefactsAt(stack.here);
 
         // updating the scene step 3 - add the 'make_opaque' CSS class to circles under the current cursor position
+// @ts-expect-error
         targets.forEach(target => target.artefact.addClasses('make_opaque'));
         targetsLength = targets.length;
     };
@@ -195,7 +196,7 @@ scrawl.addNativeListener(['touchmove'], (e) => {
 // Event listener for the buttons
 let buttonControls = function () {
 
-    let spinListener = false,
+    let spinListener,
         startAnimationButton = artefact.start_animation, 
         stopAnimationButton = artefact.stop_animation, 
         startListenersButton = artefact.start_listeners, 

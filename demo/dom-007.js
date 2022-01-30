@@ -2,7 +2,7 @@
 // Animate a DOM element using the delta attribute object; dynamically change classes on a DOM element
 
 // [Run code](../../demo/dom-007.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -102,6 +102,7 @@ flower.set({
 // Updating the flower's DOM element's class attribute
 let checkForFlowerClassUpdates = function () {
 
+// @ts-expect-error
     let current = hitgroup.getArtefactAt([flower.get('start')]).artefact;
 
     if (current && !currentClass) {

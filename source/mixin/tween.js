@@ -296,6 +296,13 @@ export default function (P = Ωempty) {
         return this.targets.some(t => t.name === item);
     };
 
+    P.run = λnull;
+    P.isRunning = λnull;
+    P.halt = λnull;
+    P.reverse = λnull;
+    P.resume = λnull;
+    P.seekTo = λnull;
+    P.seekFor = λnull;
 
 // Return the prototype
     return P;

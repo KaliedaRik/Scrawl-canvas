@@ -46,7 +46,7 @@ const Net = function (items = Ωempty) {
     this.onDown = λnull;
     this.onUp = λnull;
 
-    // Net entitys generate their Particles once, on initialization, in line with the `generate` function's instructions. Scrtawl-canvas includes a number of pre-built generator functions, which we can reference by their String names: `weak-net`, `strong-net`, `weak-shape`, `strong-shape`
+    // Net entitys generate their Particles once, on initialization, in line with the `generate` function's instructions. Scrawl-canvas includes a number of pre-built generator functions, which we can reference by their String names: `weak-net`, `strong-net`, `weak-shape`, `strong-shape`
     this.generate = λnull;
 
     // The `postGenerate` function runs imediately after the `generate` function. We can use it to amend the attributes of selected Particles, for instance to make them static.

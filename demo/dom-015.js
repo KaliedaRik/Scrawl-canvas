@@ -2,7 +2,7 @@
 // Use stacked DOM artefact corners as pivot points
 
 // [Run code](../../demo/dom-015.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -238,15 +238,25 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#width').value = 200;
+// @ts-expect-error
 document.querySelector('#height').value = 200;
+// @ts-expect-error
 document.querySelector('#handle_xAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#handle_yAbsolute').value = 100;
+// @ts-expect-error
 document.querySelector('#offset_xAbsolute').value = 0;
+// @ts-expect-error
 document.querySelector('#offset_yAbsolute').value = 0;
+// @ts-expect-error
 document.querySelector('#roll').value = 10;
+// @ts-expect-error
 document.querySelector('#pitch').value = 20;
+// @ts-expect-error
 document.querySelector('#yaw').value = 30;
+// @ts-expect-error
 document.querySelector('#scale').value = 1;
 
 

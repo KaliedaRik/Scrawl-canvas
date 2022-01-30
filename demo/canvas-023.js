@@ -138,7 +138,7 @@ let checkHitTiles = () => {
 
     myGrid.setAllTilesTo(0);
 
-    if (hits) {
+    if (typeof hits !== 'boolean' && hits) {
 
         myGrid.setTilesTo(hits.tiles, 1);
         hitReport = `Hits - x: ${hits.x}, y: ${hits.y}, tiles: ${hits.tiles.join(', ')}`;

@@ -2,7 +2,9 @@
 // Tensorflow tfjs-models / body-pix experiment - follow my eyes
 
 // [Run code](../../demo/tensorflow-001.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
+
+import { reportSpeed } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -27,6 +29,7 @@ let myAsset = scrawl.makeRawAsset({
 
             if (item && item.allPoses && item.allPoses.length) {
 
+// @ts-expect-error
                 const { parts, leftEyeX, leftEyeY, leftEye, rightEyeX, rightEyeY, rightEye, wobbleDamper } = this;
 
                 let segs = item.allPoses[0];
@@ -159,7 +162,7 @@ const perform = function (net) {
 
 // ##### Import and use livestream
 // convenience handle for the media stream asset 
-let video = false;
+let video;
 
 // Capture the media stream
 scrawl.importMediaStream({
@@ -171,7 +174,9 @@ scrawl.importMediaStream({
     video = mycamera;
 
     // This fixes the issue in Firefox where the media stream will crash Tensorflow if the stream's video element's dimensions have not been set
+// @ts-expect-error
     video.source.width = "1280";
+// @ts-expect-error
     video.source.height = "720";
 
     // Take the media stream and display it in our canvas element
@@ -188,6 +193,7 @@ scrawl.importMediaStream({
     });
 
     // Start the TensorFlow model
+// @ts-expect-error
     bodyPix.load()
     .then (net => {
 
@@ -212,21 +218,7 @@ scrawl.importMediaStream({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();
+const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation

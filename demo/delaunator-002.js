@@ -2,7 +2,9 @@
 // Responsive Voronoi cells in a RawAsset wrapper
 
 // [Run code](../../demo/delaunator-002.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
+
+// @ts-expect-error
 import Delaunator from 'https://cdn.skypack.dev/delaunator@5.0.0';
 
 import { reportSpeed } from './utilities.js';
@@ -149,6 +151,7 @@ let myAsset = scrawl.makeRawAsset({
         defaultValue: false,
         setter: function (item) {
 
+// @ts-expect-error
             const { points, here } = this;
 
             if (here && here.active) points[0] = [here.x, here.y];
@@ -198,7 +201,7 @@ scrawl.makePicture({
 
     name: 'temp',
     asset: 'voronoi-web',
-    display: 'none',
+    method: 'none',
 });
 
 // We apply the mosaic effect over our image using a Scrawl-canvas filter

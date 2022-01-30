@@ -43,7 +43,7 @@
 
 // Import the Scrawl-canvas object 
 // + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import scrawl from '../../source/scrawl.js';
+import * as scrawl from '../../source/scrawl.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -138,7 +138,9 @@ export default function (el) {
 
                 let {x, y} = here;
 
+// @ts-expect-error
                 lastX = x;
+// @ts-expect-error
                 lastY = y;
             }
         }, el);
@@ -149,7 +151,9 @@ export default function (el) {
 
                 let {x, y} = canvas.here;
 
+// @ts-expect-error
                 let dx = lastX - x,
+// @ts-expect-error
                     dy = lastY - y;
 
                 panImage.setDelta({
@@ -157,7 +161,9 @@ export default function (el) {
                     copyStartY: dy * aspectHeight,
                 });
 
+// @ts-expect-error
                 lastX = x;
+// @ts-expect-error
                 lastY = y;
              }
         }, el);
@@ -171,7 +177,9 @@ export default function (el) {
 
                 let {x, y} = canvas.here;
 
+// @ts-expect-error
                 let dx = lastX - x,
+// @ts-expect-error
                     dy = lastY - y;
 
                 panImage.setDelta({

@@ -2,7 +2,7 @@
 // Filter parameters: channels
 
 // [Run code](../../demo/filters-007.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -51,11 +51,8 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Red: ${red.value}
-    Green: ${green.value}
-    Blue: ${blue.value}
-    Alpha: ${alpha.value}
-    Opacity: ${opacity.value}`;
+// @ts-expect-error
+    return `    Red: ${red.value}\n    Green: ${green.value}\n    Blue: ${blue.value}\n    Alpha: ${alpha.value}\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -97,10 +94,15 @@ const red = document.querySelector('#red'),
     alpha = document.querySelector('#alpha'),
     opacity = document.querySelector('#opacity');
 
+// @ts-expect-error
 red.value = 1;
+// @ts-expect-error
 green.value = 1;
+// @ts-expect-error
 blue.value = 1;
+// @ts-expect-error
 alpha.value = 1;
+// @ts-expect-error
 opacity.value = 1;
 
 

@@ -6,7 +6,7 @@
 //
 // Import the Scrawl-canvas object 
 // + There's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import scrawl from '../../source/scrawl.js';
+import * as scrawl from '../../source/scrawl.js';
 
 
 // #### The entity ring factory
@@ -22,7 +22,7 @@ import scrawl from '../../source/scrawl.js';
 // + __reflectOnly__ - Boolean - when the ring half is copied and pasted back into the final output, it can be set to reflect only, which will give us a bilateral rather than a radial symmetry; default: false
 export default function (items = {}) {
 
-    if (!items.canvas || !items.entity || !items.name) return false;
+    if (!items.canvas || !items.entity || !items.name) return {};
 
     let canvas = items.canvas,
         name = items.name,

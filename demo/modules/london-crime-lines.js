@@ -32,7 +32,7 @@ Data supplied to graph module as Javascript object with structure:
 }
 */
 
-import scrawl from '../../source/scrawl.js';
+import * as scrawl from '../../source/scrawl.js';
 
 // We need to adapt the chart frame with data specific to this graph
 import * as frame from './simple-chart-frame.js';
@@ -57,8 +57,7 @@ const getRawData = (file) => {
 };
 
 // Add some module state
-let currentData = false,
-    isBuilt = false;
+let currentData, isBuilt;
 
 // Extract relevant data for the graph being requested
 const getData = (category) => {

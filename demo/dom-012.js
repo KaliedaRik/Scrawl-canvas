@@ -2,7 +2,7 @@
 // Add and remove (kill) Scrawl-canvas canvas elements programmatically
 
 // [Run code](../../demo/dom-012.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -70,9 +70,13 @@ let controls = function () {
         b3 = document.querySelector('#action_3'),
         b4 = document.querySelector('#action_4');
 
+// @ts-expect-error
     b1.disabled = '';
+// @ts-expect-error
     b2.disabled = 'disabled';
+// @ts-expect-error
     b3.disabled = '';
+// @ts-expect-error
     b4.disabled = '';
 
     let stackCanvas, divCanvas;
@@ -129,7 +133,9 @@ let controls = function () {
         switch (e.target.id) {
 
             case 'action_1':
+// @ts-expect-error
                 b1.disabled = 'disabled';
+// @ts-expect-error
                 b2.disabled = '';
 
                 stackCanvas = scrawl.addCanvas({
@@ -147,7 +153,9 @@ let controls = function () {
 
             case 'action_2':
 
+// @ts-expect-error
                 b1.disabled = '';
+// @ts-expect-error
                 b2.disabled = 'disabled';
 
                 if (stackCanvas) stackCanvas.kill();
@@ -156,8 +164,11 @@ let controls = function () {
 
             case 'action_3':
 
+// @ts-expect-error
                 b1.disabled = '';
+// @ts-expect-error
                 b2.disabled = 'disabled';
+// @ts-expect-error
                 b3.disabled = 'disabled';
 
                 mystack.kill();

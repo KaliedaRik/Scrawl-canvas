@@ -3,7 +3,7 @@
 
 // [Run code](../../demo/dom-013.html)
 
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -107,8 +107,8 @@ scrawl.addListener('move', (e) => {
         screenY = e.screenY.toFixed(0);
 
         offset.set({
-            startX: parseFloat(offsetX),
-            startY: parseFloat(offsetY),
+            startX: offsetX,
+            startY: offsetY,
         });
     }
 
@@ -184,17 +184,29 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#width').value = 400;
+// @ts-expect-error
 document.querySelector('#height').value = 400;
+// @ts-expect-error
 document.querySelector('#start_xAbsolute').value = 300;
+// @ts-expect-error
 document.querySelector('#start_yAbsolute').value = 300;
+// @ts-expect-error
 document.querySelector('#handle_xAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#handle_yAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#offset_xAbsolute').value = 0;
+// @ts-expect-error
 document.querySelector('#offset_yAbsolute').value = 0;
+// @ts-expect-error
 document.querySelector('#roll').value = 0;
+// @ts-expect-error
 document.querySelector('#pitch').value = 0;
+// @ts-expect-error
 document.querySelector('#yaw').value = 0;
+// @ts-expect-error
 document.querySelector('#scale').value = 1;
 
 console.log(scrawl.library);

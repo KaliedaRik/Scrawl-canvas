@@ -6,7 +6,7 @@
 //
 // Import the Scrawl-canvas object 
 // + There's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import scrawl from '../../source/scrawl.js';
+import * as scrawl from '../../source/scrawl.js';
 
 // Function to fetch and parse Wikipedia page view timeseries data
 // + Wikipedia implements the [Mediawiki Action API](https://www.mediawiki.org/wiki/API:Main_page), meaning we can retrieve page views statistics by calling the appropriate endpoint URL
@@ -128,7 +128,7 @@ export default function (page, canvasWrapper, reqs = {}) {
 
         const highViewsFactory = scrawl.makeColor({
             name: `${page}-high-views`,
-            maximumColor: reqs.medialColor || 'blue',
+            minimumColor: reqs.medialColor || 'blue',
             maximumColor: reqs.maximumColor || 'red',
         });
 

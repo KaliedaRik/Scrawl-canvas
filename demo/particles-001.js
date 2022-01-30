@@ -49,7 +49,9 @@ let myWorld = makeWorld({
         {
             key: 'testCoordinate', 
             type: 'Coordinate',
+// @ts-expect-error
             getter: function () { return [].concat(this.testCoordinate) },
+// @ts-expect-error
             setter: function (item) { this.testCoordinate.set(item) },
         },
 
@@ -61,12 +63,14 @@ let myWorld = makeWorld({
     ],
 
     // Overwrite our user-defined attributes' default values with new data, for testing.
+// @ts-expect-error
     hello: 'Wonderful Person',
     testCoordinate: [100, 100],
 });
 
 // Test the World object's user-defined attributes
 console.log(myWorld.get('hello'));
+// @ts-expect-error
 myWorld.set({ testCoordinate: ['center', 'center'] });
 console.log(myWorld.get('testCoordinate'));
 
@@ -122,10 +126,12 @@ const myEmitter = makeEmitter({
             history = particle.history,
             len = history.length,
             remaining, radius, alpha, 
+// @ts-expect-error
             alphaDecay = myWorld.alphaDecay, 
             colorRange, x, y, z,
             endRad = Math.PI * 2;
 
+// @ts-expect-error
         let colorFactory = this.fillColorFactory;
 
         // Start by saving the engine's current state.
@@ -206,17 +212,8 @@ const report = reportSpeed('#reportmessage', function () {
         if (p) historyCount += p.history.length;
     });
 
-    return `    Particles: ${particlenames.length}, generationRate: ${generationRate.value}, historyLength: ${historyLength.value}
-    Stamps per display: ${historyCount}
-
-    backgroundColor: ${background.value}, tickMultiplier: ${worldSpeed.value}
-    maxColor: ${maxColorController.value}, minColor: ${minColorController.value}, alphaDecay: ${colorAlpha.value}
-
-    killAfterTime: ${killAfterTime.value}, killAfterTimeVariation: ${killAfterTimeVariation.value}
-
-    Range - X: from ${rangeFromX.value} to ${parseFloat(rangeFromX.value) + parseFloat(rangeX.value)}
-    Range - Y: from ${rangeFromY.value} to ${parseFloat(rangeFromY.value) + parseFloat(rangeY.value)}
-    Range - Z: from ${rangeFromZ.value} to ${parseFloat(rangeFromZ.value) + parseFloat(rangeZ.value)}`;
+// @ts-expect-error
+    return `    Particles: ${particlenames.length}, generationRate: ${generationRate.value}, historyLength: ${historyLength.value}\n    Stamps per display: ${historyCount}\n\n    backgroundColor: ${background.value}, tickMultiplier: ${worldSpeed.value}\n    maxColor: ${maxColorController.value}, minColor: ${minColorController.value}, alphaDecay: ${colorAlpha.value}\n\n    killAfterTime: ${killAfterTime.value}, killAfterTimeVariation: ${killAfterTimeVariation.value}\n\n    Range - X: from ${rangeFromX.value} to ${parseFloat(rangeFromX.value) + parseFloat(rangeX.value)}\n    Range - Y: from ${rangeFromY.value} to ${parseFloat(rangeFromY.value) + parseFloat(rangeY.value)}\n    Range - Z: from ${rangeFromZ.value} to ${parseFloat(rangeFromZ.value) + parseFloat(rangeZ.value)}`;
 });
 
 
@@ -324,6 +321,7 @@ const useGravity = function () {
 
     return function () {
 
+// @ts-expect-error
         if (selector.value === "yes") {
 
             myEmitter.set({
@@ -360,23 +358,38 @@ const worldSpeed = document.querySelector('#world-speed'),
     killAfterTimeVariation = document.querySelector('#killAfterTimeVariation'),
     generationRate = document.querySelector('#generationRate');
 
+// @ts-expect-error
 maxColorController.value = '#F0F8FF';
+// @ts-expect-error
 minColorController.value = '#F0F8FF';
+// @ts-expect-error
 worldSpeed.value = 2;
+// @ts-expect-error
 colorAlpha.value = 6;
 
+// @ts-expect-error
 document.querySelector('#gravity').value = 'no';
 
+// @ts-expect-error
 rangeX.value = 40;
+// @ts-expect-error
 rangeFromX.value = -20;
+// @ts-expect-error
 rangeY.value = 40;
+// @ts-expect-error
 rangeFromY.value = -20;
+// @ts-expect-error
 rangeZ.value = -1;
+// @ts-expect-error
 rangeFromZ.value = -0.2;
 
+// @ts-expect-error
 generationRate.value = 60;
+// @ts-expect-error
 historyLength.value = 100;
+// @ts-expect-error
 killAfterTime.value = 5;
+// @ts-expect-error
 killAfterTimeVariation.value = 0.1;
 
 

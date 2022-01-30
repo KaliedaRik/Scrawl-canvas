@@ -2,7 +2,7 @@
 // Filter parameters: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue, grayscale, sepia, invert
 
 // [Run code](../../demo/filters-002.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -230,6 +230,7 @@ scrawl.makePhrase({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
+// @ts-expect-error
     return `    Opacity: ${opacity.value}`;
 });
 
@@ -289,8 +290,10 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 }, '#memoizeFilterOutput');
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 const opacity = document.querySelector('#opacity');
+// @ts-expect-error
 opacity.value = 1;
 
 

@@ -2,7 +2,7 @@
 // Filter parameters: curveWeights
 
 // [Run code](../../demo/filters-024.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { addImageDragAndDrop } from './utilities.js';
 
@@ -124,7 +124,7 @@ curveArray.forEach((name, index) => {
 
 // #### User interaction
 // Create the drag-and-drop zone
-let draggedPin = false;
+let draggedPin;
 
 let dragGroup = scrawl.makeGroup({
     name: 'drag-group',
@@ -144,13 +144,14 @@ const currentPin = scrawl.makeDragZone({
 
         draggedPin = currentPin();
 
-        if (draggedPin) {
+        if (typeof draggedPin != 'boolean' && draggedPin) {
 
             let pin = draggedPin.artefact,
                 name = pin.name;
 
             if (name.indexOf('start') > 0 || name.indexOf('end') > 0) {
 
+// @ts-expect-error
                 pin.isBeingDragged = false;
                 pin.set({
                     lockXTo: 'mouse',
@@ -161,7 +162,7 @@ const currentPin = scrawl.makeDragZone({
 
     updateOnEnd: () => {
 
-        if (draggedPin) {
+        if (typeof draggedPin != 'boolean' && draggedPin) {
 
             let pin = draggedPin.artefact,
                 name = pin.name;
@@ -374,8 +375,7 @@ scrawl.observeAndUpdate({
 
 
 // Channel buttons (under the curves canvas)
-let selected = false,
-    selectedGroup = false;
+let selected, selectedGroup;
 
 scrawl.addNativeListener('click', (e) => {
 
@@ -413,7 +413,9 @@ scrawl.addNativeListener(['input', 'change'], () => updateOutput(), '.controlIte
 
 
 // Setup form
+// @ts-expect-error
 document.querySelector('#useMixedChannel').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#opacity').value = 1;
 
 

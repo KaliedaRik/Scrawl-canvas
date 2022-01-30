@@ -44,6 +44,7 @@ const generics = {
 let clipzone = scrawl.makeBlock({
     name: 'block-clipper',
     dimensions: [200, 200],
+// @ts-expect-error
 }).set(generics).set({ visibility: true });
 
 scrawl.makeWheel({
@@ -52,12 +53,14 @@ scrawl.makeWheel({
     startAngle: 30,
     endAngle: -30,
     includeCenter: true,
+// @ts-expect-error
 }).set(generics);
 
 scrawl.makePhrase({
     name: 'phrase-clipper',
     text: 'HELLO!',
     font: '50px arial, sans-serif',    
+// @ts-expect-error
 }).set(generics);
 
 scrawl.makeCog({
@@ -67,6 +70,7 @@ scrawl.makeCog({
     outerControlsDistance: 20,
     innerControlsDistance: 16,
     points: 24,
+// @ts-expect-error
 }).set(generics);
 
 scrawl.makeOval({
@@ -74,12 +78,14 @@ scrawl.makeOval({
     radiusX: 120,
     radiusY: 150,
     intersectY: 0.55,
+// @ts-expect-error
 }).set(generics);
 
 scrawl.makePolygon({
     name: 'polygon-clipper',
     sideLength: 150,
     sides: 6,
+// @ts-expect-error
 }).set(generics);
 
 scrawl.makeRectangle({
@@ -87,12 +93,14 @@ scrawl.makeRectangle({
     rectangleWidth: 240,
     rectangleHeight: 180,
     radius: 30,
+// @ts-expect-error
 }).set(generics);
 
 scrawl.makeShape({
     name: 'shape-clipper',
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
     scale: 0.4,
+// @ts-expect-error
 }).set(generics);
 
 scrawl.makeSpiral({
@@ -100,6 +108,7 @@ scrawl.makeSpiral({
     loops: 2,
     loopIncrement: 80,
     drawFromLoop: 1,
+// @ts-expect-error
 }).set(generics);
 
 scrawl.makeStar({
@@ -107,6 +116,7 @@ scrawl.makeStar({
     radius1: 80,
     radius2: 140,
     points: 6,
+// @ts-expect-error
 }).set(generics);
 
 scrawl.makeTetragon({
@@ -114,6 +124,7 @@ scrawl.makeTetragon({
     radiusX: 120,
     radiusY: 150,
     intersectY: 1.2,
+// @ts-expect-error
 }).set(generics);
 
 scrawl.makePolyline({
@@ -121,6 +132,7 @@ scrawl.makePolyline({
     pins: [[100, 200], [200, 400], [300, 300], [400, 400], [500, 200], [240, 100]],
     tension: 0.5,
     closed: true,
+// @ts-expect-error
 }).set(generics);
 
 

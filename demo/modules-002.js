@@ -5,7 +5,7 @@
 // + [Wikipedia views spiral chart module](./modules/wikipedia-views-spiral-chart.html)
 //
 // [Run code](../../demo/modules-002.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -20,7 +20,7 @@ const canvas = scrawl.library.canvas.mycanvas;
 import buildChart from './modules/wikipedia-views-spiral-chart.js';
 
 // Initiate the process on page load
-let currentPage = false;
+let currentPage;
 
 buildChart('Cat', canvas, {})
 .then(res => currentPage = res)
@@ -48,6 +48,7 @@ scrawl.makeRender({
 // #### User interaction
 scrawl.addNativeListener('click', () => {
 
+// @ts-expect-error
     let page = document.querySelector('#wikipedia-page').value;
 
     if (page) {

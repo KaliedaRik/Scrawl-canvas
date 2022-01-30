@@ -2,7 +2,7 @@
 // Filter parameters: Swirl filter
 
 // [Run code](../../demo/filters-025.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -74,10 +74,8 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Start - x: ${swirl.startX}; y: ${swirl.startY}
-    Radius - outer: ${swirl.outerRadius}; inner: ${swirl.innerRadius}
-    Angle: ${angle.value}
-    Opacity: ${opacity.value}`;
+// @ts-expect-error
+    return `    Start - x: ${swirl.startX}; y: ${swirl.startY}\n    Radius - outer: ${swirl.outerRadius}; inner: ${swirl.innerRadius}\n    Angle: ${angle.value}\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -141,17 +139,28 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 const opacity = document.querySelector('#opacity');
 const angle = document.querySelector('#angle');
 
+// @ts-expect-error
 opacity.value = 1;
+// @ts-expect-error
 angle.value = 90;
 
+// @ts-expect-error
 document.querySelector('#start_xPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#start_yPercent').value = 50;
+// @ts-expect-error
 document.querySelector('#start_xAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#start_yAbsolute').value = 200;
+// @ts-expect-error
 document.querySelector('#innerRadius_percent').value = 0;
+// @ts-expect-error
 document.querySelector('#innerRadius_absolute').value = 0;
+// @ts-expect-error
 document.querySelector('#outerRadius_percent').value = 30;
+// @ts-expect-error
 document.querySelector('#outerRadius_absolute').value = 120;
+// @ts-expect-error
 document.querySelector('#easing').options.selectedIndex = 0;
 
 

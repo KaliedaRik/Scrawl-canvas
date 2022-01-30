@@ -44,7 +44,7 @@
 //
 // Import the Scrawl-canvas object 
 // + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import scrawl from '../../source/scrawl.js';
+import * as scrawl from '../../source/scrawl.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);

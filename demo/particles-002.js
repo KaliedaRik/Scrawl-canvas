@@ -2,7 +2,7 @@
 // Emitter using artefacts
 
 // [Run code](../../demo/particles-002.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -41,11 +41,13 @@ let wheel = scrawl.makeWheel({
     startAngle: 20,
     endAngle: -20,
     includeCenter: true,
+// @ts-expect-error
 }).set(commonValues);
 
 let block = scrawl.makeBlock({ 
     name: 'particle-block-entity',
     dimensions: [30, 20],
+// @ts-expect-error
 }).set(commonValues);
 
 let star = scrawl.makeStar({
@@ -53,6 +55,7 @@ let star = scrawl.makeStar({
     radius1: 18,
     radius2: 12,
     points: 5,
+// @ts-expect-error
 }).set(commonValues);
 
 let picture = scrawl.makePicture({
@@ -62,6 +65,7 @@ let picture = scrawl.makePicture({
     height: 37,
     copyWidth: '100%',
     copyHeight: '100%',
+// @ts-expect-error
 }).set(commonValues);
 
 let phrase = scrawl.makePhrase({
@@ -69,6 +73,7 @@ let phrase = scrawl.makePhrase({
     text: 'Hello',
     font: 'bold 40px Garamond, serif',
     exposeText: false,
+// @ts-expect-error
 }).set(commonValues);
 
 
@@ -133,6 +138,7 @@ const myemitter = scrawl.makeEmitter({
         let remaining, scale, roll, start, z;
 
         // For the stroke color, we shall give all particles the same color, as defined in our World object
+// @ts-expect-error
         let {strokeStyle, globalAlpha} = myWorld;
 
         // We will display each particle on the canvas using the entity currently assigned to our emitter's `artefact` attribute
@@ -181,16 +187,13 @@ const report = reportSpeed('#reportmessage', function () {
         if (p) historyCount += p.history.length;
     });
 
+// @ts-expect-error
     let kr = parseFloat(killRadius.value),
+// @ts-expect-error
         krv = parseFloat(killRadiusVariation.value) / 2;
 
-    return `    Particles: ${particlenames.length}, generationRate: ${generationRate.value}, historyLength: ${historyLength.value}
-    Stamps per display: ${historyCount}
-
-    Background color: ${background.value}, World speed (tickMultiplier): ${worldSpeed.value}
-    Outline color (strokeStyle): ${outlineColor.value}, Opacity (globalAlpha): ${opacity.value}
-    Kill radius: from ${(kr - krv) > 0 ? kr - krv : 0}px to ${kr + krv}px
-    Minimum fill color: ${minFill.value}, Maximum fill color: ${maxFill.value}`;
+// @ts-expect-error
+    return `    Particles: ${particlenames.length}, generationRate: ${generationRate.value}, historyLength: ${historyLength.value}\n    Stamps per display: ${historyCount}\n\n    Background color: ${background.value}, World speed (tickMultiplier): ${worldSpeed.value}\n    Outline color (strokeStyle): ${outlineColor.value}, Opacity (globalAlpha): ${opacity.value}\n    Kill radius: from ${(kr - krv) > 0 ? kr - krv : 0}px to ${kr + krv}px\n    Minimum fill color: ${minFill.value}, Maximum fill color: ${maxFill.value}`;
 });
 
 let mouseCheck = function () {
@@ -237,6 +240,7 @@ const setLowColor = function () {
 
     return function () {
 
+// @ts-expect-error
         colorFactory.setMinimumColor(selector.value);
     }
 }();
@@ -249,6 +253,7 @@ const setHighColor = function () {
 
     return function () {
 
+// @ts-expect-error
         colorFactory.setMaximumColor(selector.value);
     }
 }();
@@ -263,8 +268,9 @@ const useArtefact = function () {
 
     return function () {
 
+// @ts-expect-error
         val = selector.value;
-        choice = false;
+        choice;
 
         switch (val) {
 
@@ -365,17 +371,28 @@ const worldSpeed = document.querySelector('#world-speed'),
     historyLength = document.querySelector('#historyLength'),
     generationRate = document.querySelector('#generationRate');
 
+// @ts-expect-error
 minFill.value = '#000000';
+// @ts-expect-error
 maxFill.value = '#ffffff';
+// @ts-expect-error
 outlineColor.value = '#F0F8FF';
+// @ts-expect-error
 background.value = '#000040';
+// @ts-expect-error
 worldSpeed.value = 2;
+// @ts-expect-error
 opacity.value = 0.2;
+// @ts-expect-error
 generationRate.value = 10;
+// @ts-expect-error
 historyLength.value = 20;
+// @ts-expect-error
 killRadius.value = 50;
+// @ts-expect-error
 killRadiusVariation.value = 0;
 
+// @ts-expect-error
 document.querySelector('#artefact').value = 'star';
 
 

@@ -2,7 +2,7 @@
 // Fixed number of particles in a field; preAction and postAction functionality
 
 // [Run code](../../demo/particles-006.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -92,8 +92,10 @@ const myEmitter = scrawl.makeEmitter({
     // We use the `preAction` function to draw the lines between stars; the opacity of the line connecting two stars will depend on the distance between them.
     preAction: function (host) {
 
+// @ts-expect-error
         let particles = this.particleStore,
             engine = host.engine,
+// @ts-expect-error
             radius = this.world.connectionRadius;
 
         engine.save();
@@ -153,6 +155,7 @@ const myEmitter = scrawl.makeEmitter({
     // The 'postAction' function is similar to the preAction function, but now we are drawing lines between stars and the mouse cursor's current position
     postAction: function (host) {
 
+// @ts-expect-error
         let particles = this.particleStore,
             engine = host.engine,
             here = host.here;
@@ -174,6 +177,7 @@ const myEmitter = scrawl.makeEmitter({
 
                     let [fr, fz, fx, fy] = fromHistory[0];
 
+// @ts-expect-error
                     let test = scrawl.requestVector(fx, fy).vectorSubtractArray([x, y]),
                         mag = test.getMagnitude();
 

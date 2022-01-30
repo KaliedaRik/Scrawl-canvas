@@ -2,7 +2,7 @@
 // Filter parameters: mapToGradient
 
 // [Run code](../../demo/filters-022.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -145,6 +145,7 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
+// @ts-expect-error
     return `    Opacity - ${opacity.value}`;
 });
 
@@ -205,10 +206,14 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
 // Setup form
 const opacity = document.querySelector('#opacity');
+// @ts-expect-error
 opacity.value = 1;
 
+// @ts-expect-error
 document.querySelector('#useNaturalGrayscale').value = '0';
+// @ts-expect-error
 document.querySelector('#gradient').value = 'red-to-blue';
+// @ts-expect-error
 document.querySelector('#easing').options.selectedIndex = 0;
 
 

@@ -17,7 +17,7 @@ interface CommonHereObjectInput {
     [index: string]: any;
 }
 
-type CommonTwoElementArrayInput = [string | number, string | number];
+type CommonTwoElementArrayInput = [string | number, string | number] | number[];
 
 type StringOrNumberInput = string | number;
 
@@ -188,7 +188,6 @@ interface DeltaMixinDeltaInputs {}
 
 interface DeltaMixinInputs {
     checkDeltaConstraints?: boolean;
-    // delta?: CommonObjectInput;
     deltaConstraints?: CommonObjectInput;
     noDeltaUpdates?: boolean;
     performDeltaChecks?: boolean;
@@ -309,7 +308,7 @@ interface EntityMixinFunctions extends BaseMixinFunctions, PositionMixinFunction
 interface FilterMixinDeltaInputs {}
 
 interface FilterMixinInputs {
-    filters?: Array<FilterInstance | string>;
+    filters?: FilterInstance | string | Array<FilterInstance | string>;
     isStencil?: boolean;
     memoizeFilterOutput?: boolean;
 }
@@ -450,6 +449,7 @@ interface PositionMixinInputs {
     noPositionDependencies?: boolean;
     noUserInteraction?: boolean;
     order?: number;
+    particle?: ParticleInstance | string;
     purge?: PurgeValues;
     visibility?: boolean;
 }
@@ -458,14 +458,16 @@ interface HitOutput {
     artefact: ArtefactInstance;
     x: number;
     y: number;
+    tiles?: number[];
+    particle?: ParticleInstance;
 }
 
 type HitTests = CommonTwoElementArrayInput | CommonHereObjectInput | Array<CommonTwoElementArrayInput | CommonHereObjectInput>
 
 interface PositionMixinFunctions {
-    checkHit: (tests: HitTests, cell: any | null) => HitOutput | boolean;
-    dropArtefact: () => void;
-    pickupArtefact: (items: CommonTwoElementArrayInput | CommonHereObjectInput) => void;
+    checkHit: (tests: HitTests, cell?: CellInstance | string) => HitOutput | boolean;
+    dropArtefact: () => ArtefactInstance;
+    pickupArtefact: (items: CommonTwoElementArrayInput | CommonHereObjectInput) => ArtefactInstance;
     purgeArtefact: (item: string | string[]) => void;
 }
 
@@ -577,7 +579,7 @@ interface TweenMixinFunctions {
     addToTicker: (item: string) => TweenAnimationInstance;
     checkForTarget: (item: string) => TweenTargetInstance[];
     removeFromTargets: (item: any | any[]) => TweenAnimationInstance;
-    removeFromTicker: (item: string) => TweenAnimationInstance;
+    removeFromTicker: (item?: string) => TweenAnimationInstance;
     setTargets: (item: any | any[]) => TweenAnimationInstance;
 }
 
@@ -600,13 +602,16 @@ type AnyGradientInstance = GradientInstance | RadialGradientInstance | ConicGrad
 
 type StylesInstance = AnyGradientInstance | CellInstance | PatternInstance | ColorInstance;
 
-type TweenTargetInstance = AnyGradientInstance | ArtefactInstance | string;
-
 type TweenAnimationInstance = TweenInstance | ActionInstance;
 
 type AssetInstance = ImageAssetInstance | SpriteAssetInstance | VideoAssetInstance | NoiseAssetInstance | ReactionDiffusionAssetInstance | RawAssetInstance | CellInstance;
 
+type TweenTargetInstance = AnyGradientInstance | ArtefactInstance | FilterInstance | WorldInstance |AssetInstance |  string;
 
+
+interface SaveInputs {
+    includeDefaults?: boolean | string[];
+}
 
 // FACTORIES
 // =====================================
@@ -622,9 +627,18 @@ interface ActionFactoryInputs extends BaseMixinInputs, TweenMixinInputs, ActionF
     revert?: DefaultInputFunction;
 }
 
+interface ActionSaveInputs extends ActionFactoryInputs, SaveInputs {}
+
 interface ActionFactoryFunctions extends BaseMixinFunctions, TweenMixinFunctions {
     clone: (item?: ActionFactoryInputs) => ActionInstance;
-    saveAsPacket: (item?: ActionFactoryInputs) => string;
+    complete: () => void;
+    halt: () => void;
+    isRunning: () => void;
+    reset: () => void;
+    resume: () => void;
+    reverse: () => void;
+    run: () => void;
+    saveAsPacket: (item?: ActionSaveInputs | boolean) => string;
     set: (item?: ActionFactoryInputs) => ActionInstance;
     setDelta: (item?: ActionFactoryDeltaInputs) => ActionInstance;
 }
@@ -721,11 +735,14 @@ interface BezierFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs, Be
     delta?: BezierFactoryDeltaInputs;
 }
 
+interface BezierSaveInputs extends BezierFactoryInputs, SaveInputs {}
+
 interface BezierFactoryFunctions extends BaseMixinFunctions, ShapeCurveMixinFunctions {
     clone: (item?: BezierFactoryInputs) => BezierInstance;
-    saveAsPacket: (item?: BezierFactoryInputs) => string;
+    saveAsPacket: (item?: BezierSaveInputs | boolean) => string;
     set: (item?: BezierFactoryInputs) => BezierInstance;
     setDelta: (item?: BezierFactoryDeltaInputs) => BezierInstance;
+    simpleStamp: (host: CellInstance, items?: BezierFactoryInputs) => void;
 }
 
 interface BezierInstance extends BezierFactoryInputs, BezierFactoryFunctions {}
@@ -741,11 +758,14 @@ interface BlockFactoryInputs extends BaseMixinInputs, EntityMixinInputs, BlockFa
     delta?: BlockFactoryDeltaInputs;
 }
 
+interface BlockSaveInputs extends BlockFactoryInputs, SaveInputs {}
+
 interface BlockFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions {
     clone: (item?: BlockFactoryInputs) => BlockInstance;
-    saveAsPacket: (item?: BlockFactoryInputs) => string;
+    saveAsPacket: (item?: BlockSaveInputs | boolean) => string;
     set: (item?: BlockFactoryInputs) => BlockInstance;
     setDelta: (item?: BlockFactoryDeltaInputs) => BlockInstance;
+    simpleStamp: (host: CellInstance, items?: BlockFactoryInputs) => void;
 }
 
 interface BlockInstance extends BlockFactoryInputs, BlockFactoryFunctions {}
@@ -758,6 +778,8 @@ interface BlockInstance extends BlockFactoryInputs, BlockFactoryFunctions {}
 type CanvasPositionValues = 'relative' | 'absolute';
 
 type CanvasFitValues = 'none' | 'contain' | 'cover' | 'fill';
+
+type CanvasCascadeStrings = 'down' | 'up' | 'enter' | 'leave' | 'move';
 
 interface CanvasFactoryDeltaInputs extends BaseMixinDeltaInputs, DomMixinDeltaInputs, DisplayShapeMixinDeltaInputs {
     alpha?: number;
@@ -778,6 +800,8 @@ interface CanvasFactoryInputs extends BaseMixinInputs, DomMixinInputs, DisplaySh
     composite?: GlobalCompositeOperationValues;
 }
 
+interface CanvasSaveInputs extends CanvasFactoryInputs, SaveInputs {}
+
 interface CanvasFactoryFunctions extends BaseMixinFunctions, DomMixinFunctions, DisplayShapeMixinFunctions {
     setAsCurrentCanvas: () => CanvasInstance;
     setBase: (items: CellFactoryInputs) => CanvasInstance;
@@ -790,9 +814,20 @@ interface CanvasFactoryFunctions extends BaseMixinFunctions, DomMixinFunctions, 
     compile: () => void;
     show: () => void;
     render: () => void;
+    clone: (item?: CanvasFactoryInputs) => CanvasInstance;
+    saveAsPacket: (item?: CanvasSaveInputs | boolean) => string;
+    set: (item?: CanvasFactoryInputs) => CanvasInstance;
+    setDelta: (item?: CanvasFactoryDeltaInputs) => CanvasInstance;
+    simpleStamp: () => void;
 }
 
-interface CanvasInstance extends CanvasFactoryInputs, CanvasFactoryFunctions {}
+interface CanvasInstance extends CanvasFactoryInputs, CanvasFactoryFunctions {
+    base: CellInstance;
+    here: CommonHereObjectInput;
+    elementComputedStyles?: CommonObjectInput;
+    domElement: any;
+    cascadeEventAction (item: CanvasCascadeStrings | CanvasCascadeStrings[]);
+}
 
 
 
@@ -800,29 +835,29 @@ interface CanvasInstance extends CanvasFactoryInputs, CanvasFactoryFunctions {}
 // CellInstance factory
 // -------------------------------------
 interface CellFactoryDeltaInputs extends BaseMixinDeltaInputs, PositionMixinDeltaInputs, DeltaMixinDeltaInputs, PivotMixinDeltaInputs, MimicMixinDeltaInputs, PathMixinDeltaInputs, AnchorMixinDeltaInputs, CascadeMixinDeltaInputs, AssetMixinDeltaInputs, PatternMixinDeltaInputs, FilterMixinDeltaInputs {
-    alpha: number;
-    clearAlpha: number;
-    scale: number;
+    alpha?: number;
+    clearAlpha?: number;
+    scale?: number;
 }
 
 interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaMixinInputs, PivotMixinInputs, MimicMixinInputs, PathMixinInputs, AnchorMixinInputs, CascadeMixinInputs, AssetMixinInputs, PatternMixinInputs, FilterMixinInputs, CellFactoryDeltaInputs {
-    backgroundColor: string;
-    cleared: boolean;
-    compiled: boolean;
-    compileOrder: number;
-    composite: GlobalCompositeOperationValues;
+    backgroundColor?: string;
+    cleared?: boolean;
+    compiled?: boolean;
+    compileOrder?: number;
+    composite?: GlobalCompositeOperationValues;
     delta?: CellFactoryDeltaInputs;
-    filter: string;
-    flipReverse: boolean;
-    flipUpend: boolean;
-    shown: boolean;
-    showOrder: number;
-    smoothFont: boolean;
-    stashHeight: StringOrNumberInput;
-    stashWidth: StringOrNumberInput;
-    stashX: StringOrNumberInput;
-    stashY: StringOrNumberInput;
-    useAsPattern: boolean;
+    filter?: string;
+    flipReverse?: boolean;
+    flipUpend?: boolean;
+    shown?: boolean;
+    showOrder?: number;
+    smoothFont?: boolean;
+    stashHeight?: StringOrNumberInput;
+    stashWidth?: StringOrNumberInput;
+    stashX?: StringOrNumberInput;
+    stashY?: StringOrNumberInput;
+    useAsPattern?: boolean;
 }
 
 interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, CascadeMixinFunctions, AssetMixinFunctions, PatternMixinFunctions, FilterMixinFunctions {
@@ -835,7 +870,11 @@ interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunction
     setDelta: (item?: CellFactoryDeltaInputs) => CellInstance;
 }
 
-interface CellInstance extends CellFactoryInputs, CellFactoryFunctions {}
+interface CellInstance extends CellFactoryInputs, CellFactoryFunctions {
+    engine: any;
+    element: any;
+    here: CommonHereObjectInput;
+}
 
 
 
@@ -860,11 +899,14 @@ interface CogFactoryInputs extends BaseMixinInputs, ShapeBasicMixinInputs, CogFa
     delta?: CogFactoryDeltaInputs;
 }
 
+interface CogSaveInputs extends CogFactoryInputs, SaveInputs {}
+
 interface CogFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFunctions {
     clone: (item?: CogFactoryInputs) => CogInstance;
-    saveAsPacket: (item?: CogFactoryInputs) => string;
+    saveAsPacket: (item?: CogSaveInputs | boolean) => string;
     set: (item?: CogFactoryInputs) => CogInstance;
     setDelta: (item?: CogFactoryDeltaInputs) => CogInstance;
+    simpleStamp: (host: CellInstance, items?: CogFactoryInputs) => void;
 }
 
 interface CogInstance extends CogFactoryInputs, CogFactoryFunctions {}
@@ -889,6 +931,8 @@ interface ColorFactoryInputs extends BaseMixinInputs, ColorFactoryDeltaInputs {
     maximumColor?: string;
 }
 
+interface ColorSaveInputs extends ColorFactoryInputs, SaveInputs {}
+
 interface ColorFactoryFunctions extends BaseMixinFunctions {
     clone: (item?: ColorFactoryInputs) => ColorInstance;
     convertRGBtoHex: (red: number, green: number, blue: number) => string;
@@ -898,7 +942,7 @@ interface ColorFactoryFunctions extends BaseMixinFunctions {
     getMaximumColor: () => string;
     getMinimumColor: () => string;
     getRangeColor: (item: number, internalGradientBuild?: boolean) => string;
-    saveAsPacket: (item?: ColorFactoryInputs) => string;
+    saveAsPacket: (item?: ColorSaveInputs | boolean) => string;
     set: (item?: ColorFactoryInputs) => ColorInstance;
     setColor: (item: string) => ColorInstance;
     setColorSpace: (item: ColorSpacesValues) => ColorInstance;
@@ -925,9 +969,11 @@ interface ConicGradientFactoryInputs extends BaseMixinInputs, StylesMixinInputs,
     delta?: ConicGradientFactoryDeltaInputs;
 }
 
+interface ConicGradientSaveInputs extends ConicGradientFactoryInputs, SaveInputs {}
+
 interface ConicGradientFactoryFunctions extends BaseMixinFunctions, StylesMixinFunctions {
     clone: (item?: ConicGradientFactoryInputs) => ConicGradientInstance;
-    saveAsPacket: (item?: ConicGradientFactoryInputs) => string;
+    saveAsPacket: (item?: ConicGradientSaveInputs | boolean) => string;
     set: (item?: ConicGradientFactoryInputs) => ConicGradientInstance;
     setDelta: (item?: ConicGradientFactoryDeltaInputs) => ConicGradientInstance;
 }
@@ -975,11 +1021,14 @@ interface CrescentFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Cres
     displayIntersect?: boolean;
 }
 
+interface CrescentSaveInputs extends CrescentFactoryInputs, SaveInputs {}
+
 interface CrescentFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions {
     clone: (item?: CrescentFactoryInputs) => CrescentInstance;
-    saveAsPacket: (item?: CrescentFactoryInputs) => string;
+    saveAsPacket: (item?: CrescentSaveInputs | boolean) => string;
     set: (item?: CrescentFactoryInputs) => CrescentInstance;
     setDelta: (item?: CrescentFactoryDeltaInputs) => CrescentInstance;
+    simpleStamp: (host: CellInstance, items?: CrescentFactoryInputs) => void;
 }
 
 interface CrescentInstance extends CrescentFactoryInputs, CrescentFactoryFunctions {}
@@ -992,28 +1041,96 @@ interface CrescentInstance extends CrescentFactoryInputs, CrescentFactoryFunctio
 interface ElementFactoryDeltaInputs extends BaseMixinDeltaInputs, DomMixinDeltaInputs {}
 
 interface ElementFactoryInputs extends BaseMixinInputs, DomMixinInputs, ElementFactoryDeltaInputs {
-    text: string;
-    content: string;
+    text?: string;
+    content?: string;
 }
+
+interface ElementSaveInputs extends ElementFactoryInputs, SaveInputs {}
 
 interface ElementFactoryFunctions extends BaseMixinFunctions, DomMixinFunctions {
     addCanvas: (items?: CanvasFactoryInputs) => CanvasInstance;
+    clone: (item?: ElementFactoryInputs) => ElementInstance;
+    saveAsPacket: (item?: ElementSaveInputs | boolean) => string;
+    set: (item?: ElementFactoryInputs) => ElementInstance;
+    setDelta: (item?: ElementFactoryDeltaInputs) => ElementInstance;
 }
 
-interface ElementInstance extends ElementFactoryInputs, ElementFactoryFunctions {}
+interface ElementInstance extends ElementFactoryInputs, ElementFactoryFunctions {
+    here?: CommonHereObjectInput;
+    elementComputedStyles?: CommonObjectInput;
+    domElement: any;
+}
 
 
 
 
 // EmitterInstance factory
 // -------------------------------------
-interface EmitterFactoryDeltaInputs extends BaseMixinDeltaInputs {}
+interface EmitterFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
+    generationRate?: number;
+    particleCount?: number;
+    limitDirectionToAngleMultiples?: number;
+    generationChoke?: number;
+    killAfterTime?: number;
+    killAfterTimeVariation?: number;
+    killRadius?: number;
+    killRadiusVariation?: number;
+    historyLength?: number;
+    mass?: number;
+    massVariation?: number;
+    hitRadius?: number;
+    resetAfterBlur?: number;
+    rangeX?: number;
+    rangeY?: number;
+    rangeZ?: number;
+    rangeFromX?: number;
+    rangeFromY?: number;
+    rangeFromZ?: number;
+}
 
-interface EmitterFactoryInputs extends BaseMixinInputs, EmitterFactoryDeltaInputs {}
+interface EmitterFactoryInputs extends BaseMixinInputs, EntityMixinInputs, EmitterFactoryDeltaInputs {
+    world?: WorldInstance | string;
+    artefact?: ArtefactInstance | string;
+    range?: VectorInstance;
+    rangeFrom?: VectorInstance;
+    generateAlongPath?: ShapeBasedInstance | string;
+    generateInArea?: EntityInstance | string;
+    generateFromExistingParticles?: boolean;
+    generateFromExistingParticleHistories?: boolean;
+    killBeyondCanvas?: boolean;
+    forces?: Array<ForceInstance | string>;
+    engine?: ParticleEngines;
+    showHitRadius?: boolean;
+    hitRadiusColor?: string;
+    fillColor?: string;
+    fillMinimumColor?: string;
+    fillMaximumColor?: string;
+    strokeColor?: string;
+    strokeMinimumColor?: string;
+    strokeMaximumColor?: string;
+    width?: number;
+    height?: number;
+    preAction?: (item: CellInstance) => void;
+    stampAction?: (artefact: EntityInstance, particle: ParticleInstance, host: CellInstance) => void;
+    postAction?: (item: CellInstance) => void;
+    delta?: EmitterFactoryDeltaInputs;
+}
 
-interface EmitterFactoryFunctions extends BaseMixinFunctions {}
+interface EmitterSaveInputs extends EmitterFactoryInputs, SaveInputs {}
 
-interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions {}
+interface EmitterFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions {
+    clone: (item?: EmitterFactoryInputs) => EmitterInstance;
+    saveAsPacket: (item?: EmitterSaveInputs | boolean) => string;
+    set: (item?: EmitterFactoryInputs) => EmitterInstance;
+    setDelta: (item?: EmitterFactoryDeltaInputs) => EmitterInstance;
+    simpleStamp: (host: CellInstance, items?: EmitterFactoryInputs) => void;
+}
+
+interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions {
+    fillColorFactory: ColorInstance;
+    strokeColorFactor: ColorInstance;
+    particleStore: ParticleInstance[];
+}
 
 
 
@@ -1028,8 +1145,8 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     clamp?: number;
     copyHeight?: StringOrNumberInput;
     copyWidth?: StringOrNumberInput;
-    copyX?: number;
-    copyY?: number;
+    copyX?: StringOrNumberInput;
+    copyY?: StringOrNumberInput;
     greenInBlue?: number;
     greenInGreen?: number;
     greenInRed?: number;
@@ -1140,9 +1257,11 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     weights?: number[];
 }
 
+interface FilterSaveInputs extends FilterFactoryInputs, SaveInputs {}
+
 interface FilterFactoryFunctions extends BaseMixinFunctions {
     clone: (item?: FilterFactoryInputs) => FilterInstance;
-    saveAsPacket: (item?: FilterFactoryInputs) => string;
+    saveAsPacket: (item?: FilterSaveInputs | boolean) => string;
     set: (item?: FilterFactoryInputs) => FilterInstance;
     setDelta: (item?: FilterFactoryDeltaInputs) => FilterInstance;
 }
@@ -1156,7 +1275,9 @@ interface FilterInstance extends FilterFactoryInputs, FilterFactoryFunctions {}
 // -------------------------------------
 interface ForceFactoryDeltaInputs extends BaseMixinDeltaInputs {}
 
-interface ForceFactoryInputs extends BaseMixinInputs, ForceFactoryDeltaInputs {}
+interface ForceFactoryInputs extends BaseMixinInputs, ForceFactoryDeltaInputs {
+    action: (particle: ParticleInstance, world: WorldInstance, host: CellInstance) => void;
+}
 
 interface ForceFactoryFunctions extends BaseMixinFunctions {}
 
@@ -1173,9 +1294,11 @@ interface GradientFactoryInputs extends BaseMixinInputs, StylesMixinInputs, Grad
     delta?: GradientFactoryDeltaInputs;
 }
 
+interface GradientSaveInputs extends GradientFactoryInputs, SaveInputs {}
+
 interface GradientFactoryFunctions extends BaseMixinFunctions, StylesMixinFunctions {
     clone: (item?: GradientFactoryInputs) => GradientInstance;
-    saveAsPacket: (item?: GradientFactoryInputs) => string;
+    saveAsPacket: (item?: GradientSaveInputs | boolean) => string;
     set: (item?: GradientFactoryInputs) => GradientInstance;
     setDelta: (item?: GradientFactoryDeltaInputs) => GradientInstance;
 }
@@ -1187,11 +1310,45 @@ interface GradientInstance extends GradientFactoryInputs, GradientFactoryFunctio
 
 // GridInstance factory
 // -------------------------------------
-interface GridFactoryDeltaInputs extends BaseMixinDeltaInputs {}
+type GridTileTypes = 'color' | 'cellGradient' | 'gridGradient' | 'gridPicture' | 'tilePicture' | string;
 
-interface GridFactoryInputs extends BaseMixinInputs, GridFactoryDeltaInputs {}
+type GridTileGutterColors = string | number | AnyGradientInstance | GridTileObject;
 
-interface GridFactoryFunctions extends BaseMixinFunctions {}
+interface GridTileObject {
+    type: GridTileTypes;
+    source: GridTileGutterColors;
+}
+
+interface GridFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
+    columns?: number;
+    rows?: number;
+    columnGutterWidth?: number;
+    rowGutterWidth?: number;
+}
+
+interface GridFactoryInputs extends BaseMixinInputs, EntityMixinInputs, GridFactoryDeltaInputs {
+    tileSources?: GridTileObject[];
+    tileFill?: number[];
+    gutterColor?: GridTileGutterColors;
+    delta?: GridFactoryDeltaInputs;
+}
+
+interface GridSaveInputs extends GridFactoryInputs, SaveInputs {}
+
+interface GridFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions {
+    clone: (item?: GridFactoryInputs) => GridInstance;
+    saveAsPacket: (item?: GridSaveInputs | boolean) => string;
+    set: (item?: GridFactoryInputs) => GridInstance;
+    setDelta: (item?: GridFactoryDeltaInputs) => GridInstance;
+    setAllTilesTo: (index: number) => GridInstance;
+    setTileFill: (item: number[]) => GridInstance;
+    setTilesTo: (tiles: number[], val: number) => GridInstance;
+    setTileSourceTo: (index: number, obj: GridTileObject) => GridInstance;
+    removeTileSource: (index: number) => GridInstance;
+    getTileSource: (row: number, col?: number) => number;
+    getTilesUsingSource: (key: number) => number[];
+    simpleStamp: (host: CellInstance, items?: GridFactoryInputs) => void;
+}
 
 interface GridInstance extends GridFactoryInputs, GridFactoryFunctions {}
 
@@ -1220,6 +1377,8 @@ interface GroupFactoryInputs extends BaseMixinInputs, FilterMixinInputs, GroupFa
     visibility?: boolean;
 }
 
+interface GroupSaveInputs extends GroupFactoryInputs, SaveInputs {}
+
 interface GroupFactoryFunctions extends BaseMixinFunctions, FilterMixinFunctions {
     addArtefactClasses: (item: string) => GroupInstance;
     addArtefacts: (...args: GroupArtifactsInput) => GroupInstance;
@@ -1235,11 +1394,12 @@ interface GroupFactoryFunctions extends BaseMixinFunctions, FilterMixinFunctions
     removeArtefacts: (...args: GroupArtifactsInput) => GroupInstance;
     removeFiltersFromEntitys: (...args: GroupFiltersInput) => GroupInstance;
     reverseByDelta: () => GroupInstance;
-    saveAsPacket: (item?: GroupFactoryInputs) => string;
+    saveAsPacket: (item?: GroupSaveInputs | boolean) => string;
     set: (item?: GroupFactoryInputs) => GroupInstance;
     setArtefacts: (items: CommonObjectInput) => GroupInstance;
     sortArtefacts: () => void;
     setDelta: (item?: CommonObjectInput) => GroupInstance;
+    setDeltaValues: (item?: CommonObjectInput) => GroupInstance;
     updateArtefacts: (items: CommonObjectInput) => GroupInstance;
     updateByDelta: () => GroupInstance;
 }
@@ -1270,11 +1430,14 @@ interface LineFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs, Line
     delta?: LineFactoryDeltaInputs;
 }
 
+interface LineSaveInputs extends LineFactoryInputs, SaveInputs {}
+
 interface LineFactoryFunctions extends BaseMixinFunctions, ShapeCurveMixinFunctions {
     clone: (item?: LineFactoryInputs) => LineInstance;
-    saveAsPacket: (item?: LineFactoryInputs) => string;
+    saveAsPacket: (item?: LineSaveInputs | boolean) => string;
     set: (item?: LineFactoryInputs) => LineInstance;
     setDelta: (item?: LineFactoryDeltaInputs) => LineInstance;
+    simpleStamp: (host: CellInstance, items?: LineFactoryInputs) => void;
 }
 
 interface LineInstance extends LineFactoryInputs, LineFactoryFunctions {}
@@ -1296,11 +1459,14 @@ interface LineSpiralFactoryDeltaInputs extends BaseMixinDeltaInputs, ShapeBasicM
 
 interface LineSpiralFactoryInputs extends BaseMixinInputs, ShapeBasicMixinInputs, LineSpiralFactoryDeltaInputs {}
 
+interface LineSpiralSaveInputs extends LineSpiralFactoryInputs, SaveInputs {}
+
 interface LineSpiralFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFunctions {
     clone: (item?: LineSpiralFactoryInputs) => LineSpiralInstance;
-    saveAsPacket: (item?: LineSpiralFactoryInputs) => string;
+    saveAsPacket: (item?: LineSpiralSaveInputs | boolean) => string;
     set: (item?: LineSpiralFactoryInputs) => LineSpiralInstance;
     setDelta: (item?: LineSpiralFactoryDeltaInputs) => LineSpiralInstance;
+    simpleStamp: (host: CellInstance, items?: LineSpiralFactoryInputs) => void;
 }
 
 interface LineSpiralInstance extends LineSpiralFactoryInputs, LineSpiralFactoryFunctions {}
@@ -1310,11 +1476,52 @@ interface LineSpiralInstance extends LineSpiralFactoryInputs, LineSpiralFactoryF
 
 // LoomInstance factory
 // -------------------------------------
-interface LoomFactoryDeltaInputs extends BaseMixinDeltaInputs {}
+interface LoomFactoryDeltaInputs extends BaseMixinDeltaInputs, AnchorMixinDeltaInputs, DeltaMixinDeltaInputs, StateFactoryDeltaInputs {
+    fromPathEnd?: number;
+    fromPathStart?: number;
+    interferenceFactor?: number;
+    interferenceLoops?: number;
+    toPathEnd?: number;
+    toPathStart?: number;
+}
 
-interface LoomFactoryInputs extends BaseMixinInputs, LoomFactoryDeltaInputs {}
+interface LoomFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, DeltaMixinInputs, StateFactoryInputs, LoomFactoryDeltaInputs {
+    boundingBoxColor?: string;
+    constantPathSpeed?: boolean;
+    delta?: LoomFactoryDeltaInputs;
+    fromPath?: ShapeBasedInstance | string;
+    group?: GroupInstance | string;
+    isHorizontalCopy?: boolean;
+    loopPathCursors?: boolean;
+    method?: MethodValues;
+    noCanvasEngineUpdates?: boolean;
+    noDeltaUpdates?: boolean;
+    noUserInteraction?: boolean;
+    onDown?: DefaultInputFunction;
+    onEnter?: DefaultInputFunction;
+    onLeave?: DefaultInputFunction;
+    onUp?: DefaultInputFunction;
+    order?: number;
+    showBoundingBox?: boolean;
+    source?: PictureInstance | string;
+    sourceIsVideoOrSprite?: boolean;
+    synchronizePathCursors?: boolean;
+    toPath?: ShapeBasedInstance | string;
+    visibility?: boolean;
+}
 
-interface LoomFactoryFunctions extends BaseMixinFunctions {}
+interface LoomSaveInputs extends LoomFactoryInputs, SaveInputs {}
+
+interface LoomFactoryFunctions extends BaseMixinFunctions, AnchorMixinFunctions, DeltaMixinFunctions, StateFactoryFunctions {
+    checkHit: (tests: HitTests, cell?: CellInstance | string) => HitOutput | boolean;
+    clone: (item?: LoomFactoryInputs) => LoomInstance;
+    getBoundingBox: () => number[];
+    saveAsPacket: (item?: LoomSaveInputs | boolean) => string;
+    set: (item?: LoomFactoryInputs) => LoomInstance;
+    setDelta: (item?: LoomFactoryDeltaInputs) => LoomInstance;
+    update: () => void;
+    simpleStamp: (host: CellInstance, items?: LoomFactoryInputs) => void;
+}
 
 interface LoomInstance extends LoomFactoryInputs, LoomFactoryFunctions {}
 
@@ -1323,11 +1530,39 @@ interface LoomInstance extends LoomFactoryInputs, LoomFactoryFunctions {}
 
 // MeshInstance factory
 // -------------------------------------
-interface MeshFactoryDeltaInputs extends BaseMixinDeltaInputs {}
+interface MeshFactoryDeltaInputs extends BaseMixinDeltaInputs, AnchorMixinDeltaInputs, DeltaMixinDeltaInputs, StateFactoryDeltaInputs {
+    interferenceFactor?: number;
+    interferenceLoops?: number;
+}
 
-interface MeshFactoryInputs extends BaseMixinInputs, MeshFactoryDeltaInputs {}
+interface MeshFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, DeltaMixinInputs, StateFactoryInputs, MeshFactoryDeltaInputs {
+    net?: NetInstance | string;
+    isHorizontalCopy?: boolean;
+    source?: PictureInstance | string;
+    sourceIsVideoOrSprite?: boolean;
+    visibility?: boolean;
+    order?: number;
+    delta?: MeshFactoryDeltaInputs;
+    group?: GroupInstance | string;
+    noCanvasEngineUpdates?: boolean;
+    noDeltaUpdates?: boolean;
+    noUserInteraction?: boolean;
+    onDown?: DefaultInputFunction;
+    onEnter?: DefaultInputFunction;
+    onLeave?: DefaultInputFunction;
+    onUp?: DefaultInputFunction;
+    method?: MethodValues;
+}
 
-interface MeshFactoryFunctions extends BaseMixinFunctions {}
+interface MeshSaveInputs extends MeshFactoryInputs, SaveInputs {}
+
+interface MeshFactoryFunctions extends BaseMixinFunctions, AnchorMixinFunctions, DeltaMixinFunctions, StateFactoryFunctions {
+    clone: (item?: MeshFactoryInputs) => MeshInstance;
+    saveAsPacket: (item?: MeshSaveInputs | boolean) => string;
+    set: (item?: MeshFactoryInputs) => MeshInstance;
+    setDelta: (item?: MeshFactoryDeltaInputs) => MeshInstance;
+    simpleStamp: (host: CellInstance, items?: MeshFactoryInputs) => void;
+}
 
 interface MeshInstance extends MeshFactoryInputs, MeshFactoryFunctions {}
 
@@ -1336,13 +1571,57 @@ interface MeshInstance extends MeshFactoryInputs, MeshFactoryFunctions {}
 
 // NetInstance factory
 // -------------------------------------
-interface NetFactoryDeltaInputs extends BaseMixinDeltaInputs {}
+type NetGenerators = 'weak-net' | 'strong-net' | 'weak-shape' | 'strong-shape' | 'hub-spoke' | string;
 
-interface NetFactoryInputs extends BaseMixinInputs, NetFactoryDeltaInputs {}
+interface NetFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
+    columnDistance?: StringOrNumberInput;
+    columns?: number;
+    damperConstant?: number;
+    historyLength?: number;
+    hitRadius?: number;
+    mass?: number;
+    precision?: number;
+    resetAfterBlur?: number;
+    restLength?: number;
+    rowDistance?: StringOrNumberInput;
+    rows?: number;
+    springConstant?: number;
+}
 
-interface NetFactoryFunctions extends BaseMixinFunctions {}
+interface NetFactoryInputs extends BaseMixinInputs, EntityMixinInputs, NetFactoryDeltaInputs {
+    artefact?: EntityInstance | string;
+    delta?: NetFactoryDeltaInputs;
+    engine?: ParticleEngines;
+    forces?: Array<ForceInstance | string>;
+    hitRadiusColor?: string;
+    joinTemplateEnds?: boolean;
+    particlesAreDraggable?: boolean;
+    shapeTemplate?: ShapeBasedInstance | string;
+    showHitRadius?: boolean;
+    showSprings?: boolean;
+    showSpringsColor?: string;
+    stampAction?: (artefact: EntityInstance, particle: ParticleInstance, host: CellInstance) => void;
+    world?: WorldInstance | string;
+    generate?: DefaultInputFunction | NetGenerators;
+    postGenerate?: DefaultInputFunction;
 
-interface NetInstance extends NetFactoryInputs, NetFactoryFunctions {}
+}
+
+interface NetSaveInputs extends NetFactoryInputs, SaveInputs {}
+
+interface NetFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions {
+    simpleStamp: (host: CellInstance, items?: NetFactoryInputs) => void;
+    clone: (item?: NetFactoryInputs) => NetInstance;
+    saveAsPacket: (item?: NetSaveInputs | boolean) => string;
+    set: (item?: NetFactoryInputs) => NetInstance;
+    setDelta: (item?: NetFactoryDeltaInputs) => NetInstance;
+    restart: () => NetInstance;
+}
+
+interface NetInstance extends NetFactoryInputs, NetFactoryFunctions {
+    particleStore: ParticleInstance[];
+    springs: SpringInstance[];
+}
 
 
 
@@ -1380,9 +1659,11 @@ interface NoiseAssetFactoryInputs extends BaseMixinInputs, AssetMixinInputs, Ass
     worleyOutput?: WorleyOutputValues;
 }
 
+interface NoiseAssetSaveInputs extends NoiseAssetFactoryInputs, SaveInputs {}
+
 interface NoiseAssetFactoryFunctions extends BaseMixinFunctions, AssetMixinFunctions, AssetAdvancedFunctionalityMixinFunctions, PatternMixinFunctions {
     clone: (item?: NoiseAssetFactoryInputs) => NoiseAssetInstance;
-    saveAsPacket: (item?: NoiseAssetFactoryInputs) => string;
+    saveAsPacket: (item?: NoiseAssetSaveInputs | boolean) => string;
     set: (item?: NoiseAssetFactoryInputs) => NoiseAssetInstance;
     setDelta: (item?: NoiseAssetFactoryDeltaInputs) => NoiseAssetInstance;
 }
@@ -1408,11 +1689,14 @@ interface OvalFactoryInputs extends BaseMixinInputs, ShapeBasicMixinInputs, Oval
     delta?: OvalFactoryDeltaInputs;
 }
 
+interface OvalSaveInputs extends OvalFactoryInputs, SaveInputs {}
+
 interface OvalFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFunctions {
     clone: (item?: OvalFactoryInputs) => OvalInstance;
-    saveAsPacket: (item?: OvalFactoryInputs) => string;
+    saveAsPacket: (item?: OvalSaveInputs | boolean) => string;
     set: (item?: OvalFactoryInputs) => OvalInstance;
     setDelta: (item?: OvalFactoryDeltaInputs) => OvalInstance;
+    simpleStamp: (host: CellInstance, items?: OvalFactoryInputs) => void;
 }
 
 interface OvalInstance extends OvalFactoryInputs, OvalFactoryFunctions {}
@@ -1422,9 +1706,30 @@ interface OvalInstance extends OvalFactoryInputs, OvalFactoryFunctions {}
 
 // ParticleInstance factory
 // -------------------------------------
-interface ParticleFactoryDeltaInputs extends BaseMixinDeltaInputs {}
+type ParticleEngines = 'euler' | 'improved-euler' | 'runge-kutta';
+type ParticleHistory = [number, number, number, number];
 
-interface ParticleFactoryInputs extends BaseMixinInputs, ParticleFactoryDeltaInputs {}
+interface ParticleFactoryDeltaInputs extends BaseMixinDeltaInputs {
+    positionX?: number;
+    positionY?: number;
+    positionZ?: number;
+    velocityX?: number;
+    velocityY?: number;
+    velocityZ?: number;
+}
+
+interface ParticleFactoryInputs extends BaseMixinInputs, ParticleFactoryDeltaInputs {
+    position?: VectorInstance;
+    velocity?: VectorInstance;
+    load?: VectorInstance;
+    history?: ParticleHistory[];
+    historyLength?: number;
+    engine?: ParticleEngines;
+    forces?: ForceInstance[];
+    mass?: number;
+    fill?: string;
+    stroke?: string;
+}
 
 interface ParticleFactoryFunctions extends BaseMixinFunctions {}
 
@@ -1441,9 +1746,11 @@ interface PatternFactoryInputs extends BaseMixinInputs, PatternMixinInputs, Asse
     delta?: PatternFactoryDeltaInputs;
 }
 
+interface PatternSaveInputs extends PatternFactoryInputs, SaveInputs {}
+
 interface PatternFactoryFunctions extends BaseMixinFunctions, PatternMixinFunctions, AssetConsumerMixinFunctions {
     clone: (item?: PatternFactoryInputs) => PatternInstance;
-    saveAsPacket: (item?: PatternFactoryInputs) => string;
+    saveAsPacket: (item?: PatternSaveInputs | boolean) => string;
     set: (item?: PatternFactoryInputs) => PatternInstance;
     setDelta: (item?: PatternFactoryDeltaInputs) => PatternInstance;
 }
@@ -1508,13 +1815,16 @@ interface PhraseFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Phrase
     weight?: PhraseWeight;
 }
 
+interface PhraseSaveInputs extends PhraseFactoryInputs, SaveInputs {}
+
 interface PhraseFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions {
     addSectionClass: (label: string, obj: CommonObjectInput) => PhraseInstance;
     clone: (item?: PhraseFactoryInputs) => PhraseInstance;
     removeSectionClass: (label: string) => PhraseInstance;
-    saveAsPacket: (item?: PhraseFactoryInputs) => string;
+    saveAsPacket: (item?: PhraseSaveInputs | boolean) => string;
     set: (item?: PhraseFactoryInputs) => PhraseInstance;
     setDelta: (item?: PhraseFactoryDeltaInputs) => PhraseInstance;
+    simpleStamp: (host: CellInstance, items?: PhraseFactoryInputs) => void;
 }
 
 interface PhraseInstance extends PhraseFactoryInputs, PhraseFactoryFunctions {}
@@ -1538,11 +1848,14 @@ interface PictureFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Asset
     delta?: PictureFactoryDeltaInputs;
 }
 
+interface PictureSaveInputs extends PictureFactoryInputs, SaveInputs {}
+
 interface PictureFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions, AssetConsumerMixinFunctions {
     clone: (item?: PictureFactoryInputs) => PictureInstance;
-    saveAsPacket: (item?: PictureFactoryInputs) => string;
+    saveAsPacket: (item?: PictureSaveInputs | boolean) => string;
     set: (item?: PictureFactoryInputs) => PictureInstance;
     setDelta: (item?: PictureFactoryDeltaInputs) => PictureInstance;
+    simpleStamp: (host: CellInstance, items?: PictureFactoryInputs) => void;
 }
 
 interface PictureInstance extends PictureFactoryInputs, PictureFactoryFunctions {}
@@ -1561,11 +1874,14 @@ interface PolygonFactoryInputs extends BaseMixinInputs, ShapeBasicMixinInputs, P
     delta?: PolygonFactoryDeltaInputs;
 }
 
+interface PolygonSaveInputs extends PolygonFactoryInputs, SaveInputs {}
+
 interface PolygonFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFunctions {
     clone: (item?: PolygonFactoryInputs) => PolygonInstance;
-    saveAsPacket: (item?: PolygonFactoryInputs) => string;
+    saveAsPacket: (item?: PolygonSaveInputs | boolean) => string;
     set: (item?: PolygonFactoryInputs) => PolygonInstance;
     setDelta: (item?: PolygonFactoryDeltaInputs) => PolygonInstance;
+    simpleStamp: (host: CellInstance, items?: PolygonFactoryInputs) => void;
 }
 
 interface PolygonInstance extends PolygonFactoryInputs, PolygonFactoryFunctions {}
@@ -1589,14 +1905,17 @@ interface PolylineFactoryInputs extends BaseMixinInputs, ShapeBasicMixinInputs, 
     delta?: PolylineFactoryDeltaInputs;
 }
 
+interface PolylineSaveInputs extends PolylineFactoryInputs, SaveInputs {}
+
 interface PolylineFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFunctions {
     clone: (item?: PolylineFactoryInputs) => PolylineInstance;
-    saveAsPacket: (item?: PolylineFactoryInputs) => string;
+    saveAsPacket: (item?: PolylineSaveInputs | boolean) => string;
     set: (item?: PolylineFactoryInputs) => PolylineInstance;
     setDelta: (item?: PolylineFactoryDeltaInputs) => PolylineInstance;
     getPinAt: (item: number) => [number, number];
     updatePinAt: (pin: PolylinePinInput, index: number) => void;
     removePinAt: (index: number) => void;
+    simpleStamp: (host: CellInstance, items?: PolylineFactoryInputs) => void;
 }
 
 interface PolylineInstance extends PolylineFactoryInputs, PolylineFactoryFunctions {}
@@ -1627,11 +1946,14 @@ interface QuadraticFactoryInputs extends BaseMixinInputs, ShapeCurveMixinInputs,
     delta?: QuadraticFactoryDeltaInputs;
 }
 
+interface QuadraticSaveInputs extends QuadraticFactoryInputs, SaveInputs {}
+
 interface QuadraticFactoryFunctions extends BaseMixinFunctions, ShapeCurveMixinFunctions {
     clone: (item?: QuadraticFactoryInputs) => QuadraticInstance;
-    saveAsPacket: (item?: QuadraticFactoryInputs) => string;
+    saveAsPacket: (item?: QuadraticSaveInputs | boolean) => string;
     set: (item?: QuadraticFactoryInputs) => QuadraticInstance;
     setDelta: (item?: QuadraticFactoryDeltaInputs) => QuadraticInstance;
+    simpleStamp: (host: CellInstance, items?: QuadraticFactoryInputs) => void;
 }
 
 interface QuadraticInstance extends QuadraticFactoryInputs, QuadraticFactoryFunctions {}
@@ -1673,9 +1995,11 @@ interface RadialGradientFactoryInputs extends BaseMixinInputs, StylesMixinInputs
     delta?: RadialGradientFactoryDeltaInputs;
 }
 
+interface RadialGradientSaveInputs extends RadialGradientFactoryInputs, SaveInputs {}
+
 interface RadialGradientFactoryFunctions extends BaseMixinFunctions, StylesMixinFunctions {
     clone: (item?: RadialGradientFactoryInputs) => RadialGradientInstance;
-    saveAsPacket: (item?: RadialGradientFactoryInputs) => string;
+    saveAsPacket: (item?: RadialGradientSaveInputs | boolean) => string;
     set: (item?: RadialGradientFactoryInputs) => RadialGradientInstance;
     setDelta: (item?: RadialGradientFactoryDeltaInputs) => RadialGradientInstance;
 }
@@ -1696,11 +2020,13 @@ interface RawAssetFactoryInputs extends BaseMixinInputs, AssetMixinInputs, RawAs
     userAttributes?: UserInput[];
 }
 
+interface RawAssetSaveInputs extends RawAssetFactoryInputs, SaveInputs {}
+
 interface RawAssetFactoryFunctions extends BaseMixinFunctions, AssetMixinFunctions {
     addAttribute: (items: UserInput) => RawAssetInstance;
     removeAttribute: (key: string) => RawAssetInstance;
     clone: (item?: CommonObjectInput) => RawAssetInstance;
-    saveAsPacket: (item?: CommonObjectInput) => string;
+    saveAsPacket: (item?: RawAssetSaveInputs | boolean) => string;
     set: (item?: CommonObjectInput) => RawAssetInstance;
     setDelta: (item?: CommonObjectInput) => RawAssetInstance;
 }
@@ -1731,9 +2057,11 @@ interface ReactionDiffusionAssetFactoryInputs extends BaseMixinInputs, AssetMixi
     preset?: string;
 }
 
+interface ReactionDiffusionAssetSaveInputs extends ReactionDiffusionAssetFactoryInputs, SaveInputs {}
+
 interface ReactionDiffusionAssetFactoryFunctions extends BaseMixinFunctions, AssetMixinFunctions, AssetAdvancedFunctionalityMixinFunctions, PatternMixinFunctions {
     clone: (item?: ReactionDiffusionAssetFactoryInputs) => ReactionDiffusionAssetInstance;
-    saveAsPacket: (item?: ReactionDiffusionAssetFactoryInputs) => string;
+    saveAsPacket: (item?: ReactionDiffusionAssetSaveInputs | boolean) => string;
     set: (item?: ReactionDiffusionAssetFactoryInputs) => ReactionDiffusionAssetInstance;
     setDelta: (item?: ReactionDiffusionAssetFactoryDeltaInputs) => ReactionDiffusionAssetInstance;
 }
@@ -1783,11 +2111,14 @@ interface RectangleFactoryInputs extends BaseMixinInputs, ShapeBasicMixinInputs,
     delta?: RectangleFactoryDeltaInputs;
 }
 
+interface RectangleSaveInputs extends RectangleFactoryInputs, SaveInputs {}
+
 interface RectangleFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFunctions {
     clone: (item?: RectangleFactoryInputs) => RectangleInstance;
-    saveAsPacket: (item?: RectangleFactoryInputs) => string;
+    saveAsPacket: (item?: RectangleSaveInputs | boolean) => string;
     set: (item?: RectangleFactoryInputs) => RectangleInstance;
     setDelta: (item?: RectangleFactoryDeltaInputs) => RectangleInstance;
+    simpleStamp: (host: CellInstance, items?: RectangleFactoryInputs) => void;
 }
 
 interface RectangleInstance extends RectangleFactoryInputs, RectangleFactoryFunctions {}
@@ -1814,10 +2145,16 @@ interface RenderFactoryInputs extends BaseMixinInputs, RenderFactoryDeltaInputs 
     observer?: boolean;
 }
 
+interface RenderSaveInputs extends RenderFactoryInputs, SaveInputs {}
+
 interface RenderFactoryFunctions extends BaseMixinFunctions {
     halt: () => void;
     isRunning: () => boolean;
     run: () => void;
+    clone: (item?: RenderFactoryInputs) => RenderInstance;
+    saveAsPacket: (item?: RenderSaveInputs | boolean) => string;
+    set: (item?: RenderFactoryInputs) => RenderInstance;
+    setDelta: (item?: RenderFactoryDeltaInputs) => RenderInstance;
 }
 
 interface RenderInstance extends RenderFactoryInputs, RenderFactoryFunctions {}
@@ -1833,11 +2170,14 @@ interface ShapeFactoryInputs extends BaseMixinInputs, ShapeBasicMixinInputs, Sha
     delta?: ShapeFactoryDeltaInputs;
 }
 
+interface ShapeSaveInputs extends ShapeFactoryInputs, SaveInputs {}
+
 interface ShapeFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFunctions {
     clone: (item?: ShapeFactoryInputs) => ShapeInstance;
-    saveAsPacket: (item?: ShapeFactoryInputs) => string;
+    saveAsPacket: (item?: ShapeSaveInputs | boolean) => string;
     set: (item?: ShapeFactoryInputs) => ShapeInstance;
     setDelta: (item?: ShapeFactoryDeltaInputs) => ShapeInstance;
+    simpleStamp: (host: CellInstance, items?: ShapeFactoryInputs) => void;
 }
 
 interface ShapeInstance extends ShapeFactoryInputs, ShapeFactoryFunctions {
@@ -1859,11 +2199,14 @@ interface SpiralFactoryInputs extends BaseMixinInputs, ShapeBasicMixinInputs, Sp
     delta?: SpiralFactoryDeltaInputs;
 }
 
+interface SpiralSaveInputs extends SpiralFactoryInputs, SaveInputs {}
+
 interface SpiralFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFunctions {
     clone: (item?: SpiralFactoryInputs) => SpiralInstance;
-    saveAsPacket: (item?: SpiralFactoryInputs) => string;
+    saveAsPacket: (item?: SpiralSaveInputs | boolean) => string;
     set: (item?: SpiralFactoryInputs) => SpiralInstance;
     setDelta: (item?: SpiralFactoryDeltaInputs) => SpiralInstance;
+    simpleStamp: (host: CellInstance, items?: SpiralFactoryInputs) => void;
 }
 
 interface SpiralInstance extends SpiralFactoryInputs, SpiralFactoryFunctions {}
@@ -1899,13 +2242,39 @@ interface SpriteAssetInstance extends SpriteAssetFactoryInputs, SpriteAssetFacto
 
 // StackInstance factory
 // -------------------------------------
-interface StackFactoryDeltaInputs extends BaseMixinDeltaInputs {}
+interface StackPerspective {
+    x: StringOrNumberInput;
+    y: StringOrNumberInput;
+    z: StringOrNumberInput;
+}
 
-interface StackFactoryInputs extends BaseMixinInputs, StackFactoryDeltaInputs {}
+interface StackFactoryDeltaInputs extends BaseMixinDeltaInputs, DomMixinDeltaInputs {
+    perspectiveX?: StringOrNumberInput;
+    perspectiveY?: StringOrNumberInput;
+    perspectiveZ?: StringOrNumberInput;
+}
 
-interface StackFactoryFunctions extends BaseMixinFunctions {}
+interface StackFactoryInputs extends BaseMixinInputs, DomMixinInputs, StackFactoryDeltaInputs {
+    position?: string;
+    perspective?: StackPerspective;
+    isResponsive?: boolean;
+    containElementsInHeight?: boolean;
+}
 
-interface StackInstance extends StackFactoryInputs, StackFactoryFunctions {}
+interface StackSaveInputs extends StackFactoryInputs, SaveInputs {}
+
+interface StackFactoryFunctions extends BaseMixinFunctions, DomMixinFunctions {
+    clone: (item?: StackFactoryInputs) => StackInstance;
+    saveAsPacket: (item?: StackSaveInputs | boolean) => string;
+    set: (item?: StackFactoryInputs) => StackInstance;
+    setDelta: (item?: StackFactoryDeltaInputs) => StackInstance;
+}
+
+interface StackInstance extends StackFactoryInputs, StackFactoryFunctions {
+    here: CommonHereObjectInput;
+    elementComputedStyles?: CommonObjectInput;
+    domElement: any;
+}
 
 
 
@@ -1923,11 +2292,14 @@ interface StarFactoryInputs extends BaseMixinInputs, ShapeBasicMixinInputs, Star
     delta?: StarFactoryDeltaInputs;
 }
 
+interface StarSaveInputs extends StarFactoryInputs, SaveInputs {}
+
 interface StarFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFunctions {
     clone: (item?: StarFactoryInputs) => StarInstance;
-    saveAsPacket: (item?: StarFactoryInputs) => string;
+    saveAsPacket: (item?: StarSaveInputs | boolean) => string;
     set: (item?: StarFactoryInputs) => StarInstance;
     setDelta: (item?: StarFactoryDeltaInputs) => StarInstance;
+    simpleStamp: (host: CellInstance, items?: StarFactoryInputs) => void;
 }
 
 interface StarInstance extends StarFactoryInputs, StarFactoryFunctions {}
@@ -1987,11 +2359,14 @@ interface TetragonFactoryInputs extends BaseMixinInputs, ShapeBasicMixinInputs, 
     delta?: TetragonFactoryDeltaInputs;
 }
 
+interface TetragonSaveInputs extends TetragonFactoryInputs, SaveInputs {}
+
 interface TetragonFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFunctions {
     clone: (item?: TetragonFactoryInputs) => TetragonInstance;
-    saveAsPacket: (item?: TetragonFactoryInputs) => string;
+    saveAsPacket: (item?: TetragonSaveInputs | boolean) => string;
     set: (item?: TetragonFactoryInputs) => TetragonInstance;
     setDelta: (item?: TetragonFactoryDeltaInputs) => TetragonInstance;
+    simpleStamp: (host: CellInstance, items?: TetragonFactoryInputs) => void;
 }
 
 interface TetragonInstance extends TetragonFactoryInputs, TetragonFactoryFunctions {}
@@ -2021,6 +2396,8 @@ interface TickerFactoryInputs extends BaseMixinInputs, TickerFactoryDeltaInputs 
     order?: number;
 }
 
+interface TickerSaveInputs extends TickerFactoryInputs, SaveInputs {}
+
 interface TickerFactoryFunctions extends BaseMixinFunctions {
     clone: (item?: TickerFactoryInputs) => TickerInstance;
     complete: () => TickerInstance;
@@ -2028,9 +2405,9 @@ interface TickerFactoryFunctions extends BaseMixinFunctions {
     isRunning: () => boolean;
     reset: () => TickerInstance;
     resume: () => TickerInstance;
-    reverse: () => TickerInstance;
+    reverse: (resume?: boolean) => TickerInstance;
     run: () => TickerInstance;
-    saveAsPacket: (item?: TickerFactoryInputs) => string;
+    saveAsPacket: (item?: TickerSaveInputs | boolean) => string;
     seekFor: (item: number) => TickerInstance;
     seekTo: (milliseconds: number, resume?: boolean) => TickerInstance;
     set: (item?: TickerFactoryInputs) => TickerInstance;
@@ -2044,11 +2421,28 @@ interface TickerInstance extends TickerFactoryInputs, TickerFactoryFunctions {}
 
 // TracerInstance factory
 // -------------------------------------
-interface TracerFactoryDeltaInputs extends BaseMixinDeltaInputs {}
+interface TracerFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
+    historyLength?: number;
+    hitRadius?: number;
+}
 
-interface TracerFactoryInputs extends BaseMixinInputs, TracerFactoryDeltaInputs {}
+interface TracerFactoryInputs extends BaseMixinInputs, EntityMixinInputs, TracerFactoryDeltaInputs {
+    artefact?: EntityInstance | string;
+    showHitRadius?: boolean;
+    hitRadiusColor?: string;
+    stampAction?: DefaultInputFunction;
+    delta?: TracerFactoryDeltaInputs;
+}
 
-interface TracerFactoryFunctions extends BaseMixinFunctions {}
+interface TracerSaveInputs extends TracerFactoryInputs, SaveInputs {}
+
+interface TracerFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions {
+    simpleStamp: (host: CellInstance, items?: TracerFactoryInputs) => void;
+    clone: (item?: TracerFactoryInputs) => TracerInstance;
+    saveAsPacket: (item?: TracerSaveInputs | boolean) => string;
+    set: (item?: TracerFactoryInputs) => TracerInstance;
+    setDelta: (item?: TracerFactoryDeltaInputs) => TracerInstance;
+}
 
 interface TracerInstance extends TracerFactoryInputs, TracerFactoryFunctions {}
 
@@ -2086,7 +2480,10 @@ interface TweenFactoryInputs extends BaseMixinInputs, TweenMixinInputs, TweenFac
     onSeekFor?: DefaultInputFunction;
     onSeekTo?: DefaultInputFunction;
     ticker?: string;
+    useNewTicker?: boolean;
 }
+
+interface TweenSaveInputs extends TweenFactoryInputs, SaveInputs {}
 
 interface TweenFactoryFunctions extends BaseMixinFunctions, TweenMixinFunctions {
     clone: (item?: TweenFactoryInputs) => TweenInstance;
@@ -2095,7 +2492,7 @@ interface TweenFactoryFunctions extends BaseMixinFunctions, TweenMixinFunctions 
     resume: () => TweenInstance;
     reverse: () => TweenInstance;
     run: () => TweenInstance;
-    saveAsPacket: (item?: TweenFactoryInputs) => string;
+    saveAsPacket: (item?: TweenSaveInputs | boolean) => string;
     seekFor: (item: number) => TweenInstance;
     seekTo: (milliseconds: number, resume?: boolean) => TweenInstance;
     set: (item?: TweenFactoryInputs) => TweenInstance;
@@ -2111,11 +2508,23 @@ interface TweenInstance extends TweenFactoryInputs, TweenFactoryFunctions {}
 // -------------------------------------
 interface UnstackedElementFactoryDeltaInputs extends BaseMixinDeltaInputs {}
 
-interface UnstackedElementFactoryInputs extends BaseMixinInputs, UnstackedElementFactoryDeltaInputs {}
+interface UnstackedElementFactoryInputs extends BaseMixinInputs, UnstackedElementFactoryDeltaInputs {
+    canvasOnTop?: boolean;
+}
 
-interface UnstackedElementFactoryFunctions extends BaseMixinFunctions {}
+interface UnstackedElementSaveInputs extends UnstackedElementFactoryInputs, SaveInputs {}
 
-interface UnstackedElementInstance extends UnstackedElementFactoryInputs, UnstackedElementFactoryFunctions {}
+interface UnstackedElementFactoryFunctions extends BaseMixinFunctions {
+    clone: (item?: UnstackedElementFactoryInputs) => UnstackedElementInstance;
+    saveAsPacket: (item?: UnstackedElementSaveInputs | boolean) => string;
+    set: (item?: UnstackedElementFactoryInputs) => UnstackedElementInstance;
+    setDelta: (item?: UnstackedElementFactoryDeltaInputs) => UnstackedElementInstance;
+}
+
+interface UnstackedElementInstance extends UnstackedElementFactoryInputs, UnstackedElementFactoryFunctions {
+    elementComputedStyles?: CommonObjectInput;
+    domElement: any;
+}
 
 
 
@@ -2184,11 +2593,14 @@ interface WheelFactoryInputs extends BaseMixinInputs, EntityMixinInputs, WheelFa
     includeCenter?:  boolean;
 }
 
+interface WheelSaveInputs extends WheelFactoryInputs, SaveInputs {}
+
 interface WheelFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions {
     clone: (item?: WheelFactoryInputs) => WheelInstance;
-    saveAsPacket: (item?: WheelFactoryInputs) => string;
+    saveAsPacket: (item?: WheelSaveInputs | boolean) => string;
     set: (item?: WheelFactoryInputs) => WheelInstance;
     setDelta: (item?: WheelFactoryDeltaInputs) => WheelInstance;
+    simpleStamp: (host: CellInstance, items?: WheelFactoryInputs) => void;
 }
 
 interface WheelInstance extends WheelFactoryInputs, WheelFactoryFunctions {}
@@ -2198,9 +2610,11 @@ interface WheelInstance extends WheelFactoryInputs, WheelFactoryFunctions {}
 
 // WorldInstance factory
 // -------------------------------------
+type UserInputType = 'Quaternion' | 'Vector' | 'Coordinate';
 interface UserInput {
     key: string; 
-    defaultValue: any; 
+    defaultValue?: any; 
+    type?: UserInputType;
     setter?: DefaultInputFunction;
     deltaSetter?: DefaultInputFunction;
     getter?: DefaultInputFunction;
@@ -2215,11 +2629,13 @@ interface WorldFactoryInputs extends BaseMixinInputs, WorldFactoryDeltaInputs {
     userAttributes?: UserInput[];
 }
 
+interface WorldSaveInputs extends WorldFactoryInputs, SaveInputs {}
+
 interface WorldFactoryFunctions extends BaseMixinFunctions {
     addAttribute: (items: UserInput) => WorldInstance;
     removeAttribute: (key: string) => WorldInstance;
     clone: (item?: WorldFactoryInputs) => WorldInstance;
-    saveAsPacket: (item?: WorldFactoryInputs) => string;
+    saveAsPacket: (item?: WorldSaveInputs | boolean) => string;
     set: (item?: WorldFactoryInputs) => WorldInstance;
     setDelta: (item?: WorldFactoryDeltaInputs) => WorldInstance;
 }
@@ -2231,6 +2647,7 @@ interface WorldInstance extends WorldFactoryInputs, WorldFactoryFunctions {}
 
 
 // observeAndUpdate factory (not stored in library)
+// -------------------------------------
 type ObserveAndUpdateStrings = 'float' | 'int' | 'round' | 'roundDown' | 'roundUp' | 'raw' | 'string' | 'boolean' | '%' | string;
 
 interface ObserveAndUpdateInputs {
@@ -2247,7 +2664,14 @@ interface ObserveAndUpdateInputs {
     callback?: DefaultInputFunction;
 }
 
+export function observeAndUpdate(items: ObserveAndUpdateInputs): DefaultOutputFunction;
+
+
+
+
+
 // makeDragZone factory (not stored in library)
+// -------------------------------------
 interface MakeDragZoneInputs {
     zone: any;
     coordinateSource?: any;
@@ -2266,6 +2690,16 @@ interface MakeDragZoneInputs {
     resetCoordsToZeroOnTouchEnd?: boolean;
 }
 
+type DragZoneOutput = () => HitOutput | boolean;
+
+export function makeDragZone(items: MakeDragZoneInputs): DefaultOutputFunction | DragZoneOutput;
+
+
+
+
+
+// Asset uploads
+// -------------------------------------
 interface AssetImportObject {
     name?: string;
     src?: string;
@@ -2278,9 +2712,23 @@ interface AssetImportObject {
 
 type AssetImports = string | AssetImportObject | Array<string | AssetImportObject>
 
-type DragZoneOutput = () => HitOutput | boolean;
+export function importDomImage(query: string): void;
+export function importDomVideo(query: string): void;
+export function importImage(items: AssetImports): void;
+export function importMediaStream(items: CommonObjectInput): Promise<VideoAssetInstance>;
+export function importSprite(items: AssetImports): void;
+export function importVideo(items: AssetImports): void;
+
+export function createImageFromCell(item: CellInstance | CanvasInstance | string, stashAsAsset: boolean): void;
+export function createImageFromEntity(item: EntityInstance | string, stashAsAsset: boolean): void;
+export function createImageFromGroup(item: GroupInstance | CellInstance | CanvasInstance | string, stashAsAsset: boolean): void;
 
 
+
+
+
+// Event listener convenience functions
+// -------------------------------------
 export function addListener(
     evt: string | string[], 
     fn: DefaultInputFunction, 
@@ -2306,29 +2754,53 @@ export function removeNativeListener(
 ): DefaultOutputFunction;
 
 
+
+
+
+
+
+// Seeded random number generator
+// -------------------------------------
 interface SeededRandomNumberGeneratorFunctions {
     random: () => number;
 }
+export function seededRandomNumberGenerator(seed?: string): SeededRandomNumberGeneratorFunctions;
 
-export function addCanvas(): void;
-export function addStack(): void;
-export function clear(): void;
-export function compile(): void;
-export function createImageFromCell(item: CellInstance | CanvasInstance | string, stashAsAsset: boolean): void;
-export function createImageFromEntity(item: EntityInstance | string, stashAsAsset: boolean): void;
-export function createImageFromGroup(item: GroupInstance | CellInstance | CanvasInstance | string, stashAsAsset: boolean): void;
-export function getCanvas(): void;
-export function getIgnorePixelRatio(): void;
-export function getPixelRatio(): void;
-export function getStack(): void;
-export function getTouchActionChoke(): number;
-export function importDomImage(query: string): void;
-export function importDomVideo(query: string): void;
-export function importImage(items: AssetImports): void;
-export function importMediaStream(items: CommonObjectInput): Promise<VideoAssetInstance>;
-export function importSprite(items: AssetImports): void;
-export function importVideo(items: AssetImports): void;
-export function init(): void;
+
+
+
+
+
+// Exported pool objects
+// -------------------------------------
+export function requestCoordinate(x: any, y?: StringOrNumberInput): CoordinateInstance;
+export function requestQuaternion(): QuaternionInstance;
+export function requestVector(x: any, y?: number, z?: number): VectorInstance;
+export function releaseCoordinate(item: CoordinateInstance): void;
+export function releaseQuaternion(item: QuaternionInstance): void;
+export function releaseVector(item: VectorInstance): void;
+
+
+
+
+
+
+// Display cycle functions
+// -------------------------------------
+export function clear(...items: Array<CanvasInstance | StackInstance>): void;
+export function compile(...items: Array<CanvasInstance | StackInstance>): void;
+export function render(...items: Array<CanvasInstance | StackInstance>): void;
+export function show(...items: Array<CanvasInstance | StackInstance>): void;
+
+export function makeRender(items: RenderFactoryInputs): RenderInstance;
+
+
+
+
+
+
+// Factory functions
+// -------------------------------------
 export function makeAction(items: ActionFactoryInputs): ActionInstance;
 export function makeAnimation(items: AnimationFactoryInputs): AnimationInstance;
 export function makeAnimationObserver(): void;
@@ -2338,7 +2810,6 @@ export function makeCog(items: CogFactoryInputs): CogInstance;
 export function makeColor(items: ColorFactoryInputs): ColorInstance;
 export function makeConicGradient(items: ConicGradientFactoryInputs): ConicGradientInstance;
 export function makeCrescent(items: CrescentFactoryInputs): CrescentInstance;
-export function makeDragZone(items: MakeDragZoneInputs): DefaultOutputFunction | DragZoneOutput;
 export function makeEmitter(items: EmitterFactoryInputs): EmitterInstance;
 export function makeFilter(items: FilterFactoryInputs): FilterInstance;
 export function makeForce(items: ForceFactoryInputs): ForceInstance;
@@ -2363,9 +2834,7 @@ export function makeRadialGradient(items: RadialGradientFactoryInputs): RadialGr
 export function makeRawAsset(items: RawAssetFactoryInputs): RawAssetInstance;
 export function makeReactionDiffusionAsset(items: ReactionDiffusionAssetFactoryInputs): ReactionDiffusionAssetInstance;
 export function makeRectangle(items: RectangleFactoryInputs): RectangleInstance;
-export function makeRender(items: RenderFactoryInputs): RenderInstance;
 export function makeShape(items: ShapeFactoryInputs): ShapeInstance;
-export function makeSnippet(): void;
 export function makeSpiral(items: SpiralFactoryInputs): SpiralInstance;
 export function makeSpring(items: SpringFactoryInputs): SpringInstance;
 export function makeStar(items: StarFactoryInputs): StarInstance;
@@ -2375,219 +2844,77 @@ export function makeTracer(items: TracerFactoryInputs): TracerInstance;
 export function makeTween(items: TweenFactoryInputs): TweenInstance;
 export function makeWheel(items: WheelFactoryInputs): WheelInstance;
 export function makeWorld(items: WorldFactoryInputs): WorldInstance;
-export function observeAndUpdate(items: ObserveAndUpdateInputs): DefaultOutputFunction;
-export function releaseCoordinate(item: CoordinateInstance): void;
-export function releaseQuaternion(item: QuaternionInstance): void;
-export function releaseVector(item: VectorInstance): void;
-export function render(): void;
-export function requestCoordinate(x: any, y?: StringOrNumberInput): CoordinateInstance;
-export function requestQuaternion(): QuaternionInstance;
-export function requestVector(x: any, y?: number, z?: number): VectorInstance;
-export function seededRandomNumberGenerator(seed?: string): SeededRandomNumberGeneratorFunctions;
-export function setCurrentCanvas(): void;
-export function setFilterMemoizationChoke(): void;
+
+
+
+
+// Snippet factory functions
+// -------------------------------------
+interface SnippetInputs {
+    domElement?: any;
+    animationHooks?: CommonObjectInput;
+    canvasSpecs?: CommonObjectInput;
+    observerSpecs?: CommonObjectInput;
+    includeCanvas?: boolean;
+}
+
+interface SnippetReturn {
+    element?: ElementInstance | UnstackedElementInstance;
+    canvas?: CanvasInstance;
+    animation?: RenderInstance;
+    demolish: () => void;
+    [index: string]: any;
+}
+
+export function makeSnippet(items: SnippetInputs): SnippetReturn;
+
+
+
+
+// Other Scrawl-canvas function exports
+// -------------------------------------
+interface AddStackInputs extends StackFactoryInputs {
+    element?: any;
+    host?: any;
+    name?: string;
+}
+export function addStack(items?: AddStackInputs): StackInstance;
+export function getStack(item: string): StackInstance;
+
+interface AddCanvasInputs extends CanvasFactoryInputs {
+    element?: any;
+    host?: any;
+    name?: string;
+}
+export function addCanvas(items?: AddCanvasInputs): CanvasInstance;
+export function getCanvas(item: string): CanvasInstance;
+export function setCurrentCanvas(item: CanvasInstance | string): void;
+
+
+
+export function getIgnorePixelRatio(): boolean;
 export function setIgnorePixelRatio(item: boolean): void;
-export function setPixelRatioChangeAction(): void;
+export function getPixelRatio(): number;
+export function setPixelRatioChangeAction(item: DefaultInputFunction): void;
+
+export function getTouchActionChoke(): number;
 export function setTouchActionChoke(item: number): void;
-export function show(): void;
+
+export function init(): void;
+
+export function setFilterMemoizationChoke(item: number): void;
+
 export function startCoreAnimationLoop(): void;
 export function startCoreListeners(): void;
 export function stopCoreAnimationLoop(): void;
 export function stopCoreListeners(): void;
 
 
+
+
+
+
+
+// Scrawl-canvas library object
+// -------------------------------------
 export const library: CommonObjectInput;
-
-
-
-
-
-// export namespace scrawl {
-
-//     export function addListener(
-//         evt: string | string[], 
-//         fn: DefaultInputFunction, 
-//         targ: string | object | Array<string | object>
-//     ): DefaultOutputFunction;
-
-//     export function removeListener(
-//         evt: string | string[], 
-//         fn: DefaultInputFunction, 
-//         targ: string | object | Array<string | object>
-//     ): DefaultOutputFunction;
-
-//     export function addNativeListener(
-//         evt: string | string[], 
-//         fn: DefaultInputFunction, 
-//         targ: string | object | Array<string | object>
-//     ): DefaultOutputFunction;
-
-//     export function removeNativeListener(
-//         evt: string | string[], 
-//         fn: DefaultInputFunction, 
-//         targ: string | object | Array<string | object>
-//     ): DefaultOutputFunction;
-
-
-
-//     export function addCanvas(): void;
-//     export function addStack(): void;
-//     export function clear(): void;
-//     export function compile(): void;
-//     export function createImageFromCell(item: CellInstance | CanvasInstance | string, stashAsAsset: boolean): void;
-//     export function createImageFromEntity(item: EntityInstance | string, stashAsAsset: boolean): void;
-//     export function createImageFromGroup(item: GroupInstance | CellInstance | CanvasInstance | string, stashAsAsset: boolean): void;
-//     export function getCanvas(): void;
-//     export function getIgnorePixelRatio(): void;
-//     export function getPixelRatio(): void;
-//     export function getStack(): void;
-//     export function getTouchActionChoke(): number;
-//     export function importDomImage(query: string): void;
-//     export function importDomVideo(query: string): void;
-//     export function importImage(): void;
-//     export function importMediaStream(items: CommonObjectInput): Promise<VideoAssetInstance>;
-//     export function importSprite(): void;
-//     export function importVideo(): void;
-//     export function init(): void;
-//     export function makeAction(items: ActionFactoryInputs): ActionInstance;
-//     export function makeAnimation(items: AnimationFactoryInputs): AnimationInstance;
-//     export function makeAnimationObserver(): void;
-//     export function makeBezier(items: BezierFactoryInputs): BezierInstance;
-//     export function makeBlock(items: BlockFactoryInputs): BlockInstance;
-//     export function makeCog(items: CogFactoryInputs): CogInstance;
-//     export function makeColor(items: ColorFactoryInputs): ColorInstance;
-//     export function makeConicGradient(items: ConicGradientFactoryInputs): ConicGradientInstance;
-//     export function makeCrescent(items: CrescentFactoryInputs): CrescentInstance;
-//     export function makeDragZone(items: MakeDragZoneInputs): DefaultOutputFunction | DragZoneOutput;
-//     export function makeEmitter(items: EmitterFactoryInputs): EmitterInstance;
-//     export function makeFilter(items: FilterFactoryInputs): FilterInstance;
-//     export function makeForce(items: ForceFactoryInputs): ForceInstance;
-//     export function makeGradient(items: GradientFactoryInputs): GradientInstance;
-//     export function makeGrid(items: GridFactoryInputs): GridInstance;
-//     export function makeGroup(items: GroupFactoryInputs): GroupInstance;
-//     export function makeLine(items: LineFactoryInputs): LineInstance;
-//     export function makeLineSpiral(items: LineSpiralFactoryInputs): LineSpiralInstance;
-//     export function makeLoom(items: LoomFactoryInputs): LoomInstance;
-//     export function makeMesh(items: MeshFactoryInputs): MeshInstance;
-//     export function makeNet(items: NetFactoryInputs): NetInstance;
-//     export function makeNoise(items: NoiseAssetFactoryInputs): NoiseAssetInstance;
-//     export function makeNoiseAsset(items: NoiseAssetFactoryInputs): NoiseAssetInstance;
-//     export function makeOval(items: OvalFactoryInputs): OvalInstance;
-//     export function makePattern(items: PatternFactoryInputs): PatternInstance;
-//     export function makePhrase(items: PhraseFactoryInputs): PhraseInstance;
-//     export function makePicture(items: PictureFactoryInputs): PictureInstance;
-//     export function makePolygon(items: PolygonFactoryInputs): PolygonInstance;
-//     export function makePolyline(items: PolylineFactoryInputs): PolylineInstance;
-//     export function makeQuadratic(items: QuadraticFactoryInputs): QuadraticInstance;
-//     export function makeRadialGradient(items: RadialGradientFactoryInputs): RadialGradientInstance;
-//     export function makeRawAsset(items: RawAssetFactoryInputs): RawAssetInstance;
-//     export function makeReactionDiffusionAsset(items: ReactionDiffusionAssetFactoryInputs): ReactionDiffusionAssetInstance;
-//     export function makeRectangle(items: RectangleFactoryInputs): RectangleInstance;
-//     export function makeRender(items: RenderFactoryInputs): RenderInstance;
-//     export function makeShape(items: ShapeFactoryInputs): ShapeInstance;
-//     export function makeSnippet(): void;
-//     export function makeSpiral(items: SpiralFactoryInputs): SpiralInstance;
-//     export function makeSpring(items: SpringFactoryInputs): SpringInstance;
-//     export function makeStar(items: StarFactoryInputs): StarInstance;
-//     export function makeTetragon(items: TetragonFactoryInputs): TetragonInstance;
-//     export function makeTicker(items: TickerFactoryInputs): TickerInstance;
-//     export function makeTracer(items: TracerFactoryInputs): TracerInstance;
-//     export function makeTween(items: TweenFactoryInputs): TweenInstance;
-//     export function makeWheel(items: WheelFactoryInputs): WheelInstance;
-//     export function makeWorld(items: WorldFactoryInputs): WorldInstance;
-//     export function observeAndUpdate(items: ObserveAndUpdateInputs): DefaultOutputFunction;
-//     export function releaseCoordinate(item: CoordinateInstance): void;
-//     export function releaseQuaternion(item: QuaternionInstance): void;
-//     export function releaseVector(item: VectorInstance): void;
-//     export function render(): void;
-//     export function requestCoordinate(): CoordinateInstance;
-//     export function requestQuaternion(): QuaternionInstance;
-//     export function requestVector(): VectorInstance;
-//     export function seededRandomNumberGenerator(): void;
-//     export function setCurrentCanvas(): void;
-//     export function setFilterMemoizationChoke(): void;
-//     export function setIgnorePixelRatio(item: boolean): void;
-//     export function setPixelRatioChangeAction(): void;
-//     export function setTouchActionChoke(item: number): void;
-//     export function show(): void;
-//     export function startCoreAnimationLoop(): void;
-//     export function startCoreListeners(): void;
-//     export function stopCoreAnimationLoop(): void;
-//     export function stopCoreListeners(): void;
-
-//     export const library: CommonObjectInput;
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// export const library: CommonObjectInput;
-// export const scrawl: CommonObjectInput;
-
-
-// export namespace library {
-//     export type version = string;
-//     export type anchor = {[index: string]: AnchorInstance};
-//     export type anchornames = string[];
-//     export type animation = {[index: string]: AnimationInstance};
-//     export type animationnames = string[];
-//     export type animationtickers = {[index: string]: TickerInstance};
-//     export type animationtickersnames = string[];
-//     export type artefact = {[index: string]: ArtefactInstance};
-//     export type artefactnames = string[];
-//     export type asset = {[index: string]: AssetInstance};
-//     export type assetnames = string[];
-//     export type canvas = {[index: string]: CanvasInstance};
-//     export type canvasnames = string[];
-//     export type cell = {[index: string]: CellInstance};
-//     export type cellnames = string[];
-//     export type element = {[index: string]: ElementInstance};
-//     export type elementnames = string[];
-//     export type entity = {[index: string]: EntityInstance};
-//     export type entitynames = string[];
-//     export type filter = {[index: string]: FilterInstance};
-//     export type filternames = string[];
-//     export type fontattribute = {[index: string]: any};
-//     export type fontattributenames = string[];
-//     export type group = {[index: string]: GroupInstance};
-//     export type groupnames = string[];
-//     export type palette = {[index: string]: any};
-//     export type palettenames = string[];
-//     export type particle = {[index: string]: ParticleInstance};
-//     export type particlenames = string[];
-//     export type force = {[index: string]: ForceInstance};
-//     export type forcenames = string[];
-//     export type spring = {[index: string]: SpringInstance};
-//     export type springnames = string[];
-//     export type world = {[index: string]: WorldInstance};
-//     export type worldnames = string[];
-//     export type sectionClasses = {[index: string]: any};
-//     export type stack = {[index: string]: StackInstance};
-//     export type stacknames = string[];
-//     export type tween = {[index: string]: TweenAnimationInstance};
-//     export type tweennames = string[];
-//     export type styles = {[index: string]: StylesInstance};
-//     export type stylesnames = string[];
-//     export type unstackedelement = {[index: string]: UnstackedElementInstance};
-//     export type unstackedelementnames = string[];
-//     export type constructors = {[index: string]: any};
-//     export type radian = number;
-//     export type css = string[];
-//     export type xcss = string[];
-// }
-
-

@@ -2,7 +2,7 @@
 // Emit particles from inside an artefact's area
 
 // [Run code](../../demo/particles-005.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 

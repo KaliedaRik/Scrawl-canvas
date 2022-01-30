@@ -2,7 +2,7 @@
 // Filter parameters: matrix, matrix5
 
 // [Run code](../../demo/filters-012.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -57,9 +57,8 @@ const target = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    matrix3 weights array: ${matrix3.weights}
-    matrix5 weights array: ${matrix5.weights}
-    Opacity: ${opacity.value}`;
+// @ts-expect-error
+    return `    matrix3 weights array: ${matrix3.weights}    matrix5 weights array: ${matrix5.weights}    Opacity: ${opacity.value}`;
 });
 
 
@@ -81,6 +80,7 @@ const changeMatrix = function () {
     return function () {
 
         target.set({
+// @ts-expect-error
             filters: [selector.value],
         });
     }
@@ -93,14 +93,22 @@ const updateWeights = function () {
 
     return function () {
 
+// @ts-expect-error
         weights3 = [parseFloat(m22.value), parseFloat(m23.value), parseFloat(m24.value), 
+// @ts-expect-error
                     parseFloat(m32.value), parseFloat(m33.value), parseFloat(m34.value), 
+// @ts-expect-error
                     parseFloat(m42.value), parseFloat(m43.value), parseFloat(m44.value)];
 
+// @ts-expect-error
         weights5 = [parseFloat(m11.value), parseFloat(m12.value), parseFloat(m13.value), parseFloat(m14.value), parseFloat(m15.value), 
+// @ts-expect-error
                     parseFloat(m21.value), parseFloat(m22.value), parseFloat(m23.value), parseFloat(m24.value), parseFloat(m25.value), 
+// @ts-expect-error
                     parseFloat(m31.value), parseFloat(m32.value), parseFloat(m33.value), parseFloat(m34.value), parseFloat(m35.value), 
+// @ts-expect-error
                     parseFloat(m41.value), parseFloat(m42.value), parseFloat(m43.value), parseFloat(m44.value), parseFloat(m45.value), 
+// @ts-expect-error
                     parseFloat(m51.value), parseFloat(m52.value), parseFloat(m53.value), parseFloat(m54.value), parseFloat(m55.value)];
 
         matrix3.set({
@@ -192,38 +200,70 @@ const m11 = document.querySelector('#m11'),
     m55 = document.querySelector('#m55'),
     opacity = document.querySelector('#opacity');
 
+// @ts-expect-error
 m11.value = 0;
+// @ts-expect-error
 m12.value = 0;
+// @ts-expect-error
 m13.value = 0;
+// @ts-expect-error
 m14.value = 0;
+// @ts-expect-error
 m15.value = 0;
+// @ts-expect-error
 m21.value = 0;
+// @ts-expect-error
 m22.value = 0;
+// @ts-expect-error
 m23.value = 0;
+// @ts-expect-error
 m24.value = 0;
+// @ts-expect-error
 m25.value = 0;
+// @ts-expect-error
 m31.value = 0;
+// @ts-expect-error
 m32.value = 0;
+// @ts-expect-error
 m33.value = 1;
+// @ts-expect-error
 m34.value = 0;
+// @ts-expect-error
 m35.value = 0;
+// @ts-expect-error
 m41.value = 0;
+// @ts-expect-error
 m42.value = 0;
+// @ts-expect-error
 m43.value = 0;
+// @ts-expect-error
 m44.value = 0;
+// @ts-expect-error
 m45.value = 0;
+// @ts-expect-error
 m51.value = 0;
+// @ts-expect-error
 m52.value = 0;
+// @ts-expect-error
 m53.value = 0;
+// @ts-expect-error
 m54.value = 0;
+// @ts-expect-error
 m55.value = 0;
+// @ts-expect-error
 opacity.value = 1;
 
+// @ts-expect-error
 document.querySelector('#selectMatrix').value = 'matrix3';
+// @ts-expect-error
 document.querySelector('#includeRed').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeGreen').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeBlue').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#includeAlpha').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 
 

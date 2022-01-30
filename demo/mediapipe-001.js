@@ -2,7 +2,7 @@
 // MediaPipe Selfie Segmentation - model image output
 
 // [Run code](../../demo/mediapipe-001.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -143,7 +143,9 @@ scrawl.importMediaStream({
     video = mycamera;
 
     // This fixes the issue in Firefox where the media stream will crash Tensorflow if the stream's video element's dimensions have not been set
+// @ts-expect-error
     video.source.width = "1280";
+// @ts-expect-error
     video.source.height = "720";
 
     // Take the media stream and display it in our canvas element
@@ -174,6 +176,7 @@ scrawl.importMediaStream({
     });
 
     // Start the MediaPipe model
+// @ts-expect-error
     model = new SelfieSegmentation({
         locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
     });
@@ -182,6 +185,7 @@ scrawl.importMediaStream({
     model.onResults(perform);
 
     // Use MediaPipe's camera functionality to get updates to the forever loop
+// @ts-expect-error
     const mediaPipeCamera = new Camera(video.source, {
 
         onFrame: async () => {
@@ -252,7 +256,9 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 }, '.controlItem');
 
 // Set DOM form initial input values
+// @ts-expect-error
 document.querySelector('#backgroundFilter').value = '';
+// @ts-expect-error
 document.querySelector('#outlineFilter').value = '1';
 
 

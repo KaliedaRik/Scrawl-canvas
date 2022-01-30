@@ -2,7 +2,7 @@
 // Net entity: using a shape path as a net template
 
 // [Run code](../../demo/particles-010.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -76,6 +76,7 @@ const myNet = scrawl.makeNet({
 
         const regex = RegExp('-0$');
 
+// @ts-expect-error
         this.particleStore.forEach(p => {
 
             if (regex.test(p.name)) {
@@ -86,6 +87,7 @@ const myNet = scrawl.makeNet({
                     forces: [],
                 });
 
+// @ts-expect-error
                 this.springs.forEach(s => {
 
                     if (s && s.particleFrom && s.particleFrom.name === p.name) {

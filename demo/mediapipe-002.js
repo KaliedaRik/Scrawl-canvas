@@ -2,7 +2,7 @@
 // MediaPipe Face Mesh - model image output
 
 // [Run code](../../demo/mediapipe-002.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -68,12 +68,19 @@ let myAsset = scrawl.makeRawAsset({
             for (const landmarks of stuff.multiFaceLandmarks) {
 
                 // We'll draw stuff on the canvas using MediaPipe's own drawing routines
+// @ts-expect-error
                 drawConnectors(engine, landmarks, FACEMESH_TESSELATION, {color: '#707070', lineWidth: 1});
+// @ts-expect-error
                 drawConnectors(engine, landmarks, FACEMESH_RIGHT_EYE, {color: '#FF3030'});
+// @ts-expect-error
                 drawConnectors(engine, landmarks, FACEMESH_RIGHT_EYEBROW, {color: '#FF3030'});
+// @ts-expect-error
                 drawConnectors(engine, landmarks, FACEMESH_LEFT_EYE, {color: '#30FF30'});
+// @ts-expect-error
                 drawConnectors(engine, landmarks, FACEMESH_LEFT_EYEBROW, {color: '#30FF30'});
+// @ts-expect-error
                 drawConnectors(engine, landmarks, FACEMESH_FACE_OVAL, {color: '#000000'});
+// @ts-expect-error
                 drawConnectors(engine, landmarks, FACEMESH_LIPS, {color: '#000000'});
             }
         }
@@ -112,7 +119,9 @@ scrawl.importMediaStream({
 
     video = mycamera;
 
+// @ts-expect-error
     video.source.width = width;
+// @ts-expect-error
     video.source.height = height;
 
     scrawl.makePicture({
@@ -127,6 +136,7 @@ scrawl.importMediaStream({
     });
 
     // Start the MediaPipe model
+// @ts-expect-error
     model = new FaceMesh({
 
         locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
@@ -140,6 +150,7 @@ scrawl.importMediaStream({
     model.onResults(perform);
 
     // Use MediaPipe's camera functionality to get updates to the forever loop
+// @ts-expect-error
     const mediaPipeCamera = new Camera(video.source, {
 
         onFrame: async () => {

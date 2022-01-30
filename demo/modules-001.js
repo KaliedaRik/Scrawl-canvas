@@ -12,7 +12,7 @@
 //
 // [Run code](../../demo/modules-001.html)
 
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -193,6 +193,7 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
 frame.build(`${namespace}-frame`, canvas, 'Hackney');
 barGraph.build(`${namespace}-bars`, canvas, 'data/crimes-in-hackney.json');
 
+// @ts-expect-error
 crimeCategoryInput.value = 'Burglary';
 crimeCategoryInput.setAttribute('disabled', '');
 

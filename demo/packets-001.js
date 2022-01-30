@@ -2,7 +2,7 @@
 // Save and load Scrawl-canvas entity using text packets
 
 // [Run code](../../demo/packets-001.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -31,17 +31,20 @@ let box = scrawl.makeBlock({
     fillStyle: 'red',
 
     onEnter: function () {
+// @ts-expect-error
         this.set({
             fillStyle: 'pink',
         });
     },
 
     onLeave: function () {
+// @ts-expect-error
         this.set({
             fillStyle: 'red',
         });
     },
 
+// @ts-expect-error
     onUp: function () { this.clickAnchor() },
 
     anchor: {

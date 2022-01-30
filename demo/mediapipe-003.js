@@ -2,7 +2,7 @@
 // MediaPipe Face Mesh - working with the mesh coordinates
 
 // [Run code](../../demo/mediapipe-003.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -32,7 +32,9 @@ let wormStart = 220,
 const wormstartInput = document.querySelector('#wormstart'),
     wormendInput = document.querySelector('#wormend');
 
+// @ts-expect-error
 wormstartInput.value = wormStart;
+// @ts-expect-error
 wormendInput.value = wormEnd;
 
 const worm = scrawl.makePolyline({
@@ -103,7 +105,9 @@ const updateLabelsAndWorm = function (asset) {
             wormEnd = temp; 
         }
 
+// @ts-expect-error
         wormstartInput.value = wormStart;
+// @ts-expect-error
         wormendInput.value = wormEnd;
 
         // Update the worm's pins
@@ -191,7 +195,9 @@ scrawl.importMediaStream({
 
     video = mycamera;
 
+// @ts-expect-error
     video.source.width = width;
+// @ts-expect-error
     video.source.height = height;
 
     scrawl.makePicture({
@@ -206,6 +212,7 @@ scrawl.importMediaStream({
     });
 
     // Start the MediaPipe model
+// @ts-expect-error
     model = new FaceMesh({
         locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
     });
@@ -219,6 +226,7 @@ scrawl.importMediaStream({
     model.onResults(perform);
 
     // Use MediaPipe's camera functionality to get updates to the forever loop
+// @ts-expect-error
     const mediaPipeCamera = new Camera(video.source, {
 
         onFrame: async () => {

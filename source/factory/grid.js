@@ -238,6 +238,7 @@ P.setAllTilesTo = function (val) {
         this.tileFill.fill(val);
         this.dirtyFilterIdentifier = true;
     }
+    return this;
 };
 
 // `setTileFill` - update the tileFill array
@@ -251,6 +252,7 @@ P.setTileFill = function (item) {
         this.tileFill = item;
         this.dirtyFilterIdentifier = true;
     }
+    return this;
 };
 
 // `setTilesTo` - change the fill for a (set of) tile(s) in a Grid - requires two arguments:
@@ -274,6 +276,7 @@ P.setTilesTo = function (tiles, val) {
         }
         this.dirtyFilterIdentifier = true;
     }
+    return this;
 };
 
 // `setTileSourceTo` - update or replace a tileSource object - requires two arguments:
@@ -285,6 +288,7 @@ P.setTileSourceTo = function (index, obj) {
 
         if (obj.type && obj.source) this.tileSources[index] = obj;
     }
+    return this;
 };
 
 // `removeTileSource` - remove a tileSource object
@@ -298,6 +302,7 @@ P.removeTileSource = function (index) {
 
         this.tileFill = this.tileFill.map(item => item === index ? 0 : item);
     }
+    return this;
 };
 
 // `getTileSource` - returns the tileSource index Number for the given tile. Function is overloaded:

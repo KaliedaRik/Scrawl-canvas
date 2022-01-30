@@ -2,7 +2,7 @@
 // Filter parameters: chromakey
 
 // [Run code](../../demo/filters-011.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -59,9 +59,8 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Reference color: ${reference.value}
-    Transparent at: ${transparentAt.value}, Opaque at: ${opaqueAt.value}
-    Opacity: ${opacity.value}`;
+// @ts-expect-error
+    return `    Reference color: ${reference.value}\n    Transparent at: ${transparentAt.value}, Opaque at: ${opaqueAt.value}\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -101,9 +100,13 @@ const reference = document.querySelector('#reference'),
     transparentAt = document.querySelector('#transparentAt'),
     opacity = document.querySelector('#opacity');
 
+// @ts-expect-error
 reference.value = '#007700';
+// @ts-expect-error
 opaqueAt.value = 1;
+// @ts-expect-error
 transparentAt.value = 0;
+// @ts-expect-error
 opacity.value = 1;
 
 

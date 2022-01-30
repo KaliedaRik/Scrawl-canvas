@@ -489,16 +489,6 @@ P.getHost = function () {
 // Invalidate mid-init functionality
 P.midInitActions = λnull;
 
-// Invalidating sensor functionality
-P.cleanCollisionData = function () {
-
-    return [0, []];
-};
-P.getSensors = function () {
-
-    return [];
-};
-
 // #### Display cycle functionality
 
 // `prepareStamp` - function called as part of the Display cycle `compile` step.
@@ -1004,8 +994,9 @@ P.clear = function (engine) {
     }
 };
 
-// `none`
+// `none`, `clip`
 P.none = λnull;
+P.clip = λnull;
 
 
 // These __stroke__ and __fill__ functions handle most of the stuff that the method functions require to stamp the Mesh entity onto a canvas cell.

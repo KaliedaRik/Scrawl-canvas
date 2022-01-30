@@ -2,7 +2,7 @@
 // SVG-based filter example: noise
 
 // [Run code](../../demo/filters-505.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -54,11 +54,17 @@ let bfx = document.querySelector('#bfx'),
     feTurbulence = document.querySelector('feTurbulence'),
     feDisplacementMap = document.querySelector('feDisplacementMap');
 
+// @ts-expect-error
 bfx.value = 0.01;
+// @ts-expect-error
 bfy.value = 0.04;
+// @ts-expect-error
 octaves.value = 2;
+// @ts-expect-error
 scale.value = 20;
+// @ts-expect-error
 xChannelSelector.options.selectedIndex = 0;
+// @ts-expect-error
 yChannelSelector.options.selectedIndex = 0;
 
 
@@ -66,11 +72,8 @@ yChannelSelector.options.selectedIndex = 0;
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `
-<filter id="svg-noise">
-  <feTurbulence type="fractalNoise" baseFrequency="${bfx.value} ${bfy.value}" result="NOISE" numOctaves="${octaves.value}" />
-  <feDisplacementMap in="SourceGraphic" in2="NOISE" scale="${scale.value}" xChannelSelector="${xChannelSelector.value}" yChannelSelector="${yChannelSelector.value}"></feDisplacementMap>
-</filter>`;
+// @ts-expect-error
+    return `<filter id="svg-noise">\n  <feTurbulence type="fractalNoise" baseFrequency="${bfx.value} ${bfy.value}" result="NOISE" numOctaves="${octaves.value}" />\n  <feDisplacementMap in="SourceGraphic" in2="NOISE" scale="${scale.value}" xChannelSelector="${xChannelSelector.value}" yChannelSelector="${yChannelSelector.value}"></feDisplacementMap>\n</filter>`;
 });
 
 
@@ -85,18 +88,23 @@ const demoAnimation = scrawl.makeRender({
 
 // #### User interaction
 // Setup form functionality
+// @ts-expect-error
 let baseFrequency = () => feTurbulence.setAttribute('baseFrequency', `${bfx.value} ${bfy.value}`);
 scrawl.addNativeListener(['input', 'change'], baseFrequency, '.baseFreq');
 
+// @ts-expect-error
 let numOctaves = () => feTurbulence.setAttribute('numOctaves', octaves.value);
 scrawl.addNativeListener(['input', 'change'], numOctaves, '#octaves');
 
+// @ts-expect-error
 let dmScale = () => feDisplacementMap.setAttribute('scale', scale.value);
 scrawl.addNativeListener(['input', 'change'], dmScale, '#scale');
 
+// @ts-expect-error
 let dmX = () => feDisplacementMap.setAttribute('xChannelSelector', xChannelSelector.value);
 scrawl.addNativeListener(['input', 'change'], dmX, '#xChannelSelector');
 
+// @ts-expect-error
 let dmY = () => feDisplacementMap.setAttribute('yChannelSelector', yChannelSelector.value);
 scrawl.addNativeListener(['input', 'change'], dmY, '#yChannelSelector');
 

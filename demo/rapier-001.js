@@ -2,7 +2,9 @@
 // MediaPipe Selfie Segmentation - model image output
 
 // [Run code](../../demo/rapier-001.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
+
+// @ts-expect-error
 import rapier from "https://cdn.skypack.dev/@dimforge/rapier2d-compat";
 
 import { reportSpeed } from './utilities.js';
@@ -65,8 +67,8 @@ for (let y = 0; y < rows; y++) {
             startX: halfUnit + x * unit,
             startY: -sixthUnit + y * unit,
             handle: ["center", "center"],
-            width: thirdUnit + parseInt(Math.random() * halfUnit, 10),
-            height: thirdUnit + parseInt(Math.random() * halfUnit, 10),
+            width: thirdUnit + Math.ceil(Math.random() * halfUnit),
+            height: thirdUnit + Math.ceil(Math.random() * halfUnit),
             fillStyle: colorMaker.getRangeColor(Math.random()),
             method: "fillThenDraw"
         });

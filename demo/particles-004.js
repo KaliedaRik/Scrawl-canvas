@@ -2,7 +2,7 @@
 // Emit particles along the length of a path
 
 // [Run code](../../demo/particles-004.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 

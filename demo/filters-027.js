@@ -2,7 +2,7 @@
 // Filter parameters: reducePalette
 
 // [Run code](../../demo/filters-013.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -59,8 +59,8 @@ const original = dithered.clone({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Minimum color distance: ${minimumColorDistance.value}
-    Opacity: ${opacity.value}`;
+// @ts-expect-error
+    return `    Minimum color distance: ${minimumColorDistance.value}\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -114,14 +114,22 @@ scrawl.addNativeListener('change', (e) => {
 const opacity = document.querySelector('#opacity');
 const minimumColorDistance = document.querySelector('#minimumColorDistance');
 
+// @ts-expect-error
 opacity.value = 1;
+// @ts-expect-error
 minimumColorDistance.value = 1000;
 
+// @ts-expect-error
 document.querySelector('#palette').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
+// @ts-expect-error
 document.querySelector('#paletteString').value = 'yellow, green, darkgreen, limegreen, olivedrab, mediumseagreen, seagreen, lightblue, darkslategray, lavender, slateblue, mediumslateblue, black, indigo, brown, antiquewhite';
+// @ts-expect-error
 document.querySelector('#paletteNumber').options.selectedIndex = 1;
+// @ts-expect-error
 document.querySelector('#seed').value = 'some-random-string-or-other';
+// @ts-expect-error
 document.querySelector('#useBluenoise').options.selectedIndex = 0;
 
 

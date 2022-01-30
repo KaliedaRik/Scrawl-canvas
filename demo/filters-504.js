@@ -2,7 +2,7 @@
 // SVG-based filter example: duotone
 
 // [Run code](../../demo/filters-504.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -99,20 +99,29 @@ let g1 = document.querySelector('#g1'),
 let b1 = document.querySelector('#b1'),
     b2 = document.querySelector('#b2');
 
+// @ts-expect-error
 r1.value = 0.996;
+// @ts-expect-error
 r2.value = 0.984;
+// @ts-expect-error
 g1.value = 0.125;
+// @ts-expect-error
 g2.value = 0.941;
+// @ts-expect-error
 b1.value = 0.552;
+// @ts-expect-error
 b2.value = 0.478;
 
 // Setup form functionality
+// @ts-expect-error
 let updateR = () => feFuncR.setAttribute('tableValues', `${r1.value} ${r2.value}`);
 scrawl.addNativeListener(['input', 'change'], updateR, '.feFuncR');
 
+// @ts-expect-error
 let updateG = () => feFuncG.setAttribute('tableValues', `${g1.value} ${g2.value}`);
 scrawl.addNativeListener(['input', 'change'], updateG, '.feFuncG');
 
+// @ts-expect-error
 let updateB = () => feFuncB.setAttribute('tableValues', `${b1.value} ${b2.value}`);
 scrawl.addNativeListener(['input', 'change'], updateB, '.feFuncB');
 

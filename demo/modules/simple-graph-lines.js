@@ -19,7 +19,7 @@ Data supplied to graph module as Javascript object with structure:
 }
 */
 
-import scrawl from '../../source/scrawl.js';
+import * as scrawl from '../../source/scrawl.js';
 
 // We need to adapt the graph frame with data specific to this graph
 import * as frame from './simple-chart-frame.js';

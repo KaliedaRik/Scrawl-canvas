@@ -2,7 +2,7 @@
 // Add and remove (kill) Scrawl-canvas stack elements programmatically
 
 // [Run code](../../demo/dom-010.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 
 // #### Scene setup
@@ -61,9 +61,13 @@ let controls = function () {
         b3 = document.querySelector('#action_3'),
         b4 = document.querySelector('#action_4');
 
+// @ts-expect-error
     b1.disabled = '';
+// @ts-expect-error
     b2.disabled = 'disabled';
+// @ts-expect-error
     b3.disabled = '';
+// @ts-expect-error
     b4.disabled = 'disabled';
 
     let newStack, hostStack;
@@ -76,7 +80,9 @@ let controls = function () {
         switch (e.target.id) {
 
             case 'action_1':
+// @ts-expect-error
                 b1.disabled = 'disabled';
+// @ts-expect-error
                 b2.disabled = '';
 
                 newStack = scrawl.addStack({
@@ -90,7 +96,9 @@ let controls = function () {
 
             case 'action_2':
 
+// @ts-expect-error
                 b1.disabled = '';
+// @ts-expect-error
                 b2.disabled = 'disabled';
 
                 newStack.kill();
@@ -99,7 +107,9 @@ let controls = function () {
 
             case 'action_3':
 
+// @ts-expect-error
                 b3.disabled = 'disabled';
+// @ts-expect-error
                 b4.disabled = '';
 
                 hostStack = scrawl.addStack({
@@ -110,13 +120,18 @@ let controls = function () {
                 
             case 'action_4':
 
+// @ts-expect-error
                 if (b1.disabled) {
 
+// @ts-expect-error
                     b1.disabled = '';
+// @ts-expect-error
                     b2.disabled = 'disabled';
                 }
 
+// @ts-expect-error
                 b3.disabled = 'disabled';
+// @ts-expect-error
                 b4.disabled = 'disabled';
                 
                 hostStack.kill();

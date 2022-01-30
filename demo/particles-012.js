@@ -2,7 +2,7 @@
 // Use Net entity particles as reference coordinates for other artefacts
 
 // [Run code](../../demo/particles-012.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -44,12 +44,14 @@ const myNet = scrawl.makeNet({
 
         const regex = RegExp('-0-[0-9]+$');
 
+// @ts-expect-error
         this.particleStore.forEach(p => {
 
             if (regex.test(p.name)) {
 
                 p.set({ forces: [] });
 
+// @ts-expect-error
                 this.springs.forEach(s => {
 
                     if (s && s.particleFrom && s.particleFrom.name === p.name) {

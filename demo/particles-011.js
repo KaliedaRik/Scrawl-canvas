@@ -2,7 +2,7 @@
 // Tracer entity: generation and functionality
 
 // [Run code](../../demo/particles-011.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -189,7 +189,7 @@ scrawl.makeTracer({
             artefact.simpleStamp(host, {
                 start,
                 scale: magicNumber * 3,
-                fillStyle: colorFactory.get(magicNumber),
+                fillStyle: colorFactory.getRangeColor(magicNumber),
             });
         });
     },
@@ -242,6 +242,7 @@ const filterChoice = function (e) {
 };
 scrawl.addNativeListener(['input', 'change'], filterChoice, '#filter');
 
+// @ts-expect-error
 document.querySelector('#filter').value = '';
 
 

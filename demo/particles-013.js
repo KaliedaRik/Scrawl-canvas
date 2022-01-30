@@ -2,7 +2,7 @@
 // Seasons greetings
 
 // [Run code](../../demo/particles-013.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -337,6 +337,7 @@ const myEmitter = scrawl.makeEmitter({
             remaining, radius, alpha, x, y, z,
             endRad = Math.PI * 2;
 
+// @ts-expect-error
         let colorFactory = this.fillColorFactory;
 
         engine.save();

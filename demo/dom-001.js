@@ -17,7 +17,7 @@ import {
 // Define some demo variables. All Scrawl-canvas wrappers for DOM elements can be found in the __scrawl.library.artefact__ section of the Scrawl-canvas library. The elements themselves are held in the __domElement__ attribute of the wrapper. 
 let artefact = L.artefact,
     myStack = artefact.mystack,
-    report = artefact.reportmessage;
+    reportMessage = artefact.reportmessage;
 
 
 // Scrawl-canvas stack elements calculate the positions and dimensions of their member artefacts on the assumption that the stack element itself has no padding. If the element does include padding then all member artefacts will be offset (rightwards and downwards) by the left and top padfding values.
@@ -35,7 +35,7 @@ myStack.set({
 // Position and size the report &lt;div> element, which is where we will be displaying details about the stack.
 //
 // Note that moving this div element will leave a gap at the top of the stack. The positions and dimensions of Stack member artefacts (in other words, all immediate child elements of the stack element) are calculated when Scrawl-canvas initializes, before Scrawl-canvas updates their CSS position value to "absolute". Thus moving the report div downwards will not trigger a DOM redraw/reflow action
-report.set({
+reportMessage.set({
     startY: '50%',
     width: '91.5%',
     height: 'auto'
@@ -61,7 +61,7 @@ makeAnimation({
 
         let here = myStack.here || {};
 
-        reportmessage.textContent =  `File dom-001.js has loaded successfully
+        reportMessage.textContent =  `File dom-001.js has loaded successfully
    Stack name: ${myStack.name} - width: ${here.w}, height: ${here.h}
    Interaction type: ${here.type} - active: ${here.active}
    Current cursor coordinates - x: ${here.x}, y: ${here.y} 

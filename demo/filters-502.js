@@ -2,7 +2,7 @@
 // SVG-based filter example: gaussian blur
 
 // [Run code](../../demo/filters-502.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
@@ -77,7 +77,7 @@ let updateStdDeviation = (e) => {
     e.preventDefault();
     e.returnValue = false;
 
-    feGaussianBlur.setAttribute('stdDeviation', parseFloat(e.target.value));
+    feGaussianBlur.setAttribute('stdDeviation', e.target.value);
 };
 scrawl.addNativeListener(['input', 'change'], updateStdDeviation, '#stdDeviation');
 
@@ -90,7 +90,9 @@ let updateEdgeMode = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateEdgeMode, '#edgeMode');
 
+// @ts-expect-error
 document.querySelector('#stdDeviation').value = 5;
+// @ts-expect-error
 document.querySelector('#edgeMode').options.selectedIndex = 0;
 
 

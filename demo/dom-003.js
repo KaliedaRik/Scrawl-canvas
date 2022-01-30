@@ -2,7 +2,7 @@
 // Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack
 
 // [Run code](../../demo/dom-003.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 

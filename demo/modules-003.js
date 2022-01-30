@@ -5,7 +5,7 @@
 // + [Wikipedia views spiral chart module](./modules/entity-ring-builder.html)
 //
 // [Run code](../../demo/modules-003.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 

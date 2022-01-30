@@ -132,8 +132,8 @@ let defaultAttributes = {
     // + If we set the `generateAlongPath` attribute to a path-based entity then the Emitter will use that path to set the initial coordinate for all its generated particles
     // + If we set the `generateInArea` attribute to any entity then the Emitter will use that entity's area to set the initial coordinate for all its generated particles
     // + `generateInArea` takes precedence over `generateAlongPath`, which in turn takes precedence over the default coordinate behaviour
-    generateAlongPath: false,
-    generateInArea: false,
+    generateAlongPath: null,
+    generateInArea: null,
     generateFromExistingParticles: false,
     generateFromExistingParticleHistories: false,
     limitDirectionToAngleMultiples: 0,

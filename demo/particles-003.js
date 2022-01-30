@@ -2,7 +2,7 @@
 // Position Emitter entity: start; pivot; mimic; path; mouse; drag-and-drop
 
 // [Run code](../../demo/particles-003.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
 
@@ -228,6 +228,7 @@ const myemitter = scrawl.makeEmitter({
 
         let history = particle.history,
             remaining, globalAlpha, scale, start, z,
+// @ts-expect-error
             roll = this.get('roll');
 
         history.forEach((p, index) => {
@@ -317,8 +318,9 @@ const useArtefact = function () {
 
     return function () {
 
+// @ts-expect-error
         val = selector.value;
-        choice = false;
+        choice;
 
         switch (val) {
 
@@ -350,7 +352,9 @@ const useArtefact = function () {
 scrawl.addNativeListener(['input', 'change'], useArtefact, '#artefact');
 
 // Initialize form values
+// @ts-expect-error
 document.querySelector('#artefact').value = 'star';
+// @ts-expect-error
 document.querySelector('#position').value = 'start';
 
 

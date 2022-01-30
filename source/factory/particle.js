@@ -81,7 +81,7 @@ P = baseMix(P);
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
-// The __position__ attribute represents a particle's world coordinate, and is held in an `{x:value, y:value, z:value}` Vector object. The default values are `{x:0, y:0, z:0}`, placing the artifact at the Cdell canvas's top-left corner. We can set the position using the __positionX__, __positionY__ and __positionZ__ pseudo-attributes.
+// The __position__ attribute represents a particle's world coordinate, and is held in an `{x:value, y:value, z:value}` Vector object. The default values are `{x:0, y:0, z:0}`, placing the artifact at the Cell canvas's top-left corner. We can set the position using the __positionX__, __positionY__ and __positionZ__ pseudo-attributes.
     position: null,
 
 // __velocity__ - Vector object, generally used internally as part of the particle physics calculation. We can give a particle an initial velocity using the __velocityX__, __velocityY__ and __velocityZ__ pseudo-attributes.

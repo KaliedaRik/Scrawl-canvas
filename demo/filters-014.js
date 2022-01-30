@@ -2,7 +2,7 @@
 // Filter parameters: areaAlpha
 
 // [Run code](../../demo/filters-014.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -55,11 +55,8 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}
-    Gutter dimensions - width: ${gutter_width.value} height: ${gutter_height.value}
-    Offset - x: ${offset_x.value} y: ${offset_y.value}
-    areaAlphaLevels array: [${alpha_0.value}, ${alpha_1.value}, ${alpha_2.value}, ${alpha_3.value}]
-    Opacity: ${opacity.value}`;
+// @ts-expect-error
+    return `    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}\n    Gutter dimensions - width: ${gutter_width.value} height: ${gutter_height.value}\n    Offset - x: ${offset_x.value} y: ${offset_y.value}\n    areaAlphaLevels array: [${alpha_0.value}, ${alpha_1.value}, ${alpha_2.value}, ${alpha_3.value}]\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -98,10 +95,14 @@ scrawl.observeAndUpdate({
 
 scrawl.addNativeListener(['input', 'change'], function (e) {
 
-    let a0 = parseInt(document.querySelector('#alpha_0').value, 10),
-        a1 = parseInt(document.querySelector('#alpha_1').value, 10),
-        a2 = parseInt(document.querySelector('#alpha_2').value, 10),
-        a3 = parseInt(document.querySelector('#alpha_3').value, 10);
+// @ts-expect-error
+    let a0 = parseInt(alpha_0.value, 10),
+// @ts-expect-error
+        a1 = parseInt(alpha_1.value, 10),
+// @ts-expect-error
+        a2 = parseInt(alpha_2.value, 10),
+// @ts-expect-error
+        a3 = parseInt(alpha_3.value, 10);
 
         myFilter.set({
             areaAlphaLevels: [a0, a2, a1, a3],
@@ -122,16 +123,27 @@ const tile_width = document.querySelector('#tile_width'),
     offset_y = document.querySelector('#offset_y'),
     opacity = document.querySelector('#opacity');
 
+// @ts-expect-error
 tile_width.value = 10;
+// @ts-expect-error
 tile_height.value = 10;
+// @ts-expect-error
 gutter_width.value = 10;
+// @ts-expect-error
 gutter_height.value = 10;
+// @ts-expect-error
 offset_x.value = 0;
+// @ts-expect-error
 offset_y.value = 0;
+// @ts-expect-error
 opacity.value = 1;
+// @ts-expect-error
 alpha_0.value = 255;
+// @ts-expect-error
 alpha_1.value = 0;
+// @ts-expect-error
 alpha_2.value = 255;
+// @ts-expect-error
 alpha_3.value = 0;
 
 

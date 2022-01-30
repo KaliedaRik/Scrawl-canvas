@@ -2,7 +2,7 @@
 // Limitless rockets (clone and destroy elements, tweens, tickers)
 
 // [Run code](../../demo/dom-004.html)
-import scrawl from '../source/scrawl.js'
+import * as scrawl from '../source/scrawl.js'
 
 import { reportSpeed, killTicker } from './utilities.js';
 
@@ -52,6 +52,7 @@ let tween = scrawl.makeTween({
 
     commenceAction: function () {
 
+// @ts-expect-error
         this.set({
             targets: rocket.clone({
                 name: `${this.name}-element`,

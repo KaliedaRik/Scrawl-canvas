@@ -2,7 +2,7 @@
 // Filter parameters: brightness, saturation
 
 // [Run code](../../demo/filters-003.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -129,9 +129,8 @@ scrawl.makePhrase({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Level: ${level.value}
-    Opacity: ${opacity.value}
-    R: ${red.value}; G: ${green.value}; B: ${blue.value}; A: ${alpha.value}`;
+// @ts-expect-error
+    return `    Level: ${level.value}\n    Opacity: ${opacity.value}\n    R: ${red.value}; G: ${green.value}; B: ${blue.value}; A: ${alpha.value}`;
 });
 
 
@@ -149,6 +148,7 @@ scrawl.addNativeListener(['input', 'change'], () => {
 
     simpleFilters.forEach(f => {
         f.set({
+// @ts-expect-error
             opacity: opacity.value,
         });
     });
@@ -157,10 +157,15 @@ scrawl.addNativeListener(['input', 'change'], () => {
         f.set({
             actions: [{
                 action: "modulate-channels",
+// @ts-expect-error
                 opacity: opacity.value,
+// @ts-expect-error
                 red: red.value,
+// @ts-expect-error
                 green: green.value,
+// @ts-expect-error
                 blue: blue.value,
+// @ts-expect-error
                 alpha: alpha.value,
                 saturation: ('advancedsaturation' === f.name) ? true : false,
             }],
@@ -173,6 +178,7 @@ scrawl.addNativeListener(['input', 'change'], () => {
 
     simpleFilters.forEach(f => {
         f.set({
+// @ts-expect-error
             level: level.value,
         });
     });
@@ -185,10 +191,15 @@ scrawl.addNativeListener(['input', 'change'], () => {
         f.set({
             actions: [{
                 action: "modulate-channels",
+// @ts-expect-error
                 opacity: opacity.value,
+// @ts-expect-error
                 red: red.value,
+// @ts-expect-error
                 green: green.value,
+// @ts-expect-error
                 blue: blue.value,
+// @ts-expect-error
                 alpha: alpha.value,
                 saturation: ('advancedsaturation' === f.name) ? true : false,
             }],
@@ -205,11 +216,17 @@ const green = document.querySelector('#green');
 const blue = document.querySelector('#blue');
 const alpha = document.querySelector('#alpha');
 
+// @ts-expect-error
 opacity.value = 1;
+// @ts-expect-error
 level.value = 1;
+// @ts-expect-error
 red.value = 1;
+// @ts-expect-error
 green.value = 1;
+// @ts-expect-error
 blue.value = 1;
+// @ts-expect-error
 alpha.value = 1;
 
 

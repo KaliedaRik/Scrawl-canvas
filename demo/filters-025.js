@@ -2,7 +2,7 @@
 // Filter parameters: Glitch filter
 
 // [Run code](../../demo/filters-025.html)
-import scrawl from '../source/scrawl.js';
+import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
@@ -46,12 +46,8 @@ const piccy = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    Level: ${level.value}
-    Mixed offset - min: ${offsetMin.value}; max ${offsetMax.value}
-    Red offset - min: ${offsetRedMin.value}; max ${offsetRedMax.value}
-    Green offset - min: ${offsetGreenMin.value}; max ${offsetGreenMax.value}
-    Blue offset - min: ${offsetBlueMin.value}; max ${offsetBlueMax.value}
-    Opacity: ${opacity.value}`;
+// @ts-expect-error
+    return `    Level: ${level.value}\n    Mixed offset - min: ${offsetMin.value}; max ${offsetMax.value}\n    Red offset - min: ${offsetRedMin.value}; max ${offsetRedMax.value}\n    Green offset - min: ${offsetGreenMin.value}; max ${offsetGreenMax.value}\n    Blue offset - min: ${offsetBlueMin.value}; max ${offsetBlueMax.value}\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -109,18 +105,31 @@ const offsetBlueMin = document.querySelector('#offsetBlueMin');
 const offsetBlueMax = document.querySelector('#offsetBlueMax');
 const opacity = document.querySelector('#opacity');
 
+// @ts-expect-error
 level.value = 0.2;
+// @ts-expect-error
 step.value = 1;
+// @ts-expect-error
 useMixedChannel.options.selectedIndex = 1;
+// @ts-expect-error
 transparentEdges.options.selectedIndex = 0;
+// @ts-expect-error
 offsetMin.value = -10;
+// @ts-expect-error
 offsetMax.value = 10;
+// @ts-expect-error
 offsetRedMin.value = 0;
+// @ts-expect-error
 offsetRedMax.value = 0;
+// @ts-expect-error
 offsetGreenMin.value = 0;
+// @ts-expect-error
 offsetGreenMax.value = 0;
+// @ts-expect-error
 offsetBlueMin.value = 0;
+// @ts-expect-error
 offsetBlueMax.value = 0;
+// @ts-expect-error
 opacity.value = 1;
 
 
