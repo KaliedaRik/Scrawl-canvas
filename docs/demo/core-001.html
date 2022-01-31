@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo Modules 003</title>
+  <title>core-001.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -996,6 +996,12 @@
     
     <ul class="sections">
         
+          <li id="title">
+              <div class="annotation">
+                  <h1>core-001.js</h1>
+              </div>
+          </li>
+        
         
         
         <li id="section-1">
@@ -1004,19 +1010,15 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="demo-modules-003">Demo Modules 003</h1>
-<p>Factory functions to create more complex, compound entitys</p>
-<p>Related files:</p>
+              <p>Import the Scrawl-canvas file, using: </p>
 <ul>
-<li><a href="./modules/entity-ring-builder.html">Entity ring builder module</a></li>
+<li>either an absolute path to it; </li>
+<li>or a path relative to the html file which loaded this user-defined javascript file</li>
 </ul>
-<p><a href="../../demo/modules-003.html">Run code</a></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span></pre></div></div>
             
         </li>
         
@@ -1027,11 +1029,9 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
+              <p>To see the Scrawl-canvas associated module files load, use the browser’s file inspection console</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
             
         </li>
         
@@ -1042,16 +1042,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="scene-setup">Scene setup</h4>
+              <p>Test variables</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
-
-canvas.<span class="hljs-title function_">setBase</span>({
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;azure&#x27;</span>,
-    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1062,11 +1057,17 @@ canvas.<span class="hljs-title function_">setBase</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Import the entity ring factory</p>
+              <p>Animation</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> buildEntityRing <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./modules/entity-ring-builder.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeAnimation</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+
+    <span class="hljs-attr">fn</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -1077,248 +1078,22 @@ canvas.<span class="hljs-title function_">setBase</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Some gradients for our scene</p>
+              <p>If all modules load and run correctly, we should see data appear in the web page</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> parasolGradient = scrawl.<span class="hljs-title function_">makeGradient</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-gradient&#x27;</span>,
-    <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">paletteEnd</span>: <span class="hljs-number">299</span>,
-    <span class="hljs-attr">colors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;transparent&#x27;</span>]
-    ],
-});
+            <div class="content"><div class='highlight'><pre>            report.<span class="hljs-property">textContent</span> = <span class="hljs-string">`cursor x: <span class="hljs-subst">${scrawl.currentCorePosition.x}</span>
+cursor y: <span class="hljs-subst">${scrawl.currentCorePosition.y}</span>
+browser width: <span class="hljs-subst">${scrawl.currentCorePosition.w}</span>
+browser height: <span class="hljs-subst">${scrawl.currentCorePosition.h}</span>
+scroll x: <span class="hljs-subst">${scrawl.currentCorePosition.scrollX}</span>
+scroll y: <span class="hljs-subst">${scrawl.currentCorePosition.scrollY}</span>
+cursor type: <span class="hljs-subst">${scrawl.currentCorePosition.type}</span>`</span>;
 
-scrawl.<span class="hljs-title function_">makeGradient</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plank-gradient&#x27;</span>,
-    <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">colors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;gold&#x27;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;green&#x27;</span>]
-    ],
+            <span class="hljs-title function_">resolve</span>(<span class="hljs-literal">true</span>);
+        });
+    },
 });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>A parasol compound-entity</p>
-<ul>
-<li>See the <a href="./modules/entity-ring-builder.html">entity ring builder module</a> for an explanation of the argument attributes used to construct the compound entity</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> parasol = <span class="hljs-title function_">buildEntityRing</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol&#x27;</span>,
-    canvas,
-
-    <span class="hljs-attr">dimensions</span>: <span class="hljs-number">400</span>,
-    <span class="hljs-attr">buildStartAngle</span>: -<span class="hljs-number">20</span>,
-    <span class="hljs-attr">buildEndAngle</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">buildStepAngle</span>: <span class="hljs-number">5</span>,
-    <span class="hljs-attr">reflectOnly</span>: <span class="hljs-literal">false</span>,
-
-    <span class="hljs-attr">entity</span>: scrawl.<span class="hljs-title function_">makeBlock</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-template&#x27;</span>,
-        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">18</span>],
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;parasol-gradient&#x27;</span>,
-        <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
-    }),
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>A ring-of-planks compound-entity</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> plank = <span class="hljs-title function_">buildEntityRing</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plank&#x27;</span>,
-    canvas,
-
-    <span class="hljs-attr">dimensions</span>: <span class="hljs-number">600</span>,
-    <span class="hljs-attr">buildStartAngle</span>: -<span class="hljs-number">90</span>,
-    <span class="hljs-attr">buildEndAngle</span>: <span class="hljs-number">210</span>,
-    <span class="hljs-attr">buildStepAngle</span>: <span class="hljs-number">30</span>,
-    <span class="hljs-attr">buildOffset</span>: <span class="hljs-number">190</span>,
-    <span class="hljs-attr">reflectOnly</span>: <span class="hljs-literal">false</span>,
-
-    <span class="hljs-attr">entity</span>: scrawl.<span class="hljs-title function_">makeBlock</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plank-template&#x27;</span>,
-        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;top&#x27;</span>],
-        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">150</span>, <span class="hljs-number">30</span>],
-        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;plank-gradient&#x27;</span>,
-        <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-        <span class="hljs-attr">delta</span>: {
-            <span class="hljs-attr">roll</span>: <span class="hljs-number">0.3</span>,
-        },
-    }),
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <p>We can now use our compound entitys to create a scene</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plank-picture&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">asset</span>: plank.<span class="hljs-property">cell</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
-    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-    <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">roll</span>: -<span class="hljs-number">0.25</span>,
-    }
-});
-
-scrawl.<span class="hljs-title function_">makePicture</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-picture&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">asset</span>: parasol.<span class="hljs-property">cell</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">400</span>, <span class="hljs-number">400</span>],
-    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-    <span class="hljs-attr">scale</span>: <span class="hljs-number">0.8</span>,
-    <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">roll</span>: <span class="hljs-number">0.1</span>,
-    }
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>Create the Display cycle animation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p>And some additional animation for the parasol gradient</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ticker = scrawl.<span class="hljs-title function_">makeTicker</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-gradient-ticker&#x27;</span>,
-    <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;12s&#x27;</span>,
-});
-
-scrawl.<span class="hljs-title function_">makeTween</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-start-palette-tween&#x27;</span>,
-    <span class="hljs-attr">targets</span>: parasolGradient,
-    <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;parasol-gradient-ticker&#x27;</span>,
-    <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;60%&#x27;</span>,
-    <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
-    <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">definitions</span>: [
-        {
-            <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;paletteStart&#x27;</span>,
-            <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
-            <span class="hljs-attr">end</span>: <span class="hljs-number">700</span>,
-            <span class="hljs-attr">integer</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeOutIn&#x27;</span>,
-        }
-    ]
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-end-palette-tween&#x27;</span>,
-    <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;30%&#x27;</span>,
-    <span class="hljs-attr">definitions</span>: [
-        {
-            <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;paletteEnd&#x27;</span>,
-            <span class="hljs-attr">start</span>: <span class="hljs-number">299</span>,
-            <span class="hljs-attr">end</span>: <span class="hljs-number">999</span>,
-            <span class="hljs-attr">integer</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeOutIn&#x27;</span>,
-        }
-    ]
-});
-
-ticker.<span class="hljs-title function_">run</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <h4 id="development-and-testing">Development and testing</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

@@ -1,5 +1,5 @@
 // # Demo Rapier 001
-// MediaPipe Selfie Segmentation - model image output
+// Rapier physics engine - stacking boxes
 
 // [Run code](../../demo/rapier-001.html)
 import * as scrawl from '../source/scrawl.js';

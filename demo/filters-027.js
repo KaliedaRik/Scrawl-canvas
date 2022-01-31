@@ -1,7 +1,7 @@
-// # Demo Filters 013 
+// # Demo Filters 027 
 // Filter parameters: reducePalette
 
-// [Run code](../../demo/filters-013.html)
+// [Run code](../../demo/filters-027.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';

@@ -4,7 +4,7 @@
 // Related files:
 // + [Lottie loader module](./modules/lottie-loader.html)
 //
-// [Run code](../../demo/modules-003.html)
+// [Run code](../../demo/modules-004.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';

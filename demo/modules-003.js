@@ -2,7 +2,7 @@
 // Factory functions to create more complex, compound entitys
 //
 // Related files:
-// + [Wikipedia views spiral chart module](./modules/entity-ring-builder.html)
+// + [Entity ring builder module](./modules/entity-ring-builder.html)
 //
 // [Run code](../../demo/modules-003.html)
 import * as scrawl from '../source/scrawl.js';

@@ -9,8 +9,8 @@
 import * as scrawl from '../../source/scrawl.js';
 
 
-// #### The entity ring factory
-// This factory takes a single __items__ Javascript Object argument (to match the functionality of built-in Scrawl-canvas factories). Three of the attributes of this argument object are required, the others will fall back on default values. These attrributes are:
+// #### The Lottie animation loader function
+// This factory takes a single __items__ Javascript Object argument (to match the functionality of built-in Scrawl-canvas factories). Two of the attributes of this argument object are required, the others will fall back on default values. These attrributes are:
 // + __name__ (required) - String - unique name value
 // + __src__ (required) - String - path to the lottie.json animation file
 // + __width__ - Number - width of the animation; default `1000`

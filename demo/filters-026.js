@@ -1,7 +1,7 @@
 // # Demo Filters 026
 // Filter parameters: Swirl filter
 
-// [Run code](../../demo/filters-025.html)
+// [Run code](../../demo/filters-026.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';

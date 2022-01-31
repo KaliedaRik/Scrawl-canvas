@@ -1,7 +1,7 @@
 // # Demo Canvas 060
 // Noise asset functionality
 
-// [Run code](../../demo/filters-019.html)
+// [Run code](../../demo/filters-060.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
