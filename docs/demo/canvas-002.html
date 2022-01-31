@@ -620,6 +620,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-004.html">
+                  ./demo/modules-004.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -930,6 +935,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-036.html">
+                  ./demo/temp-036.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -957,6 +967,11 @@
                 
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
+                </a>
+              
+                
+                <a class="source" href="temp-lottie.html">
+                  ./demo/temp-lottie.js
                 </a>
               
                 
@@ -1361,10 +1376,7 @@ mywheel.<span class="hljs-title function_">clone</span>({
 });
 
 <span class="hljs-keyword">const</span> backgroundColorSelector = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#backgroundColor&#x27;</span>),
-    clearAlphaInput = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#clearAlpha&#x27;</span>);
-
-backgroundColorSelector.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;&#x27;</span>;
-clearAlphaInput.<span class="hljs-property">value</span> = <span class="hljs-number">0.9</span>;</pre></div></div>
+    clearAlphaInput = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#clearAlpha&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1375,14 +1387,11 @@ clearAlphaInput.<span class="hljs-property">value</span> = <span class="hljs-num
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <p>@ts-expect-error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`    clearAlpha: <span class="hljs-subst">${clearAlphaInput.value}</span>`</span>;
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>backgroundColorSelector.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1392,6 +1401,53 @@ clearAlphaInput.<span class="hljs-property">value</span> = <span class="hljs-num
               
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>clearAlphaInput.<span class="hljs-property">value</span> = <span class="hljs-number">0.9</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    clearAlpha: <span class="hljs-subst">${clearAlphaInput.value}</span>`</span>;
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1408,11 +1464,11 @@ clearAlphaInput.<span class="hljs-property">value</span> = <span class="hljs-num
         </li>
         
         
-        <li id="section-16">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

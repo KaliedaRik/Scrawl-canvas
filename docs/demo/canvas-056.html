@@ -620,6 +620,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-004.html">
+                  ./demo/modules-004.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -930,6 +935,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-036.html">
+                  ./demo/temp-036.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -957,6 +967,11 @@
                 
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
+                </a>
+              
+                
+                <a class="source" href="temp-lottie.html">
+                  ./demo/temp-lottie.js
                 </a>
               
                 
@@ -1007,7 +1022,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
 
 <span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
@@ -1106,8 +1121,22 @@ canvas.<span class="hljs-title function_">set</span>({
 
     scrawl.<span class="hljs-title function_">makeWheel</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`pin-1-<span class="hljs-subst">${i}</span>`</span>,
-        <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;first-pins&#x27;</span>,
-        <span class="hljs-attr">start</span>: [...coord],
+        <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;first-pins&#x27;</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">start</span>: [...coord],
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
         <span class="hljs-attr">radius</span>: <span class="hljs-number">10</span>,
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
@@ -1133,11 +1162,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>The Shape entity starts with a minimal pathDefinition value. Note that the Shape’s start and handle attributes are centered; this entity does not pivot or mimic to the Polyline entity which is why their borders are often misaligned.</p>
 
@@ -1158,11 +1187,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>We recalculate the Shape entity’s pathDefinition value each time the user updates a control or drags one of the Polyline entity’s pins. </p>
 
@@ -1181,11 +1210,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Rotations are calculated with the help of a pool Coordinate object</p>
 
@@ -1196,11 +1225,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Get the number generator</p>
 
@@ -1216,11 +1245,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>getPathPositionData</strong> returns an Object with attributes <code>x</code>, <code>y</code>, <code>angle</code>.</p>
 <ul>
@@ -1252,11 +1281,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Return the Coordinate object back to the pool - failure to do this leads to memory leaks!</p>
 
@@ -1273,30 +1302,43 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Rotation: <span class="hljs-subst">${rotation.value}</span>; Length: <span class="hljs-subst">${length.value}</span>; Density: <span class="hljs-subst">${density.value}</span>`</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Rotation: <span class="hljs-subst">${rotation.value}</span>; Length: <span class="hljs-subst">${length.value}</span>; Density: <span class="hljs-subst">${density.value}</span>`</span>;
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1320,11 +1362,11 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
@@ -1335,22 +1377,76 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
 <span class="hljs-keyword">const</span> density = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#density&#x27;</span>);
 <span class="hljs-keyword">const</span> pathRotation = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#pathroll&#x27;</span>);
 
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">() =&gt;</span> {
-
-    rotationValue = rotation.<span class="hljs-property">value</span>;
-    lengthValue = length.<span class="hljs-property">value</span>;
-    densityValue = density.<span class="hljs-property">value</span>;
-
-    pathrollValue = (<span class="hljs-string">&#x27;0&#x27;</span> === pathroll.<span class="hljs-property">value</span>) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;</pre></div></div>
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">() =&gt;</span> {</pre></div></div>
             
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    rotationValue = rotation.<span class="hljs-property">value</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    lengthValue = length.<span class="hljs-property">value</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    densityValue = density.<span class="hljs-property">value</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    pathrollValue = (<span class="hljs-string">&#x27;0&#x27;</span> === pathroll.<span class="hljs-property">value</span>) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Setting the <code>currentOutline</code> variable to a null string guarantees that the Shape entity’s pathDefinition will be recalculated at the start of the next Display cycle</p>
 
@@ -1358,11 +1454,52 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
             
             <div class="content"><div class='highlight'><pre>    currentOutline = <span class="hljs-string">&#x27;&#x27;</span>;
 
-}, <span class="hljs-string">&#x27;.controlItem&#x27;</span>);
+}, <span class="hljs-string">&#x27;.controlItem&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-rotation.<span class="hljs-property">value</span> = <span class="hljs-number">360</span>;
-length.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;
-density.<span class="hljs-property">value</span> = <span class="hljs-number">600</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>rotation.<span class="hljs-property">value</span> = <span class="hljs-number">360</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>length.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>density.<span class="hljs-property">value</span> = <span class="hljs-number">600</span>;
 pathroll.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
 
 <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>

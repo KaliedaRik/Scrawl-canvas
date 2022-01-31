@@ -620,6 +620,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-004.html">
+                  ./demo/modules-004.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -930,6 +935,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-036.html">
+                  ./demo/temp-036.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -957,6 +967,11 @@
                 
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
+                </a>
+              
+                
+                <a class="source" href="temp-lottie.html">
+                  ./demo/temp-lottie.js
                 </a>
               
                 
@@ -1007,7 +1022,18 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
+    setIgnorePixelRatio,
+    library <span class="hljs-keyword">as</span> L,
+    importDomImage,
+    makeFilter,
+    makePicture,
+    createImageFromEntity,
+    makeRadialGradient,
+    makeBlock,
+    makeRender,
+    addNativeListener,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
@@ -1024,7 +1050,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
             
         </li>
         
@@ -1039,8 +1065,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvases = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>,
-    entitys = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvases = L.<span class="hljs-property">canvas</span>,
+    entitys = L.<span class="hljs-property">entity</span>,
     c1 = canvases[<span class="hljs-string">&#x27;hackney&#x27;</span>],
     c2 = canvases[<span class="hljs-string">&#x27;heathrow&#x27;</span>],
     c3 = canvases[<span class="hljs-string">&#x27;kingston&#x27;</span>],
@@ -1059,7 +1085,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.places&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.places&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1128,7 +1154,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;gaussianBlur&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">20</span>,
@@ -1165,7 +1191,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> entity = scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> entity = <span class="hljs-title function_">makePicture</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-original`</span>,
         <span class="hljs-attr">group</span>: scene.<span class="hljs-property">canvas</span>.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
@@ -1192,7 +1218,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">createImageFromEntity</span>(entity, <span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">createImageFromEntity</span>(entity, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
         
@@ -1207,7 +1233,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makeRadialGradient</span>({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">makeRadialGradient</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-gradient`</span>,
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
@@ -1234,7 +1260,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> filterBlock = scrawl.<span class="hljs-title function_">makeBlock</span>({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> filterBlock = <span class="hljs-title function_">makeBlock</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-block`</span>,
         <span class="hljs-attr">group</span>: scene.<span class="hljs-property">canvas</span>.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
@@ -1366,7 +1392,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: [c1, c2, c3, c4],
@@ -1389,7 +1415,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;touchmove&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;touchmove&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
@@ -1409,7 +1435,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(L);</pre></div></div>
             
         </li>
         

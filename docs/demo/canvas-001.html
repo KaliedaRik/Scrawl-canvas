@@ -620,6 +620,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-004.html">
+                  ./demo/modules-004.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -930,6 +935,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-036.html">
+                  ./demo/temp-036.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -957,6 +967,11 @@
                 
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
+                </a>
+              
+                
+                <a class="source" href="temp-lottie.html">
+                  ./demo/temp-lottie.js
                 </a>
               
                 
@@ -1007,11 +1022,6 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl, {
-    makeBlock,
-    makeWheel
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
-            
         </li>
         
         
@@ -1021,11 +1031,42 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>import scrawl from ‘../min/scrawl.js’</p>
+              <p>Various ways to import the SAcrawl-canvas library, depending on project requirements</p>
+<pre><code><span class="hljs-comment">// If library has been added to a project build using npm/yarn/etc and is being bundled:</span>
+<span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;scrawl&#x27;</span>;
+
+<span class="hljs-comment">// If library has been added to a public/dist folder in the code base:</span>
+<span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./path/to/min/scrawl.js&#x27;</span>;
+
+<span class="hljs-comment">// If library is imported from a Content Distribution Network endpoint:</span>
+<span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;https://path/to/cdn/endpoint/scrawl-canvas&#x27;</span>;
+
+<span class="hljs-comment">// If the library is to be used in a TypeScript project, or for tree-shaking[1], then functions need to be imported individually:</span>
+<span class="hljs-keyword">import</span> {
+    makeBlock,
+    makeWheel,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;relevant-library-path-source&#x27;</span>;
+
+<span class="hljs-comment">// ...Or, alternatively, using the * notation:</span>
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;relevant-library-path-source&#x27;</span>;
+
+<span class="hljs-comment">// [1] - Tree-shaking functionality to help package managers reduce the size of the shipped library code is on the road map for delivery as part of SC version 9.0.0</span>
+</code></pre>
+<ul>
+<li>All testing Demos use the TS version for loading the library, so we can test the library’s .d.ts TypeScript definitions file against them (SC doesn’t use TS internally). Other approaches tend to generate a TypeScript error claiming (wrongly) that the library doesn’t have a default export.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
+    library <span class="hljs-keyword">as</span> L,
+    makeBlock,
+    makeDragZone,
+    makeRender,
+    makeWheel,
+    setIgnorePixelRatio,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> { reportSpeed, killArtefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
@@ -1041,7 +1082,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
             
         </li>
         
@@ -1056,7 +1097,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
 
 canvas.<span class="hljs-title function_">setBase</span>({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>
@@ -1208,7 +1249,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;myblock-fillAndDraw&#x27;</span>].<span class="hljs-title function_">set</span>({
+            <div class="content"><div class='highlight'><pre>L.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;myblock-fillAndDraw&#x27;</span>].<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>
 });</pre></div></div>
@@ -1226,7 +1267,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>[<span class="hljs-string">&#x27;mywheel-fillAndDraw&#x27;</span>].<span class="hljs-title function_">set</span>({
+            <div class="content"><div class='highlight'><pre>L.<span class="hljs-property">entity</span>[<span class="hljs-string">&#x27;mywheel-fillAndDraw&#x27;</span>].<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>
 });</pre></div></div>
@@ -1245,7 +1286,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> current = scrawl.<span class="hljs-title function_">makeDragZone</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> current = <span class="hljs-title function_">makeDragZone</span>({
 
     <span class="hljs-attr">zone</span>: canvas,
     <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
@@ -1269,7 +1310,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
     <span class="hljs-keyword">const</span> dragging = <span class="hljs-title function_">current</span>();
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`Currently dragging: <span class="hljs-subst">${(dragging) ? dragging.artefact.name : <span class="hljs-string">&#x27;nothing&#x27;</span>}</span>`</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`Currently dragging: <span class="hljs-subst">${(<span class="hljs-keyword">typeof</span> dragging !== <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; dragging) ? dragging.artefact.name : <span class="hljs-string">&#x27;nothing&#x27;</span>}</span>`</span>;
 });</pre></div></div>
             
         </li>
@@ -1285,7 +1326,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -1305,7 +1346,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(L);
 
 <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Performing tests ...&#x27;</span>);
 <span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-string">&#x27;myblock-fill&#x27;</span>, <span class="hljs-number">4000</span>);

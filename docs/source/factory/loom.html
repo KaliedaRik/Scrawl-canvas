@@ -547,6 +547,7 @@
 <span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/cell.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+<span class="hljs-keyword">import</span> deltaMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/delta.js&#x27;</span>;
 <span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/anchor.js&#x27;</span>;</pre></div></div>
             
         </li>
@@ -626,6 +627,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
             </div>
             
             <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">deltaMix</span>(P);
 P = <span class="hljs-title function_">anchorMix</span>(P);</pre></div></div>
             
         </li>
@@ -833,11 +835,7 @@ P = <span class="hljs-title function_">anchorMix</span>(P);</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">delta</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">host</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">anchor</span>: <span class="hljs-literal">null</span>,</pre></div></div>
+    <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -848,11 +846,13 @@ P = <span class="hljs-title function_">anchorMix</span>(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p><strong>noCanvasEngineUpdates</strong> - Boolean flag - Canvas engine updates are required for the Loom’s border - strokeStyle and line styling; if a Loom is to be drawn without a border, then setting this flag to <code>true</code> may help improve rendering efficiency.</p>
+              <p>delta: null,</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">noCanvasEngineUpdates</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">host</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">anchor</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -863,11 +863,11 @@ P = <span class="hljs-title function_">anchorMix</span>(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p><strong>noDeltaUpdates</strong> - Boolean flag - Loom entitys support delta animation - achieved by updating the <code>...path</code> attributes by appropriate (and small!) values. If the Loom is not going to be animated by delta values, setting the flag to <code>true</code> may help improve rendering efficiency.</p>
+              <p><strong>noCanvasEngineUpdates</strong> - Boolean flag - Canvas engine updates are required for the Loom’s border - strokeStyle and line styling; if a Loom is to be drawn without a border, then setting this flag to <code>true</code> may help improve rendering efficiency.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">noCanvasEngineUpdates</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -877,6 +877,21 @@ P = <span class="hljs-title function_">anchorMix</span>(P);</pre></div></div>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p><strong>noDeltaUpdates</strong> - Boolean flag - Loom entitys support delta animation - achieved by updating the <code>...path</code> attributes by appropriate (and small!) values. If the Loom is not going to be animated by delta values, setting the flag to <code>true</code> may help improve rendering efficiency.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><strong>onEnter</strong>, <strong>onLeave</strong>, <strong>onDown</strong>, <strong>onUp</strong> - Loom entitys support <em><strong>collision detection</strong></em>, reporting a hit when a test coordinate falls within the Loom’s output image. As a result, Looms can also accept and act on the four <strong>on</strong> functions - see <a href="../mixin/entity.html#section-11">entity event listener functions</a> for more details.</p>
 
@@ -890,11 +905,11 @@ P = <span class="hljs-title function_">anchorMix</span>(P);</pre></div></div>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>noUserInteraction</strong> - Boolean flag - To switch off collision detection for a Loom entity - which might help improve rendering efficiency - set the flag to <code>true</code>.</p>
 
@@ -905,11 +920,11 @@ P = <span class="hljs-title function_">anchorMix</span>(P);</pre></div></div>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><a href="./anchor.html">Anchor objects</a> can be assigned to Loom entitys, meaning the following attributes are supported:</p>
 <ul>
@@ -944,11 +959,11 @@ P = <span class="hljs-title function_">anchorMix</span>(P);</pre></div></div>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><strong>method</strong> - All normal Scrawl-canvas entity stamping methods are supported.</p>
 
@@ -959,11 +974,11 @@ P = <span class="hljs-title function_">anchorMix</span>(P);</pre></div></div>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Loom entitys support appropriate styling attributes, mainly for their stroke styles (used with the <code>draw</code>, <code>drawAndFill</code>, <code>fillAndDraw</code>, <code>drawThenFill</code> and <code>fillThenDraw</code> stamping methods). </p>
 <ul>
@@ -1004,11 +1019,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -1052,11 +1067,11 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>TODO - this functionality is currently disabled, need to enable it and make it work properly</p>
@@ -1068,11 +1083,11 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -1082,11 +1097,11 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1099,11 +1114,11 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><strong>get</strong> - copied over from the entity mixin</p>
 
@@ -1142,11 +1157,11 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><strong>set</strong> - copied over from the entity mixin.</p>
 
@@ -1198,11 +1213,11 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><strong>setDelta</strong> - copied over from the entity mixin.</p>
 
@@ -1254,11 +1269,11 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><strong>host</strong>, <strong>getHost</strong> - copied over from the position mixin.</p>
 
@@ -1279,11 +1294,11 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><strong>group</strong> - copied over from the position mixin.</p>
 
@@ -1317,11 +1332,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><strong>getHere</strong> - returns current core position.</p>
 
@@ -1335,11 +1350,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><strong>delta</strong> - copied over from the position mixin.</p>
 
@@ -1353,11 +1368,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><strong>fromPath</strong></p>
 
@@ -1387,11 +1402,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><strong>toPath</strong></p>
 
@@ -1421,11 +1436,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><strong>source</strong></p>
 
@@ -1450,11 +1465,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><strong>isHorizontalCopy</strong></p>
 
@@ -1469,11 +1484,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><strong>synchronizePathCursors</strong></p>
 
@@ -1495,11 +1510,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><strong>loopPathCursors</strong></p>
 
@@ -1533,11 +1548,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><strong>fromPathStart</strong></p>
 
@@ -1563,11 +1578,11 @@ D.<span class="hljs-property">fromPathStart</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><strong>fromPathEnd</strong></p>
 
@@ -1593,11 +1608,11 @@ D.<span class="hljs-property">fromPathEnd</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><strong>toPathStart</strong></p>
 
@@ -1623,11 +1638,11 @@ D.<span class="hljs-property">toPathStart</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><strong>toPathEnd</strong></p>
 
@@ -1653,11 +1668,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1666,11 +1681,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>getHost</code> - copied over from the position mixin.</p>
 
@@ -1696,129 +1711,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-48">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
-              </div>
-              <p><code>updateByDelta</code>, <code>reverseByDelta</code> - copied over from the position mixin.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateByDelta</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDelta</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">delta</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};
-
-P.<span class="hljs-property">reverseByDelta</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">let</span> temp = {};
-    
-    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">delta</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[key, val]</span>) =&gt;</span> {
-
-        <span class="hljs-keyword">if</span> (val.<span class="hljs-property">substring</span>) val = -(<span class="hljs-built_in">parseFloat</span>(val)) + <span class="hljs-string">&#x27;%&#x27;</span>;
-        <span class="hljs-keyword">else</span> val = -val;
-
-        temp[key] = val;
-    });
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDelta</span>(temp);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-49">&#x00a7;</a>
-              </div>
-              <p><code>setDeltaValues</code> - copied over from the position mixin.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setDeltaValues</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
-
-    <span class="hljs-keyword">let</span> delta = <span class="hljs-variable language_">this</span>.<span class="hljs-property">delta</span>, 
-        oldVal, action;
-
-    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(items).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[key, requirement]</span>) =&gt;</span> {
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(delta[key])) {
-
-            action = requirement;
-
-            oldVal = delta[key];
-
-            <span class="hljs-keyword">switch</span> (action) {
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;reverse&#x27;</span> :
-                    <span class="hljs-keyword">if</span> (oldVal.<span class="hljs-property">toFixed</span>) delta[key] = -oldVal;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-50">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
-              </div>
-              <p>TODO: reverse String% (and em, etc) values</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;zero&#x27;</span> :
-                    <span class="hljs-keyword">if</span> (oldVal.<span class="hljs-property">toFixed</span>) delta[key] = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-51">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
-              </div>
-              <p>TODO: zero String% (and em, etc) values</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;add&#x27;</span> :
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;subtract&#x27;</span> :
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;multiply&#x27;</span> :
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;divide&#x27;</span> :
-                    <span class="hljs-keyword">break</span>;
-            }
-        }
-    })
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-52">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p>Invalidate mid-init functionality</p>
 
@@ -1829,33 +1726,11 @@ P.<span class="hljs-property">reverseByDelta</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-53">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
-              </div>
-              <p>Invalidating sensor functionality</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanCollisionData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">return</span> [<span class="hljs-number">0</span>, []];
-};
-P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">return</span> [];
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-54">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>Force the Loom entity to update</p>
 <ul>
@@ -1873,11 +1748,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-55">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 
@@ -1886,11 +1761,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-56">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code> - function called as part of the Display cycle <code>compile</code> step.</p>
 <ul>
@@ -1909,11 +1784,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-57">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p>Sanity check 1</p>
 <ul>
@@ -1928,11 +1803,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-58">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>Sanity check 2</p>
 <ul>
@@ -2029,11 +1904,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-59">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>setSourceDimension</code> - internal function called by <code>prepareStamp</code>.</p>
 <ul>
@@ -2048,11 +1923,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-60">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <ul>
 <li><code>prepareStamp</code> does the dimension calculation itself, then supplies the new value</li>
@@ -2073,11 +1948,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-61">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>if other functions call setSourceDimension, they will do it without supplying a new value</p>
 <ul>
@@ -2110,11 +1985,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-62">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>simpleStamp</code> - Simple stamping is entirely synchronous</p>
 <ul>
@@ -2141,11 +2016,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-63">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>stamp</code> - All entity stamping, except for simple stamps, goes through this function.</p>
 <ul>
@@ -2189,11 +2064,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-64">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 
@@ -2202,11 +2077,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-65">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>cleanInput</code> - internal function called by <code>stamp</code></p>
 
@@ -2255,11 +2130,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-66">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>cleanOutput</code> - internal function called by <code>stamp</code></p>
 <ul>
@@ -2457,11 +2332,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-67">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>else return new Error(<code>${this.name} - cleanOutput Error: source has a zero dimension, or no data</code>);</p>
 
@@ -2472,11 +2347,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-68">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - internal function called by <code>stamp</code></p>
 
@@ -2499,11 +2374,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-69">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>getBoundingBox</code> - internal function called by <code>prepareStamp</code> and <code>cleanOutput</code> functions, as well as the various <em><strong>method</strong></em> functions.</p>
 <ul>
@@ -2559,11 +2434,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-70">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>These ‘method’ functions stamp the Loom entity onto the canvas context supplied to them in the <code>engine</code> argument.</p>
@@ -2573,11 +2448,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-71">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -2595,11 +2470,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-72">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -2615,11 +2490,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-73">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -2637,11 +2512,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-74">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -2659,11 +2534,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-75">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -2680,11 +2555,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-76">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -2701,11 +2576,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-77">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2742,26 +2617,27 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-78">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
-              <p><code>none</code></p>
+              <p><code>none</code>, <code>clip</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">none</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">none</span> = λ<span class="hljs-literal">null</span>;
+P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-79">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p>These <strong>stroke</strong> and <strong>fill</strong> functions handle most of the stuff that the method functions require to stamp the Loom entity onto a canvas cell.</p>
 
@@ -2770,11 +2646,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-80">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><code>doStroke</code></p>
 
@@ -2817,11 +2693,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-81">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><code>doFill</code></p>
 <ul>
@@ -2858,11 +2734,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-82">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><code>drawBoundingBox</code></p>
 <ul>
@@ -2897,11 +2773,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-83">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 
@@ -2910,11 +2786,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-84">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-84">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p>The <code>checkHit</code> functionality can be used in the same way it is for other entitys (and groups)</p>
 <ul>
@@ -2977,11 +2853,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-85">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-85">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeQuadratic</span>({
@@ -3046,11 +2922,11 @@ constructors.<span class="hljs-property">Loom</span> = <span class="hljs-title c
         </li>
         
         
-        <li id="section-86">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-86">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

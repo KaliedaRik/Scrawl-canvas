@@ -22,7 +22,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="scrawl-canvas">Scrawl-canvas</h1>
-<h4 id="version-871---20-jan-2022">Version 8.7.1 - 20 Jan 2022</h4>
+<h4 id="version-880---2-feb-2022">Version 8.8.0 - 2 Feb 2022</h4>
 <hr>
 
             </div>
@@ -95,514 +95,119 @@ THE SOFTWARE.</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <h2 id="importexport-scrawl-canvas-module-functions">Import/Export Scrawl-canvas module functions</h2>
+              <h2 id="export-scrawl-canvas-module-functions">Export Scrawl-canvas module functions</h2>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { 
-    startCoreAnimationLoop <span class="hljs-keyword">as</span> _startCoreAnimationLoop, 
-    stopCoreAnimationLoop <span class="hljs-keyword">as</span> _stopCoreAnimationLoop,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> { 
+    startCoreAnimationLoop, 
+    stopCoreAnimationLoop,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/animationloop.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> startCoreAnimationLoop = _startCoreAnimationLoop;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> stopCoreAnimationLoop = _stopCoreAnimationLoop;
-
-
-<span class="hljs-keyword">import</span> { 
-    addStack <span class="hljs-keyword">as</span> _addStack,
-    getStack <span class="hljs-keyword">as</span> _getStack,
-    addCanvas <span class="hljs-keyword">as</span> _addCanvas,
-    getCanvas <span class="hljs-keyword">as</span> _getCanvas,
-    setCurrentCanvas <span class="hljs-keyword">as</span> _setCurrentCanvas,
-    clear <span class="hljs-keyword">as</span> _clear,
-    compile <span class="hljs-keyword">as</span> _compile,
-    show <span class="hljs-keyword">as</span> _show,
-    render <span class="hljs-keyword">as</span> _render,
+<span class="hljs-keyword">export</span> { 
+    addStack,
+    getStack,
+    addCanvas,
+    getCanvas,
+    setCurrentCanvas,
+    clear,
+    compile,
+    show,
+    render,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/document.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> addStack = _addStack;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getStack = _getStack;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> addCanvas = _addCanvas;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getCanvas = _getCanvas;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> setCurrentCanvas = _setCurrentCanvas;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> clear = _clear;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> compile = _compile;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> show = _show;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> render = _render;
-
-
-<span class="hljs-keyword">import</span> { 
-    addListener <span class="hljs-keyword">as</span> _addListener,
-    removeListener <span class="hljs-keyword">as</span> _removeListener,
-    addNativeListener <span class="hljs-keyword">as</span> _addNativeListener,
-    removeNativeListener <span class="hljs-keyword">as</span> _removeNativeListener,
-    makeAnimationObserver <span class="hljs-keyword">as</span> _makeAnimationObserver,
-    getPixelRatio <span class="hljs-keyword">as</span> _getPixelRatio,
-    setPixelRatioChangeAction <span class="hljs-keyword">as</span> _setPixelRatioChangeAction,
-    getIgnorePixelRatio <span class="hljs-keyword">as</span> _getIgnorePixelRatio,
-    setIgnorePixelRatio <span class="hljs-keyword">as</span> _setIgnorePixelRatio,
+<span class="hljs-keyword">export</span> { 
+    addListener,
+    removeListener,
+    addNativeListener,
+    removeNativeListener,
+    makeAnimationObserver,
+    getPixelRatio,
+    setPixelRatioChangeAction,
+    getIgnorePixelRatio,
+    setIgnorePixelRatio,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/events.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> addListener = _addListener;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> removeListener = _removeListener;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> addNativeListener = _addNativeListener;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> removeNativeListener = _removeNativeListener;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeAnimationObserver = _makeAnimationObserver;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getPixelRatio = _getPixelRatio;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> setPixelRatioChangeAction = _setPixelRatioChangeAction;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getIgnorePixelRatio = _getIgnorePixelRatio;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> setIgnorePixelRatio = _setIgnorePixelRatio;
-
-
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> _library <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/library.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> library = _library;
-
-
-<span class="hljs-keyword">import</span> { 
-    seededRandomNumberGenerator <span class="hljs-keyword">as</span> _seededRandomNumberGenerator,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/random-seed.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> seededRandomNumberGenerator = _seededRandomNumberGenerator;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeSnippet <span class="hljs-keyword">as</span> _makeSnippet,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/snippets.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeSnippet = _makeSnippet;
-
-
-<span class="hljs-keyword">import</span> { 
-    currentCorePosition <span class="hljs-keyword">as</span> _currentCorePosition, 
-    startCoreListeners <span class="hljs-keyword">as</span> _startCoreListeners, 
-    stopCoreListeners <span class="hljs-keyword">as</span> _stopCoreListeners, 
-    observeAndUpdate <span class="hljs-keyword">as</span> _observeAndUpdate,
-    makeDragZone <span class="hljs-keyword">as</span> _makeDragZone,
-    getTouchActionChoke <span class="hljs-keyword">as</span> _getTouchActionChoke,
-    setTouchActionChoke <span class="hljs-keyword">as</span> _setTouchActionChoke,
+<span class="hljs-keyword">export</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/library.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/random-seed.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeSnippet } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/snippets.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { 
+    currentCorePosition, 
+    startCoreListeners, 
+    stopCoreListeners, 
+    observeAndUpdate,
+    makeDragZone,
+    getTouchActionChoke,
+    setTouchActionChoke,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/userInteraction.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> currentCorePosition = _currentCorePosition;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> startCoreListeners = _startCoreListeners;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> stopCoreListeners = _stopCoreListeners;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> observeAndUpdate = _observeAndUpdate;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeDragZone = _makeDragZone;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getTouchActionChoke = _getTouchActionChoke;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> setTouchActionChoke = _setTouchActionChoke;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeAction <span class="hljs-keyword">as</span> _makeAction,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/action.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeAction = _makeAction;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeAnimation <span class="hljs-keyword">as</span> _makeAnimation,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/animation.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeAnimation = _makeAnimation;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeBlock <span class="hljs-keyword">as</span> _makeBlock,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/block.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeBlock = _makeBlock;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeBezier <span class="hljs-keyword">as</span> _makeBezier,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/bezier.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeBezier = _makeBezier;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeCog <span class="hljs-keyword">as</span> _makeCog,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/cog.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeCog = _makeCog;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeColor <span class="hljs-keyword">as</span> _makeColor,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/color.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeColor = _makeColor;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeConicGradient <span class="hljs-keyword">as</span> _makeConicGradient,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/conicGradient.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeConicGradient = _makeConicGradient;
-
-
-<span class="hljs-keyword">import</span> { 
-    requestCoordinate <span class="hljs-keyword">as</span> _requestCoordinate, 
-    releaseCoordinate <span class="hljs-keyword">as</span> _releaseCoordinate,
+<span class="hljs-keyword">export</span> { makeAction <span class="hljs-keyword">as</span> _makeAction } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/action.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/animation.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeBlock } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/block.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeBezier } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/bezier.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeCog } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/cog.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/color.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeConicGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/conicGradient.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { 
+    requestCoordinate,
+    releaseCoordinate,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/coordinate.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestCoordinate = _requestCoordinate; 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> releaseCoordinate = _releaseCoordinate;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeCrescent <span class="hljs-keyword">as</span> _makeCrescent,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/crescent.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeCrescent = _makeCrescent;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeEmitter <span class="hljs-keyword">as</span> _makeEmitter,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/emitter.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeEmitter = _makeEmitter;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeFilter <span class="hljs-keyword">as</span> _makeFilter,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/filter.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeFilter = _makeFilter;
-
-
-<span class="hljs-keyword">import</span> { 
-    setFilterMemoizationChoke <span class="hljs-keyword">as</span> _setFilterMemoizationChoke,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/filterEngine.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> setFilterMemoizationChoke = _setFilterMemoizationChoke;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeForce <span class="hljs-keyword">as</span> _makeForce,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particleForce.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeForce = _makeForce;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeGradient <span class="hljs-keyword">as</span> _makeGradient,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/gradient.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeGradient = _makeGradient;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeGrid <span class="hljs-keyword">as</span> _makeGrid,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/grid.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeGrid = _makeGrid;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeGroup <span class="hljs-keyword">as</span> _makeGroup,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/group.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeGroup = _makeGroup;
-
-
-<span class="hljs-keyword">import</span> { 
-    importImage <span class="hljs-keyword">as</span> _importImage,
-    importDomImage <span class="hljs-keyword">as</span> _importDomImage,
-    createImageFromCell <span class="hljs-keyword">as</span> _createImageFromCell,
-    createImageFromGroup <span class="hljs-keyword">as</span> _createImageFromGroup,
-    createImageFromEntity <span class="hljs-keyword">as</span> _createImageFromEntity,
+<span class="hljs-keyword">export</span> { makeCrescent } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/crescent.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeEmitter } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/emitter.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeFilter } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/filter.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { setFilterMemoizationChoke } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/filterEngine.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeForce } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particleForce.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/gradient.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeGrid } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/grid.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/group.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { 
+    importImage,
+    importDomImage,
+    createImageFromCell,
+    createImageFromGroup,
+    createImageFromEntity,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/imageAsset.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> importImage = _importImage;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> importDomImage = _importDomImage;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> createImageFromCell = _createImageFromCell;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> createImageFromGroup = _createImageFromGroup;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> createImageFromEntity = _createImageFromEntity;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeLine <span class="hljs-keyword">as</span> _makeLine,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/line.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeLine = _makeLine;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeLineSpiral <span class="hljs-keyword">as</span> _makeLineSpiral,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/lineSpiral.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeLineSpiral = _makeLineSpiral;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeLoom <span class="hljs-keyword">as</span> _makeLoom,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/loom.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeLoom = _makeLoom;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeMesh <span class="hljs-keyword">as</span> _makeMesh,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/mesh.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeMesh = _makeMesh;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeNet <span class="hljs-keyword">as</span> _makeNet,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/net.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeNet = _makeNet;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeNoise <span class="hljs-keyword">as</span> _makeNoise,
-    makeNoiseAsset <span class="hljs-keyword">as</span> _makeNoiseAsset,
+<span class="hljs-keyword">export</span> { makeLine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/line.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeLineSpiral } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/lineSpiral.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeLoom } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/loom.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeMesh } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/mesh.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeNet } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/net.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { 
+    makeNoise,
+    makeNoiseAsset,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/noiseAsset.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeNoise = _makeNoise;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeNoiseAsset = _makeNoiseAsset;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeOval <span class="hljs-keyword">as</span> _makeOval,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/oval.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeOval = _makeOval;
-
-
-<span class="hljs-keyword">import</span> { 
-    makePattern <span class="hljs-keyword">as</span> _makePattern,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/pattern.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makePattern = _makePattern;
-
-
-<span class="hljs-keyword">import</span> { 
-    makePhrase <span class="hljs-keyword">as</span> _makePhrase,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/phrase.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makePhrase = _makePhrase;
-
-
-<span class="hljs-keyword">import</span> { 
-    makePicture <span class="hljs-keyword">as</span> _makePicture,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/picture.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makePicture = _makePicture;
-
-
-<span class="hljs-keyword">import</span> { 
-    makePolygon <span class="hljs-keyword">as</span> _makePolygon,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/polygon.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makePolygon = _makePolygon;
-
-
-<span class="hljs-keyword">import</span> { 
-    makePolyline <span class="hljs-keyword">as</span> _makePolyline,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/polyline.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makePolyline = _makePolyline;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeQuadratic <span class="hljs-keyword">as</span> _makeQuadratic,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/quadratic.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeQuadratic = _makeQuadratic;
-
-
-<span class="hljs-keyword">import</span> { 
-    requestQuaternion <span class="hljs-keyword">as</span> _requestQuaternion,
-    releaseQuaternion <span class="hljs-keyword">as</span> _releaseQuaternion,
+<span class="hljs-keyword">export</span> { makeOval } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/oval.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makePattern } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/pattern.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makePhrase } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/phrase.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makePicture } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/picture.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makePolygon } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/polygon.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makePolyline } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/polyline.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeQuadratic } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/quadratic.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { 
+    requestQuaternion,
+    releaseQuaternion,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/quaternion.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestQuaternion = _requestQuaternion;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> releaseQuaternion = _releaseQuaternion;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeRadialGradient <span class="hljs-keyword">as</span> _makeRadialGradient,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/radialGradient.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeRadialGradient = _makeRadialGradient;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeRawAsset <span class="hljs-keyword">as</span> _makeRawAsset,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/rawAsset.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeRawAsset = _makeRawAsset;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeReactionDiffusionAsset <span class="hljs-keyword">as</span> _makeReactionDiffusionAsset,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/rdAsset.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeReactionDiffusionAsset = _makeReactionDiffusionAsset;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeRectangle <span class="hljs-keyword">as</span> _makeRectangle,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/rectangle.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeRectangle = _makeRectangle;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeRender <span class="hljs-keyword">as</span> _makeRender,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/renderAnimation.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeRender = _makeRender;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeShape <span class="hljs-keyword">as</span> _makeShape,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/shape.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeShape = _makeShape;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeSpiral <span class="hljs-keyword">as</span> _makeSpiral,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/spiral.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeSpiral = _makeSpiral;
-
-
-<span class="hljs-keyword">import</span> { 
-    importSprite <span class="hljs-keyword">as</span> _importSprite,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/spriteAsset.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> importSprite = _importSprite;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeSpring <span class="hljs-keyword">as</span> _makeSpring,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particleSpring.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeSpring = _makeSpring;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeStar <span class="hljs-keyword">as</span> _makeStar,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/star.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeStar = _makeStar;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeTetragon <span class="hljs-keyword">as</span> _makeTetragon,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tetragon.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeTetragon = _makeTetragon;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeTicker <span class="hljs-keyword">as</span> _makeTicker,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/ticker.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeTicker = _makeTicker;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeTracer <span class="hljs-keyword">as</span> _makeTracer,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tracer.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeTracer = _makeTracer;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeTween <span class="hljs-keyword">as</span> _makeTween,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tween.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeTween = _makeTween;
-
-
-<span class="hljs-keyword">import</span> { 
-    requestVector <span class="hljs-keyword">as</span> _requestVector, 
-    releaseVector <span class="hljs-keyword">as</span> _releaseVector,
+<span class="hljs-keyword">export</span> { makeRadialGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/radialGradient.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeRawAsset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/rawAsset.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeReactionDiffusionAsset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/rdAsset.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeRectangle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/rectangle.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeRender } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/renderAnimation.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeShape } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/shape.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeSpiral } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/spiral.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { importSprite } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/spriteAsset.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeSpring } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particleSpring.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeStar } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/star.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeTetragon } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tetragon.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeTicker } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/ticker.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeTracer } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tracer.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeTween } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tween.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { 
+    requestVector, 
+    releaseVector,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/vector.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestVector = _requestVector; 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> releaseVector = _releaseVector;
-
-
-<span class="hljs-keyword">import</span> { 
-    importDomVideo <span class="hljs-keyword">as</span> _importDomVideo,
-    importVideo <span class="hljs-keyword">as</span> _importVideo,
-    importMediaStream <span class="hljs-keyword">as</span> _importMediaStream,
+<span class="hljs-keyword">export</span> { 
+    importDomVideo,
+    importVideo,
+    importMediaStream,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/videoAsset.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> importDomVideo = _importDomVideo;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> importVideo = _importVideo;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> importMediaStream = _importMediaStream;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeWheel <span class="hljs-keyword">as</span> _makeWheel,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/wheel.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeWheel = _makeWheel;
-
-
-<span class="hljs-keyword">import</span> { 
-    makeWorld <span class="hljs-keyword">as</span> _makeWorld,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particleWorld.js&#x27;</span>;
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeWorld = _makeWorld;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <h2 id="export-selected-functionalities-that-users-can-use-in-their-scripts">Export selected functionalities that users can use in their scripts</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
-    <span class="hljs-attr">addCanvas</span>: _addCanvas,
-    <span class="hljs-attr">addListener</span>: _addListener,
-    <span class="hljs-attr">addNativeListener</span>: _addNativeListener,
-    <span class="hljs-attr">addStack</span>: _addStack,
-    <span class="hljs-attr">clear</span>: _clear,
-    <span class="hljs-attr">compile</span>: _compile,
-    <span class="hljs-attr">createImageFromCell</span>: _createImageFromCell,
-    <span class="hljs-attr">createImageFromEntity</span>: _createImageFromEntity,
-    <span class="hljs-attr">createImageFromGroup</span>: _createImageFromGroup,
-    <span class="hljs-attr">currentCorePosition</span>: _currentCorePosition,
-    <span class="hljs-attr">getCanvas</span>: _getCanvas,
-    <span class="hljs-attr">getIgnorePixelRatio</span>: _getIgnorePixelRatio,
-    <span class="hljs-attr">getPixelRatio</span>: _getPixelRatio,
-    <span class="hljs-attr">getStack</span>: _getStack,
-    <span class="hljs-attr">getTouchActionChoke</span>: _getTouchActionChoke,
-    <span class="hljs-attr">importDomImage</span>: _importDomImage,
-    <span class="hljs-attr">importDomVideo</span>: _importDomVideo,
-    <span class="hljs-attr">importImage</span>: _importImage,
-    <span class="hljs-attr">importMediaStream</span>: _importMediaStream,
-    <span class="hljs-attr">importSprite</span>: _importSprite,
-    <span class="hljs-attr">importVideo</span>: _importVideo,
-    <span class="hljs-attr">init</span>: _init,
-    <span class="hljs-attr">library</span>: _library,
-    <span class="hljs-attr">makeAction</span>: _makeAction,
-    <span class="hljs-attr">makeAnimation</span>: _makeAnimation,
-    <span class="hljs-attr">makeAnimationObserver</span>: _makeAnimationObserver,
-    <span class="hljs-attr">makeBezier</span>: _makeBezier,
-    <span class="hljs-attr">makeBlock</span>: _makeBlock,
-    <span class="hljs-attr">makeCog</span>: _makeCog,
-    <span class="hljs-attr">makeColor</span>: _makeColor,
-    <span class="hljs-attr">makeConicGradient</span>: _makeConicGradient,
-    <span class="hljs-attr">makeCrescent</span>: _makeCrescent,
-    <span class="hljs-attr">makeDragZone</span>: _makeDragZone,
-    <span class="hljs-attr">makeEmitter</span>: _makeEmitter,
-    <span class="hljs-attr">makeFilter</span>: _makeFilter,
-    <span class="hljs-attr">makeForce</span>: _makeForce,
-    <span class="hljs-attr">makeGradient</span>: _makeGradient,
-    <span class="hljs-attr">makeGrid</span>: _makeGrid,
-    <span class="hljs-attr">makeGroup</span>: _makeGroup,
-    <span class="hljs-attr">makeLine</span>: _makeLine,
-    <span class="hljs-attr">makeLineSpiral</span>: _makeLineSpiral,
-    <span class="hljs-attr">makeLoom</span>: _makeLoom,
-    <span class="hljs-attr">makeMesh</span>: _makeMesh,
-    <span class="hljs-attr">makeNet</span>: _makeNet,
-    <span class="hljs-attr">makeNoise</span>: _makeNoise,
-    <span class="hljs-attr">makeNoiseAsset</span>: _makeNoiseAsset,
-    <span class="hljs-attr">makeOval</span>: _makeOval,
-    <span class="hljs-attr">makePattern</span>: _makePattern,
-    <span class="hljs-attr">makePhrase</span>: _makePhrase,
-    <span class="hljs-attr">makePicture</span>: _makePicture,
-    <span class="hljs-attr">makePolygon</span>: _makePolygon,
-    <span class="hljs-attr">makePolyline</span>: _makePolyline,
-    <span class="hljs-attr">makeQuadratic</span>: _makeQuadratic,
-    <span class="hljs-attr">makeRadialGradient</span>: _makeRadialGradient,
-    <span class="hljs-attr">makeRawAsset</span>: _makeRawAsset,
-    <span class="hljs-attr">makeReactionDiffusionAsset</span>: _makeReactionDiffusionAsset,
-    <span class="hljs-attr">makeRectangle</span>: _makeRectangle,
-    <span class="hljs-attr">makeRender</span>: _makeRender,
-    <span class="hljs-attr">makeShape</span>: _makeShape,
-    <span class="hljs-attr">makeSnippet</span>: _makeSnippet,
-    <span class="hljs-attr">makeSpiral</span>: _makeSpiral,
-    <span class="hljs-attr">makeSpring</span>: _makeSpring,
-    <span class="hljs-attr">makeStar</span>: _makeStar,
-    <span class="hljs-attr">makeTetragon</span>: _makeTetragon,
-    <span class="hljs-attr">makeTicker</span>: _makeTicker,
-    <span class="hljs-attr">makeTracer</span>: _makeTracer,
-    <span class="hljs-attr">makeTween</span>: _makeTween,
-    <span class="hljs-attr">makeWheel</span>: _makeWheel,
-    <span class="hljs-attr">makeWorld</span>: _makeWorld,
-    <span class="hljs-attr">observeAndUpdate</span>: _observeAndUpdate,
-    <span class="hljs-attr">releaseCoordinate</span>: _releaseCoordinate,
-    <span class="hljs-attr">releaseQuaternion</span>: _releaseQuaternion,
-    <span class="hljs-attr">releaseVector</span>: _releaseVector,
-    <span class="hljs-attr">removeListener</span>: _removeListener,
-    <span class="hljs-attr">removeNativeListener</span>: _removeNativeListener,
-    <span class="hljs-attr">render</span>: _render,
-    <span class="hljs-attr">requestCoordinate</span>: _requestCoordinate, 
-    <span class="hljs-attr">requestQuaternion</span>: _requestQuaternion, 
-    <span class="hljs-attr">requestVector</span>: _requestVector, 
-    <span class="hljs-attr">seededRandomNumberGenerator</span>: _seededRandomNumberGenerator,
-    <span class="hljs-attr">setCurrentCanvas</span>: _setCurrentCanvas,
-    <span class="hljs-attr">setFilterMemoizationChoke</span>: _setFilterMemoizationChoke,
-    <span class="hljs-attr">setIgnorePixelRatio</span>: _setIgnorePixelRatio,
-    <span class="hljs-attr">setPixelRatioChangeAction</span>: _setPixelRatioChangeAction,
-    <span class="hljs-attr">setTouchActionChoke</span>: _setTouchActionChoke,
-    <span class="hljs-attr">show</span>: _show,
-    <span class="hljs-attr">startCoreAnimationLoop</span>: _startCoreAnimationLoop, 
-    <span class="hljs-attr">startCoreListeners</span>: _startCoreListeners,
-    <span class="hljs-attr">stopCoreAnimationLoop</span>: _stopCoreAnimationLoop,
-    <span class="hljs-attr">stopCoreListeners</span>: _stopCoreListeners,
-};</pre></div></div>
+<span class="hljs-keyword">export</span> { makeWheel } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/wheel.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeWorld } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particleWorld.js&#x27;</span>;</pre></div></div>
             
         </li>
         

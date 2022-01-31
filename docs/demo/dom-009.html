@@ -620,6 +620,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-004.html">
+                  ./demo/modules-004.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -930,6 +935,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-036.html">
+                  ./demo/temp-036.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -957,6 +967,11 @@
                 
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
+                </a>
+              
+                
+                <a class="source" href="temp-lottie.html">
+                  ./demo/temp-lottie.js
                 </a>
               
                 
@@ -1007,7 +1022,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
 
 <span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
@@ -1345,7 +1360,8 @@ artefact.<span class="hljs-property">stop_listeners</span>.<span class="hljs-tit
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p>updating the scene step 3 - add the ‘make_opaque’ CSS class to circles under the current cursor position</p>
+              <p>updating the scene step 3 - add the ‘make_opaque’ CSS class to circles under the current cursor position
+@ts-expect-error</p>
 
             </div>
             
@@ -1428,7 +1444,7 @@ artefact.<span class="hljs-property">stop_listeners</span>.<span class="hljs-tit
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> buttonControls = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> spinListener = <span class="hljs-literal">false</span>,
+    <span class="hljs-keyword">let</span> spinListener,
         startAnimationButton = artefact.<span class="hljs-property">start_animation</span>, 
         stopAnimationButton = artefact.<span class="hljs-property">stop_animation</span>, 
         startListenersButton = artefact.<span class="hljs-property">start_listeners</span>, 

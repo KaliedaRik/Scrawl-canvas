@@ -620,6 +620,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-004.html">
+                  ./demo/modules-004.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -930,6 +935,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-036.html">
+                  ./demo/temp-036.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -957,6 +967,11 @@
                 
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
+                </a>
+              
+                
+                <a class="source" href="temp-lottie.html">
+                  ./demo/temp-lottie.js
                 </a>
               
                 
@@ -1150,10 +1165,7 @@
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;reaction-diffusion-asset&#x27;</span>,
     <span class="hljs-attr">width</span>: assetDimension,
-    <span class="hljs-attr">height</span>: assetDimension,
-
-    <span class="hljs-attr">colors</span>: colorStops[<span class="hljs-string">&#x27;monochrome&#x27;</span>],
-});</pre></div></div>
+    <span class="hljs-attr">height</span>: assetDimension,</pre></div></div>
             
         </li>
         
@@ -1163,6 +1175,22 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">colors</span>: colorStops[<span class="hljs-string">&#x27;monochrome&#x27;</span>],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Test that the RD asset output is always tileable by displaying it via a Pattern style</p>
 
@@ -1177,11 +1205,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Display the RD asset output in a block</p>
 <ul>
@@ -1200,11 +1228,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Entitys that can be used by the RD asset for its initialization</p>
 <ul>
@@ -1246,43 +1274,64 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-    <span class="hljs-keyword">const</span> {currentGeneration, maxGenerations, initialRandomSeedLevel, diffusionRateA, diffusionRateB, feedRate, killRate, width, height} = reactionAsset;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> {currentGeneration, maxGenerations, initialRandomSeedLevel, diffusionRateA, diffusionRateB, feedRate, killRate, width, height} = reactionAsset;
 
     <span class="hljs-keyword">const</span> mx = myPattern.<span class="hljs-property">patternMatrix</span>;
 
     <span class="hljs-keyword">const</span> matrixVals = (mx) ? 
         <span class="hljs-string">`[<span class="hljs-subst">${mx.a}</span>, <span class="hljs-subst">${mx.b}</span>, <span class="hljs-subst">${mx.c}</span>, <span class="hljs-subst">${mx.d}</span>, <span class="hljs-subst">${mx.e}</span>, <span class="hljs-subst">${mx.f}</span>]`</span> :
-        <span class="hljs-string">&#x27;[]&#x27;</span>;
+        <span class="hljs-string">&#x27;[]&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Generation: <span class="hljs-subst">${reactionAsset.currentGeneration}</span> of <span class="hljs-subst">${reactionAsset.maxGenerations}</span>
-    Initial random seed level: <span class="hljs-subst">${reactionAsset.initialRandomSeedLevel}</span>
-    Diffusion rates - A: <span class="hljs-subst">${reactionAsset.diffusionRateA}</span>, B: <span class="hljs-subst">${reactionAsset.diffusionRateB}</span>
-    Feed rate: <span class="hljs-subst">${reactionAsset.feedRate}</span>; Kill rate: <span class="hljs-subst">${reactionAsset.killRate}</span>
-    Asset dimensions - width: <span class="hljs-subst">${reactionAsset.width}</span>, height: <span class="hljs-subst">${reactionAsset.height}</span>
-    Pattern matrix: <span class="hljs-subst">${matrixVals}</span>`</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Generation: <span class="hljs-subst">${reactionAsset.currentGeneration}</span> of <span class="hljs-subst">${reactionAsset.maxGenerations}</span>\n    Initial random seed level: <span class="hljs-subst">${reactionAsset.initialRandomSeedLevel}</span>\n    Diffusion rates - A: <span class="hljs-subst">${reactionAsset.diffusionRateA}</span>, B: <span class="hljs-subst">${reactionAsset.diffusionRateB}</span>\n    Feed rate: <span class="hljs-subst">${reactionAsset.feedRate}</span>; Kill rate: <span class="hljs-subst">${reactionAsset.killRate}</span>\n    Asset dimensions - width: <span class="hljs-subst">${reactionAsset.width}</span>, height: <span class="hljs-subst">${reactionAsset.height}</span>\n    Pattern matrix: <span class="hljs-subst">${matrixVals}</span>`</span>;
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-12">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1300,11 +1349,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Setup form observer functionality</p>
@@ -1438,11 +1487,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>This listener updates the RD asset with the selected preset value. Most of the following code is to update the the Demo’s user interface</p>
 
@@ -1462,220 +1511,2236 @@
 
         <span class="hljs-keyword">switch</span> (val) {
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;negativeBubbles&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.098</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0555</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.05</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;negativeBubbles&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.098</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0555</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.05</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;positiveBubbles&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.098</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.057</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.1</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;positiveBubbles&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.098</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.057</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.1</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;precriticalBubbles&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.082</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.059</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.08</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;precriticalBubbles&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.082</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.059</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.08</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;wormsAndLoops&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.082</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.06</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.08</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;wormsAndLoops&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.082</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.06</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.08</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;stableSolitons&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.074</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.064</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.15</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;stableSolitons&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.074</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.064</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.15</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;uSkateWorld&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.062</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0609</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;uSkateWorld&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-50">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.062</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-51">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0609</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-53">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;worms&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.058</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.065</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.1</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;worms&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-54">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-55">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-56">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.058</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-57">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.065</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-58">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-59">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.1</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;wormsJoinIntoMazes&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.046</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.063</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;wormsJoinIntoMazes&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-62">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.046</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-63">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.063</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-65">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;negatons&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.046</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0594</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;negatons&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-66">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-67">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-68">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.046</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-69">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0594</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-70">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-71">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;turingPatterns&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.042</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.059</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;turingPatterns&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-72">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-73">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-74">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.042</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-75">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.059</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-76">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-77">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;chaosToTuringNegatons&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.039</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.058</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;chaosToTuringNegatons&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-78">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-79">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-80">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-80">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.039</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-81">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-81">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.058</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-82">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-82">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-83">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-83">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;fingerprints&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.037</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.06</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;fingerprints&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-84">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-84">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-85">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-85">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-86">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-86">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.037</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-87">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-87">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.06</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-88">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-88">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-89">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-89">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;chaosWithNegatons&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0353</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0566</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;chaosWithNegatons&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-90">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-90">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-91">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-91">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-92">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-92">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0353</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-93">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-93">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0566</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-94">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-94">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-95">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-95">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;spotsAndWorms&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.034</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0618</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;spotsAndWorms&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-96">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-96">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-97">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-97">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-98">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-98">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.034</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-99">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-99">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0618</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-100">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-100">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-101">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-101">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;selfReplicatingSpots&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.03</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.063</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;selfReplicatingSpots&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-102">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-102">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-103">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-103">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-104">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-104">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.03</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-105">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-105">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.063</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-106">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-106">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-107">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-107">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;superResonantMazes&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.03</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0565</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;superResonantMazes&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-108">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-108">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-109">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-109">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-110">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-110">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.03</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-111">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-111">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.0565</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-112">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-112">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-113">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-113">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;mazes&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.029</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.057</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;mazes&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-114">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-114">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-115">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-115">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-116">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-116">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.029</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-117">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-117">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.057</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-118">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-118">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-119">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-119">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;mazesWithSomeChaos&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.026</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.055</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;mazesWithSomeChaos&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-120">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-120">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-121">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-121">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-122">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-122">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.026</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-123">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-123">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.055</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-124">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-124">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-125">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-125">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;chaos&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.026</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.051</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.009</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;chaos&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-126">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-126">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-127">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-127">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-128">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-128">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.026</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-129">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-129">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.051</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-130">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-130">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-131">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-131">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.009</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;warringMicrobes&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.022</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.059</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;warringMicrobes&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-132">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-132">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-133">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-133">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-134">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-134">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.022</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-135">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-135">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.059</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-136">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-136">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-137">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-137">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;spotsAndLoops&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.018</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.051</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;spotsAndLoops&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-138">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-138">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-139">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-139">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-140">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-140">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.018</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-141">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-141">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.051</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-142">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-142">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-143">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-143">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;movingSpots&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.014</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.054</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;movingSpots&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-144">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-144">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-145">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-145">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-146">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-146">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.014</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-147">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-147">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.054</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-148">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-148">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-149">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-149">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;waves&#x27;</span>:
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.014</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.045</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;waves&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-150">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-150">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-151">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-151">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-152">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-152">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.014</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-153">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-153">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.045</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-154">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-154">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-155">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-155">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-attr">default</span>: 
-                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.054</span>;
-                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.062</span>;
-                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
+            <span class="hljs-attr">default</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-156">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-156">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-157">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-157">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-158">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-158">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.054</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-159">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-159">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.062</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-160">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-160">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-161">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-161">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.0045</span>;
         }
     }
 }, <span class="hljs-string">&#x27;#presets&#x27;</span>);</pre></div></div>
@@ -1683,11 +3748,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-162">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-162">&#x00a7;</a>
               </div>
               <p>Setup form</p>
 
@@ -1718,44 +3783,406 @@
     qs_colorStops = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#colorStops&#x27;</span>),
     qs_cyclePalette = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#cyclePalette&#x27;</span>),
     qs_colorSpace = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#colorSpace&#x27;</span>),
-    qs_returnColorAs = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#returnColorAs&#x27;</span>);
-
-
-qs_presets.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
-qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.1</span>;
-qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;
-qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;
-qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.054</span>;
-qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.062</span>;
-qs_drawEvery.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;
-qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;
-qs_canvasWidth.<span class="hljs-property">value</span> = assetDimension;
-qs_canvasHeight.<span class="hljs-property">value</span> = assetDimension;
-qs_matrixA.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-qs_matrixB.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-qs_matrixC.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-qs_matrixD.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-qs_matrixE.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-qs_matrixF.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-qs_initialSettingPreference.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
-qs_randomEngineSeed.<span class="hljs-property">value</span> = reactionAsset.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;randomEngineSeed&#x27;</span>);
-qs_paletteStart.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-qs_paletteEnd.<span class="hljs-property">value</span> = <span class="hljs-number">999</span>;
-qs_precision.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-qs_colorStops.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
-qs_easing.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
-qs_cyclePalette.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
-qs_colorSpace.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
-qs_returnColorAs.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+    qs_returnColorAs = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#returnColorAs&#x27;</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-16">
+        <li id="section-163">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-163">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_presets.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-164">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-164">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_initialRandomSeedLevel.<span class="hljs-property">value</span> = <span class="hljs-number">0.1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-165">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-165">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_diffusionRateA.<span class="hljs-property">value</span> = <span class="hljs-number">0.2097</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-166">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-166">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_diffusionRateB.<span class="hljs-property">value</span> = <span class="hljs-number">0.105</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-167">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-167">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_feedRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.054</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-168">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-168">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_killRate.<span class="hljs-property">value</span> = <span class="hljs-number">0.062</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-169">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-169">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_drawEvery.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-170">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-170">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_maxGenerations.<span class="hljs-property">value</span> = <span class="hljs-number">4000</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-171">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-171">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_canvasWidth.<span class="hljs-property">value</span> = assetDimension;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-172">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-172">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_canvasHeight.<span class="hljs-property">value</span> = assetDimension;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-173">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-173">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_matrixA.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-174">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-174">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_matrixB.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-175">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-175">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_matrixC.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-176">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-176">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_matrixD.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-177">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-177">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_matrixE.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-178">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-178">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_matrixF.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-179">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-179">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_initialSettingPreference.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-180">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-180">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_randomEngineSeed.<span class="hljs-property">value</span> = reactionAsset.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;randomEngineSeed&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-181">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-181">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_paletteStart.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-182">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-182">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_paletteEnd.<span class="hljs-property">value</span> = <span class="hljs-number">999</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-183">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-183">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_precision.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-184">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-184">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_colorStops.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-185">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-185">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_easing.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-186">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-186">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_cyclePalette.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-187">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-187">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_colorSpace.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-188">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-188">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>qs_returnColorAs.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-189">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-189">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

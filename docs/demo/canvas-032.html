@@ -620,6 +620,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-004.html">
+                  ./demo/modules-004.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -930,6 +935,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-036.html">
+                  ./demo/temp-036.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -957,6 +967,11 @@
                 
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
+                </a>
+              
+                
+                <a class="source" href="temp-lottie.html">
+                  ./demo/temp-lottie.js
                 </a>
               
                 
@@ -1010,7 +1025,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
@@ -1071,7 +1086,7 @@ canvas.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> currentLine = <span class="hljs-literal">false</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> currentLine,
     currentPins = [],
     lineHold = [],
     lineBin = [],
@@ -1094,10 +1109,8 @@ canvas.<span class="hljs-title function_">set</span>({
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myColorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;color-factory&#x27;</span>,
-
-    <span class="hljs-attr">rMax</span>: <span class="hljs-number">160</span>,
-    <span class="hljs-attr">gMax</span>: <span class="hljs-number">160</span>,
-    <span class="hljs-attr">bMax</span>: <span class="hljs-number">160</span>,
+    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -1132,7 +1145,7 @@ canvas.<span class="hljs-title function_">set</span>({
 
                 <span class="hljs-attr">tension</span>: <span class="hljs-number">0.3</span>,
 
-                <span class="hljs-attr">strokeStyle</span>: myColorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
+                <span class="hljs-attr">strokeStyle</span>: myColorFactory.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>()),
                 <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span> + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">20</span>),
 
                 <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,

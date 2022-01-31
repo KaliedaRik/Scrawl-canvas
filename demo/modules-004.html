@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Demo Modules 004</title>
+
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    canvas {
+      margin: 0 auto 1em;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Modules test 004</h1>
+  <h2>Import and use Lottie animations</h2>
+
+  <canvas id="mycanvas" width="600" height="600"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a function that will take some parameters and, using that data, load a Lottie animation alongside the Bodymovin library used to play it.</li>
+      <li>Create several Picture entitys that display the animation</li>
+    </ul>
+
+    <p><a href="../docs/demo/modules-004.html">Annotated code</a></p>
+    <ul>
+      <li><a href="../docs/demo/modules/lottie-loader.html">Lottie loader module</a></li>
+    </ul>
+  </div>
+
+  <script src="modules-004.js" type="module"></script>
+
+</body>
+
+</html>

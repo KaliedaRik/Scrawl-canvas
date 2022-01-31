@@ -637,7 +637,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Quat
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_quaternion</span>(obj)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromQuaternion</span>(obj);
 
-    <span class="hljs-keyword">if</span> ((obj &amp;&amp; obj.<span class="hljs-property">type</span> &amp;&amp; obj.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Vector&#x27;</span>)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromVector</span>(obj);
+    <span class="hljs-comment">/* if ((obj &amp;&amp; obj.type &amp;&amp; obj.type === &#x27;Vector&#x27;)) return this.setFromVector(obj); */</span>
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xto</span>(obj.<span class="hljs-property">pitch</span>, obj.<span class="hljs-property">yaw</span>, obj.<span class="hljs-property">roll</span>)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromEuler</span>(obj);
 

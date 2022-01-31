@@ -620,6 +620,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-004.html">
+                  ./demo/modules-004.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -930,6 +935,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-036.html">
+                  ./demo/temp-036.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -957,6 +967,11 @@
                 
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
+                </a>
+              
+                
+                <a class="source" href="temp-lottie.html">
+                  ./demo/temp-lottie.js
                 </a>
               
                 
@@ -1523,7 +1538,7 @@ L.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
     <span class="hljs-keyword">const</span> dragging = <span class="hljs-title function_">current</span>();
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`Currently dragging: <span class="hljs-subst">${(dragging) ? dragging.artefact.name : <span class="hljs-string">&#x27;nothing&#x27;</span>}</span>`</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`Currently dragging: <span class="hljs-subst">${(<span class="hljs-keyword">typeof</span> dragging !== <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; dragging) ? dragging.artefact.name : <span class="hljs-string">&#x27;nothing&#x27;</span>}</span>`</span>;
 });</pre></div></div>
             
         </li>

@@ -1,5 +1,5 @@
 # Welcome to the Scrawl-canvas Library
-Version: `8.8.0 - 30 Jan 2022` 
+Version: `8.8.0 - 2 Feb 2022` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 + learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
@@ -45,7 +45,7 @@ Scrawl-canvas is fast, and developer-friendly. It's suitable for building infogr
 
 Scrawl-canvas offers all of this while never losing its hard focus on making the &lt;canvas> element `accessible, responsive and fully interactive` while at the same time offering a `pleasant developer experience`. 
 
-Scrawl-canvas is fun to work with!
+Also, from version 8.8.0, Scrawl-canvas supports developers coding in TypeScript by means of a TS definitions file included in the repository.
 
 ## Installation and use
 
@@ -73,7 +73,7 @@ Alternatively, a zip package of the v8.8.0 files can be downloaded from this lin
     <!-- The library is entirely modular and needs to be imported into a module script -->
     <script type="module">
 
-        import scrawl from './relative-or-absolute/path/to/scrawl-canvas/min/scrawl.js';
+        import * as scrawl from './relative-or-absolute/path/to/scrawl-canvas/min/scrawl.js';
 
         // Get a handle to the canvas element
         let canvas = scrawl.library.canvas.mycanvas;
@@ -149,6 +149,16 @@ The code base does not include any ___unit testing___ frameworks. Instead, we re
 Why this approach? Because most of the Scrawl-canvas functionality revolves around various forms of animation, which requires visual inspection of the Demo tests to check that the canvas display - and thus, by inference, the underlying code - performs as expected.
 
 Most Demos include some form of user interaction, which allows us to test specific aspects of the code base.
+
+### TypeScript support
+Scrawl-canvas supports TypeScript (since v8.8.0) through a TypeScript Definitions (d.ts) file. The definitions file aims to be as accurate, comprehensive and informative as possible, but specifically excludes support for internal (private) SC object attributes and functions.
+
+To aid development, we test the definitions file against the entire suite of Demo code .js files supplied as part of the library. From the root of the project, run the following command:
+
+```sh
+$> yarn test
+```
+
 
 ### Documentation
 The source code has been extensively commented. We generate documentation from that code using [Docco](http://ashkenas.com/docco/). Documentation is regenerated each time the library is rebuilt.

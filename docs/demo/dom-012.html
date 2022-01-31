@@ -620,6 +620,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-004.html">
+                  ./demo/modules-004.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -930,6 +935,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-036.html">
+                  ./demo/temp-036.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -957,6 +967,11 @@
                 
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
+                </a>
+              
+                
+                <a class="source" href="temp-lottie.html">
+                  ./demo/temp-lottie.js
                 </a>
               
                 
@@ -1007,7 +1022,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1140,14 +1155,7 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> b1 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_1&#x27;</span>),
         b2 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_2&#x27;</span>),
         b3 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_3&#x27;</span>),
-        b4 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_4&#x27;</span>);
-
-    b1.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
-    b2.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;
-    b3.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
-    b4.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
-
-    <span class="hljs-keyword">let</span> stackCanvas, divCanvas;</pre></div></div>
+        b4 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_4&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1157,6 +1165,68 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
               
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    b1.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    b2.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    b3.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    b4.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
+
+    <span class="hljs-keyword">let</span> stackCanvas, divCanvas;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Using a color factory object to generate random colors within a restricted palette</p>
 
@@ -1171,11 +1241,11 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
         </li>
         
         
-        <li id="section-10">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Test color packet and clone functionality</p>
 
@@ -1190,11 +1260,11 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
         </li>
         
         
-        <li id="section-11">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-attr">RESULTS</span>:
 [
@@ -1236,20 +1306,48 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
         
         <span class="hljs-keyword">switch</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>) {
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;action_1&#x27;</span>:
-                b1.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;
-                b2.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;action_1&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                b1.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                b2.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
 
                 stackCanvas = scrawl.<span class="hljs-title function_">addCanvas</span>({</pre></div></div>
             
         </li>
         
         
-        <li id="section-12">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Test to make sure host attribute accepts both Stack object and CSS search String</p>
 
@@ -1265,20 +1363,88 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
 
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;action_2&#x27;</span>:
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;action_2&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                b1.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
-                b2.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                b1.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                b2.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;
 
                 <span class="hljs-keyword">if</span> (stackCanvas) stackCanvas.<span class="hljs-title function_">kill</span>();
 
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;action_3&#x27;</span>:
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;action_3&#x27;</span>:</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-                b1.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
-                b2.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;
-                b3.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                b1.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                b2.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                b3.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;
 
                 mystack.<span class="hljs-title function_">kill</span>();
                 mystack = <span class="hljs-literal">false</span>;
@@ -1304,11 +1470,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-13">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

@@ -766,7 +766,20 @@
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;&#x27;</span>,
     };
-    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
+    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);
+
+
+    <span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>;
+
+    G.<span class="hljs-property">type</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span>;
+    };
+    G.<span class="hljs-property">isArtefact</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">isArtefact</span>;
+    };
+    G.<span class="hljs-property">isAsset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">isAsset</span>;
+    };</pre></div></div>
             
         </li>
         

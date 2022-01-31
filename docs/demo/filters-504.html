@@ -620,6 +620,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-004.html">
+                  ./demo/modules-004.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -930,6 +935,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-036.html">
+                  ./demo/temp-036.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -957,6 +967,11 @@
                 
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
+                </a>
+              
+                
+                <a class="source" href="temp-lottie.html">
+                  ./demo/temp-lottie.js
                 </a>
               
                 
@@ -1007,7 +1022,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
@@ -1192,14 +1207,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
     g2 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#g2&#x27;</span>);
 
 <span class="hljs-keyword">let</span> b1 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#b1&#x27;</span>),
-    b2 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#b2&#x27;</span>);
-
-r1.<span class="hljs-property">value</span> = <span class="hljs-number">0.996</span>;
-r2.<span class="hljs-property">value</span> = <span class="hljs-number">0.984</span>;
-g1.<span class="hljs-property">value</span> = <span class="hljs-number">0.125</span>;
-g2.<span class="hljs-property">value</span> = <span class="hljs-number">0.941</span>;
-b1.<span class="hljs-property">value</span> = <span class="hljs-number">0.552</span>;
-b2.<span class="hljs-property">value</span> = <span class="hljs-number">0.478</span>;</pre></div></div>
+    b2 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#b2&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1210,18 +1218,11 @@ b2.<span class="hljs-property">value</span> = <span class="hljs-number">0.478</s
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>Setup form functionality</p>
+              <p>@ts-expect-error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updateR</span> = (<span class="hljs-params"></span>) =&gt; feFuncR.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tableValues&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${r1.value}</span> <span class="hljs-subst">${r2.value}</span>`</span>);
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateR, <span class="hljs-string">&#x27;.feFuncR&#x27;</span>);
-
-<span class="hljs-keyword">let</span> <span class="hljs-title function_">updateG</span> = (<span class="hljs-params"></span>) =&gt; feFuncG.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tableValues&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${g1.value}</span> <span class="hljs-subst">${g2.value}</span>`</span>);
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateG, <span class="hljs-string">&#x27;.feFuncG&#x27;</span>);
-
-<span class="hljs-keyword">let</span> <span class="hljs-title function_">updateB</span> = (<span class="hljs-params"></span>) =&gt; feFuncB.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tableValues&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${b1.value}</span> <span class="hljs-subst">${b2.value}</span>`</span>);
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateB, <span class="hljs-string">&#x27;.feFuncB&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>r1.<span class="hljs-property">value</span> = <span class="hljs-number">0.996</span>;</pre></div></div>
             
         </li>
         
@@ -1231,6 +1232,130 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>r2.<span class="hljs-property">value</span> = <span class="hljs-number">0.984</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>g1.<span class="hljs-property">value</span> = <span class="hljs-number">0.125</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>g2.<span class="hljs-property">value</span> = <span class="hljs-number">0.941</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>b1.<span class="hljs-property">value</span> = <span class="hljs-number">0.552</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>b2.<span class="hljs-property">value</span> = <span class="hljs-number">0.478</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>Setup form functionality
+@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updateR</span> = (<span class="hljs-params"></span>) =&gt; feFuncR.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tableValues&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${r1.value}</span> <span class="hljs-subst">${r2.value}</span>`</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateR, <span class="hljs-string">&#x27;.feFuncR&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updateG</span> = (<span class="hljs-params"></span>) =&gt; feFuncG.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tableValues&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${g1.value}</span> <span class="hljs-subst">${g2.value}</span>`</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateG, <span class="hljs-string">&#x27;.feFuncG&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updateB</span> = (<span class="hljs-params"></span>) =&gt; feFuncB.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tableValues&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${b1.value}</span> <span class="hljs-subst">${b2.value}</span>`</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateB, <span class="hljs-string">&#x27;.feFuncB&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

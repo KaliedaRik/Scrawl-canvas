@@ -620,6 +620,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-004.html">
+                  ./demo/modules-004.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -930,6 +935,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-036.html">
+                  ./demo/temp-036.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -957,6 +967,11 @@
                 
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
+                </a>
+              
+                
+                <a class="source" href="temp-lottie.html">
+                  ./demo/temp-lottie.js
                 </a>
               
                 
@@ -1007,7 +1022,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1076,8 +1091,8 @@ bc2.<span class="hljs-title function_">set</span>(canvasSet);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> fixedCanvasIsDisplaying = <span class="hljs-literal">false</span>;
-<span class="hljs-keyword">let</span> fixedCanvasDragZone = <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> fixedCanvasIsDisplaying,
+    fixedCanvasDragZone;
 
 <span class="hljs-keyword">const</span> fcAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
@@ -1395,8 +1410,22 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         bc1.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span> }});
-        fc.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span> }});
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ 
+        fc.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span> }});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ 
             <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;pink&#x27;</span>,
             <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">8</span>,
         });
@@ -1405,8 +1434,22 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         bc1.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span> }});
-        fc.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span> }});
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ 
+        fc.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span> }});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ 
             <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
             <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
         });
@@ -1511,9 +1554,22 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
                 <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">&#x27;bc1-drag-group&#x27;</span>,
                 <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
             });
-        };
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-        bc1ArrowProgress.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">progress</span>: inViewportTop * (-<span class="hljs-number">1</span> / <span class="hljs-number">2</span>) });
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>       bc1ArrowProgress.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">progress</span>: inViewportTop * (-<span class="hljs-number">1</span> / <span class="hljs-number">2</span>) });
 
         bc1Cell.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${ (inViewportTop * -<span class="hljs-number">100</span>) / <span class="hljs-number">3</span> }</span>%`</span> });
     }
@@ -1533,11 +1589,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-11">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="responsive-canvas-3">Responsive canvas 3</h4>
 <p>Link progression of tween-based animations to the position of the center of the &lt;canvas&gt; element in the viewport. Trigger timeline actions when the center of the element passes the action’s breakpoint. Tweens and actions are reversible.</p>
@@ -1711,11 +1767,11 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="banner-canvas-2">Banner canvas 2</h4>
 <p>Play a video (after user interaction) only while the &lt;canvas&gt; element is fully visible in the viewport. Show scroll progression using a graphic dial and text. The blurred background moves upwards (parallax) as the user scrolls down. The parallax effect and dial/text animation are reversible.</p>
@@ -1779,11 +1835,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Get rid of the event listener after invocation - it’s a one-time-only action</p>
 
@@ -1883,11 +1939,11 @@ bc2DialWheel.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>fc.domElement.style.transform = <code>translateY(${inViewportTop * 100}%)</code>;</p>
 
@@ -1970,11 +2026,11 @@ bc2DialWheel.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="scene-animation-reporter">Scene animation reporter</h4>
 <p>Function to display whether each canvas wrapper’s associated animation object is currently running</p>

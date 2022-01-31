@@ -1243,7 +1243,7 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
     <span class="hljs-keyword">let</span> natWidth = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span>,
         natHeight = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(natWidth, natHeight)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(natWidth, natHeight) &amp;&amp; natWidth &gt; <span class="hljs-number">0</span> &amp;&amp; natHeight &gt; <span class="hljs-number">0</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImage</span> = <span class="hljs-literal">false</span>;
 
@@ -1283,7 +1283,7 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
     <span class="hljs-keyword">let</span> width = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span>,
         height = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(width, height)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(width, height) &amp;&amp; width &gt; <span class="hljs-number">0</span> &amp;&amp; height &gt; <span class="hljs-number">0</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">false</span>;
 
@@ -1326,7 +1326,7 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
     <span class="hljs-keyword">let</span> natWidth = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span>,
         natHeight = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(natWidth, natHeight)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(natWidth, natHeight) &amp;&amp; natWidth &gt; <span class="hljs-number">0</span> &amp;&amp; natHeight &gt; <span class="hljs-number">0</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">false</span>;
 
