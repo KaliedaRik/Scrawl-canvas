@@ -15,9 +15,8 @@ import {
 
 // #### Scene setup
 // Define some demo variables. All Scrawl-canvas wrappers for DOM elements can be found in the __scrawl.library.artefact__ section of the Scrawl-canvas library. The elements themselves are held in the __domElement__ attribute of the wrapper. 
-let artefact = L.artefact,
-    myStack = artefact.mystack,
-    reportMessage = artefact.reportmessage;
+let myStack = L.artefact.mystack,
+    reportMessage = L.artefact.reportmessage;
 
 
 // Scrawl-canvas stack elements calculate the positions and dimensions of their member artefacts on the assumption that the stack element itself has no padding. If the element does include padding then all member artefacts will be offset (rightwards and downwards) by the left and top padfding values.
@@ -61,7 +60,7 @@ makeAnimation({
 
         let here = myStack.here || {};
 
-        reportMessage.textContent =  `File dom-001.js has loaded successfully
+        reportMessage.domElement.textContent =  `File dom-001.js has loaded successfully
    Stack name: ${myStack.name} - width: ${here.w}, height: ${here.h}
    Interaction type: ${here.type} - active: ${here.active}
    Current cursor coordinates - x: ${here.x}, y: ${here.y} 

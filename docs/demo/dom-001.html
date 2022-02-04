@@ -1056,9 +1056,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> artefact = L.<span class="hljs-property">artefact</span>,
-    myStack = artefact.<span class="hljs-property">mystack</span>,
-    reportMessage = artefact.<span class="hljs-property">reportmessage</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myStack = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mystack</span>,
+    reportMessage = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">reportmessage</span>;</pre></div></div>
             
         </li>
         
@@ -1153,7 +1152,7 @@
 
         <span class="hljs-keyword">let</span> here = myStack.<span class="hljs-property">here</span> || {};
 
-        reportMessage.<span class="hljs-property">textContent</span> =  <span class="hljs-string">`File dom-001.js has loaded successfully
+        reportMessage.<span class="hljs-property">domElement</span>.<span class="hljs-property">textContent</span> =  <span class="hljs-string">`File dom-001.js has loaded successfully
    Stack name: <span class="hljs-subst">${myStack.name}</span> - width: <span class="hljs-subst">${here.w}</span>, height: <span class="hljs-subst">${here.h}</span>
    Interaction type: <span class="hljs-subst">${here.type}</span> - active: <span class="hljs-subst">${here.active}</span>
    Current cursor coordinates - x: <span class="hljs-subst">${here.x}</span>, y: <span class="hljs-subst">${here.y}</span> 

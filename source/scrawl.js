@@ -70,7 +70,7 @@ export {
     getTouchActionChoke,
     setTouchActionChoke,
 } from './core/userInteraction.js';
-export { makeAction as _makeAction } from './factory/action.js';
+export { makeAction } from './factory/action.js';
 export { makeAnimation } from './factory/animation.js';
 export { makeBlock } from './factory/block.js';
 export { makeBezier } from './factory/bezier.js';

@@ -27,9 +27,10 @@ const myNoise = scrawl.makeNoiseAsset({
     height: 400,
     scale: 80,
 
-    paletteStart: 699,
+    paletteStart: 399,
     paletteEnd: 999,
-    choke: 80,
+    choke: 50,
+    precision: 1,
     delta: {
         paletteStart: -1,
         paletteEnd: -1,

@@ -41,15 +41,15 @@
 
   <p>By importing the scrawl.js file, the browser will also import all the related files required by Scrawl-canvas. The import code goes at the top of the user code (in this demo, the <span class="scrawl-code">dom-001.js</span> file):</p>
 
-  <h3><b>import</b> scrawl from '../../relative/path/to/scrawl.js';</h3>
+  <h3><b>import</b> * as scrawl from '../../relative/path/to/scrawl.js';</h3>
 
   <p>... or if the library has been included via NPM or Yarn:</p>
 
-  <h3><b>import</b> scrawl from 'scrawl-canvas';</h3>
+  <h3><b>import</b> * as scrawl from 'scrawl-canvas';</h3>
 
   <p>... or if using the remote CDN version:</p>
 
-  <h3><b>import</b> scrawl from 'https://unpkg.com/scrawl-canvas@8.2.3';</h3>
+  <h3><b>import</b> * as scrawl from 'https://unpkg.com/scrawl-canvas@8.2.3';</h3>
 
   <p>The import doesn't need to be called <span class="scrawl-code">'scrawl'</span> - it can be whatever the user prefers.</p>
 

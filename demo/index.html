@@ -156,7 +156,7 @@
         <li>Color factories, and gradient styles, can have easing algorithms applied to them &mdash; <strong>non-linear gradients</strong>.</li>
       </ul>
       <li>They can also take <strong>Pattern</strong> styles which may contain a variety of image-based assets; patterns can be scaled, skewed and positioned as required.</li>
-      <li>Entitys can also act as <strong>clipping zones</strong> for subesequent drawing activities.</li>
+      <li>Entitys can also act as <strong>clipping zones</strong> for subsequent drawing activities.</li>
       <li>The visual assets used by Picture entitys and Pattern styles can include fully responsive <strong>&lt;img></strong> elements (with a <strong>srcset</strong> attribute), or image files.</li>
       <li><strong>&lt;video></strong> and <strong>&lt;canvas></strong> element assets are also supported, as are <strong>spritesheet animations</strong>.</li>
       <li>Scrawl-canvas includes a <strong>NoiseAsset</strong> asset (for Perlin, Simplex, Worley, etc, noise generation), alongside an <strong>RdAsset</strong> reaction-diffusion asset (for more organic patterns).</li>
@@ -167,7 +167,7 @@
 
     <ul>
       <li>Cells can be positioned like entitys (absolutely, relatively, by reference); they can be scaled, rotated and flipped; they can be animated &mdash; including along paths.</li>
-      <li>Like the base canvas Cells can track mouse/touch interactions and movements, which allows users to interact with entitys displayed on the Cell.</li>
+      <li>Like the base canvas, Cells can track mouse/touch interactions and movements, which allows users to interact with entitys displayed on the Cell.</li>
     </ul>
 
     <div class="container">
@@ -885,14 +885,14 @@
     <p>Scrawl-canvas &lt;canvas> elements do not live in splendid isolation; the library is aware of each canvas's wider environment:</p>
 
     <ul>
-      <li>Scrawl canvas treats <strong>accessibility as a First Class Issue:</strong></li>
+      <li>Scrawl-canvas treats <strong>accessibility as a First Class Issue:</strong></li>
       <ul>
         <li>All canvases have appropriate <strong>ARIA tags</strong> added to them &mdash; including ARIA labels and descriptions.</li>
         <li><strong>Graphical text</strong> is automatically exposed to the DOM, to make it readable to assistive technology</li>
         <li><strong>Graphical navigation</strong> is automatically reflected into the DOM via &lt;a> anchor elements which can be triggered using the keyboard. This extends to responding visually to keyboard-driven <strong>focus/blur</strong> events.</li>
         <li>Canvases can adapt to <strong>user preferences</strong>, for instance <strong>prefers-reduced-motion</strong> and <strong>prefers-color-scheme</strong>.</li>
       </ul>
-      <li>Scrawl canvas treats <strong>responsiveness as a First Class Requirement:</strong></li>
+      <li>Scrawl-canvas treats <strong>responsiveness as a First Class Requirement:</strong></li>
       <ul>
         <li>Scrawl-canvas &lt;canvas> elements are aware of their size and shape, and include functionality to adapt to changes in their dimensions (approximating <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Container_Queries">CSS container queries</a> functionality). Canvases can be used safely within CSS grids.</li>
         <li>Canvases also emulate responsive behaviours associated with the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">CSS object-fit</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/background-size">background-size</a> properties.</li>
