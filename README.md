@@ -105,7 +105,7 @@ Alternatively, a zip package of the v8.8.0 files can be downloaded from this lin
 This will pull the requested npm package directly into your web page:
 ```html
 <script type="module">
-    import scrawl from 'https://unpkg.com/scrawl-canvas@8.8.0';
+    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.8.0';
     [...]
 </script>
 ```
