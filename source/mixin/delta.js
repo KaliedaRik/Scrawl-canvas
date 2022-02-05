@@ -149,7 +149,7 @@ export default function (P = Ωempty) {
                             if (keyIndex < 2) valArray = this.start;
                             else if (keyIndex < 4) valArray = this.handle;
                             else if (keyIndex < 6) valArray = this.offset;
-                            else if (keyIndex < 6) valArray = this.dimensions;
+                            else if (keyIndex < 8) valArray = this.dimensions;
 
                             if (['startY', 'handleY', 'offsetY', 'height'].indexOf(key) >= 0) valIndex = 1;
 
