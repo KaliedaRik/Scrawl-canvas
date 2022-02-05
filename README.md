@@ -122,7 +122,7 @@ $> npm install scrawl-canvas
 $> yarn add scrawl-canvas
 
 // then in your script file
-import scrawl from 'scrawl-canvas';
+import * as scrawl from 'scrawl-canvas';
 
 // Scrawl-canvas has no dependencies
 // - it can be used as-is, with no further installation steps required
