@@ -1,7 +1,7 @@
 // # Demo Canvas 061
 // Gradients stress test
 
-// [Run code](../../demo/filters-061.html)
+// [Run code](../../demo/canvas-061.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';

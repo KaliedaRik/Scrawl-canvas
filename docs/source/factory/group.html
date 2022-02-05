@@ -2015,170 +2015,6 @@ TODO: don’t think this is tested anywhere - build test!</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
-              <p>The <code>getArtefactCollisions</code> function returns an array of hit reports from all of the Group object’s artefacts which are currently in collision with the <strong>sensor</strong> coordinates supplied by the artefact argument. The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
-<p>The argument must be either the artefact object itself, or its String name.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getArtefactCollisions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">art</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-65">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
-              </div>
-              <p>return empty array if no argument, or the argument is not an artefact, or the Group is empty</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!art || !art.<span class="hljs-property">isArtefact</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span>.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> [];
-
-    <span class="hljs-keyword">if</span> (art.<span class="hljs-property">substring</span>) art = artefact[art];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-66">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
-              </div>
-              <p>Return empty array if the artefact argument has not been setup to check for collisions</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!art.<span class="hljs-property">collides</span>) <span class="hljs-keyword">return</span> [];
-
-    <span class="hljs-keyword">let</span> artBuckets = <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span>,
-        targets = [],
-        target, i, iz;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-67">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
-              </div>
-              <p>Get entity collision data</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> [entityRadius, entitySensors] = art.<span class="hljs-title function_">cleanCollisionData</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-68">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
-              </div>
-              <p>Winnow step 1: don’t check the entity itself, or any missing or malformed artefacts in the Group</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = artBuckets.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-        target = artBuckets[i];
-
-        <span class="hljs-keyword">if</span> (!target || !target.<span class="hljs-property">cleanCollisionData</span> || art.<span class="hljs-property">name</span> === target.<span class="hljs-property">name</span>) targets.<span class="hljs-title function_">push</span>(<span class="hljs-literal">false</span>);
-        <span class="hljs-keyword">else</span> targets.<span class="hljs-title function_">push</span>(target);
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-69">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
-              </div>
-              <p>Winnow step 2: exclude all targets outside the artefact/target collision radius</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> [entityStampX, entityStampY] = art.<span class="hljs-property">currentStampPosition</span>;
-
-    <span class="hljs-keyword">let</span> combinedRadius, targetData, dx, dy, dh;
-
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = targets.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-        target = targets[i];
-
-        <span class="hljs-keyword">if</span> (target) {
-
-            <span class="hljs-keyword">let</span> [targetStampX, targetStampY] = target.<span class="hljs-property">currentStampPosition</span>;
-
-            targetData = target.<span class="hljs-title function_">cleanCollisionData</span>();
-            combinedRadius = entityRadius + targetData[<span class="hljs-number">0</span>];
-
-            dx = entityStampX - targetStampX;
-            dy = entityStampY - targetStampY;
-            dh = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>((dx * dx) + (dy * dy));
-
-            <span class="hljs-keyword">if</span> (dh &gt; combinedRadius) targets[i] = <span class="hljs-literal">false</span>;
-        }
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-70">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
-              </div>
-              <p>Winnow step 3: perform hit checks on remaining targets - this will not retrieve targets entirely inside the artefact</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> myCell = <span class="hljs-title function_">requestCell</span>();
-
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = targets.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-        target = targets[i];
-
-        <span class="hljs-keyword">if</span> (target) targets[i] = target.<span class="hljs-title function_">checkHit</span>(entitySensors, myCell);
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-71">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
-              </div>
-              <p>return filtered results</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">releaseCell</span>(myCell);
-
-    <span class="hljs-keyword">return</span> targets.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> !!target);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-72">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
-              </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> faces = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
@@ -2203,11 +2039,11 @@ constructors.<span class="hljs-property">Group</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-73">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
