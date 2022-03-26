@@ -66,7 +66,7 @@ export default function (P = Ωempty) {
         }
     };
 
-// `memoizeFilterOutput` - ___Dangerous action!__ - replaces the existing filters Array with a new filters Array. If a string name is supplied, will add that name to the existing filters array
+// `memoizeFilterOutput` - tell the filter engine to cache its output. Cache is namestring-controlled, and tied to the entity/group/cell. Various updates to the entity/etc - including positional, rotational and scaling updates - will lead to the generation of a new namestring and forcing the filter to serve a newly created output rather than the cached output. Cached outputs are removed if they are not used again within 1 second.
     S.memoizeFilterOutput = function (item) {
 
         this.memoizeFilterOutput = item;

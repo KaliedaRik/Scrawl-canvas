@@ -676,12 +676,7 @@ P.subscribeAction = function (sub = {}) {
 P.installElement = function (element) {
 
     this.element = element;
-    this.engine = this.element.getContext('2d', {
-
-        // willReadFrequently is a Gecko-only flag, deprecated but not yet removed
-        willReadFrequently: true,
-        /* desynchronized: true, */
-    });
+    this.engine = this.element.getContext('2d');
 
     this.state = makeState({
         engine: this.engine,

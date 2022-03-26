@@ -174,15 +174,7 @@
       <li>Check that we can successfully manipulate the palettes's start and end cursors</li>
       <li>Check that we can dynamically add and remove color stops</li>
     </ul>
-    <p><b>Note that this is experimental technology!</b> No browser currently supports conic gradients in the canvas engine, though most support them as a CSS gradient:</p>
-    <ul>
-      <li><b>Chrome browsers</b> - from version 86: this feature is behind the #new-canvas-2d-api preferences. To change preferences in Chrome, visit <a href="chrome://flags">chrome://flags</a>.</li>
-      <li><b>Firefox browsers</b> - Supported from version 90. For older versions after v85 this feature is behind the canvas.createConicGradient.enabled preferences. To change preferences in Firefox, visit <a href="about:config">about:config</a>.</li>
-      <li><b>Safari browsers</b> - Appears to be supported in latest versions.</li>
-      <li>Other browsers - currently no signals about support. See the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createConicGradient">MDN createConicGradient()</a> page for further details.</li>
-    </ul>
-    <p><b>Known issue</b> - Chrome appears to set the start angle value 0 to point east; the specification requires that angle 0 points north.</p>
-    <p>For browsers that do not support conic gradients in the canvas this gradient will return a solid, transparent color for fill and stroke styles using it.</p>
+    <p><b>Known issue</b> - For browsers that do not support conic gradients in the canvas this gradient will return a solid, transparent color for fill and stroke styles using it.</p>
     
     <p><b>Touch test:</b> not required</p>
 
