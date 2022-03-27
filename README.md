@@ -1,5 +1,5 @@
 # Welcome to the Scrawl-canvas Library
-Version: `8.8.0 - 2 Feb 2022` 
+Version: `8.8.1 - 27 Mar 2022` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 + learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
@@ -46,7 +46,7 @@ Scrawl-canvas is fast, and developer-friendly. It's suitable for building infogr
 
 Scrawl-canvas offers all of this while never losing its hard focus on making the &lt;canvas> element `accessible, responsive and fully interactive` while at the same time offering a `pleasant developer experience`. 
 
-Also, from version 8.8.0, Scrawl-canvas supports developers coding in TypeScript by means of a TS definitions file included in the repository.
+Also, Scrawl-canvas supports developers coding in TypeScript by means of a TS definitions file included in the repository.
 
 ## Installation and use
 
@@ -58,7 +58,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the file to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.8.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-8-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-8.0.zip) - that package only includes the minified file.
+Alternatively, a zip package of the v8.8.1 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-8-1.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-8.1.zip) - that package only includes the minified file.
 
 ```html
 <!-- Hello world -->
@@ -106,7 +106,7 @@ Alternatively, a zip package of the v8.8.0 files can be downloaded from this lin
 This will pull the requested npm package directly into your web page:
 ```html
 <script type="module">
-    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.8.0';
+    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.8.1';
     [...]
 </script>
 ```
@@ -152,7 +152,7 @@ Why this approach? Because most of the Scrawl-canvas functionality revolves arou
 Most Demos include some form of user interaction, which allows us to test specific aspects of the code base.
 
 ### TypeScript support
-Scrawl-canvas supports TypeScript (since v8.8.0) through a TypeScript Definitions (d.ts) file. The definitions file aims to be as accurate, comprehensive and informative as possible, but specifically excludes support for internal (private) SC object attributes and functions.
+Scrawl-canvas supports TypeScript through a TypeScript Definitions (d.ts) file. The definitions file aims to be as accurate, comprehensive and informative as possible, but specifically excludes support for internal (private) SC object attributes and functions.
 
 To aid development, we test the definitions file against the entire suite of Demo code .js files supplied as part of the library. From the root of the project, run the following command:
 
