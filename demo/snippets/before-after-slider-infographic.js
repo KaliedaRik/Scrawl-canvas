@@ -19,6 +19,7 @@
 //   
 //   <div 
 //     id="left-panel-unique-name"
+//       data-date="date of image"
 //     data-frame="left">
 //
 //     <img 
@@ -70,6 +71,7 @@
 //
 //   <div 
 //     id="right-panel-unique-name"
+//       data-date="date of image"
 //     data-frame="right">
 //
 //     <img 
@@ -136,8 +138,7 @@
 //
 // ### Snippet code
 // Import the Scrawl-canvas object 
-// + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import * as scrawl from '../../source/scrawl.js';
+import * as scrawl from '../../source/scrawl.js'
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -151,6 +152,7 @@ const getPanelData = function (el, store, canvas) {
 
     store.element = el;
     store.name = el.id;
+    store.date = el.dataset.date;
     store.imageElement = img;
     store.pinElements = el.querySelectorAll('p');
     store.pins = [];
@@ -203,7 +205,7 @@ const getNavigationData = function (el, store, canvas) {
 };
 
 // The pin factory takes all the data about pins that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each pin
-const pinFactory = function (items, canvas, pinTextGroup, colors) {
+const pinFactory = function (items, canvas, pinTextGroup, pinTextBackgroundGroup, colors) {
 
     let { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, labelbackground, shared, suppressAccessibleText } = items;
 
@@ -304,7 +306,6 @@ const pinFactory = function (items, canvas, pinTextGroup, colors) {
             lineHeight: 1.15,
 
             width: labelwidth,
-// @ts-expect-error
             handle,
 
             pivot: `${name}-pin`,
@@ -358,6 +359,8 @@ const pinFactory = function (items, canvas, pinTextGroup, colors) {
             addOwnHandleToMimic: true,
             visibility: false,
         });
+
+        pinTextBackgroundGroup.addArtefacts(`${name}-background`);
     }
 };
 
@@ -397,7 +400,6 @@ const linkFactory = function (items, canvas, linkTextGroup, colors) {
                 }
             });
 
-// @ts-expect-error
             this.set({
                 text: `§UNDERLINE§${this.text}`,
             });
@@ -411,7 +413,6 @@ const linkFactory = function (items, canvas, linkTextGroup, colors) {
                 }
             });
 
-// @ts-expect-error
             this.set({
                 text: this.text.replace('§UNDERLINE§', ''),
             });
@@ -419,7 +420,6 @@ const linkFactory = function (items, canvas, linkTextGroup, colors) {
 
         onUp: function () {
 
-// @ts-expect-error
             this.clickAnchor();
         },
 
@@ -517,6 +517,10 @@ export default function (el) {
                 name: `${name}-pin-texts-group`,
             });
 
+            const pinTextBackgroundGroup = scrawl.makeGroup({
+                name: `${name}-pin-texts-background-group`,
+            });
+
             const linkTextGroup = scrawl.makeGroup({
                 name: `${name}-link-texts-group`,
             });
@@ -527,6 +531,7 @@ export default function (el) {
                 // Accessibility first!
                 label: aria_label,
                 description: aria_description,
+                includeInTabNavigation: true,
 
                 // Responsive text - we need to make sure text updates to an appropriate, readable size when the user changes the dimensions of their browser's window, or alters the orientation of their device.
                 breakToSmallest: 200000,
@@ -559,6 +564,102 @@ export default function (el) {
                 compileOrder: 1,
             });
 
+            // Infographic keyboard navigation
+            let displayAllLabels = false;
+
+            const toggleLabels = () => {
+
+                displayAllLabels = !displayAllLabels;
+
+                pinTextGroup.setArtefacts({
+                    visibility: displayAllLabels,
+                });
+
+                pinTextBackgroundGroup.setArtefacts({
+                    visibility: displayAllLabels,
+                });
+            }
+
+            const moveBar = (pos, width) => {
+
+                dragBar.set({
+                    startX: pos,
+                });
+
+                rightImage.set({
+                    copyStartX: pos,
+                    copyWidth: width,
+                    width,
+                });
+            };
+
+            const showMore = (moveLeft = true) => {
+
+                const canvasWidth = canvas.get('width');
+                const currentPos = dragBar.get('position');
+                const [x, y] = currentPos;
+
+                const dir = (moveLeft) ? -1 : 1;
+
+                let distance = ((x * 100) / canvasWidth) + dir;
+                if (distance < 0) distance = 0;
+                else if (distance > 100) distance = 100;
+
+                const pos = `${distance.toFixed(2)}%`;
+                const width = `${(100 - distance).toFixed(2)}%`;
+
+                return [pos, width];
+            };
+
+            const showAllBefore = () => moveBar('100%', '0%');
+            const showAllAfter = () => moveBar('0%', '100%');
+            const showMoreBefore = () => moveBar(...showMore(false));
+            const showMoreAfter = () => moveBar(...showMore(true));
+
+            const canvasKeys = (e) => {
+
+                const { keyCode, shiftKey, isComposing } = e;
+
+                // Ignore when user is composing a glyph
+                if (isComposing || 229 === keyCode) return;
+
+                // Tab, Enter/Return, Esc
+                if (9 === keyCode || 13 === keyCode || 27 === keyCode) {
+                    canvas.domElement.blur();
+                    return;
+                }
+
+                e.preventDefault();
+
+                // Left/right arrow keys (with and without shift)
+                if (shiftKey) {
+                    if (39 === keyCode) showAllBefore();
+                    else if (37 === keyCode) showAllAfter();
+                }
+                else {
+                    if (39 === keyCode) showMoreBefore();
+                    else if (37 === keyCode) showMoreAfter();
+                    else if (32 === keyCode) toggleLabels();
+                }
+            }
+            scrawl.addNativeListener('keydown', canvasKeys, canvas.domElement);
+
+            // Grab colors from CSS
+            const colors = {},
+                cssColors = getComputedStyle(document.documentElement);
+
+            colors.default = cssColors.getPropertyValue('--sc-default');
+            colors.shadow = cssColors.getPropertyValue('--sc-shadow');
+            colors.link = cssColors.getPropertyValue('--sc-link');
+            colors.linkshadow = cssColors.getPropertyValue('--sc-linkshadow');
+            colors.linkunderline = cssColors.getPropertyValue('--sc-linkunderline');
+            colors.red = cssColors.getPropertyValue('--sc-red');
+            colors.green = cssColors.getPropertyValue('--sc-green');
+            colors.blue = cssColors.getPropertyValue('--sc-blue');
+            colors.black = cssColors.getPropertyValue('--sc-black');
+            colors.white = cssColors.getPropertyValue('--sc-white');
+            colors.gray = cssColors.getPropertyValue('--sc-gray');
+
             // __8. Build the left-hand panel__
             const leftPanelName = leftPanel.name;
 
@@ -575,6 +676,35 @@ export default function (el) {
                 asset: leftPanel.imageElement.id,
                 dimensions: ['100%', '100%'],
                 copyDimensions: ['100%', '100%'],
+            });
+
+            scrawl.makePhrase({
+                name: `${leftPanelName}-image-date`,
+                group: `${leftPanelName}-cell`,
+                order: 1,
+                start: ['1%', '1%'],
+                handle: ['left', 'top'],
+                text: leftPanel.date,
+                font: '20px Arial, sans-serif',
+                lineHeight: 0.7,
+                fillStyle: colors.white,
+            });
+
+            scrawl.makeBlock({
+                name: `${leftPanelName}-image-date-background`,
+                group: `${leftPanelName}-cell`,
+                order: 0,
+                fillStyle: colors.black,
+                width: 20,
+                height: 20,
+                handle: [10, 10],
+                mimic: `${leftPanelName}-image-date`,
+                lockTo: 'mimic',
+                useMimicDimensions: true,
+                useMimicStart: true,
+                useMimicHandle: true,
+                addOwnDimensionsToMimic: true,
+                addOwnHandleToMimic: true,
             });
 
             scrawl.makePicture({
@@ -603,6 +733,35 @@ export default function (el) {
                 copyDimensions: ['100%', '100%'],
             });
 
+            scrawl.makePhrase({
+                name: `${rightPanelName}-image-date`,
+                group: `${rightPanelName}-cell`,
+                order: 1,
+                start: ['99%', '1%'],
+                handle: ['right', 'top'],
+                text: rightPanel.date,
+                font: '20px Arial, sans-serif',
+                lineHeight: 0.7,
+                fillStyle: colors.white,
+            });
+
+            scrawl.makeBlock({
+                name: `${rightPanelName}-image-date-background`,
+                group: `${rightPanelName}-cell`,
+                order: 0,
+                fillStyle: colors.black,
+                width: 20,
+                height: 20,
+                handle: [10, 10],
+                mimic: `${rightPanelName}-image-date`,
+                lockTo: 'mimic',
+                useMimicDimensions: true,
+                useMimicStart: true,
+                useMimicHandle: true,
+                addOwnDimensionsToMimic: true,
+                addOwnHandleToMimic: true,
+            });
+
             // We only need to manipulate the attributes of the right hand panel to execute the slider functionality
             const rightImage = scrawl.makePicture({
                 name: `${rightPanelName}-image-display`,
@@ -616,21 +775,6 @@ export default function (el) {
             });
 
             // __10. Generate pins and their associated labels__
-            const colors = {},
-                cssColors = getComputedStyle(document.documentElement);
-
-            colors.default = cssColors.getPropertyValue('--sc-default');
-            colors.shadow = cssColors.getPropertyValue('--sc-shadow');
-            colors.link = cssColors.getPropertyValue('--sc-link');
-            colors.linkshadow = cssColors.getPropertyValue('--sc-linkshadow');
-            colors.linkunderline = cssColors.getPropertyValue('--sc-linkunderline');
-            colors.red = cssColors.getPropertyValue('--sc-red');
-            colors.green = cssColors.getPropertyValue('--sc-green');
-            colors.blue = cssColors.getPropertyValue('--sc-blue');
-            colors.black = cssColors.getPropertyValue('--sc-black');
-            colors.white = cssColors.getPropertyValue('--sc-white');
-            colors.gray = cssColors.getPropertyValue('--sc-gray');
-
             leftPanel.pins.forEach(p => {
 
                 if (p.shared) {
@@ -640,13 +784,13 @@ export default function (el) {
                     p.name = `${n}-left`
                     p.groupname = leftPanelName;
                     
-                    pinFactory(p, canvas, pinTextGroup, colors);
+                    pinFactory(p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
 
                     p.name = `${n}-right`
                     p.groupname = rightPanelName;
                     p.suppressAccessibleText = true;
                 }
-                pinFactory(p, canvas, pinTextGroup, colors);
+                pinFactory(p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
             });
 
             rightPanel.pins.forEach(p => {
@@ -658,13 +802,13 @@ export default function (el) {
                     p.name = `${n}-left`
                     p.groupname = leftPanelName;
                     
-                    pinFactory(p, canvas, pinTextGroup, colors);
+                    pinFactory(p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
 
                     p.name = `${n}-right`
                     p.groupname = rightPanelName;
                     p.suppressAccessibleText = true;
                 }
-                pinFactory(p, canvas, pinTextGroup, colors);
+                pinFactory(p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
             });
 
 
@@ -767,7 +911,6 @@ export default function (el) {
 
                 updateOnStart: () => {
 
-// @ts-expect-error
                     dragBar.isBeingDragged = false;
                     dragBar.set({
                         lockXTo: 'mouse',

@@ -8,22 +8,6 @@
   <title>Demo Snippets 005</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
-  
-  <style>
-    body {
-      margin:  0;
-      border: 0;
-      padding: 0;
-    }
-
-    p {
-      box-sizing: border-box;
-      width: 100%;
-      max-width: 800px;
-      margin: 1em auto;
-      padding: 0 1em;
-    }
-  </style>
 </head>
 
 <body>
@@ -35,6 +19,20 @@
   -->
   <style>
   
+    /* Boilerplate stuff */
+    body {
+      font: 16px Arial, sans-serif;
+      line-height: 1.5;
+      margin: 0;
+    }
+    section {
+      max-width: 60em;
+      margin: 0 auto;
+      padding: 0 2em;
+    }
+
+    /* SLIDER INFOGRAPHIC */
+
     /* Define the values of the various colors our pin labels and link texts can use */
     :root {
       --sc-default: white;
@@ -59,7 +57,7 @@
       visibility: hidden;
     }
 
-    /* We need to give the infographic container a height value; the height value needs to be responsive, updating as the width value changes - best to do this on individually identified infographics as they may have differing height requirements */
+    /* We need to give the infographic container a height value; the height value needs to be responsive, updating as the width value changes - best to do this on individually identified infographics as they may have differing height requirements? */
     #beirut-infographic {
       height: calc(100vw / 2);
     }
@@ -71,7 +69,29 @@
     }
   </style>
 
+  <section>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, <a href="https://example.com">example.com</a> sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Felis eget nunc lobortis mattis aliquam. Dapibus ultrices in iaculis nunc sed augue. Tempor orci dapibus ultrices in iaculis nunc sed augue lacus. Lacus laoreet non curabitur gravida arcu ac tortor. Cursus in hac habitasse platea dictumst quisque sagittis. Arcu bibendum at varius vel pharetra vel turpis. Consectetur a erat nam at lectus urna duis convallis. Orci phasellus egestas tellus rutrum tellus pellentesque eu. Viverra mauris in aliquam sem fringilla ut. Dui faucibus in ornare quam viverra orci. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum odio. Orci eu lobortis elementum nibh tellus molestie nunc non. Leo integer malesuada nunc vel risus commodo viverra maecenas accumsan. Urna nec tincidunt praesent semper feugiat nibh. Cras semper auctor neque vitae tempus quam pellentesque.</p>
+
+    <p>Sapien faucibus et molestie ac feugiat sed lectus vestibulum mattis. Ultrices eros in cursus turpis massa tincidunt dui ut ornare. Turpis massa tincidunt dui ut ornare lectus sit amet est. Vestibulum rhoncus est pellentesque elit ullamcorper dignissim cras. Morbi tristique senectus et netus et malesuada. Faucibus turpis in eu mi bibendum neque egestas congue quisque. Duis convallis convallis tellus id interdum velit laoreet id donec. Erat nam at lectus urna. Gravida cum sociis natoque penatibus et magnis. <a href="https://example.com">example.com</a> Viverra maecenas accumsan lacus vel facilisis volutpat est.</p>
+  </section>
+
+  <section>
+    <h4>Keyboard infographic shortcuts</h4>
+    <ul>
+      <li><b>tab:</b> move forwards through links</li>
+      <li><b>shift + tab:</b> move back through links</li>
+      <li><b>enter:</b> when on link, navigate to that linked page</li>
+      <li><b>right arrow:</b> (when canvas is focussed) move infographic bar rightwards</li>
+      <li><b>shift + right arrow:</b> (when canvas is focussed) show all of the before image</li>
+      <li><b>left arrow:</b> (when canvas is focussed) move infographic bar leftwards</li>
+      <li><b>shift + left arrow:</b> (when canvas is focussed) show all of the after image</li>
+      <li><b>space:</b> (when canvas is focussed) toggle pin labels on/off</li>
+    </ul>
+  </section>
+
   <!--
+    We start creating the infographic using HTML and CSS. This code will display for users who prefer to visit websites using a browser with Javascript disabled.
+
     The outer container includes an id value, alongside data-label and data-description attributes which describe what's happening in the infographic
   -->
   <div id="beirut-infographic"
@@ -82,23 +102,28 @@
 
     data-description="Satellite images show the scale of the damage caused by the 2020 explosions in the Lebanese capital, with buildings miles from the port lying in ruin. Points of interest include: 1, center-left (before) a very large shed on the dockside surrounded by lorries and containers; 2, center-right (after) a similar shed, completely destroyed; 3, bottom-center (both images) a boat in the harbour afloat (before) and rolled on its side (after); 4, top-right (before) some large transport containers, missing in the after image; 5, centre (both images) a roundabout connecting the sheds to the transport network. Before image taken on 31 July; after image taken 5 August. Photograph: Maxar Tech/AFP via Getty Images.">
 
+    <h3>Beirut explosion: satellite images before and after the blast</h3>
+    <p>The port of Beirut (Photographs: Maxar Tech/AFP via Getty Images)</p>
+
     <!--
       The container contains two <div> elements, one for each panel of the infographic. Each element includes an <img> element and however many <p> elements are required to add hotspot information points (which trigger when hovered over or tapped) to that panel. 
 
-      The <div> elements need an id value, alongside a data-frame attribute set to either "left" or "right", so we can position the panels correctly
+      The <div> elements need an id value, alongside a data-frame attribute set to either "left" or "right", so we can position the panels correctly. Also have a data-date attribute, though current infographic functionality doesn't do anything with it. 
     -->
     <div 
       id="beirut-infographic-before"
+      data-date="31 July"
       data-frame="left">
 
       <!--
         Give each <img> element an id value alongside some alt text and a src url
+        For now I've put the photo date in a title attribute
       -->
-      <!-- https://assets.codepen.io/128723/temp-beirut-before.jpeg -->
       <img 
         id="beirut-infographic-before-image"
         alt="Beirut harbour before the explosion" 
-        src="img/beirut-2020-before.webp" />
+        title="Photograph from: 31 July"
+        src="https://i.guim.co.uk/img/media/f2af43aa8e1510fa3ebd7bd8652de528c3bce144/18_21_1984_1252/master/1984.jpg?width=1000&quality=85&s=92e4b44515c489fa06beaf5fe9559477" />
       <!--
         Each <p> element needs an id value together with some data- attributes
 
@@ -163,13 +188,14 @@
 
     <div 
       id="beirut-infographic-after"
+      data-date="5 August"
       data-frame="right">
       
-      <!-- https://assets.codepen.io/128723/temp-beirut-after.jpeg -->
-      <img 
+       <img 
         id="beirut-infographic-after-image"
         alt="Beirut harbour after the explosion" 
-        src="img/beirut-2020-after.jpeg" />
+        title="Photograph from: 5 August"
+        src="https://i.guim.co.uk/img/media/f2af43aa8e1510fa3ebd7bd8652de528c3bce144/29_1315_1953_1232/master/1953.jpg?width=1000&quality=85&s=698240542c692c8e07b81e8cb5f086d2" />
 
       <p 
         id="beirut-infographic-destroyed-shed" 
@@ -228,6 +254,16 @@
       .slider-infographic {
         visibility: visible;
         height: auto !important;
+        width: calc(100% - 4em - 2px);
+        max-width: 60em;
+        margin: 0 auto;
+        padding: 0 2em;
+        border: 1px solid black;
+        padding-bottom: 1em;
+      }
+
+      .slider-infographic img {
+        width: 100%;
       }
 
       .sc-red {
@@ -251,34 +287,15 @@
     </style>
   </noscript>
 
-  <div class="testinfo">
-    <h4>Test purpose</h4>
-    <ul>
-      <li>Initial code is friendly to non-Javascript users</li>
-      <li>Import the before-after-slider-infographic.js snippet code</li>
-      <li>Apply the snippet to our markup. Make sure that the code:</li>
-      <ul>
-        <li>Creates a &lt;canvas> element</li>
-        <li>Parses the supplied element's children, extracting data, and then deletes those children from the DOM</li>
-        <li>Loads the images into the correct panels</li>
-        <li>Creates all required pins and positions them correctly on the canvas</li>
-        <li>Styles the pins in accordance with their data-attribute values</li>
-        <li>Creates the slider functionality</li>
-        <li>Displays pin labels when user hovers over pins</li>
-        <li>Formats the pin label text correctly</li>
-        <li>Adds the linked entitys to the canvas</li>
-        <li>Underlines links when user hovers over them</li>
-        <li>Opens the correct web page when user clicks on the link</li>
-        <li>Allows user to tab through links, and open links using enter,shift+enter, etc key presses</li>
-        <li>Adjustsd text sizes of labels and links when user resizes browser window</li>
-      </ul>
-    </ul>
+  <section>
+    <p>Original before|after image slider effect shown on Guardian Media article <a href="https://www.theguardian.com/world/2020/aug/06/beirut-explosion-before-and-after-satellite-images">Beirut explosion: satellite images before and after the blast</a>. Photograph: Maxar Tech/AFP via Getty Images.</p>
 
-    <ul>
-      <li><a href="../docs/demo/snippets-005.html">Annotated code</a></li>
-      <li><a href="../docs/demo/snippets/before-after-slider-infographic.html">Before/after slider infographic snippet</a></li>
-    </ul>
-  </div>
+    <p>Tortor at auctor urna nunc id cursus. Lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet. Aenean vel elit scelerisque mauris pellentesque. Dictum sit amet justo donec. Neque ornare aenean euismod elementum nisi quis eleifend quam. Nam aliquam sem et tortor consequat id. Egestas purus viverra accumsan in nisl. Leo in vitae turpis massa. Placerat in egestas erat imperdiet sed euismod nisi porta lorem. Gravida rutrum quisque non tellus orci ac auctor augue mauris. Ipsum faucibus vitae aliquet nec ullamcorper sit.</p>
+
+    <p>Ullamcorper sit amet risus nullam eget felis eget. Phasellus egestas tellus rutrum tellus pellentesque eu. Id consectetur purus ut faucibus pulvinar elementum integer. <a href="https://example.com">example.com</a> Tempus iaculis urna id volutpat lacus laoreet. Eu non diam phasellus vestibulum lorem sed risus ultricies tristique. Tempus egestas sed sed risus. Ac turpis egestas sed tempus. Ut aliquam purus sit amet luctus venenatis lectus. Bibendum est ultricies integer quis auctor. Morbi tristique senectus et netus. Facilisi etiam dignissim diam quis enim lobortis. Lectus magna fringilla urna porttitor rhoncus dolor purus non. Id donec ultrices tincidunt arcu non sodales. Libero enim sed faucibus turpis in eu mi bibendum. Laoreet suspendisse interdum consectetur libero id faucibus. Ut pharetra sit amet aliquam id diam maecenas ultricies.</p>
+
+    <p>Arcu non odio euismod lacinia. Gravida cum sociis natoque penatibus et magnis dis parturient montes. Tristique et egestas quis ipsum suspendisse ultrices gravida. Sed adipiscing diam donec adipiscing tristique risus nec feugiat. Vestibulum rhoncus est pellentesque elit ullamcorper dignissim cras. Tellus in hac habitasse platea. Lorem dolor sed viverra ipsum nunc. Sed elementum tempus egestas sed sed. Nunc id cursus metus aliquam eleifend. Consectetur adipiscing elit ut aliquam purus sit amet luctus venenatis. Amet porttitor eget dolor morbi. Vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Etiam erat velit scelerisque in. Massa id neque aliquam vestibulum morbi.<a href="https://example.com">example.com</a>        </p>
+  </section>
 
   <!-- 
     We use Javascript to turn the infographic container's HTML/CSS code into a canvas-based infographic which will replace that code
