@@ -14,20 +14,11 @@
 // + Smoothed stripes
 // + Worley - both euclidean and manhattan versions
 //
-// These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo [Filters-019](../../demo/filters-019.html) has been set up to allow for experimenting with these attributes
+// These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo [Canvas-060](../../demo/canvas-060.html) has been set up to allow for experimenting with these attributes
 //
-// The noise generated will be output to a dedicated offscreen &lt;canvas> element, which is the asset used by Picture entitys, Pattern styles and filters. The output image can be set to three color schemas:
-// + __Monochrome__ (black - gray - white)
-// + __Gradient__ - mediated by a Scrawl-canvas Color object
-// + __Hue__ - where the engine output for each pixel is interpreted as the hue component of an HSL color
-// + __Rainbow__ - to map a more complex Scrawl-canvas gradient to the noise output (for instance, to create contour lines and shading)
-//
-// (___NOTE:___ Perlin, Simplex and Value noise generator code based on code found in the [canvas-noise GitHub repository](https://github.com/lencinhaus/canvas-noise) written by [lencinhaus](https://github.com/lencinhaus).
-
-
 // #### Demos:
 // + [Canvas-044](../../demo/canvas-044.html) - Building more complex patterns
-// + [Filters-019](../../demo/filters-019.html) - Using a Noise asset with a displace filter
+// + [Canvas-060](../../demo/canvas-060.html) - Noise asset functionality
 
 
 // #### Imports

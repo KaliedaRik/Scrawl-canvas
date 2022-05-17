@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Snippets 006</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    .demo-header {
+      text-align: left;
+      line-height: 1.15;
+      border: 0;
+    }
+    #header-test-1 {
+      font-size: 5em;
+    }
+    #header-test-2 {
+      font-size: 4em;
+    }
+    #header-test-3 {
+      font-size: 5em;
+      font-family: "Mountains of Christmas";
+    }
+    #header-test-4 {
+      font-size: 5em;
+    }
+    #header-test-5 {
+      font-size: 4em;
+    }
+    #header-test-6 {
+      font-size: 5em;
+      font-family: "Bungee";
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Snippets test 006</h1>
+  <h2>Editable header elements with various text fill effects</h2>
+  <h3>These example headers are all editable.</h3>
+
+  <h2 id="header-test-1" class="demo-header risograph-header" contentEditable="true" data-y-offset="10" data-lineheight-adjuster="0.89" data-outline-width="2">This is an editable Risograph noisy gradient effect header.</h2>
+
+  <h2 id="header-test-2" class="demo-header risograph-header" contentEditable="true" data-y-offset="9" data-lineheight-adjuster="0.89" data-random-radius="15" data-top-color="red" data-bottom-color="black">This is the same effect as above, but with different data values.</h2>
+
+  <h2 id="header-test-3" class="demo-header risograph-header" contentEditable="true" data-y-offset="12" data-lineheight-adjuster="0.77" data-outline-width="2">This is the original effect, applied to a different (cloud based Google) font.</h2>
+
+  <h2 id="header-test-4" class="demo-header worley-header" contentEditable="true" data-y-offset="10" data-lineheight-adjuster="0.89" data-outline-width="2">This is an editable Worley noise effect header.</h2>
+
+  <h2 id="header-test-5" class="demo-header worley-header" contentEditable="true" data-y-offset="9" data-lineheight-adjuster="0.89" data-highlight-color="red" data-noise-scale="40" data-noise-sum-function="none">This is the same effect as above, but with different data values.</h2>
+
+  <h2 id="header-test-6" class="demo-header worley-header" contentEditable="true" data-y-offset="8" data-lineheight-adjuster="0.86" data-outline-width="2">This is the original effect, applied to a different (cloud based Google) font.</h2>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Apply text-based effect snippets to a series of &lt;h2> header elements</li>
+      <li>Edit the header elements - the effect should update in real-time</li>
+      <li>Resize the browser window - the effect should update in real-time</li>
+    </ul>
+
+    <p><b>Note 1:</b> only tested on Latin-based (alphabetical left-to-right) fonts.</p>
+    
+    <p><b>Known issue 1:</b> the HTML and canvas-based text will break at different points - this is because the canvas text is measuring lines including the space at the end of each word, while browsers remove the space at the end of each line. TODO: Needs to be fixed</p>
+
+    <p><b>Known issue 2:</b> canvas text assumes that hyphenated words are single words and won't break on the hyphen, unlike browsers. TODO: consider how to handle all the various different ways that browsers break text into lines.</p>
+    
+    <p><b>Known issue 3:</b> canvas text cannot handle multiline line breaks (the return key). TODO: decide if we want to fix this and, if yes, fix it.</p>
+    
+    <p><b>Touch test:</b> should work as expected</p>
+
+    <p><a href="../docs/demo/canvas-015.html">Annotated code</a></p>
+  </div>
+
+  <script src="snippets-006.js" type="module"></script>
+</body>
+
+</html>
