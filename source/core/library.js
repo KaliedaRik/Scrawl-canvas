@@ -93,18 +93,34 @@ export const worldnames = [];
 // Section classes are used with Phrase entitys - we store the class definitions in the library so that they can be easily shared between Phrases
 export const sectionClasses = {
     'DEFAULTS': { defaults: true },
+
+    'b': { weight: 'bold' },
+    '/b': { weight: 'normal' },
+    'strong': { weight: 'bold' },
+    '/strong': { weight: 'normal' },
     'BOLD': { weight: 'bold' },
-    'ITALIC': { style: 'italic' },
-    'SMALL-CAPS': { variant: 'small-caps' },
-    'HIGHLIGHT': { highlight: true },
-    'UNDERLINE': { underline: true },
-    'OVERLINE': { overline: true },
     '/BOLD': { weight: 'normal' },
+
+    'i': { style: 'italic' },
+    '/i': { style: 'normal' },
+    'em': { style: 'italic' },
+    '/em': { style: 'normal' },
+    'ITALIC': { style: 'italic' },
     '/ITALIC': { style: 'normal' },
-    '/SMALL-CAPS': { variant: 'normal' },
-    '/HIGHLIGHT': { highlight: false },
+
+    'u': { underline: true },
+    '/u': { underline: false },
+    'UNDERLINE': { underline: true },
     '/UNDERLINE': { underline: false },
-    '/OVERLINE': { overline: false }
+
+    'OVERLINE': { overline: true },
+    '/OVERLINE': { overline: false },
+
+    'SMALL-CAPS': { variant: 'small-caps' },
+    '/SMALL-CAPS': { variant: 'normal' },
+
+    'HIGHLIGHT': { highlight: true },
+    '/HIGHLIGHT': { highlight: false },
 };
 
 // Stack element wrappers created during Scrawl-canvas initialization, and created using the __makeStack__ and __addStack__ factories

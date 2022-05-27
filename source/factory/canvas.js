@@ -81,7 +81,8 @@ const Canvas = function (items = Ωempty) {
 
     el = this.domElement;
 
-    if (el) {
+    if (!el) this.cleanDimensions();
+    else {
 
         this.engine = this.domElement.getContext('2d');
 
@@ -95,12 +96,41 @@ const Canvas = function (items = Ωempty) {
         this.cellBatchesCompile = [];
         this.cellBatchesShow = [];
 
+        let baseWidth = this.currentDimensions[0],
+            baseHeight = this.currentDimensions[1];
+
+        const ds = el.dataset;
+
+        if (ds.isResponsive) {
+
+            el.style.width = '100%';
+            el.style.height = '100%';
+
+            let baseMatches = true;
+
+            if (ds.baseWidth && ds.baseHeight) {
+
+                baseMatches = false;
+                baseWidth = parseFloat(ds.baseWidth);
+                baseHeight = parseFloat(ds.baseHeight);
+            }
+
+            this.set({
+                checkForResize: true,
+                baseMatchesCanvasDimensions: baseMatches,
+                ignoreCanvasCssDimensions: true,
+                fit: ds.fit || this.fit,
+            });
+
+            this.cleanDimensions();
+        }
+
         // setup base cell
         let cellArgs = {
             name: `${this.name}_base`,
             element: false,
-            width: this.currentDimensions[0],
-            height: this.currentDimensions[1],
+            width: baseWidth,
+            height: baseHeight,
             cleared: true,
             compiled: true,
             shown: false,
@@ -168,7 +198,7 @@ const Canvas = function (items = Ωempty) {
 
     this.dirtyDomDimensions = true;
     if (items.setAsCurrentCanvas) this.setAsCurrentCanvas();
-    
+
     return this;
 };
 

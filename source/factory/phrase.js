@@ -235,7 +235,7 @@ let defaultAttributes = {
 // + `HIGHLIGHT`, `/HIGHLIGHT` - add/remove glyph background highlight
 // + `UNDERLINE`, `/UNDERLINE` - add/remove glyph underline
 // + `OVERLINE`, `/OVERLINE` - add/remove glyph overline
-    sectionClassMarker: '§',
+    sectionClassMarker: '[§<>]',
     sectionClasses: null,
 
 // ##### Overlines, underlines, highlighting
@@ -247,10 +247,14 @@ let defaultAttributes = {
 // __overlinePosition__, __overlineStyle__
     overlinePosition: -0.1,
     overlineStyle: 'rgb(250,0,0)',
+    overlineWidth: 1,
+    noOverlineGlyphs: '',
 
 // __underlinePosition__, __underlineStyle__
     underlinePosition: 0.6,
     underlineStyle: 'rgb(250,0,0)',
+    underlineWidth: 1,
+    noUnderlineGlyphs: '',
 
 // __highlightStyle__
     highlightStyle: 'rgba(250,218,94,0.4)',
@@ -508,6 +512,12 @@ D.overlinePosition = function (item) {
     this.dirtyFilterIdentifier = true;
 };
 
+// __noOverlineGlyphs__
+S.noOverlineGlyphs = function (item) {
+
+    if (item.substring) this.noOverlineGlyphs = item;
+};
+
 // __underlinePosition__
 S.underlinePosition = function (item) {
 
@@ -524,6 +534,12 @@ D.underlinePosition = function (item) {
     this.dirtyPathObject = true;
     this.dirtyText = true;
     this.dirtyFilterIdentifier = true;
+};
+
+// __noUnderlineGlyphs__
+S.noUnderlineGlyphs = function (item) {
+
+    if (item.substring) this.noUnderlineGlyphs = item;
 };
 
 // __textPath__
@@ -1385,6 +1401,10 @@ P.regularStamp = function () {
 
             if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
+            // __Needs investigating:__ for some reason when applying a filter to a phrase entity the pool cell gets its baseline reset to default, which displaces the filter effect upwards. These lines fix the immediate issue, but don't solve the deeper mystery.
+            engine.textBaseline = 'top';
+            engine.textAlign = 'left';
+
             this.getTextPath();
             this.calculateGlyphPathPositions();
 
@@ -1425,6 +1445,10 @@ P.regularStamp = function () {
             this.performRotation(engine);
 
             if (!this.noCanvasEngineUpdates) dest.setEngine(this);
+
+            // ... See above
+            engine.textBaseline = 'top';
+            engine.textAlign = 'left';
 
             pos = this.textPositions || [];
 
@@ -1523,12 +1547,7 @@ P.preStamper = function (dest, engine, entity, args) {
 
     if (highlight || underline || overline) {
 
-        let highlightStyle = entity.highlightStyle,
-            height = entity.textHeight,
-            underlineStyle = entity.underlineStyle,
-            underlinePosition = entity.underlinePosition,
-            overlineStyle = entity.overlineStyle,
-            overlinePosition = entity.overlinePosition;
+        let { highlightStyle, textHeight, underlineStyle, underlineWidth, underlinePosition, noUnderlineGlyphs, overlineStyle, overlineWidth, overlinePosition, noOverlineGlyphs } = entity;
 
         engine.save();
 
@@ -1539,19 +1558,19 @@ P.preStamper = function (dest, engine, entity, args) {
         if (highlight) {
 
             engine.fillStyle = makeStyle(highlightStyle);
-            engine.fillRect(data[1], data[2], data[3], height);
+            engine.fillRect(data[1], data[2], data[3], textHeight);
         }
 
-        if (underline) {
+        if (underline && noUnderlineGlyphs.indexOf(data[0]) < 0) {
 
-            engine.strokeStyle = makeStyle(underlineStyle);
-            engine.strokeRect(data[1], data[2] + (height * underlinePosition), data[3], 1);
+            engine.fillStyle = makeStyle(underlineStyle);
+            engine.fillRect(data[1], data[2] + (textHeight * underlinePosition), data[3], underlineWidth);
         }
 
         if (overline) {
 
-            engine.strokeStyle = makeStyle(overlineStyle);
-            engine.strokeRect(data[1], data[2] + (height * overlinePosition), data[3], 1);
+            engine.fillStyle = makeStyle(overlineStyle);
+            engine.fillRect(data[1], data[2] + (textHeight * overlinePosition), data[3], overlineWidth);
         }
         engine.restore();
     }

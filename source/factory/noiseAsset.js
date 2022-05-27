@@ -113,11 +113,13 @@ let defaultAttributes = {
     smoothing: 'quintic',
 
     // Post-processing the noise map: The __sumFunction__ attribute - a String value - identifies the smoothing function that will be applied to the noise map once the noise calculations complete. 
-    // + Permitted values include: `none`, `sine-x`, `sine-y`, `sine`, `modular`
-    // + __sineFrequencyCoeff__ - a Number - is used by sine-based sum functions
-    // + __sumAmplitude__ - a Number - is used by the modular sum function
+    // + Permitted values include: `none`, `sine-x`, `sine-y`, `sine`, `modular`, `random`
     sumFunction: 'none',
+
+    // __sineFrequencyCoeff__ - a Number - is used by sine-based sum functions
     sineFrequencyCoeff: 1,
+
+    // __sumAmplitude__ - a Number - is used by the modular sum function
     sumAmplitude: 5,
 
     // Worley functionality found in the [jackunion/tooloud GitHub repository](https://github.com/jackunion/tooloud/blob/master/src/Worley.js). 

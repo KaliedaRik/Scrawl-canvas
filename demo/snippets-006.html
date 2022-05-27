@@ -14,68 +14,570 @@
   <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
 
   <style>
-    .demo-header {
+    @import url(https://fonts.googleapis.com/css2?family=Bungee+Spice);
+
+    .spicy {
+      font-family: "Bungee Spice";
+      font-size: 3em;
+      font-palette: --colorized;
+      color: #e67900;
+    }
+    
+    @font-palette-values --colorized {
+      font-family: "Bungee Spice";
+      base-palette: 0;
+      override-colors: 0 #00ffbb, 1 #007744, 2 #004433;
+    }
+  </style>
+
+  <style>
+    main {
+      width: 100%;
+      max-width: 60em;
+      margin: 0 auto;
       text-align: left;
+    }
+    main p {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    main h3 {
+      font-size: 150%;
+      font-weight: bold;
+      color: black;
+      text-align: left;
+      margin-top: 1.5em;
+      border-top: 6px double black;
+      padding-top: 1em;
+    }
+    main li {
+      margin-bottom: 0.7em;
+    }
+    kbd {
+      display: inline-block;
+      font-size: 16px;
+      background-color: rgb(240 240 240);
+    }
+    code {
+      display: block;
+      font-size: 16px;
+      background-color: rgb(240 240 240);
+      margin-bottom: 1em;
+      overflow: auto;
+    }
+    .demo-header {
       line-height: 1.15;
       border: 0;
+      margin: 0;
+      -webkit-hyphens: none;
+      -ms-hyphens: none;
+      hyphens: none;
+      min-height: 1em;
+      caret-color: rgba(0 0 0 / 1);
+    }
+    .example-code {
+      border-top: 3px black solid;
+      margin-top: 3em;
     }
     #header-test-1 {
       font-size: 5em;
     }
     #header-test-2 {
       font-size: 4em;
+      font-weight: normal;
+      font-family: "Times New Roman, serif";
     }
     #header-test-3 {
       font-size: 5em;
       font-family: "Mountains of Christmas";
     }
     #header-test-4 {
+      font-weight: normal;
       font-size: 5em;
     }
     #header-test-5 {
       font-size: 4em;
     }
     #header-test-6 {
-      font-size: 5em;
+      font-size: 3em;
       font-family: "Bungee";
+    }
+    #header-test-7 {
+      font-size: 5em;
+    }
+    #header-test-8 {
+      font-size: 5em;
+      font-family: "Times New Roman, serif";
+    }
+    #reportmessage {
+      width: 80%;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background-color: #60d060;
+      padding: 0.5em 1em;
+      margin: 0 auto 2em;
     }
   </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Snippets test 006</h1>
-  <h2>Editable header elements with various text fill effects</h2>
-  <h3>These example headers are all editable.</h3>
+  <h2>Editable header element font colorizer snippets</h2>
 
-  <h2 id="header-test-1" class="demo-header risograph-header" contentEditable="true" data-y-offset="10" data-lineheight-adjuster="0.89" data-outline-width="2">This is an editable Risograph noisy gradient effect header.</h2>
+  <main>
+    <p class="spicy">Color fonts are a real thing. However...</p>
 
-  <h2 id="header-test-2" class="demo-header risograph-header" contentEditable="true" data-y-offset="9" data-lineheight-adjuster="0.89" data-random-radius="15" data-top-color="red" data-bottom-color="black">This is the same effect as above, but with different data values.</h2>
+    <p>... Support for <a href="https://www.colorfonts.wtf/">OpenType SVG fonts</a> in browsers is in active development, with all the caveats that apply to such functionality - see the <a href="https://caniuse.com/?search=font-color">caniuse site</a> for current details.</p>
 
-  <h2 id="header-test-3" class="demo-header risograph-header" contentEditable="true" data-y-offset="12" data-lineheight-adjuster="0.77" data-outline-width="2">This is the original effect, applied to a different (cloud based Google) font.</h2>
+    <p><strong><em>This demo does not use color font technology, nor does it attempt to replicate color font functionality!</em></strong> Instead it demonstrates the application of color design and animation to any text on the web page, typically in HTML header elements, through the use of Scrawl-canvas snippet modules.</p>
 
-  <h2 id="header-test-4" class="demo-header worley-header" contentEditable="true" data-y-offset="10" data-lineheight-adjuster="0.89" data-outline-width="2">This is an editable Worley noise effect header.</h2>
+    <h3>Scrawl-canvas font colorizer snippets</h3>
 
-  <h2 id="header-test-5" class="demo-header worley-header" contentEditable="true" data-y-offset="9" data-lineheight-adjuster="0.89" data-highlight-color="red" data-noise-scale="40" data-noise-sum-function="none">This is the same effect as above, but with different data values.</h2>
+    <p>The snippets in this demo allow developers to apply color, distortion and animation effects to HTML header text blocks. Each header element can personalize the snippet effect applied to it using <kbd>data-</kbd> attributes, meaning each snippet can create a range of different effects.</p>
 
-  <h2 id="header-test-6" class="demo-header worley-header" contentEditable="true" data-y-offset="8" data-lineheight-adjuster="0.86" data-outline-width="2">This is the original effect, applied to a different (cloud based Google) font.</h2>
+    <p><b>Heads up!</b> This technique uses Scrawl-canvas snippet modules, which are experimental. Snippets add canvas elements behind the HTML element they are applied to. Depending on the header size, and the complexity of the pattern design and animation effect, the technique may lead to heavy computation which can result in excessive power use and slower screen refresh rates. Use snippets sparingly!</p>
 
-  <p id="reportmessage"></p>
+    <p>Each of the following snippets relies on the <kbd>text-snippet-helper.js</kbd> module to do much of the text-related computation which attempts to match canvas text to HTML/CSS text. However there are limitations to what text effects we can match - in particular canvas text does not support many (most!) of the more advanced CSS text features available in modern browsers.</p>
+
+    <p>Also, this demo includes many header examples. The more headers that the snippets get applied to, the longer the initial computation takes, which leads to a delay to the effects appearing on the page - an unfortunate FOUT (flash of unstyled text). Better coding may help alleviate this issue.</p>
+
+    <h3>Applying a Scrawl-canvas snippet to HTML header elements</h3>
+
+    <p>These header text colorizer effects have been designed so they <b>can be applied to any font</b> (left-to-right, alphabetic) - including cloud-based fonts - at any given font size. However, every font is its own thing and the metadata included in a font can be, at times, less than helpful. Some fonts, for instance, will break through the ascendor and descendor values they claim to respect - in such cases (as demonstrated below) the longest ascendor/descendor strokes may appear to be clipped off.</p>
+
+    <p>The practical outcome of font-uniqueness is that we have to finesse canvas font placement so that it can match up with the HTML-rendered text as closely as possible. We can do this using a set of <kbd>data-</kbd> attributes added to each header element:</p>
+
+    <code>
+  CSS:
+    .demo-header {
+      line-height: 1.15;
+      border: 0;
+      margin: 0;
+      -webkit-hyphens: none;
+      -ms-hyphens: none;
+      hyphens: none;
+      min-height: 1em;
+      caret-color: rgba(0 0 0 / 1);
+    }
+    .demo-header canvas {
+      width: 100%;
+      height: 100%;
+    }
+    #my-SC-styled-header {
+      font-size: 5em;
+      font-weight: normal;
+    }
+
+  HTML:
+    &lt;h4 
+        id="my-SC-styled-header" 
+        class="demo-header pretty-effect" 
+        contenteditable="plaintext-only" 
+        data-y-offset="10" 
+        data-lineheight-adjuster="0.89" 
+        data-underline-position="0.75"
+        data-underline-width="8"
+        data-no-underline-glyphs="gjpqy"
+    >
+      Header with &lt;b>bold&lt;/b>, &lt;i>italic&lt;/i> and &lt;u>underline&lt;/u> markup.
+    &lt;/h4>
+
+  JS:
+    import effect from './path/to/required-SC-header-snippet.js';
+    const headers = document.querySelectorAll('.pretty-effect');
+    headers.forEach(el => effect(el));
+    </code>
+
+    <ul>
+      <li><kbd>id="my-SC-styled-header"</kbd> - if applying a snippet to an HTML element, that element needs to be given a unique id value</li>
+      <li><kbd>class="pretty-effect"</kbd> - we can use any CSS selector value to apply a snippet to HTML elements matching that selector</li>
+      <li><kbd>contenteditable="plaintext-only"</kbd> - useful during development to make sure canvas and HTML text match up as closely as possible</li>
+      <li><kbd>data-y-offset="10"</kbd> - (px) move the canvas text up and down until it covers the HTML text</li>
+      <li><kbd>data-lineheight-adjuster="0.89"</kbd> - (0 - 1) tweak the canvas text line height, for when the HTML text breaks into multiple lines (eg for responsive headers)</li>
+      <li><kbd>data-underline-position="0.75"</kbd> - (% of lineheight) tweak the positioning of canvas font underlines</li>
+      <li><kbd>data-underline-width="8"</kbd> - (px) tweak the canvas underline width</li>
+      <li><kbd>data-no-underline-glyphs="gjpqy"</kbd> - (string) skip underlining these letters</li>
+      <li><kbd>data-is-animated="true"</kbd> - when set, the snippet will attempt to add accessibility control buttons to the header element to switch the animation off, and back on again. If the supplied value is <kbd>"reduced"</kbd> then the snippet will also implement functionality to halt the animation five seconds after it initially runs</li>
+    </ul>
+
+    <p>Scrawl-canvas <i>Phrase entitys</i> can consume text strings that include the following html markup: <kbd>&lt;b>, &lt;strong>, &lt;i>, &lt;em>, &lt;u></kbd>. Phrase entitys also handle long text, breaking it into multiple lines to fit into a given width, automatically.</p>
+
+    <p id="reportmessage"></p>
+
+    <h3>risograph-text-gradient-snippet</h3>
+
+    <p>This effect is inspired by <a href="https://dribbble.com/resources/risograph-printing">Risograph printing</a> which uses a limited color palette, stippling colors to create a gradient effect.</p>
+
+    <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied to the HTML element:</p>
+
+    <ul>
+      <li><kbd>data-top-color</kbd> - any CSS color string</li>
+      <li><kbd>data-bottom-color</kbd> - any CSS color string</li>
+      <li><kbd>data-random-radius</kbd> - (px) the amount of mixing of the top and bottom colors</li>
+      <li><kbd>data-random-level</kbd> - (0 - 1) the density of the color mixing</li>
+      <li><kbd>data-outline-color</kbd> - any CSS color string</li>
+      <li><kbd>data-outline-width</kbd> - (px) outline width (needs to be double the required width)</li>
+    </ul>
+
+    <code class="example-code">
+  CSS:
+    #header-test-1 {
+      font-size: 5em;
+    }
+
+  HTML:
+    &lt;h4 
+        class="demo-header risograph-header" 
+        contenteditable="plaintext-only" 
+        data-y-offset="10" 
+        data-lineheight-adjuster="0.89" 
+        data-outline-width="2"
+        data-underline-position="0.75"
+        data-underline-width="8"
+        data-no-underline-glyphs="gjpqy"
+    >
+      Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
+    &lt;/h4>
+    </code>
+
+    <h4 
+      id="header-test-1" 
+      class="demo-header risograph-header" 
+      contenteditable="plaintext-only" 
+      data-y-offset="10" 
+      data-lineheight-adjuster="0.89" 
+      data-outline-width="2"
+      data-underline-position="0.75"
+      data-underline-width="8"
+      data-no-underline-glyphs="gjpqy"
+    >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
+
+    <code class="example-code">
+  CSS:
+    #header-test-2 {
+      font-size: 4em;
+      font-weight: normal;
+      font-family: "Times New Roman, serif";
+    }
+
+  HTML:
+    &lt;h4 
+        id="header-test-2" 
+        class="demo-header risograph-header" 
+        contenteditable="plaintext-only" 
+        data-y-offset="9" 
+        data-lineheight-adjuster="0.85" 
+        data-random-radius="15" 
+        data-top-color="red" 
+        data-bottom-color="black"
+        data-outline-color="gold"
+        data-outline-width="6"
+        data-underline-position="0.7"
+        data-underline-width="4"
+        data-no-underline-glyphs="gjpqy"
+    >
+      Lorem ipsum dolor &lt;i>sit amet&lt;/i>, &lt;b>consectetur&lt;/b> &lt;u>adipiscing elit&lt;/u> magna aliqua
+    &lt;/h4>
+    </code>
+
+    <h4 
+      id="header-test-2" 
+      class="demo-header risograph-header" 
+      contenteditable="plaintext-only" 
+      data-y-offset="9" 
+      data-lineheight-adjuster="0.85" 
+      data-random-radius="15" 
+      data-top-color="red" 
+      data-bottom-color="black"
+      data-outline-color="gold"
+      data-outline-width="6"
+      data-underline-position="0.7"
+      data-underline-width="4"
+      data-no-underline-glyphs="gjpqy"
+    >Lorem ipsum dolor <i>sit amet</i>, <b>consectetur</b> <u>adipiscing elit</u> magna aliqua</h4>
+
+    <code class="example-code">
+  CSS:
+    #header-test-3 {
+      font-size: 5em;
+      font-family: "Mountains of Christmas";
+    }
+
+  HTML:
+    &lt;h4 
+        id="header-test-3" 
+        class="demo-header risograph-header" 
+        contenteditable="plaintext-only" 
+        data-y-offset="12" 
+        data-lineheight-adjuster="0.77" 
+        data-outline-width="2"
+        data-underline-position="0.63"
+        data-underline-width="6"
+        data-no-underline-glyphs="gjlpqsy"
+    >
+      Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
+    &lt;/h4>
+    </code>
+
+    <p>This font is quite badly behaved when it comes to respecting the dimensions it sets itself.</p>
+
+    <h4 
+      id="header-test-3" 
+      class="demo-header risograph-header" 
+      contenteditable="plaintext-only" 
+      data-y-offset="12" 
+      data-lineheight-adjuster="0.77" 
+      data-outline-width="2"
+      data-underline-position="0.63"
+      data-underline-width="6"
+      data-no-underline-glyphs="gjlpqsy"
+    >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
+
+    <h3>worley-text-gradient-snippet</h3>
+
+    <p>Worley noise is a form of procedural texture which can be generated and used to simulate textures which look like stone, water or biological cells.</p>
+
+    <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied to the HTML element:</p>
+
+    <ul>
+      <li><kbd>data-base-color</kbd> - any CSS color string</li>
+      <li><kbd>data-highlight-color</kbd> - any CSS color string</li>
+      <li><kbd>data-noise-sum-function</kbd> - permitted values include: 'none', 'sine-x', 'sine-y', 'sine', 'modular', 'random'</li>
+      <li><kbd>data-noise-scale</kbd> - (+number) a form of zoom level</li>
+      <li><kbd>data-noise-output</kbd> - permitted values include: 'X', 'YminusX', 'ZminusX', etc</li>
+      <li><kbd>data-shadow-color</kbd> - any CSS color string, for the text shadow</li>
+      <li><kbd>data-shadow-offset-x</kbd> - (px) to offset the text shadow horizontally</li>
+      <li><kbd>data-shadow-offset-y</kbd> - (px) to offset the text shadow vertically</li>
+      <li><kbd>data-shadow-blur</kbd> - (px) to blur the shadow</li>
+    </ul>
+
+    <code class="example-code">
+  CSS:
+    #header-test-4 {
+      font-weight: normal;
+      font-size: 5em;
+    }
+
+  HTML:
+    &lt;h4 
+        id="header-test-4" 
+        class="demo-header worley-header" 
+        contenteditable="plaintext-only" 
+        data-y-offset="10" 
+        data-lineheight-adjuster="0.89" 
+        data-underline-position="0.75"
+        data-underline-width="8"
+        data-no-underline-glyphs="gjpqy"
+    >
+      Lorem ipsum &lt;b>dolor &lt;i>sit amet&lt;/i>&lt;/b>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
+    &lt;/h4>
+    </code>
+
+    <h4 
+      id="header-test-4" 
+      class="demo-header worley-header" 
+      contenteditable="plaintext-only" 
+      data-y-offset="10" 
+      data-lineheight-adjuster="0.89" 
+      data-underline-position="0.75"
+      data-underline-width="8"
+      data-no-underline-glyphs="gjpqy"
+    >Lorem ipsum <b>dolor <i>sit amet</i></b>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
+
+    <code class="example-code">
+  CSS:
+    #header-test-5 {
+      font-size: 4em;
+    }
+
+  HTML:
+    &lt;h4 
+        id="header-test-5" 
+        class="demo-header worley-header" 
+        contenteditable="plaintext-only" 
+        data-y-offset="9" 
+        data-lineheight-adjuster="0.89" 
+        data-highlight-color="red" 
+        data-shadow-color="slategray"
+        data-shadow-offset-x="2"
+        data-shadow-offset-y="2"
+        data-shadow-blur="3"
+        data-noise-scale="40" 
+        data-noise-sum-function="none"
+        data-underline-position="0.75"
+        data-underline-width="4"
+        data-no-underline-glyphs="gjpqy"
+    >
+      Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
+    &lt;/h4>
+    </code>
+
+    <h4 
+      id="header-test-5" 
+      class="demo-header worley-header" 
+      contenteditable="plaintext-only" 
+      data-y-offset="9" 
+      data-lineheight-adjuster="0.89" 
+      data-highlight-color="red" 
+      data-shadow-color="slategray"
+      data-shadow-offset-x="2"
+      data-shadow-offset-y="2"
+      data-shadow-blur="3"
+      data-noise-scale="40" 
+      data-noise-sum-function="none"
+      data-underline-position="0.75"
+      data-underline-width="4"
+      data-no-underline-glyphs="gjpqy"
+    >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</b></h4>
+
+    <code class="example-code">
+  CSS:
+    #header-test-6 {
+      font-size: 3em;
+      font-family: "Bungee";
+    }
+
+  HTML:
+    &lt;h4 
+        id="header-test-6" 
+        class="demo-header worley-header" 
+        contenteditable="plaintext-only" 
+        data-y-offset="4" 
+        data-lineheight-adjuster="0.86" 
+        data-base-color="white" 
+        data-highlight-color="#0760f7" 
+        data-noise-sum-function="none"
+        data-noise-output="YminusX"
+        data-noise-scale="45"
+        data-underline-position="0.79"
+        data-underline-width="4"
+    >
+      Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
+    &lt;/h4>
+    </code>
+
+    <h4 
+      id="header-test-6" 
+      class="demo-header worley-header" 
+      contenteditable="plaintext-only" 
+      data-y-offset="4" 
+      data-lineheight-adjuster="0.86" 
+      data-base-color="white" 
+      data-highlight-color="#0760f7" 
+      data-noise-sum-function="none"
+      data-noise-output="YminusX"
+      data-noise-scale="45"
+      data-underline-position="0.79"
+      data-underline-width="4"
+    >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
+
+    <h3>animated-highlight-gradient-text-snippet</h3>
+
+    <p>A simple gradient effect using two colors, spaced along the gradient to make a series of bars. The gradient animates downwards in a repeating pattern.</p>
+
+    <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied to the HTML element:</p>
+
+    <ul>
+      <li><kbd>data-main-color</kbd> - any CSS color string</li>
+      <li><kbd>data-highlight-color</kbd> - any CSS color string</li>
+      <li><kbd>data-gradient-easing</kbd> - easing function, for example: 'linear', 'easeOutIn3', etc</li>
+    </ul>
+
+    <code class="example-code">
+  CSS:
+    #header-test-7 {
+      font-size: 5em;
+    }
+
+  HTML:
+    &lt;h4 
+        id="header-test-7" 
+        class="demo-header highlight-gradient-header" 
+        contenteditable="plaintext-only" 
+        data-y-offset="10" 
+        data-lineheight-adjuster="0.89" 
+        data-underline-position="0.75"
+        data-underline-width="8"
+        data-no-underline-glyphs="gjpqy"
+        data-is-animated="true"
+    >
+      Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
+    &lt;/h4>
+    </code>
+
+    <h4 
+      id="header-test-7" 
+      class="demo-header highlight-gradient-header" 
+      contenteditable="plaintext-only" 
+      data-y-offset="10" 
+      data-lineheight-adjuster="0.89" 
+      data-underline-position="0.75"
+      data-underline-width="8"
+      data-no-underline-glyphs="gjpqy"
+      data-is-animated="true"
+    >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
+
+    <code class="example-code">
+  CSS:
+    #header-test-7 {
+      font-size: 4em;
+      font-family: "Times New Roman, serif";
+    }
+
+  HTML:
+    &lt;h4 
+        id="header-test-8" 
+        class="demo-header highlight-gradient-header" 
+        contenteditable="plaintext-only" 
+        data-y-offset="11" 
+        data-lineheight-adjuster="0.86" 
+        data-random-radius="15" 
+        data-main-color="black" 
+        data-highlight-color="yellow"
+        data-gradient-easing="easeInOut"
+        data-underline-position="0.7"
+        data-underline-width="7"
+        data-no-underline-glyphs="gjpqy"
+        data-is-animated="true"
+    >
+      Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
+    &lt;/h4>
+    </code>
+
+    <h4 
+      id="header-test-8" 
+      class="demo-header highlight-gradient-header" 
+      contenteditable="plaintext-only" 
+      data-y-offset="11" 
+      data-lineheight-adjuster="0.86" 
+      data-random-radius="15" 
+      data-main-color="black" 
+      data-highlight-color="yellow"
+      data-gradient-easing="easeInOut"
+      data-underline-position="0.7"
+      data-underline-width="7"
+      data-no-underline-glyphs="gjpqy"
+      data-is-animated="true"
+    >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
+
+  </main>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Apply text-based effect snippets to a series of &lt;h2> header elements</li>
+      <li>Apply text-based effect snippets to a series of header elements</li>
       <li>Edit the header elements - the effect should update in real-time</li>
       <li>Resize the browser window - the effect should update in real-time</li>
     </ul>
 
     <p><b>Note 1:</b> only tested on Latin-based (alphabetical left-to-right) fonts.</p>
     
-    <p><b>Known issue 1:</b> the HTML and canvas-based text will break at different points - this is because the canvas text is measuring lines including the space at the end of each word, while browsers remove the space at the end of each line. TODO: Needs to be fixed</p>
+    <p><b>Known issue 1:</b> Setting the <kbd>contenteditable</kbd> attribute on a DOM element makes the element editable, but leads to side effects. In particular, browsers have a tendency to add non-breaking spaces to the edited text which makes measuring that text problematic - which in turn leads to lines breaking before they should. When this happens, we need to set the element's height to incorporate the additional line which in turn increases the canvas height which will then display the additional line correctly. Note that setting <kbd>contenteditable="plaintext-only"</kbd> (somewhat) alleveates the problem - except in Firefox which doesn't support the <kbd>plaintext-only</kbd> value</p>
 
-    <p><b>Known issue 2:</b> canvas text assumes that hyphenated words are single words and won't break on the hyphen, unlike browsers. TODO: consider how to handle all the various different ways that browsers break text into lines.</p>
+    <p><b>Known issue 2:</b> canvas text assumes that hyphenated words are single words and won't break on the hyphen, unlike browsers. ACTION: will not fix - life is too short</p>
     
-    <p><b>Known issue 3:</b> canvas text cannot handle multiline line breaks (the return key). TODO: decide if we want to fix this and, if yes, fix it.</p>
+    <p><b>Known issue 3:</b> canvas text cannot handle multiline line breaks (the return key). ACTION: will not fix</p>
     
     <p><b>Touch test:</b> should work as expected</p>
 

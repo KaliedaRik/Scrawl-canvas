@@ -319,7 +319,7 @@ const pinFactory = function (items, canvas, pinTextGroup, pinTextBackgroundGroup
             visibility: false,
 
             // Changing the section class markers to include angle-bracketed markup
-            sectionClassMarker: '[§<>]',
+            // sectionClassMarker: '[§<>]',
         });
 
         pinText.addSectionClass('span class="sc-red"', { fill: colors.red })
@@ -328,15 +328,15 @@ const pinFactory = function (items, canvas, pinTextGroup, pinTextBackgroundGroup
         .addSectionClass('span class="sc-white"', { fill: colors.white })
         .addSectionClass('span class="sc-black"', { fill: colors.black })
         .addSectionClass('span class="sc-gray"', { fill: colors.gray })
-        .addSectionClass('/span', { fill: 'default' })
-        .addSectionClass('b', { weight: 'bold' })
-        .addSectionClass('/b', { weight: 'normal' })
-        .addSectionClass('strong', { weight: 'bold' })
-        .addSectionClass('/strong', { weight: 'normal' })
-        .addSectionClass('i', { style: 'italic' })
-        .addSectionClass('/i', { style: 'normal' })
-        .addSectionClass('em', { style: 'italic' })
-        .addSectionClass('/em', { style: 'normal' });
+        .addSectionClass('/span', { fill: 'default' });
+        // .addSectionClass('b', { weight: 'bold' })
+        // .addSectionClass('/b', { weight: 'normal' })
+        // .addSectionClass('strong', { weight: 'bold' })
+        // .addSectionClass('/strong', { weight: 'normal' })
+        // .addSectionClass('i', { style: 'italic' })
+        // .addSectionClass('/i', { style: 'normal' })
+        // .addSectionClass('em', { style: 'italic' })
+        // .addSectionClass('/em', { style: 'normal' });
 
         pinTextGroup.addArtefacts(`${name}-label`);
 

@@ -15,93 +15,75 @@
       border: 0;
       padding: 0;
     }
-    
 
-    canvas {
-      display:  block;
-      margin:  0 auto;
+    section {
+      margin: 0 1em;
     }
 
-    h4, p {
-      margin:  1em;
-    }
-    h4 {
-      border-top: 1px solid gray;
-      padding-top: 1em;
-    }
-
-    .testinfo p {
+    section h3 {
+      font-size:  2em;
       text-align: left;
+      margin-top: 1em;
+    }
+    
+    section code {
+      border-top: 4px solid lightgray;
     }
 
-    .with-responsiveness {
-      width: 100%;
-      height: 100%;
-    }
-
-    .make-stretched-by-css {
-      width: 100%;
-      height: 100%;
-    }
-
-    .with-border {
-      border: 1px dashed black;
-    }
-
-    .canvas-container {
+    section .canvas-container {
       overflow: hidden;
       resize: both;
-
-      border: 1px solid red;
-      margin: 0 auto 1em;
-
-      width: 450px;
-      height: 225px;
-
-      min-width: 300px;
-      min-height: 150px;
-
-      max-width: 600px;
-      max-height: 300px;
+      border: 1px solid black;
+      width: 400px;
+      height: 400px;
+      min-width: 200px;
+      min-height: 200px;
+      max-width: 800px;
+      max-height: 800px;
     }
 
-    .canvas-banner {
-      margin: 0;
-      border: 0;
-      padding: 0;
-
-      overflow: hidden;
+    section .nr-canvas-css-relative {
       width: 100%;
+      height: 100%;
+    }
 
+    section .nr-canvas-css-dimensions {
+      width: 600px;
+      height: 200px;
+    }
+
+    section .padded-canvas {
+      border: 24px dashed aqua;
+      padding: 24px;
       box-sizing: border-box;
-      border: 1px dashed red;
+      background-color: teal;
     }
 
-    .canvas-grid {
-      display: grid;
-
-      grid-template-columns: 1fr 1fr;
-      grid-column-gap: 2px;
-
-      grid-template-rows: auto;
-      grid-row-gap: 2px;
-
-      font-size:  12px;
-
-      margin: 1em;
-    }
-
-    .canvas-grid div {
+    section .boxed {
       box-sizing: border-box;
-
-      justify-self: stretch;
-
-      align-self: center;
-      text-align: center;
-      padding: 6px 0;
+      border-style: double;
     }
-    .canvas-grid p {
-      text-align:  center;
+
+    section .with-responsiveness {
+      width: 100%;
+      height: 100%;
+      border: 4px dashed red;
+    }
+
+    section kbd {
+      background-color: beige;
+      padding: 2px;
+    }
+    section code {
+      background-color: beige;
+      font-size: 16px;
+      line-height:  1.5;
+      padding: 0 1em;
+      margin-top: 1em;
+      white-space: pre-wrap;
+    }
+    section li {
+      margin-bottom: 0.7em;
     }
 
     .myimage {
@@ -114,463 +96,219 @@
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 025</h1>
   <h2>Various responsive and non-responsive canvases; responsive images</h2>
 
-  <p>In all the following examples:</p>
-  <ul>
-    <li>The large Picture is positioned relatively, and has relative dimensions</li>
-    <li>The smaller Picture is positioned relatively, but has absolute dimensions</li>
-    <li>The Picture image's natural aspect ratio is 4:3. This is reflected correctly in the smaller picture; the larger picture's relative dimensions may lead to distortions</li>
-    <li>The red Block is absolutely positioned and dimensioned</li>
-    <li>The yellow Block is relatively positioned and dimensioned</li>
-  </ul>
+  <section>
 
-  <h4>Default canvases: not updated in JS except for <strong>fit</strong> attribute</h4>
-  <p>Default canvas dimensions are 300px x 150px.</p>
+    <h3>Non-responsive canvas elements</h3>
+    
+    <code>
+<b><u>The default canvas element</u></b>
+By default, browsers will create canvas elements with a width of 300px and a height of 150px
 
-  <div class="canvas-grid">
-    <div>
-      <p>Fit: none (default)</p>
-      <canvas id="default-none" class="with-border"></canvas>
-    </div>
-    <div>
-      <p>Fit: fill</p>
-      <canvas id="default-fill" class="with-border"></canvas>
-    </div>
-    <div>
-      <p>Fit: contain</p>
-      <canvas id="default-contain" class="with-border"></canvas>
-    </div>
-    <div>
-      <p>Fit: cover</p>
-      <canvas id="default-cover" class="with-border"></canvas>
-    </div>
-  </div>
+<u>HTML:</u>
+&lt;canvas 
+  id="nr-canvas-1"
+>&lt;/canvas>
 
-  <h4>CSS only canvases: <strong>fitted in JS</strong>; sized using CSS.</h4> 
-  <p>Note: browser will maintain the canvas aspect ratio without our intervention; essentially it ignores the `height: 100%` rule and determines the height based on the aspect ratio (300px x 150px default canvas size == 2:1 aspect ratio)</p>
-  <p>Also: the CSS width rule only sets the canvas dimensions on initial page load. Changing the viewport dimensions repositions the canvases within their grid element, but doesn't resize them.</p>
+<b><i>Note that</i></b> the blue oval uses relative ('n%' string) values to set its x and y radiuses, and changes its appearance in line with the canvas element's dimensions, whereas the green oval uses absolute (n number) values so is unaffected by changes in the canvas element's dimensions
+    </code>
+    <canvas id="nr-canvas-1"></canvas>
 
-  <div class="canvas-grid">
-    <div>
-      <p>Fit: none (default)</p>
-      <canvas id="css-none" class="with-border make-stretched-by-css"></canvas>
-    </div>
-    <div>
-      <p>Fit: fill</p>
-      <canvas id="css-fill" class="with-border make-stretched-by-css"></canvas>
-    </div>
-    <div>
-      <p>Fit: contain</p>
-      <canvas id="css-contain" class="with-border make-stretched-by-css"></canvas>
-    </div>
-    <div>
-      <p>Fit: cover</p>
-      <canvas id="css-cover" class="with-border make-stretched-by-css"></canvas>
-    </div>
-  </div>
+    <code>
+<b><u>The sized canvas element</u></b>
+We can set the canvas dimensions using the width and height attributes
 
-  <h4>Default canvases: <strong>fitted in JS</strong>; base set to 500px square</h4>
-  <p>The canvas base Cell positions itself in the display &lt;canvas> element, taking the <strong>fit</strong> attribute's value into account.</p>
+<u>HTML:</u>
+&lt;canvas 
+  id="nr-canvas-2" 
+  width="300" 
+  height="300"
+>&lt;/canvas>
+    </code>
+    <canvas id="nr-canvas-2" width="300" height="300"></canvas>
 
-  <div class="canvas-grid">
-    <div>
-      <p>Fit: none (default)</p>
-      <canvas id="default-none-square-base" class="with-border"></canvas>
-    </div>
-    <div>
-      <p>Fit: fill</p>
-      <canvas id="default-fill-square-base" class="with-border"></canvas>
-    </div>
-    <div>
-      <p>Fit: contain</p>
-      <canvas id="default-contain-square-base" class="with-border"></canvas>
-    </div>
-    <div>
-      <p>Fit: cover</p>
-      <canvas id="default-cover-square-base" class="with-border"></canvas>
-    </div>
-  </div>
+    <code>
+<b><u>Canvas elements and CSS box-sizing</u></b>
+Canvas elements ignore all attempts to set their CSS box-sizing property to anything other than 'content-box'
 
-  <h4>CSS only canvases: <strong>fitted in JS</strong>; base set to 500px square; sized using CSS</h4>
-  <p>Same issues with CSS sizing as noted above.</p>
+<u>CSS:</u>
+.padded-canvas {
+  border: 24px dashed aqua;
+  padding: 24px;
+  background-color: teal;
+  box-sizing: border-box;
+}
 
-  <div class="canvas-grid">
-    <div>
-      <p>Fit: none (default)</p>
-      <canvas id="css-none-square-base" class="with-border make-stretched-by-css"></canvas>
-    </div>
-    <div>
-      <p>Fit: fill</p>
-      <canvas id="css-fill-square-base" class="with-border make-stretched-by-css"></canvas>
-    </div>
-    <div>
-      <p>Fit: contain</p>
-      <canvas id="css-contain-square-base" class="with-border make-stretched-by-css"></canvas>
-    </div>
-    <div>
-      <p>Fit: cover</p>
-      <canvas id="css-cover-square-base" class="with-border make-stretched-by-css"></canvas>
-    </div>
-  </div>
+<u>HTML:</u>
+&lt;canvas 
+  id="nr-canvas-3" 
+  class="padded-canvas"
+>&lt;/canvas>
 
-  <h4>Default canvases: dimensions set to 40% in JS</h4>
-  <p>Default canvas dimensions are 300 &times; 150px.</p>
-  <p>JS-dimensioned canvases will set their dimensions based on the parent element (in this case, a grid element). This may also lead to canvas aspect ratios being broken - as in this case where the result is a set of square canvas elements (aspect ratio 1:1)</p>
+<b><i>Be aware:</i></b> Scrawl-canvas will include the canvas border and padding values when calculating the dimensions of the canvas element's base cell, making it larger than the display canvas. This will have a effect on the displayed graphic - strokes, and some shapes, will look thinner/smaller than expected.
+    </code>
+    <canvas id="nr-canvas-3" class="padded-canvas"></canvas>
 
-  <div class="canvas-grid">
-    <div>
-      <p>Fit: none (default); JS dimensions: 40%</p>
-      <canvas id="default-none-40" class="with-border"></canvas>
-    </div>
-    <div>
-      <p>Fit: fill; JS dimensions: 40%</p>
-      <canvas id="default-fill-40" class="with-border"></canvas>
-    </div>
-    <div>
-      <p>Fit: contain; JS dimensions: 40%</p>
-      <canvas id="default-contain-40" class="with-border"></canvas>
-    </div>
-    <div>
-      <p>Fit: cover; JS dimensions: 40%</p>
-      <canvas id="default-cover-40" class="with-border"></canvas>
-    </div>
-  </div>
+    <code>
+<b><u>Sizing the canvas element using CSS</u></b>
+While Scrawl-canvas static canvases can be sized using CSS, this is not a recommended practice. 
 
-  <h4>Responsive canvas 1</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> false</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> false</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> false</li>
-  </ul>
+<u>CSS:</u>
+.nr-canvas-css-dimensions {
+  width: 600px;
+  height: 200px;
+}
 
-  <div class="canvas-grid">
+<u>HTML:</u>
+&lt;canvas 
+  id="nr-canvas-4" 
+  class="nr-canvas-css-dimensions"
+>&lt;/canvas>
+    </code>
+    <canvas id="nr-canvas-4" class="nr-canvas-css-dimensions"></canvas>
+
+    <h3>Responsive canvas elements</h3>
+    
+    <code>
+<b><u>Sizing the canvas element using CSS (continued)</u></b>
+Attempts to use CSS to make the canvas element 'responsive' <b><i>will not work</i></b> on Scrawl-canvas canvases.
+
+<u>CSS:</u>
+.canvas-container {
+  overflow: hidden;
+  resize: both;
+  border: 1px solid black;
+  width: 400px;
+  height: 400px;
+  min-width: 200px;
+  min-height: 200px;
+  max-width: 800px;
+  max-height: 800px;
+}
+
+.nr-canvas-css-relative {
+  width: 100%;
+  height: 100%;
+}
+
+<u>HTML:</u>
+&lt;div class="canvas-container">
+  &lt;canvas id="nr-canvas-5" class="nr-canvas-css-relative">&lt;/canvas>
+&lt;/div>
+    </code>
     <div class="canvas-container">
-      <p>Dimensions set in CSS<br />Expected behaviour: canvas remains static; initial canvas dimensions match container dimensions; base dimensions remain default</p>
-      <canvas id="responsive-canvas-1" class="with-border with-responsiveness"></canvas>
+      <canvas id="nr-canvas-5" class="nr-canvas-css-relative"></canvas>
     </div>
+
+    <code>
+<b><u>Make the canvas responsive using Scrawl-canvas</u></b>
+To make a canvas responsive, add the <i>data-is-responsive="true"</i> attribute to it
+
+<u>HTML:</u>
+&lt;div class="canvas-container">
+  &lt;canvas 
+    id="canvas-1" 
+    data-is-responsive="true"
+  >&lt;/canvas>
+&lt;/div>
+    </code>
     <div class="canvas-container">
-      <p>Dimensions set in JS<br />Expected behaviour: canvas remains static; initial canvas dimensions match container parent dimensions; base dimensions remain default</p>
-      <canvas id="responsive-canvas-1-100" class="with-border"></canvas>
+      <canvas id="canvas-1" data-is-responsive="true"></canvas>
     </div>
-  </div>
 
-  <h4>Responsive canvas 2</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> true</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> false</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> false</li>
-  </ul>
-  <p>Known issue: canvases with margin, border or padding set on them via CSS will shrink on mouse move.</p>
+    <code>
+<b><u>Emulate the CSS image-fit property</u></b>
+We can add additional data- attributes to the canvas element's markup to set the dimensions of its base cell, and determine how the base cell will fit into its display canvas
 
-  <div class="canvas-grid">
+<u>HTML:</u>
+&lt;div class="canvas-container">
+  &lt;canvas 
+    id="canvas-2" 
+    data-is-responsive="true" 
+    data-base-width="400" 
+    data-base-height="400" 
+    data-fit="contain"
+  >&lt;/canvas>
+&lt;/div>
+
+Scrawl-canvas supports the following data-fit values: "none" (the default); "cover"; "contain"; and "fill"
+    </code>
     <div class="canvas-container">
-      <p>Dimensions set in CSS<br />Expected behaviour: canvas remains static; initial canvas and base dimensions match container dimensions</p>
-      <canvas id="responsive-canvas-2" class="with-responsiveness"></canvas>
+      <canvas id="canvas-2" data-is-responsive="true" data-base-width="400" data-base-height="400" data-fit="contain"></canvas>
     </div>
+
+    <h3>Responsive images</h3>
+    
+    <code>
+<b><u>Defining a responsive image in HTML</u></b>
+Scrawl-canvas can use an image asset defined in an &lt;img> element with a <b>srcset</b> attribute, and will update the image in line with browser updates in response to changes in their viewport widths.
+
+<u>HTML:</u>
+&lt;div class="canvas-container">
+  &lt;canvas 
+    id="canvas-3" 
+    data-is-responsive="true" 
+    data-base-width="800" 
+    data-base-height="400" 
+    data-fit="cover"
+  >&lt;/canvas>
+&lt;/div>
+
+&lt;img 
+  id="river" 
+  class="myimage" 
+  alt="Image used in canvas element"
+  src="img/river.jpg"
+  srcset="img/river-300.jpg 300w,
+    img/river-600.jpg 600w,
+    img/river-900.jpg 900w,
+    img/river-1200.jpg 1200w,
+    img/river-1600.jpg 1600w,
+    img/river-2000.jpg 2000w,
+    img/river-2400.jpg 2400w,
+    img/river-2800.jpg 2800w,
+    img/river-3200.jpg 3200w,
+    img/river-3600.jpg 3600w,
+    img/river-4000.jpg 4000w"
+  data-dimensions='{
+    "river-300.jpg": [300, 225],
+    "river-600.jpg": [600, 450],
+    "river-900.jpg": [900, 675],
+    "river-1200.jpg": [1200, 900],
+    "river-1600.jpg": [1600, 1200],
+    "river-2000.jpg": [2000, 1500],
+    "river-2400.jpg": [2400, 1800],
+    "river-2800.jpg": [2800, 2100],
+    "river-3200.jpg": [3200, 2400],
+    "river-3600.jpg": [3600, 2700],
+    "river-4000.jpg": [4000, 3000]
+  }' 
+/>
+
+<u>Javascript:</u>
+const canvas3 = scrawl.library.canvas['canvas-3'];
+
+scrawl.importDomImage('.myimage');
+
+scrawl.makePicture({
+    name: `${canvas3.name}-image`,
+    group: canvas3.base.name,
+    asset: "river",
+    width: "100%",
+    height: "100%",
+    copyWidth: "100%",
+    copyHeight: "100%"
+});
+
+To work correctly, we need to add some additional data to the element - specifically the <b>intrinsic dimensions of each image</b> defined in the srcset attribute, supplied as a JSON string of an object with the filename of each image as a key and an array of that image's width and height (in px) as the value to that key.
+    </code>
     <div class="canvas-container">
-      <p>Dimensions set in JS<br />Expected behaviour: canvas remains static; initial canvas dimensions match container parent dimensions; base dimensions remain default</p>
-      <canvas id="responsive-canvas-2-100" class=""></canvas>
+      <canvas id="canvas-3" data-is-responsive="true" data-base-width="800" data-base-height="400" data-fit="cover"></canvas>
     </div>
-    <div class="canvas-container">
-      <p>Border and dimensions set in CSS<br />Expected behaviour: canvas will shrink on mouse move</p>
-      <canvas id="responsive-canvas-2-border" class="with-border with-responsiveness"></canvas>
-    </div>
-    <div class="canvas-container">
-      <p>Border set in CSS; dimensions set in JS<br />Expected behaviour: canvas will shrink on mouse move</p>
-      <canvas id="responsive-canvas-2-100-border" class="with-border"></canvas>
-    </div>
-  </div>
 
-  <h4>Responsive canvas 3</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> false</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> true</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> false</li>
-  </ul>
 
-  <div class="canvas-grid">
-    <div class="canvas-container">
-      <p>Dimensions set in CSS<br />Expected behaviour: canvas remains static; initial and base dimensions match container dimensions</p>
-      <canvas id="responsive-canvas-3" class="with-border with-responsiveness"></canvas>
-    </div>
-    <div class="canvas-container">
-      <p>Dimensions set in JS<br />Expected behaviour: canvas remains static; initial and base dimensions match container parent dimensions</p>
-      <canvas id="responsive-canvas-3-100" class="with-border"></canvas>
-    </div>
-  </div>
 
-  <h4>Responsive canvas 4</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> false</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> false</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> true</li>
-  </ul>
 
-  <div class="canvas-grid">
-    <div class="canvas-container">
-      <p>Dimensions set in CSS<br />Expected behaviour: canvas will distort on resize; initial and base dimensions match container dimensions</p>
-      <canvas id="responsive-canvas-4" class="with-border with-responsiveness"></canvas>
-    </div>
-    <div class="canvas-container">
-      <p>Dimensions set in JS<br />Expected behaviour: canvas will distort on resize; initial dimensions match container dimensions; base dimensions remain default</p>
-      <canvas id="responsive-canvas-4-100" class="with-border"></canvas>
-    </div>
-  </div>
-
-  <h4>Responsive canvas 5</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> true</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> true</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> false</li>
-  </ul>
-  <p>Known issue: canvases with margin, border or padding set on them via CSS will shrink on mouse move.</p>
-
-  <div class="canvas-grid">
-    <div class="canvas-container">
-      <p>Dimensions set in CSS<br />Expected behaviour: canvas remains static; initial and base dimensions match container dimensions</p>
-      <canvas id="responsive-canvas-5" class="with-responsiveness"></canvas>
-    </div>
-    <div class="canvas-container">
-      <p>Dimensions set in JS<br />Expected behaviour: canvas remains static; initial and base dimensions match container parent dimensions</p>
-      <canvas id="responsive-canvas-5-100" class=""></canvas>
-    </div>
-    <div class="canvas-container">
-      <p>Border and dimensions set in CSS<br />Expected behaviour: canvas will shrink on mouse move</p>
-      <canvas id="responsive-canvas-5-border" class="with-border with-responsiveness"></canvas>
-    </div>
-    <div class="canvas-container">
-      <p>Border set in CSS; dimensions set in JS<br />Expected behaviour: canvas will shrink on mouse move</p>
-      <canvas id="responsive-canvas-5-100-border" class="with-border"></canvas>
-    </div>
-  </div>
-
-  <h4>Responsive canvas 6</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> true</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> false</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> true</li>
-  </ul>
-
-  <div class="canvas-grid">
-    <div class="canvas-container">
-      <p>Dimensions set in CSS<br />Expected behaviour: canvas responsive; base initializes to container dimensions; entitys not affected by resize</p>
-      <canvas id="responsive-canvas-6" class="with-border with-responsiveness"></canvas>
-    </div>
-    <div class="canvas-container">
-      <p>Dimensions set in JS<br />Expected behaviour: canvas responsive; base initializes to container dimensions; entitys not affected by resize</p>
-      <canvas id="responsive-canvas-6-100" class="with-border"></canvas>
-    </div>
-  </div>
-
-  <h4>Responsive canvas 7</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> false</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> true</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> true</li>
-  </ul>
-
-  <div class="canvas-grid">
-    <div class="canvas-container">
-      <p>Dimensions set in CSS<br />Expected behaviour: canvas will distort on resize; initial and base dimensions match container dimensions</p>
-      <canvas id="responsive-canvas-7" class="with-border with-responsiveness"></canvas>
-    </div>
-    <div class="canvas-container">
-      <p>Dimensions set in JS<br />Expected behaviour: canvas will distort on resize; initial dimensions match container dimensions; base dimensions match container parent dimensions</p>
-      <canvas id="responsive-canvas-7-100" class="with-border"></canvas>
-    </div>
-  </div>
-
-  <h4>Responsive canvas 8</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> true</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> true</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> true</li>
-  </ul>
-
-  <div class="canvas-grid">
-    <div class="canvas-container">
-      <p>Dimensions set in CSS<br />Expected behaviour: canvas responsive; canvas and base match container dimensions; relative entitys affected by resize</p>
-      <canvas id="responsive-canvas-8" class="with-border with-responsiveness"></canvas>
-    </div>
-    <div class="canvas-container">
-      <p>Dimensions set in JS<br />Expected behaviour: canvas responsive; canvas and base match container dimensions; relative entitys affected by resize</p>
-      <canvas id="responsive-canvas-8-100" class="with-border"></canvas>
-    </div>
-  </div>
-
-  <h4>Banner canvas 1</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> false</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> false</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> false</li>
-  </ul>
-  <p>Known issue: setting canvas dimensions in JS (to ['100%', '100%']), as done in the second banner, will make the banner square. Setting dimensions in CSS will maintain the canvas element's aspect ratio as resizing occurs.</p>
-
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-1" class="with-responsiveness with-border"></canvas>
-  </div>
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-1-100" class="with-border"></canvas>
-  </div>
-
-  <h4>Banner canvas 2</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> true</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> false</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> false</li>
-  </ul>
-
-  <p>Known issue: setting canvas dimensions in JS (to ['100%', '100%']), as done in the second banner, will make the banner square. Setting dimensions in CSS will maintain the canvas element's aspect ratio as resizing occurs.</p>
-
-  <p>Known issue: canvases with margin, border or padding set on them via CSS will shrink on mouse move.</p>
-
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-2" class="with-responsiveness"></canvas>
-  </div>
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-2-border" class="with-responsiveness with-border"></canvas>
-  </div>
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-2-100" class=""></canvas>
-  </div>
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-2-100-border" class="with-border"></canvas>
-  </div>
-
-  <h4>Banner canvas 3</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> false</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> true</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> false</li>
-  </ul>
-
-  <p>Known issue: setting canvas dimensions in JS (to ['100%', '100%']), as done in the second banner, will make the banner square. Setting dimensions in CSS will maintain the canvas element's aspect ratio as resizing occurs.</p>
-
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-3" class="with-responsiveness with-border"></canvas>
-  </div>
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-3-100" class="with-border"></canvas>
-  </div>
-
-  <h4>Banner canvas 4</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> false</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> false</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> true</li>
-  </ul>
-
-  <p>Known issue: setting canvas dimensions in JS (to ['100%', '100%']), as done in the second banner, will make the banner square. Setting dimensions in CSS will maintain the canvas element's aspect ratio as resizing occurs.</p>
-
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-4" class="with-responsiveness with-border"></canvas>
-  </div>
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-4-100" class="with-border"></canvas>
-  </div>
-
-  <h4>Banner canvas 5</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> true</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> true</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> false</li>
-  </ul>
-
-  <p>Known issue: setting canvas dimensions in JS (to ['100%', '100%']), as done in the second banner, will make the banner square. Setting dimensions in CSS will maintain the canvas element's aspect ratio as resizing occurs.</p>
-
-  <p>Known issue: canvases with margin, border or padding set on them via CSS will shrink on mouse move.</p>
-
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-5" class="with-responsiveness"></canvas>
-  </div>
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-5-border" class="with-responsiveness with-border"></canvas>
-  </div>
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-5-100" class=""></canvas>
-  </div>
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-5-100-border" class="with-border"></canvas>
-  </div>
-
-  <h4>Banner canvas 6</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> true</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> false</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> true</li>
-  </ul>
-
-  <p>Known issue: setting canvas dimensions in JS (to ['100%', '100%']), as done in the second banner, will make the banner square. Setting dimensions in CSS will maintain the canvas element's aspect ratio as resizing occurs.</p>
-
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-6" class="with-responsiveness with-border"></canvas>
-  </div>
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-6-100" class="with-border"></canvas>
-  </div>
-
-  <h4>Banner canvas 7</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> false</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> true</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> true</li>
-  </ul>
-
-  <p>Known issue: setting canvas dimensions in JS (to ['100%', '100%']), as done in the second banner, will make the banner square. Setting dimensions in CSS will maintain the canvas element's aspect ratio as resizing occurs.</p>
-
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-7" class="with-responsiveness with-border"></canvas>
-  </div>
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-7-100" class="with-border"></canvas>
-  </div>
-
-  <h4>Banner canvas 8</h4>
-  <p>Canvas set in JS with the following attribute values:</p>
-  <ul>
-    <li><strong>fit:</strong> contain</li>
-    <li><strong>checkForResize:</strong> true</li>
-    <li><strong>baseMatchesCanvasDimensions:</strong> true</li>
-    <li><strong>ignoreCanvasCssDimensions:</strong> true</li>
-  </ul>
-
-  <p>Known issue: setting canvas dimensions in JS (to ['100%', '100%']), as done in the second banner, will make the banner square. Setting dimensions in CSS will maintain the canvas element's aspect ratio as resizing occurs.</p>
-
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-8" class="with-responsiveness with-border"></canvas>
-  </div>
-  <div class="canvas-banner">
-    <canvas id="banner-canvas-8-100" class="with-border"></canvas>
-  </div>
+  </section>
 
   <p id="reportmessage"></p>
 
@@ -606,7 +344,21 @@
       img/river-2800.jpg 2800w,
       img/river-3200.jpg 3200w,
       img/river-3600.jpg 3600w,
-      img/river-4000.jpg 4000w" />
+      img/river-4000.jpg 4000w" 
+    data-dimensions='{
+      "river-300.jpg": [300, 225],
+      "river-600.jpg": [600, 450],
+      "river-900.jpg": [900, 675],
+      "river-1200.jpg": [1200, 900],
+      "river-1600.jpg": [1600, 1200],
+      "river-2000.jpg": [2000, 1500],
+      "river-2400.jpg": [2400, 1800],
+      "river-2800.jpg": [2800, 2100],
+      "river-3200.jpg": [3200, 2400],
+      "river-3600.jpg": [3600, 2700],
+      "river-4000.jpg": [4000, 3000]
+    }'
+  />
 
   <script src="canvas-025.js" type="module"></script>
 
