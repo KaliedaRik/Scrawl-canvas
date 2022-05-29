@@ -126,7 +126,7 @@ const Canvas = function (items = Ωempty) {
         }
 
         // setup base cell
-        let cellArgs = {
+        const cellArgs = {
             name: `${this.name}_base`,
             element: false,
             width: baseWidth,
@@ -139,6 +139,10 @@ const Canvas = function (items = Ωempty) {
             controller: this,
             order: 10,
         };
+
+        if (ds.baseClearAlpha) cellArgs.clearAlpha = parseFloat(ds.baseClearAlpha);
+        if (ds.baseBackgroundColor) cellArgs.backgroundColor = ds.baseBackgroundColor;
+
         this.base = this.buildCell(cellArgs);
 
         // even if it is a child of a stack element, it needs to be recorded as a 'rootElement'
@@ -148,7 +152,7 @@ const Canvas = function (items = Ωempty) {
         // ##### Accessibility
         // if (!el.getAttribute('role')) el.setAttribute('role', 'img');
 
-        let navigation = document.createElement('nav');
+        const navigation = document.createElement('nav');
         navigation.id = `${this.name}-navigation`;
         navigation.style.width = '0px';
         navigation.style.height = '0px';
@@ -161,7 +165,7 @@ const Canvas = function (items = Ωempty) {
         this.navigation = navigation;
         el.appendChild(navigation);
 
-        let textHold = document.createElement('div');
+        const textHold = document.createElement('div');
         textHold.id = `${this.name}-text-hold`;
         textHold.style.width = '0px';
         textHold.style.height = '0px';
@@ -174,7 +178,7 @@ const Canvas = function (items = Ωempty) {
         this.textHold = textHold;
         el.appendChild(textHold);
 
-        let ariaLabel = document.createElement('div');
+        const ariaLabel = document.createElement('div');
         ariaLabel.id = `${this.name}-ARIA-label`;
         ariaLabel.textContent = this.label;
         this.ariaLabelElement = ariaLabel;
@@ -182,7 +186,7 @@ const Canvas = function (items = Ωempty) {
         el.setAttribute('aria-labelledby', ariaLabel.id);
         el.setAttribute('aria-live', 'polite');
 
-        let ariaDescription = document.createElement('div');
+        const ariaDescription = document.createElement('div');
         ariaDescription.id = `${this.name}-ARIA-description`;
         ariaDescription.textContent = this.description;
         this.ariaDescriptionElement = ariaDescription;
@@ -241,7 +245,7 @@ let defaultAttributes = {
 
 // __fit__ - String indicating how the base Cell should copy its contents over to the &lt;canvas> element as the final step in the Display cycle. Accepted values are: `fill`, `contain`, `cover`, `none` (but not `scale-down`).
 // 
-// The aim of this functionality is to replicate the CSS `object-fit` property - [detailed here](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) - for &lt;canvas> elements. Unlike the CSS property, we apply the fit attribute to the Canvas wrapper, not the element itself or its parent element.
+// The aim of this functionality is to replicate the CSS `object-fit` property - [detailed here](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) - for &lt;canvas> elements. We apply the fit attribute to the Canvas wrapper, not the element itself or its parent element.
     fit: 'none',
 
 // DEPRECATED (because it is a really bad name) __isComponent__ replaced by __baseMatchesCanvasDimensions__ - set to true if, for example, canvas is being used as part of a Scrawl-canvas snippet.

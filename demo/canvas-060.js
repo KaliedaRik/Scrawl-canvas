@@ -13,11 +13,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.set({
-    fit: 'cover',
-    checkForResize: true,
-    ignoreCanvasCssDimensions: true,
-});
 
 // Build and display the reaction-diffusion asset
 const bespokeColors = {

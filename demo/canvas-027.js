@@ -14,20 +14,6 @@ scrawl.setIgnorePixelRatio(false);
 let canvas = scrawl.library.canvas.mycanvas;
 
 
-canvas.set({
-
-    checkForResize: true,
-    fit: 'contain',
-    ignoreCanvasCssDimensions: true,
-
-}).setBase({
-
-    width: 640,
-    height: 360
-
-}).setAsCurrentCanvas();
-
-
 // Importing the video file programmatically
 let myvideo = scrawl.makePicture({
 

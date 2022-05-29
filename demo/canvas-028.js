@@ -15,18 +15,6 @@ scrawl.importDomImage('.angels');
 
 let canvas = scrawl.library.canvas.mycanvas;
 
-canvas.set({
-
-    fit: 'cover',
-    checkForResize: true,
-    ignoreCanvasCssDimensions: true,
-
-}).setBase({
-
-    width: 800,
-    height: 400,
-
-}).setAsCurrentCanvas();
 
 let magnifier = scrawl.makeGroup({
 

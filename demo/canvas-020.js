@@ -14,14 +14,6 @@ scrawl.setIgnorePixelRatio(false);
 let canvas = scrawl.library.artefact.mycanvas,
     hold = scrawl.library.artefact.holdcanvas;
 
-canvas.set({
-    fit: 'fill',
-    backgroundColor: 'lightgray',
-    css: {
-        border: '1px solid black'
-    }
-});
-
 
 // Create gradients
 let myGrad = scrawl.makeGradient({

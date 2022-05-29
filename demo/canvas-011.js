@@ -20,13 +20,6 @@ setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = L.artefact.mycanvas;
 
-L.canvas.mycanvas.set({
-    backgroundColor: 'lightblue',
-    css: {
-        border: '1px solid black'
-    }
-});
-
 
 // Japan outline
 makeShape({

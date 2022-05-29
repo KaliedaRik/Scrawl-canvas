@@ -1,8 +1,9 @@
 // # Demo Snippets 006
-// Editable header elements with various text fill effects 
+// Editable header element color font snippets
 //
 // Related files:
-// + [Editable header elements with various text color effects](../snippets-006.html)
+// + [Editable header element color font snippets](../snippets-006.html)
+// + [Text snippet helper](./text-snippet-helper.html)
 
 import { getSnippetData } from './text-snippet-helper.js';
 

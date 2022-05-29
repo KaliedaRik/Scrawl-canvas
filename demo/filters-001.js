@@ -22,11 +22,7 @@ setIgnorePixelRatio(false);
 // #### Scene setup
 const canvas = L.canvas.mycanvas;
 
-canvas.set({
-    css: {
-      display: 'inline-block',
-    },
-}).setBase({
+canvas.setBase({
     compileOrder: 1,
 });
 

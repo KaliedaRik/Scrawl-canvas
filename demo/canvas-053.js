@@ -29,13 +29,13 @@ const canvasDimension = 400,
     assetDimension = 80;
 
 // Make the canvas responsive
-canvas.set({
-    fit: 'cover',
-    checkForResize: true,
-    ignoreCanvasCssDimensions: true,
-}).setBase({
-    dimensions: [canvasDimension, canvasDimension],
-});
+// canvas.set({
+//     fit: 'cover',
+//     checkForResize: true,
+//     ignoreCanvasCssDimensions: true,
+// }).setBase({
+//     dimensions: [canvasDimension, canvasDimension],
+// });
 
 
 // Build and display the reaction-diffusion asset

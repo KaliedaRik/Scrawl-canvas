@@ -13,10 +13,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.setBase({
-    backgroundColor: 'slategray',
-});
-
 
 // For this Demo, we are creating some Shape entitys and using them as a template for generating Net entity Particles.
 scrawl.makeShape({

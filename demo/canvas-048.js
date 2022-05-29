@@ -13,21 +13,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.canvas.mycanvas;
 
-canvas.set({
-
-    // Make the canvas responsive
-    fit: 'cover',
-    checkForResize: true,
-    ignoreCanvasCssDimensions: true,
-
-}).setBase({
-
-    // We'll set the base canvas's dimensions to match our video's dimensions
-    // - This isn't required, but it cuts down on possible distortions later
-    width: 640,
-    height: 360,
-});
-
 
 // #### Create filters
 scrawl.makeFilter({

@@ -23,7 +23,6 @@ setIgnorePixelRatio(false);
 let porthole = L.artefact.porthole;
 
 porthole.set({
-    backgroundColor: 'black',
     css: {
         borderRadius: '50%'
     }

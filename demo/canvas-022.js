@@ -13,12 +13,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.set({
-    backgroundColor: 'gray',
-    css: {
-        border: '1px solid black'
-    }
-});
 
 // Create gradients
 let cellGradient = scrawl.makeGradient({

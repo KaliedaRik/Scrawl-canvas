@@ -15,10 +15,6 @@ const canvas = scrawl.library.canvas.mycanvas;
 
 const balancePoint = 2500;
 
-canvas.setBase({
-    backgroundColor: 'aliceblue',
-});
-
 
 // Create a Shape entity to act as a path for our strokeStyle outline
 const arrow = scrawl.makeShape({

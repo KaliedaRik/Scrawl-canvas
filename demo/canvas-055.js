@@ -13,6 +13,7 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
+
 const myMoon = scrawl.makeCrescent({
     name: 'my-crescent',
     start: ['center', 'center'],

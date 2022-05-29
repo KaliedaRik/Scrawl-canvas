@@ -10,15 +10,6 @@
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
-    #my-image-store {
-      display: none;
-    }
-
-    canvas {
-      width: 100%;
-      height: 100%;
-    }
-
     .canvas-container {
       overflow: hidden;
       resize: both;
@@ -43,7 +34,13 @@
   <h3>Resize the canvas by dragging its bottom right corner</h3>
 
   <div class="canvas-container">
-    <canvas id="mycanvas"></canvas>
+    <canvas 
+      id="mycanvas"
+      data-is-responsive="true" 
+      data-base-width="600" 
+      data-base-height="600" 
+      data-fit="cover"
+    ></canvas>
   </div>
 
   <p id="reportmessage"></p>

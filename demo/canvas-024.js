@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-024.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -12,13 +12,6 @@ scrawl.setIgnorePixelRatio(false);
 
 // #### Scene setup
 let canvas = scrawl.library.canvas.mycanvas;
-
-canvas.set({
-    backgroundColor: 'aliceblue',
-    css: {
-        border: '1px solid black'
-    }
-});
 
 
 // Import image from DOM
@@ -219,6 +212,10 @@ scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
+
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, '#my-image-store', piccy);
 
 
 // #### More user interaction

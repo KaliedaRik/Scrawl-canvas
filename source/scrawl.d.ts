@@ -2909,6 +2909,7 @@ export function startCoreListeners(): void;
 export function stopCoreAnimationLoop(): void;
 export function stopCoreListeners(): void;
 
+export function forceUpdate(): void;
 
 
 

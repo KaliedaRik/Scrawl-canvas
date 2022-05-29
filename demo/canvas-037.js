@@ -36,17 +36,6 @@ let canvas = scrawl.library.canvas.mycanvas,
 
 
 // #### Scene setup
-canvas.set({
-
-    backgroundColor: 'honeydew',
-
-    width: frameDimension,
-    height: frameDimension,
-
-    checkForResize: true,
-    baseMatchesCanvasDimensions: true,
-
-}).setAsCurrentCanvas();
 
 // The Picture entity will cover the entire displayed canvas
 let piccie = scrawl.makePicture({

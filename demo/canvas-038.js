@@ -13,13 +13,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.set({
-
-    backgroundColor: 'honeydew',
-    baseMatchesCanvasDimensions: true,
-    checkForResize: true,
-    ignoreCanvasCssDimensions: true,
-});
 
 // Create a shape track along which we can animate a Cell
 scrawl.makeOval({

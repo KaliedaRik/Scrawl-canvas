@@ -7,7 +7,7 @@ import * as scrawl from '../source/scrawl.js';
 // @ts-expect-error
 import Delaunator from 'https://cdn.skypack.dev/delaunator@5.0.0';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -80,40 +80,17 @@ scrawl.importDomImage('.flowers');
 // Magic number - base Cell dimensions
 const baseDimension = 400;
 
-canvas.set({
 
-    // Make the canvas responsive
-    fit: 'cover',
-    checkForResize: true,
-    ignoreCanvasCssDimensions: true,
-
-}).setBase({
-
-    // Set the base Cell
-    width: baseDimension,
-    height: baseDimension,
-    backgroundColor: 'black',
-});
-
-
-// Create the coordinates to be used as the Voronoi web's points - for this deo these coordinates will be static, except for the first point which will track the mouse cursor position over the canvas
+// Create the coordinates to be used as the Voronoi web's points - for this demo these coordinates will be static, except for the first point which will track the mouse cursor position over the canvas
 const coordArray = [],
-    coord = scrawl.requestCoordinate(),
     center = [baseDimension/2, baseDimension/2];
 
-coordArray.push(center);
+for (let i = 0; i < 200; i++) {
 
-for (let r = 1; r < 5; r++) {
-
-    for (let p = 0; p < 50; p++) {
-        
-        coord.set(0, Math.floor(Math.random() * (r * 200)));
-        coord.rotate(Math.random() * 360);
-        coord.add(center);
-        coordArray.push([...coord]);
-    }
+    const x = Math.floor(Math.random() * (baseDimension * 2) - (baseDimension / 2));
+    const y = Math.floor(Math.random() * (baseDimension * 2) - (baseDimension / 2));
+    coordArray.push([x, y]);
 }
-scrawl.releaseCoordinate(coord);
 
 // We build the Voronoi web in a RawAsset wrapper
 let myAsset = scrawl.makeRawAsset({
@@ -271,7 +248,7 @@ scrawl.makeFilter({
 });
 
 // Display our image in a Picture entity - the filter is applied here 
-scrawl.makePicture({
+const piccy = scrawl.makePicture({
 
     name: 'myFlower',
     asset: 'iris',
@@ -309,6 +286,8 @@ scrawl.addNativeListener(['touchmove'], (e) => {
 
 }, canvas.domElement);
 
+
+addImageDragAndDrop(canvas, '#my-image-store', piccy);
 
 // #### Development and testing
 console.log(scrawl.library);

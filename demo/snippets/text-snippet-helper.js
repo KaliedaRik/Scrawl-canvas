@@ -1,3 +1,12 @@
+// # Demo Snippets 006
+// Editable header element color font snippets
+//
+// Related files:
+// + [Editable header element color font snippets](../snippets-006.html)
+// + [Animated highlight gradient text snippet](./animated-highlight-gradient-text-snippet.html)
+// + [Risograph text gradient snippet](./risograph-text-gradient-snippet.html)
+// + [Worley text gradient snippet](./worley-text-gradient-snippet.html)
+
 export const getSnippetData = (snippet, scrawl) => {
 
     const canvas = snippet.canvas,
@@ -29,6 +38,7 @@ export const getSnippetData = (snippet, scrawl) => {
             el.style.backgroundColor = 'transparent';
         }
         el.style.color = 'rgba(0,0,0,0)';
+        el.style.overflow = 'hidden';
     };
 
     const processText = t => {

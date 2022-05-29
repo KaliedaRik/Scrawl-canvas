@@ -21,13 +21,6 @@ setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = L.artefact.mycanvas;
 
-canvas.set({
-    backgroundColor: 'blanchedalmond',
-    css: {
-        border: '1px solid black'
-    }
-});
-
 
 // Create the linear gradient - we will kill and resurrect it as the demo runs
 // + Needs to be a let, not a const, because we're going to kill/resurrect this gradient

@@ -15,8 +15,6 @@ const canvas = scrawl.library.canvas.mycanvas;
 
 canvas.setBase({
 
-    backgroundColor: 'azure',
-
     // The order in which we compile Cells becomes important when building more complex patterns with additional Cells
     compileOrder: 2,
 });

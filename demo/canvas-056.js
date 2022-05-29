@@ -13,9 +13,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.set({
-    backgroundColor: 'azure',
-});
 
 // Magic numbers
 const noOfPins = 16,

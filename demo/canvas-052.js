@@ -16,15 +16,6 @@ let canvas = scrawl.library.artefact.mycanvas;
 // Magic numbers
 const dimension = 600;
 
-// Make the canvas responsive
-canvas.set({
-    fit: 'cover',
-    checkForResize: true,
-    ignoreCanvasCssDimensions: true,
-}).setBase({
-    dimensions: [dimension, dimension],
-});
-
 
 // Import image from DOM, and create Picture entity using it
 scrawl.importDomImage('.flowers');

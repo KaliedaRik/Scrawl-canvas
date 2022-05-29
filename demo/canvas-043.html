@@ -16,7 +16,6 @@
       display: none;
     }
     canvas {
-      border: 1px solid red;
       margin: 0 auto 1em;
     }
     p {
@@ -33,15 +32,30 @@
   <h2>Test various clipping strategies</h2>
 
   <p>Applying more than one clipped region to a scene, using Groups to separate them:</p>
-  <canvas id="canvas1" width="600" height="400"></canvas>
+  <canvas 
+    id="canvas1" 
+    width="600" 
+    height="400"
+    data-base-background-color="lemonchiffon"
+  ></canvas>
 
   <p>Generate and use Picture entitys from clipped scenes rendered in their own cells:</p>
-  <canvas id="canvas2" width="600" height="400"></canvas>
+  <canvas 
+    id="canvas2" 
+    width="600" 
+    height="400"
+    data-base-background-color="honeydew"
+  ></canvas>
 
   <h3>Note that Phrase entitys cannot clip to the letters.<br />For these, we have to use alternative solutions.</h3>
 
   <p>Emulate clipping to a Phrase entity using a composite scene rendered in its own cell:</p>
-  <canvas id="canvas3" width="600" height="400"></canvas>
+  <canvas 
+    id="canvas3" 
+    width="600" 
+    height="400"
+    data-base-background-color="lavender"
+  ></canvas>
 
   <p>... Once we have the clipped text in its own cell, we could then generate a Picture entity from it (not tested in this demo).</p>
 

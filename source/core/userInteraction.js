@@ -503,12 +503,19 @@ const applyCoreResizeListener = function () {
 
     resizeAction();
     mouseChanged = true;
+    viewportChanged = true;
 };
 
 const applyCoreScrollListener = function () {
 
     scrollAction();
     mouseChanged = true;
+};
+
+const forceUpdate = function () {
+
+    mouseChanged = true;
+    viewportChanged = true;
 };
 
 
@@ -906,6 +913,7 @@ export {
     stopCoreListeners,
     applyCoreResizeListener,
     applyCoreScrollListener,
+    forceUpdate,
     observeAndUpdate,
     makeDragZone,
     getTouchActionChoke,

@@ -18,12 +18,6 @@ scrawl.importDomVideo('.myvideo');
 scrawl.importDomImage('.flowers');
 scrawl.importSprite('img/cat-sprite.png');
 
-canvas.set({
-    backgroundColor: 'aliceblue',
-    css: {
-        border: '1px solid black'
-    }
-});
 
 // Create the picture entitys
 scrawl.makePicture({

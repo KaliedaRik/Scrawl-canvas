@@ -30,32 +30,6 @@ stack.set({
 });
 
 
-// Setup the (displayed) canvas element to cover the entire stack element, and to respond to changes in the Stack's dimensions
-canvas.set({
-    width: '100%',
-    height: '100%',
-
-    // The `fit` attribute comes into play when the displayed canvas element and its hidden canvas companion (the base canvas) have different dimensions. The hidden canvas is copied over to the displayed canvas at the end of every display cycle.
-    //
-    // We can influence how this copy happens by setting the `fit` attribute to an appropriate String value (`fill`, `contain`, `cover`, or `none`). These replicate the effect of the [CSS object-fit property](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit).
-    fit: 'fill',
-
-    // The Stack artefact's coordinate `[0, 0]` lies at the top left corner of its DOM element's ___content box__, not its _border box_ (as per the HTML/CSS specifications).
-    // + We've given the Stack element a 1px border. We need to compensate for this (and any top/left padding) when aligning the canvas element within the stack. 
-    // + If we don't do this, we get a 1px white line between the stack border and the canvas (on the top and left edges)
-    startX: -1,
-    startY: -1,
-});
-
-
-// The base canvas - every displayed canvas element has at least one hidden ('base') canvas companion - does not need to replicate the displayed canvas. For instance, it can have different dimensions. The base canvas is copied over to the displayed canvas at the end of every display cycle.
-canvas.setBase({
-    width: 800,
-    height: 600,
-    backgroundColor: 'lightblue',
-});
-
-
 // A displayed canvas can have more than one hidden canvas. These additional 'cells' - which act much like traditional animation cels (see https://en.wikipedia.org/wiki/Cel) - will be copied onto the 'base' canvas before the it gets copied over to the displayed cell at the end of every display cycle.
 let cell = canvas.buildCell({
     name: 'mycell',
@@ -103,9 +77,6 @@ scrawl.makeRender({
     name: 'demo-animation',
     commence: check,
     afterShow: report,
-
-    // During setup, the canvas resizes before its parent stack, meaning that the stack resize doesn't get cascaded down to the canvas for the initial display. We can fix that by adding a run-once function to the animation loop
-    afterCreated: () => canvas.set({ width: '100%'}),
 });
 
 

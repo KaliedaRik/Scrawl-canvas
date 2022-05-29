@@ -14,7 +14,6 @@ scrawl.setIgnorePixelRatio(false);
 const canvas = scrawl.library.canvas.mycanvas;
 
 canvas.setBase({
-    backgroundColor: 'navy',
     compileOrder: 1,
 });
 

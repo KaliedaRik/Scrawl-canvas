@@ -13,10 +13,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.setBase({
-    backgroundColor: 'aliceblue',
-});
-
 
 // Define some filters
 scrawl.makeFilter({
@@ -76,6 +72,8 @@ let colorFactory = scrawl.makeColor({
 
     minimumColor: 'red',
     maximumColor: 'blue',
+
+    colorSpace: 'LAB',
 });
 
 // Create a Tracer entity

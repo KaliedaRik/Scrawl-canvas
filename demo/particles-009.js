@@ -13,10 +13,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.setBase({
-    backgroundColor: 'slategray',
-});
-
 
 // Define some filters
 scrawl.makeFilter({

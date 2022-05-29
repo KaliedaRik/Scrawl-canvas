@@ -13,18 +13,12 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.set({
-    fit: 'cover',
-    checkForResize: true,
-    ignoreCanvasCssDimensions: true,
-});
-
 
 // Add the NoiseAsset, and a Picture entity in which to display it
 const myNoise = scrawl.makeNoiseAsset({
     name: 'base-noise',
-    width: 400,
-    height: 400,
+    width: 600,
+    height: 600,
     scale: 80,
 
     paletteStart: 399,

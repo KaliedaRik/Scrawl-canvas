@@ -15,10 +15,6 @@ let canvas = scrawl.library.artefact.mycanvas;
 
 scrawl.importDomImage('#bunny');
 
-canvas.setBase({
-    backgroundColor: 'aliceblue',
-});
-
 
 // Create Block and Shape entitys that can be used as pivot, mimic and path objects for the Emitter entity
 scrawl.makeBlock({ 

@@ -45,10 +45,6 @@ setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = L.artefact.mycanvas;
 
-canvas.setBase({
-    backgroundColor: 'aliceblue'
-});
-
 
 // Create and clone block entitys
 makeBlock({

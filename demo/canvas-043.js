@@ -17,9 +17,6 @@ scrawl.importDomImage('.canal');
 
 // #### Canvas 1
 // Applying more than one clipped region to a scene, using Groups to separate them
-canvas1.set({
-    backgroundColor: 'lemonchiffon',
-})
 
 // The scene will be made up of two clipped images, both draggable around the canvas
 scrawl.makeGroup({
@@ -145,9 +142,6 @@ scrawl.makeDragZone({
 
 // #### Canvas 2: 
 // Generate and use Picture entitys from clipped scenes
-canvas2.set({
-    backgroundColor: 'honeydew',
-})
 
 // We will generate Image assets from cells created specifically for this one task
 canvas2.buildCell({
@@ -330,9 +324,6 @@ const canvasTwoPostInitialization = function () {
 
 // #### Canvas 3: 
 // Emulate clipping to a Phrase entity using a composite scene rendered in its own cell
-canvas3.set({
-    backgroundColor: 'lavender',
-})
 
 // We will generate Image assets from cells created specifically for this one task
 const serifHelloCell = canvas3.buildCell({

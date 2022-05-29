@@ -25,12 +25,6 @@ setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = L.canvas.mycanvas;
 
-canvas.set({
-    backgroundColor: 'aliceblue',
-    css: {
-        border: '1px solid black',
-    }
-});
 
 // Define the entitys that will be used as pivots and paths before the entitys that use them as such
 makeWheel({

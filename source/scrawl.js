@@ -66,6 +66,7 @@ export {
     startCoreListeners, 
     stopCoreListeners, 
     observeAndUpdate,
+    forceUpdate,
     makeDragZone,
     getTouchActionChoke,
     setTouchActionChoke,

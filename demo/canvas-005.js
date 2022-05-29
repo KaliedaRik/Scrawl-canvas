@@ -23,12 +23,6 @@ setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = L.artefact.mycanvas;
 
-canvas.set({
-    css: {
-        border: '1px solid black'
-    }
-});
-
 
 // Build the gradient objects
 let myRadial = makeRadialGradient({

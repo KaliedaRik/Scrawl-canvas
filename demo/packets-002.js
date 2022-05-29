@@ -11,9 +11,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.set({
-    backgroundColor: 'aliceblue',
-});
 
 // Setup Gradient style
 let mygradient = scrawl.makeGradient({

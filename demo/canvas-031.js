@@ -145,15 +145,6 @@ let canvas = scrawl.library.canvas.mycanvas,
     base = canvas.base,
     namespace = 'kaliedoscope-clock';
 
-// Prepare the canvas
-canvas.set({
-
-    backgroundColor: 'honeydew',
-    checkForResize: true,
-    fit: 'cover',
-    ignoreCanvasCssDimensions: true,
-});
-
 // Building the background - this goes in a separate Cell
 let myBackground = canvas.buildCell({
 

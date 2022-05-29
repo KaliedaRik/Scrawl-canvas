@@ -14,13 +14,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.set({
-
-    baseMatchesCanvasDimensions: true,
-    checkForResize: true,
-    ignoreCanvasCssDimensions: true,
-
-}).setAsCurrentCanvas();
 
 // Create the demo Phrase entity
 const mytext = scrawl.makePhrase({

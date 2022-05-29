@@ -9,11 +9,6 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
-    canvas {
-      width: 100%;
-      height: 100%;
-    }
-
     .canvas-container {
       overflow: hidden;
       resize: both;
@@ -25,7 +20,6 @@
       max-height: 600px;
       max-width: 600px;
     }
-
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
@@ -202,7 +196,13 @@
   </div>
 
   <div class="canvas-container">
-    <canvas id="mycanvas"></canvas>
+    <canvas 
+      id="mycanvas"
+      data-is-responsive="true" 
+      data-base-width="400" 
+      data-base-height="400" 
+      data-fit="cover"
+    ></canvas>
   </div>
 
   <p id="reportmessage"></p>

@@ -27,14 +27,6 @@ let canvas = L.artefact.mycanvas;
 
 importDomImage('.filter-image');
 
-canvas.set({
-    fit: 'fill',
-    backgroundColor: 'beige',
-    css: {
-        border: '1px solid black',
-    }
-});
-
 
 let myGrad = makeGradient({
     name: 'linear1',

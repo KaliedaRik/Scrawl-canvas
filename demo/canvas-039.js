@@ -13,6 +13,7 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
+
 // Create a second cell for the canvas
 // + This cell will act as a moveable layer (start, handle, offset, roll, flipUpend, flipReverse)
 // + We will also add entitys to the new Cell, and create a drag zone on it so those entitys can be dragged and dropped across the Cell.

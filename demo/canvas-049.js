@@ -13,13 +13,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.set({
-    backgroundColor: 'blanchedalmond',
-    css: {
-        border: '1px solid black'
-    }
-});
-
 
 // Create the radial gradient
 let graddy = scrawl.makeConicGradient({

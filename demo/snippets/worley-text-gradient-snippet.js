@@ -1,3 +1,10 @@
+// # Demo Snippets 006
+// Editable header element color font snippets
+//
+// Related files:
+// + [Editable header element color font snippets](../snippets-006.html)
+// + [Text snippet helper](./text-snippet-helper.html)
+
 import { getSnippetData } from './text-snippet-helper.js';
 
 // __Effects on the element:__ 

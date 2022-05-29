@@ -18,12 +18,6 @@ const width = 1280,
 // #### Scene setup
 const canvas = scrawl.library.artefact.mycanvas;
 
-canvas.set({
-    width,
-    height,
-    baseMatchesCanvasDimensions: true,
-});
-
 
 // Create and manipulate the face worm
 let wormStart = 220,

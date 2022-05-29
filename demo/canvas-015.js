@@ -19,13 +19,6 @@ setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = L.artefact.mycanvas;
 
-canvas.set({
-    backgroundColor: 'aliceblue',
-    css: {
-        border: '1px solid black'
-    }
-});
-
 
 // Create and clone Phrase entitys
 makePhrase({

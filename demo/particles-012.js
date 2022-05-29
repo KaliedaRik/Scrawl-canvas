@@ -15,10 +15,6 @@ scrawl.importDomImage('#bunny');
 
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.setBase({
-    backgroundColor: 'aliceblue',
-});
-
 
 // #### Particle physics animation scene
 

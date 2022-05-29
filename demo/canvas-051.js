@@ -13,6 +13,7 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
+
 let mySpiral = scrawl.makeLineSpiral({
 
     name: 'my-spiral',

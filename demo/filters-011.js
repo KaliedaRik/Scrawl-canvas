@@ -15,10 +15,6 @@ const canvas = scrawl.library.canvas.mycanvas;
 
 scrawl.importDomImage('.flowers');
 
-canvas.setBase({
-    backgroundColor: 'red',
-})
-
 
 // Create the filter
 // + Chroma filters can have more than one range; each range array should be added to the `ranges` attribute

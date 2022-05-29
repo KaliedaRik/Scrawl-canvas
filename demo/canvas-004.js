@@ -21,16 +21,6 @@ setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = L.artefact.mycanvas;
 
-canvas.set({
-    backgroundColor: 'blanchedalmond',
-    checkForResize: true,
-    fit: 'cover',
-    ignoreCanvasCssDimensions: true,
-}).setBase({
-    width: 1000,
-    height: 1000,
-});
-
 
 // Create the radial gradient
 let graddy = makeRadialGradient({

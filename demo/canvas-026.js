@@ -14,10 +14,6 @@ scrawl.setIgnorePixelRatio(false);
 let canvas = scrawl.library.canvas.mycanvas;
 
 
-canvas.set({
-    backgroundColor: 'honeydew',
-}).setAsCurrentCanvas();
-
 scrawl.makeBlock({
 
     name: 'peg-1',

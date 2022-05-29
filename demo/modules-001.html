@@ -13,10 +13,6 @@
       font-size: 18px;
       font-family: roboto;
     }
-    canvas {
-      width: 100%;
-      height: 100%;
-    }
     .canvas-container {
       position: relative;
       overflow: hidden;
@@ -27,7 +23,7 @@
       min-width: 350px;
       max-height: 600px;
       max-width: 600px;
-      border: 1px dashed red;
+      border: 1px solid black;
     }
     .image-hold {
       height: 0;
@@ -83,7 +79,14 @@
   </div>
 
   <div class="canvas-container">
-    <canvas id="mycanvas"></canvas>
+    <canvas 
+      id="mycanvas"
+      data-is-responsive="true" 
+      data-base-width="600" 
+      data-base-height="600" 
+      data-fit="contain"
+      data-base-background-color="lemonchiffon"
+    ></canvas>
   </div>
 
   <p id="library-reporter"></p>

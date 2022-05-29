@@ -14,11 +14,6 @@
       display: none;
     }
 
-    canvas {
-      width: 100%;
-      height: 100%;
-    }
-
     .instructions {
       max-width: 48rem;
       margin: 0 auto;
@@ -67,7 +62,14 @@
   </div>
 
   <div class="canvas-container">
-    <canvas id="mycanvas"></canvas>
+    <canvas 
+      id="mycanvas"
+      data-is-responsive="true" 
+      data-base-width="600" 
+      data-base-height="600" 
+      data-base-background-color="blanchedalmond"
+      data-fit="cover"
+    ></canvas>
   </div>
 
   <p id="reportmessage"></p>

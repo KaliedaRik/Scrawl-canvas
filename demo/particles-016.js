@@ -13,9 +13,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.setBase({
-    backgroundColor: 'azure',
-});
 
 // Import image from DOM
 scrawl.importDomImage('.flowers');

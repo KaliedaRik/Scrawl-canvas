@@ -1,9 +1,11 @@
 // # Demo Snippets 006
-// Snippets included in the Scrawl-canvas Demo folder
+// Editable header element color font snippets
 //
 // Related files:
-// + [Animated drape text gradient](./snippets/animated-drape-text-gradient-snippet.html)
-// + [Worley text gradient(./snippets/worley-text-gradient-snippet.html)
+// + [Animated highlight gradient text snippet](./snippets/animated-highlight-gradient-text-snippet.html)
+// + [Risograph text gradient snippet](./snippets/risograph-text-gradient-snippet.html)
+// + [Text snippet helper](./snippets/text-snippet-helper.html)
+// + [Worley text gradient snippet](./snippets/worley-text-gradient-snippet.html)
 //
 // [Run code](../../demo/snippets-006.html)
 

@@ -28,13 +28,6 @@ setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = L.canvas.mycanvas
 
-canvas.set({
-    backgroundColor: 'lightgray',
-    css: {
-        border: '1px solid black'
-    }
-});
-
 
 // ##### makeOval factory function 
 makeOval({

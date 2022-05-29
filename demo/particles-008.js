@@ -17,9 +17,6 @@ scrawl.importDomImage('.flowers');
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.setBase({
-    backgroundColor: 'aliceblue',
-});
 
 // For this Demo, we are creating a flag and pinning it to a pole. This is the pole.
 scrawl.makeLine({

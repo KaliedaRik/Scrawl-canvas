@@ -13,19 +13,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.set({
-
-    backgroundColor: 'honeydew',
-
-    // Make the Canvas adapt to changes in its container's dimensions
-    checkForResize: true,
-
-    // Cascade changes in the Canvas dimensions down to its base Cell
-    baseMatchesCanvasDimensions: true,
-
-    ignoreCanvasCssDimensions: true,
-});
-
 
 // Create a Cell on the canvas
 const cell1 = canvas.buildCell({

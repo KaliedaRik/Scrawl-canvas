@@ -16,14 +16,23 @@
     canvas {
       margin: 0 auto;
     }
+    #my-image-store {
+      display: none;
+    }
   </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 024</h1>
   <h2>Loom entity functionality</h2>
+  <h3>To change image, drag-and-drop an image file over the canvas then update one of the controls</h3>
 
-  <canvas id="mycanvas" width="600" height="600"></canvas>
+  <canvas 
+    id="mycanvas" 
+    width="600" 
+    height="600"
+    data-base-background-color="aliceblue"
+  ></canvas>
 
   <p id="reportmessage"></p>
 
@@ -137,7 +146,7 @@
     <p><a href="../docs/demo/canvas-024.html">Annotated code</a></p>
   </div>
 
-  <div style="display: none;">
+  <div id="my-image-store">
     <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 

@@ -21,10 +21,6 @@ setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = L.artefact.mycanvas;
 
-canvas.setBase({
-    clearAlpha: 0.9,
-});
-
 
 // Create and clone block and wheel entitys. For the sake of safety and sanity, create the (reference) entitys on which other artefacts will pivot and mimic first. Then create those other artefacts.
 //

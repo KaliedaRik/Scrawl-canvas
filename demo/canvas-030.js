@@ -14,10 +14,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.setBase({
-    backgroundColor: 'aliceblue'
-});
-
 
 // Build some coordinate arrays ...
 let absoluteCoords = [[100, 200], [200, 400], [300, 300], [400, 400], [500, 200], [240, 100]];

@@ -13,10 +13,6 @@ const canvas = scrawl.library.canvas.mycanvas;
 scrawl.setIgnorePixelRatio(false);
 
 
-canvas.set({
-    backgroundColor: 'honeydew',
-});
-
 const easingDisplayComponent = function (name, ypos) {
 
     let color = scrawl.makeColor({

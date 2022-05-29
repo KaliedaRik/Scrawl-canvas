@@ -139,12 +139,6 @@ const buildSmokeRing = function (namespace, canvasWrapper, color) {
 const canvas = scrawl.library.canvas.mycanvas;
 
 
-// Create a fade effect at the cell level - without this, the smoke ring just looks like a squiggly line
-canvas.setBase({
-    clearAlpha: 0.985,
-})
-
-
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {

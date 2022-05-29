@@ -24,19 +24,6 @@ stack.set({
     width: 600,
     height:400,
     perspectiveZ: 1200,
-    checkForResize: true,
-});
-
-
-canvas.set({
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'gray',
-});
-
-cell.set({
-    width: '100%',
-    height: '100%',
 });
 
 
@@ -58,6 +45,7 @@ element.set({
     css: {
         borderWidth: '0',
         color: 'white',
+        textShadow: '0 0 2px black',
     },
 });
 

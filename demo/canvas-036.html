@@ -11,9 +11,6 @@
   <style>
     canvas {
       background-color: lemonchiffon;
-      border: 1px dashed red;
-      width: 100%;
-      height: 100%;
     }
   </style>
 </head>
@@ -24,7 +21,11 @@
   <h3>This canvas is resizable - drag the bottom right corner to change its dimensions. Also, Cells 4 and 5 are enabled for drag-and-drop</h3>
 
   <div class="canvas-container">
-      <canvas id="mycanvas"></canvas>
+    <canvas 
+      id="mycanvas" 
+      data-is-responsive="true" 
+      data-base-background-color="honeydew"
+    ></canvas>
   </div>
 
   <p id="reportmessage"></p>

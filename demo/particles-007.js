@@ -15,10 +15,6 @@ let canvas = scrawl.library.artefact.mycanvas;
 
 scrawl.importDomImage('#bunny');
 
-canvas.setBase({
-    backgroundColor: 'beige',
-});
-
 
 // Define some filters
 scrawl.makeFilter({

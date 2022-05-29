@@ -15,19 +15,6 @@ scrawl.setIgnorePixelRatio(false);
 let canvas = scrawl.library.artefact.mycanvas,
     base = canvas.base;
 
-canvas.set({
-
-    backgroundColor: 'honeydew',
-    fit: 'contain',
-    checkForResize: true,
-    ignoreCanvasCssDimensions: true,
-
-}).setBase({
-
-    width: 1000,
-    height: 1000,
-});
-
 
 // Internal state variables
 let currentLine,

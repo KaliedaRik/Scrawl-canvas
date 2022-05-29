@@ -13,9 +13,6 @@ scrawl.setIgnorePixelRatio(false);
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.setBase({
-    backgroundColor: 'azure',
-});
 
 canvas.buildCell({
 

@@ -24,8 +24,6 @@ stack.set({
 canvas.set({
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    backgroundColor: 'beige',
-
     trackHere: 'local',
 });
 
@@ -79,16 +77,16 @@ const checkCanvasIsActive = function () {
 
 
 // #### Scene animation
-let clientX = 0,
-    clientY = 0,
-    movementX = 0,
-    movementY = 0,
-    offsetX = 0,
-    offsetY = 0,
-    pageX = 0,
-    pageY = 0,
-    screenX= 0,
-    screenY = 0;
+let clientX = '0',
+    clientY = '0',
+    movementX = '0',
+    movementY = '0',
+    offsetX = '0',
+    offsetY = '0',
+    pageX = '0',
+    pageY = '0',
+    screenX= '0',
+    screenY = '0';
 
 scrawl.addListener('move', (e) => {
 
@@ -107,8 +105,8 @@ scrawl.addListener('move', (e) => {
         screenY = e.screenY.toFixed(0);
 
         offset.set({
-            startX: offsetX,
-            startY: offsetY,
+            startX: parseFloat(offsetX),
+            startY: parseFloat(offsetY),
         });
     }
 

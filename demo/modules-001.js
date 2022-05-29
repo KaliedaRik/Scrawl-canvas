@@ -29,20 +29,8 @@ import * as lineGraph from './modules/london-crime-lines.js';
 
 canvas.set({
 
-    backgroundColor: 'lemonchiffon',
-
     label: 'Crime statistics for London areas - from 1999 to 2017',
-
     description: 'Interactive graphic showing crimes recorded in various London areas, broken down into crime types. Data taken from https://data.london.gov.uk/dataset/recorded_crime_rates',
-
-    fit: 'contain',
-    checkForResize: true,
-    ignoreCanvasCssDimensions: true,
-
-}).setBase({
-
-    width: 600,
-    height: 600,
 });
 
 const assets = scrawl.library.assetnames,

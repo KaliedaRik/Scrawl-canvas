@@ -14,10 +14,6 @@ scrawl.setIgnorePixelRatio(true);
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.setBase({
-    backgroundColor: 'aliceblue',
-});
-
 
 const boxes = [];
 
@@ -58,7 +54,7 @@ sourceEngine.lineWidth = 1;
 for (let i = 0; i < 40; i++) {
 
     let size = 10 + i,
-        delta = size / 2;
+        delta = Math.floor(size / 2) + 0.5;
 
     sourceEngine.setTransform(1, 0, 0, 1, (50 * i) + 25, 25);
     sourceEngine.fillRect(-delta, -delta, size, size);
@@ -77,8 +73,8 @@ const buildBoxes = function (boxesRequired) {
     for (let i = 0; i < boxesRequired; i++) {
 
         size = 10 + Math.random() * 40;
-        x = Math.random() * width;
-        y = Math.random() * height;
+        x = Math.floor(Math.random() * width);
+        y = Math.floor(Math.random() * height);
         dx = -1 - Math.random();
 
         boxes.push([x, y, dx, Math.floor(size - 10)]);

@@ -19,18 +19,6 @@ const background_dark = '#404040',
     background_light = '#f0f0f0',
     text_light = '#408f40';
 
-canvas.set({
-
-    fit: "cover",
-    checkForResize: true,
-    ignoreCanvasCssDimensions: true,
-
-}).setBase({
-
-    width: 800,
-    height: 800,
-
-}).setAsCurrentCanvas();
 
 // Create the demo Oval entity
 const track = scrawl.makeOval({
