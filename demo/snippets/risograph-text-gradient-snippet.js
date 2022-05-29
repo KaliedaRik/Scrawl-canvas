@@ -21,7 +21,7 @@ export default function (el, scrawl) {
 
         canvas.base.set({
             compileOrder: 1,
-        })
+        });
 
         const topColor = dataset.topColor ? dataset.topColor : 'lightblue';
         const bottomColor = dataset.bottomColor ? dataset.bottomColor : 'blue';

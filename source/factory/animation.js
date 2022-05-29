@@ -118,7 +118,7 @@ P.run = function () {
     pushUnique(animate, this.name);
     resortAnimations();
 
-    setTimeout(() => forceUpdate(), 0);
+    setTimeout(() => forceUpdate(), 20);
     
     return this;
 };

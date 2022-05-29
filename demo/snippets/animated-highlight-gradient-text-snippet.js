@@ -26,6 +26,8 @@ export default function (el, scrawl) {
         const mainColor = dataset.mainColor ? dataset.mainColor : 'black';
         const highlightColor = dataset.highlightColor ? dataset.highlightColor : 'lightgreen';
         const gradientEasing = dataset.gradientEasing ? dataset.gradientEasing : 'linear';
+        const gradientSkewX = dataset.gradientSkewX ? parseFloat(dataset.gradientSkewX) : 0;
+        const gradientSkewY = dataset.gradientSkewY ? parseFloat(dataset.gradientSkewY) : 0;
 
         const myGradient = scrawl.makeGradient({
             name: `${name}-highlight-gradient`,
@@ -65,6 +67,8 @@ export default function (el, scrawl) {
         scrawl.makePattern({
             name: `${name}-highlight-gradient-pattern`,
             asset: `${name}-highlight-gradient-cell`,
+            matrixB: gradientSkewY,
+            matrixC: gradientSkewX,
         });
 
         const textFill = scrawl.makePhrase({

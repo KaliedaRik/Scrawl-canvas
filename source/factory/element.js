@@ -230,6 +230,7 @@ P.addCanvas = function (items = Ωempty) {
 
         return art;
     }
+    else return this.canvas;
 };
 
 

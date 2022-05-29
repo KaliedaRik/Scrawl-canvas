@@ -29,6 +29,10 @@ import highlightGradientEffect from './snippets/animated-highlight-gradient-text
 const highlightGradientHeaders = document.querySelectorAll('.highlight-gradient-header');
 highlightGradientHeaders.forEach(el => highlightGradientEffect(el, scrawl));
 
+import bubblesEffect from './snippets/bubbles-text-snippet.js';
+const bubblesHeaders = document.querySelectorAll('.bubbles-text-header');
+bubblesHeaders.forEach(el => bubblesEffect(el, scrawl));
+
 import pagePerformance from './snippets/page-performance-snippet.js';
 const pageReport = document.querySelectorAll('#reportmessage');
 pageReport.forEach(el => pagePerformance(el));
