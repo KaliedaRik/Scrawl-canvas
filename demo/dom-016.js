@@ -92,9 +92,6 @@ const demoAnimation = scrawl.makeRender({
     name: "demo-animation",
     target: stack,
     afterShow: report,
-
-    // We manually trigger the display shape functionality after the first render cycle completes. This allows all artefacts to settle into a state where we can then update the Element artefact with text and roll values appropriate to the Stack element's initial shape
-    afterCreated: () => stack.updateDisplayShape(),
 });
 
 

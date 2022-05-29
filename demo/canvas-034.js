@@ -139,9 +139,6 @@ const demoAnimation = scrawl.makeRender({
     name: "demo-animation",
     target: canvas,
     afterShow: report,
-
-    // We manually trigger the display shape functionality after the first render cycle completes. This allows all artefacts to settle into a state where we can then update the Phrase entity with text and roll values appropriate to the Canvas element's initial shape
-    afterCreated: () => canvas.updateDisplay(),
 });
 
 

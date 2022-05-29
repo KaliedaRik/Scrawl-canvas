@@ -118,20 +118,10 @@ let checkForFlowerClassUpdates = function () {
 };
 
 
-// Combining the two check functions above into a single function
-let commenceActions = function () {
-
-    // checkForFlowerBoundaryCollisions();
-    checkForFlowerClassUpdates();
-};
-
-
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    const classes = flower.get('classes');
-
-    return `Current classes: "${classes}"`;
+    return `    Current classes: "${flower.get('classes')}"`;
 });
 
 
@@ -139,15 +129,11 @@ const report = reportSpeed('#reportmessage', function () {
 scrawl.makeRender({
 
     name: 'demo-animation',
-    commence: commenceActions,
+    commence: checkForFlowerClassUpdates,
     target: stack,
     afterShow: report,
 
     // We need to finalize the stack's display after the first Display cycle completes
-    // + Tweaking thge stack's `height` attribute should cascade through to its constituent elements, so that they can finalize their own dimensions and positioning (which in this case are both set relative to the stack's dimensions).
-    // + We also need to force the system to propagate the changes once; DOM element resize actions get processed only when mouse/touch cursor movements are detected, or a scroll or viewport resize event fires. To trigger this programmatically, we restart the Scrawl-canvas core listeners.
-    afterCreated: () => {
-        stack.set({height: 400.1});
-        scrawl.startCoreListeners();
-    },
+    // + Tweaking the stack's `height` attribute should cascade through to its constituent elements, so that they can finalize their own dimensions and positioning (which in this case are both set relative to the stack's dimensions).
+    afterCreated: () => stack.set({height: 400}),
 });

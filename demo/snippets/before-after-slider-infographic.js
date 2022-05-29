@@ -944,10 +944,7 @@ export default function (el) {
             scrawl.addNativeListener(['click', 'touchend'], () => canvas.cascadeEventAction('up'), el);
 
             // __15. Update the animation object to listen for drag bar activity__
-            animation.set({
-                commence: dragAction,
-                afterCreated: () => canvas.updateDisplay(),
-            });
+            animation.set({ commence: dragAction });
         }
     }
 

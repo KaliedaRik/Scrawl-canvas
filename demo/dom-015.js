@@ -181,11 +181,7 @@ scrawl.makeRender({
     afterShow: report,
 
     // Fixes element misplacement issue on scene creation - see Demo [DOM-007](./dom-007.html) for more details of the fix
-    afterCreated: () => {
-        stack.set({ height: 399 });
-        element.set({ startX: 301 });
-        scrawl.startCoreListeners();
-    },
+    afterCreated: () => stack.set({ height: 400 }),
 });
 
 // We can have more than one Display cycle animation on a web page
