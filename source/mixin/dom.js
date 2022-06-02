@@ -102,6 +102,8 @@ export default function (P = Ωempty) {
         includeInTabNavigation: false,
 
 // These actions are all related to user accessibility and the ability of the user to define their preferences at the operation system or device level. Listeners to capture the state of, and changes in, those values are set up in `core/userInteraction.js`. Each canvas, stack or (subscribed) element can take advantage of this functionality to update its appearance dependant on the user's preferences.
+        moreContrastAction: null,
+        otherContrastAction: null,
         reduceMotionAction: null,
         noPreferenceMotionAction: null,
         colorSchemeLightAction: null,
@@ -918,6 +920,37 @@ S.trackHere = function(val) {
         this.noPreferenceTransparencyAction = λnull;
         this.reduceDataAction = λnull;
         this.noPreferenceDataAction = λnull;
+        this.moreContrastAction = λnull;
+        this.otherContrastAction = λnull;
+    };
+
+// __prefers-contrast__ accessibility user choice
+    S.moreContrastAction = function (item) {
+        if (isa_fn(item)) this.moreContrastAction = item;
+    };
+    P.setMoreContrastAction = function (item) {
+        if (isa_fn(item)) this.moreContrastAction = item;
+    };
+    S.otherContrastAction = function (item) {
+        if (isa_fn(item)) this.otherContrastAction = item;
+    };
+    P.setNoPreferenceMotionAction = function (item) {
+        if (isa_fn(item)) this.otherContrastAction = item;
+    };
+    P.contrastActions = function () {
+
+        const here = this.here;
+
+        if (xt(here)) {
+
+            const accessibilityFlag = here.prefersContrast;
+
+            if (xt(accessibilityFlag)) {
+
+                if (accessibilityFlag) this.moreContrastAction();
+                else this.otherContrastAction();
+            }
+        }
     };
 
 // __prefers-reduced-motion__ accessibility user choice
@@ -1040,6 +1073,7 @@ S.trackHere = function(val) {
 
     P.checkAccessibilityValues = function () {
 
+        this.contrastActions();
         this.reducedMotionActions();
         this.colorSchemeActions();
         this.reducedTransparencyActions();

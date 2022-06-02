@@ -43,13 +43,26 @@ export default function (el) {
             testTime, testNow,
             testMessage = document.querySelector(`#${el.id}`);
 
+        let history = [],
+            averageTime = 0;
+
+        const addTime = (t) => {
+
+            if (history.length > 20) history.shift();
+            history.push(t);
+            averageTime = history.reduce((p, c) => p + c, 0);
+            averageTime /= history.length;
+        }
+
         return function () {
 
             testNow = Date.now();
             testTime = testNow - testTicker;
             testTicker = testNow;
 
-            testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+            addTime(testTime);
+
+            testMessage.textContent = `Screen refresh: ${Math.ceil(averageTime)}ms; fps: ${Math.floor(1000 / averageTime)}`;
         };
     }();
 

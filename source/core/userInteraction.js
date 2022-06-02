@@ -20,6 +20,7 @@ const uiSubscribedElements = [];
 let trackMouse = false,
     mouseChanged = false,
     viewportChanged = false,
+    prefersContrastChanged = false,
     prefersReducedMotionChanged = false,
     prefersDarkColorSchemeChanged = false,
     prefersReduceTransparencyChanged = false,
@@ -38,12 +39,28 @@ const currentCorePosition = {
     prefersReducedMotion: false,
     prefersDarkColorScheme: false,
     prefersReduceTransparency: false,
+    prefersContrast: false,
     prefersReduceData: false,
     rawTouches: [],
 };
 
 
 // ### Accessibility preferences
+
+// __reducedMotionMediaQuery__ - real-time check on the `prefers-reduced-motion` user preference, as set for the device or OS
+const contrastMediaQuery = window.matchMedia("(prefers-contrast: more)");
+
+contrastMediaQuery.addEventListener('change', () => {
+
+    let res = contrastMediaQuery.matches;
+
+    if (currentCorePosition.prefersContrast !== res) {
+
+        currentCorePosition.prefersContrast = res;
+        prefersContrastChanged = true;
+    }
+});
+currentCorePosition.prefersContrast = contrastMediaQuery.matches;
 
 // __reducedMotionMediaQuery__ - real-time check on the `prefers-reduced-motion` user preference, as set for the device or OS
 const reducedMotionMediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -240,11 +257,13 @@ const updateUiSubscribedElement = function (art) {
         const { here, domElement:el } = dom;
 
         // Accessibility
+        here.prefersContrast = currentCorePosition.prefersContrast;
         here.prefersReducedMotion = currentCorePosition.prefersReducedMotion;
         here.prefersDarkColorScheme = currentCorePosition.prefersDarkColorScheme;
         here.prefersReduceTransparency = currentCorePosition.prefersReduceTransparency;
         here.prefersReduceData = currentCorePosition.prefersReduceData;
 
+        if (prefersContrastChanged) dom.contrastActions();
         if (prefersReducedMotionChanged) dom.reducedMotionActions();
         if (prefersDarkColorSchemeChanged) dom.colorSchemeActions();
         if (prefersReduceTransparencyChanged) dom.reducedTransparencyActions();

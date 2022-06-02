@@ -21,12 +21,12 @@ export default function (P = Ωempty) {
         repeat: 'repeat',
 
 // __patternMatrix__ - Scrawl-canvas will apply a 2d-style, 6 value [DOMMatrix](https://developer.mozilla.org/en-US/docs/Web/API/DOMMatrix) to the pattern each time it is recreated. Changing the values of the matrix will change the rotation, skew, etc of the pattern. Pseudo-attributes can be used to set individual elements of the matrix, as follows:
-// + `matrixA` - generally used for horizontal (x axis) scale
-// + `matrixB` - generally used for horizontal (x axis) skew
-// + `matrixC` - generally used for vertical (y axis) skew
-// + `matrixD` - generally used for vertical (y axis) scale
-// + `matrixE` - generally used for horizontal (x axis) positioning
-// + `matrixF` - generally used for vertical (y axis) positioning
+// + `stretchX` (or `matrixA`) - generally used for horizontal (x axis) scale
+// + `skewY` (or `matrixB`) - generally used for horizontal (x axis) skew
+// + `skewX` (or `matrixC`) - generally used for vertical (y axis) skew
+// + `stretchY` (or `matrixD`) - generally used for vertical (y axis) scale
+// + `shiftX` (or `matrixE`) - generally used for horizontal (x axis) positioning
+// + `shiftY` (or `matrixF`) - generally used for vertical (y axis) positioning
 //
 // To rotate the pattern, update the B and C matrix values in tandem. Results will be dependent on the surrounding matrix values. See demo [Canvas-035](../../demo/canvas-035.html) to explore further.
         patternMatrix: null,
@@ -78,6 +78,14 @@ export default function (P = Ωempty) {
     S.matrixD = function (item) { this.updateMatrixNumber(item, 'd'); };
     S.matrixE = function (item) { this.updateMatrixNumber(item, 'e'); };
     S.matrixF = function (item) { this.updateMatrixNumber(item, 'f'); };
+
+// __stretchX__, __skewY__, __skewX__, __stretchY__, __shiftX__, __shiftY__ - these _pseudo-attributes_ can be used to set individual attributes of the `patternMatrix` DOMMatrix object
+    S.stretchX = function (item) { this.updateMatrixNumber(item, 'a'); };
+    S.skewY = function (item) { this.updateMatrixNumber(item, 'b'); };
+    S.skewX = function (item) { this.updateMatrixNumber(item, 'c'); };
+    S.stretchY = function (item) { this.updateMatrixNumber(item, 'd'); };
+    S.shiftX = function (item) { this.updateMatrixNumber(item, 'e'); };
+    S.shiftY = function (item) { this.updateMatrixNumber(item, 'f'); };
 
 // __patternMatrix__ - the argument must be an Array containing 6 Number elements in the form of `[a, b, c, d, e, f]`
     S.patternMatrix = function (item) {

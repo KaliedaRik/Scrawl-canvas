@@ -2,10 +2,13 @@
 // Editable header element color font snippets
 //
 // Related files:
-// + [Animated highlight gradient text snippet](./snippets/animated-highlight-gradient-text-snippet.html)
-// + [Risograph text gradient snippet](./snippets/risograph-text-gradient-snippet.html)
-// + [Text snippet helper](./snippets/text-snippet-helper.html)
-// + [Worley text gradient snippet](./snippets/worley-text-gradient-snippet.html)
+// + [Editable header text colorizer and animation effect snippets](../snippets-006.html)
+// + [Animated highlight gradient text snippet](./animated-highlight-gradient-text-snippet.html)
+// + [Bubbles text snippet](./bubbles-text-snippet.html)
+// + [Risograph text gradient snippet](./risograph-text-gradient-snippet.html)
+// + [Swirling stripes text snippet](./swirling-stripes-text-snippet.html)
+// + [Worley text gradient snippet](./worley-text-gradient-snippet.html)
+// + [Text snippet helper](./text-snippet-helper.html)
 //
 // [Run code](../../demo/snippets-006.html)
 
@@ -32,6 +35,10 @@ highlightGradientHeaders.forEach(el => highlightGradientEffect(el, scrawl));
 import bubblesEffect from './snippets/bubbles-text-snippet.js';
 const bubblesHeaders = document.querySelectorAll('.bubbles-text-header');
 bubblesHeaders.forEach(el => bubblesEffect(el, scrawl));
+
+import swirlStripesEffect from './snippets/swirling-stripes-text-snippet.js';
+const swirlStripesHeaders = document.querySelectorAll('.swirling-stripes-header');
+swirlStripesHeaders.forEach(el => swirlStripesEffect(el, scrawl));
 
 import pagePerformance from './snippets/page-performance-snippet.js';
 const pageReport = document.querySelectorAll('#reportmessage');

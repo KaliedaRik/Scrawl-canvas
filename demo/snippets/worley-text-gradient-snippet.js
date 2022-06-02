@@ -1,8 +1,8 @@
 // # Demo Snippets 006
-// Editable header element color font snippets
+// Editable header text colorizer and animation effect snippets
 //
 // Related files:
-// + [Editable header element color font snippets](../snippets-006.html)
+// + [Editable header text colorizer and animation effect snippets](../snippets-006.html)
 // + [Text snippet helper](./text-snippet-helper.html)
 
 import { getSnippetData } from './text-snippet-helper.js';
@@ -20,30 +20,120 @@ export default function (el, scrawl) {
 
     if (snippet) {
 
-        let { canvas, group, dataset, name, width, height, yOffset, initCanvas, initPhrase, textGroup, additionalDemolishActions } = getSnippetData(snippet, scrawl);
+        let { canvas, group, dataset, compStyles, name, width, height, fontSize, yOffset, initCanvas, initPhrase, textGroup, responsiveFunctions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
+
+        const contrastMediaQuery = window.matchMedia("(prefers-contrast: more)");
+        if (contrastMediaQuery.matches) {
+            return { error: 'User has indicated they want maximum contrast' };
+        }
 
         initCanvas();
 
         canvas.base.set({
             compileOrder: 1,
-        })
+        });
 
-        const baseColor = dataset.baseColor ? dataset.baseColor : 'black';
-        const highlightColor = dataset.highlightColor ? dataset.highlightColor : 'orange';
-        const noiseSumFunction = dataset.noiseSumFunction ? dataset.noiseSumFunction : 'random';
-        const noiseScale = dataset.noiseScale ? parseFloat(dataset.noiseScale) : 50;
-        const noiseOutput = dataset.noiseOutput ? dataset.noiseOutput : 'X';
-        const shadowColor = dataset.shadowColor ? dataset.shadowColor : 'black';
-        const shadowOffsetX = dataset.shadowOffsetX ? parseFloat(dataset.shadowOffsetX) : 0;
-        const shadowOffsetY = dataset.shadowOffsetY ? parseFloat(dataset.shadowOffsetY) : 0;
-        const shadowBlur = dataset.shadowBlur ? parseFloat(dataset.shadowBlur) : 0;
+        let baseColor = 'black',
+            darkBaseColor = 'white',
+            highlightColor = 'orange',
+            darkHighlightColor = 'orange',
+            noiseSumFunction = 'random',
+            noiseOutput = 'X',
+            noiseScale = 50,
+            shadowColor = 'black',
+            darkShadowColor = 'white',
+            shadowOffsetX = 0,
+            shadowOffsetY = 0,
+            shadowBlur = 0;
 
+        if (dataset.baseColor) baseColor = dataset.baseColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-base-color');
+            if (s) baseColor = s;
+        }
+
+        if (dataset.darkBaseColor) darkBaseColor = dataset.darkBaseColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-dark-base-color');
+            if (s) darkBaseColor = s;
+        }
+
+        if (dataset.highlightColor) highlightColor = dataset.highlightColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-highlight-color');
+            if (s) highlightColor = s;
+        }
+
+        if (dataset.darkHighlightColor) darkHighlightColor = dataset.darkHighlightColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-dark-highlight-color');
+            if (s) darkHighlightColor = s;
+        }
+
+        if (dataset.noiseSumFunction) noiseSumFunction = dataset.noiseSumFunction;
+        else {
+            const s = compStyles.getPropertyValue('--data-noise-sum-function');
+            if (s) noiseSumFunction = s;
+        }
+
+        if (dataset.noiseOutput) noiseOutput = dataset.noiseOutput;
+        else {
+            const s = compStyles.getPropertyValue('--data-noise-output');
+            if (s) noiseOutput = s;
+        }
+
+        if (dataset.noiseScale) noiseScale = parseFloat(dataset.noiseScale);
+        else {
+            const s = compStyles.getPropertyValue('--data-noise-scale');
+            if (s) noiseScale = parseFloat(s);
+        }
+
+        if (dataset.shadowColor) shadowColor = dataset.shadowColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-shadow-color');
+            if (s) shadowColor = s;
+        }
+
+        if (dataset.darkShadowColor) darkShadowColor = dataset.darkShadowColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-dark-shadow-color');
+            if (s) darkShadowColor = s;
+        }
+
+        if (dataset.shadowOffsetX) shadowOffsetX = parseFloat(dataset.shadowOffsetX);
+        else {
+            const s = compStyles.getPropertyValue('--data-shadow-offset-x');
+            if (s) shadowOffsetX = parseFloat(s);
+        }
+
+        if (dataset.shadowOffsetY) shadowOffsetY = parseFloat(dataset.shadowOffsetY);
+        else {
+            const s = compStyles.getPropertyValue('--data-shadow-offset-y');
+            if (s) shadowOffsetY = parseFloat(s);
+        }
+
+        if (dataset.shadowBlur) shadowBlur = parseFloat(dataset.shadowBlur);
+        else {
+            const s = compStyles.getPropertyValue('--data-shadow-blur');
+            if (s) shadowBlur = parseFloat(s);
+        }
+
+        let color1 = baseColor,
+            color2 = highlightColor,
+            color3 = shadowColor;
+
+        const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        if (colorSchemeMediaQuery.matches) {
+            color1 = darkBaseColor;
+            color2 = darkHighlightColor;
+            color3 = darkShadowColor;
+        }
 
         const worley = scrawl.makeNoiseAsset({
             name: `${name}-noise-generator`,
             colors: [
-                [0, highlightColor],
-                [999, baseColor],
+                [0, color2],
+                [999, color1],
             ],
             colorSpace: 'LAB',
             noiseEngine: 'worley-euclidean',
@@ -62,7 +152,7 @@ export default function (el, scrawl) {
         const f1 = scrawl.makeFilter({
             name: `${name}-blur-filter`,
             method: 'gaussianBlur',
-            radius: shadowBlur,
+            radius: Math.round(fontSize * shadowBlur),
         });
 
         const textFill = scrawl.makePhrase({
@@ -76,9 +166,9 @@ export default function (el, scrawl) {
         const textStroke = textFill.clone({
             name: `${name}-text-outline`,
             order: 2,
-            startX: shadowOffsetX,
-            startY: yOffset + shadowOffsetY,
-            fillStyle: shadowColor,
+            startX: Math.round(fontSize * shadowOffsetY),
+            startY: Math.round((fontSize * yOffset) + (fontSize * shadowOffsetY)),
+            fillStyle: color3,
             filters: shadowBlur ? [`${name}-blur-filter`] : [],
             memoizeFilterOutput: true,
             globalCompositeOperation: 'destination-over',
@@ -94,6 +184,27 @@ export default function (el, scrawl) {
             height: '100%',
             fillStyle: `${name}-noise-pattern`,
             globalCompositeOperation: 'source-in',
+        });
+
+        responsiveFunctions.push((items = {}) => {
+
+            const localFontSize = parseFloat(items.fontSize),
+                localWidth = parseFloat(items.width),
+                localHeight = parseFloat(items.height);
+
+            worley.set({
+                width: localWidth,
+                height: localHeight,
+            });
+
+            f1.set({
+                radius: Math.round(localFontSize * shadowBlur),
+            });
+
+            textStroke.set({
+                startX: Math.round(localFontSize * shadowOffsetY),
+                startY: Math.round((localFontSize * yOffset) + (localFontSize * shadowOffsetY)),
+            });
         });
 
         additionalDemolishActions.push(() => {

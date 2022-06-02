@@ -153,7 +153,10 @@ const myBlock = scrawl.makeBlock({
 const report = reportSpeed('#reportmessage', function () {
 
     let matrix = styles['bunny-pattern'].patternMatrix;
-    if (matrix) return `Matrix - A: ${matrix.a}, B: ${matrix.b}, C: ${matrix.c}, D: ${matrix.d}, E: ${matrix.e}, F: ${matrix.f}`;
+    if (matrix) return `    Matrix: [${matrix.a}, ${matrix.b}, ${matrix.c}, ${matrix.d}, ${matrix.e}, ${matrix.f}]
+    stretchX: ${matrix.a}, stretchY: ${matrix.d}
+    skewX: ${matrix.c}, skewY: ${matrix.b}
+    shiftX: ${matrix.e}, shiftY: ${matrix.f}`;
     return 'Matrix not available'
 });
 

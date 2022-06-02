@@ -15,7 +15,7 @@ export default function (el, scrawl) {
 
     if (snippet) {
 
-        let { canvas, group, animation, compStyles, dataset, name, height, lineHeight, initCanvas, initPhrase, textGroup, responsiveFunctions, animationFunctions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
+        let { canvas, group, animation, compStyles, dataset, name, height, lineHeight, initCanvas, initPhrase, textGroup, responsiveFunctions, animationFunctions, animationEndFunctions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
 
         const contrastMediaQuery = window.matchMedia("(prefers-contrast: more)");
         if (contrastMediaQuery.matches) {
@@ -24,15 +24,12 @@ export default function (el, scrawl) {
 
         initCanvas();
 
-        canvas.base.set({
-            compileOrder: 1,
-        })
-
         let mainColor = 'black',
-            highlightColor = 'lightgreen',
-            darkMainColor = 'ivory',
-            darkHighlightColor = 'green',
-            gradientEasing = 'linear',
+            darkMainColor = 'white',
+            stripeColor = 'red',
+            darkStripeColor = '#e34e49',
+            stripeRatio = 0.5,
+            swirlAngle = 90,
             gradientSkewX = 0,
             gradientSkewY = 0,
             gradientStretchX = 1,
@@ -46,26 +43,32 @@ export default function (el, scrawl) {
 
         if (dataset.darkMainColor) darkMainColor = dataset.darkMainColor;
         else {
-            const s = compStyles.getPropertyValue('--data-dark-main-color');
+            const s = compStyles.getPropertyValue('--data-main-color');
             if (s) darkMainColor = s;
         }
 
-        if (dataset.highlightColor) highlightColor = dataset.highlightColor;
+        if (dataset.stripeColor) stripeColor = dataset.stripeColor;
         else {
-            const s = compStyles.getPropertyValue('--data-highlight-color');
-            if (s) highlightColor = s;
+            const s = compStyles.getPropertyValue('--data-stripe-color');
+            if (s) stripeColor = s;
         }
 
-        if (dataset.darkHighlightColor) darkHighlightColor = dataset.darkHighlightColor;
+        if (dataset.darkStripeColor) darkStripeColor = dataset.darkStripeColor;
         else {
-            const s = compStyles.getPropertyValue('--data-dark-highlight-color');
-            if (s) darkHighlightColor = s;
+            const s = compStyles.getPropertyValue('--data-stripe-color');
+            if (s) darkStripeColor = s;
         }
 
-        if (dataset.gradientEasing) gradientEasing = dataset.gradientEasing;
+        if (dataset.stripeRatio) stripeRatio = parseFloat(dataset.stripeRatio);
         else {
             const s = compStyles.getPropertyValue('--data-gradient-easing');
-            if (s) gradientEasing = s;
+            if (s) stripeRatio = parseFloat(s);
+        }
+
+        if (dataset.swirlAngle) swirlAngle = parseFloat(dataset.swirlAngle);
+        else {
+            const s = compStyles.getPropertyValue('--data-swirl-angle');
+            if (s) swirlAngle = parseFloat(s);
         }
 
         if (dataset.gradientSkewX) gradientSkewX = parseFloat(dataset.gradientSkewX);
@@ -93,52 +96,59 @@ export default function (el, scrawl) {
         }
 
         let color1 = mainColor,
-            color2 = highlightColor;
+            color2 = stripeColor;
 
         const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
         if (colorSchemeMediaQuery.matches) {
             color1 = darkMainColor;
-            color2 = darkHighlightColor;
+            color2 = darkStripeColor;
         }
 
+        let gradientChangeAt = Math.floor(stripeRatio * 1000);
+        if (gradientChangeAt < 1) gradientChangeAt = 1;
+        if (gradientChangeAt > 997) gradientChangeAt = 997;
         const myGradient = scrawl.makeGradient({
-            name: `${name}-highlight-gradient`,
+            name: `${name}-swirlstripe-gradient`,
             colors: [
-                [0, color1],
-                [199, color2],
-                [399, color1],
-                [599, color2],
-                [799, color1],
+                [0, color2],
+                [gradientChangeAt, color2],
+                [gradientChangeAt + 1, color1],
                 [999, color1],
             ],
             endY: '100%',
-            delta: {
-                paletteStart: -3,
-                paletteEnd: -3,
-            },
-            cyclePalette: true,
-            easing: gradientEasing,
-            precision: 4,
+            precision: 10,
         });
 
         const cell = canvas.buildCell({
-            name: `${name}-highlight-gradient-cell`,
+            name: `${name}-swirlstripe-gradient-cell`,
             width: 16,
             height: lineHeight,
             shown: false,
         });
 
         scrawl.makeBlock({
-            name: `${name}-highlight-gradient-block`,
-            group: `${name}-highlight-gradient-cell`,
-            dimensions: ['100%', '100%'],
-            fillStyle: `${name}-highlight-gradient`,
+            name: `${name}-swirlstripe-gradient-block-0`,
+            group: `${name}-swirlstripe-gradient-cell`,
+            dimensions: ['100%', '20%'],
+            fillStyle: `${name}-swirlstripe-gradient`,
             lockFillStyleToEntity: true,
+        }).clone({
+            name: `${name}-swirlstripe-gradient-block-1`,
+            startY: '20%',
+        }).clone({
+            name: `${name}-swirlstripe-gradient-block-2`,
+            startY: '40%',
+        }).clone({
+            name: `${name}-swirlstripe-gradient-block-3`,
+            startY: '60%',
+        }).clone({
+            name: `${name}-swirlstripe-gradient-block-4`,
+            startY: '80%',
         });
 
         const p1 = scrawl.makePattern({
-            name: `${name}-highlight-gradient-pattern`,
-            asset: `${name}-highlight-gradient-cell`,
+            name: `${name}-swirlstripe-gradient-pattern`,
+            asset: `${name}-swirlstripe-gradient-cell`,
             stretchX: gradientStretchY,
             stretchY: gradientStretchX,
             skewX: gradientSkewY,
@@ -161,8 +171,25 @@ export default function (el, scrawl) {
             order: 1,
             width: '100%',
             height: '100%',
-            fillStyle: `${name}-highlight-gradient-pattern`,
+            fillStyle: `${name}-swirlstripe-gradient-pattern`,
             globalCompositeOperation: 'source-in',
+        });
+
+        const swirl = scrawl.makeFilter({
+            name: `${name}-swirl-filter`,
+            method: 'swirl',
+            startX: '50%',
+            startY: '50%',
+            innerRadius: 0,
+            outerRadius: Math.ceil(lineHeight * 2),
+            easing: 'easeOutIn',
+            angle: swirlAngle,
+            transparentEdges: true,
+        });
+
+        canvas.base.set({
+            compileOrder: 1,
+            memoizeFilterOutput: true,
         });
 
         responsiveFunctions.push((items = {}) => {
@@ -172,13 +199,55 @@ export default function (el, scrawl) {
             cell.set({
                 height: localLineHeight,
             });
+
+            swirl.set({
+                outerRadius: Math.ceil(localLineHeight * 2),
+            });
         });
 
-        animationFunctions.push(() => myGradient.updateByDelta());
+        let isActive = false;
+
+        animationFunctions.push(() => {
+
+            const {x, y, active} = canvas.here;
+
+            if (active & !isActive) {
+
+                isActive = true;
+
+                canvas.base.set({
+                    filters: [swirl.name],
+                });
+            }
+            else if (!active && isActive) {
+
+                isActive = false;
+
+                canvas.base.set({
+                    filters: [],
+                });
+            }
+
+            if (isActive) {
+
+                swirl.set({
+                    startX: x,
+                    startY: y,
+                });
+            }
+        });
+
+        animationEndFunctions.push(() => {
+
+            canvas.base.set({
+                filters: [],
+            });
+        });
 
         additionalDemolishActions.push(() => {
             myGradient.kill();
             p1.kill();
+            swirl.kill();
             cell.kill();
         });
     }

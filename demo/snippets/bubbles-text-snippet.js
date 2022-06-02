@@ -1,8 +1,8 @@
 // # Demo Snippets 006
-// Editable header element color font snippets
+// Editable header text colorizer and animation effect snippets
 //
 // Related files:
-// + [Editable header element color font snippets](../snippets-006.html)
+// + [Editable header text colorizer and animation effect snippets](../snippets-006.html)
 // + [Text snippet helper](./text-snippet-helper.html)
 
 import { getSnippetData } from './text-snippet-helper.js';
@@ -20,17 +20,102 @@ export default function (el, scrawl) {
 
     if (snippet) {
 
-        let { canvas, group, dataset, name, yOffset, lineHeight, initCanvas, initPhrase, textGroup, additionalDemolishActions } = getSnippetData(snippet, scrawl);
+        let { canvas, group, dataset, compStyles, name, yOffset, fontSize, lineHeight, initCanvas, initPhrase, textGroup, eternalTweens, responsiveFunctions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
+
+        const contrastMediaQuery = window.matchMedia("(prefers-contrast: more)");
+        if (contrastMediaQuery.matches) {
+            return { error: 'User has indicated they want maximum contrast' };
+        }
 
         initCanvas();
 
-        const textColor = dataset.textColor ? dataset.textColor : 'darkblue';
-        const outlineColor = dataset.outlineColor ? dataset.outlineColor : 'black';
-        const outlineWidth = dataset.outlineWidth ? parseFloat(dataset.outlineWidth) : 2;
-        const bubbleMaxColor = dataset.bubbleMaxColor ? dataset.bubbleMaxColor : 'lightblue';
-        const bubbleMinColor = dataset.bubbleMinColor ? dataset.bubbleMinColor : 'pink';
-        const bubbleOutlineColor = dataset.bubbleOutlineColor ? dataset.bubbleOutlineColor : 'white';
-        const bubbleDensity = dataset.bubbleDensity ? parseFloat(dataset.bubbleDensity) : 50;
+        let textColor = '#c213bc',
+            darkTextColor = '#fcdeef',
+            outlineColor = '#f59dcf',
+            darkOutlineColor = '#f59dcf',
+            outlineWidth = 0.05,
+            bubbleColor = '#fcdeef',
+            darkBubbleColor = '#ed5fb0',
+            bubbleOutlineColor = '#c213bc',
+            darkBubbleOutlineColor = '#c213bc',
+            bubbleDensity = 50;
+
+        if (dataset.textColor) textColor = dataset.textColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-text-color');
+            if (s) textColor = s;
+        }
+
+        if (dataset.darkTextColor) darkTextColor = dataset.darkTextColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-dark-text-color');
+            if (s) darkTextColor = s;
+        }
+
+        if (dataset.outlineColor) outlineColor = dataset.outlineColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-outline-color');
+            if (s) outlineColor = s;
+        }
+
+        if (dataset.darkOutlineColor) darkOutlineColor = dataset.darkOutlineColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-dark-outline-color');
+            if (s) darkOutlineColor = s;
+        }
+
+        if (dataset.outlineWidth) outlineWidth = parseFloat(dataset.outlineWidth);
+        else {
+            const s = compStyles.getPropertyValue('--data-outline-width');
+            if (s) outlineWidth = parseFloat(s);
+        }
+
+        if (dataset.bubbleColor) bubbleColor = dataset.bubbleColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-bubble-color');
+            if (s) bubbleColor = s;
+        }
+
+        if (dataset.darkBubbleColor) darkBubbleColor = dataset.darkBubbleColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-dark-bubble-color');
+            if (s) darkBubbleColor = s;
+        }
+
+        if (dataset.bubbleOutlineColor) bubbleOutlineColor = dataset.bubbleOutlineColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-bubble-outline-color');
+            if (s) bubbleOutlineColor = s;
+        }
+
+        if (dataset.darkBubbleOutlineColor) darkBubbleOutlineColor = dataset.darkBubbleOutlineColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-dark-bubble-outline-color');
+            if (s) darkBubbleOutlineColor = s;
+        }
+
+        if (dataset.bubbleDensity) bubbleDensity = parseFloat(dataset.bubbleDensity);
+        else {
+            const s = compStyles.getPropertyValue('--data-bubble-density');
+            if (s) bubbleDensity = parseFloat(s);
+        }
+
+        let bubbleFillColor = bubbleColor,
+            bubbleStrokeColor = bubbleOutlineColor,
+            textFillColor = textColor,
+            textStrokeColor = outlineColor;
+
+        const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        if (colorSchemeMediaQuery.matches) {
+            bubbleFillColor = darkBubbleColor;
+            bubbleStrokeColor = darkBubbleOutlineColor;
+            textFillColor = darkTextColor;
+            textStrokeColor = darkOutlineColor;
+        }
+
+        const bubblesGroup = scrawl.makeGroup({
+            name: `${name}-bubbles-group`,
+        });
 
         const fizz = scrawl.makeWheel({
             name: `${name}-bubbles-template`,
@@ -39,39 +124,34 @@ export default function (el, scrawl) {
             startY: '100%',
             handleX: 'center',
             handleY: 'center',
-            strokeStyle: bubbleOutlineColor,
+            fillStyle: bubbleFillColor,
+            strokeStyle: bubbleStrokeColor,
             method: 'fillThenDraw',
             globalCompositeOperation: 'source-atop',
-            visibility: false,
             noDeltaUpdates: true,
             noPositionDependencies: true,
             noFilters: true,
             noUserInteraction: true,
+            purge: 'all',
         });
 
-        const colorFactory = scrawl.makeColor({
-            name: `${name}-bubbles-color-factory`,
-            minimumColor: bubbleMinColor,
-            maximumColor: bubbleMaxColor,
-            internalColorSpaces: 'LAB',
-        });
-
-        const tweens = [];
+        bubblesGroup.addArtefacts(fizz);
 
         for (let i = 0; i < bubbleDensity; i++) {
 
             const bubble = fizz.clone({
                 name: `${name}-bubble-${i}`,
-                radius: Math.round((Math.random() * 20) + 20),
-                fillStyle: colorFactory.getRangeColor(Math.random()),
+                radius: Math.round((Math.random() * (fontSize / 2)) + 4),
                 startX: `${Math.random() * 100}%`,
-                visibility: true,
-                purge: 'all',
+                noCanvasEngineUpdates: true,
+                sharedState: true,
             });
+
+            bubblesGroup.addArtefacts(bubble);
 
             const myRandom = Math.random();
 
-            tweens.push(scrawl.makeTween({
+            eternalTweens.push(scrawl.makeTween({
                 name: bubble.name,
                 targets: bubble,
                 duration: Math.round((myRandom * 3000) + 5000),
@@ -84,10 +164,6 @@ export default function (el, scrawl) {
                     attribute: 'scale',
                     start: 0.3,
                     end: Math.round((1 - myRandom) * 0.9) + 0.6,
-                }, {
-                    attribute: 'globalAlpha',
-                    start: 1,
-                    end: 0.2,
                 }],
             }).run());
         }
@@ -95,8 +171,8 @@ export default function (el, scrawl) {
         const textFill = scrawl.makePhrase({
             name: `${name}-text-stencil`,
             group,
-            fillStyle: textColor,
-            underlineStyle: textColor,
+            fillStyle: textFillColor,
+            underlineStyle: textFillColor,
             method: 'fill',
             order: 0,
         });
@@ -106,31 +182,30 @@ export default function (el, scrawl) {
         const textStroke = textFill.clone({
             name: `${name}-text-outline`,
             order: 2,
-            strokeStyle: outlineColor,
-            lineWidth: outlineWidth,
+            strokeStyle: textStrokeColor,
+            lineWidth: outlineWidth * fontSize,
             underlineStyle: 'transparent',
             method: 'draw',
         });
 
         textGroup.addArtefacts(textFill, textStroke);
 
-        // scrawl.makeBlock({
-        //     name: `${name}-text-fill`,
-        //     group,
-        //     order: 1,
-        //     width: '100%',
-        //     height: '100%',
-        //     fillStyle: `${name}-bubbles-pattern`,
-        //     globalCompositeOperation: 'source-in',
-        // });
+        responsiveFunctions.push((items = {}) => {
 
-        const killTweens = () => tweens.forEach(t => t.kill());
+            const localFontSize = parseFloat(items.fontSize),
+                localRadius = localFontSize / 2;
+
+            textStroke.set({
+                lineWidth: outlineWidth * localFontSize,
+            });
+
+            bubblesGroup.setArtefacts({
+                radius: Math.round((Math.random() * localRadius) + 4),
+            });
+        });
 
         additionalDemolishActions.push(() => {
-            // cell.kill();
-            // pattern.kill();
-            colorFactory.kill();
-            killTweens();
+            bubblesGroup.kill();
         });
     }
 

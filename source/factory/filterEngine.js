@@ -3889,13 +3889,14 @@ P.theBigActionsObject = {
             iWidth = input.width,
             r, g, b, a, i, dw, dh, source;
 
-        let {opacity, width, height, level, seed, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, lineOut} = requirements;
+        let {opacity, width, height, level, seed, noWrap, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == width) width = 1;
         if (null == height) height = 1;
         if (null == level) level = 0.5;
         if (null == seed) seed = 'some-random-string-or-other';
+        if (null == noWrap) noWrap = false;
         if (null == includeRed) includeRed = true;
         if (null == includeGreen) includeGreen = true;
         if (null == includeBlue) includeBlue = true;
@@ -3922,10 +3923,7 @@ P.theBigActionsObject = {
 
                 source = i + ((dh * iWidth) + dw) * 4;
 
-                if (source < 0) source += len;
-                else if (source >= len) source -= len;
-
-                if (excludeTransparentPixels && (!iData[a] || !iData[source + 3])) {
+                if (noWrap && (source < 0 || source >= len)) {
 
                     oData[r] = iData[r];
                     oData[g] = iData[g];
@@ -3934,14 +3932,28 @@ P.theBigActionsObject = {
                 }
                 else {
 
-                    oData[r] = (includeRed) ? iData[source] : iData[r];
-                    source++;
-                    oData[g] = (includeGreen) ? iData[source] : iData[g];
-                    source++;
-                    oData[b] = (includeBlue) ? iData[source] : iData[b];
-                    source++;
-                    oData[a] = (includeAlpha) ? iData[source] : iData[a];
+                    if (source < 0) source += len;
+                    else if (source >= len) source -= len;
+
+                    if (excludeTransparentPixels && (!iData[a] || !iData[source + 3])) {
+
+                        oData[r] = iData[r];
+                        oData[g] = iData[g];
+                        oData[b] = iData[b];
+                        oData[a] = iData[a];
+                    }
+                    else {
+
+                        oData[r] = (includeRed) ? iData[source] : iData[r];
+                        source++;
+                        oData[g] = (includeGreen) ? iData[source] : iData[g];
+                        source++;
+                        oData[b] = (includeBlue) ? iData[source] : iData[b];
+                        source++;
+                        oData[a] = (includeAlpha) ? iData[source] : iData[a];
+                    }
                 }
+
             }
             else {
 

@@ -31,6 +31,10 @@
   </style>
 
   <style>
+    body {
+      color: black;
+      background-color: transparent;
+    }
     main {
       width: 100%;
       max-width: 60em;
@@ -38,11 +42,11 @@
       text-align: left;
     }
     main p {
-      font-size: 16px;
+      font-size: 1rem;
       line-height: 1.5;
     }
     main h3 {
-      font-size: 150%;
+      font-size: 1.2rem;
       font-weight: bold;
       color: black;
       text-align: left;
@@ -51,21 +55,59 @@
       padding-top: 1em;
     }
     main li {
+      font-size: 1rem;
       margin-bottom: 0.7em;
+      line-height: 1.5;
     }
-    kbd {
+    main kbd {
       display: inline-block;
-      font-size: 16px;
+      font-size: 0.9rem;
       background-color: rgb(240 240 240);
     }
-    code {
+    main code {
       display: block;
-      font-size: 16px;
+      font-size: 0.9rem;
       background-color: rgb(240 240 240);
       margin-bottom: 1em;
+      padding-left:  1em;
+      padding-right:  1em;
       white-space: pre-wrap;
     }
+    @media (min-width: 30em) {
+      main p, main li {
+        font-size: 1rem;
+      }
+      main code, main kbd {
+        font-size: 0.9rem;
+      }
+      main h3 {
+        font-size: 1.3rem;
+      }
+    }
+    @media (min-width: 40em) {
+      main p, main li {
+        font-size: 1.1rem;
+      }
+      main code, main kbd {
+        font-size: 1rem;
+      }
+      main h3 {
+        font-size: 1.5rem;
+      }
+    }
+    @media (min-width: 50em) {
+      main p, main li {
+        font-size: 1.2rem;
+      }
+      main code, main kbd {
+        font-size: 1.1rem;
+      }
+      main h3 {
+        font-size: 1.7rem;
+      }
+    }
     .demo-header {
+      font-size: 2rem;
       line-height: 1.15;
       border: 0;
       margin: 0;
@@ -74,46 +116,98 @@
       hyphens: none;
       min-height: 1em;
       caret-color: rgba(0 0 0 / 1);
+      background-color: rgba(0 0 0 / 0);
+    }
+    @media (min-width: 30em) {
+      .demo-header {
+        font-size: 3rem;
+      }
+    }
+    @media (min-width: 40em) {
+      .demo-header {
+        font-size: 4rem;
+      }
+    }
+    @media (min-width: 50em) {
+      .demo-header {
+        font-size: 5rem;
+      }
     }
     .example-code {
       border-top: 3px black solid;
       margin-top: 3em;
     }
-    .header-5em-bold {
-      font-size: 5em;
-      font-weight: bold;
+    @media (prefers-color-scheme: dark) {
+      body {
+        color: white;
+        background-color: black;
+      }
+      a {
+        color: lightblue;
+      }
+      main h3 {
+        color: white;
+        border-top: 6px double white;
+      }
+      main kbd {
+        background-color: rgb(80 80 80);
+      }
+      main code {
+        background-color: rgb(80 80 80);
+      }
+      .demo-header {
+        caret-color: rgba(255 255 255 / 1);
+      }
+      .example-code {
+        border-top: 3px white solid;
+      }
     }
-    .header-4em-bold {
-      font-size: 4em;
-      font-weight: bold;
+    .justify-center-test {
+      text-align: center;
     }
-    .header-3em-bold {
-      font-size: 3em;
-      font-weight: bold;
+    .justify-right-test {
+      text-align: right;
     }
-    .header-5em-normal {
-      font-size: 5em;
-      font-weight: normal;
+    .letter-space-px-test {
+      letter-spacing: 4px;
     }
-    .header-4em-normal {
-      font-size: 4em;
-      font-weight: normal;
+    .letter-space-em-test {
+      letter-spacing: 0.2em;
     }
-    .header-3em-normal {
-      font-size: 3em;
+    .no-bold {
       font-weight: normal;
     }
     .header-font-sans {
       font-family: 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif;
+      --data-y-offset: 0.11;
+      --data-lineheight-adjuster: 0.875;
+      --data-underline-position: 0.75;
+      --data-underline-width: 0.09;
+      --data-no-underline-glyphs:gjpqy;
     }
     .header-font-serif {
       font-family: 'Lucida Bright', 'Lucida Fax', Palatino, 'Palatino Linotype', Palladio, 'URW Palladio', serif;
+      --data-y-offset: 0.1;
+      --data-lineheight-adjuster: 0.84;
+      --data-underline-position: 0.67;
+      --data-underline-width: 0.09;
+      --data-no-underline-glyphs:gjpqy;
     }
     .header-font-mono {
       font-family: 'Fira Mono', 'DejaVu Sans Mono', Menlo, Consolas, 'Liberation Mono', Monaco, 'Lucida Console', monospace;
+      --data-y-offset: 0.15;
+      --data-lineheight-adjuster: 0.85;
+      --data-underline-position: 0.72;
+      --data-underline-width: 0.08;
+      --data-no-underline-glyphs:gjpqy;
     }
     .header-font-cursive {
       font-family: 'Brush Script MT', 'Brush Script Std', 'Lucida Calligraphy', 'Lucida Handwriting', 'Apple Chancery', cursive;
+      --data-y-offset: 0.15;
+      --data-lineheight-adjuster: 0.83;
+      --data-underline-position: 0.65;
+      --data-underline-width: 0.08;
+      --data-no-underline-glyphs:gjpqy
     }
     .header-font-fantasy {
       font-family: Papyrus, Herculanum, 'Party LET', 'Curlz MT', Harrington, fantasy;
@@ -123,9 +217,69 @@
     }
     .header-font-bungee {
       font-family: Bungee;
+      --data-y-offset: 0.09;
+      --data-lineheight-adjuster: 0.86;
+      --data-underline-position: 0.79;
+      --data-underline-width: 0.08;
     }
     .header-font-carter-one {
       font-family: 'Carter One';
+      --data-y-offset: 0.17;
+      --data-lineheight-adjuster: 0.73;
+      --data-underline-position: 0.57;
+      --data-underline-width: 0.08;
+      --data-no-underline-glyphs:gjpqy;
+    }
+    .risograph-v1 {
+      --data-random-radius: 0.15;
+      --data-outline-width: 0.08;
+      --data-top-color: red; 
+      --data-bottom-color: black;
+      --data-outline-color: gold;
+      --data-dark-top-color: red; 
+      --data-dark-bottom-color: white;
+      --data-dark-outline-color: gold;
+    }
+    .worley-v1 {
+      --data-highlight-color: red;
+      --data-shadow-color: slategray;
+      --data-dark-highlight-color: red;
+      --data-dark-shadow-color: lightslategray;
+      --data-shadow-offset-x: 0.05;
+      --data-shadow-offset-y: 0.05;
+      --data-shadow-blur: 0.03;
+      --data-noise-scale: 40;
+      --data-noise-sum-function: none;
+    }
+    .worley-v2 {
+      --data-base-color: white;
+      --data-dark-base-color: white;
+      --data-highlight-color: #0760f7;
+      --data-dark-highlight-color: #74c0f2;
+      --data-noise-sum-function: none;
+      --data-noise-output: YminusX;
+      --data-noise-scale: 45;
+    }
+    .highlight-gradient-v1 {
+      --data-main-color: lch(29.2345% 44.2 27);
+      --data-dark-main-color: #5eadd1;
+      --data-highlight-color: lab(52.2345% 40.1645 59.9971);
+      --data-dark-highlight-color: #c5d6fc;
+      --data-gradient-skew-x: -1;
+      --data-gradient-easing:easeOutIn;
+      --data-is-animated: true;
+    }
+    .bubbles-text-v1 {
+      --data-text-color: white;
+      --data-outline-color: black;
+      --data-bubble-color: green;
+      --data-bubble-outline-color: gold;
+      --data-dark-text-color: black;
+      --data-dark-outline-color: white;
+      --data-dark-bubble-color: lightgreen;
+      --data-dark-bubble-outline-color: gold;
+      --data-bubble-density: 100;
+      --data-is-animated: true;
     }
 
     #reportmessage {
@@ -142,7 +296,7 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Snippets test 006</h1>
-  <h2>Editable header element color font snippets</h2>
+  <h2>Editable header text colorizer and animation effect snippets</h2>
   <h3>To test accessibility, tab through this demo page</h3>
 
   <main>
@@ -152,83 +306,38 @@
 
     <p><strong><em>This demo does not use color font technology, nor does it attempt to replicate color font functionality.</em></strong> Instead it demonstrates the application of color design and animation to any text on the web page, typically in HTML header elements, through the use of Scrawl-canvas snippet modules.</p>
 
-    <h3>Scrawl-canvas font colorizer snippets</h3>
+    <h3>Scrawl-canvas font snippets</h3>
 
-    <p>The snippets in this demo allow developers to apply color, distortion and animation effects to HTML header text blocks. Each header element can personalize the snippet effect applied to it using <kbd>data-</kbd> attributes, meaning each snippet can create a range of different effects.</p>
+    <p>The snippets in this demo allow developers to apply color, distortion and animation effects to HTML header text blocks. Each header element can personalize the snippet effect applied to it using both CSS classes and HTML <kbd>data-</kbd> attributes (which take priority), meaning each snippet can create a range of different effects.</p>
 
-    <p><b>Heads up!</b> This technique uses Scrawl-canvas snippet modules, which are <b><i>experimental</i></b>. Snippets add canvas elements behind the HTML element they are applied to. Depending on the header size, and the complexity of the pattern design and animation effect, the technique may lead to heavy computation which can result in excessive power use and slower screen refresh rates. Use snippets sparingly!</p>
+    <p><b>Heads up!</b> This technique uses Scrawl-canvas snippet modules, which are <b><i>experimental</i></b>. Depending on the header size, and the complexity of the pattern design and animation effect, the technique may lead to heavy computation which can result in excessive power use and slower screen refresh rates.</p>
 
-    <p>Each of the following snippets relies on the <kbd>text-snippet-helper.js</kbd> module to do much of the text-related computation which attempts to match canvas text to HTML/CSS text. However there are limitations to what text effects we can match - in particular canvas text does not support many (most!) of the more advanced CSS text features available in modern browsers.</p>
+    <p>Note that this demo includes many header examples. The more headers that the snippets get applied to, the longer the initial computation takes, which can lead to a delay to the effects appearing on the page - resulting in an unfortunate FOUT (flash of unstyled text).</p>
 
-    <p>Also, this demo includes many header examples. The more headers that the snippets get applied to, the longer the initial computation takes, which leads to a delay to the effects appearing on the page - an unfortunate FOUT (flash of unstyled text). Better coding may help alleviate this issue.</p>
+    <p>Use snippets sparingly!</p>
 
-    <h3>Applying a Scrawl-canvas snippet to HTML header elements</h3>
+    <p><b>DOM text and canvas text:</b> These snippets work by matching the font characteristics of the DOM headers and recreating the text in a &lt;canvas> element added inside the header element (progressive enhancement). For accessibility and user experience purposes the DOM text is not removed: users should be able to copy/paste the header text as normal. Users who disable Javascript in their devices should still be able to see the normal, CSS styled header text.</p>
 
-    <p>These header text colorizer and animation effects have been designed so they <b>can be applied to any font</b> (left-to-right, alphabetic) - including cloud-based fonts - at any given font size. However, every font is its own thing and the metadata included in a font can be, at times, less than helpful. Some fonts, for instance, will break through the ascendor and descendor values they claim to respect - in such cases (as demonstrated below) the longest ascendor/descendor strokes may appear to be clipped off.</p>
-
-    <p>The practical outcome of font-uniqueness is that we have to finesse canvas font placement so that it can match up with the HTML-rendered text as closely as possible. We can do this using a set of <kbd>data-</kbd> attributes added to each header element:</p>
-
-    <code>
-  CSS:
-    .demo-header {
-      line-height: 1.15;
-      border: 0;
-      margin: 0;
-      -webkit-hyphens: none;
-      -ms-hyphens: none;
-      hyphens: none;
-      min-height: 1em;
-      caret-color: rgba(0 0 0 / 1);
-    }
-    .times-font {
-      font-family: "Times New Roman, serif";
-    }
-    .header-5em-normal {
-      font-size: 5em;
-      font-weight: normal;
-    }
-
-  HTML:
-    &lt;h4 
-        id="this-header-unique-name" 
-        class="
-          demo-header 
-          times-font 
-          header-5em-normal 
-          pretty-effect" 
-        contenteditable="plaintext-only" 
-        data-y-offset="10" 
-        data-lineheight-adjuster="0.89" 
-        data-underline-position="0.75"
-        data-underline-width="8"
-        data-no-underline-glyphs="gjpqy"
-    >
-      Header with &lt;b>bold&lt;/b>, &lt;i>italic&lt;/i> and &lt;u>underline&lt;/u> markup.
-    &lt;/h4>
-
-  JS:
-    import * as scrawl from 'path/to/scrawl-canvas/library';
-
-    import myFontEffect from './path/to/required-SC-header-snippet.js';
-    const headers = document.querySelectorAll('.pretty-effect');
-    headers.forEach(el => myFontEffect(el, scrawl));
-    </code>
+    <p>Canvas text functionality is severely limited, compared to DOM text. These snippets attempt to:</p>
 
     <ul>
-      <li><kbd>id="this-header-unique-name"</kbd> - if applying a snippet to an HTML element, that element needs to be given a unique id value</li>
-      <li><kbd>class="pretty-effect"</kbd> - we can use any CSS selector value to apply a snippet to HTML elements matching that selector</li>
-      <li><kbd>contenteditable="plaintext-only"</kbd> - useful during development to make sure canvas and HTML text match up as closely as possible</li>
-      <li><kbd>data-y-offset="10"</kbd> - (px) move the canvas text up and down until it covers the HTML text</li>
-      <li><kbd>data-lineheight-adjuster="0.89"</kbd> - (0 - 1) tweak the canvas text line height, for when the HTML text breaks into multiple lines</li>
-      <li><kbd>data-underline-position="0.75"</kbd> - (% of lineheight) tweak the positioning of canvas font underlines</li>
-      <li><kbd>data-underline-width="8"</kbd> - (px) tweak the canvas underline width</li>
-      <li><kbd>data-no-underline-glyphs="gjpqy"</kbd> - (string) skip underlining these letters</li>
-      <li><kbd>data-is-animated="true"</kbd> - when set, the snippet will attempt to add accessibility control buttons to the header element to switch the animation off, and back on again. If the supplied value is <kbd>"reduced"</kbd> then the snippet will also implement functionality to halt the animation five seconds after it initially runs</li>
+      <li>Match the header text font family - including cloud-based web fonts</li>
+      <li>Match the positioning, <kbd>line-height</kbd> and line breaks of the header text in the canvas (as far as possible)</li>
+      <li>Match the font size of the header text, and adapt to CSS media query responsive sizing on a real-time basis (work in progress)</li>
+      <li>Respect <kbd>&lt;b></kbd>, <kbd>&lt;strong></kbd>, <kbd>&lt;i></kbd>, <kbd>&lt;em></kbd> and <kbd>&lt;u></kbd> markup within the header text</li>
+      <li>Respect some of the CSS styling applied to the header text, such as: <kbd>text-align</kbd>, <kbd>letter-spacing</kbd></li>
     </ul>
 
-    <p><b><i>Note that</i></b> if the header has been set with multiple font-family choices (for example: <i>'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif</i>), then the <kbd>data-y-offset</kbd>, <kbd>data-lineheight-adjuster</kbd>, <kbd>data-underline-position</kbd> and <kbd>data-underline-width</kbd> attributes can only ever be best guesses. Similarly, a single font may render differently in different browsers. This is the spice of frontend web developer life.</p>
+    <p>Accessibility controls and checks include:</p>
 
-    <p><b><i>Note also that</i></b> Scrawl-canvas <i>Phrase entitys</i> can consume text strings that include the following html markup: <kbd>&lt;b></kbd>, <kbd>&lt;strong></kbd>, <kbd>&lt;i></kbd>, <kbd>&lt;em></kbd> and <kbd>&lt;u></kbd>. SC Phrase entitys also handle long text, breaking it into multiple lines to fit into a given width, automatically; sadly, getting canvas text to break at the same point as HTML text is a complex problem - complete accuracy is not guaranteed.</p>
+    <ul>
+      <li>For animated font effects, the snippets will attempt to add a navigable <kbd>play|pause</kbd> control button in the top-right corner of the header element</li>
+      <li>For users who have set the <kbd>prefers-reduced-motion: reduced</kbd> feature on their devices, animated font effects will play for 5 seconds, then halt</li>
+      <li>For users who have set the <kbd>prefers-color-scheme: dark</kbd> feature on their devices, the font effect will display using dark-mode colors (if they have been set)</li>
+      <li>For users who have set the new <kbd>prefers-contrast: more</kbd> feature on their devices, the font effect will not display</li>
+    </ul>
+
+    <p>Details on how to apply these Scrawl-canvas snippets to DOM elements can be found at the end of this page.</p>
 
     <p id="reportmessage"></p>
 
@@ -236,140 +345,229 @@
 
     <p>This effect is inspired by <a href="https://dribbble.com/resources/risograph-printing">Risograph printing</a> which uses a limited color palette, stippling colors to create a gradient effect.</p>
 
-    <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied to the HTML element:</p>
+    <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied using CSS variables, or directly to the HTML header element:</p>
 
     <ul>
       <li><kbd>data-top-color</kbd> - any CSS color string</li>
       <li><kbd>data-bottom-color</kbd> - any CSS color string</li>
-      <li><kbd>data-random-radius</kbd> - (px) the amount of mixing of the top and bottom colors</li>
-      <li><kbd>data-random-level</kbd> - (0 - 1) the density of the color mixing</li>
       <li><kbd>data-outline-color</kbd> - any CSS color string</li>
-      <li><kbd>data-outline-width</kbd> - (px) outline width (needs to be double the required width)</li>
+      <li><kbd>data-outline-width</kbd> - (unit % of font size) outline width as a percentage of the font size</li>
+      <li><kbd>data-random-radius</kbd> - (0 - 1) the amount of mixing of the top and bottom colors</li>
+      <li><kbd>data-random-level</kbd> - (0 - 1) the density of the color mixing</li>
+    </ul>
+
+    <p>... And for <kbd>prefers-color-scheme: dark</kbd> users:</p>
+
+    <ul>
+      <li><kbd>data-dark-top-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-bottom-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-outline-color</kbd> - any CSS color string</li>
     </ul>
 
     <code class="example-code">
+<b>Risograph effect - default values</b>
+
+<u>CSS:</u>
+  .demo-header {
+    font-size: 2em;
+    line-height: 1.15;
+    border: 0;
+    margin: 0;
+    -webkit-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+    min-height: 1em;
+    caret-color: rgba(0 0 0 / 1);
+    background-color: rgba(0 0 0 / 0);
+  }
+  @media (min-width: 30em) {
+    .demo-header {
+      font-size: 3em;
+    }
+  }
+  @media (min-width: 40em) {
+    .demo-header {
+      font-size: 4em;
+    }
+  }
+  @media (min-width: 50em) {
+    .demo-header {
+      font-size: 5em;
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    .demo-header {
+      caret-color: rgba(255 255 255 / 1);
+    }
+  }
+
+  .header-font-sans {
+    font-family: 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif;
+
+    /* 
+      These font-specific data values can only ever be best-fit approximations
+      - Especially when used for multiple fonts, like here
+    */
+    --data-y-offset: 0.11;
+    --data-lineheight-adjuster: 0.875;
+    --data-underline-position: 0.75;
+    --data-underline-width: 0.09;
+
+    /* 
+      no space after the colon (unless you don't want underlined spaces) 
+    */
+    --data-no-underline-glyphs:gjpqy
+  }
+
+<u>HTML:</u>
   &lt;h4 
-      class="demo-header header-5em-bold header-font-sans risograph-header" 
-      contenteditable="plaintext-only" 
-      data-y-offset="10" 
-      data-lineheight-adjuster="0.875" 
-      data-outline-width="2"
-      data-underline-position="0.75"
-      data-underline-width="8"
-      data-no-underline-glyphs="gjpqy"
-  >
-    Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
-  &lt;/h4>
+    id="header-test-1" 
+    class="demo-header 
+      header-font-sans 
+      risograph-header" 
+    contenteditable="plaintext-only" 
+  >Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua&lt;/h4>
     </code>
 
     <h4 
       id="header-test-1" 
-      class="demo-header header-5em-bold header-font-sans risograph-header" 
+      class="demo-header header-font-sans risograph-header" 
       contenteditable="plaintext-only" 
-      data-y-offset="10" 
-      data-lineheight-adjuster="0.875" 
-      data-outline-width="2"
-      data-underline-position="0.75"
-      data-underline-width="8"
-      data-no-underline-glyphs="gjpqy"
     >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
 
     <code class="example-code">
+<b>Risograph effect - variant 1</b>
+
+<u>CSS:</u>
+  .header-font-serif {
+    font-family: 'Lucida Bright', 'Lucida Fax', Palatino, 'Palatino Linotype', Palladio, 'URW Palladio', serif;
+    --data-y-offset: 0.1;
+    --data-lineheight-adjuster: 0.84;
+    --data-underline-position: 0.67;
+    --data-underline-width: 0.09;
+    --data-no-underline-glyphs: gjpqy;
+  }
+
+  .risograph-v1 {
+    --data-random-radius: 0.15;
+    --data-outline-width: 0.08;
+    --data-top-color: red; 
+    --data-bottom-color: black;
+    --data-outline-color: gold;
+    --data-dark-top-color: red; 
+    --data-dark-bottom-color: white;
+    --data-dark-outline-color: gold;
+  }
+
+  .no-bold {
+    font-weight: normal;
+  }
+
+<u>HTML:</u>
   &lt;h4 
+    id="header-test-2" 
+    class="demo-header 
+      header-font-serif 
+      no-bold 
+      risograph-header
+      risograph-v1" 
+    contenteditable="plaintext-only" 
+  >Lorem ipsum dolor &lt;i>sit amet&lt;/i>, &lt;b>consectetur&lt;/b> &lt;u>adipiscing elit&lt;/u> magna aliqua&lt;/h4>
+    </code>
+
+    <h4 
       id="header-test-2" 
-      class="demo-header header-4em-normal header-font-serif risograph-header" 
+      class="demo-header header-font-serif no-bold risograph-header risograph-v1" 
       contenteditable="plaintext-only" 
-      data-y-offset="9" 
-      data-lineheight-adjuster="0.84" 
-      data-random-radius="15" 
-      data-top-color="red" 
-      data-bottom-color="black"
-      data-outline-color="gold"
-      data-outline-width="6"
-      data-underline-position="0.7"
-      data-underline-width="4"
-      data-no-underline-glyphs="gjpqy"
+    >Lorem ipsum dolor <i>sit amet</i>, <b>consectetur</b> <u>adipiscing elit</u> magna aliqua</h4>
+
+    <code class="example-code">
+<b>Risograph effect - default values with local amendments</b>
+
+<u>CSS:</u>
+  .header-font-mono {
+    font-family: 'Fira Mono', 'DejaVu Sans Mono', Menlo, Consolas, 'Liberation Mono', Monaco, 'Lucida Console', monospace;
+    --data-y-offset: 0.15;
+    --data-lineheight-adjuster: 0.85;
+    --data-underline-position: 0.72;
+    --data-underline-width: 0.08;
+    --data-no-underline-glyphs: gjpqy;
+  }
+
+<u>HTML:</u>
+  &lt;h4 
+    id="header-test-3" 
+    class="demo-header 
+      header-font-mono 
+      no-bold 
+      risograph-header" 
+    contenteditable="plaintext-only" 
+    data-outline-width="0.1"
+    data-outline-color="darkslateblue"
+    data-dark-outline-color="lightslateblue"
   >
     Lorem ipsum dolor &lt;i>sit amet&lt;/i>, &lt;b>consectetur&lt;/b> &lt;u>adipiscing elit&lt;/u> magna aliqua
   &lt;/h4>
     </code>
 
     <h4 
-      id="header-test-2" 
-      class="demo-header header-4em-normal header-font-serif risograph-header" 
+      id="header-test-3" 
+      class="demo-header header-font-mono no-bold risograph-header" 
       contenteditable="plaintext-only" 
-      data-y-offset="9" 
-      data-lineheight-adjuster="0.84" 
-      data-random-radius="15" 
-      data-top-color="red" 
-      data-bottom-color="black"
-      data-outline-color="gold"
-      data-outline-width="6"
-      data-underline-position="0.7"
-      data-underline-width="4"
-      data-no-underline-glyphs="gjpqy"
+      data-outline-width="0.1"
+      data-outline-color="darkslateblue"
+      data-dark-outline-color="lightslateblue"
     >Lorem ipsum dolor <i>sit amet</i>, <b>consectetur</b> <u>adipiscing elit</u> magna aliqua</h4>
-
-    <code class="example-code">
-  &lt;h4 
-      id="header-test-3" 
-      class="demo-header header-5em-bold header-font-christmas risograph-header" 
-      contenteditable="plaintext-only" 
-      data-y-offset="12" 
-      data-lineheight-adjuster="0.77" 
-      data-outline-width="2"
-      data-underline-position="0.63"
-      data-underline-width="6"
-      data-no-underline-glyphs="gjlpqsy"
-  >
-    Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
-  &lt;/h4>
-    </code>
-
-    <p>This font is quite badly behaved when it comes to respecting the dimensions it sets itself.</p>
-
-    <h4 
-      id="header-test-3" 
-      class="demo-header header-5em-bold header-font-christmas risograph-header" 
-      contenteditable="plaintext-only" 
-      data-y-offset="12" 
-      data-lineheight-adjuster="0.77" 
-      data-outline-width="2"
-      data-underline-position="0.63"
-      data-underline-width="6"
-      data-no-underline-glyphs="gjlpqsy"
-    >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
 
     <h3>worley-text-gradient-snippet</h3>
 
     <p><a href="https://thebookofshaders.com/12/">Worley noise</a> is a form of procedural texture which can be generated and used to simulate textures which look (a bit) like stone, water or biological cells.</p>
 
-    <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied to the HTML element:</p>
+    <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied using CSS variables, or directly to the HTML header element:</p>
 
     <ul>
       <li><kbd>data-base-color</kbd> - any CSS color string</li>
       <li><kbd>data-highlight-color</kbd> - any CSS color string</li>
-      <li><kbd>data-noise-sum-function</kbd> - permitted values include: 'none', 'sine-x', 'sine-y', 'sine', 'modular', 'random'</li>
+      <li><kbd>data-noise-sum-function</kbd> - permitted values include: <kbd>'none'</kbd>, <kbd>'sine-x'</kbd>, <kbd>'sine-y'</kbd>, <kbd>'sine'</kbd>, <kbd>'modular'</kbd>, <kbd>'random'</kbd></kbd></li>
       <li><kbd>data-noise-scale</kbd> - (+number) a form of zoom level</li>
-      <li><kbd>data-noise-output</kbd> - permitted values include: 'X', 'YminusX', 'ZminusX', etc</li>
+      <li><kbd>data-noise-output</kbd> - permitted values include: <kbd>'X'</kbd>, <kbd>'YminusX'</kbd>, <kbd>'ZminusX'</kbd> etc</li>
       <li><kbd>data-shadow-color</kbd> - any CSS color string, for the text shadow</li>
-      <li><kbd>data-shadow-offset-x</kbd> - (px) to offset the text shadow horizontally</li>
-      <li><kbd>data-shadow-offset-y</kbd> - (px) to offset the text shadow vertically</li>
-      <li><kbd>data-shadow-blur</kbd> - (px) to blur the shadow</li>
+      <li><kbd>data-shadow-offset-x</kbd> - (unit % of font size) percentage of the font size to offset the text shadow horizontally</li>
+      <li><kbd>data-shadow-offset-y</kbd> - (unit % of font size) percentage of the font size to offset the text shadow vertically</li>
+      <li><kbd>data-shadow-blur</kbd> - (unit % of font size) percentage of the font size to blur the shadow</li>
+    </ul>
+
+    <p>... And for <kbd>prefers-color-scheme: dark</kbd> users:</p>
+
+    <ul>
+      <li><kbd>data-dark-base-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-highlight-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-shadow-color</kbd> - any CSS color string, for the text shadow</li>
     </ul>
 
     <p>Scrawl-canvas supports several types of noise generation, including Worley noise - see <a href="canvas-060.html">Demo canvas-060</a>.</p>
 
     <code class="example-code">
+<b>Worley effect - default</b>
+
+<u>CSS:</u>
+  .header-font-cursive {
+    font-family: 'Brush Script MT', 'Brush Script Std', 'Lucida Calligraphy', 'Lucida Handwriting', 'Apple Chancery', cursive;
+    --data-y-offset: 0.15;
+    --data-lineheight-adjuster: 0.83;
+    --data-underline-position: 0.65;
+    --data-underline-width: 0.08;
+    --data-no-underline-glyphs: gjpqy
+  }
+
+<u>HTML:</u>
   &lt;h4 
-      id="header-test-4" 
-      class="demo-header header-5em-normal header-font-cursive worley-header" 
-      contenteditable="plaintext-only" 
-      data-y-offset="10" 
-      data-lineheight-adjuster="0.85" 
-      data-underline-position="0.65"
-      data-underline-width="6"
-      data-no-underline-glyphs="gjpqy"
+    id="header-test-4" 
+    class="demo-header 
+      header-font-cursive 
+      no-bold 
+      worley-header" 
+    contenteditable="plaintext-only" 
   >
     Lorem ipsum &lt;b>dolor sit amet&lt;/b>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
   &lt;/h4>
@@ -377,69 +575,84 @@
 
     <h4 
       id="header-test-4" 
-      class="demo-header header-5em-normal header-font-cursive worley-header" 
+      class="demo-header header-font-cursive no-bold worley-header" 
       contenteditable="plaintext-only" 
-      data-y-offset="10" 
-      data-lineheight-adjuster="0.85" 
-      data-underline-position="0.65"
-      data-underline-width="6"
-      data-no-underline-glyphs="gjpqy"
     >Lorem ipsum <b>dolor sit amet</b>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
 
     <code class="example-code">
+<b>Worley effect - variant 1</b>
+
+<u>CSS:</u>
+  .justify-center-test {
+    text-align: center;
+  }
+  .worley-v1 {
+    --data-highlight-color: red;
+    --data-shadow-color: slategray;
+    --data-dark-highlight-color: red;
+    --data-dark-shadow-color: lightslategray;
+    --data-shadow-offset-x: 0.05;
+    --data-shadow-offset-y: 0.05;
+    --data-shadow-blur: 0.03;
+    --data-noise-scale: 40;
+    --data-noise-sum-function: none;
+  }
+
+<u>HTML:</u>
   &lt;h4 
-      id="header-test-5" 
-      class="demo-header header-5em-bold header-font-sans worley-header" 
-      contenteditable="plaintext-only" 
-      data-y-offset="9" 
-      data-lineheight-adjuster="0.88" 
-      data-highlight-color="red" 
-      data-shadow-color="slategray"
-      data-shadow-offset-x="2"
-      data-shadow-offset-y="2"
-      data-shadow-blur="3"
-      data-noise-scale="40" 
-      data-noise-sum-function="none"
-      data-underline-position="0.75"
-      data-underline-width="4"
-      data-no-underline-glyphs="gjpqy"
+    id="header-test-5" 
+    class="demo-header 
+      header-font-sans 
+      justify-center-test 
+      worley-header 
+      worley-v1" 
+    contenteditable="plaintext-only" 
   >
     Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
   &lt;/h4>
     </code>
 
+    <p>Scrawl-canvas Phrase entity text can be justified within the Phrase's width; these text snippets will pick up and apply the header block <i>text-align</i> property.</p>
+
     <h4 
       id="header-test-5" 
-      class="demo-header header-5em-bold header-font-sans worley-header" 
+      class="demo-header header-font-sans justify-center-test worley-header worley-v1" 
       contenteditable="plaintext-only" 
-      data-y-offset="9" 
-      data-lineheight-adjuster="0.88" 
-      data-highlight-color="red" 
-      data-shadow-color="slategray"
-      data-shadow-offset-x="2"
-      data-shadow-offset-y="2"
-      data-shadow-blur="3"
-      data-noise-scale="40" 
-      data-noise-sum-function="none"
-      data-underline-position="0.75"
-      data-underline-width="4"
-      data-no-underline-glyphs="gjpqy"
     >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
 
     <code class="example-code">
+<b>Worley effect - variant 2</b>
+
+<u>CSS:</u>
+  .header-font-bungee {
+    font-family: Bungee;
+    --data-y-offset: 0.09;
+    --data-lineheight-adjuster: 0.86;
+    --data-underline-position: 0.79;
+    --data-underline-width: 0.08;
+  }
+  .justify-right-test {
+    text-align: right;
+  }
+  .worley-v2 {
+    --data-base-color: white;
+    --data-dark-base-color: white;
+    --data-highlight-color: #0760f7;
+    --data-dark-highlight-color: #74c0f2;
+    --data-noise-sum-function: none;
+    --data-noise-output: YminusX;
+    --data-noise-scale: 45;
+  }
+
+<u>HTML:</u>
   &lt;h4 
-      id="header-test-6" 
-      class="demo-header header-4em-bold header-font-bungee worley-header" 
-      contenteditable="plaintext-only" 
-      data-y-offset="4" 
-      data-lineheight-adjuster="0.86" 
-      data-base-color="white" 
-      data-highlight-color="#0760f7" 
-      data-noise-sum-function="none"
-      data-noise-output="YminusX"
-      data-noise-scale="45"
-      data-underline-position="0.79"
-      data-underline-width="4"
+    id="header-test-6" 
+    class="demo-header 
+      header-font-bungee 
+      justify-right-test 
+      worley-header
+      worley-v2" 
+    contenteditable="plaintext-only" 
   >
     Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
   &lt;/h4>
@@ -447,75 +660,86 @@
 
     <h4 
       id="header-test-6" 
-      class="demo-header header-4em-bold header-font-bungee worley-header" 
+      class="demo-header header-font-bungee justify-right-test worley-header worley-v2" 
       contenteditable="plaintext-only" 
-      data-y-offset="4" 
-      data-lineheight-adjuster="0.86" 
-      data-base-color="white" 
-      data-highlight-color="#0760f7" 
-      data-noise-sum-function="none"
-      data-noise-output="YminusX"
-      data-noise-scale="45"
-      data-underline-position="0.79"
-      data-underline-width="4"
     >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
 
     <h3>animated-highlight-gradient-text-snippet</h3>
 
     <p>A simple gradient effect using two colors, spaced along the gradient to make a series of bars. The gradient animates downwards in a repeating pattern.</p>
 
-    <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied to the HTML element:</p>
+    <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied using CSS variables, or directly to the HTML header element:</p>
 
     <ul>
       <li><kbd>data-main-color</kbd> - any CSS color string</li>
       <li><kbd>data-highlight-color</kbd> - any CSS color string</li>
       <li><kbd>data-gradient-easing</kbd> - (string) easing function, for example: 'linear', 'easeOutIn3', etc</li>
-      <li><kbd>data-gradient-skew-x</kbd> - (number) skew the gradient pattern horizontally</li>
-      <li><kbd>data-gradient-skew-y</kbd> - (number) skew the gradient pattern vertically</li>
+      <li><kbd>data-gradient-skew-x</kbd> - (-2 - 2) skew the gradient pattern horizontally</li>
+      <li><kbd>data-gradient-skew-y</kbd> - (-2 - 2) skew the gradient pattern vertically</li>
+      <li><kbd>data-gradient-stretch-x</kbd> - (0 - 4) stretch the gradient pattern horizontally</li>
+      <li><kbd>data-gradient-stretch-y</kbd> - (0 - 4) stretch the gradient pattern vertically</li>
+    </ul>
+
+    <p>... And for <kbd>prefers-color-scheme: dark</kbd> users:</p>
+
+    <ul>
+      <li><kbd>data-dark-main-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-highlight-color</kbd> - any CSS color string</li>
     </ul>
 
     <code class="example-code">
+<b>Animated highlight gradient effect - default (animated)</b>
+
+<u>CSS:</u>
+  .letter-space-px-test {
+    letter-spacing: 4px;
+  }
+
+<u>HTML:</u>
   &lt;h4 
-      id="header-test-7" 
-      class="demo-header header-5em-bold header-font-sans highlight-gradient-header" 
-      contenteditable="plaintext-only" 
-      data-y-offset="10" 
-      data-lineheight-adjuster="0.88" 
-      data-underline-position="0.75"
-      data-underline-width="8"
-      data-no-underline-glyphs="gjpqy"
-      data-is-animated="true"
+    id="header-test-7" 
+    class="demo-header 
+      header-font-sans 
+      letter-space-px-test 
+      highlight-gradient-header" 
+    contenteditable="plaintext-only" 
+    data-is-animated="true"
   >
     Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
   &lt;/h4>
     </code>
 
+    <p>Scrawl-canvas Phrase entitys include letter spacing functionality; these text snippets will use any CSS letter-spacing property value applied to the header element.</p>
+
     <h4 
       id="header-test-7" 
-      class="demo-header header-5em-bold header-font-sans highlight-gradient-header" 
+      class="demo-header header-font-sans letter-space-px-test highlight-gradient-header" 
       contenteditable="plaintext-only" 
-      data-y-offset="10" 
-      data-lineheight-adjuster="0.88" 
-      data-underline-position="0.75"
-      data-underline-width="8"
-      data-no-underline-glyphs="gjpqy"
       data-is-animated="true"
     >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
 
     <code class="example-code">
+<b>Animated highlight gradient effect - default with amendments</b>
+
+<u>CSS:</u>
+  .letter-space-em-test {
+    letter-spacing: 0.2em;
+  }
+
+<u>HTML:</u>
   &lt;h4 
-      id="header-test-8" 
-      class="demo-header header-4em-bold header-font-mono highlight-gradient-header" 
-      contenteditable="plaintext-only" 
-      data-y-offset="10" 
-      data-lineheight-adjuster="0.85" 
-      data-main-color="black" 
-      data-highlight-color="orange"
-      data-gradient-easing="easeInOut"
-      data-underline-position="0.7"
-      data-underline-width="7"
-      data-no-underline-glyphs="gjpqy"
-      data-is-animated="true"
+    id="header-test-8" 
+    class="demo-header 
+      header-font-serif 
+      letter-space-em-test 
+      highlight-gradient-header" 
+    contenteditable="plaintext-only" 
+    data-main-color="black" 
+    data-dark-main-color="#faf1d4" 
+    data-highlight-color="orange"
+    data-dark-highlight-color="#e6a315"
+    data-gradient-easing="easeInOut"
+    data-is-animated="true"
   >
     Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
   &lt;/h4>
@@ -525,32 +749,37 @@
 
     <h4 
       id="header-test-8" 
-      class="demo-header header-4em-bold header-font-mono highlight-gradient-header" 
+      class="demo-header header-font-serif letter-space-em-test highlight-gradient-header" 
       contenteditable="plaintext-only" 
-      data-y-offset="10" 
-      data-lineheight-adjuster="0.85" 
       data-main-color="black" 
+      data-dark-main-color="#faf1d4" 
       data-highlight-color="orange"
+      data-dark-highlight-color="#e6a315"
       data-gradient-easing="easeInOut"
-      data-underline-position="0.7"
-      data-underline-width="7"
-      data-no-underline-glyphs="gjpqy"
       data-is-animated="true"
     >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
 
     <code class="example-code">
+<b>Animated highlight gradient effect - variant 1</b>
+
+<u>CSS:</u>
+  .highlight-gradient-v1 {
+    --data-main-color: lch(29.2345% 44.2 27);
+    --data-highlight-color: lab(52.2345% 40.1645 59.9971);
+    --data-gradient-skew-x: -1;
+    /* no space after the colon! */
+    --data-gradient-easing:easeOutIn;
+    --data-is-animated: true;
+  }
+
+<u>HTML:</u>
   &lt;h4 
-      id="header-test-9" 
-      class="demo-header header-4em-bold header-font-bungee highlight-gradient-header" 
-      contenteditable="plaintext-only" 
-      data-y-offset="4" 
-      data-lineheight-adjuster="0.86" 
-      data-main-color="lch(29.2345% 44.2 27)" 
-      data-highlight-color="lab(52.2345% 40.1645 59.9971)"
-      data-gradient-skew-y="1"
-      data-underline-position="0.79"
-      data-underline-width="4"
-      data-is-animated="true"
+    id="header-test-9" 
+    class="demo-header 
+      header-font-bungee 
+      highlight-gradient-header
+      highlight-gradient-v1" 
+    contenteditable="plaintext-only" 
   >
     Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
   &lt;/h4>
@@ -560,45 +789,56 @@
 
     <h4 
       id="header-test-9" 
-      class="demo-header header-4em-bold header-font-bungee highlight-gradient-header" 
+      class="demo-header header-font-bungee highlight-gradient-header highlight-gradient-v1" 
       contenteditable="plaintext-only" 
-      data-y-offset="4" 
-      data-lineheight-adjuster="0.86" 
-      data-main-color="lch(29.2345% 44.2 27)" 
-      data-highlight-color="lab(52.2345% 40.1645 59.9971)"
-      data-gradient-skew-y="1"
-      data-underline-position="0.79"
-      data-underline-width="4"
-      data-is-animated="true"
     >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
 
     <h3>bubbles-text-snippet</h3>
 
     <p>An animation effect showing bubbles appearing, expanding, fading and disappearing inside the text.</p>
 
-    <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied to the HTML element:</p>
+    <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied using CSS variables, or directly to the HTML header element:</p>
 
     <ul>
       <li><kbd>data-text-color</kbd> - any CSS color string</li>
       <li><kbd>data-outline-color</kbd> - any CSS color string</li>
-      <li><kbd>data-outline-width</kbd> - (px) text outline width</li>
-      <li><kbd>data-bubble-min-color</kbd> - any CSS color string</li>
-      <li><kbd>data-bubble-max-color</kbd> - any CSS color string</li>
+      <li><kbd>data-outline-width</kbd> - (unit % of font size) percentage of the font size for text outline width</li>
+      <li><kbd>data-bubble-color</kbd> - any CSS color string</li>
       <li><kbd>data-bubble-outline-color</kbd> - any CSS color string</li>
       <li><kbd>data-bubble-density</kbd> - the number of bubbles to generate</li>
     </ul>
 
+    <p>... And for <kbd>prefers-color-scheme: dark</kbd> users:</p>
+
+    <ul>
+      <li><kbd>data-dark-text-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-outline-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-bubble-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-bubble-outline-color</kbd> - any CSS color string</li>
+    </ul>
+
     <code class="example-code">
+<b>Bubbles text effect - default values</b>
+
+<u>CSS:</u>
+  .header-font-carter-one {
+    font-family: 'Carter One';
+    --data-y-offset: 0.17;
+    --data-lineheight-adjuster: 0.73;
+    --data-underline-position: 0.57;
+    --data-underline-width: 0.08;
+    --data-no-underline-glyphs:gjpqy;
+  }
+
+<u>HTML:</u>
   &lt;h4 
-      id="header-test-10" 
-      class="demo-header header-5em-normal header-font-carter-one bubbles-text-header" 
-      contenteditable="plaintext-only" 
-      data-y-offset="15" 
-      data-lineheight-adjuster="0.73" 
-      data-underline-position="0.57"
-      data-underline-width="6"
-      data-no-underline-glyphs="gjpqy"
-      data-is-animated="true"
+    id="header-test-10" 
+    class="demo-header 
+      header-font-carter-one 
+      no-bold 
+      bubbles-text-header" 
+    contenteditable="plaintext-only" 
+    data-is-animated="true"
   >
     Lorem ipsum &lt;b>dolor&lt;/b> &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
   &lt;/h4>
@@ -606,33 +846,37 @@
 
     <h4 
       id="header-test-10" 
-      class="demo-header header-5em-normal header-font-carter-one bubbles-text-header" 
+      class="demo-header header-font-carter-one no-bold bubbles-text-header" 
       contenteditable="plaintext-only" 
-      data-y-offset="15" 
-      data-lineheight-adjuster="0.73" 
-      data-underline-position="0.57"
-      data-underline-width="6"
-      data-no-underline-glyphs="gjpqy"
       data-is-animated="true"
     >Lorem ipsum <b>dolor</b> <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
+
     <code class="example-code">
+<b>Bubbles text effect - variant 1</b>
+
+<u>CSS:</u>
+  .bubbles-text-v1 {
+    --data-text-color: white;
+    --data-outline-color: black;
+    --data-bubble-color: green;
+    --data-bubble-outline-color: gold;
+    --data-dark-text-color: black;
+    --data-dark-outline-color: white;
+    --data-dark-bubble-color: lightgreen;
+    --data-dark-bubble-outline-color: gold;
+    --data-bubble-density: 100;
+    --data-is-animated: true;
+  }
+
+<u>HTML:</u>
   &lt;h4 
-      id="header-test-11" 
-      class="demo-header header-5em-normal header-font-carter-one bubbles-text-header" 
-      contenteditable="plaintext-only" 
-      data-y-offset="15" 
-      data-text-color="white"
-      data-outline-color="black"
-      data-outline-width="2"
-      data-bubble-min-color="red"
-      data-bubble-max-color="green"
-      data-bubble-outline-color="gold"
-      data-bubble-density="80"
-      data-lineheight-adjuster="0.73" 
-      data-underline-position="0.57"
-      data-underline-width="6"
-      data-no-underline-glyphs="gjpqy"
-      data-is-animated="true"
+    id="header-test-11" 
+    class="demo-header 
+      header-font-carter-one 
+      no-bold 
+      bubbles-text-header
+      bubbles-text-v1" 
+    contenteditable="plaintext-only" 
   >
     Lorem ipsum &lt;b>dolor&lt;/b> &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
   &lt;/h4>
@@ -640,22 +884,56 @@
 
     <h4 
       id="header-test-11" 
-      class="demo-header header-5em-normal header-font-carter-one bubbles-text-header" 
+      class="demo-header header-font-carter-one no-bold bubbles-text-header bubbles-text-v1" 
       contenteditable="plaintext-only" 
-      data-y-offset="15" 
-      data-text-color="silver"
-      data-outline-color="black"
-      data-outline-width="2"
-      data-bubble-min-color="red"
-      data-bubble-max-color="green"
-      data-bubble-outline-color="gold"
-      data-bubble-density="60"
-      data-lineheight-adjuster="0.73" 
-      data-underline-position="0.57"
-      data-underline-width="6"
-      data-no-underline-glyphs="gjpqy"
-      data-is-animated="true"
     >Lorem ipsum <b>dolor</b> <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
+
+    <h3>swirling-stripes-text-snippet</h3>
+
+    <p>A striped 2-color gradient effect. Animation occurs when the user hovers their browser cursor over the header, which leads to a swirl filter being applied to the text.</p>
+
+    <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied using CSS variables, or directly to the HTML header element:</p>
+
+    <ul>
+      <li><kbd>data-main-color</kbd> - any CSS color string</li>
+      <li><kbd>data-stripe-color</kbd> - any CSS color string</li>
+      <li><kbd>data-stripe-ratio</kbd> - (0 - 1) the ratio of stripe to main color; higher values show wider stripes</li>
+      <li><kbd>data-swirl-angle</kbd> - (degrees) higher values lead to a tighter swirl; use negative values to reverse the swirl direction</li>
+      <li><kbd>data-gradient-skew-x</kbd> - (-2 - 2) skew the gradient pattern horizontally</li>
+      <li><kbd>data-gradient-skew-y</kbd> - (-2 - 2) skew the gradient pattern vertically</li>
+      <li><kbd>data-gradient-stretch-x</kbd> - (0 - 4) stretch the gradient pattern horizontally</li>
+      <li><kbd>data-gradient-stretch-y</kbd> - (0 - 4) stretch the gradient pattern vertically</li>
+    </ul>
+
+    <p>... And for <kbd>prefers-color-scheme: dark</kbd> users:</p>
+
+    <ul>
+      <li><kbd>data-dark-main-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-stripe-color</kbd> - any CSS color string</li>
+    </ul>
+
+    <code class="example-code">
+<b>Swirling stripes effect - default (animated)</b>
+
+<u>HTML:</u>
+  &lt;h4 
+    id="header-test-12" 
+    class="demo-header 
+      header-font-sans 
+      swirling-stripes-header" 
+    contenteditable="plaintext-only" 
+    data-is-animated="true"
+  >
+    Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
+  &lt;/h4>
+    </code>
+
+    <h4 
+      id="header-test-12" 
+      class="demo-header header-font-sans swirling-stripes-header" 
+      contenteditable="plaintext-only" 
+      data-is-animated="true"
+    >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
 
 <!--
 .header-5em-bold {
@@ -675,6 +953,40 @@
 .header-font-bungee {
 .header-font-carter-one {
 -->
+
+    <h3>Applying a Scrawl-canvas snippet to HTML header elements</h3>
+
+    <p>These header text colorizer and animation effects have been designed so they <b>can be applied to any font</b> (left-to-right, alphabetic) - including cloud-based fonts - at any given font size. However, every font is its own thing and the metadata included in a font can be, at times, less than helpful. The practical outcome of font-uniqueness is that we have to finesse canvas font placement so that it can match up with the HTML-rendered text as closely as possible. We can do this using a set of <kbd>data-</kbd> attributes applied using CSS variables, or directly to the HTML header element:</p>
+
+    <p><u>HTML elements</u></p>
+    <ul>
+      <li><kbd>id="this-header-unique-name"</kbd> - if applying a snippet to an HTML element, that element needs to be given a unique id value</li>
+      <li><kbd>class="arbitrary-name"</kbd> - we can use any CSS selector value to apply a snippet to HTML elements matching that selector</li>
+      <li><kbd>contenteditable="plaintext-only"</kbd> - useful during development to make sure canvas and HTML text match up as closely as possible</li>
+    </ul>
+
+    <p><u>HTML and/or CSS font-related data- attributes/variables</u></p>
+    <ul>
+      <li><kbd>data-y-offset="0.11"</kbd> - (unit % of font size) move the canvas text up/down until it covers the HTML text</li>
+      <li><kbd>data-lineheight-adjuster="0.89"</kbd> - (0 - 1) tweak the canvas text line height, for when the HTML text breaks into multiple lines</li>
+      <li><kbd>data-underline-position="0.75"</kbd> - (unit % of font size) tweak the positioning of canvas font underlines</li>
+      <li><kbd>data-underline-width="0.09"</kbd> - (unit % of font size) tweak the canvas underline width</li>
+      <li><kbd>data-no-underline-glyphs="gjpqy"</kbd> - (string) skip underlining these letters</li>
+      <li><kbd>data-is-animated="true"</kbd> - when set, the snippet will attempt to add accessibility control buttons to the header element to switch the animation off, and back on again. If the user has set their device/browser to <kbd>prefers-reduced-motion</kbd> then the animation should automatically halt after 5 seconds</li>
+    </ul>
+
+    <p><b><i>Using snippets:</i></b> We apply Scrawl-canvas snippets to HTML elements using Javascript:</p>
+
+    <code>
+JS:
+  import * as scrawl from 'path/to/scrawl-canvas/library';
+
+  import myFontEffect from './path/to/required-SC-header-snippet.js';
+  const headers = document.querySelectorAll('.arbitrary-name');
+  headers.forEach(el => myFontEffect(el, scrawl));
+    </code>
+
+    <p><b><i>Testing the responsiveness of the snippets:</i></b> all the examples have been set up with media queries to change font size in line with browser's viewport width.</p>
 
   </main>
 
@@ -703,6 +1015,7 @@
       <li><a href="../docs/demo/snippets/animated-highlight-gradient-text-snippet.html">animated-highlight-gradient-text-snippet.js</a></li>
       <li><a href="../docs/demo/snippets/bubbles-text-snippet.html">bubbles-text-snippet.js</a></li>
       <li><a href="../docs/demo/snippets/risograph-text-gradient-snippet.html">risograph-text-gradient-snippet.js</a></li>
+      <li><a href="../docs/demo/snippets/swirling-stripes-snippet.html">swirling-stripes-snippet.js</a></li>
       <li><a href="../docs/demo/snippets/worley-text-gradient-snippet.html">worley-text-gradient-snippet.js</a></li>
     </ul>
   </div>

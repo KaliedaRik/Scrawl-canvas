@@ -1300,7 +1300,7 @@ P.calculateTextPositions = function (mytext) {
 
                 len = handleX;
 
-                if (textLineWords[i] > 1) space = (width - textLineWidths[i]) / (textLineWords[i] - 1);
+                if (i < iz - 1 && textLineWords[i] > 1) space = (width - textLineWidths[i]) / (textLineWords[i] - 1);
                 else space = 0;
 
                 for (j = 0, jz = textLines[i].length; j < jz; j++) {

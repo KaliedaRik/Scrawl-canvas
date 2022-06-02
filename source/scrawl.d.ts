@@ -1164,6 +1164,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     lowGreen?: number;
     lowRed?: number;
     minimumColorDistance?: number;
+    noWrap?: boolean;
     offsetAlphaMax?: number;
     offsetAlphaMin?: number;
     offsetAlphaX?: number;
