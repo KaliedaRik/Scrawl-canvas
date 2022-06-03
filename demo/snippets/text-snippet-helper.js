@@ -9,6 +9,49 @@
 // + [Swirling stripes text snippet](./swirling-stripes-text-snippet.html)
 // + [Worley text gradient snippet](./worley-text-gradient-snippet.html)
 
+// ### Text snippet helper function
+//
+// __Purpose__ - Used by text snippets to handle some boilerplate and common functionality:
+// + Handles most work related to matching the canvas font to the HTML element's font
+// + Retrieves the `data-` attributes which handle canvas text alignment with the HTML element's text layout
+// + For editable HTML elements, handles user updates to the text
+// + Canvas initialization, including accessibility
+// + Phrase entity initialisation, and updates - including adapting the HTML element to accommodate the phrase's dimensions
+// + Animation boilerplate code, including animation accessibility - create and manage the `play|pause` `button` element created and added to the HTML element
+//
+// __Function input__ - The Scrawl-canvas snippet object, alongside the SC object (both arguments required).
+//
+// __Function output__ - A Javascript object with the following `key:value` attributes:
+// + `canvas` - SC snippet's Canvas wrapper
+// + `group` - (string) Canvas wrapper's base Cell's name value
+// + `animation` - SC snippet's animation object
+// + `wrapper` - SC snippet's Element artefact wrapper
+// + `dataset` - HTML element's `dataset` object
+// + `compStyles` - HTML element's `elementComputedStyles` object
+// + `name` - (string) SC snippet's Element artefact wrapper's name value
+//
+// + `width` - (number px) initial HTML element width value
+// + `height` - (number px) initial HTML element height value
+// + `lineHeight` - (number px) initial HTML element line height value
+// + `fontSize` - (number px) initial HTML element font size value
+// + `yOffset` - user-defined canvas font vertical positioning correction value
+//
+// + `textGroup` - the non-cell group used to manage and update the two Phrase entitys
+//
+// + `initCanvas` - function to invoke to initialize the Canvas wrapper
+// + `initPhrase` - function to invoke to initialize the Phrase entitys
+// + `processText` - function to handle `contenteditable` element text updates
+//
+// + `responsiveFunctions` - Array to hold snippet-specific functions relating to responsiveness
+// + `animationFunctions` - Array to hold snippet-specific functions relating to running animations
+// + `animationStartFunctions` - Array to hold snippet-specific functions relating to `animation.run()`
+// + `animationEndFunctions` - Array to hold snippet-specific functions relating to `animation.halt()`
+// + `contrastMoreActions` - Array to hold a `prefers-contrast` accessibility change function
+// + `contrastOtherActions` - Array to hold a `prefers-contrast` accessibility change function
+// + `colorSchemeDarkActions` - Array to hold a `prefers-color-scheme` accessibility change function
+// + `colorSchemeLightActions` - Array to hold a `prefers-color-scheme` accessibility change function
+// + `eternalTweens` - Array to hold sets of continuously-running tweens created by the snippet
+// + `additionalDemolishActions` - Array to hold snippet-specific functions relating to snippet demolition
 export const getSnippetData = (snippet, scrawl) => {
 
     const canvas = snippet.canvas,
@@ -21,7 +64,7 @@ export const getSnippetData = (snippet, scrawl) => {
         name = wrapper.name,
         dataset = el.dataset;
 
-    const {fontStyle, fontVariant, fontWeight, fontSize, fontFamily, lineHeight, width, height, backgroundColor, textAlign, letterSpacing} = compStyles;
+    const {fontStyle, fontVariant, fontWeight, fontSize, fontFamily, lineHeight, color, width, height, backgroundColor, textAlign, letterSpacing} = compStyles;
 
     let yOffset = 0,
         lineheightAdjuster = 1,
@@ -66,38 +109,54 @@ export const getSnippetData = (snippet, scrawl) => {
         if (s) isAnimated = s;
     }
 
-    const initCanvas = () => {
-
-        if (backgroundColor) {
-
-            canvas.set({ backgroundColor });
-            el.style.backgroundColor = 'transparent';
-        }
-        el.style.color = 'rgba(0,0,0,0)';
-        el.style.overflow = 'hidden';
-    };
-
-    const processText = t => {
-        t = t.replace(/<canvas.*<\/canvas>/gi, '');
-        t = t.replace(/<button.*<\/button>/gi, '');
-        return t;
-    }
-
     const additionalDemolishActions = [];
     const responsiveFunctions = [];
     const animationFunctions = [];
     const animationStartFunctions = [];
     const animationEndFunctions = [];
+    const contrastMoreActions = [];
+    const contrastOtherActions = [];
+    const colorSchemeDarkActions = [];
+    const colorSchemeLightActions = [];
     const eternalTweens = [];
 
+    const initCanvas = () => {
+
+        el.style.color = 'transparent';
+        el.style.overflow = 'hidden';
+
+        canvas.setColorSchemeDarkAction(() => colorSchemeDarkActions.forEach(a => a(compStyles)));
+        canvas.setColorSchemeLightAction(() => colorSchemeLightActions.forEach(a => a(compStyles)));
+        canvas.setMoreContrastAction(() => contrastMoreActions.forEach(a => a(compStyles)));
+        canvas.setOtherContrastAction(() => contrastOtherActions.forEach(a => a(compStyles)));
+    };
+
+    const addTextNode = () => {
+        const shy = document.createTextNode('!');
+        el.appendChild(shy);
+    };
+
+    const processText = t => {
+        t = t.replace(/<canvas.*<\/canvas>/gi, '');
+        t = t.replace(/<button.*<\/button>/gi, '');
+        if (!t.length) {
+            addTextNode();
+            t = '!';
+        }
+        return t;
+    }
 
     if (el.getAttribute('contenteditable')) {
 
         const updateText = (e) => {
             textGroup.setArtefacts({ text: processText(el.innerHTML) });
         }
-        const focusText = (e) => el.style.color = 'rgba(0,0,0,0.2)';
-        const blurText = (e) => el.style.color = 'rgba(0,0,0,0)';
+        const focusText = (e) => {
+            el.style.color = 'gray';
+        }
+        const blurText = (e) => {
+            el.style.color = 'transparent';
+        }
 
         scrawl.addNativeListener('input', updateText, el);
         scrawl.addNativeListener('focus', focusText, el);
@@ -213,8 +272,6 @@ export const getSnippetData = (snippet, scrawl) => {
         control.style.display = 'block';
         control.style.top = '0';
         control.style.right = '0';
-        // control.style.backgroundColor = 'transparent';
-        // control.style.borderRadius = '2px';
         control.textContent = 'Halt';
         control.setAttribute('contenteditable', 'false');
 
@@ -239,22 +296,14 @@ export const getSnippetData = (snippet, scrawl) => {
 
         el.appendChild(control);
 
-        const reducedMotionMediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-        if (reducedMotionMediaQuery.matches) {
-            setTimeout(() => {
-                doAnimation = false;
-                control.textContent = 'Play';
-            }, 5000);
-        }
-
         additionalDemolishActions.push(() => {
             scrawl.removeNativeListener('click', controlClick, control);
-            textGroup.kill();
         });
     }
 
     snippet.demolish = () => {
         eternalTweens.forEach(t => t.kill());
+        textGroup.kill();
         additionalDemolishActions.forEach(f => f());
         demolishAction();
     };
@@ -284,6 +333,10 @@ export const getSnippetData = (snippet, scrawl) => {
         animationFunctions,
         animationStartFunctions,
         animationEndFunctions,
+        contrastMoreActions,
+        contrastOtherActions,
+        colorSchemeDarkActions,
+        colorSchemeLightActions,
         eternalTweens,
         additionalDemolishActions,
     };

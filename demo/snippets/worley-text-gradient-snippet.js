@@ -4,7 +4,52 @@
 // Related files:
 // + [Editable header text colorizer and animation effect snippets](../snippets-006.html)
 // + [Text snippet helper](./text-snippet-helper.html)
+//
+// ### 'Worley noise used to color text' snippet
+//
+// __Purpose:__ Worley noise is a form of procedural texture which can be generated and used to simulate textures which look (a bit) like stone, water or biological cells.
+// + This snippet supports dark-mode alternative colors
+// + This snippet supports high contrast alternative colors
+// + This snippet is not animated
+//
+// __Function input:__ 
+// + the DOM element - generally a block or inline-block element.
+//
+// __Customisation:__ The snippet can be customised using the following data- attributes applied using CSS variables, or directly to the HTML header element:
+// + `data-base-color` - any CSS color string
+// + `data-dark-base-color` - any CSS color string
+// + `data-highlight-color` - any CSS color string
+// + `data-dark-highlight-color` - any CSS color string
+// + `data-noise-sum-function` - permitted values include: `none`, `sine-x`, `sine-y`, `sine`, `modular`, `random`
+// + `data-noise-scale` - (+number) a form of zoom level
+// + `data-noise-output` - permitted values include: `X`, `YminusX`, `ZminusX`, etc</li>
+// + `data-shadow-color` - any CSS color string, for the text shadow
+// + `data-dark-shadow-color` - any CSS color string, for the text shadow
+// + `data-shadow-offset-x` - (unit % of font size) percentage of the font size to offset the text shadow horizontally
+// + `data-shadow-offset-y` - (unit % of font size) percentage of the font size to offset the text shadow vertically
+// + `data-shadow-blur` - (unit % of font size) percentage of the font size to blur the shadow
+// + `data-contrast-color` - any CSS color string, used when user has set `prefers-contrast: more`
+// + `data-dark-contrast-color` - any CSS color string, used when user has set `prefers-contrast: more`
+// 
+// __Function output:__ a Javascript object will be returned, containing the following attributes
+// ```
+// {
+//     element     // the Scrawl-canvas wrapper for the DOM element supplied to the function
+//     canvas      // the Scrawl-canvas wrapper for the snippet's canvas
+//     animation   // the Scrawl-canvas animation object
+//     demolish    // remove the snippet from the Scrawl-canvas library
+// }
+// ```
+// ##### Usage example:
+// ```
+// import * as scrawl from 'path/to/scrawl-canvas/library';
+//
+// import mySnippet from './relative/or/absolute/path/to/this/file.js';
+// let myElements = document.querySelectorAll('.some-class');
+// myElements.forEach(el => mySnippet(el, scrawl));
+// ```
 
+// Additional font-specific customisation can be added courtesy of the Text Snippet Helper module
 import { getSnippetData } from './text-snippet-helper.js';
 
 // __Effects on the element:__ 
@@ -18,21 +63,20 @@ export default function (el, scrawl) {
         domElement: el,
     });
 
+    // Only proceed if the snippet is successfully generated
     if (snippet) {
 
-        let { canvas, group, dataset, compStyles, name, width, height, fontSize, yOffset, initCanvas, initPhrase, textGroup, responsiveFunctions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
+        // Import data and functionality from the Text Snippet Helper module
+        let { canvas, group, dataset, compStyles, name, width, height, fontSize, yOffset, initCanvas, initPhrase, textGroup, responsiveFunctions, contrastMoreActions, contrastOtherActions, colorSchemeDarkActions, colorSchemeLightActions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
 
-        const contrastMediaQuery = window.matchMedia("(prefers-contrast: more)");
-        if (contrastMediaQuery.matches) {
-            return { error: 'User has indicated they want maximum contrast' };
-        }
-
+        // Initialise the canvas
         initCanvas();
 
         canvas.base.set({
             compileOrder: 1,
         });
 
+        // Initialize and collect developer-supplied data
         let baseColor = 'black',
             darkBaseColor = 'white',
             highlightColor = 'orange',
@@ -44,7 +88,9 @@ export default function (el, scrawl) {
             darkShadowColor = 'white',
             shadowOffsetX = 0,
             shadowOffsetY = 0,
-            shadowBlur = 0;
+            shadowBlur = 0,
+            contrastColor = 'black',
+            darkContrastColor = 'white';
 
         if (dataset.baseColor) baseColor = dataset.baseColor;
         else {
@@ -118,22 +164,24 @@ export default function (el, scrawl) {
             if (s) shadowBlur = parseFloat(s);
         }
 
-        let color1 = baseColor,
-            color2 = highlightColor,
-            color3 = shadowColor;
-
-        const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-        if (colorSchemeMediaQuery.matches) {
-            color1 = darkBaseColor;
-            color2 = darkHighlightColor;
-            color3 = darkShadowColor;
+        if (dataset.contrastColor) contrastColor = dataset.contrastColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-contrast-color');
+            if (s) contrastColor = s;
         }
 
+        if (dataset.darkContrastColor) darkContrastColor = dataset.darkContrastColor;
+        else {
+            const s = compStyles.getPropertyValue('--data-dark-contrast-color');
+            if (s) darkContrastColor = s;
+        }
+
+        // Build the text effect
         const worley = scrawl.makeNoiseAsset({
             name: `${name}-noise-generator`,
             colors: [
-                [0, color2],
-                [999, color1],
+                [0, highlightColor],
+                [999, baseColor],
             ],
             colorSpace: 'LAB',
             noiseEngine: 'worley-euclidean',
@@ -168,7 +216,7 @@ export default function (el, scrawl) {
             order: 2,
             startX: Math.round(fontSize * shadowOffsetY),
             startY: Math.round((fontSize * yOffset) + (fontSize * shadowOffsetY)),
-            fillStyle: color3,
+            fillStyle: shadowColor,
             filters: shadowBlur ? [`${name}-blur-filter`] : [],
             memoizeFilterOutput: true,
             globalCompositeOperation: 'destination-over',
@@ -186,6 +234,60 @@ export default function (el, scrawl) {
             globalCompositeOperation: 'source-in',
         });
 
+        // Accessibility
+        colorSchemeLightActions.push((items = {}) => {
+
+            const localWidth = parseFloat(items.width),
+                localHeight = parseFloat(items.height);
+
+            worley.set({
+                colors: [
+                    [0, highlightColor],
+                    [999, baseColor],
+                ],
+                width: localWidth,
+                height: localHeight,
+            });
+
+            textStroke.set({
+                fillStyle: shadowColor,
+            });
+        });
+
+        colorSchemeDarkActions.push((items = {}) => {
+
+            const localWidth = parseFloat(items.width),
+                localHeight = parseFloat(items.height);
+
+            worley.set({
+                colors: [
+                    [0, darkHighlightColor],
+                    [999, darkBaseColor],
+                ],
+                width: localWidth,
+                height: localHeight,
+            });
+
+            textStroke.set({
+                fillStyle: darkShadowColor,
+            });
+        });
+
+        contrastMoreActions.push(() => {
+            el.style.color = (canvas.here.prefersDarkColorScheme) ? darkContrastColor : contrastColor;
+            textGroup.setArtefacts({
+                visibility: false,
+            });
+        });
+
+        contrastOtherActions.push(() => {
+            el.style.color = 'transparent';
+            textGroup.setArtefacts({
+                visibility: true,
+            });
+        });
+
+        // Responsiveness
         responsiveFunctions.push((items = {}) => {
 
             const localFontSize = parseFloat(items.fontSize),
@@ -207,6 +309,7 @@ export default function (el, scrawl) {
             });
         });
 
+        // Cleanup
         additionalDemolishActions.push(() => {
             f1.kill();
             p1.kill();

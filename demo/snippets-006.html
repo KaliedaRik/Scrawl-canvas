@@ -161,6 +161,9 @@
       .example-code {
         border-top: 3px white solid;
       }
+      .testinfo {
+        background-color: darkred;
+      }
     }
     .justify-center-test {
       text-align: center;
@@ -259,6 +262,8 @@
       --data-noise-sum-function: none;
       --data-noise-output: YminusX;
       --data-noise-scale: 45;
+      --data-contrast-color: darkred;
+      --data-dark-contrast-color: pink;
     }
     .highlight-gradient-v1 {
       --data-main-color: lch(29.2345% 44.2 27);
@@ -279,6 +284,8 @@
       --data-dark-bubble-color: lightgreen;
       --data-dark-bubble-outline-color: gold;
       --data-bubble-density: 100;
+      --data-contrast-color: darkred;
+      --data-dark-contrast-color: pink;
       --data-is-animated: true;
     }
 
@@ -364,6 +371,13 @@
       <li><kbd>data-dark-outline-color</kbd> - any CSS color string</li>
     </ul>
 
+    <p>This snippet reacts to the user preference <kbd>prefers-contrast: more</kbd> with the following <kbd>data-</kbd> attributes:</p>
+
+    <ul>
+      <li><kbd>data-contrast-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-contrast-color</kbd> - any CSS color string</li>
+    </ul>
+
     <code class="example-code">
 <b>Risograph effect - default values</b>
 
@@ -445,7 +459,7 @@
     --data-lineheight-adjuster: 0.84;
     --data-underline-position: 0.67;
     --data-underline-width: 0.09;
-    --data-no-underline-glyphs: gjpqy;
+    --data-no-underline-glyphs:gjpqy;
   }
 
   .risograph-v1 {
@@ -491,7 +505,7 @@
     --data-lineheight-adjuster: 0.85;
     --data-underline-position: 0.72;
     --data-underline-width: 0.08;
-    --data-no-underline-glyphs: gjpqy;
+    --data-no-underline-glyphs:gjpqy;
   }
 
 <u>HTML:</u>
@@ -505,6 +519,8 @@
     data-outline-width="0.1"
     data-outline-color="darkslateblue"
     data-dark-outline-color="lightslateblue"
+    data-contrast-color="darkred"
+    data-dark-contrast-color="pink"
   >
     Lorem ipsum dolor &lt;i>sit amet&lt;/i>, &lt;b>consectetur&lt;/b> &lt;u>adipiscing elit&lt;/u> magna aliqua
   &lt;/h4>
@@ -517,6 +533,8 @@
       data-outline-width="0.1"
       data-outline-color="darkslateblue"
       data-dark-outline-color="lightslateblue"
+      data-contrast-color="darkred"
+      data-dark-contrast-color="pink"
     >Lorem ipsum dolor <i>sit amet</i>, <b>consectetur</b> <u>adipiscing elit</u> magna aliqua</h4>
 
     <h3>worley-text-gradient-snippet</h3>
@@ -545,6 +563,13 @@
       <li><kbd>data-dark-shadow-color</kbd> - any CSS color string, for the text shadow</li>
     </ul>
 
+    <p>This snippet reacts to the user preference <kbd>prefers-contrast: more</kbd> with the following <kbd>data-</kbd> attributes:</p>
+
+    <ul>
+      <li><kbd>data-contrast-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-contrast-color</kbd> - any CSS color string</li>
+    </ul>
+
     <p>Scrawl-canvas supports several types of noise generation, including Worley noise - see <a href="canvas-060.html">Demo canvas-060</a>.</p>
 
     <code class="example-code">
@@ -557,7 +582,7 @@
     --data-lineheight-adjuster: 0.83;
     --data-underline-position: 0.65;
     --data-underline-width: 0.08;
-    --data-no-underline-glyphs: gjpqy
+    --data-no-underline-glyphs:gjpqy
   }
 
 <u>HTML:</u>
@@ -612,7 +637,7 @@
   &lt;/h4>
     </code>
 
-    <p>Scrawl-canvas Phrase entity text can be justified within the Phrase's width; these text snippets will pick up and apply the header block <i>text-align</i> property.</p>
+    <p>Scrawl-canvas Phrase entity text can be justified within the Phrase's width; these text snippets will pick up and apply the header block <kbd>text-align</kbd> property.</p>
 
     <h4 
       id="header-test-5" 
@@ -642,6 +667,8 @@
     --data-noise-sum-function: none;
     --data-noise-output: YminusX;
     --data-noise-scale: 45;
+    --data-contrast-color: darkred;
+    --data-dark-contrast-color: pink;
   }
 
 <u>HTML:</u>
@@ -687,6 +714,13 @@
       <li><kbd>data-dark-highlight-color</kbd> - any CSS color string</li>
     </ul>
 
+    <p>This snippet reacts to the user preference <kbd>prefers-contrast: more</kbd> with the following <kbd>data-</kbd> attributes:</p>
+
+    <ul>
+      <li><kbd>data-contrast-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-contrast-color</kbd> - any CSS color string</li>
+    </ul>
+
     <code class="example-code">
 <b>Animated highlight gradient effect - default (animated)</b>
 
@@ -709,7 +743,7 @@
   &lt;/h4>
     </code>
 
-    <p>Scrawl-canvas Phrase entitys include letter spacing functionality; these text snippets will use any CSS letter-spacing property value applied to the header element.</p>
+    <p>Scrawl-canvas Phrase entitys include letter spacing functionality; these text snippets will use any CSS <kbd>letter-spacing</kbd> property value applied to the header element.</p>
 
     <h4 
       id="header-test-7" 
@@ -765,7 +799,9 @@
 <u>CSS:</u>
   .highlight-gradient-v1 {
     --data-main-color: lch(29.2345% 44.2 27);
+    --data-dark-main-color: #5eadd1;
     --data-highlight-color: lab(52.2345% 40.1645 59.9971);
+    --data-dark-highlight-color: #c5d6fc;
     --data-gradient-skew-x: -1;
     /* no space after the colon! */
     --data-gradient-easing:easeOutIn;
@@ -779,6 +815,8 @@
       header-font-bungee 
       highlight-gradient-header
       highlight-gradient-v1" 
+    data-contrast-color="darkred"
+    data-dark-contrast-color="pink"
     contenteditable="plaintext-only" 
   >
     Lorem ipsum dolor &lt;i>sit amet&lt;/i>, consectetur &lt;u>adipiscing elit&lt;/u> magna aliqua
@@ -790,12 +828,14 @@
     <h4 
       id="header-test-9" 
       class="demo-header header-font-bungee highlight-gradient-header highlight-gradient-v1" 
+      data-contrast-color="darkred"
+      data-dark-contrast-color="pink"
       contenteditable="plaintext-only" 
     >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
 
     <h3>bubbles-text-snippet</h3>
 
-    <p>An animation effect showing bubbles appearing, expanding, fading and disappearing inside the text.</p>
+    <p>An animation effect that shows bubbles appearing, rising and expanding inside the text.</p>
 
     <p>The snippet can be customised using the following <kbd>data-</kbd> attributes applied using CSS variables, or directly to the HTML header element:</p>
 
@@ -815,6 +855,13 @@
       <li><kbd>data-dark-outline-color</kbd> - any CSS color string</li>
       <li><kbd>data-dark-bubble-color</kbd> - any CSS color string</li>
       <li><kbd>data-dark-bubble-outline-color</kbd> - any CSS color string</li>
+    </ul>
+
+    <p>This snippet reacts to the user preference <kbd>prefers-contrast: more</kbd> with the following <kbd>data-</kbd> attributes:</p>
+
+    <ul>
+      <li><kbd>data-contrast-color</kbd> - any CSS color string</li>
+      <li><kbd>data-dark-contrast-color</kbd> - any CSS color string</li>
     </ul>
 
     <code class="example-code">
@@ -865,6 +912,8 @@
     --data-dark-bubble-color: lightgreen;
     --data-dark-bubble-outline-color: gold;
     --data-bubble-density: 100;
+    --data-contrast-color: darkred;
+    --data-dark-contrast-color: pink;
     --data-is-animated: true;
   }
 
@@ -911,6 +960,8 @@
       <li><kbd>data-dark-main-color</kbd> - any CSS color string</li>
       <li><kbd>data-dark-stripe-color</kbd> - any CSS color string</li>
     </ul>
+
+    <p>This snippet makes no attempt to react to the <kbd>prefers-contrast</kbd> user preference.</p>
 
     <code class="example-code">
 <b>Swirling stripes effect - default (animated)</b>

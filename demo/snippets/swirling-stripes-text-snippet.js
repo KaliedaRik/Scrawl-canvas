@@ -4,26 +4,71 @@
 // Related files:
 // + [Editable header text colorizer and animation effect snippets](../snippets-006.html)
 // + [Text snippet helper](./text-snippet-helper.html)
+//
+// ### 'Horizontally striped text with swirl animation' snippet
+//
+// __Purpose:__ Paints the text with a striped gradient pattern, and adds a swirl effect when the user moves their browser's cursor over the text
+// + This snippet supports dark-mode alternative colors
+// + This snippet does not support high contrast alternative colors
+// + This snippet supports an animation effect which can be disabled in an accessible manner
+//
+// __Function input:__ 
+// + the DOM element - generally a block or inline-block element.
+//
+// __Customisation:__ The snippet can be customised using the following data- attributes applied using CSS variables, or directly to the HTML header element:
+// + `data-main-color` - any CSS color string
+// + `data-dark-main-color` - any CSS color string
+// + `data-stripe-color` - any CSS color string
+// + `data-dark-stripe-color` - any CSS color string
+// + `data-stripe-ratio` - (0 - 1) the ratio of stripe to main color; higher values show wider stripes
+// + `data-swirl-angle` - (degrees) higher values lead to a tighter swirl; use negative values to reverse the swirl direction
+// + `data-gradient-skew-x` - (-2 - 2) skew the gradient pattern horizontally
+// + `data-gradient-skew-y` - (-2 - 2) skew the gradient pattern vertically
+// + `data-gradient-stretch-x` - (0 - 4) stretch the gradient pattern horizontally
+// + `data-gradient-stretch-y` - (0 - 4) stretch the gradient pattern vertically
+// 
+// __Function output:__ a Javascript object will be returned, containing the following attributes
+// ```
+// {
+//     element     // the Scrawl-canvas wrapper for the DOM element supplied to the function
+//     canvas      // the Scrawl-canvas wrapper for the snippet's canvas
+//     animation   // the Scrawl-canvas animation object
+//     demolish    // remove the snippet from the Scrawl-canvas library
+// }
+// ```
+// ##### Usage example:
+// ```
+// import * as scrawl from 'path/to/scrawl-canvas/library';
+//
+// import mySnippet from './relative/or/absolute/path/to/this/file.js';
+// let myElements = document.querySelectorAll('.some-class');
+// myElements.forEach(el => mySnippet(el, scrawl));
+// ```
 
+// Additional font-specific customisation can be added courtesy of the Text Snippet Helper module
 import { getSnippetData } from './text-snippet-helper.js';
 
+// __Effects on the element:__ 
+// + Imports the element's background color, and sets the element background to `transparent`
+// + Imports the element's text node text, and sets the text color to `transparent`
+// + ___Note that canvas text will NEVER be as good as DOM text!___
 export default function (el, scrawl) {
 
+    // Apply the snippet to the DOM element
     let snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
+    // Only proceed if the snippet is successfully generated
     if (snippet) {
 
-        let { canvas, group, animation, compStyles, dataset, name, height, lineHeight, initCanvas, initPhrase, textGroup, responsiveFunctions, animationFunctions, animationEndFunctions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
+        // Import data and functionality from the Text Snippet Helper module
+        let { canvas, group, animation, compStyles, dataset, name, height, lineHeight, initCanvas, initPhrase, textGroup, responsiveFunctions, colorSchemeDarkActions, colorSchemeLightActions, animationFunctions, animationEndFunctions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
 
-        const contrastMediaQuery = window.matchMedia("(prefers-contrast: more)");
-        if (contrastMediaQuery.matches) {
-            return { error: 'User has indicated they want maximum contrast' };
-        }
-
+        // Initialise the canvas
         initCanvas();
 
+        // Initialize and collect developer-supplied data
         let mainColor = 'black',
             darkMainColor = 'white',
             stripeColor = 'red',
@@ -95,25 +140,18 @@ export default function (el, scrawl) {
             if (s) gradientStretchY = parseFloat(s);
         }
 
-        let color1 = mainColor,
-            color2 = stripeColor;
-
-        const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-        if (colorSchemeMediaQuery.matches) {
-            color1 = darkMainColor;
-            color2 = darkStripeColor;
-        }
-
+        // Build the text effect
         let gradientChangeAt = Math.floor(stripeRatio * 1000);
         if (gradientChangeAt < 1) gradientChangeAt = 1;
         if (gradientChangeAt > 997) gradientChangeAt = 997;
+
         const myGradient = scrawl.makeGradient({
             name: `${name}-swirlstripe-gradient`,
             colors: [
-                [0, color2],
-                [gradientChangeAt, color2],
-                [gradientChangeAt + 1, color1],
-                [999, color1],
+                [0, stripeColor],
+                [gradientChangeAt, stripeColor],
+                [gradientChangeAt + 1, mainColor],
+                [999, mainColor],
             ],
             endY: '100%',
             precision: 10,
@@ -192,6 +230,30 @@ export default function (el, scrawl) {
             memoizeFilterOutput: true,
         });
 
+        // Accessibility
+        colorSchemeLightActions.push(() => {
+            myGradient.set({
+                colors: [
+                    [0, stripeColor],
+                    [gradientChangeAt, stripeColor],
+                    [gradientChangeAt + 1, mainColor],
+                    [999, mainColor],
+                ],
+            });
+        });
+
+        colorSchemeDarkActions.push(() => {
+            myGradient.set({
+                colors: [
+                    [0, darkStripeColor],
+                    [gradientChangeAt, darkStripeColor],
+                    [gradientChangeAt + 1, darkMainColor],
+                    [999, darkMainColor],
+                ],
+            });
+        });
+
+        // Responsiveness
         responsiveFunctions.push((items = {}) => {
 
             const localLineHeight = parseFloat(items.lineHeight);
@@ -205,6 +267,7 @@ export default function (el, scrawl) {
             });
         });
 
+        // Additional animation functionality
         let isActive = false;
 
         animationFunctions.push(() => {
@@ -244,6 +307,7 @@ export default function (el, scrawl) {
             });
         });
 
+        // Cleanup
         additionalDemolishActions.push(() => {
             myGradient.kill();
             p1.kill();
@@ -251,5 +315,7 @@ export default function (el, scrawl) {
             cell.kill();
         });
     }
+
+    // Return the snippet, so coders can access the snippet's parts - in case they need to tweak the output to meet the web page's specific requirements
     return snippet;
 };

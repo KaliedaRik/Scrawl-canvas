@@ -934,7 +934,7 @@ S.trackHere = function(val) {
     S.otherContrastAction = function (item) {
         if (isa_fn(item)) this.otherContrastAction = item;
     };
-    P.setNoPreferenceMotionAction = function (item) {
+    P.setOtherContrastAction = function (item) {
         if (isa_fn(item)) this.otherContrastAction = item;
     };
     P.contrastActions = function () {
