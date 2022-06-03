@@ -296,6 +296,28 @@ export const getSnippetData = (snippet, scrawl) => {
 
         el.appendChild(control);
 
+        canvas.setReduceMotionAction(() => {
+
+            if (doAnimation) {
+                
+                doAnimation = false;
+                control.textContent = 'Play';
+                animationEndFunctions.forEach(a => a());
+                eternalTweens.forEach(t => t.halt());
+            }
+        });
+        
+        canvas.setNoPreferenceMotionAction(() => {
+
+            if (!doAnimation) {
+
+                doAnimation = true;
+                control.textContent = 'Halt';
+                animationStartFunctions.forEach(a => a());
+                eternalTweens.forEach(t => t.resume());
+            }
+        });
+
         additionalDemolishActions.push(() => {
             scrawl.removeNativeListener('click', controlClick, control);
         });

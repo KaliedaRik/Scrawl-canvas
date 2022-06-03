@@ -132,6 +132,7 @@ const resizeAction = function (e) {
         h = document.documentElement.clientHeight;
 
     if (currentCorePosition.w !== w || currentCorePosition.h !== h) {
+
         currentCorePosition.w = w;
         currentCorePosition.h = h;
         mouseChanged = true;
@@ -345,6 +346,7 @@ const updateUiSubscribedElement = function (art) {
             // Automatically check for element resize
             // + The artefact's `checkForResize` flag needs to be set
             // + We ignore resizing actions while dimensions-related dirty flags are set (to prevent getting ourselves into a continuous feedback loop)
+
             if (dom.checkForResize && !dom.dirtyDimensions && !dom.dirtyDomDimensions) {
 
                 let [w, h] = dom.currentDimensions;

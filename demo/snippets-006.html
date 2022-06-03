@@ -986,25 +986,6 @@
       data-is-animated="true"
     >Lorem ipsum dolor <i>sit amet</i>, consectetur <u>adipiscing elit</u> magna aliqua</h4>
 
-<!--
-.header-5em-bold {
-.header-4em-bold {
-.header-3em-bold {
-
-.header-5em-normal {
-.header-4em-normal {
-.header-3em-normal {
-
-.header-font-sans {
-.header-font-serif {
-.header-font-mono {
-.header-font-cursive {
-.header-font-fantasy {
-.header-font-christmas {
-.header-font-bungee {
-.header-font-carter-one {
--->
-
     <h3>Applying a Scrawl-canvas snippet to HTML header elements</h3>
 
     <p>These header text colorizer and animation effects have been designed so they <b>can be applied to any font</b> (left-to-right, alphabetic) - including cloud-based fonts - at any given font size. However, every font is its own thing and the metadata included in a font can be, at times, less than helpful. The practical outcome of font-uniqueness is that we have to finesse canvas font placement so that it can match up with the HTML-rendered text as closely as possible. We can do this using a set of <kbd>data-</kbd> attributes applied using CSS variables, or directly to the HTML header element:</p>
@@ -1044,18 +1025,28 @@ JS:
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Apply text-based effect snippets to a series of header elements</li>
+      <li>Apply text-based effect snippets to a series of header elements with various fonts, both local to the device and remote (Google Fonts)</li>
+      <li>Check that the snippets correctly apply themselves to each font</li>
       <li>Edit the header elements - the effect should update in real-time</li>
-      <li>Resize the browser window - the effect should update in real-time</li>
+      <li>Resize the browser window - the effect should adapt its values and display in real-time</li>
+      <li>Update browser "prefers-color-scheme" settings - each effect on each header should update to take into account the user preference</li>
+      <li>Update browser "prefers-contrast" settings - each effect on each header should update to take into account the user preference</li>
+      <li>Use the keyboard tab field to navigate between headers and the play|halt button that should appear in the top right corner of each animated snippet header</li>
+      <li>Check that clicking (and keyboard equivalent) on an animated effect's "pause" button stops the animation; clicking on the "play" button should start the animation effect</li>
+      <li>Update browser "prefers-reduced-motion" settings - the "reduced" setting should halt animations immediately; other setting should (re)start the animation</li>
     </ul>
 
-    <p><b>Note 1:</b> only tested on Latin-based (alphabetical left-to-right) fonts.</p>
+    <p><b>Note 0:</b> only tested on Latin-based (alphabetical left-to-right) fonts.</p>
     
-    <p><b>Known issue 1:</b> Setting the <kbd>contenteditable</kbd> attribute on a DOM element makes the element editable, but leads to side effects. In particular, browsers have a tendency to add non-breaking spaces to the edited text which makes measuring that text problematic - which in turn leads to lines breaking before they should. When this happens, we need to set the element's height to incorporate the additional line which in turn increases the canvas height which will then display the additional line correctly. Note that setting <kbd>contenteditable="plaintext-only"</kbd> (somewhat) alleveates the problem - except in Firefox which doesn't support the <kbd>plaintext-only</kbd> value.</p>
+    <p><b>Known issue 1:</b> Resizing the browser dimensions does not have an immediate effect on each canvas's display, which only triggers when the canvas enters the viewport - leads to an unfortunate repaing and content shift.  ACTION: needs to be fixed ... but updating canvas elements not in the viewport is a complex problem in the current codebase. Making canvases animate or continuously update while out-of-sight is not a solution as it would seriously impact on page performance.</p>
 
-    <p><b>Known issue 2:</b> canvas text assumes that hyphenated words are single words and won't break on the hyphen, unlike browsers. ACTION: will not fix - life is too short.</p>
+    <p><b>Note 1:</b> Canvases that get resized while visible in the browser viewport do update correctly in real-time, as required.</p>
     
-    <p><b>Known issue 3:</b> canvas text cannot handle multiline line breaks (the return key). ACTION: will not fix - seriously, life really is too short!</p>
+    <p><b>Known issue 2:</b> Setting the <kbd>contenteditable</kbd> attribute on a DOM element makes the element editable, but leads to side effects. In particular, browsers have a tendency to add non-breaking spaces to the edited text which makes measuring that text problematic - which in turn leads to lines breaking before they should. When this happens, we need to set the element's height to incorporate the additional line which in turn increases the canvas height which will then display the additional line correctly. Note that setting <kbd>contenteditable="plaintext-only"</kbd> (somewhat) alleveates the problem - except in Firefox which doesn't support the <kbd>plaintext-only</kbd> value.</p>
+
+    <p><b>Known issue 3:</b> canvas text assumes that hyphenated words are single words and won't break on the hyphen, unlike browsers. ACTION: will not fix - we are not building a text editor here.</p>
+    
+    <p><b>Known issue 4:</b> canvas text cannot handle multiline line breaks (the return key). ACTION: will not fix - we are not building a text editor here.</p>
     
     <p><b>Touch test:</b> should work as expected</p>
 
