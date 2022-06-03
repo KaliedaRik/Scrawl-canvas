@@ -546,6 +546,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> trackMouse = <span class="hljs-literal">false</span>,
     mouseChanged = <span class="hljs-literal">false</span>,
     viewportChanged = <span class="hljs-literal">false</span>,
+    prefersContrastChanged = <span class="hljs-literal">false</span>,
     prefersReducedMotionChanged = <span class="hljs-literal">false</span>,
     prefersDarkColorSchemeChanged = <span class="hljs-literal">false</span>,
     prefersReduceTransparencyChanged = <span class="hljs-literal">false</span>,
@@ -575,6 +576,7 @@
     <span class="hljs-attr">prefersReducedMotion</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">prefersDarkColorScheme</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">prefersReduceTransparency</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">prefersContrast</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">prefersReduceData</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">rawTouches</span>: [],
 };</pre></div></div>
@@ -605,6 +607,33 @@
 
             </div>
             
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> contrastMediaQuery = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">&quot;(prefers-contrast: more)&quot;</span>);
+
+contrastMediaQuery.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+
+    <span class="hljs-keyword">let</span> res = contrastMediaQuery.<span class="hljs-property">matches</span>;
+
+    <span class="hljs-keyword">if</span> (currentCorePosition.<span class="hljs-property">prefersContrast</span> !== res) {
+
+        currentCorePosition.<span class="hljs-property">prefersContrast</span> = res;
+        prefersContrastChanged = <span class="hljs-literal">true</span>;
+    }
+});
+currentCorePosition.<span class="hljs-property">prefersContrast</span> = contrastMediaQuery.<span class="hljs-property">matches</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p><strong>reducedMotionMediaQuery</strong> - real-time check on the <code>prefers-reduced-motion</code> user preference, as set for the device or OS</p>
+
+            </div>
+            
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> reducedMotionMediaQuery = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">&quot;(prefers-reduced-motion: reduce)&quot;</span>);
 
 reducedMotionMediaQuery.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
@@ -622,11 +651,11 @@ currentCorePosition.<span class="hljs-property">prefersReducedMotion</span> = re
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>colorSchemeMediaQuery</strong> - real-time check on the <code>prefers-color-scheme</code> user preference, as set for the device or OS</p>
 
@@ -649,11 +678,11 @@ currentCorePosition.<span class="hljs-property">prefersDarkColorScheme</span> = 
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>reducedTransparencyMediaQuery</strong> - real-time check on the <code>prefers-reduced-transparency</code> user preference, as set for the device or OS</p>
 
@@ -676,11 +705,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceTransparency</span>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>reducedDataMediaQuery</strong> - real-time check on the <code>prefers-reduced-data</code> user preference, as set for the device or OS</p>
 
@@ -703,11 +732,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h3 id="watch-for-browser-window-resize-or-device-rotation-which-trigger-changes-in-the-viewport-dimensions">Watch for browser window resize, or device rotation, which trigger changes in the viewport dimensions</h3>
 
@@ -716,11 +745,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>resizeAction</strong> function - to check if a view resize has occurred; if yes, flag that currentCorePosition object needs to be updated</p>
 
@@ -732,6 +761,7 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         h = <span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-property">clientHeight</span>;
 
     <span class="hljs-keyword">if</span> (currentCorePosition.<span class="hljs-property">w</span> !== w || currentCorePosition.<span class="hljs-property">h</span> !== h) {
+
         currentCorePosition.<span class="hljs-property">w</span> = w;
         currentCorePosition.<span class="hljs-property">h</span> = h;
         mouseChanged = <span class="hljs-literal">true</span>;
@@ -742,11 +772,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h3 id="watch-for-scrolling-interactions">Watch for scrolling interactions</h3>
 
@@ -755,11 +785,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>scrollAction</strong> function - to check if a view scroll has occurred; if yes, flag that currentCorePosition object needs to be updated</p>
 
@@ -782,26 +812,13 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <h3 id="watch-for-mouse-pointer-and-touch-movement">Watch for mouse, pointer and touch movement</h3>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p><strong>moveAction</strong> function - to check if mouse cursor position has changed; if yes, update currentCorePosition object and flag that the updated needs to cascade to subscribed elements at the next RAF invocation.</p>
+              <h3 id="watch-for-mouse-pointer-and-touch-movement">Watch for mouse, pointer and touch movement</h3>
 
             </div>
             
@@ -813,6 +830,19 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
               
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p><strong>moveAction</strong> function - to check if mouse cursor position has changed; if yes, update currentCorePosition object and flag that the updated needs to cascade to subscribed elements at the next RAF invocation.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>The events that trigger this function (pointermove, pointerup, pointerdown, pointerleave, pointerenter; or mousemove, mouseup, mousedown, mouseleave, mouseenter) are tied to the window object, not to any particular DOM element.</p>
 
@@ -834,26 +864,13 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p><strong>touchAction</strong> function - maps touch coordinates to the mouse cursor position (via currentCorePosition) and then immediately invokes a cascade update action to all subscribed elements.</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p>The events that trigger this function (touchstart, touchmove, touchend, touchcancel) are tied to the window object, not to any particular DOM element.</p>
+              <p><strong>touchAction</strong> function - maps touch coordinates to the mouse cursor position (via currentCorePosition) and then immediately invokes a cascade update action to all subscribed elements.</p>
 
             </div>
             
@@ -865,6 +882,19 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
               
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>The events that trigger this function (touchstart, touchmove, touchend, touchcancel) are tied to the window object, not to any particular DOM element.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame. </p>
 <p>TODO: Need to keep an eye on how many times touchAction gets run, for example during a touch-driven drag-and-drop action. If necessary, add a Date.now mediated choke to the check (say minimum 15ms between checks?) to minimize impact on the wider Scrawl-canvas ecosystem.</p>
@@ -926,11 +956,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h2 id="cascade-interaction-results-down-to-subscribed-elements">Cascade interaction results down to subscribed elements</h2>
 
@@ -939,11 +969,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Functions to update uiSubscribedElements attached to specified DOM elements. Each stack or canvas element tracked by Scrawl-canvas will include a local <strong>here</strong> object which includes details of the element’s current dimensions, relative position, and the position of the mouse cursor in relation to its top-left corner. These all need to be updated whenever there’s a resize, scroll or cursor movement.</p>
 
@@ -970,21 +1000,23 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Accessibility</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        here.<span class="hljs-property">prefersReducedMotion</span> = currentCorePosition.<span class="hljs-property">prefersReducedMotion</span>;
+            <div class="content"><div class='highlight'><pre>        here.<span class="hljs-property">prefersContrast</span> = currentCorePosition.<span class="hljs-property">prefersContrast</span>;
+        here.<span class="hljs-property">prefersReducedMotion</span> = currentCorePosition.<span class="hljs-property">prefersReducedMotion</span>;
         here.<span class="hljs-property">prefersDarkColorScheme</span> = currentCorePosition.<span class="hljs-property">prefersDarkColorScheme</span>;
         here.<span class="hljs-property">prefersReduceTransparency</span> = currentCorePosition.<span class="hljs-property">prefersReduceTransparency</span>;
         here.<span class="hljs-property">prefersReduceData</span> = currentCorePosition.<span class="hljs-property">prefersReduceData</span>;
 
+        <span class="hljs-keyword">if</span> (prefersContrastChanged) dom.<span class="hljs-title function_">contrastActions</span>();
         <span class="hljs-keyword">if</span> (prefersReducedMotionChanged) dom.<span class="hljs-title function_">reducedMotionActions</span>();
         <span class="hljs-keyword">if</span> (prefersDarkColorSchemeChanged) dom.<span class="hljs-title function_">colorSchemeActions</span>();
         <span class="hljs-keyword">if</span> (prefersReduceTransparencyChanged) dom.<span class="hljs-title function_">reducedTransparencyActions</span>();
@@ -993,11 +1025,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>DOM-element-dependant values</p>
 
@@ -1020,11 +1052,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>Position of the artefact in the browser/device viewport</p>
 
@@ -1041,11 +1073,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>DOM-based artefacts have the option of creating a local mouse move event listener, which better tracks mouse movements across them when their element has been rotated in three dimensions.</p>
 
@@ -1070,11 +1102,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>Default mouse tracking behaviour</p>
 
@@ -1112,11 +1144,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Canvas <code>fit</code> attribute adjustments</p>
 
@@ -1127,11 +1159,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Automatically check for element resize</p>
 <ul>
@@ -1141,7 +1173,8 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (dom.<span class="hljs-property">checkForResize</span> &amp;&amp; !dom.<span class="hljs-property">dirtyDimensions</span> &amp;&amp; !dom.<span class="hljs-property">dirtyDomDimensions</span>) {
+            <div class="content"><div class='highlight'><pre>
+            <span class="hljs-keyword">if</span> (dom.<span class="hljs-property">checkForResize</span> &amp;&amp; !dom.<span class="hljs-property">dirtyDimensions</span> &amp;&amp; !dom.<span class="hljs-property">dirtyDomDimensions</span>) {
 
                 <span class="hljs-keyword">let</span> [w, h] = dom.<span class="hljs-property">currentDimensions</span>;
 
@@ -1150,11 +1183,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Regardless of the setting of &lt;canvas&gt; element’s <code>boxSizing</code> style attribute:</p>
 <ul>
@@ -1185,11 +1218,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Stack and Element artefacts resize test.</p>
 <ul>
@@ -1226,11 +1259,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Internal functions that get triggered when setting a DOM-based artefact’s <code>trackHere</code> attribute. They add/remove an event listener to the artefact’s domElement.</p>
 
@@ -1271,11 +1304,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Animation object which checks whether any window event listeners have fired, and actions accordingly</p>
 
@@ -1319,11 +1352,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><code>Exported functions</code> (to modules and the scrawl object). Event listeners can be a drain on web page efficiency. If a web page contains only static canvas (and/or stack) displays, with no requirement for user interaction, we can minimize Scrawl-canvas’s impact on those pages by switching off the core listeners (and also the core animation loop).</p>
 
@@ -1351,11 +1384,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Helper function</p>
 
@@ -1392,11 +1425,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><code>Exported functions</code> (to modules). Invoke the resize and/or scroll event listeners once, outside the regular requestAnimationFrame tick.</p>
 
@@ -1406,22 +1439,29 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
 
     <span class="hljs-title function_">resizeAction</span>();
     mouseChanged = <span class="hljs-literal">true</span>;
+    viewportChanged = <span class="hljs-literal">true</span>;
 };
 
 <span class="hljs-keyword">const</span> applyCoreScrollListener = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-title function_">scrollAction</span>();
     mouseChanged = <span class="hljs-literal">true</span>;
+};
+
+<span class="hljs-keyword">const</span> forceUpdate = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    mouseChanged = <span class="hljs-literal">true</span>;
+    viewportChanged = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <h4 id="convenience-functions">Convenience functions</h4>
 <p>Okay, so I got very bored of writing boilerplate to react to various form elements user interactions across the demos. So I wrote some functions to setup (and take down) batches of DOM event listeners to make my life easier. These are:</p>
@@ -1443,11 +1483,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (to modules and the scrawl object). Capture changes in a form and apply them to a target Scrawl-canvas artefact, asset, style, group, etc object</p>
 <p><strong>observeAndUpdate - example</strong></p>
@@ -1552,11 +1592,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>Supplied value converted to float Number</p>
 
@@ -1569,11 +1609,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>Supplied value converted to integer Number</p>
 
@@ -1586,11 +1626,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>Supplied value rounded up or down to nearest integer Number</p>
 
@@ -1603,11 +1643,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>Supplied value rounded down to nearest integer Number</p>
 
@@ -1620,11 +1660,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Supplied value rounded up to nearest integer Number</p>
 
@@ -1637,11 +1677,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>Supplied value not modified in any way</p>
 
@@ -1654,11 +1694,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>Supplied value converted to String</p>
 
@@ -1671,11 +1711,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>Supplied value converted to Boolean</p>
 
@@ -1698,11 +1738,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>Supplied value converted to float number, then action value (eg: ‘%’) added to result to output a String</p>
 
@@ -1716,11 +1756,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p>Update - we can apply updates to a Group of artefacts, or to a single artefact</p>
 
@@ -1744,11 +1784,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>Invoke any supplied callback function</p>
 
@@ -1773,11 +1813,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <h4 id="drag-and-drop-zones">Drag-and-drop zones.</h4>
 <p><strong>makeDragZone</strong> is an attempt to make setting up drag-and-drop functionality within a Scrawl-canvas stack or canvas as simple as possible</p>
@@ -1808,11 +1848,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.</p>
 
@@ -1825,11 +1865,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>zone</code> is required</p>
 <ul>
@@ -1851,11 +1891,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>collisionGroup</code> is optional; defaults to zone’s namesake group</p>
 <ul>
@@ -1876,11 +1916,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>coordinateSource</code> will be an object containing <code>x</code> and <code>y</code> attributes</p>
 <ul>
@@ -1905,11 +1945,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>startOn</code>, <code>endOn</code> - if supplied, then need to be arrays</p>
 
@@ -1925,11 +1965,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>We can only drag one artefact at a time; that artefact - alongside the hit coordinate’s x and y values -  is stored in the <code>current</code> variable</p>
 
@@ -1940,11 +1980,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>updateOnStart</code>, <code>updateOnEnd</code> - if supplied, then need to be functions</p>
 
@@ -1961,11 +2001,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>exposeCurrentArtefact</code> - if supplied, then needs to be a boolean</p>
 
@@ -2062,11 +2102,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
@@ -2081,6 +2121,7 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
     stopCoreListeners,
     applyCoreResizeListener,
     applyCoreScrollListener,
+    forceUpdate,
     observeAndUpdate,
     makeDragZone,
     getTouchActionChoke,

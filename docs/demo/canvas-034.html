@@ -750,6 +750,11 @@
                 </a>
               
                 
+                <a class="source" href="snippets-006.html">
+                  ./demo/snippets-006.js
+                </a>
+              
+                
                 <a class="source" href="temp-000.html">
                   ./demo/temp-000.js
                 </a>
@@ -975,6 +980,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-200.html">
+                  ./demo/temp-200.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -1064,15 +1074,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
-
-canvas.<span class="hljs-title function_">set</span>({
-
-    <span class="hljs-attr">baseMatchesCanvasDimensions</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">ignoreCanvasCssDimensions</span>: <span class="hljs-literal">true</span>,
-
-}).<span class="hljs-title function_">setAsCurrentCanvas</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -1265,7 +1267,8 @@ canvas.<span class="hljs-title function_">setActionSmallerArea</span>(<span clas
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,</pre></div></div>
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
             
         </li>
         
@@ -1275,22 +1278,6 @@ canvas.<span class="hljs-title function_">setActionSmallerArea</span>(<span clas
               
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p>We manually trigger the display shape functionality after the first render cycle completes. This allows all artefacts to settle into a state where we can then update the Phrase entity with text and roll values appropriate to the Canvas element’s initial shape</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">updateDisplay</span>(),
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

@@ -750,6 +750,11 @@
                 </a>
               
                 
+                <a class="source" href="snippets-006.html">
+                  ./demo/snippets-006.js
+                </a>
+              
+                
                 <a class="source" href="temp-000.html">
                   ./demo/temp-000.js
                 </a>
@@ -975,6 +980,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-200.html">
+                  ./demo/temp-200.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -1066,8 +1076,6 @@ stack.<span class="hljs-title function_">set</span>({
 canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;beige&#x27;</span>,
-
     <span class="hljs-attr">trackHere</span>: <span class="hljs-string">&#x27;local&#x27;</span>,
 });
 
@@ -1144,16 +1152,16 @@ canvas.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> clientX = <span class="hljs-number">0</span>,
-    clientY = <span class="hljs-number">0</span>,
-    movementX = <span class="hljs-number">0</span>,
-    movementY = <span class="hljs-number">0</span>,
-    offsetX = <span class="hljs-number">0</span>,
-    offsetY = <span class="hljs-number">0</span>,
-    pageX = <span class="hljs-number">0</span>,
-    pageY = <span class="hljs-number">0</span>,
-    screenX= <span class="hljs-number">0</span>,
-    screenY = <span class="hljs-number">0</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> clientX = <span class="hljs-string">&#x27;0&#x27;</span>,
+    clientY = <span class="hljs-string">&#x27;0&#x27;</span>,
+    movementX = <span class="hljs-string">&#x27;0&#x27;</span>,
+    movementY = <span class="hljs-string">&#x27;0&#x27;</span>,
+    offsetX = <span class="hljs-string">&#x27;0&#x27;</span>,
+    offsetY = <span class="hljs-string">&#x27;0&#x27;</span>,
+    pageX = <span class="hljs-string">&#x27;0&#x27;</span>,
+    pageY = <span class="hljs-string">&#x27;0&#x27;</span>,
+    screenX= <span class="hljs-string">&#x27;0&#x27;</span>,
+    screenY = <span class="hljs-string">&#x27;0&#x27;</span>;
 
 scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
@@ -1172,8 +1180,8 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         screenY = e.<span class="hljs-property">screenY</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
 
         offset.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">startX</span>: offsetX,
-            <span class="hljs-attr">startY</span>: offsetY,
+            <span class="hljs-attr">startX</span>: <span class="hljs-built_in">parseFloat</span>(offsetX),
+            <span class="hljs-attr">startY</span>: <span class="hljs-built_in">parseFloat</span>(offsetY),
         });
     }
 

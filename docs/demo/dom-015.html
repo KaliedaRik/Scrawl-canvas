@@ -750,6 +750,11 @@
                 </a>
               
                 
+                <a class="source" href="snippets-006.html">
+                  ./demo/snippets-006.js
+                </a>
+              
+                
                 <a class="source" href="temp-000.html">
                   ./demo/temp-000.js
                 </a>
@@ -975,6 +980,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-200.html">
+                  ./demo/temp-200.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -1088,19 +1098,6 @@
     <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
     <span class="hljs-attr">height</span>:<span class="hljs-number">400</span>,
     <span class="hljs-attr">perspectiveZ</span>: <span class="hljs-number">1200</span>,
-    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
-});
-
-
-canvas.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;gray&#x27;</span>,
-});
-
-cell.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -1133,6 +1130,7 @@ cell.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">css</span>: {
         <span class="hljs-attr">borderWidth</span>: <span class="hljs-string">&#x27;0&#x27;</span>,
         <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+        <span class="hljs-attr">textShadow</span>: <span class="hljs-string">&#x27;0 0 2px black&#x27;</span>,
     },
 });</pre></div></div>
             
@@ -1348,11 +1346,7 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> {
-        stack.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">height</span>: <span class="hljs-number">399</span> });
-        element.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startX</span>: <span class="hljs-number">301</span> });
-        scrawl.<span class="hljs-title function_">startCoreListeners</span>();
-    },
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> stack.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">height</span>: <span class="hljs-number">400</span> }),
 });</pre></div></div>
             
         </li>

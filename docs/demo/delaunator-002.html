@@ -750,6 +750,11 @@
                 </a>
               
                 
+                <a class="source" href="snippets-006.html">
+                  ./demo/snippets-006.js
+                </a>
+              
+                
                 <a class="source" href="temp-000.html">
                   ./demo/temp-000.js
                 </a>
@@ -975,6 +980,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-200.html">
+                  ./demo/temp-200.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -1049,7 +1059,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> <span class="hljs-title class_">Delaunator</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;https://cdn.skypack.dev/delaunator@5.0.0&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed, addImageDragAndDrop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1181,9 +1191,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> baseDimension = <span class="hljs-number">400</span>;
-
-canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> baseDimension = <span class="hljs-number">400</span>;</pre></div></div>
             
         </li>
         
@@ -1194,15 +1202,19 @@ canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Make the canvas responsive</p>
+              <p>Create the coordinates to be used as the Voronoi web’s points - for this demo these coordinates will be static, except for the first point which will track the mouse cursor position over the canvas</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;cover&#x27;</span>,
-    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">ignoreCanvasCssDimensions</span>: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> coordArray = [],
+    center = [baseDimension/<span class="hljs-number">2</span>, baseDimension/<span class="hljs-number">2</span>];
 
-}).<span class="hljs-title function_">setBase</span>({</pre></div></div>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">200</span>; i++) {
+
+    <span class="hljs-keyword">const</span> x = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * (baseDimension * <span class="hljs-number">2</span>) - (baseDimension / <span class="hljs-number">2</span>));
+    <span class="hljs-keyword">const</span> y = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * (baseDimension * <span class="hljs-number">2</span>) - (baseDimension / <span class="hljs-number">2</span>));
+    coordArray.<span class="hljs-title function_">push</span>([x, y]);
+}</pre></div></div>
             
         </li>
         
@@ -1212,55 +1224,6 @@ canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>Set the base Cell</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">width</span>: baseDimension,
-    <span class="hljs-attr">height</span>: baseDimension,
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p>Create the coordinates to be used as the Voronoi web’s points - for this deo these coordinates will be static, except for the first point which will track the mouse cursor position over the canvas</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> coordArray = [],
-    coord = scrawl.<span class="hljs-title function_">requestCoordinate</span>(),
-    center = [baseDimension/<span class="hljs-number">2</span>, baseDimension/<span class="hljs-number">2</span>];
-
-coordArray.<span class="hljs-title function_">push</span>(center);
-
-<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> r = <span class="hljs-number">1</span>; r &lt; <span class="hljs-number">5</span>; r++) {
-
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> p = <span class="hljs-number">0</span>; p &lt; <span class="hljs-number">50</span>; p++) {
-        
-        coord.<span class="hljs-title function_">set</span>(<span class="hljs-number">0</span>, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * (r * <span class="hljs-number">200</span>)));
-        coord.<span class="hljs-title function_">rotate</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">360</span>);
-        coord.<span class="hljs-title function_">add</span>(center);
-        coordArray.<span class="hljs-title function_">push</span>([...coord]);
-    }
-}
-scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>We build the Voronoi web in a RawAsset wrapper</p>
 
@@ -1275,11 +1238,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>points</strong> - an array holding the coordinate arrays we generate elsewhere</p>
 <ul>
@@ -1299,11 +1262,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>here</strong> - a handle to our Canvas wrapper’s base Cell’s <code>here</code> object, which gives us the current mouse cursor coordinates</p>
 
@@ -1316,11 +1279,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>delaunay</strong> - a handle to the current Delaunator object we recreate on each update</p>
 
@@ -1333,11 +1296,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>canvasWidth</strong>, <strong>canvasHeight</strong> - make the RawAsset’s dimensions the same as our canvas base Cell’s dimensions</p>
 
@@ -1353,11 +1316,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>trigger</strong> - we update the RawAsset at the start of each Display cycle by setting its <code>trigger</code> attribute. All the work with recreating the Delaunator object happens here</p>
 
@@ -1370,11 +1333,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1394,11 +1357,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>assetWrapper</code> is the same as <code>this</code> when function is declared with the function keyword</p>
 <ul>
@@ -1435,11 +1398,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Initialize the RawAsset with relevant data</p>
 
@@ -1453,11 +1416,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>The RawAsset needs a subscriber to make it active - currently filters do not subscribe to assets so we need to do it via an otherwise unused Picture entity</p>
 
@@ -1473,11 +1436,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>We apply the mosaic effect over our image using a Scrawl-canvas filter</p>
 
@@ -1492,11 +1455,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Load our RawAsset’s output - the Voronoi web - into the filter</p>
 
@@ -1514,11 +1477,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Create the tiles from the Voronoi web</p>
 
@@ -1547,11 +1510,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Apply our image over the tiles</p>
 
@@ -1566,11 +1529,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Tile shadows - blur the voronoi web then apply it, offset up and left, to the image </p>
 
@@ -1591,11 +1554,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Tile highlights - invert the blurred web then apply it, offset down and right, to the image </p>
 
@@ -1616,17 +1579,17 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>Display our image in a Picture entity - the filter is applied here </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myFlower&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
@@ -1640,11 +1603,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1656,11 +1619,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1674,11 +1637,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>We need to update our RawAsset at the start of each Display cycle</p>
 
@@ -1691,11 +1654,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>For this demo we will suppress touchmove functionality over the canvas</p>
@@ -1707,16 +1670,19 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-}, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
+}, canvas.<span class="hljs-property">domElement</span>);
+
+
+<span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
             
         </li>
         
         
-        <li id="section-33">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

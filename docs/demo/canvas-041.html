@@ -750,6 +750,11 @@
                 </a>
               
                 
+                <a class="source" href="snippets-006.html">
+                  ./demo/snippets-006.js
+                </a>
+              
+                
                 <a class="source" href="temp-000.html">
                   ./demo/temp-000.js
                 </a>
@@ -975,6 +980,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-200.html">
+                  ./demo/temp-200.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -1069,10 +1079,6 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-canvas.<span class="hljs-title function_">setBase</span>({
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
-});
-
 
 <span class="hljs-keyword">const</span> boxes = [];
 
@@ -1137,7 +1143,7 @@ sourceEngine.<span class="hljs-property">lineWidth</span> = <span class="hljs-nu
 <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">40</span>; i++) {
 
     <span class="hljs-keyword">let</span> size = <span class="hljs-number">10</span> + i,
-        delta = size / <span class="hljs-number">2</span>;
+        delta = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(size / <span class="hljs-number">2</span>) + <span class="hljs-number">0.5</span>;
 
     sourceEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, (<span class="hljs-number">50</span> * i) + <span class="hljs-number">25</span>, <span class="hljs-number">25</span>);
     sourceEngine.<span class="hljs-title function_">fillRect</span>(-delta, -delta, size, size);
@@ -1170,8 +1176,8 @@ sourceEngine.<span class="hljs-property">lineWidth</span> = <span class="hljs-nu
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; boxesRequired; i++) {
 
         size = <span class="hljs-number">10</span> + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">40</span>;
-        x = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * width;
-        y = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * height;
+        x = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * width);
+        y = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * height);
         dx = -<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>();
 
         boxes.<span class="hljs-title function_">push</span>([x, y, dx, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(size - <span class="hljs-number">10</span>)]);

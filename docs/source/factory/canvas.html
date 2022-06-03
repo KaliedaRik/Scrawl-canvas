@@ -602,7 +602,8 @@
 
     el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
-    <span class="hljs-keyword">if</span> (el) {
+    <span class="hljs-keyword">if</span> (!el) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanDimensions</span>();
+    <span class="hljs-keyword">else</span> {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&#x27;2d&#x27;</span>);
 
@@ -626,7 +627,36 @@
             <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">cells</span> = [];
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">cellBatchesClear</span> = [];
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">cellBatchesCompile</span> = [];
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">cellBatchesShow</span> = [];</pre></div></div>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">cellBatchesShow</span> = [];
+
+        <span class="hljs-keyword">let</span> baseWidth = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">0</span>],
+            baseHeight = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">1</span>];
+
+        <span class="hljs-keyword">const</span> ds = el.<span class="hljs-property">dataset</span>;
+
+        <span class="hljs-keyword">if</span> (ds.<span class="hljs-property">isResponsive</span>) {
+
+            el.<span class="hljs-property">style</span>.<span class="hljs-property">width</span> = <span class="hljs-string">&#x27;100%&#x27;</span>;
+            el.<span class="hljs-property">style</span>.<span class="hljs-property">height</span> = <span class="hljs-string">&#x27;100%&#x27;</span>;
+
+            <span class="hljs-keyword">let</span> baseMatches = <span class="hljs-literal">true</span>;
+
+            <span class="hljs-keyword">if</span> (ds.<span class="hljs-property">baseWidth</span> &amp;&amp; ds.<span class="hljs-property">baseHeight</span>) {
+
+                baseMatches = <span class="hljs-literal">false</span>;
+                baseWidth = <span class="hljs-built_in">parseFloat</span>(ds.<span class="hljs-property">baseWidth</span>);
+                baseHeight = <span class="hljs-built_in">parseFloat</span>(ds.<span class="hljs-property">baseHeight</span>);
+            }
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">baseMatchesCanvasDimensions</span>: baseMatches,
+                <span class="hljs-attr">ignoreCanvasCssDimensions</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">fit</span>: ds.<span class="hljs-property">fit</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">fit</span>,
+            });
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanDimensions</span>();
+        }</pre></div></div>
             
         </li>
         
@@ -641,11 +671,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> cellArgs = {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> cellArgs = {
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>_base`</span>,
             <span class="hljs-attr">element</span>: <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">width</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">0</span>],
-            <span class="hljs-attr">height</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">1</span>],
+            <span class="hljs-attr">width</span>: baseWidth,
+            <span class="hljs-attr">height</span>: baseHeight,
             <span class="hljs-attr">cleared</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">compiled</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
@@ -654,6 +684,10 @@
             <span class="hljs-attr">controller</span>: <span class="hljs-variable language_">this</span>,
             <span class="hljs-attr">order</span>: <span class="hljs-number">10</span>,
         };
+
+        <span class="hljs-keyword">if</span> (ds.<span class="hljs-property">baseClearAlpha</span>) cellArgs.<span class="hljs-property">clearAlpha</span> = <span class="hljs-built_in">parseFloat</span>(ds.<span class="hljs-property">baseClearAlpha</span>);
+        <span class="hljs-keyword">if</span> (ds.<span class="hljs-property">baseBackgroundColor</span>) cellArgs.<span class="hljs-property">backgroundColor</span> = ds.<span class="hljs-property">baseBackgroundColor</span>;
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildCell</span>(cellArgs);</pre></div></div>
             
         </li>
@@ -687,7 +721,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        <span class="hljs-keyword">let</span> navigation = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;nav&#x27;</span>);
+        <span class="hljs-keyword">const</span> navigation = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;nav&#x27;</span>);
         navigation.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-navigation`</span>;
         navigation.<span class="hljs-property">style</span>.<span class="hljs-property">width</span> = <span class="hljs-string">&#x27;0px&#x27;</span>;
         navigation.<span class="hljs-property">style</span>.<span class="hljs-property">height</span> = <span class="hljs-string">&#x27;0px&#x27;</span>;
@@ -700,7 +734,7 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">navigation</span> = navigation;
         el.<span class="hljs-title function_">appendChild</span>(navigation);
 
-        <span class="hljs-keyword">let</span> textHold = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);
+        <span class="hljs-keyword">const</span> textHold = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);
         textHold.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-text-hold`</span>;
         textHold.<span class="hljs-property">style</span>.<span class="hljs-property">width</span> = <span class="hljs-string">&#x27;0px&#x27;</span>;
         textHold.<span class="hljs-property">style</span>.<span class="hljs-property">height</span> = <span class="hljs-string">&#x27;0px&#x27;</span>;
@@ -713,7 +747,7 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">textHold</span> = textHold;
         el.<span class="hljs-title function_">appendChild</span>(textHold);
 
-        <span class="hljs-keyword">let</span> ariaLabel = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);
+        <span class="hljs-keyword">const</span> ariaLabel = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);
         ariaLabel.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-ARIA-label`</span>;
         ariaLabel.<span class="hljs-property">textContent</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">label</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">ariaLabelElement</span> = ariaLabel;
@@ -721,7 +755,7 @@
         el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;aria-labelledby&#x27;</span>, ariaLabel.<span class="hljs-property">id</span>);
         el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;aria-live&#x27;</span>, <span class="hljs-string">&#x27;polite&#x27;</span>);
 
-        <span class="hljs-keyword">let</span> ariaDescription = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);
+        <span class="hljs-keyword">const</span> ariaDescription = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);
         ariaDescription.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-ARIA-description`</span>;
         ariaDescription.<span class="hljs-property">textContent</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">description</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">ariaDescriptionElement</span> = ariaDescription;
@@ -737,7 +771,7 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDomDimensions</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">if</span> (items.<span class="hljs-property">setAsCurrentCanvas</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setAsCurrentCanvas</span>();
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
@@ -848,7 +882,7 @@ P = <span class="hljs-title function_">displayMix</span>(P);</pre></div></div>
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>fit</strong> - String indicating how the base Cell should copy its contents over to the &lt;canvas&gt; element as the final step in the Display cycle. Accepted values are: <code>fill</code>, <code>contain</code>, <code>cover</code>, <code>none</code> (but not <code>scale-down</code>).</p>
-<p>The aim of this functionality is to replicate the CSS <code>object-fit</code> property - <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">detailed here</a> - for &lt;canvas&gt; elements. Unlike the CSS property, we apply the fit attribute to the Canvas wrapper, not the element itself or its parent element.</p>
+<p>The aim of this functionality is to replicate the CSS <code>object-fit</code> property - <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">detailed here</a> - for &lt;canvas&gt; elements. We apply the fit attribute to the Canvas wrapper, not the element itself or its parent element.</p>
 
             </div>
             

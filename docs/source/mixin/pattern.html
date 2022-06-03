@@ -571,12 +571,12 @@
               </div>
               <p><strong>patternMatrix</strong> - Scrawl-canvas will apply a 2d-style, 6 value <a href="https://developer.mozilla.org/en-US/docs/Web/API/DOMMatrix">DOMMatrix</a> to the pattern each time it is recreated. Changing the values of the matrix will change the rotation, skew, etc of the pattern. Pseudo-attributes can be used to set individual elements of the matrix, as follows:</p>
 <ul>
-<li><code>matrixA</code> - generally used for horizontal (x axis) scale</li>
-<li><code>matrixB</code> - generally used for horizontal (x axis) skew</li>
-<li><code>matrixC</code> - generally used for vertical (y axis) skew</li>
-<li><code>matrixD</code> - generally used for vertical (y axis) scale</li>
-<li><code>matrixE</code> - generally used for horizontal (x axis) positioning</li>
-<li><code>matrixF</code> - generally used for vertical (y axis) positioning</li>
+<li><code>stretchX</code> (or <code>matrixA</code>) - generally used for horizontal (x axis) scale</li>
+<li><code>skewY</code> (or <code>matrixB</code>) - generally used for horizontal (x axis) skew</li>
+<li><code>skewX</code> (or <code>matrixC</code>) - generally used for vertical (y axis) skew</li>
+<li><code>stretchY</code> (or <code>matrixD</code>) - generally used for vertical (y axis) scale</li>
+<li><code>shiftX</code> (or <code>matrixE</code>) - generally used for horizontal (x axis) positioning</li>
+<li><code>shiftY</code> (or <code>matrixF</code>) - generally used for vertical (y axis) positioning</li>
 </ul>
 <p>To rotate the pattern, update the B and C matrix values in tandem. Results will be dependent on the surrounding matrix values. See demo <a href="../../demo/canvas-035.html">Canvas-035</a> to explore further.</p>
 
@@ -718,6 +718,26 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
+              <p><strong>stretchX</strong>, <strong>skewY</strong>, <strong>skewX</strong>, <strong>stretchY</strong>, <strong>shiftX</strong>, <strong>shiftY</strong> - these <em>pseudo-attributes</em> can be used to set individual attributes of the <code>patternMatrix</code> DOMMatrix object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">stretchX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, <span class="hljs-string">&#x27;a&#x27;</span>); };
+    S.<span class="hljs-property">skewY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, <span class="hljs-string">&#x27;b&#x27;</span>); };
+    S.<span class="hljs-property">skewX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, <span class="hljs-string">&#x27;c&#x27;</span>); };
+    S.<span class="hljs-property">stretchY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, <span class="hljs-string">&#x27;d&#x27;</span>); };
+    S.<span class="hljs-property">shiftX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, <span class="hljs-string">&#x27;e&#x27;</span>); };
+    S.<span class="hljs-property">shiftY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, <span class="hljs-string">&#x27;f&#x27;</span>); };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
               <p><strong>patternMatrix</strong> - the argument must be an Array containing 6 Number elements in the form of <code>[a, b, c, d, e, f]</code></p>
 
             </div>
@@ -740,11 +760,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -753,11 +773,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>buildStyle</code> - internal function: creates the pattern on the Cell’s CanvasRenderingContext2D engine.</p>
 
@@ -794,11 +814,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 

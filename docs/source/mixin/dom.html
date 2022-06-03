@@ -805,7 +805,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">reduceMotionAction</span>: <span class="hljs-literal">null</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">moreContrastAction</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">otherContrastAction</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">reduceMotionAction</span>: <span class="hljs-literal">null</span>,
         <span class="hljs-attr">noPreferenceMotionAction</span>: <span class="hljs-literal">null</span>,
         <span class="hljs-attr">colorSchemeLightAction</span>: <span class="hljs-literal">null</span>,
         <span class="hljs-attr">colorSchemeDarkAction</span>: <span class="hljs-literal">null</span>,
@@ -2308,6 +2310,8 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">noPreferenceTransparencyAction</span> = λ<span class="hljs-literal">null</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">reduceDataAction</span> = λ<span class="hljs-literal">null</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">noPreferenceDataAction</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">moreContrastAction</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">otherContrastAction</span> = λ<span class="hljs-literal">null</span>;
     };</pre></div></div>
             
         </li>
@@ -2318,6 +2322,47 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
               
               <div class="sswrap ">
                 <a class="ss" href="#section-77">&#x00a7;</a>
+              </div>
+              <p><strong>prefers-contrast</strong> accessibility user choice</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">moreContrastAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">moreContrastAction</span> = item;
+    };
+    P.<span class="hljs-property">setMoreContrastAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">moreContrastAction</span> = item;
+    };
+    S.<span class="hljs-property">otherContrastAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">otherContrastAction</span> = item;
+    };
+    P.<span class="hljs-property">setOtherContrastAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">otherContrastAction</span> = item;
+    };
+    P.<span class="hljs-property">contrastActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">const</span> here = <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(here)) {
+
+            <span class="hljs-keyword">const</span> accessibilityFlag = here.<span class="hljs-property">prefersContrast</span>;
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(accessibilityFlag)) {
+
+                <span class="hljs-keyword">if</span> (accessibilityFlag) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">moreContrastAction</span>();
+                <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">otherContrastAction</span>();
+            }
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><strong>prefers-reduced-motion</strong> accessibility user choice</p>
 
@@ -2354,11 +2399,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><strong>prefers-color-scheme</strong> accessibility user choice</p>
 
@@ -2395,11 +2440,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p><strong>prefers-reduced-transparency</strong> accessibility user choice</p>
 
@@ -2436,11 +2481,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p><strong>prefers-reduced-data</strong> accessibility user choice</p>
 
@@ -2476,6 +2521,7 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
 
     P.<span class="hljs-property">checkAccessibilityValues</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">contrastActions</span>();
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">reducedMotionActions</span>();
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">colorSchemeActions</span>();
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">reducedTransparencyActions</span>();
@@ -2485,11 +2531,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-81">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><code>apply</code></p>
 <ul>
@@ -2514,11 +2560,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-82">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 

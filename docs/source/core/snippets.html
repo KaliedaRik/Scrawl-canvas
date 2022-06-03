@@ -587,6 +587,8 @@
     <span class="hljs-keyword">if</span> (!myElement) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
     canvasSpecs.<span class="hljs-property">baseMatchesCanvasDimensions</span> = <span class="hljs-literal">true</span>;
+    canvasSpecs.<span class="hljs-property">ignoreCanvasCssDimensions</span> = <span class="hljs-literal">true</span>;
+    canvasSpecs.<span class="hljs-property">checkForResize</span> = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">let</span> myCanvas = myElement.<span class="hljs-title function_">addCanvas</span>(canvasSpecs);
     myElement.<span class="hljs-property">elementComputedStyles</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(domElement);
@@ -639,6 +641,7 @@
     <span class="hljs-keyword">else</span> myElement = <span class="hljs-title function_">makeUnstackedElement</span>(domElement);
 
     canvasSpecs.<span class="hljs-property">baseMatchesCanvasDimensions</span> = <span class="hljs-literal">true</span>;
+    canvasSpecs.<span class="hljs-property">checkForResize</span> = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">let</span> myCanvas = (includeCanvas) ? myElement.<span class="hljs-title function_">addCanvas</span>(canvasSpecs) : <span class="hljs-literal">false</span>;
 

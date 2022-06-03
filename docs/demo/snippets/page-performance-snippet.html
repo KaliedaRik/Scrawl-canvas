@@ -70,6 +70,11 @@
                 </a>
               
                 
+                <a class="source" href="animated-highlight-gradient-text-snippet.html">
+                  ./demo/snippets/animated-highlight-gradient-text-snippet.js
+                </a>
+              
+                
                 <a class="source" href="animated-hover-gradient-snippet.html">
                   ./demo/snippets/animated-hover-gradient-snippet.js
                 </a>
@@ -82,6 +87,11 @@
                 
                 <a class="source" href="before-after-slider-infographic.html">
                   ./demo/snippets/before-after-slider-infographic.js
+                </a>
+              
+                
+                <a class="source" href="bubbles-text-snippet.html">
+                  ./demo/snippets/bubbles-text-snippet.js
                 </a>
               
                 
@@ -120,6 +130,11 @@
                 </a>
               
                 
+                <a class="source" href="risograph-text-gradient-snippet.html">
+                  ./demo/snippets/risograph-text-gradient-snippet.js
+                </a>
+              
+                
                 <a class="source" href="spotlight-text-snippet-test.html">
                   ./demo/snippets/spotlight-text-snippet-test.js
                 </a>
@@ -130,8 +145,23 @@
                 </a>
               
                 
+                <a class="source" href="swirling-stripes-text-snippet.html">
+                  ./demo/snippets/swirling-stripes-text-snippet.js
+                </a>
+              
+                
+                <a class="source" href="text-snippet-helper.html">
+                  ./demo/snippets/text-snippet-helper.js
+                </a>
+              
+                
                 <a class="source" href="word-highlighter-snippet.html">
                   ./demo/snippets/word-highlighter-snippet.js
+                </a>
+              
+                
+                <a class="source" href="worley-text-gradient-snippet.html">
+                  ./demo/snippets/worley-text-gradient-snippet.js
                 </a>
               
             </div>
@@ -242,13 +272,26 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             testTime, testNow,
             testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${el.id}</span>`</span>);
 
+        <span class="hljs-keyword">let</span> history = [],
+            averageTime = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">addTime</span> = (<span class="hljs-params">t</span>) =&gt; {
+
+            <span class="hljs-keyword">if</span> (history.<span class="hljs-property">length</span> &gt; <span class="hljs-number">20</span>) history.<span class="hljs-title function_">shift</span>();
+            history.<span class="hljs-title function_">push</span>(t);
+            averageTime = history.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">p, c</span>) =&gt;</span> p + c, <span class="hljs-number">0</span>);
+            averageTime /= history.<span class="hljs-property">length</span>;
+        }
+
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
             testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
             testTime = testNow - testTicker;
             testTicker = testNow;
 
-            testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+            <span class="hljs-title function_">addTime</span>(testTime);
+
+            testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(averageTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / averageTime)}</span>`</span>;
         };
     }();</pre></div></div>
             

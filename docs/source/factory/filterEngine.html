@@ -5222,13 +5222,14 @@ r, g, b, a, i, gray;</p>
             iWidth = input.<span class="hljs-property">width</span>,
             r, g, b, a, i, dw, dh, source;
 
-        <span class="hljs-keyword">let</span> {opacity, width, height, level, seed, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, lineOut} = requirements;
+        <span class="hljs-keyword">let</span> {opacity, width, height, level, seed, noWrap, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, lineOut} = requirements;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == width) width = <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == height) height = <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == level) level = <span class="hljs-number">0.5</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == seed) seed = <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == noWrap) noWrap = <span class="hljs-literal">false</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
@@ -5255,10 +5256,7 @@ r, g, b, a, i, gray;</p>
 
                 source = i + ((dh * iWidth) + dw) * <span class="hljs-number">4</span>;
 
-                <span class="hljs-keyword">if</span> (source &lt; <span class="hljs-number">0</span>) source += len;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (source &gt;= len) source -= len;
-
-                <span class="hljs-keyword">if</span> (excludeTransparentPixels &amp;&amp; (!iData[a] || !iData[source + <span class="hljs-number">3</span>])) {
+                <span class="hljs-keyword">if</span> (noWrap &amp;&amp; (source &lt; <span class="hljs-number">0</span> || source &gt;= len)) {
 
                     oData[r] = iData[r];
                     oData[g] = iData[g];
@@ -5267,14 +5265,28 @@ r, g, b, a, i, gray;</p>
                 }
                 <span class="hljs-keyword">else</span> {
 
-                    oData[r] = (includeRed) ? iData[source] : iData[r];
-                    source++;
-                    oData[g] = (includeGreen) ? iData[source] : iData[g];
-                    source++;
-                    oData[b] = (includeBlue) ? iData[source] : iData[b];
-                    source++;
-                    oData[a] = (includeAlpha) ? iData[source] : iData[a];
+                    <span class="hljs-keyword">if</span> (source &lt; <span class="hljs-number">0</span>) source += len;
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (source &gt;= len) source -= len;
+
+                    <span class="hljs-keyword">if</span> (excludeTransparentPixels &amp;&amp; (!iData[a] || !iData[source + <span class="hljs-number">3</span>])) {
+
+                        oData[r] = iData[r];
+                        oData[g] = iData[g];
+                        oData[b] = iData[b];
+                        oData[a] = iData[a];
+                    }
+                    <span class="hljs-keyword">else</span> {
+
+                        oData[r] = (includeRed) ? iData[source] : iData[r];
+                        source++;
+                        oData[g] = (includeGreen) ? iData[source] : iData[g];
+                        source++;
+                        oData[b] = (includeBlue) ? iData[source] : iData[b];
+                        source++;
+                        oData[a] = (includeAlpha) ? iData[source] : iData[a];
+                    }
                 }
+
             }
             <span class="hljs-keyword">else</span> {
 

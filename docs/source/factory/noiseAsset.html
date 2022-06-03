@@ -517,15 +517,12 @@
 <li>Smoothed stripes</li>
 <li>Worley - both euclidean and manhattan versions</li>
 </ul>
-<p>These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo <a href="../../demo/filters-019.html">Filters-019</a> has been set up to allow for experimenting with these attributes</p>
-<p>The noise generated will be output to a dedicated offscreen &lt;canvas&gt; element, which is the asset used by Picture entitys, Pattern styles and filters. The output image can be set to three color schemas:</p>
+<p>These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo <a href="../../demo/canvas-060.html">Canvas-060</a> has been set up to allow for experimenting with these attributes</p>
+<h4 id="demos">Demos:</h4>
 <ul>
-<li><strong>Monochrome</strong> (black - gray - white)</li>
-<li><strong>Gradient</strong> - mediated by a Scrawl-canvas Color object</li>
-<li><strong>Hue</strong> - where the engine output for each pixel is interpreted as the hue component of an HSL color</li>
-<li><strong>Rainbow</strong> - to map a more complex Scrawl-canvas gradient to the noise output (for instance, to create contour lines and shading)</li>
+<li><a href="../../demo/canvas-044.html">Canvas-044</a> - Building more complex patterns</li>
+<li><a href="../../demo/canvas-060.html">Canvas-060</a> - Noise asset functionality</li>
 </ul>
-<p>(<em><strong>NOTE:</strong></em> Perlin, Simplex and Value noise generator code based on code found in the <a href="https://github.com/lencinhaus/canvas-noise">canvas-noise GitHub repository</a> written by <a href="https://github.com/lencinhaus">lencinhaus</a>.</p>
 
             </div>
             
@@ -537,23 +534,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
-              <h4 id="demos">Demos:</h4>
-<ul>
-<li><a href="../../demo/canvas-044.html">Canvas-044</a> - Building more complex patterns</li>
-<li><a href="../../demo/filters-019.html">Filters-019</a> - Using a Noise asset with a displace filter</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -573,11 +553,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="noiseasset-constructor">NoiseAsset constructor</h4>
 
@@ -610,11 +590,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="noiseasset-prototype">NoiseAsset prototype</h4>
 
@@ -629,11 +609,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 <ul>
@@ -653,11 +633,11 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="noiseasset-attributes">NoiseAsset attributes</h4>
 <ul>
@@ -674,11 +654,11 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>The offscreen canvas dimensions, within which the noise will be generated, is set using the <strong>width</strong> and <strong>height</strong> attributes. These take Number values.</p>
 
@@ -690,11 +670,11 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>noiseEngine</strong> - String - the currently supported noise engines String values are: <code>perlin</code>, <code>improved-perlin</code>, <code>simplex</code>, <code>value</code>, <code>stripes</code>, <code>smoothed-stripes</code>, <code>worley-euclidean</code>, <code>worley-manhattan</code></p>
 
@@ -705,11 +685,11 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>When a noise engine initializes it will create several Arrays of pseudo-random values. The <strong>seed</strong> attribute is a String used to initialize the pseudo-random number generator, while the <strong>size</strong> attribute is a Number (often a power of 2 value) which determines the lengths of the Arrays</p>
 
@@ -721,11 +701,11 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>The <strong>scale</strong> attribute determines the relative scale of the noise calculation, which affects the noise output. Think of it as a rather idiosyncratic zoom factor </p>
 
@@ -736,11 +716,11 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Attributes used when calculating the noise map include:</p>
 <ul>
@@ -759,11 +739,11 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>The <strong>smoothing</strong> attribute - a String value - identifies the smoothing function that will be applied pixel noise values as they are calculated. There are a wide number of functions available; default: <code>quintic</code></p>
 
@@ -774,24 +754,35 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
         </li>
         
         
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>Post-processing the noise map: The <strong>sumFunction</strong> attribute - a String value - identifies the smoothing function that will be applied to the noise map once the noise calculations complete. </p>
+<ul>
+<li>Permitted values include: <code>none</code>, <code>sine-x</code>, <code>sine-y</code>, <code>sine</code>, <code>modular</code>, <code>random</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">sumFunction</span>: <span class="hljs-string">&#x27;none&#x27;</span>,</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p>Post-processing the noise map: The <strong>sumFunction</strong> attribute - a String value - identifies the smoothing function that will be applied to the noise map once the noise calculations complete. </p>
-<ul>
-<li>Permitted values include: <code>none</code>, <code>sine-x</code>, <code>sine-y</code>, <code>sine</code>, <code>modular</code></li>
-<li><strong>sineFrequencyCoeff</strong> - a Number - is used by sine-based sum functions</li>
-<li><strong>sumAmplitude</strong> - a Number - is used by the modular sum function</li>
-</ul>
+              <p><strong>sineFrequencyCoeff</strong> - a Number - is used by sine-based sum functions</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">sumFunction</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
-    <span class="hljs-attr">sineFrequencyCoeff</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">sumAmplitude</span>: <span class="hljs-number">5</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">sineFrequencyCoeff</span>: <span class="hljs-number">1</span>,</pre></div></div>
             
         </li>
         
@@ -801,6 +792,21 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p><strong>sumAmplitude</strong> - a Number - is used by the modular sum function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">sumAmplitude</span>: <span class="hljs-number">5</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Worley functionality found in the <a href="https://github.com/jackunion/tooloud/blob/master/src/Worley.js">jackunion/tooloud GitHub repository</a>. </p>
 <ul>
@@ -816,11 +822,11 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>worleyDepth - positive integer Number - Scrawl-canvas only uses the x and y dimensions to calculate noise; worley noise also comes with a z dimension which we can amend via this attribute</p>
 
@@ -836,11 +842,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>This functionality is disabled for noiseAsset objects</p>
@@ -858,11 +864,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 
@@ -873,11 +879,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -887,11 +893,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -904,11 +910,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>source</strong></p>
 
@@ -919,11 +925,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><strong>subscribers</strong> - we disable the ability to set the subscribers Array directly. Picture entitys and Pattern styles will manage their subscription to the asset using their subscribe() and unsubscribe() functions. Filters will check for updates every time they run</p>
 
@@ -1032,11 +1038,11 @@ S.<span class="hljs-property">sineFrequencyCoeff</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>modularAmplitude</code> - name changed to <code>sumAmplitude</code></p>
 
@@ -1108,11 +1114,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p><code>cleanOutput</code> - internal function called by the <code>notifySubscribers</code> function</p>
@@ -1131,11 +1137,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>cleanNoise</code> - internal function called by the <code>cleanOutput</code> function</p>
 
@@ -1154,11 +1160,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>Seed our pseudo-random number generator</p>
 
@@ -1169,11 +1175,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Generate the permutations table(s)</p>
 
@@ -1184,11 +1190,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Initialize the appropriate noise function</p>
 
@@ -1204,11 +1210,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Prepare the noiseValues 2d array</p>
 
@@ -1226,11 +1232,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Calculate a relative scale, and setup min/max variables</p>
 
@@ -1244,11 +1250,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>This is the core of the calculation, performed for each cell in the noiseValues 2d array</p>
 
@@ -1280,11 +1286,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>We can modify the output by scaling it</p>
 <ul>
@@ -1299,11 +1305,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Amplitude and frequency will update once per octave calculation; totalNoise is the sum of all octave results</p>
 
@@ -1316,11 +1322,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>The calculation will be performed at least once</p>
 <ul>
@@ -1334,11 +1340,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Call the appropriate getNoiseValue function</p>
 <ul>
@@ -1352,11 +1358,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Update octave with a post-calculation octaveFunction, if required</p>
 
@@ -1367,11 +1373,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>Modify result by the current amplitude, and add to the running total</p>
 
@@ -1383,11 +1389,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>Update the variables that change over multiple octave loops</p>
 
@@ -1400,11 +1406,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>Update the noise value in its array</p>
 
@@ -1415,11 +1421,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>… and check for max/min spread of the generated values</p>
 
@@ -1434,11 +1440,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>Calculate the span of numbers generated - we need to get all the results in the range 0 to 1</p>
 
@@ -1455,11 +1461,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Clamp the cell’s noise value to between 0 and 1, then update it with the post-calculation sumFunction, if required</p>
 
@@ -1473,11 +1479,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>Update the cached noise values arrays</p>
 
@@ -1492,11 +1498,11 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>checkOutputValuesExist</code> and <code>getOutputValue</code> are internal variables that must be defined by any asset that makes use of the <em>assetAdvancedFunctionality.js</em> mixin and its <code>paintCanvas</code> function</p>
 
@@ -1517,11 +1523,11 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <h4 id="noiseasset-generator-functionality">NoiseAsset generator functionality</h4>
 
@@ -1530,11 +1536,11 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>Convenience constants
 P.F = 0.5 * (Math.sqrt(3) - 1);
@@ -1550,11 +1556,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>noiseEngines</code> - a {key:object} object. Each named object contains two functions:</p>
 <ul>
@@ -1569,11 +1575,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>The classic Perlin noise generator</p>
 
@@ -1644,11 +1650,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>An improved Perlin noise generator</p>
 
@@ -1704,11 +1710,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p>A successor to Perlin noise generation, by the person who invented it</p>
 
@@ -1768,11 +1774,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p>A simplified form of Perlin noise</p>
 
@@ -1822,11 +1828,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>For generating repeated stripe gradients, set the sum function to <code>modular</code> and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects</p>
 
@@ -1847,11 +1853,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p>As for stripes, but can apply smoothing function to the output</p>
 <ul>
@@ -1880,11 +1886,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p>Worley functionality found in the <a href="https://github.com/jackunion/tooloud/blob/master/src/Worley.js">jackunion/tooloud GitHub repository</a></p>
 
@@ -1913,11 +1919,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>For generating repeated stripe gradients, set the sum function to <code>modular</code> and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects</p>
 
@@ -1947,11 +1953,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>generatePermutationTable</code> - internal function called by the <code>cleanNoise</code> function</p>
 <ul>
@@ -1993,11 +1999,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>octaveFunctions</code> - a {key:functions} object holding functions used to modify octave loop results</p>
 <ul>
@@ -2015,11 +2021,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>sumFunctions</code> - a {key:functions} object holding functions used to modify noise values after their calculation has completed (post-processing)</p>
 <ul>
@@ -2035,11 +2041,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>These functions modify the final output using a sine frequency calculation based on the pixel position within the canvas</p>
 
@@ -2052,11 +2058,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>This function creates repeating bands, the frequency of which depends on the sumAmplitude attribute</p>
 
@@ -2070,11 +2076,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>This function adds random interference to the final output, the strength of which depends on the sumAmplitude attribute (lower values create a stronger effect)</p>
 
@@ -2095,11 +2101,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p>Worley functionality found in the <a href="https://github.com/jackunion/tooloud/blob/master/src/Worley.js">jackunion/tooloud GitHub repository</a></p>
 
@@ -2337,11 +2343,11 @@ P.<span class="hljs-property">worleyNoise</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
@@ -2365,11 +2371,11 @@ P.<span class="hljs-property">worleyNoise</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p>Deprecated - old name</p>
 
@@ -2382,11 +2388,11 @@ constructors.<span class="hljs-property">NoiseAsset</span> = <span class="hljs-t
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
