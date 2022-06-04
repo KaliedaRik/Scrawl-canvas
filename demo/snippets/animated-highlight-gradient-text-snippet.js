@@ -179,6 +179,7 @@ export default function (el, scrawl) {
             width: 16,
             height: lineHeight,
             shown: false,
+            useAsPattern: true,
         });
 
         scrawl.makeBlock({

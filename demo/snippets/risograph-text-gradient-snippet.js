@@ -180,11 +180,12 @@ export default function (el, scrawl) {
 
         const cell = canvas.buildCell({
             name: `${name}-riso-cell`,
-            width: '100%',
+            width: 32,
             height: lineHeight,
             cleared: false,
             compiled: false,
             shown: false,
+            useAsPattern: true,
         });
 
         scrawl.makeBlock({

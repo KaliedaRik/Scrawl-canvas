@@ -339,7 +339,7 @@
 
     <ul>
       <li>For animated font effects, the snippets will attempt to add a navigable <kbd>play|pause</kbd> control button in the top-right corner of the header element</li>
-      <li>For users who have set the <kbd>prefers-reduced-motion: reduced</kbd> feature on their devices, animated font effects will play for 5 seconds, then halt</li>
+      <li>For users who have set the <kbd>prefers-reduced-motion: reduced</kbd> feature on their devices, animated font effects will only play after the user clicks the <kbd>Play|Pause</kbd> control</li>
       <li>For users who have set the <kbd>prefers-color-scheme: dark</kbd> feature on their devices, the font effect will display using dark-mode colors (if they have been set)</li>
       <li>For users who have set the new <kbd>prefers-contrast: more</kbd> feature on their devices, the font effect will not display</li>
     </ul>
@@ -1027,26 +1027,45 @@ JS:
     <ul>
       <li>Apply text-based effect snippets to a series of header elements with various fonts, both local to the device and remote (Google Fonts)</li>
       <li>Check that the snippets correctly apply themselves to each font</li>
-      <li>Edit the header elements - the effect should update in real-time</li>
+      <li>Edit the header elements - the effect across the text should update in real-time</li>
       <li>Resize the browser window - the effect should adapt its values and display in real-time</li>
       <li>Update browser "prefers-color-scheme" settings - each effect on each header should update to take into account the user preference</li>
-      <li>Update browser "prefers-contrast" settings - each effect on each header should update to take into account the user preference</li>
+      <li>Update browser "prefers-contrast" settings - each effect on each header (where applicable) should update to take into account the user preference</li>
       <li>Use the keyboard tab field to navigate between headers and the play|halt button that should appear in the top right corner of each animated snippet header</li>
       <li>Check that clicking (and keyboard equivalent) on an animated effect's "pause" button stops the animation; clicking on the "play" button should start the animation effect</li>
       <li>Update browser "prefers-reduced-motion" settings - the "reduced" setting should halt animations immediately; other setting should (re)start the animation</li>
     </ul>
 
-    <p><b>Note 0:</b> only tested on Latin-based (alphabetical left-to-right) fonts.</p>
+    <p><b>Note:</b> only tested on Latin-based (alphabetical left-to-right) fonts.</p>
     
-    <p><b>Known issue 1:</b> Resizing the browser dimensions does not have an immediate effect on each canvas's display, which only triggers when the canvas enters the viewport - leads to an unfortunate repaing and content shift.  ACTION: needs to be fixed ... but updating canvas elements not in the viewport is a complex problem in the current codebase. Making canvases animate or continuously update while out-of-sight is not a solution as it would seriously impact on page performance.</p>
+    <p><b>Known issue 1:</b> Resizing the browser dimensions does not have an immediate effect on each canvas's display, which only triggers when the canvas enters the viewport - leads to an unfortunate repainting and content shift.</p>
 
-    <p><b>Note 1:</b> Canvases that get resized while visible in the browser viewport do update correctly in real-time, as required.</p>
-    
-    <p><b>Known issue 2:</b> Setting the <kbd>contenteditable</kbd> attribute on a DOM element makes the element editable, but leads to side effects. In particular, browsers have a tendency to add non-breaking spaces to the edited text which makes measuring that text problematic - which in turn leads to lines breaking before they should. When this happens, we need to set the element's height to incorporate the additional line which in turn increases the canvas height which will then display the additional line correctly. Note that setting <kbd>contenteditable="plaintext-only"</kbd> (somewhat) alleveates the problem - except in Firefox which doesn't support the <kbd>plaintext-only</kbd> value.</p>
+    <ul>
+      <li>A serious side effect of this is the appearance of the horizontal scrollbar when user resizes the browser window to a smaller width</li>
+      <li>Canvases that get resized while visible in the browser viewport will - more often than not - update correctly in real-time, as required, but is not yet reliable enough for production use</li>
+    </ul>
 
-    <p><b>Known issue 3:</b> canvas text assumes that hyphenated words are single words and won't break on the hyphen, unlike browsers. ACTION: will not fix - we are not building a text editor here.</p>
+    <p>ACTION: needs to be fixed ... but:</p>
     
-    <p><b>Known issue 4:</b> canvas text cannot handle multiline line breaks (the return key). ACTION: will not fix - we are not building a text editor here.</p>
+    <ul>
+      <li>Updating canvas elements not in the viewport is a complex problem in the current codebase. Making canvases animate or continuously update while out-of-sight is not a solution as it would seriously impact on page performance</li>
+    </ul>
+
+    <p><b>Known issue 2:</b> Setting the <kbd>contenteditable</kbd> attribute on a DOM element makes the element editable, but leads to side effects:</p>
+
+    <ul>
+      <li>In particular, browsers have a tendency to add non-breaking spaces to the edited DOM text which makes measuring that text problematic - which in turn leads to canvas text lines breaking before they should. The snippets will correct for this, but it leads to the canvas text displaying more lines than are present in the DOM text</li>
+      <ul>
+        <li>Setting <kbd>contenteditable="plaintext-only"</kbd> (somewhat) alleveates the problem - except in Firefox which doesn't support the <kbd>plaintext-only</kbd> value</li>
+      </ul>
+      <li>Hyphenated words (and soft hyphens) - Scrawl-canvas Phrase entitys do not break words on hyphens; DOM text will break on them (with appropriate CSS styling)</li>
+      <li>Line breaks and line returns - Scrawl-canvas Phrase entitys works on the level of the paragraph, not the page; <kbd>contenteditable</kbd> elements do respect these breaks</li>
+      <li>Line lengths and DOM/canvas text horizontal alignment seems to work (with font-specific line-height adjustments) for left-justified text; center- and right-justified text is, however, often misaligned</li>
+    </ul>
+
+    <p>ACTION: will not fix - we are not building a text editor here.</p>
+    
+    <p><b>Known issue 3:</b> page refresh rates are significantly slower on retina-like screens. ACTION: will not fix - probably not fixable.</p>
     
     <p><b>Touch test:</b> should work as expected</p>
 
