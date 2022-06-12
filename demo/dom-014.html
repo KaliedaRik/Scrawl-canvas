@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 014</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .canvas-host {
+      overflow: hidden;
+      resize: both;
+      border: 1px solid red;
+      width: 400px;
+      height: 400px;
+      min-width: 200px;
+      min-height: 200px;
+      max-width: 600px;
+      max-height: 600px;
+      margin: 0 auto 2em;
+      background-color: #444;
+    }
+    #my-scrawl-canvas {
+      background-color: lemonchiffon;
+    }
+    h3 {
+      border-top: 4px double black;
+      padding-top: 1em;
+      margin-top: 1em;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 014</h1>
+  <h2>Scrawl-canvas initialization: canvas interference check</h2>
+
+  <!-- PixiJS -->
+  <h3><a href="https://pixijs.io/guides/">PixiJS</a> - creates a canvas element in code and adds it to the web page</h3>
+
+  <div id="pixi-container"></div>
+
+  <script src="https://pixijs.download/release/pixi.min.js"></script>
+
+  <script>
+    console.log('Pixi.JS code run started');
+
+    const pixiApp = new PIXI.Application({ width: 640, height: 360, antialias: true });
+
+    document.querySelector('#pixi-container').appendChild(pixiApp.view);
+
+    const pixiGraphics = new PIXI.Graphics();
+
+    // Rectangle
+    pixiGraphics.beginFill(0xDE3249);
+    pixiGraphics.drawRect(50, 50, 100, 100);
+    pixiGraphics.endFill();
+
+    // Rectangle + line style 1
+    pixiGraphics.lineStyle(2, 0xFEEB77, 1);
+    pixiGraphics.beginFill(0x650A5A);
+    pixiGraphics.drawRect(200, 50, 100, 100);
+    pixiGraphics.endFill();
+
+    pixiApp.stage.addChild(pixiGraphics);
+
+    console.log('Pixi.JS code run completed');
+  </script>
+
+  <!-- ThreeJS -->
+  <h3><a href="https://threejs.org/">ThreeJS</a> - creates a canvas element in code and adds it to the web page</h3>
+
+  <div id="three-container"></div>
+
+  <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.141.0/build/three.module.js"
+      }
+    }
+  </script>
+
+  <script type="module">
+
+    console.log('ThreeJS code run started');
+
+    import * as THREE from 'three';
+
+    const threeScene = new THREE.Scene();
+    const threeCamera = new THREE.PerspectiveCamera( 75, 600 / 400, 0.1, 1000 );
+    const threeRenderer = new THREE.WebGLRenderer();
+
+    threeRenderer.setSize( 600, 400 );
+
+    document.querySelector('#three-container').appendChild(threeRenderer.domElement);
+
+    const threeGeometry = new THREE.BoxGeometry( 1, 1, 1 );
+    const threeMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+    const threeCube = new THREE.Mesh( threeGeometry, threeMaterial );
+    threeScene.add( threeCube );
+
+    threeCamera.position.z = 3;
+
+    function threeAnimate() {
+      requestAnimationFrame( threeAnimate );
+      threeCube.rotation.x += 0.01;
+      threeCube.rotation.y += 0.01;
+      threeRenderer.render( threeScene, threeCamera );
+    }
+    threeAnimate();
+
+    console.log('ThreeJS code run completed');
+  </script>
+
+  <!-- P5.js -->
+  <h3><a href="https://p5js.org/">P5.js</a> - creates a canvas element in code and adds it to the web page</h3>
+
+  <main id="p5-container"></main>
+
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
+
+  <script>
+    console.log('P5 code run started');
+
+    let p5_flag = false;
+
+    function setup() {
+      createCanvas(400, 400);
+    }
+
+    function draw() {
+      background(220);
+      ellipse(50,50,80,80);
+
+      if (!p5_flag) {
+        p5_flag = true;
+        console.log('P5 code run completed');
+      }
+    }
+  </script>
+
+  <!-- Chart.js -->
+  <h3><a href="https://www.chartjs.org/docs/latest/">Chart.js</a> - uses an existing &lt;canvas> element</h3>
+
+  <canvas 
+    id="my-chart-canvas" 
+    width="400" 
+    height="400"
+  ></canvas>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js" integrity="sha512-sW/w8s4RWTdFFSduOTGtk4isV1+190E/GghVffMA9XczdJ2MDzSzLEubKAs5h0wzgSJOQTRYyaz73L3d6RtJSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script>
+    console.log('Chart.js code run started');
+
+    const ctx = document.getElementById('my-chart-canvas');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    console.log('Chart.js code run completed');
+  </script>
+
+  <!-- Scrawl-canvas -->
+  <h3>Scrawl-canvas &lt;canvas> element and code</h3>
+  <div class="canvas-host">
+    <canvas 
+      id="my-scrawl-canvas"
+      class="demo-temp-302"
+      data-scrawl-canvas
+      data-is-responsive="true"
+      data-base-width="600" 
+      data-base-height="600" 
+      data-base-background-color="honeydew"
+      data-fit="contain"
+    ></canvas>
+  </div>
+
+  <script type="module">
+    console.log('Scrawl-canvas code run started');
+
+    // import * as scrawl from "https://unpkg.com/scrawl-canvas@8.8.2";
+    import * as scrawl from '../source/scrawl.js'
+    scrawl.setIgnorePixelRatio(false);
+
+    const canvas = scrawl.library.canvas['my-scrawl-canvas'];
+    const namespace = 'dom-014';
+
+    scrawl.makePhrase({
+      name: `${namespace}-label`,
+
+      start: ['center', 'center'],
+      handle: ['center', 'center'],
+      width: '100%',
+
+      font: '4.5em bold Garamond, sans-serif',
+      text: 'Hello, world!',
+      justify: 'center',
+
+      fillStyle: 'lightblue',
+      lineWidth: 2,
+      strokeStyle: 'blue',
+      method: 'fillThenDraw',
+    });
+
+    scrawl.makeRender({
+      name: `${namespace}-render`,
+      target: canvas
+    });
+
+    console.log('Scrawl-canvas code run completed');
+    console.log(scrawl.library);
+  </script>
+
+  <h3>Other canvas libraries</h3>
+
+  <ul>
+    <li><a href="https://github.com/fabricjs/fabric.js">FabricJS</a> - not tested. No clear way to download and use the library from a CDN url.</li>
+  </ul>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <p>On page load, Scrawl-canvas should only pick up and modify canvas elements which have been explicitly assigned to it:</p>
+
+    <ul>
+      <li>Create several canvas-based scenes using a variety of Javascript canvas libraries</li>
+      <li>At the end of the page, create a Scrawl-canvas canvas scene</li>
+      <li>The Scrawl-canvas library should load last, after the other canvas libraries have completed their work and created their scenes (not taking into account async networking issues when downloading JS libraries from the various CDNs)</li>
+      <li>Check to make sure Scrawl-canvas has not interfered in any way with the HTML markup of canvases used by, or generated by, the other canvas libraries</li>
+      <li>Check to make sure the other library canvases display as expected, and the user can interact with them in the normal way (if they display an interactive scene)</li>
+      <li>Check to make sure the Scrawl-canvas scene works as expected (the canvas is responsive)</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required</p>
+
+    <p><b>Annotated code</b> - all code for this test is in the HTML file; no Javascript file gets loaded by the page. Inspect the HTML page source to see the JS code.</p>
+  </div>
+
+</body>
+
+</html>
