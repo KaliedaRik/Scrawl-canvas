@@ -22,7 +22,7 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 032</h1>
   <h2>Freehand drawing</h2>
-  <h3>This canvas is resizable - drag the bottom right corner to change its dimensions.</h3>
+  <h3>Click-drag to draw lines<br />This canvas is resizable - drag the bottom right corner to change its dimensions.</h3>
 
   <div class="button-menu">
     <button id="clear-button">Clear lines</button>
@@ -33,6 +33,7 @@
   <div class="canvas-container">
     <canvas 
       id="mycanvas" 
+      data-scrawl-canvas
       data-is-responsive="true" 
       data-base-width="1000" 
       data-base-height="1000" 

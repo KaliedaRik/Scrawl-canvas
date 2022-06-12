@@ -145,7 +145,7 @@ export default function (P = Ωempty) {
 
             let mynode = el.cloneNode(true);
 
-            let kids = mynode.querySelectorAll('[data-corner-div="sc"]');
+            let kids = mynode.querySelectorAll('[data-scrawl-corner-div="sc"]');
             kids.forEach(kid => mynode.removeChild(kid));
 
             copy.outerHTML = mynode.outerHTML;
@@ -509,19 +509,19 @@ S.trackHere = function(val) {
 
             tl.style.top = '0%';
             tl.style.left = '0%';
-            tl.setAttribute('data-corner-div', 'sc');
+            tl.setAttribute('data-scrawl-corner-div', 'sc');
 
             tr.style.top = '0%';
             tr.style.left = '100%';
-            tr.setAttribute('data-corner-div', 'sc');
+            tr.setAttribute('data-scrawl-corner-div', 'sc');
 
             br.style.top = '100%';
             br.style.left = '100%';
-            br.setAttribute('data-corner-div', 'sc');
+            br.setAttribute('data-scrawl-corner-div', 'sc');
 
             bl.style.top = '100%';
             bl.style.left = '0%';
-            bl.setAttribute('data-corner-div', 'sc');
+            bl.setAttribute('data-scrawl-corner-div', 'sc');
 
             let el = this.domElement;
 

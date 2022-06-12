@@ -11,7 +11,7 @@
 // Stack    ~~> Canvas/Cell  
 // Element  ~~> Entity (eg Block)  
 // ```
-// During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a `data-stack` attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas> elements). As part of this work, Scrawl-canvas will modify the affected elements' `position` CSS style:
+// During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a `data-scrawl-stack` attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas> elements). As part of this work, Scrawl-canvas will modify the affected elements' `position` CSS style:
 // + Stack elements have `relative` positioning within the DOM
 // + Element elements have `absolute` positioning within the Stack
 //
@@ -140,7 +140,7 @@ S.text = function (item) {
     if (isa_dom(this.domElement)) {
 
         let el = this.domElement,
-            kids = el.querySelectorAll('[data-corner-div="sc"]');
+            kids = el.querySelectorAll('[data-scrawl-corner-div="sc"]');
 
         el.textContent = item;
 
@@ -159,7 +159,7 @@ S.content = function (item) {
     if (this.domElement) {
 
         let el = this.domElement,
-            kids = el.querySelectorAll('[data-corner-div="sc"]');
+            kids = el.querySelectorAll('[data-scrawl-corner-div="sc"]');
 
         el.innerHTML = item;
 

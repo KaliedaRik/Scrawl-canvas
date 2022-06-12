@@ -63,7 +63,7 @@ code {
 	white-space: pre-wrap;
 }
 
-[data-stack] {
+[data-scrawl-stack] {
 	border: 1px solid red;
 	box-sizing: border-box;
 }

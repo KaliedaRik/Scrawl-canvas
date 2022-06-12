@@ -15,7 +15,6 @@ let artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     canvas = artefact.mycanvas;
 
-
 // Resize the stack, and give it some CSS
 stack.set({
     width: 400,

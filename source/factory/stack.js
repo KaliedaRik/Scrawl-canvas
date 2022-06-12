@@ -11,7 +11,7 @@
 // Stack    ~~> Canvas/Cell  
 // Element  ~~> Entity (eg Block)  
 // ```
-// During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a `data-stack` attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas> elements). As part of this work, Scrawl-canvas will modify the affected elements' `position` CSS style:
+// During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a `data-scrawl-stack` attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas> elements). As part of this work, Scrawl-canvas will modify the affected elements' `position` CSS style:
 // + Stack elements have `relative` positioning within the DOM
 // + Element elements have `absolute` positioning within the Stack
 //
@@ -94,7 +94,7 @@ const Stack = function (items = Ωempty) {
 
     if (el) {
 
-        if (el.getAttribute('data-group') === 'root') {
+        if (el.getAttribute('data-scrawl-group') === 'root') {
 
             pushUnique(rootElements, this.name);
             setRootElementsSort();
@@ -419,7 +419,7 @@ P.addNewElement = function (items) {
     if (items && items.tag) {
 
         items.domElement = document.createElement(items.tag);
-        items.domElement.setAttribute('data-group', this.name);
+        items.domElement.setAttribute('data-scrawl-group', this.name);
         if (!xt(items.group)) items.group = this.name;
         items.host = this.name;
 

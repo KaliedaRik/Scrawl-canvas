@@ -107,11 +107,12 @@ By default, browsers will create canvas elements with a width of 300px and a hei
 <u>HTML:</u>
 &lt;canvas 
   id="nr-canvas-1"
+  data-scrawl-canvas
 >&lt;/canvas>
 
 <b><i>Note that</i></b> the blue oval uses relative ('n%' string) values to set its x and y radiuses, and changes its appearance in line with the canvas element's dimensions, whereas the green oval uses absolute (n number) values so is unaffected by changes in the canvas element's dimensions
     </code>
-    <canvas id="nr-canvas-1"></canvas>
+    <canvas id="nr-canvas-1" data-scrawl-canvas></canvas>
 
     <code>
 <b><u>The sized canvas element</u></b>
@@ -122,9 +123,10 @@ We can set the canvas dimensions using the width and height attributes
   id="nr-canvas-2" 
   width="300" 
   height="300"
+  data-scrawl-canvas
 >&lt;/canvas>
     </code>
-    <canvas id="nr-canvas-2" width="300" height="300"></canvas>
+    <canvas id="nr-canvas-2" width="300" height="300" data-scrawl-canvas></canvas>
 
     <code>
 <b><u>Canvas elements and CSS box-sizing</u></b>
@@ -142,11 +144,12 @@ Canvas elements ignore all attempts to set their CSS box-sizing property to anyt
 &lt;canvas 
   id="nr-canvas-3" 
   class="padded-canvas"
+  data-scrawl-canvas
 >&lt;/canvas>
 
 <b><i>Be aware:</i></b> Scrawl-canvas will include the canvas border and padding values when calculating the dimensions of the canvas element's base cell, making it larger than the display canvas. This will have a effect on the displayed graphic - strokes, and some shapes, will look thinner/smaller than expected.
     </code>
-    <canvas id="nr-canvas-3" class="padded-canvas"></canvas>
+    <canvas id="nr-canvas-3" class="padded-canvas" data-scrawl-canvas></canvas>
 
     <code>
 <b><u>Sizing the canvas element using CSS</u></b>
@@ -162,9 +165,10 @@ While Scrawl-canvas static canvases can be sized using CSS, this is not a recomm
 &lt;canvas 
   id="nr-canvas-4" 
   class="nr-canvas-css-dimensions"
+  data-scrawl-canvas
 >&lt;/canvas>
     </code>
-    <canvas id="nr-canvas-4" class="nr-canvas-css-dimensions"></canvas>
+    <canvas id="nr-canvas-4" class="nr-canvas-css-dimensions" data-scrawl-canvas></canvas>
 
     <h3>Responsive canvas elements</h3>
     
@@ -192,11 +196,15 @@ Attempts to use CSS to make the canvas element 'responsive' <b><i>will not work<
 
 <u>HTML:</u>
 &lt;div class="canvas-container">
-  &lt;canvas id="nr-canvas-5" class="nr-canvas-css-relative">&lt;/canvas>
+  &lt;canvas 
+    id="nr-canvas-5" 
+    class="nr-canvas-css-relative"
+    data-scrawl-canvas
+>&lt;/canvas>
 &lt;/div>
     </code>
     <div class="canvas-container">
-      <canvas id="nr-canvas-5" class="nr-canvas-css-relative"></canvas>
+      <canvas id="nr-canvas-5" class="nr-canvas-css-relative" data-scrawl-canvas></canvas>
     </div>
 
     <code>
@@ -207,12 +215,13 @@ To make a canvas responsive, add the <i>data-is-responsive="true"</i> attribute 
 &lt;div class="canvas-container">
   &lt;canvas 
     id="canvas-1" 
+    data-scrawl-canvas
     data-is-responsive="true"
   >&lt;/canvas>
 &lt;/div>
     </code>
     <div class="canvas-container">
-      <canvas id="canvas-1" data-is-responsive="true"></canvas>
+      <canvas id="canvas-1" data-scrawl-canvas data-is-responsive="true"></canvas>
     </div>
 
     <code>
@@ -223,6 +232,7 @@ We can add additional data- attributes to the canvas element's markup to set the
 &lt;div class="canvas-container">
   &lt;canvas 
     id="canvas-2" 
+    data-scrawl-canvas
     data-is-responsive="true" 
     data-base-width="400" 
     data-base-height="400" 
@@ -233,7 +243,7 @@ We can add additional data- attributes to the canvas element's markup to set the
 Scrawl-canvas supports the following data-fit values: "none" (the default); "cover"; "contain"; and "fill"
     </code>
     <div class="canvas-container">
-      <canvas id="canvas-2" data-is-responsive="true" data-base-width="400" data-base-height="400" data-fit="contain"></canvas>
+      <canvas id="canvas-2" data-scrawl-canvas data-is-responsive="true" data-base-width="400" data-base-height="400" data-fit="contain"></canvas>
     </div>
 
     <h3>Responsive images</h3>
@@ -246,6 +256,7 @@ Scrawl-canvas can use an image asset defined in an &lt;img> element with a <b>sr
 &lt;div class="canvas-container">
   &lt;canvas 
     id="canvas-3" 
+    data-scrawl-canvas
     data-is-responsive="true" 
     data-base-width="800" 
     data-base-height="400" 
@@ -302,7 +313,7 @@ scrawl.makePicture({
 To work correctly, we need to add some additional data to the element - specifically the <b>intrinsic dimensions of each image</b> defined in the srcset attribute, supplied as a JSON string of an object with the filename of each image as a key and an array of that image's width and height (in px) as the value to that key.
     </code>
     <div class="canvas-container">
-      <canvas id="canvas-3" data-is-responsive="true" data-base-width="800" data-base-height="400" data-fit="cover"></canvas>
+      <canvas id="canvas-3" data-scrawl-canvas data-is-responsive="true" data-base-width="800" data-base-height="400" data-fit="cover"></canvas>
     </div>
 
 

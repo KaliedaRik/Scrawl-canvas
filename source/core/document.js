@@ -67,21 +67,21 @@ const sortRootElements = function () {
 // `Exported function` (to modules). Parse the DOM, looking for all elements that have been given a __data-stack__ attribute; then create __Stack__ artefact wrappers for each of them. 
 //
 // This function will also create wrappers for all __direct child elements__ (one level down) within the stack, and create appropriate wrappers (Stack, Canvas, Element) for them.
-const getStacks = function () {
-        
-    document.querySelectorAll('[data-stack]').forEach(el => addInitialStackElement(el));
+const getStacks = function (query = '[data-scrawl-stack]') {
+
+    document.querySelectorAll(query).forEach(el => addInitialStackElement(el));
 };
 
 // Create a __stack__ artefact wrapper for a given stack element.
 const addInitialStackElement = function (el) {
 
-    let mygroup = el.getAttribute('data-group'),
+    let mygroup = el.getAttribute('data-scrawl-group'),
         myname = el.id || el.getAttribute('name'),
         position = 'absolute';
 
     if (!mygroup) {
 
-        el.setAttribute('data-group', 'root');
+        el.setAttribute('data-scrawl-group', 'root');
         mygroup = 'root';
         position = 'relative';
     }
@@ -115,7 +115,7 @@ const processNewStackChildren = function (el, name) {
     // Only go down one level of hierarchy here; stacks don't do hierarchies, only interested in knowing about immediate child elements
     Array.from(el.children).forEach(child => {
     
-        if (child.getAttribute('data-stack') == null && !isa_canvas(child) && child.tagName !== 'SCRIPT') {
+        if (child.getAttribute('data-scrawl-stack') == null && !isa_canvas(child) && child.tagName !== 'SCRIPT') {
 
             let dims = child.getBoundingClientRect(),
                 computed = window.getComputedStyle(child);
@@ -143,7 +143,7 @@ const processNewStackChildren = function (el, name) {
         }
 
         // No need to worry about processing child stacks - they'll already be in the list of stacks to be processed
-        else child.setAttribute('data-group', name);
+        else child.setAttribute('data-scrawl-group', name);
     });
 };
 
@@ -187,11 +187,11 @@ const addStack = function (items = Ωempty) {
     if (!name) name = generateUniqueString();
     el.id = name;
 
-    // set the 'data-stack' attribute on the stack-to-be element
-    el.setAttribute('data-stack', 'data-stack');
+    // set the 'data-scrawl-stack' attribute on the stack-to-be element
+    el.setAttribute('data-scrawl-stack', 'data-scrawl-stack');
 
     // determine whether the parent element is already known to Scrawl-canvas - affects the stack-to-be element's group 
-    if (host && host.getAttribute('data-stack') != null) {
+    if (host && host.getAttribute('data-scrawl-stack') != null) {
 
         hostinscrawl = artefact[host.id];
 
@@ -199,8 +199,8 @@ const addStack = function (items = Ωempty) {
     }
     else mygroup = 'root';
 
-    // set the 'data-group' attribute on the stack-to-be element
-    el.setAttribute('data-group', mygroup);
+    // set the 'data-scrawl-group' attribute on the stack-to-be element
+    el.setAttribute('data-scrawl-group', mygroup);
 
     // determine what the stack-to-be element's position style attribute will be
     if (mygroup === 'root') position = 'relative';
@@ -241,11 +241,11 @@ const addStack = function (items = Ωempty) {
 
 // #### Canvas discovery
 // `Exported function` (to modules). Parse the DOM, looking for &lt;canvas> elements; then create __Canvas__ artefact and __Cell__ asset wrappers for each canvas found. Canvas elements do not need to be part of a stack and can appear anywhere in the HTML body.
-const getCanvases = function () {
+const getCanvases = function (query = '[data-scrawl-canvas]') {
 
     let item;
 
-    document.querySelectorAll('canvas').forEach((el, index) => {
+    document.querySelectorAll(query).forEach((el, index) => {
 
         item = addInitialCanvasElement(el);
 
@@ -256,13 +256,13 @@ const getCanvases = function () {
 // Create a __canvas__ artefact wrapper for a given canvas element.
 const addInitialCanvasElement = function (el) {
 
-    let mygroup = el.getAttribute('data-group'),
+    let mygroup = el.getAttribute('data-scrawl-group'),
         myname = el.id || el.getAttribute('name'),
         position = 'absolute';
 
     if (!mygroup) {
 
-        el.setAttribute('data-group', 'root');
+        el.setAttribute('data-scrawl-group', 'root');
         mygroup = 'root';
         position = el.style.position;
     }
@@ -384,7 +384,7 @@ const addCanvas = function (items = Ωempty) {
     else host = document.body;
 
     el.id = myname;
-    el.setAttribute('data-group', mygroup);
+    el.setAttribute('data-scrawl-group', mygroup);
     el.width = width;
     el.height = height;
     el.style.position = position;
