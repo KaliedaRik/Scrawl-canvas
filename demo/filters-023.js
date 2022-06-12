@@ -79,6 +79,7 @@ scrawl.observeAndUpdate({
         height: ['height', 'round'],
         opacity: ['opacity', 'float'],
         level: ['level', 'float'],
+        noWrap: ['noWrap', 'boolean'],
         includeRed: ['includeRed', 'boolean'],
         includeGreen: ['includeGreen', 'boolean'],
         includeBlue: ['includeBlue', 'boolean'],
@@ -101,6 +102,8 @@ level.value = 0.5;
 // @ts-expect-error
 opacity.value = 1;
 
+// @ts-expect-error
+document.querySelector('#noWrap').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#includeRed').options.selectedIndex = 1;
 // @ts-expect-error

@@ -61,7 +61,8 @@ P.action = function (packet) {
 
     // TODO: work out why filter memoization destroys Safari-based browser performance
     // + For now, we disable memoization for Safari-based browsers
-    if (identifier && workstore[identifier] && !window.scrawlEnvironmentBrowserDetection.includes('safari')) {
+    // if (identifier && workstore[identifier] && !window.scrawlEnvironmentBrowserDetection.includes('safari')) {
+    if (identifier && workstore[identifier]) {
 
         workstoreLastAccessed[identifier] = Date.now();
         return workstore[identifier];
@@ -89,7 +90,8 @@ P.action = function (packet) {
         }
 
         // + For now, we disable memoization for Safari-based browsers
-        if (identifier && !window.scrawlEnvironmentBrowserDetection.includes('safari')) {
+        // if (identifier && !window.scrawlEnvironmentBrowserDetection.includes('safari')) {
+        if (identifier) {
 
             workstore[identifier] = this.cache.work;
             workstoreLastAccessed[identifier] = Date.now();
