@@ -6,9 +6,6 @@ import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
-// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
-
 
 // #### Smoke ring generator
 // We could place this code in its own module then import it into this code

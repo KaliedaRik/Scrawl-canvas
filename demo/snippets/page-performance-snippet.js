@@ -28,9 +28,6 @@
 // + There's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
 import * as scrawl from '../../source/scrawl.js';
 
-// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
-
 
 // __Effects on the element:__ 
 // + updates the &lt;div> element's `innerHTML` data, which will replace any child elements or text placed between the element's opening and closing tags.

@@ -3,7 +3,6 @@
 
 // [Run code](../../demo/canvas-019.html)
 import {
-    setIgnorePixelRatio,
     library as L,
     importDomImage,
     makeFilter,
@@ -16,9 +15,6 @@ import {
 } from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
-
-// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-setIgnorePixelRatio(false);
 
 
 // #### Scene setup

@@ -33,13 +33,9 @@ import {
     makeDragZone,
     makeRender,
     makeWheel,
-    setIgnorePixelRatio,
 } from '../source/scrawl.js';
 
 import { reportSpeed, killArtefact } from './utilities.js';
-
-// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-setIgnorePixelRatio(false);
 
 
 // #### Scene setup

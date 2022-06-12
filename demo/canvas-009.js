@@ -9,13 +9,9 @@ import {
     makeBlock,
     makePattern,
     makeRender,
-    setIgnorePixelRatio,
 } from '../source/scrawl.js'
 
 import { reportSpeed, killArtefactAndAnchor, killStyle } from './utilities.js';
-
-// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-setIgnorePixelRatio(false);
 
 
 // #### Google Analytics

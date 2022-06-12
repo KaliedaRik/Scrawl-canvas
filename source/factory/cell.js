@@ -974,6 +974,9 @@ P.getComputedFontSizes = function () {
 // This functionality is triggered by the Cell's Canvas wrapper controller
 
 // `checkEngineScale`
+// DPR is detected in the `core/events.js` file, but mainly handled here
+// + We scale the cell by DPR - this should be the only time we touch native scale functionality!
+// + All the other scaling functionality in SC is handled by computiation - applying the scaling factor to dimensions, start, handle, offset etc values which then get saved in the `current` equivalent attributes
 const checkEngineScale = function (engine) {
 
     if (engine) {
@@ -983,7 +986,7 @@ const checkEngineScale = function (engine) {
         if (getIgnorePixelRatio()) engine.scale(1, 1);
         else {
 
-            let dpr = getPixelRatio();
+            const dpr = getPixelRatio();
             engine.scale(dpr, dpr);
             return dpr;
         }

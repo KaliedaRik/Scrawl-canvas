@@ -9,9 +9,6 @@ import rapier from "https://cdn.skypack.dev/@dimforge/rapier2d-compat";
 
 import { reportSpeed } from './utilities.js';
 
-// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
-
 
 // We are using a 600px x 600px canvas
 // + which means we can assume 1 rapierUnit = 60px

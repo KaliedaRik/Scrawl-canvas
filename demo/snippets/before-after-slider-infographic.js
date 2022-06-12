@@ -140,8 +140,6 @@
 // Import the Scrawl-canvas object 
 import * as scrawl from '../../source/scrawl.js'
 
-// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
 
 // Internal function to scrape data from the supplied element 
 const getPanelData = function (el, store, canvas) {

@@ -6,9 +6,6 @@ import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
-// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
-
 
 // This code can be factored away into its own module
 // + Because: clocks are useful; most of this code can be thought of as clock boilerplate

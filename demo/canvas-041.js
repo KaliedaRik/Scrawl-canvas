@@ -6,8 +6,8 @@ import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
-// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-// + TODO: work out how to make this work with high DPR screens
+// Ignore pixel ratio considerations
+// + Leads to issues when dragging the browser between screens with different pixel ratio densities
 scrawl.setIgnorePixelRatio(true);
 
 

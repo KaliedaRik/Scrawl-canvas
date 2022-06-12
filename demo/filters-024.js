@@ -8,8 +8,6 @@ import { addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
-scrawl.setIgnorePixelRatio(false);
-
 scrawl.importDomImage('.flowers');
 
 const oCanvas = scrawl.library.canvas['output-canvas'];

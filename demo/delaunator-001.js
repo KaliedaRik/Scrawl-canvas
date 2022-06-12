@@ -11,16 +11,12 @@ import {
     makeStar,
     makeWheel,
     makeWorld,
-    setIgnorePixelRatio,
 } from '../source/scrawl.js';
 
 // @ts-expect-error
 import Delaunator from 'https://cdn.skypack.dev/delaunator@5.0.0';
 
 import { reportSpeed } from './utilities.js';
-
-// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-setIgnorePixelRatio(false);
 
 
 // The following functions are used to handle the Delaunay object

@@ -235,8 +235,10 @@ const actionNativeListener = function (evt, fn, targ, action) {
 };
 
 
-
 // ## Monitoring the device pixel ratio
+// DPR is detected here, but mainly handled in the `factory/cell.js` file
+// + We scale the cell by DPR - this should be the only time we touch native scale functionality!
+// + All the other scaling functionality in SC is handled by computiation - applying the scaling factor to dimensions, start, handle, offset etc values which then get saved in the `current` equivalent attributes
 let dpr_changeAction = λnull;
 const setPixelRatioChangeAction = (func) => dpr_changeAction = func;
 
@@ -246,42 +248,38 @@ window.scrawlEnvironmentBrowserDetection = browserIs;
 let dpr = 0;
 const getPixelRatio = () => dpr;
 
-let ignorePixelRatio = true;
+let ignorePixelRatio = false;
 const getIgnorePixelRatio = () => ignorePixelRatio;
 const setIgnorePixelRatio = (val) => ignorePixelRatio = val;
 
 const updatePixelRatio = () => {
 
-    if (browserIs.indexOf('safari') >= 0) {
+    dpr = window.devicePixelRatio;
 
-        console.log('safari browser detected. Switching off DPR functionality, and filter memoization');
+    for (const [name, wrapper] of Object.entries(canvas)) {
 
-        ignorePixelRatio = true;
-        dpr = 1;
-    }
-    else {
-
-        dpr = window.devicePixelRatio;
-
-        for (const [name, wrapper] of Object.entries(canvas)) {
-
-            wrapper.dirtyDimensions = true;
-        }
-
-        for (const [name, wrapper] of Object.entries(cell)) {
-
-            wrapper.dirtyDimensions = true;
-        }
-
-        for (const [name, ent] of Object.entries(entity)) {
-
-            ent.dirtyHost = true;
-        }
-
-        if (!ignorePixelRatio) dpr_changeAction();
+        wrapper.dirtyDimensions = true;
     }
 
-    matchMedia(`(resolution: ${dpr}dppx)`).addEventListener("change", updatePixelRatio, { once: true });
+    for (const [name, wrapper] of Object.entries(cell)) {
+
+        wrapper.dirtyDimensions = true;
+    }
+
+    for (const [name, ent] of Object.entries(entity)) {
+
+        ent.dirtyHost = true;
+    }
+
+    if (!ignorePixelRatio) dpr_changeAction();
+
+    // __Note:__ I have no idea what Safari is doing - maybe device pixel ratio stuff is handled internally? 
+    // + Whatever. Safari does not like, or respond to, this matchmedia query
+    // + As long as the demos display as expected in Safari on both 1dppx and 2dppx (Retina) screens, and dragging the Safari browser between screens with different dppx values doesn't break the display or freeze the page, then I think we're okay
+    if (browserIs.indexOf('safari') < 0) {
+
+        matchMedia(`(resolution: ${dpr}dppx)`).addEventListener("change", updatePixelRatio, { once: true });
+    }
 };
 
 updatePixelRatio();
