@@ -985,6 +985,16 @@
                 </a>
               
                 
+                <a class="source" href="temp-301.html">
+                  ./demo/temp-301.js
+                </a>
+              
+                
+                <a class="source" href="temp-302.html">
+                  ./demo/temp-302.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -1055,21 +1065,6 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
-              </div>
               <h4 id="scene-setup">Scene setup</h4>
 
             </div>
@@ -1079,11 +1074,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Magic numbers</p>
 
@@ -1095,11 +1090,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="mediapipe-functionality">MediaPipe functionality</h4>
 <p>We’ll handle everything in a raw asset object, which a Picture entity can then use as its source</p>
@@ -1143,11 +1138,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Clear the RawAsset’s canvass element</p>
 
@@ -1159,11 +1154,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>The model’s results supply an entire WebGL2 canvas in stuff.image</p>
 <ul>
@@ -1181,11 +1176,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>We’ll draw stuff on the canvas using MediaPipe’s own drawing routines
 @ts-expect-error</p>
@@ -1193,6 +1188,21 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
             </div>
             
             <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_TESSELATION</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#707070&#x27;</span>, <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_RIGHT_EYE</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#FF3030&#x27;</span>});</pre></div></div>
             
         </li>
         
@@ -1207,7 +1217,7 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_RIGHT_EYE</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#FF3030&#x27;</span>});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_RIGHT_EYEBROW</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#FF3030&#x27;</span>});</pre></div></div>
             
         </li>
         
@@ -1222,7 +1232,7 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_RIGHT_EYEBROW</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#FF3030&#x27;</span>});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_LEFT_EYE</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#30FF30&#x27;</span>});</pre></div></div>
             
         </li>
         
@@ -1237,7 +1247,7 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_LEFT_EYE</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#30FF30&#x27;</span>});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_LEFT_EYEBROW</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#30FF30&#x27;</span>});</pre></div></div>
             
         </li>
         
@@ -1252,7 +1262,7 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_LEFT_EYEBROW</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#30FF30&#x27;</span>});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_FACE_OVAL</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>});</pre></div></div>
             
         </li>
         
@@ -1262,21 +1272,6 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-title function_">drawConnectors</span>(engine, landmarks, <span class="hljs-variable constant_">FACEMESH_FACE_OVAL</span>, {<span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1292,11 +1287,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>The forever loop function, which captures the MediaPipe model’s output and passes it on to our raw asset for processing</p>
 
@@ -1319,11 +1314,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h5 id="import-and-use-livestream">Import and use livestream</h5>
 <p>convenience handle for the media stream asset </p>
@@ -1335,11 +1330,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Capture the media stream</p>
 
@@ -1357,11 +1352,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1372,11 +1367,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1398,11 +1393,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Start the MediaPipe model
 @ts-expect-error</p>
@@ -1424,11 +1419,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Use MediaPipe’s camera functionality to get updates to the forever loop
 @ts-expect-error</p>
@@ -1453,11 +1448,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1469,11 +1464,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1489,11 +1484,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

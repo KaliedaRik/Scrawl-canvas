@@ -895,7 +895,7 @@
 
             <span class="hljs-keyword">let</span> mynode = el.<span class="hljs-title function_">cloneNode</span>(<span class="hljs-literal">true</span>);
 
-            <span class="hljs-keyword">let</span> kids = mynode.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;[data-corner-div=&quot;sc&quot;]&#x27;</span>);
+            <span class="hljs-keyword">let</span> kids = mynode.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;[data-scrawl-corner-div=&quot;sc&quot;]&#x27;</span>);
             kids.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">kid</span> =&gt;</span> mynode.<span class="hljs-title function_">removeChild</span>(kid));
 
             copy.<span class="hljs-property">outerHTML</span> = mynode.<span class="hljs-property">outerHTML</span>;
@@ -1646,19 +1646,19 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
 
             tl.<span class="hljs-property">style</span>.<span class="hljs-property">top</span> = <span class="hljs-string">&#x27;0%&#x27;</span>;
             tl.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = <span class="hljs-string">&#x27;0%&#x27;</span>;
-            tl.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-corner-div&#x27;</span>, <span class="hljs-string">&#x27;sc&#x27;</span>);
+            tl.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-corner-div&#x27;</span>, <span class="hljs-string">&#x27;sc&#x27;</span>);
 
             tr.<span class="hljs-property">style</span>.<span class="hljs-property">top</span> = <span class="hljs-string">&#x27;0%&#x27;</span>;
             tr.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = <span class="hljs-string">&#x27;100%&#x27;</span>;
-            tr.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-corner-div&#x27;</span>, <span class="hljs-string">&#x27;sc&#x27;</span>);
+            tr.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-corner-div&#x27;</span>, <span class="hljs-string">&#x27;sc&#x27;</span>);
 
             br.<span class="hljs-property">style</span>.<span class="hljs-property">top</span> = <span class="hljs-string">&#x27;100%&#x27;</span>;
             br.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = <span class="hljs-string">&#x27;100%&#x27;</span>;
-            br.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-corner-div&#x27;</span>, <span class="hljs-string">&#x27;sc&#x27;</span>);
+            br.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-corner-div&#x27;</span>, <span class="hljs-string">&#x27;sc&#x27;</span>);
 
             bl.<span class="hljs-property">style</span>.<span class="hljs-property">top</span> = <span class="hljs-string">&#x27;100%&#x27;</span>;
             bl.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = <span class="hljs-string">&#x27;0%&#x27;</span>;
-            bl.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-corner-div&#x27;</span>, <span class="hljs-string">&#x27;sc&#x27;</span>);
+            bl.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-corner-div&#x27;</span>, <span class="hljs-string">&#x27;sc&#x27;</span>);
 
             <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 

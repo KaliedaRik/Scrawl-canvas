@@ -502,7 +502,7 @@
 <pre><code><span class="hljs-title class_">Stack</span>    ~~&gt; <span class="hljs-title class_">Canvas</span>/<span class="hljs-title class_">Cell</span>  
 <span class="hljs-title class_">Element</span>  ~~&gt; <span class="hljs-title class_">Entity</span> (eg <span class="hljs-title class_">Block</span>)  
 </code></pre>
-<p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
+<p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-scrawl-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
 <ul>
 <li>Stack elements have <code>relative</code> positioning within the DOM</li>
 <li>Element elements have <code>absolute</code> positioning within the Stack</li>
@@ -620,7 +620,7 @@
 
     <span class="hljs-keyword">if</span> (el) {
 
-        <span class="hljs-keyword">if</span> (el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-group&#x27;</span>) === <span class="hljs-string">&#x27;root&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>) === <span class="hljs-string">&#x27;root&#x27;</span>) {
 
             <span class="hljs-title function_">pushUnique</span>(rootElements, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
             <span class="hljs-title function_">setRootElementsSort</span>();
@@ -1277,7 +1277,7 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
     <span class="hljs-keyword">if</span> (items &amp;&amp; items.<span class="hljs-property">tag</span>) {
 
         items.<span class="hljs-property">domElement</span> = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(items.<span class="hljs-property">tag</span>);
-        items.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-group&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+        items.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">group</span>)) items.<span class="hljs-property">group</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
         items.<span class="hljs-property">host</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 

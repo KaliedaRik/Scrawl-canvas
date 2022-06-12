@@ -611,9 +611,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getStacks = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-        
-    <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;[data-stack]&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">addInitialStackElement</span>(el));
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getStacks = <span class="hljs-keyword">function</span> (<span class="hljs-params">query = <span class="hljs-string">&#x27;[data-scrawl-stack]&#x27;</span></span>) {
+
+    <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(query).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">addInitialStackElement</span>(el));
 };</pre></div></div>
             
         </li>
@@ -631,13 +631,13 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addInitialStackElement = <span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) {
 
-    <span class="hljs-keyword">let</span> mygroup = el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-group&#x27;</span>),
+    <span class="hljs-keyword">let</span> mygroup = el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>),
         myname = el.<span class="hljs-property">id</span> || el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;name&#x27;</span>),
         position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
 
     <span class="hljs-keyword">if</span> (!mygroup) {
 
-        el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-group&#x27;</span>, <span class="hljs-string">&#x27;root&#x27;</span>);
+        el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, <span class="hljs-string">&#x27;root&#x27;</span>);
         mygroup = <span class="hljs-string">&#x27;root&#x27;</span>;
         position = <span class="hljs-string">&#x27;relative&#x27;</span>;
     }
@@ -695,7 +695,7 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(el.<span class="hljs-property">children</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">child</span> =&gt;</span> {
     
-        <span class="hljs-keyword">if</span> (child.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-stack&#x27;</span>) == <span class="hljs-literal">null</span> &amp;&amp; !<span class="hljs-title function_">isa_canvas</span>(child) &amp;&amp; child.<span class="hljs-property">tagName</span> !== <span class="hljs-string">&#x27;SCRIPT&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (child.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-stack&#x27;</span>) == <span class="hljs-literal">null</span> &amp;&amp; !<span class="hljs-title function_">isa_canvas</span>(child) &amp;&amp; child.<span class="hljs-property">tagName</span> !== <span class="hljs-string">&#x27;SCRIPT&#x27;</span>) {
 
             <span class="hljs-keyword">let</span> dims = child.<span class="hljs-title function_">getBoundingClientRect</span>(),
                 computed = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(child);
@@ -735,7 +735,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> child.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-group&#x27;</span>, name);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> child.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, name);
     });
 };</pre></div></div>
             
@@ -862,11 +862,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p>set the ‘data-stack’ attribute on the stack-to-be element</p>
+              <p>set the ‘data-scrawl-stack’ attribute on the stack-to-be element</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-stack&#x27;</span>, <span class="hljs-string">&#x27;data-stack&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-stack&#x27;</span>, <span class="hljs-string">&#x27;data-scrawl-stack&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -881,7 +881,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-stack&#x27;</span>) != <span class="hljs-literal">null</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-stack&#x27;</span>) != <span class="hljs-literal">null</span>) {
 
         hostinscrawl = artefact[host.<span class="hljs-property">id</span>];
 
@@ -898,11 +898,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p>set the ‘data-group’ attribute on the stack-to-be element</p>
+              <p>set the ‘data-scrawl-group’ attribute on the stack-to-be element</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-group&#x27;</span>, mygroup);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, mygroup);</pre></div></div>
             
         </li>
         
@@ -1027,11 +1027,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getCanvases = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getCanvases = <span class="hljs-keyword">function</span> (<span class="hljs-params">query = <span class="hljs-string">&#x27;[data-scrawl-canvas]&#x27;</span></span>) {
 
     <span class="hljs-keyword">let</span> item;
 
-    <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">el, index</span>) =&gt;</span> {
+    <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(query).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">el, index</span>) =&gt;</span> {
 
         item = <span class="hljs-title function_">addInitialCanvasElement</span>(el);
 
@@ -1054,13 +1054,13 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addInitialCanvasElement = <span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) {
 
-    <span class="hljs-keyword">let</span> mygroup = el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-group&#x27;</span>),
+    <span class="hljs-keyword">let</span> mygroup = el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>),
         myname = el.<span class="hljs-property">id</span> || el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;name&#x27;</span>),
         position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
 
     <span class="hljs-keyword">if</span> (!mygroup) {
 
-        el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-group&#x27;</span>, <span class="hljs-string">&#x27;root&#x27;</span>);
+        el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, <span class="hljs-string">&#x27;root&#x27;</span>);
         mygroup = <span class="hljs-string">&#x27;root&#x27;</span>;
         position = el.<span class="hljs-property">style</span>.<span class="hljs-property">position</span>;
     }
@@ -1254,7 +1254,7 @@
     <span class="hljs-keyword">else</span> host = <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>;
 
     el.<span class="hljs-property">id</span> = myname;
-    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-group&#x27;</span>, mygroup);
+    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, mygroup);
     el.<span class="hljs-property">width</span> = width;
     el.<span class="hljs-property">height</span> = height;
     el.<span class="hljs-property">style</span>.<span class="hljs-property">position</span> = position;

@@ -2179,7 +2179,12 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
-              <p><code>checkEngineScale</code></p>
+              <p><code>checkEngineScale</code>
+DPR is detected in the <code>core/events.js</code> file, but mainly handled here</p>
+<ul>
+<li>We scale the cell by DPR - this should be the only time we touch native scale functionality!</li>
+<li>All the other scaling functionality in SC is handled by computiation - applying the scaling factor to dimensions, start, handle, offset etc values which then get saved in the <code>current</code> equivalent attributes</li>
+</ul>
 
             </div>
             
@@ -2192,7 +2197,7 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">getIgnorePixelRatio</span>()) engine.<span class="hljs-title function_">scale</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> dpr = <span class="hljs-title function_">getPixelRatio</span>();
+            <span class="hljs-keyword">const</span> dpr = <span class="hljs-title function_">getPixelRatio</span>();
             engine.<span class="hljs-title function_">scale</span>(dpr, dpr);
             <span class="hljs-keyword">return</span> dpr;
         }

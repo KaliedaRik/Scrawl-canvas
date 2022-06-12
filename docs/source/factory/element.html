@@ -502,7 +502,7 @@
 <pre><code><span class="hljs-title class_">Stack</span>    ~~&gt; <span class="hljs-title class_">Canvas</span>/<span class="hljs-title class_">Cell</span>  
 <span class="hljs-title class_">Element</span>  ~~&gt; <span class="hljs-title class_">Entity</span> (eg <span class="hljs-title class_">Block</span>)  
 </code></pre>
-<p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
+<p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-scrawl-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
 <ul>
 <li>Stack elements have <code>relative</code> positioning within the DOM</li>
 <li>Element elements have <code>absolute</code> positioning within the Stack</li>
@@ -765,7 +765,7 @@ P = <span class="hljs-title function_">domMix</span>(P);</pre></div></div>
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_dom</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>)) {
 
         <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>,
-            kids = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;[data-corner-div=&quot;sc&quot;]&#x27;</span>);
+            kids = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;[data-scrawl-corner-div=&quot;sc&quot;]&#x27;</span>);
 
         el.<span class="hljs-property">textContent</span> = item;
 
@@ -794,7 +794,7 @@ P = <span class="hljs-title function_">domMix</span>(P);</pre></div></div>
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) {
 
         <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>,
-            kids = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;[data-corner-div=&quot;sc&quot;]&#x27;</span>);
+            kids = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;[data-scrawl-corner-div=&quot;sc&quot;]&#x27;</span>);
 
         el.<span class="hljs-property">innerHTML</span> = item;
 

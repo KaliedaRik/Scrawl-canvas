@@ -624,12 +624,13 @@ P.<span class="hljs-property">action</span> = <span class="hljs-keyword">functio
               </div>
               <p>TODO: work out why filter memoization destroys Safari-based browser performance</p>
 <ul>
-<li>For now, we disable memoization for Safari-based browsers</li>
+<li>For now, we disable memoization for Safari-based browsers
+if (identifier &amp;&amp; workstore[identifier] &amp;&amp; !window.scrawlEnvironmentBrowserDetection.includes(‘safari’)) {</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (identifier &amp;&amp; workstore[identifier] &amp;&amp; !<span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentBrowserDetection</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;safari&#x27;</span>)) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (identifier &amp;&amp; workstore[identifier]) {
 
         workstoreLastAccessed[identifier] = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         <span class="hljs-keyword">return</span> workstore[identifier];
@@ -666,12 +667,13 @@ P.<span class="hljs-property">action</span> = <span class="hljs-keyword">functio
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <ul>
-<li>For now, we disable memoization for Safari-based browsers</li>
+<li>For now, we disable memoization for Safari-based browsers
+if (identifier &amp;&amp; !window.scrawlEnvironmentBrowserDetection.includes(‘safari’)) {</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (identifier &amp;&amp; !<span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentBrowserDetection</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;safari&#x27;</span>)) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (identifier) {
 
             workstore[identifier] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>;
             workstoreLastAccessed[identifier] = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
