@@ -327,14 +327,6 @@ const pinFactory = function (items, canvas, pinTextGroup, pinTextBackgroundGroup
         .addSectionClass('span class="sc-black"', { fill: colors.black })
         .addSectionClass('span class="sc-gray"', { fill: colors.gray })
         .addSectionClass('/span', { fill: 'default' });
-        // .addSectionClass('b', { weight: 'bold' })
-        // .addSectionClass('/b', { weight: 'normal' })
-        // .addSectionClass('strong', { weight: 'bold' })
-        // .addSectionClass('/strong', { weight: 'normal' })
-        // .addSectionClass('i', { style: 'italic' })
-        // .addSectionClass('/i', { style: 'normal' })
-        // .addSectionClass('em', { style: 'italic' })
-        // .addSectionClass('/em', { style: 'normal' });
 
         pinTextGroup.addArtefacts(`${name}-label`);
 
