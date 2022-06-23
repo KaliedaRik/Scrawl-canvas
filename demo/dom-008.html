@@ -11,9 +11,10 @@
 
   <style>
     #mystack {
-      width: 500px;
-      height: 500px;
       margin: 0 auto;
+      border: 1px solid black;
+      width: 600px;
+      height: 600px;
       touch-action: none;
     }
   </style>
@@ -24,13 +25,13 @@
   <h2>3d animated cube</h2>
 
   <div id="mystack" data-scrawl-stack>
-    <div id="cube"></div>
-    <div class="cubeface" id="frontface">FRONT</div>
-    <div class="cubeface" id="rightface">RIGHT</div>
-    <div class="cubeface" id="topface">TOP</div>
-    <div class="cubeface" id="backface">BACK</div>
-    <div class="cubeface" id="bottomface">BOTTOM</div>
-    <div class="cubeface" id="leftface">LEFT</div>
+    <div id="pin"></div>
+    <canvas id="frontface" data-scrawl-canvas></canvas>
+    <canvas id="rightface" data-scrawl-canvas></canvas>
+    <canvas id="topface" data-scrawl-canvas></canvas>
+    <canvas id="backface" data-scrawl-canvas></canvas>
+    <canvas id="bottomface" data-scrawl-canvas></canvas>
+    <canvas id="leftface" data-scrawl-canvas></canvas>
   </div>
 
   <p id="reportmessage"></p>
