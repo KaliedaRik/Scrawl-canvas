@@ -22,6 +22,7 @@ canvas.set({
     start: ['center', 'center'],
     handle: ['center', 'center'],
     trackHere: 'local',
+    offsetZ: 150,
 });
 
 const ball = scrawl.makeWheel({
