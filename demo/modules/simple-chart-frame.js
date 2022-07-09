@@ -19,7 +19,8 @@ let background,
     title, subtitle, 
     yLabelTop, yLabelBottom, 
     xLabelLeft, xLabelRight, 
-    group;
+    group,
+    navigation;
 
 // Magic numbers to define where the chart will go within the grid
 const graphWidth = 90;
@@ -29,6 +30,16 @@ const graphLeft = 10;
 
 const build = function (namespace, canvas, backgroundImage) {
 
+
+    // Accessibility
+    canvas.set({
+        includeInTabNavigation: true,
+    });
+
+    navigation = addArrowNavigation(canvas);
+
+
+    // Build out the frame
     group = scrawl.makeGroup({
 
         name: `${namespace}-group`,
@@ -70,10 +81,6 @@ const build = function (namespace, canvas, backgroundImage) {
         font: '1.5rem Roboto, Arial, sans-serif',
 
         fillStyle: 'black',
-
-        // Adding shadow text to a canvas graphic kills performance in Firefox browsers
-        // shadowColor: 'white',
-        // shadowBlur: 6,
     });
 
     subtitle = title.clone({
@@ -100,9 +107,6 @@ const build = function (namespace, canvas, backgroundImage) {
         font: '0.9rem Roboto, Arial, sans-serif',
 
         fillStyle: 'darkred',
-
-        // shadowColor: 'white',
-        // shadowBlur: 6,
     });
 
     yLabelBottom = yLabelTop.clone({
@@ -162,16 +166,76 @@ const build = function (namespace, canvas, backgroundImage) {
     show();
 };
 
-const kill = () => group.kill(true);
+// Accessibility
+const arrowActions = {
+    up: () => {},
+    right: () => {},
+    down: () => {},
+    left: () => {},
+};
 
-const hide = () => group.visibility = false;
-const show = () => group.visibility = true;
+const setArrowAction = (key, action) => {
+
+    if (key != null && action != null) {
+
+        arrowActions[key] = action;
+    }
+};
+
+const addArrowNavigation = (canvas) => {
+
+    const entityNavigationKeysDown = (e) => {
+
+        const { key } = e;
+
+        // Tab, Enter/Return, Esc
+        if ('Tab' === key || 'Escape' === key) {
+            canvas.domElement.blur();
+            return;
+        }
+
+        // Prevent various combikey events interfering with navigation functionality
+        if ('Shift' === key || 'Alt' === key || 'Ctrl' === key|| 'Meta' === key) return;
+
+        else if ('ArrowLeft' === key) arrowActions.left();
+        else if ('ArrowUp' === key) arrowActions.up();
+        else if ('ArrowRight' === key) arrowActions.right();
+        else if ('ArrowDown' === key) arrowActions.down();
+
+        e.preventDefault();
+    }
+
+    return scrawl.addNativeListener('keydown', entityNavigationKeysDown, canvas.domElement);
+};
+
+
+
+// API
+const kill = () => {
+
+    if (group != null && navigation != null) {
+
+        group.kill(true);
+        navigation();
+    }
+}
+
+const hide = () => {
+
+    if (group != null) group.set({
+        visibility: false,
+    });
+};
+const show = () => {
+
+    if (group != null) group.set({
+        visibility: true,
+    });
+};
 
 const updateTextHelper = function (item, text) {
 
-    item.set({
-        text: text,
-    });
+    if (item != null && text != null) item.set({ text });
 };
 
 const updateTitle = (text) => updateTextHelper(title, text);
@@ -183,9 +247,7 @@ const updateXRight = (text) => updateTextHelper(xLabelRight, text);
 
 const updateBackground = function (asset) {
 
-    background.set({
-        asset: asset,
-    });
+    if (background != null && asset != null) background.set({ asset });
 };
 
 export {
@@ -208,4 +270,6 @@ export {
     updateXRight,
 
     updateBackground,
+
+    setArrowAction,
 };

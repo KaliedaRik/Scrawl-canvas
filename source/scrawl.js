@@ -83,6 +83,7 @@ export {
     releaseCoordinate,
 } from './factory/coordinate.js';
 export { makeCrescent } from './factory/crescent.js';
+export { makeElement } from './factory/element.js';
 export { makeEmitter } from './factory/emitter.js';
 export { makeFilter } from './factory/filter.js';
 export { setFilterMemoizationChoke } from './factory/filterEngine.js';

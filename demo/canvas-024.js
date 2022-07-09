@@ -78,12 +78,40 @@ scrawl.makeWheel({
     startY: 500,
 });
 
+// Make an object to hold functions we'll use for UI
+const setCursorTo = {
+
+    auto: () => {
+        canvas.set({
+            css: {
+                cursor: 'auto',
+            },
+        });
+    },
+    pointer: () => {
+        canvas.set({
+            css: {
+                cursor: 'pointer',
+            },
+        });
+    },
+    grabbing: () => {
+        canvas.set({
+            css: {
+                cursor: 'grabbing',
+            },
+        });
+    },
+};
 
 // Create a Group to hold the draggable artefacts, for easier user action collision detection
 let pins = scrawl.makeGroup({
 
     name: 'my-pins',
     host: canvas.base.name,
+    checkForEntityHover: true,
+    onEntityHover: setCursorTo.pointer,
+    onEntityNoHover: setCursorTo.auto,
 
 }).addArtefacts('pin-1', 'pin-2', 'pin-3', 'pin-4', 'pin-5', 'pin-6', 'pin-7');
 
@@ -194,6 +222,8 @@ scrawl.makeDragZone({
     endOn: ['up', 'leave'],
     exposeCurrentArtefact: true,
     preventTouchDefaultWhenDragging: true,
+    updateOnStart: setCursorTo.grabbing,
+    updateOnEnd: setCursorTo.pointer,
 });
 
 

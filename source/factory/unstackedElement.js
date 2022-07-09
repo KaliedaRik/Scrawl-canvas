@@ -105,6 +105,8 @@ P.addCanvas = function (items = Ωempty) {
 
         if (style.position === 'static') style.position = 'relative';
 
+        canvas.id = `${this.name}-canvas`;
+        
         el.prepend(canvas);
 
         let art = makeCanvas({

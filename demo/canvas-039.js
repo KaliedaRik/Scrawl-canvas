@@ -40,11 +40,40 @@ const mycell = canvas.buildCell({
 });
 
 
+// Make an object to hold functions we'll use for UI
+const setCursorTo = {
+
+    auto: () => {
+        canvas.set({
+            css: {
+                cursor: 'auto',
+            },
+        });
+    },
+    pointer: () => {
+        canvas.set({
+            css: {
+                cursor: 'pointer',
+            },
+        });
+    },
+    grabbing: () => {
+        canvas.set({
+            css: {
+                cursor: 'grabbing',
+            },
+        });
+    },
+};
+
 // Create the drag group
 scrawl.makeGroup({
 
     name: 'drag-group',
-    host: 'test-cell'
+    host: 'test-cell',
+    checkForEntityHover: true,
+    onEntityHover: setCursorTo.pointer,
+    onEntityNoHover: setCursorTo.auto,
 })
 
 // Create draggable entitys
@@ -130,6 +159,7 @@ const demoAnimation = scrawl.makeRender({
 
     // Non-base Cells do not routinely update their local here object, has to be triggered manually
     commence: () => mycell.updateHere(),
+    afterCompile: () => canvas.checkHover(),
     afterShow: report,
 });
 
@@ -143,6 +173,8 @@ scrawl.makeDragZone({
     coordinateSource: mycell,
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
+    updateOnStart: setCursorTo.grabbing,
+    updateOnEnd: setCursorTo.pointer,
 });
 
 // For this demo we will suppress touchmove functionality over the canvas

@@ -798,6 +798,9 @@ interface CanvasFactoryInputs extends BaseMixinInputs, DomMixinInputs, DisplaySh
     role?: string;
     backgroundColor?: string;
     composite?: GlobalCompositeOperationValues;
+    checkForEntityHover?: boolean;
+    onEntityHover?: DefaultInputFunction;
+    onEntityNoHover?: DefaultInputFunction;
 }
 
 interface CanvasSaveInputs extends CanvasFactoryInputs, SaveInputs {}
@@ -850,6 +853,7 @@ interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaM
     filter?: string;
     flipReverse?: boolean;
     flipUpend?: boolean;
+    includeInCascadeEventActions?: boolean;
     shown?: boolean;
     showOrder?: number;
     smoothFont?: boolean;
@@ -858,6 +862,9 @@ interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaM
     stashX?: StringOrNumberInput;
     stashY?: StringOrNumberInput;
     useAsPattern?: boolean;
+    checkForEntityHover??: boolean;
+    onEntityHover??: DefaultInputFunction;
+    onEntityNoHover??: DefaultInputFunction;
 }
 
 interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, CascadeMixinFunctions, AssetMixinFunctions, PatternMixinFunctions, FilterMixinFunctions {
@@ -1372,10 +1379,14 @@ interface GroupFactoryInputs extends BaseMixinInputs, FilterMixinInputs, GroupFa
     artefacts?: string[];
     delta?: GroupFactoryDeltaInputs;
     host?: GroupHosts;
+    noFilters?: boolean;
     order?: number;
     stashOutput?: boolean;
     stashOutputAsAsset?: boolean;
     visibility?: boolean;
+    checkForEntityHover?: boolean;
+    onEntityHover?: DefaultInputFunction;
+    onEntityNoHover?: DefaultInputFunction;
 }
 
 interface GroupSaveInputs extends GroupFactoryInputs, SaveInputs {}
@@ -2689,6 +2700,7 @@ interface MakeDragZoneInputs {
     exposeCurrentArtefact?: boolean;
     preventTouchDefaultWhenDragging?: boolean;
     resetCoordsToZeroOnTouchEnd?: boolean;
+    processOrder?: number;
 }
 
 type DragZoneOutput = () => HitOutput | boolean;

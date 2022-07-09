@@ -743,6 +743,13 @@ export default function (P = Ωempty) {
         if (this.group && this.group.type === 'Group') this.group.addArtefacts(this.name);
     };
 
+// __noFilters__
+    S.noFilters = function (item) {
+
+        this.noFilters = item;
+        this.dirtyFilterIdentifier = true;
+    };
+
 
 // #### Prototype functions
 

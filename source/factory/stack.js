@@ -94,6 +94,13 @@ const Stack = function (items = Ωempty) {
 
     if (el) {
 
+        const ds = el.dataset;
+
+        if (ds.isResponsive) {
+
+            this.isResponsive = true;
+        }
+
         if (el.getAttribute('data-scrawl-group') === 'root') {
 
             pushUnique(rootElements, this.name);
@@ -424,6 +431,13 @@ P.addNewElement = function (items) {
         items.host = this.name;
 
         if (!items.position) items.position = 'absolute';
+
+        if (items.dimensions && Array.isArray(items.dimensions)) {
+
+            items.width = items.dimensions[0] || 100;
+            items.height = items.dimensions[1] || 100;
+        }
+
         if (!xt(items.width)) items.width = 100;
         if (!xt(items.height)) items.height = 100;
 

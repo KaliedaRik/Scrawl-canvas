@@ -23,7 +23,7 @@
 
 // #### Imports
 import { constructors, cell, artefact, group, entity, asset } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, Ωempty, λnull } from '../core/utilities.js';
 import { scrawlCanvasHold } from '../core/document.js';
 
 import { filterEngine } from './filterEngine.js';
@@ -44,6 +44,11 @@ const Group = function (items = Ωempty) {
     this.artefactBuckets = [];
 
     this.set(this.defs);
+
+    this.onEntityHover = λnull;
+    this.onEntityNoHover = λnull;
+    this.isHovering = null;
+
     this.set(items);
 
     return this;
@@ -79,12 +84,22 @@ let defaultAttributes = {
 
 // __regionRadius__ - positive Number (measured in px), used as an initial test as part of collision detection functionality
     regionRadius: 0,
+
+// __checkForEntityHover__ - we can trigger groups, as part of the Display cycle, to check if any of their entitys are currently hittable (the mouse cursor is hovering over them) and run functions based on changes in hover state. This is not the same as canvas `cascadeEventActions`
+    checkForEntityHover: false,
+
+// __onEntityHover__ - define tasks to be performed for `down` events
+    onEntityHover: null,
+
+// __onEntityNoHover__ - define tasks to be performed for `up` events
+    onEntityNoHover: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['artefactBuckets', 'batchResort']);
+P.packetFunctions = pushUnique(P.packetFunctions, ['onEntityHover', 'onEntityNoHover']);
 
 
 // #### Clone management
@@ -106,6 +121,9 @@ P.postCloneAction = function(clone, items) {
         host.addGroups(clone.name);
         if (!clone.host) clone.host = host.name;
     }
+
+    if (this.onEntityHover) clone.onEntityHover = this.onEntityHover;
+    if (this.onEntityNoHover) clone.onEntityNoHover = this.onEntityNoHover;
 
     return clone;
 };
@@ -198,6 +216,12 @@ S.order = function (item) {
     }
 };
 
+// __noFilters__
+S.noFilters = function (item) {
+
+    this.noFilters = item;
+    this.dirtyFilterIdentifier = true;
+};
 
 // #### Prototype functions
 
@@ -789,8 +813,21 @@ P.getAllArtefactsAt = function (items) {
             }
         }
     }
-
     releaseCell(myCell);
+
+    if (this.checkForEntityHover) {
+
+        const foundArtefacts = (results.length) ? true : false,
+            isHovering = this.isHovering;
+
+        if (isHovering !== foundArtefacts) {
+
+            this.isHovering = foundArtefacts;
+
+            if (foundArtefacts) this.onEntityHover();
+            else this.onEntityNoHover();
+        }
+    }
     return results;
 };
 

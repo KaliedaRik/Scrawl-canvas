@@ -1,5 +1,5 @@
 // # Demo Canvas 005 
-// Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
+// Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween; trigger canvas hover and drag UX
 
 // [Run code](../../demo/canvas-005.html)
 import {
@@ -17,11 +17,11 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 
 // Build the gradient objects
-let myRadial = makeRadialGradient({
+const myRadial = makeRadialGradient({
     name: 'circle-waves',
 
     startX: '30%',
@@ -196,19 +196,54 @@ makeWheel({
 
 
 // #### User interaction
+// Make an object to hold functions we'll use for UI
+const setCursorTo = {
+
+    auto: () => {
+        canvas.set({
+            css: {
+                cursor: 'auto',
+            },
+        });
+    },
+    pointer: () => {
+        canvas.set({
+            css: {
+                cursor: 'pointer',
+            },
+        });
+    },
+    grabbing: () => {
+        canvas.set({
+            css: {
+                cursor: 'grabbing',
+            },
+        });
+    },
+};
+
 // Create the drag-and-drop zone
-let current = makeDragZone({
+const current = makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],
     exposeCurrentArtefact: true,
     preventTouchDefaultWhenDragging: true,
+    updateOnStart: setCursorTo.grabbing,
+    updateOnEnd: setCursorTo.pointer,
+});
+
+// Implement the hover check on the Canvas wrapper
+canvas.set({
+    checkForEntityHover: true,
+    onEntityHover: setCursorTo.pointer,
+    onEntityNoHover: setCursorTo.auto,
 });
 
 
 // #### Scene animation
 // Tween, and the engine used by the tween to calculate values
-let tweenEngine = (start, change, position) => {
+const tweenEngine = (start, change, position) => {
 
     let temp = 1 - position,
         val;
@@ -222,7 +257,7 @@ let tweenEngine = (start, change, position) => {
     return val % 1000;
 };
 
-let tweeny = makeTween({
+const tweeny = makeTween({
     name: 'mytween',
     targets: 'colored-pipes',
     duration: 5000,
@@ -256,7 +291,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Function to animate the gradients
-let animateGradients = function () {
+const animateGradients = function () {
 
     myRadial.updateByDelta();
 
@@ -277,7 +312,15 @@ makeRender({
 
     name: 'demo-animation',
     target: canvas,
+
+    // Gradient animation is not automatically handled by the Display cycle
+    // - instead we have to trigger it manually
     commence: animateGradients,
+
+    // We have to tell the canvas to check UI for hovering states every Display cycle
+    afterCompile: () => canvas.checkHover(),
+
+    // Display the current frame rate - calculated at the end of each Display cycle
     afterShow: report,
 });
 

@@ -1,5 +1,5 @@
 // # Demo Canvas 062
-// Gradients stress test
+// Group and ungroup entitys; create a bespoke drag-drop UX
 
 // [Run code](../../demo/filters-062.html)
 import * as scrawl from '../source/scrawl.js';
@@ -40,6 +40,10 @@ for (let i = 0; i < 100; i++) {
         roll: Math.random() * 360,
         fillStyle: colorEngine.getRangeColor(Math.random()),
         globalAlpha: 0.25,
+        delta: {
+            roll: 0.8,
+        },
+        noDeltaUpdates: true,
     });
 }
 
@@ -118,28 +122,21 @@ const downAction = (e) => {
 
             boxGroup.setArtefacts({
                 globalAlpha: 0.25,
-                delta: {
-                    roll: 0,
-                },
+                noDeltaUpdates: true,
             });
 
-            const { here } = canvas;
+            const {x, y} = here;
 
-            if (here) {
+            startX = x;
+            startY = y;
 
-                const {x, y} = here;
+            referenceBlock.set({
+                start: [x, y],
+                dimensions: [0, 0],
+            });
 
-                startX = x;
-                startY = y;
-
-                referenceBlock.set({
-                    start: [x, y],
-                    dimensions: [0, 0],
-                });
-
-                isGathering = true;
-                isMoving = false;
-            }
+            isGathering = true;
+            isMoving = false;
         }
     }
 }
@@ -186,9 +183,7 @@ const doGathering = () => {
 
         gatherGroup.setArtefacts({
             globalAlpha: 0.25,
-            delta: {
-                roll: 0,
-            },
+            noDeltaUpdates: true,
         });
 
         gatherGroup.clearArtefacts();
@@ -212,9 +207,7 @@ const doGathering = () => {
 
         gatherGroup.setArtefacts({
             globalAlpha: 1,
-            delta: {
-                roll: 0.8,
-            },
+            noDeltaUpdates: false,
         });
     }
 };

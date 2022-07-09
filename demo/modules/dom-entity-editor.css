@@ -1,0 +1,85 @@
+/*
+ # Demo Modules 005
+ Accessible GUI-based simple canvas editor
+
+ Related files:
+ + [Accessible GUI-based simple canvas editor - main demo](../modules-005.html)
+
+
+ #### Usage
+ TODO: add documentation
+*/
+
+.sc-dee-container {
+    font: 14px Arial, sans-serif;
+    padding: 1em;
+    background-color: beige;
+}
+
+.sc-dee-title {
+    color: black;
+    text-align: left;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.sc-dee-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 4px;
+}
+@media (min-width: 800px) { 
+    .sc-dee-form {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+@media (min-width: 1200px) { 
+    .sc-dee-form {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+@media (min-width: 1600px) { 
+    .sc-dee-form {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
+
+.sc-dee-field-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px;
+    padding-left: 6px;
+    margin-bottom: 4px;
+    border: 1px solid #999;
+}
+
+.sc-dee-field-controller {
+    padding: 1px 2px;
+    border: 1px solid #999;
+}
+
+.sc-dee-field-container input {
+    min-width: 200px;
+}
+.sc-dee-field-container select {
+    min-width: 200px;
+}
+
+.sc-dee-field-color-0 {
+    background-color: pink;
+}
+.sc-dee-field-color-1 {
+    background-color: honeydew;
+}
+.sc-dee-field-color-2 {
+    background-color: lavender;
+}
+.sc-dee-field-color-3 {
+    background-color: aliceblue;
+}
+.sc-dee-field-color-4 {
+    background-color: palegoldenrod;
+}

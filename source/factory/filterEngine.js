@@ -3032,19 +3032,22 @@ P.theBigActionsObject = {
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            i, c;
+            i, c, a;
 
-        let {opacity, red, green, blue, alpha, lineOut} = requirements;
+        let {opacity, red, green, blue, alpha, excludeAlpha, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == red) red = 0;
         if (null == green) green = 0;
         if (null == blue) blue = 0;
         if (null == alpha) alpha = 255;
+        if (null == excludeAlpha) excludeAlpha = false;
 
         for (i = 0; i < len; i += 4) {
 
-            if (iData[i + 3]) {
+            a = 1 + 3;
+
+            if (iData[a]) {
 
                 c = i;
                 oData[c] = red;
@@ -3056,7 +3059,7 @@ P.theBigActionsObject = {
                 oData[c] = blue;
 
                 c++;
-                oData[c] = alpha;
+                oData[c] = (excludeAlpha) ? iData[a] : alpha;
             }
         }
 
@@ -4575,7 +4578,7 @@ P.theBigActionsObject = {
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            i, r, g, b, a, red, green, blue, gray, all, allR, allG, allB;
+            i, r, g, b, a, red, green, blue, alpha, gray, all, allR, allG, allB;
 
         let {opacity, weights, useMixedChannel, lineOut} = requirements;
 
@@ -4601,6 +4604,7 @@ P.theBigActionsObject = {
             red = iData[r];
             green = iData[g];
             blue = iData[b];
+            alpha = iData[a];
 
             if (useMixedChannel) {
 
@@ -4622,7 +4626,7 @@ P.theBigActionsObject = {
                 oData[r] = red + weights[red * 4];
                 oData[g] = green + weights[(green * 4) + 1];
                 oData[b] = blue + weights[(blue * 4) + 2];
-                oData[a] = iData[a];
+                oData[a] = alpha + weights[(alpha * 4) + 3];
             }
         }
         if (lineOut) this.processResults(output, input, 1 - opacity);

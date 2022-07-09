@@ -192,6 +192,8 @@ P.addCanvas = function (items = Ωempty) {
         let canvas = document.createElement('canvas'),
             el = this.domElement;
 
+        canvas.id = `${this.name}-canvas`;
+        
         let rect = el.getBoundingClientRect(),
             style = window.getComputedStyle(el);
 

@@ -33,7 +33,7 @@
 
 
 // #### Imports
-import { animation, filter } from "./library.js";
+import { animation } from "./library.js";
 
 // Local variables 
 let doAnimation = false,

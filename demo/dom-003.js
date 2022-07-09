@@ -10,8 +10,7 @@ import { reportSpeed } from './utilities.js';
 // #### Scene setup
 // Create some variables for use elsewhere in the script
 let artefact = scrawl.library.artefact,
-    stack = artefact.mystack,
-    current, here;
+    stack = artefact.mystack;
 
 
 // Create a new group to which we can assign the artefacts we want to drag around the stack

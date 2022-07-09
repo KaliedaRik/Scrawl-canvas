@@ -1,5 +1,5 @@
 // # Demo Canvas 063
-// Semi-accessible Minimap
+// Semi-accessible Minimap; multiple drag zones
 
 // [Run code](../../demo/filters-063.html)
 import * as scrawl from '../source/scrawl.js';
@@ -79,12 +79,12 @@ const mainCellPicture = scrawl.makePicture({
 
 // Functionality to enable drag-drop on main Cell
 scrawl.makeDragZone({
-
     zone: canvas,
     collisionGroup: "my-circle-group",
     coordinateSource: mainCell,
     endOn: ["up", "leave"],
-    preventTouchDefaultWhenDragging: true
+    preventTouchDefaultWhenDragging: true,
+    processingOrder: 2,
 });
 
 // Build out the smaller map Cell (200px x 200px)
@@ -103,6 +103,16 @@ const myMapPivot = scrawl.makeBlock({
     start: [displayWidth - mapDimensions, 0],
     dimensions: [mapDimensions, mapDimensions],
     method: "none"
+});
+
+// Functionality so we can drag-drop the map Cell around the base Cell
+scrawl.makeDragZone({
+    zone: canvas,
+    collisionGroup: "map-pivot-group",
+    coordinateSource: canvas.base,
+    endOn: ["up", "leave"],
+    preventTouchDefaultWhenDragging: true,
+    processingOrder: 1,
 });
 
 const mapCell = canvas.buildCell({
@@ -180,47 +190,10 @@ const frameDragZone = scrawl.makeDragZone({
     endOn: ["up", "leave"],
     updateWhileMoving: checkFrameDrag,
     preventTouchDefaultWhenDragging: true,
-    exposeCurrentArtefact: true
+    exposeCurrentArtefact: true,
+    processingOrder: 0,
 });
 
-// Functionality so we can drag-drop the map Cell around the base Cell
-let draggingMap = false;
-scrawl.addListener("down", (e) => {
-
-    if (e) {
-
-        let hit = pivotGroup.getArtefactAt(canvas.here);
-
-        if (hit) {
-
-            e.preventDefault();
-            e.returnValue = false;
-
-            let mapHit = myFrameGroup.getArtefactAt(mapCell.here);
-
-            if (!mapHit) {
-
-                draggingMap = true;
-                myMapPivot.pickupArtefact(canvas.here);
-            }
-        }
-    }
-}, canvas.domElement);
-
-scrawl.addListener(["up", "leave"], (e) => {
-
-    if (e) {
-
-        e.preventDefault();
-        e.returnValue = false;
-
-        if (draggingMap) {
-
-            myMapPivot.dropArtefact();
-            draggingMap = false;
-        }
-    }
-}, canvas.domElement);
 
 // Add a label to the map Cell
 scrawl.makePhrase({

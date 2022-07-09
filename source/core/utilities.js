@@ -6,12 +6,12 @@ import * as library from "./library.js";
 
 // #### Functions
 
-// __addStrings__ adds the two arguments together and returns a percentage string value if either of the values was a string; 
+// __addStrings__ adds the two arguments together and returns a percentage string value if either of the values was a string; or a sum of the two numbers.
 //
 // Examples:
 // ```
 // addStrings(20, 40);
-// -> '60%'
+// -> 60
 //    
 // addStrings('20%', 40);
 // -> '60%'
@@ -21,6 +21,9 @@ import * as library from "./library.js";
 //  
 // addStrings('20%', '40%');
 // -> '60%'
+//  
+// addStrings('center', 3);
+// -> '53%'
 // ```
 
 const addStrings = (current, delta) => {
@@ -28,6 +31,11 @@ const addStrings = (current, delta) => {
     if (!xt(delta)) throw new Error(`core/utilities addStrings() error - no delta argument supplied ${current}, ${delta}`);
 
     if ((delta != null)) {
+
+        // Correct for labels
+        if ('left' === current || 'top' === current) current = '0%';
+        else if ('right' === current || 'bottom' === current) current = '100%';
+        else if ('center' === current) current = '50%';
 
         let stringFlag = (current.substring || delta.substring) ? true : false;
 

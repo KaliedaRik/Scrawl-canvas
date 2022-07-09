@@ -218,6 +218,8 @@ let defaultAttributes = {
 // __controller__ - A reference link to the displayed &lt;canvas> element's Scrawl-canvas wrapper (factory/canvas.js) - only 'base' cells require this handle.
     controller: null,
 
+// __includeInCascadeEventActions__ - if a non-base Cell has its `shown` flag set to true, then it is automatically included in CascadeEventActions functionality. In situations where we don't want the Cell to _directly_ appear in the canvas, but do want to include it in CascadeEventActions, then we can set this flag to `true`
+    includeInCascadeEventActions: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -522,6 +524,26 @@ S.smoothFont = function (item) {
             }
         }
     }
+};
+
+// `checkForEntityHover`, `onEntityHover`, `onEntityNoHover` - these are group-specific attributes which we can set on the Cell's named group via the Cell's wrapper
+S.checkForEntityHover = function (item) {
+
+    group[this.name].set({
+        checkForEntityHover: item,
+    });
+};
+S.onEntityHover = function (item) {
+
+    group[this.name].set({
+        onEntityHover: item,
+    });
+};
+S.onEntityNoHover = function (item) {
+
+    group[this.name].set({
+        onEntityNoHover: item,
+    });
 };
 
 

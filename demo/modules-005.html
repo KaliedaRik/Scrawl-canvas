@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Demo Modules 005</title>
+
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <!-- the DOM entity editor, being part of the page, can be styled using normal CSS -->
+  <link href="modules/dom-entity-editor.css" rel="stylesheet" />
+
+  <style>
+    .outer-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-column-gap: 2px;
+      grid-template-rows: auto;
+      margin-bottom: 1em;
+      border: 1px solid black;
+    }
+    .outer-container div {
+      box-sizing: border-box;
+      align-self: center;
+    }
+    .canvas-container {
+      margin: 0 auto;
+      border-width: 0;
+    }
+    #my-canvas-dahsboard {
+      border-top: 1px solid black;
+    }
+    h3 {
+      text-align: left;
+    }
+    .centered {
+      text-align: center;
+    }
+    code {
+      display: inline-block;
+      color: #900;
+      font-size: 90%;
+      padding: 0 4px;
+      border: 1px solid black;
+      background-color: aliceblue;
+      border-radius: 6px;
+    }
+    .honeydew {
+      background-color: honeydew;
+    }
+    li {
+      margin-bottom: 0.55em;
+    }
+    .history-container {
+      max-width: 800px;
+      margin: 0 auto;
+      border: 1px solid green;
+    }
+    #reportmessage {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background-color: #8fc290;
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Modules test 005</h1>
+  <h2>Accessible GUI-based simple canvas editor</h2>
+  <h3 class="centered">Instructions for using the editor appear below the canvas</h3>
+
+  <p id="reportmessage"></p>
+
+  <div class="outer-container">
+    <div class="canvas-container">
+      <canvas 
+        id="scene-canvas" 
+        data-scrawl-canvas 
+        data-is-responsive="true" 
+        data-base-background-color="honeydew"
+        data-fit="cover"
+      ></canvas>
+    </div>
+    <div id="scene-canvas-dahsboard">This is where the dashboard controls will go</div>
+  </div>
+
+  <div class="history-container">
+    <canvas 
+      id="history-canvas" 
+      data-scrawl-canvas 
+      data-is-responsive="true" 
+    ></canvas>
+  </div>
+
+  <h3>Canvas</h3>
+  <ul>
+    <li>The canvas element is resizable, by dragging its bottom-right corner</li>
+    <li>The entitys on the canvas are draggable</li>
+    <li>To move an (unselected) entity around the canvas using the keyboard:</li>
+    <ul>
+      <li><code>TAB</code> or <code>ALT + TAB</code> to focus on the canvas</li>
+      <li><code>ARROWS</code> to navigate between entitys - only one entity can be <b>highlighted</b> at any time</li>
+      <li><code>SHIFT + ARROWS</code> to move the <b>highlighted</b> entity</li>
+    </ul>
+  </ul>
+
+  <h3>Minimap</h3>
+  <ul>
+    <li>Use <code>ALT + BACKSPACE</code> to show/hide the minimap</li>
+    <li>The minimap is draggable</li>
+    <li><code>ALT + SHIFT + ARROWS</code> also moves the minimap (when the canvas element is focussed)</li>
+    <li>Move around the canvas by dragging the red rectangle around the minimap</li>
+    <li><code>ALT + ARROWS</code> will also move the red rectangle around the minimap</li>
+    <li>The red rectangle should adapt its dimensions when resizing the canvas element</li>
+  </ul>
+
+  <h3>Entity selection</h3>
+  <ul>
+    <li>Use <code>SHIFT + CLICK</code> to select an entity</li>
+    <li><code>SHIFT + CLICK</code> on a selected entity will unselect it</li>
+    <li>On the keyboard, <code>RETURN</code> will select/unselect the currently <b>highlighted</b> entity</li>
+    <li><code>BACKSPACE</code> will clear all the currently selected entitys</li>
+    <li>Multiple entitys can be selected, for batch editing</li>
+  </ul>
+
+  <h3>Editing selected entitys</h3>
+  <ul>
+    <li>When one or more entitys are selected, the <b>batch edit GUI</b> will display</li>
+    <li>The GUI allows the user to move, scale and rotate the selected entitys in various ways.</li>
+    <li>It consists of three circles: a central <code class="honeydew">MOVE</code> pin and two orbiting pins labelled <code class="honeydew">ROLL</code> and <code class="honeydew">SCALE</code></li>
+  </ul>
+
+  <p><i>Moving</i></p>
+  <ul>
+    <li>The selected group of entitys can be moved by drag-dropping the MOVE pin or, using the keyboard, by pressing the <code>W</code> (up), <code>A</code> (left), <code>S</code> (down) and <code>D</code> (right) keys</li>
+    <li>To change its position of the <code class="honeydew">MOVE</code> pin without moving the selected entitys alongside it, hold down the <code>SHIFT</code> key while performing the drag-drop action; this can also be done on the keyboard by holding down the shift key while pressing the <code class="honeydew">WASD</code> keys</li>
+    <li>By default the move keys will shift the pin/group by 1px in the desired direction; this delta value can be changed at any time using the <code>Q</code> key to bring up an alert form</li>
+  </ul>
+
+  <p><i>Scaling</i></p>
+  <ul>
+    <li>To scale the selected group, drag-drop the <code class="honeydew">SCALE</code> pin; scaling is done using the <code class="honeydew">MOVE</code> pin as the reference point for the action</li>
+    <li>The same operation can be performed using the keyboard - <code>N</code> to scale down, <code>M</code> to scale up</li>
+    <li>To scale the entitys without scaling the selected group, hold down the <code>SHIFT</code> key while performing the drag-drop action or pressing the scale keys</li>
+    <li>By default the scale keys will scale the group/entitys by a factor of 0.01 in either direction; this delta value can be changed at any time using the <code>B</code> key to bring up an alert form</li>
+  </ul>
+
+  <p><i>Rotating</i></p>
+  <ul>
+    <li>To rotate the selected group, drag-drop the <code class="honeydew">ROLL</code> pin; rotation is done using the <code class="honeydew">MOVE</code> pin as the reference point for the action</li>
+    <li>The same operation can be performed using the keyboard - <code>K</code> to rotate clockwise, <code>J</code> to rotate anti-clockwise</li>
+    <li>To rotate the entitys in-place, hold down the <code>SHIFT</code> key while performing the drag-drop action or pressing the rotate keys</li>
+    <li>By default the rotate keys will rotate the group/entitys by 0.2 degrees in either direction; this delta value can be changed at any time using the <code>H</code> key to bring up an alert form</li>
+  </ul>
+
+  <p><i>Editing other entity attributes</i></p>
+  <ul>
+    <li>Various other entity properties can be edited using the <b>dashboard panel</b>, which appears when entitys are selected</li>
+    <li>For a single selected entity, the dashboard panel will include a comprehensive list of attributes; these attributes vary by the type of entity selected</li>
+    <li>If more than one entity has been selected, the dashboard panel will display a much more limited set of common attributes for editing</li>
+  </ul>
+
+  <p><i>Non-QWERTY keyboards</i></p>
+  <ul>
+    <li>The keyboard shortcuts can be updated for non-western and non-QWERTY keyboards using <button id="update-keyboard-shortcuts-action">this alert form</button></li>
+  </ul>
+
+  <h3>Entity copy, paste and delete</h3>
+  <ul>
+    <li>The currently selected entitys can be copied using the normal <code>CTRL + C</code> keyboard combination</li>
+    <li>They can also be deleted using the <code>CTRL + X</code> keyboard combination</li>
+    <li>To paste a copied selection onto the canvas, or restore the deleted selection, use the <code>CTRL + V</code> keyboard combination</li>
+  </ul>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li></li>
+    </ul>
+
+    <p><b>Touch test:</b> not required</p>
+
+    <p><a href="../docs/demo/modules-005">Annotated code</a></p>
+  </div>
+
+  <script src="modules-005.js" type="module"></script>
+
+</body>
+
+</html>

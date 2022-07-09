@@ -92,8 +92,13 @@ export default function (P = Ωempty) {
                 pushUnique(newMimic.mimicked, name);
 
                 this.mimic = newMimic;
-                this.dirtyStampPositions = true;
-                this.dirtyStampHandlePositions = true;
+
+                if (this.useMimicDimensions) this.dirtyDimensions = true;
+                if (this.useMimicScale) this.dirtyScale = true;
+                if (this.useMimicStart) this.dirtyStart = true;
+                if (this.useMimicHandle) this.dirtyHandle = true;
+                if (this.useMimicOffset) this.dirtyOffset = true;
+                if (this.useMimicRotation) this.dirtyRotation = true;
             }
         }
     };

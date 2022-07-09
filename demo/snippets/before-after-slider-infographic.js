@@ -944,3 +944,5 @@ export default function (el) {
     // #### Return the snippet output
     return snippet;
 };
+
+console.log(scrawl.library);

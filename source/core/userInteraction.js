@@ -757,9 +757,9 @@ const observeAndUpdate = function (items = Ωempty) {
 // + __.collisionGroup__ - String name of Group object, or Group object itself
 // + __.startOn__ - Array of Strings
 // + __.endOn__ - Array of Strings
-// + __.updateOnStart__ - Function, or a `set` object to be applied to the current artefact
-// + __.updateOnEnd__ - Function, or a `set` object to be applied to the current artefact
-// + __.updateWhileMoving__ - Function to be run while drag is in progress
+// + __.updateOnStart__, __.updateOnShiftStart__ - Function, or a `set` object to be applied to the current artefact
+// + __.updateOnEnd__, __.updateOnShiftEnd__ - Function, or a `set` object to be applied to the current artefact
+// + __.updateWhileMoving__, __.updateWhileShiftMoving__ - Function to be run while drag is in progress
 // + __.exposeCurrentArtefact__ - Boolean (default: false)
 // + __.preventTouchDefaultWhenDragging__ - Boolean (default: false)
 // + __.resetCoordsToZeroOnTouchEnd__ - Boolean (default: true)
@@ -773,9 +773,28 @@ const observeAndUpdate = function (items = Ωempty) {
 // NOTE: drag-and-drop functionality using this factory function __is not guaranteed__ for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.
 
 // `Exported function` (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.
-const makeDragZone = function (items = Ωempty) {
+const dragZones = {};
 
-    let {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, updateWhileMoving, exposeCurrentArtefact, preventTouchDefaultWhenDragging, resetCoordsToZeroOnTouchEnd} = items
+const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveListeners) {
+
+    let {
+        zone, 
+        coordinateSource, 
+        collisionGroup, 
+        startOn, 
+        endOn, 
+        updateOnStart, 
+        updateOnEnd, 
+        updateWhileMoving, 
+        updateOnShiftStart, 
+        updateOnShiftEnd, 
+        updateWhileShiftMoving, 
+        updateOnPrematureExit,
+        exposeCurrentArtefact, 
+        preventTouchDefaultWhenDragging, 
+        resetCoordsToZeroOnTouchEnd, 
+        processingOrder,
+    } = items;
 
     // `zone` is required
     // + must be either a Canvas or Stack wrapper, or a wrapper's String name
@@ -823,20 +842,33 @@ const makeDragZone = function (items = Ωempty) {
     if (preventTouchDefaultWhenDragging == null) preventTouchDefaultWhenDragging = false;
     if (resetCoordsToZeroOnTouchEnd == null) resetCoordsToZeroOnTouchEnd = true;
 
-    // We can only drag one artefact at a time; that artefact - alongside the hit coordinate's x and y values -  is stored in the `current` variable
-    let current = false;
-
-    // `updateOnStart`, `updateOnEnd` - if supplied, then need to be functions
+    // `updateOnStart`, `updateOnEnd`, `updateOnShiftStart`, `updateOnShiftEnd` - if supplied, then needs to be key:value objects which will be applied to the entity (using set) or, alternatively, a callback function
     if (isa_obj(updateOnStart)) updateOnStart = function () { current.artefact.set(items.updateOnStart) };
     if (!isa_fn(updateOnStart)) updateOnStart = λnull;
+
+    if (isa_obj(updateOnShiftStart)) updateOnShiftStart = function () { current.artefact.set(items.updateOnShiftStart) };
+    if (!isa_fn(updateOnShiftStart)) updateOnShiftStart = updateOnStart;
 
     if (isa_obj(updateOnEnd)) updateOnEnd = function () { current.artefact.set(items.updateOnEnd) };
     if (!isa_fn(updateOnEnd)) updateOnEnd = λnull;
 
+    if (isa_obj(updateOnShiftEnd)) updateOnShiftEnd = function () { current.artefact.set(items.updateOnShiftEnd) };
+    if (!isa_fn(updateOnShiftEnd)) updateOnShiftEnd = updateOnEnd;
+
+    // `updateWhileMoving`, `updateWhileShiftMoving` - if supplied, needs to be a callback function
     if (!isa_fn(updateWhileMoving)) updateWhileMoving = λnull;
+    if (!isa_fn(updateWhileShiftMoving)) updateWhileShiftMoving = updateWhileMoving;
+
+    // `updateOnPrematureExit` - if supplied, needs to be a callback function
+    if (!isa_fn(updateOnPrematureExit)) updateOnPrematureExit = λnull;
 
     // `exposeCurrentArtefact` - if supplied, then needs to be a boolean
     if (!isa_boolean(exposeCurrentArtefact)) exposeCurrentArtefact = false;
+
+    if (processingOrder == null) processingOrder = 0;
+
+    // We can only drag one artefact at a time; that artefact - alongside the hit coordinate's x and y values -  is stored in the `current` variable
+    let current = false;
 
     const checkE = function (e) {
 
@@ -867,61 +899,171 @@ const makeDragZone = function (items = Ωempty) {
         if (current) {
 
             current.artefact.pickupArtefact(coordinateSource);
-            updateOnStart();
+            if (e.shiftKey) updateOnShiftStart(e);
+            else updateOnStart(e);
         }
+        return {
+            current,
+            move,
+            drop,
+        };
     };
 
     const move = function (e = {}) {
 
-        checkE(e);
+        if (current) {
 
-        let type = e.type;
-        if (type === 'touchmove') touchAction(e);
+            checkE(e);
 
-        updateWhileMoving();
+            let type = e.type;
+            if (type === 'touchmove') touchAction(e);
+
+            if (e.shiftKey) updateWhileShiftMoving(e);
+            else updateWhileMoving(e);
+        }
     };
 
     const drop = function (e = {}) {
 
-        checkE(e);
-
-        let type = e.type;
-        if (type === 'touchend') {
-
-            touchAction(e, resetCoordsToZeroOnTouchEnd);
-        }
-
         if (current) {
 
+            checkE(e);
+
+            let type = e.type;
+            if (type === 'touchend') {
+
+                touchAction(e, resetCoordsToZeroOnTouchEnd);
+            }
+
             current.artefact.dropArtefact();
-            updateOnEnd();
+            if (e.shiftKey) updateOnShiftEnd(e);
+            else updateOnEnd(e);
             current = false;
         }
     };
 
+    if (!dragZones[zone.name]) {
+
+        dragZones[zone.name] = [];
+        doAddListeners(startOn, endOn, target);
+    }
+
     const kill = function () {
+
+        const name = `${zone.name}_${collisionGroup.name}_${processingOrder}`;
+
+        dragZones[zone.name] = dragZones[zone.name].filter(z => z.name !== name);
+
+        if (!dragZones[zone.name].length) doRemoveListeners(startOn, endOn, target);
+    };
+
+    const getCurrent = function (actionKill) {
+
+        if (actionKill) {
+
+            if (actionKill === 'exit' || actionKill === 'drop') {
+
+                drop();
+                updateOnPrematureExit();
+            }
+            else kill();
+        }
+        else return current;
+    };
+
+    const data = {
+        name: `${zone.name}_${collisionGroup.name}_${processingOrder}`,
+        exposeCurrentArtefact, 
+        target,
+        processingOrder,
+        pickup,
+        move,
+        drop,
+        kill,
+        getCurrent,
+    };
+
+    dragZones[zone.name].push(data);
+
+    dragZones[zone.name].sort((a, b) => a.processingOrder - b.processingOrder);
+
+    return {
+        exposeCurrentArtefact, 
+        getCurrent,
+        kill,
+        zone,
+    };
+};
+
+const makeDragZone = function (items = Ωempty) {
+
+    const pickup = (e = {}) => {
+
+        if (e && e.target) {
+
+            let myTarget = e.target,
+                name = '';
+
+            while (!name) {
+
+                if (dragZones[myTarget.id]) name = myTarget.id;
+                if (myTarget.tagName === 'BODY') break;
+                myTarget = myTarget.parentElement;
+            }
+
+            const variants = dragZones[name];
+
+            if (variants) {
+
+                for (let i = 0, iz = variants.length; i < iz; i++) {
+
+                    const v = variants[i];
+
+                    const res = v.pickup(e);
+
+                    if (res.current) {
+
+                        currentMove = res.move;
+                        currentDrop = res.drop;
+                        break;
+                    }
+                }
+            }
+        }
+    };
+
+    let currentMove = λnull;
+    const move = (e = {}) => {
+
+        currentMove(e);
+    };
+
+    let currentDrop = λnull;
+    const drop = (e = {}) => {
+
+        currentDrop(e);
+        currentMove = λnull;
+        currentDrop = λnull;
+    };
+
+    const doAddListeners = (startOn, endOn, target) => {
+
+        addListener(startOn, pickup, target);
+        addListener('move', move, target);
+        addListener(endOn, drop, target);
+    };
+
+    const doRemoveListeners = (startOn, endOn, target) => {
 
         removeListener(startOn, pickup, target);
         removeListener('move', move, target);
         removeListener(endOn, drop, target);
     };
 
-    const getCurrent = function (actionKill = false) {
+    const processedData = processDragZoneData(items, doAddListeners, doRemoveListeners);
 
-        if (isa_boolean(actionKill) && actionKill) kill();
-        else if (actionKill.substring) {
-            if (actionKill === 'drop') drop();
-            if (actionKill === 'kill') kill();
-        }
-        else return current;
-    };
-
-    addListener(startOn, pickup, target);
-    addListener('move', move, target);
-    addListener(endOn, drop, target);
-
-    if (exposeCurrentArtefact) return getCurrent;
-    else return kill;
+    if (processedData.exposeCurrentArtefact) return processedData.getCurrent;
+    else return processedData.kill;
 };
 
 // #### Exports

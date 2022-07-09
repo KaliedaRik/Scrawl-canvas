@@ -432,6 +432,26 @@ S.composite = function (item) {
     }
 };
 
+// `checkForEntityHover`, `onEntityHover`, `onEntityNoHover` - these are group-specific attributes which we can set on the base Cell's named group via the Canvas wrapper
+S.checkForEntityHover = function (item) {
+
+    this.base.set({
+        checkForEntityHover: item,
+    });
+};
+S.onEntityHover = function (item) {
+
+    this.base.set({
+        onEntityHover: item,
+    });
+};
+S.onEntityNoHover = function (item) {
+
+    this.base.set({
+        onEntityNoHover: item,
+    });
+};
+
 
 // #### Prototype functions
 
@@ -726,7 +746,7 @@ P.cleanCells = function () {
 // This allows us to 'regionalize' various parts of the &lt;canvas> element so that they respond in a similar way to an HTML __image map__ (defined using &lt;map> and &lt;area> elements) 
 // + Cascaded events are limited to mouse and touch events, which Scrawl-canvas bundles together into 5 types of event: `down`, `up` (which also captures click events), `enter`, `leave`, `move`.
 // + Returns an Array of name Strings for the entitys at the current mouse cursor coordinates; the Array is also accessible from the Canvas wrapper's `currentActiveEntityNames` attribute.
-P.cascadeEventAction = function (action) {
+P.cascadeEventAction = function (action, e = {}) {
 
     if (!this.currentActiveEntityNames) this.currentActiveEntityNames = [];
 
@@ -745,7 +765,7 @@ P.cascadeEventAction = function (action) {
 
         myCell = cell[c[i]];
 
-        if (myCell && (myCell.shown || myCell.isBase)) testActiveEntityObjects.push(myCell.getEntityHits());
+        if (myCell && (myCell.shown || myCell.isBase || myCell.includeInCascadeEventActions)) testActiveEntityObjects.push(myCell.getEntityHits());
     };
 
     testActiveEntityObjects = testActiveEntityObjects.reduce((a, v) => a.concat(v), []);
@@ -776,7 +796,7 @@ P.cascadeEventAction = function (action) {
     let currentActiveEntityObjects = newActiveEntityObjects.concat(knownActiveEntityObjects);
 
     // 3. Trigger the required action on each affected entity
-    let doLeave = function () {
+    let doLeave = function (e) {
 
         if (currentActiveEntityNames.length) {
 
@@ -792,7 +812,7 @@ P.cascadeEventAction = function (action) {
 
                 myArt = artefact[currentActiveEntityNames[i]];
 
-                if (myArt) myArt.onLeave();
+                if (myArt) myArt.onLeave(e);
             }
         }
     };
@@ -804,30 +824,30 @@ P.cascadeEventAction = function (action) {
 
         case 'down' :
             for (i = 0; i < currentActiveLen; i++) {
-                currentActiveEntityObjects[i].onDown();
+                currentActiveEntityObjects[i].onDown(e);
             }
             break;
 
         case 'up' :
             for (i = 0; i < currentActiveLen; i++) {
-                currentActiveEntityObjects[i].onUp();
+                currentActiveEntityObjects[i].onUp(e);
             }
             break;
 
         case 'enter' :
             for (i = 0; i < newActiveLen; i++) {
-                newActiveEntityObjects[i].onEnter();
+                newActiveEntityObjects[i].onEnter(e);
             }
             break;
 
         case 'leave' :
-            doLeave();
+            doLeave(e);
             break;
 
         case 'move' :
-            doLeave();
+            doLeave(e);
             for (i = 0; i < newActiveLen; i++) {
-                newActiveEntityObjects[i].onEnter();
+                newActiveEntityObjects[i].onEnter(e);
             }
             break;
     }
@@ -836,6 +856,16 @@ P.cascadeEventAction = function (action) {
     this.currentActiveEntityNames = newActiveEntityNames.concat(knownActiveEntityNames);
 
     return this.currentActiveEntityNames;
+};
+
+// `getEntityHits`, `checkHover` - returns the names of all entitys associated with this canvas that are currently colliding with the mouse cursor; should also trigger any hover actions active on Group objects associated with the Canvas wrapper 
+P.getEntityHits = function () {
+
+    return this.cascadeEventAction();
+};
+P.checkHover = function () {
+
+    this.cascadeEventAction();
 };
 
 // `cleanAria` - internal function; transfers updated __title__, __label__, __description__ and __role__ attribute values into the relevant DOM elements

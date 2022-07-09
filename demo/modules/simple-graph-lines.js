@@ -35,8 +35,16 @@ let positionGroup,
     lineGroup,
     pinGroup;
 
+// Accessibility
+let selectedColumn = 0,
+    space = '',
+    currentData;
+
 // The exported 'build' function
 const build = function (namespace, canvas, dataSet) {
+
+    space = namespace;
+    currentData = dataSet;
 
     // Only build the Groups and entitys if they don't already exist
     if (!positionGroup) {
@@ -122,6 +130,7 @@ const build = function (namespace, canvas, dataSet) {
 
                 name: `${namespace}-${index}-pin`,
                 group: pinGroup,
+                order: index,
 
                 radius: 8,
 
@@ -140,13 +149,45 @@ const build = function (namespace, canvas, dataSet) {
         });
 
         // All further calculation happens in the 'update' function
-        update(namespace, dataSet);
+        update();
+
+        // Accessibility
+        frame.setArrowAction('up', () => {});
+        frame.setArrowAction('down', () => {});
+        frame.setArrowAction('left', () => doNavigation('left'));
+        frame.setArrowAction('right', () => doNavigation('right'));
 
         // Display the graph entitys
         show();
     }
 };
 
+// Accessibility
+const doNavigation = (direction) => {
+
+    const { yearLabels } = currentData;
+
+    const len = yearLabels.length;
+
+    switch (direction) {
+
+        case 'left' : 
+            selectedColumn--;
+            break;
+
+        case 'right' : 
+            selectedColumn++;
+            break;
+    }
+
+    if (selectedColumn < 0) selectedColumn = len - 1;
+    else if (selectedColumn >= len) selectedColumn = 0;
+
+    updateSelected();
+};
+
+// Processing
+//
 // Determine the range batch
 // - To make sure the graph covers as much vertical space as possible
 const calculateBatchValue = (val) => {
@@ -166,15 +207,15 @@ const calculateBatchValue = (val) => {
     return 1;
 }
 
-// the exported 'update' function
-const update = (namespace, dataSet) => {
+// The exported 'update' function
+const update = () => {
 
     // Only update if we have entitys to update
     if (positionGroup) {
 
         // Initial positioning calculations
-        let yearLabels = dataSet.yearLabels,
-            data = dataSet.data,
+        let yearLabels = currentData.yearLabels,
+            data = currentData.data,
             max = Math.max(...data),
             min = Math.min(...data),
             batch = calculateBatchValue(max - min);
@@ -199,7 +240,7 @@ const update = (namespace, dataSet) => {
 
             let pointDepth = (data[index] - min) * categoryValue,
                 yVal = yDepth + (graphHeight - pointDepth),
-                tempName = `${namespace}-${index}`;
+                tempName = `${space}-${index}`;
 
             entity[`${tempName}-position`].set({
                 startY: `${yVal}%`,
@@ -209,17 +250,8 @@ const update = (namespace, dataSet) => {
 
                 onEnter: function () {
 
-                    pinGroup.setArtefacts({
-                        scale: 1,
-                        fillStyle: 'aliceblue',
-                    });
-
-                    frame.updateSubtitle(`${label}: §RED§${data[index].toLocaleString()}`);
-
-                    this.set({
-                        scale: 1.5,
-                        fillStyle: 'red',
-                    });
+                    selectedColumn = this.get('order');
+                    updateSelected();
                 },
             });
         });
@@ -230,7 +262,30 @@ const update = (namespace, dataSet) => {
         frame.updateYBottom(min.toLocaleString());
         frame.updateXLeft(yearLabels[0]);
         frame.updateXRight(yearLabels[yearLabels.length - 1]);
+
+        selectedColumn = 0;
+        updateSelected();
     }
+};
+
+// Handles both mouse hover, and (accessibility) keyboard navigation
+const updateSelected = () => {
+
+    const { yearLabels, data } = currentData;
+
+        const entity = pinGroup.getArtefact(pinGroup.artefacts[selectedColumn]);
+
+        pinGroup.setArtefacts({
+            scale: 1,
+            fillStyle: 'aliceblue',
+        });
+
+        frame.updateSubtitle(`${yearLabels[selectedColumn]}: §RED§${data[selectedColumn].toLocaleString()}`);
+
+        entity.set({
+            scale: 1.5,
+            fillStyle: 'red',
+        });
 };
 
 // Exported 'kill' function
