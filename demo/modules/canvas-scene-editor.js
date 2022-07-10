@@ -49,7 +49,6 @@ const initializeCanvasSceneEditor = (items = {}, scrawl) => {
         canvas: sceneCanvas,
         mainDimensions: sceneDimensions,
         mapDimensions: minimapDimensions,
-        supportedKey: 'altKey',
     }, scrawl);
 
 

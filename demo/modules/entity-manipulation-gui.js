@@ -896,42 +896,6 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
         }
     };
 
-    // Because keyboards have different layouts, we need a function that will allow users to set their preferred character keys to trigger GUI interaction
-    // + On QWERTY keyboards, the standard choice for arrow directions is often `wasd` for `up left down right`
-    // + The Dvorak keyboard equivalent often changes to `,aoe`
-    // + For AZERTY keyboards, `zqsd`
-    // + By default this demo uses `n` for scale up, `m` for scale down, `h` for rotate anti-clockwise, and `j` for rotate clockwise. These key choices are entirely arbitrary!
-    // + Users can change the default deltas for move, scale and rotate keyboard actions via an alert triggered by the appropriate key press; by default these keys are `q` (move), `b` (scale), `g` (rotation)
-    let charUp, charLeft, charDown, charRight, charShiftUp, charShiftLeft, charShiftDown, charShiftRight, charGrow, charShrink, charDextral, charSinistral, charShiftGrow, charShiftShrink, charShiftDextral, charShiftSinistral, charDeltaAngle, charDeltaScale, charDeltaMove;
-
-    const setGuiControlChars = (chars) => {
-
-        if (chars != null) {
-            
-            chars = chars.replace(/ /g, '');
-
-            if (chars.length === 11) {
-
-                chars = chars.toLowerCase().split('');
-
-                // The order in which the desired keyboard shortcuts are presented must match this array
-                [charDeltaMove, charUp, charLeft, charDown, charRight, charDeltaScale, charGrow, charShrink, charDeltaAngle, charDextral, charSinistral] = chars;
-
-                charShiftUp = charUp.toUpperCase();
-                charShiftLeft = charLeft.toUpperCase();
-                charShiftDown = charDown.toUpperCase();
-                charShiftRight = charRight.toUpperCase();
-                charShiftGrow = charGrow.toUpperCase();
-                charShiftShrink = charShrink.toUpperCase();
-                charShiftDextral = charDextral.toUpperCase();
-                charShiftSinistral = charSinistral.toUpperCase();
-            }
-        }
-    };
-
-    // The default keys are `q w a s d b n m g j h`
-    setGuiControlChars('qwasdbnmgjh');
-
     const setDeltaAngle = () => {
 
         const val = window.prompt('Set the delta angle to be applied to selected entitys via keyboard interactions', '0.5');
@@ -959,44 +923,79 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
         if (isNaN(deltaMove)) deltaMove = 1;
     };
 
+
     // Keyboard event listener functions
-    const canvasKeysDown = (e) => {
+    let keyboard = scrawl.makeKeyboardZone({
 
-        const { key } = e;
+        zone: canvas,
+    });
 
-        // Tab, Enter/Return, Esc
-        if ('Tab' === key || 'Escape' === key) {
-            canvas.domElement.blur();
-            return;
+    // Because keyboards have different layouts, we need a function that will allow users to set their preferred character keys to trigger GUI interaction
+    // + On QWERTY keyboards, the standard choice for arrow directions is often `wasd` for `up left down right`
+    // + The Dvorak keyboard equivalent often changes to `,aoe`
+    // + For AZERTY keyboards, `zqsd`
+    // + By default this demo uses `n` for scale up, `m` for scale down, `h` for rotate anti-clockwise, and `j` for rotate clockwise. These key choices are entirely arbitrary!
+    // + Users can change the default deltas for move, scale and rotate keyboard actions via an alert triggered by the appropriate key press; by default these keys are `q` (move), `b` (scale), `g` (rotation)
+    const setGuiControlChars = (chars) => {
+
+        if (chars != null) {
+            
+            chars = chars.replace(/ /g, '');
+
+            if (chars.length === 11) {
+
+                const unshiftedActions = {},
+                    shiftedActions = {};
+
+                const oldChars = currentGuiControlChars.split('');
+
+                oldChars.forEach(char => {
+
+                    unshiftedActions[char] = null;
+                    shiftedActions[char.toUpperCase()] = null;
+                });
+
+                currentGuiControlChars = chars.toUpperCase();
+
+                shiftedActions[currentGuiControlChars[0]] = () => setDeltaMove(); // q
+                shiftedActions[currentGuiControlChars[1]] = () => moveGuiPin('up'); // w
+                shiftedActions[currentGuiControlChars[2]] = () => moveGuiPin('left'); // a
+                shiftedActions[currentGuiControlChars[3]] = () => moveGuiPin('down'); // s
+                shiftedActions[currentGuiControlChars[4]] = () => moveGuiPin('right'); // d
+                shiftedActions[currentGuiControlChars[5]] = () => setDeltaScale(); // b
+                shiftedActions[currentGuiControlChars[6]] = () => scaleEntitys('grow'); // n
+                shiftedActions[currentGuiControlChars[7]] = () => scaleEntitys('shrink'); // m
+                shiftedActions[currentGuiControlChars[8]] = () => setDeltaAngle(); // g
+                shiftedActions[currentGuiControlChars[9]] = () => rotateEntitys('dextral'); // j
+                shiftedActions[currentGuiControlChars[10]] = () => rotateEntitys('sinistral'); // h
+
+                currentGuiControlChars = currentGuiControlChars.toLowerCase();
+
+                unshiftedActions[currentGuiControlChars[0]] = () => setDeltaMove(); // q
+                unshiftedActions[currentGuiControlChars[1]] = () => moveSelection('up'); // w
+                unshiftedActions[currentGuiControlChars[2]] = () => moveSelection('left'); // a
+                unshiftedActions[currentGuiControlChars[3]] = () => moveSelection('down'); // s
+                unshiftedActions[currentGuiControlChars[4]] = () => moveSelection('right'); // d
+                unshiftedActions[currentGuiControlChars[5]] = () => setDeltaScale(); // b
+                unshiftedActions[currentGuiControlChars[6]] = () => scaleGroup('grow'); // n
+                unshiftedActions[currentGuiControlChars[7]] = () => scaleGroup('shrink'); // m
+                unshiftedActions[currentGuiControlChars[8]] = () => setDeltaAngle(); // g
+                unshiftedActions[currentGuiControlChars[9]] = () => rotateGroup('dextral'); // j
+                unshiftedActions[currentGuiControlChars[10]] = () => rotateGroup('sinistral'); // h
+
+                keyboard = scrawl.makeKeyboardZone({
+                    zone: canvas,
+                    none: unshiftedActions,
+                    shiftOnly: shiftedActions,
+                });
+            }
         }
+    };
 
-        if (charShiftLeft === key) moveGuiPin('left');
-        else if (charShiftUp === key) moveGuiPin('up');
-        else if (charShiftRight === key) moveGuiPin('right');
-        else if (charShiftDown === key) moveGuiPin('down');
+    // The default keys are `q w a s d b n m g j h`
+    let currentGuiControlChars = 'qwasdbnmgjh';
+    setGuiControlChars(currentGuiControlChars);
 
-        else if (charLeft === key) moveSelection('left');
-        else if (charUp === key) moveSelection('up');
-        else if (charRight === key) moveSelection('right');
-        else if (charDown === key) moveSelection('down');
-
-        else if (charShiftGrow === key) scaleEntitys('grow');
-        else if (charShiftShrink === key) scaleEntitys('shrink');
-        else if (charGrow === key) scaleGroup('grow');
-        else if (charShrink === key) scaleGroup('shrink');
-
-        else if (charShiftDextral === key) rotateEntitys('dextral');
-        else if (charShiftSinistral === key) rotateEntitys('sinistral');
-        else if (charDextral === key) rotateGroup('dextral');
-        else if (charSinistral === key) rotateGroup('sinistral');
-
-        else if (charDeltaAngle === key) setDeltaAngle();
-        else if (charDeltaScale === key) setDeltaScale();
-        else if (charDeltaMove === key) setDeltaMove();
-
-        e.preventDefault();
-    }
-    scrawl.addNativeListener('keydown', canvasKeysDown, canvas.domElement);
 
     const currentSelectedEntries = [...selectedEntitys.artefacts];
 
@@ -1020,7 +1019,9 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
         movePinGroup.kill();
         gui.kill(true);
         movePinDragZone();
-        canvasKeysDown();
+        rotatePinDragZone();
+        scalePinDragZone();
+        keyboard.kill();
     };
 
     return {

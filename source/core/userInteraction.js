@@ -7,7 +7,7 @@
 
 // #### Imports
 import * as library from "./library.js";
-import { xt, xta, isa_dom, isa_fn, isa_boolean, isa_obj, λnull } from "./utilities.js";
+import { xt, xta, isa_dom, isa_fn, isa_boolean, isa_obj, λnull, Ωempty, mergeDiscard } from "./utilities.js";
 import { addListener, addNativeListener, removeListener, removeNativeListener } from "./events.js";
 
 import { makeAnimation } from "../factory/animation.js";
@@ -887,7 +887,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
         }
     };
 
-    const pickup = function (e = {}) {
+    const pickup = function (e = Ωempty) {
 
         checkE(e);
 
@@ -909,7 +909,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
         };
     };
 
-    const move = function (e = {}) {
+    const move = function (e = Ωempty) {
 
         if (current) {
 
@@ -923,7 +923,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
         }
     };
 
-    const drop = function (e = {}) {
+    const drop = function (e = Ωempty) {
 
         if (current) {
 
@@ -997,7 +997,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
 const makeDragZone = function (items = Ωempty) {
 
-    const pickup = (e = {}) => {
+    const pickup = (e = Ωempty) => {
 
         if (e && e.target) {
 
@@ -1033,13 +1033,13 @@ const makeDragZone = function (items = Ωempty) {
     };
 
     let currentMove = λnull;
-    const move = (e = {}) => {
+    const move = (e = Ωempty) => {
 
         currentMove(e);
     };
 
     let currentDrop = λnull;
-    const drop = (e = {}) => {
+    const drop = (e = Ωempty) => {
 
         currentDrop(e);
         currentMove = λnull;
@@ -1066,6 +1066,249 @@ const makeDragZone = function (items = Ωempty) {
     else return processedData.kill;
 };
 
+const keyboardZones = {};
+
+const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRemoveListeners) {
+
+    let {
+        zone, 
+    } = items;
+
+    // `zone` is required
+    // + must be either a Canvas or Stack wrapper, or a wrapper's String name
+    if (!zone) return new Error('keyboardZone constructor - no zone supplied');
+
+    if (zone.substring) zone = artefact[zone];
+
+    if (!zone || ['Canvas', 'Stack'].indexOf(zone.type) < 0) return new Error('keyboardZone constructor - zone object is not a Stack or Canvas wrapper');
+
+    let target = zone.domElement;
+
+    if (!target) return new Error('keyboardZone constructor - zone does not contain a target DOM element');
+
+    let zoneItem = keyboardZones[zone.name];
+
+    if (!zoneItem) {
+
+        keyboardZones[zone.name] = {};
+        zoneItem = keyboardZones[zone.name];
+        doAddListeners(target);
+    }
+
+    if (!zoneItem.extraKeys) {
+
+        zoneItem.extraKeys = {
+            Shift: false,
+            Control: false,
+            Alt: false,
+            Meta: false,
+        };
+    }
+
+    const keyGroupsArray = [
+        'none',
+        'shiftOnly',
+        'altOnly',
+        'ctrlOnly',
+        'metaOnly',
+        'shiftAlt',
+        'shiftCtrl',
+        'shiftMeta',
+        'altCtrl',
+        'altMeta',
+        'ctrlMeta',
+        'shiftAltCtrl',
+        'shiftAltMeta',
+        'shiftCtrlMeta',
+        'altCtrlMeta',
+        'all',
+    ];
+
+    if (!zoneItem.keyGroups) {
+
+        const groups = {};
+        keyGroupsArray.forEach(g => groups[g] = {});
+        zoneItem.keyGroups = groups;
+    }
+
+    const KG = zoneItem.keyGroups;
+
+    keyGroupsArray.forEach(g => {
+
+        const keymap = items[g];
+        if (keymap != null) mergeDiscard(KG[g], keymap);
+    });
+
+    if (!zoneItem.onKeyDown) {
+
+        zoneItem.onKeyDown = (e = Ωempty) => {
+
+            if (e && e.key) {
+
+                e.preventDefault();
+
+                const { extraKeys, keyGroups } = zoneItem;
+                const { key } = e;
+
+               // Tab, Esc
+                if ('Tab' === key || 'Escape' === key) {
+
+                    target.blur();
+                    return;
+                }
+                if (extraKeys[key] != null) {
+
+                    extraKeys[key] = true;
+                    return;
+                }
+
+                const { Shift, Control, Alt, Meta } = extraKeys;
+
+                let group = keyGroups.none;
+
+                if (Shift || Control || Alt || Meta) {
+
+                    if (Shift) {
+                        if (Alt) {
+                            if (Control) {
+                                if (Meta) group = keyGroups.all;
+                                else group = keyGroups.shiftAltCtrl;
+                            }
+                            else {
+                                if (Meta) group = keyGroups.shiftAltMeta;
+                                else group = keyGroups.shiftAlt;
+                            }
+                        }
+                        else {
+                            if (Control) {
+                                if (Meta) group = keyGroups.shiftCtrlMeta;
+                                else group = keyGroups.shiftCtrl;
+                            }
+                            else {
+                                if (Meta) group = keyGroups.shiftMeta;
+                                else group = keyGroups.shiftOnly;
+                            }
+                        }
+                    }
+                    else {
+                        if (Alt) {
+                            if (Control) {
+                                if (Meta) group = keyGroups.altCtrlMeta;
+                                else group = keyGroups.altCtrl;
+                            }
+                            else {
+                                if (Meta) group = keyGroups.altMeta;
+                                else group = keyGroups.altOnly;
+                            }
+                        }
+                        else {
+                            if (Control) {
+                                if (Meta) group = keyGroups.ctrlMeta;
+                                else group = keyGroups.ctrlOnly;
+                            }
+                            else {
+                                if (Meta) group = keyGroups.altOnly;
+                                else group = keyGroups.none;
+                            }
+                        }
+                    }
+                }
+                if (group[key]) group[key]();
+            }
+        };
+    }
+
+    if (!zoneItem.onKeyUp) {
+        
+        zoneItem.onKeyUp = (e = Ωempty) => {
+
+            if (e && e.key) {
+
+                e.preventDefault();
+
+                const { extraKeys } = zoneItem;
+                const { key } = e;
+
+                if (extraKeys[key] != null) extraKeys[key] = false;
+            }
+        };
+    }
+
+    if (!zoneItem.kill) {
+
+        zoneItem.kill = function () {
+
+            delete keyboardZones[zone.name];
+            doRemoveListeners(target);
+        };
+    }
+
+    const getMappedKeys = (keyGroup = 'none') => {
+
+        if (zoneItem.keyGroups[keyGroup] != null) {
+
+            return Object.keys(zoneItem.keyGroups[keyGroup]);
+        }
+        return [];
+    }
+
+    return {
+        kill: zoneItem.kill,
+        getMappedKeys,
+    }
+}
+
+
+const makeKeyboardZone = function (items = Ωempty) {
+
+    const actionKeyDown = (e = Ωempty) => {
+
+        if (e && e.target) {
+
+            let myTarget = e.target,
+                name = '';
+
+            while (!name) {
+
+                if (dragZones[myTarget.id]) name = myTarget.id;
+                if (myTarget.tagName === 'BODY') break;
+                myTarget = myTarget.parentElement;
+            }
+
+            const actions = keyboardZones[name];
+
+            if (actions) {
+
+                actions.onKeyDown(e);
+                currentKeyUp = actions.onKeyUp;
+            }
+            else currentKeyUp = λnull;
+        }
+    };
+
+
+    let currentKeyUp = λnull;
+    const actionKeyUp = (e) => {
+
+        currentKeyUp(e);
+    };
+
+    const doAddListeners = (target) => {
+
+        addNativeListener('keydown', actionKeyDown, target);
+        addNativeListener('keyup', actionKeyUp, target);
+    };
+
+    const doRemoveListeners = (target) => {
+
+        removeNativeListener('keydown', actionKeyDown, target);
+        removeNativeListener('keyup', actionKeyUp, target);
+    };
+
+    return processKeyboardZoneData(items, doAddListeners, doRemoveListeners);
+};
+
+
 // #### Exports
 export {
     uiSubscribedElements,
@@ -1079,6 +1322,7 @@ export {
     forceUpdate,
     observeAndUpdate,
     makeDragZone,
+    makeKeyboardZone,
     getTouchActionChoke,
     setTouchActionChoke,
 };

@@ -15,6 +15,7 @@ const weights2 = [0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 22, 0, 0, 0, 30, 0, 0, 0, 38
 
 const initializeEntityNavigation = (items = {}, scrawl) => {
 
+
     // Check we have required arguments/values
     const { canvas, cell, dashboard } = items;
 
@@ -54,6 +55,7 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
             });
         },
     };
+
 
     // Sometimes the supplied cell may not be shown directly in the canvas - for example, the canvas-minimap.js module does not directly show its mainCell; in these cases we need to make sure entitys in the Cell get included in the event cascade
     cell.set({
@@ -116,6 +118,7 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
         memoizeFilterOutput: true,
     });
 
+
     // Function to add/remove an entity to/from the selectedEntitys Group
     const selectEntity = (entity) => {
 
@@ -145,6 +148,7 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
         dashboard.refresh(selectedEntitys, updateControllersDisplayOnEnd);
     };
 
+
     // A set of attributes that can be applied to entitys to include them from the entity controllers system
     const addControllerAttributes = {
 
@@ -153,6 +157,7 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
             if (e.shiftKey) selectEntity(this);
         },
     };
+
 
     // A set of attributes that can be applied to entitys to remove them from the entity controllers system
     const removeControllerAttributes = {
@@ -172,6 +177,7 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
         role: 'application',
         includeInTabNavigation: true,
     });
+
 
     // Setup a group which will display the current keyboard-navigated entity
     scrawl.makeFilter({
@@ -197,6 +203,7 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
         filters: ['keyboard-entitys-border'],
         memoizeFilterOutput: true,
     });
+
 
     // Setup some state to keep track of navigable entitys, and where we currently are in that list
     let entityNames = [],
@@ -244,11 +251,13 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
         });
     };
 
+
     // Add/remove a highlighted entity to/from the selection
     const keyboardSelectEntity = () => {
 
         if (currentKeyboardEntity) selectEntity(currentKeyboardEntity);
     };
+
 
     // Move the highlighted entity
     const keyboardPositionEntity = (direction = '', delta = 1) => {
@@ -298,64 +307,29 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
         }
     };
 
+
     // Keyboard event listener functions
-    const extraKeys = {
-        shiftKey: false,
-        altKey: false,
-        ctrlKey: false,
-        metaKey: false,
-    };
+    const keyboard = scrawl.makeKeyboardZone({
 
-    const entityNavigationKeysDown = (e) => {
+        zone: canvas,
 
-        const { key } = e;
+        shiftOnly: {
+            Backspace: () => clearSelectedEntitys(),
+            Enter: () => keyboardSelectEntity(),
+            ArrowLeft: () => keyboardPositionEntity('left'),
+            ArrowUp: () => keyboardPositionEntity('up'),
+            ArrowRight: () => keyboardPositionEntity('right'),
+            ArrowDown: () => keyboardPositionEntity('down'),
+        },
 
-        // Tab, Enter/Return, Esc
-        if ('Tab' === key || 'Escape' === key) {
-            canvas.domElement.blur();
-            return;
-        }
+        none: {
+            Backspace: () => clearSelectedEntitys(),
+            Enter: () => keyboardSelectEntity(),
+            ArrowLeft: () => keyboardNavigateEntitys(true),
+            ArrowRight: () => keyboardNavigateEntitys(false),
+        },
+    });
 
-        if ('Shift' === key) extraKeys.shiftKey = true;
-        if ('Alt' === key) extraKeys.altKey = true;
-        if ('Ctrl' === key) extraKeys.ctrlKey = true;
-        if ('Meta' === key) extraKeys.metaKey = true;
-
-        // Prevent various combikey events interfering with navigation functionality
-        // + Minimap operates the arrows/backspace using those events
-        if (extraKeys.altKey || extraKeys.ctrlKey || extraKeys.metaKey) return;
-
-        // Arrow keys, backspace, enter
-        if (extraKeys.shiftKey) {
-            if ('Backspace' === key) clearSelectedEntitys();
-            if ('Enter' === key) keyboardSelectEntity();
-            else if ('ArrowLeft' === key) keyboardPositionEntity('left');
-            else if ('ArrowUp' === key) keyboardPositionEntity('up');
-            else if ('ArrowRight' === key) keyboardPositionEntity('right');
-            else if ('ArrowDown' === key) keyboardPositionEntity('down');
-        }
-        else {
-            if ('Backspace' === key) clearSelectedEntitys();
-            if ('Enter' === key) keyboardSelectEntity();
-            else if ('ArrowLeft' === key) keyboardNavigateEntitys(true);
-            else if ('ArrowRight' === key) keyboardNavigateEntitys(false);
-        }
-        e.preventDefault();
-    }
-    scrawl.addNativeListener('keydown', entityNavigationKeysDown, canvas.domElement);
-
-    const entityNavigationKeysUp = (e) => {
-
-        const { key } = e;
-
-        if ('Shift' === key) extraKeys.shiftKey = false;
-        if ('Alt' === key) extraKeys.altKey = false;
-        if ('Ctrl' === key) extraKeys.ctrlKey = false;
-        if ('Meta' === key) extraKeys.metaKey = false;
-
-        e.preventDefault();
-    }
-    scrawl.addNativeListener('keyup', entityNavigationKeysUp, canvas.domElement);
 
     // Drag-and-drop entitys
     const updateControllersDisplayOnStart = () => {
@@ -423,10 +397,7 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
         keyboardEntitys.kill(true);
         cascade();
         entityNavigationDrag();
-        entityNavigationKeysDown();
-        entityNavigationKeysUp();
-        canvasMinimapKeysDown();
-        canvasMinimapKeysUp();
+        keyboard.kill();
     };
 
     return {

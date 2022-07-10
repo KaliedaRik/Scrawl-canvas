@@ -68,6 +68,7 @@ export {
     observeAndUpdate,
     forceUpdate,
     makeDragZone,
+    makeKeyboardZone,
     getTouchActionChoke,
     setTouchActionChoke,
 } from './core/userInteraction.js';

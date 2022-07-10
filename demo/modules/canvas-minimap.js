@@ -66,18 +66,6 @@ const initializeMinimap = (args = {}, scrawl) => {
     let frameWidth = (displayWidth / mainDimensionX) * mapDimensionX;
     let frameHeight = (displayHeight / mainDimensionY) * mapDimensionY;
 
-    // Permitted values: `'altKey', 'ctrlKey', 'metaKey'`, or not defined
-    // + Because key detection is a mess across browsers, we can also use an array of two strings eg: `['ctrlKey', 'metaKey']`
-    let supportedKey1, supportedKey2;
-
-    if (!supportedKey) supportedKey = 'none';
-
-    if (Array.isArray(supportedKey)) {
-
-        supportedKey1 = supportedKey[0];
-        supportedKey2 = supportedKey[1];
-    }
-
     canvas.set({
 
         includeInTabNavigation: true,
@@ -130,8 +118,9 @@ const initializeMinimap = (args = {}, scrawl) => {
         method: "none"
     });
 
+
     // Functionality so we can drag-drop the map Cell around the base Cell
-    scrawl.makeDragZone({
+    const mapDragZone = scrawl.makeDragZone({
         zone: canvas,
         collisionGroup: "map-cell-pivot-group",
         coordinateSource: canvas.base,
@@ -251,45 +240,6 @@ const initializeMinimap = (args = {}, scrawl) => {
     });
 
 
-    // // Functionality so we can drag-drop the map Cell around the base Cell
-    // let draggingMap = false;
-    // const dragDownListener = scrawl.addListener("down", (e) => {
-
-    //     if (e) {
-
-    //         let hit = pivotGroup.getArtefactAt(canvas.here);
-
-    //         if (hit) {
-
-    //             e.preventDefault();
-    //             e.returnValue = false;
-
-    //             let mapHit = myFrameGroup.getArtefactAt(mapCell.here);
-
-    //             if (!mapHit) {
-
-    //                 draggingMap = true;
-    //                 mapPivot.pickupArtefact(canvas.here);
-    //             }
-    //         }
-    //     }
-    // }, canvas.domElement);
-
-    // const dragUpListener = scrawl.addListener(["up", "leave"], (e) => {
-
-    //     if (e) {
-
-    //         e.preventDefault();
-    //         e.returnValue = false;
-
-    //         if (draggingMap) {
-
-    //             mapPivot.dropArtefact();
-    //             draggingMap = false;
-    //         }
-    //     }
-    // }, canvas.domElement);
-
     const checkForMinimapChanges = () => {
 
         const [w, h] = canvas.get("dimensions");
@@ -342,27 +292,28 @@ const initializeMinimap = (args = {}, scrawl) => {
                 break;
         }
 
-        [x, y] = checkPermittedFramePosition(x, y);
+        if(checkPermittedFramePosition(x, y)) {
 
-        let newX = x * mainMapRatioX,
-            newY = y * mainMapRatioY;
+            let newX = x * mainMapRatioX,
+                newY = y * mainMapRatioY;
 
-        frame.set({
-            startX: x,
-            startY: y,
-        });
+            frame.set({
+                startX: x,
+                startY: y,
+            });
 
-        // Adjust the position of the Picture wrt to the frame in the map
-        mainCellPicture.set({
-            copyStartX: newX,
-            copyStartY: newY
-        });
+            // Adjust the position of the Picture wrt to the frame in the map
+            mainCellPicture.set({
+                copyStartX: newX,
+                copyStartY: newY
+            });
 
-        // Adjust the position of the large Cell wrt the base Cell
-        mainCell.set({
-            startX: -newX,
-            startY: -newY
-        });
+            // Adjust the position of the large Cell wrt the base Cell
+            mainCell.set({
+                startX: -newX,
+                startY: -newY
+            });
+        }
     };
 
     const moveMinimap = (direction) => {
@@ -391,6 +342,7 @@ const initializeMinimap = (args = {}, scrawl) => {
         });
     };
 
+
     // Show/hide minimap
     let minimapIsShowing = true;
     const displayMinimap = () => {
@@ -407,74 +359,27 @@ const initializeMinimap = (args = {}, scrawl) => {
     };
 
 
-    // TODO: add functionality for zooming the main map
-    const zoom = (direction) => {};
-
-
     // Keyboard event listener functions
-    const extraKeys = {
-        none: true,
-        shiftKey: false,
-        ctrlKey: false,
-        altKey: false,
-        metaKey: false
-    };
+    const keyboard = scrawl.makeKeyboardZone({
 
-    const canvasMinimapKeysDown = (e) => {
+        zone: canvas,
 
-        const { key } = e;
+        shiftAlt: {
+            Backspace: () => displayMinimap(),
+            ArrowLeft: () => moveMinimap('left'),
+            ArrowUp: () => moveMinimap('up'),
+            ArrowRight: () => moveMinimap('right'),
+            ArrowDown: () => moveMinimap('down'),
+        },
 
-        // Tab, Enter/Return, Esc
-        if ('Tab' === key || 'Escape' === key) {
-            canvas.domElement.blur();
-            return;
-        }
-
-        if ('Shift' === key) extraKeys.shiftKey = true;
-        else if ('Alt' === key) extraKeys.altKey = true;
-        else if ('Control' === key) extraKeys.ctrlKey = true;
-        else if ('Meta' === key) extraKeys.metaKey = true;
-
-        if (
-            extraKeys[supportedKey] || 
-            extraKeys[supportedKey1] || 
-            extraKeys[supportedKey2]
-        ) {
-
-            // Arrow keys (with and without shift)
-            if (extraKeys.shiftKey) {
-
-                if ('Backspace' === key) displayMinimap();
-                else if ('ArrowLeft' === key) moveMinimap('left');
-                else if ('ArrowUp' === key) moveMinimap('up');
-                else if ('ArrowRight' === key) moveMinimap('right');
-                else if ('ArrowDown' === key) moveMinimap('down');
-            }
-            else {
-
-                if ('Backspace' === key) displayMinimap();
-                else if ('ArrowLeft' === key) moveFrame('left');
-                else if ('ArrowUp' === key) moveFrame('up');
-                else if ('ArrowRight' === key) moveFrame('right');
-                else if ('ArrowDown' === key) moveFrame('down');
-            }
-        }
-        e.preventDefault();
-    }
-    scrawl.addNativeListener('keydown', canvasMinimapKeysDown, canvas.domElement);
-
-    const canvasMinimapKeysUp = (e) => {
-
-        const { key } = e;
-
-        if ('Shift' === key) extraKeys.shiftKey = false;
-        else if ('Alt' === key) extraKeys.altKey = false;
-        else if ('Control' === key) extraKeys.ctrlKey = false;
-        else if ('Meta' === key) extraKeys.metaKey = false;
-
-        e.preventDefault();
-    }
-    scrawl.addNativeListener('keyup', canvasMinimapKeysUp, canvas.domElement);
+        altOnly: {
+            Backspace: () => displayMinimap(),
+            ArrowLeft: () => moveFrame('left'),
+            ArrowUp: () => moveFrame('up'),
+            ArrowRight: () => moveFrame('right'),
+            ArrowDown: () => moveFrame('down'),
+        },
+    });
 
 
     // #### Cleanup and return
@@ -483,11 +388,9 @@ const initializeMinimap = (args = {}, scrawl) => {
         myFrameGroup.kill(true);
         scrawl.library.group[mainCell.name].kill(true);
         scrawl.library.group[mapCell.name].kill(true);
-        frameDragZone(true);
-        dragDownListener();
-        dragUpListener();
-        canvasMinimapKeysDown();
-        canvasMinimapKeysUp();
+        keyboard.kill();
+        frameDragZone();
+        mapDragZone();
     };
 
     return {

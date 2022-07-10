@@ -2711,6 +2711,35 @@ export function makeDragZone(items: MakeDragZoneInputs): DefaultOutputFunction |
 
 
 
+// makeDragZone factory (not stored in library)
+// -------------------------------------
+interface MakeKeyboardZoneInputs {
+    zone: any;
+    // coordinateSource?: any;
+    // collisionGroup?: any;
+    // startOn?: string | string[];
+    // endOn?: string | string[];
+    // updateOnStart?: {
+    //     [index: string]: any;
+    // } | DefaultInputFunction;
+    // updateOnEnd?: {
+    //     [index: string]: any;
+    // } | DefaultInputFunction;
+    // updateWhileMoving?: DefaultInputFunction;
+    // exposeCurrentArtefact?: boolean;
+    // preventTouchDefaultWhenDragging?: boolean;
+    // resetCoordsToZeroOnTouchEnd?: boolean;
+    // processOrder?: number;
+}
+
+type KeyboardZoneOutput = () => boolean;
+
+export function makeKeyboardZone(items: MakeKeyboardZoneInputs): DefaultOutputFunction | KeyboardZoneOutput;
+
+
+
+
+
 // Asset uploads
 // -------------------------------------
 interface AssetImportObject {
