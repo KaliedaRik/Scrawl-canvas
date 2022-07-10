@@ -4,11 +4,26 @@
 // Related files:
 // + [Accessible GUI-based simple canvas editor - main demo](../modules-005.html)
 //
-
-
 // #### Usage
-// TODO: add documentation
+// This module creates a simple GUI control that appears when an entity, or a group of entitys, are selected. The control allows users to move, scale and rotate selected entitys. The control can be positioned in relation to the selected entitys using both drag, and keyboard, input. All the control's actions can be replicated using the keyboard. The module adds the following zones to the supplied Canvas wrapper:
+// + Three GUI drag zones -one for each part of the control - to manipulate the GUI control (processingOrder: 50, 51, 52)
+// + A keyboard zone - to handle `alphanumeric` and `SHIFT + alphanumeric` input to position, scale and rotate selected entitys. A function is also exported to allow users to customise the alphanumeric key mappings
+//
+// __Inputs to the `initializeEntityManipulationGui` function__
+// + `canvas` - SC canvas wrapper object (required)
+// + `cell` - the scene Cell wrapper object, from the canvas-minimap module (required)
+// + `selectedEntitys` - the selected entitys group, from the entity-navigation module (required)
+// + `updateControllerDisplay` - an object containing functions to update the canvas element's cursor appearance during hover and drag actions, from the entity-navigation module (required)
+// + `dashboard` - an object containing DOM form functions, from the dom-entity-editor module (required)
+//
+// __Output from the `initializeEntityManipulationGui` function__ - is an object containing the following attributes:
+// + `checkForSelectionUpdates` - a function to be added to an animation object elsewhere
+// + `setGuiControlChars` - a function which allows users to adjust their keyboard mappings
+// + `createGui` - the function to (re)create the GUI control
+// + `killEntityManipulationGui` - kill function, to remove everything associated with the GUI control
 
+
+// #### Initialization function (exported)
 const initializeEntityManipulationGui = (items = {}, scrawl) => {
 
     // Check we have required arguments/values

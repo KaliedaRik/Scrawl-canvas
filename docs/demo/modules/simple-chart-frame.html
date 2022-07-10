@@ -20,6 +20,36 @@
             <div id="jump_page">
               
                 
+                <a class="source" href="canvas-minimap.html">
+                  ./demo/modules/canvas-minimap.js
+                </a>
+              
+                
+                <a class="source" href="canvas-scene-editor.html">
+                  ./demo/modules/canvas-scene-editor.js
+                </a>
+              
+                
+                <a class="source" href="dom-entity-editor.html">
+                  ./demo/modules/dom-entity-editor.js
+                </a>
+              
+                
+                <a class="source" href="entity-copy-paste.html">
+                  ./demo/modules/entity-copy-paste.js
+                </a>
+              
+                
+                <a class="source" href="entity-manipulation-gui.html">
+                  ./demo/modules/entity-manipulation-gui.js
+                </a>
+              
+                
+                <a class="source" href="entity-navigation.html">
+                  ./demo/modules/entity-navigation.js
+                </a>
+              
+                
                 <a class="source" href="entity-ring-builder.html">
                   ./demo/modules/entity-ring-builder.js
                 </a>
@@ -204,7 +234,8 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
     title, subtitle, 
     yLabelTop, yLabelBottom, 
     xLabelLeft, xLabelRight, 
-    group;</pre></div></div>
+    group,
+    navigation;</pre></div></div>
             
         </li>
         
@@ -224,9 +255,41 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 <span class="hljs-keyword">const</span> graphBottom = <span class="hljs-number">95</span>;
 <span class="hljs-keyword">const</span> graphLeft = <span class="hljs-number">10</span>;
 
-<span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, backgroundImage</span>) {
+<span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, backgroundImage</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Accessibility</p>
 
-    group = scrawl.<span class="hljs-title function_">makeGroup</span>({
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    canvas.<span class="hljs-title function_">set</span>({
+        <span class="hljs-attr">includeInTabNavigation</span>: <span class="hljs-literal">true</span>,
+    });
+
+    navigation = <span class="hljs-title function_">addArrowNavigation</span>(canvas);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Build out the frame</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    group = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-group`</span>,
         <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
@@ -266,24 +329,8 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
         <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;1.5rem Roboto, Arial, sans-serif&#x27;</span>,
 
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;black&#x27;</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
-              <p>Adding shadow text to a canvas graphic kills performance in Firefox browsers
-shadowColor: ‘white’,
-shadowBlur: 6,</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    });
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+    });
 
     subtitle = title.<span class="hljs-title function_">clone</span>({
 
@@ -308,23 +355,8 @@ shadowBlur: 6,</p>
 
         <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;0.9rem Roboto, Arial, sans-serif&#x27;</span>,
 
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;darkred&#x27;</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
-              </div>
-              <p>shadowColor: ‘white’,
-shadowBlur: 6,</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    });
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;darkred&#x27;</span>,
+    });
 
     yLabelBottom = yLabelTop.<span class="hljs-title function_">clone</span>({
 
@@ -381,18 +413,124 @@ shadowBlur: 6,</p>
     });
 
     <span class="hljs-title function_">show</span>();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Accessibility</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> arrowActions = {
+    <span class="hljs-attr">up</span>: <span class="hljs-function">() =&gt;</span> {},
+    <span class="hljs-attr">right</span>: <span class="hljs-function">() =&gt;</span> {},
+    <span class="hljs-attr">down</span>: <span class="hljs-function">() =&gt;</span> {},
+    <span class="hljs-attr">left</span>: <span class="hljs-function">() =&gt;</span> {},
 };
 
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">kill</span> = (<span class="hljs-params"></span>) =&gt; group.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">setArrowAction</span> = (<span class="hljs-params">key, action</span>) =&gt; {
 
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">hide</span> = (<span class="hljs-params"></span>) =&gt; group.<span class="hljs-property">visibility</span> = <span class="hljs-literal">false</span>;
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">show</span> = (<span class="hljs-params"></span>) =&gt; group.<span class="hljs-property">visibility</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (key != <span class="hljs-literal">null</span> &amp;&amp; action != <span class="hljs-literal">null</span>) {
+
+        arrowActions[key] = action;
+    }
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">addArrowNavigation</span> = (<span class="hljs-params">canvas</span>) =&gt; {
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">entityNavigationKeysDown</span> = (<span class="hljs-params">e</span>) =&gt; {
+
+        <span class="hljs-keyword">const</span> { key } = e;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>Tab, Enter/Return, Esc</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;Tab&#x27;</span> === key || <span class="hljs-string">&#x27;Escape&#x27;</span> === key) {
+            canvas.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">blur</span>();
+            <span class="hljs-keyword">return</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Prevent various combikey events interfering with navigation functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;Shift&#x27;</span> === key || <span class="hljs-string">&#x27;Alt&#x27;</span> === key || <span class="hljs-string">&#x27;Ctrl&#x27;</span> === key|| <span class="hljs-string">&#x27;Meta&#x27;</span> === key) <span class="hljs-keyword">return</span>;
+
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;ArrowLeft&#x27;</span> === key) arrowActions.<span class="hljs-title function_">left</span>();
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;ArrowUp&#x27;</span> === key) arrowActions.<span class="hljs-title function_">up</span>();
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;ArrowRight&#x27;</span> === key) arrowActions.<span class="hljs-title function_">right</span>();
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;ArrowDown&#x27;</span> === key) arrowActions.<span class="hljs-title function_">down</span>();
+
+        e.<span class="hljs-title function_">preventDefault</span>();
+    }
+
+    <span class="hljs-keyword">return</span> scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;keydown&#x27;</span>, entityNavigationKeysDown, canvas.<span class="hljs-property">domElement</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>API</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">kill</span> = (<span class="hljs-params"></span>) =&gt; {
+
+    <span class="hljs-keyword">if</span> (group != <span class="hljs-literal">null</span> &amp;&amp; navigation != <span class="hljs-literal">null</span>) {
+
+        group.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
+        <span class="hljs-title function_">navigation</span>();
+    }
+}
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">hide</span> = (<span class="hljs-params"></span>) =&gt; {
+
+    <span class="hljs-keyword">if</span> (group != <span class="hljs-literal">null</span>) group.<span class="hljs-title function_">set</span>({
+        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+    });
+};
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">show</span> = (<span class="hljs-params"></span>) =&gt; {
+
+    <span class="hljs-keyword">if</span> (group != <span class="hljs-literal">null</span>) group.<span class="hljs-title function_">set</span>({
+        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
+    });
+};
 
 <span class="hljs-keyword">const</span> updateTextHelper = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, text</span>) {
 
-    item.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">text</span>: text,
-    });
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; text != <span class="hljs-literal">null</span>) item.<span class="hljs-title function_">set</span>({ text });
 };
 
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateTitle</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(title, text);
@@ -404,9 +542,7 @@ shadowBlur: 6,</p>
 
 <span class="hljs-keyword">const</span> updateBackground = <span class="hljs-keyword">function</span> (<span class="hljs-params">asset</span>) {
 
-    background.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">asset</span>: asset,
-    });
+    <span class="hljs-keyword">if</span> (background != <span class="hljs-literal">null</span> &amp;&amp; asset != <span class="hljs-literal">null</span>) background.<span class="hljs-title function_">set</span>({ asset });
 };
 
 <span class="hljs-keyword">export</span> {
@@ -429,6 +565,8 @@ shadowBlur: 6,</p>
     updateXRight,
 
     updateBackground,
+
+    setArrowAction,
 };</pre></div></div>
             
         </li>

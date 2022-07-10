@@ -718,8 +718,13 @@
                 <span class="hljs-title function_">pushUnique</span>(newMimic.<span class="hljs-property">mimicked</span>, name);
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span> = newMimic;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
+
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicDimensions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicStart</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicOffset</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicRotation</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
             }
         }
     };</pre></div></div>

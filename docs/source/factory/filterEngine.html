@@ -4159,19 +4159,22 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>,
-            i, c;
+            i, c, a;
 
-        <span class="hljs-keyword">let</span> {opacity, red, green, blue, alpha, lineOut} = requirements;
+        <span class="hljs-keyword">let</span> {opacity, red, green, blue, alpha, excludeAlpha, lineOut} = requirements;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == red) red = <span class="hljs-number">0</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == green) green = <span class="hljs-number">0</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == blue) blue = <span class="hljs-number">0</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == alpha) alpha = <span class="hljs-number">255</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == excludeAlpha) excludeAlpha = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
-            <span class="hljs-keyword">if</span> (iData[i + <span class="hljs-number">3</span>]) {
+            a = <span class="hljs-number">1</span> + <span class="hljs-number">3</span>;
+
+            <span class="hljs-keyword">if</span> (iData[a]) {
 
                 c = i;
                 oData[c] = red;
@@ -4183,7 +4186,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 oData[c] = blue;
 
                 c++;
-                oData[c] = alpha;
+                oData[c] = (excludeAlpha) ? iData[a] : alpha;
             }
         }
 
@@ -6062,7 +6065,7 @@ r, g, b, a, i, gray;</p>
         <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>,
-            i, r, g, b, a, red, green, blue, gray, all, allR, allG, allB;
+            i, r, g, b, a, red, green, blue, alpha, gray, all, allR, allG, allB;
 
         <span class="hljs-keyword">let</span> {opacity, weights, useMixedChannel, lineOut} = requirements;
 
@@ -6088,6 +6091,7 @@ r, g, b, a, i, gray;</p>
             red = iData[r];
             green = iData[g];
             blue = iData[b];
+            alpha = iData[a];
 
             <span class="hljs-keyword">if</span> (useMixedChannel) {
 
@@ -6109,7 +6113,7 @@ r, g, b, a, i, gray;</p>
                 oData[r] = red + weights[red * <span class="hljs-number">4</span>];
                 oData[g] = green + weights[(green * <span class="hljs-number">4</span>) + <span class="hljs-number">1</span>];
                 oData[b] = blue + weights[(blue * <span class="hljs-number">4</span>) + <span class="hljs-number">2</span>];
-                oData[a] = iData[a];
+                oData[a] = alpha + weights[(alpha * <span class="hljs-number">4</span>) + <span class="hljs-number">3</span>];
             }
         }
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);

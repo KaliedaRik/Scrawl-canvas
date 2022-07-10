@@ -640,6 +640,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-005.html">
+                  ./demo/modules-005.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -1005,11 +1010,6 @@
                 </a>
               
                 
-                <a class="source" href="temp-302.html">
-                  ./demo/temp-302.js
-                </a>
-              
-                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -1050,7 +1050,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-canvas-063">Demo Canvas 063</h1>
-<p>Semi-accessible Minimap</p>
+<p>Semi-accessible Minimap; multiple drag zones</p>
 
             </div>
             
@@ -1230,12 +1230,12 @@ canvas.<span class="hljs-title function_">set</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeDragZone</span>({
-
     <span class="hljs-attr">zone</span>: canvas,
     <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">&quot;my-circle-group&quot;</span>,
     <span class="hljs-attr">coordinateSource</span>: mainCell,
     <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&quot;up&quot;</span>, <span class="hljs-string">&quot;leave&quot;</span>],
-    <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>
+    <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">processingOrder</span>: <span class="hljs-number">2</span>,
 });</pre></div></div>
             
         </li>
@@ -1268,6 +1268,28 @@ canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">start</span>: [displayWidth - mapDimensions, <span class="hljs-number">0</span>],
     <span class="hljs-attr">dimensions</span>: [mapDimensions, mapDimensions],
     <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;none&quot;</span>
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>Functionality so we can drag-drop the map Cell around the base Cell</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeDragZone</span>({
+    <span class="hljs-attr">zone</span>: canvas,
+    <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">&quot;map-pivot-group&quot;</span>,
+    <span class="hljs-attr">coordinateSource</span>: canvas.<span class="hljs-property">base</span>,
+    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&quot;up&quot;</span>, <span class="hljs-string">&quot;leave&quot;</span>],
+    <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">processingOrder</span>: <span class="hljs-number">1</span>,
 });
 
 <span class="hljs-keyword">const</span> mapCell = canvas.<span class="hljs-title function_">buildCell</span>({
@@ -1278,11 +1300,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>We pivot the map Cell to the draggable Block entity</p>
 <ul>
@@ -1298,11 +1320,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>The map Cell needs to compile after the large Cell</p>
 
@@ -1314,11 +1336,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Now we can copy the large Cell into the map Cell</p>
 
@@ -1339,11 +1361,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Add the draggable map frame</p>
 
@@ -1368,11 +1390,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Functionality so we can drag-drop the frame around the map Cell</p>
 
@@ -1390,11 +1412,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Adjust the position of the Picture wrt to the frame in the map</p>
 
@@ -1408,11 +1430,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Adjust the position of the large Cell wrt the base Cell</p>
 
@@ -1433,59 +1455,9 @@ canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&quot;up&quot;</span>, <span class="hljs-string">&quot;leave&quot;</span>],
     <span class="hljs-attr">updateWhileMoving</span>: checkFrameDrag,
     <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">exposeCurrentArtefact</span>: <span class="hljs-literal">true</span>
+    <span class="hljs-attr">exposeCurrentArtefact</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">processingOrder</span>: <span class="hljs-number">0</span>,
 });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>Functionality so we can drag-drop the map Cell around the base Cell</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> draggingMap = <span class="hljs-literal">false</span>;
-scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&quot;down&quot;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-
-    <span class="hljs-keyword">if</span> (e) {
-
-        <span class="hljs-keyword">let</span> hit = pivotGroup.<span class="hljs-title function_">getArtefactAt</span>(canvas.<span class="hljs-property">here</span>);
-
-        <span class="hljs-keyword">if</span> (hit) {
-
-            e.<span class="hljs-title function_">preventDefault</span>();
-            e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
-
-            <span class="hljs-keyword">let</span> mapHit = myFrameGroup.<span class="hljs-title function_">getArtefactAt</span>(mapCell.<span class="hljs-property">here</span>);
-
-            <span class="hljs-keyword">if</span> (!mapHit) {
-
-                draggingMap = <span class="hljs-literal">true</span>;
-                myMapPivot.<span class="hljs-title function_">pickupArtefact</span>(canvas.<span class="hljs-property">here</span>);
-            }
-        }
-    }
-}, canvas.<span class="hljs-property">domElement</span>);
-
-scrawl.<span class="hljs-title function_">addListener</span>([<span class="hljs-string">&quot;up&quot;</span>, <span class="hljs-string">&quot;leave&quot;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-
-    <span class="hljs-keyword">if</span> (e) {
-
-        e.<span class="hljs-title function_">preventDefault</span>();
-        e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
-
-        <span class="hljs-keyword">if</span> (draggingMap) {
-
-            myMapPivot.<span class="hljs-title function_">dropArtefact</span>();
-            draggingMap = <span class="hljs-literal">false</span>;
-        }
-    }
-}, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         

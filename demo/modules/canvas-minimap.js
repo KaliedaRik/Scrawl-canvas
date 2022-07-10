@@ -4,11 +4,24 @@
 // Related files:
 // + [Accessible GUI-based simple canvas editor - main demo](../modules-005.html)
 //
-
-
 // #### Usage
-// TODO: add documentation
+// This module creates a large Cell wrapper which we can use to host the entitys to be used in the scene, alongside a draggable, keyboard accessible minimap for navigating around the Cell. The module will also add the following zones to the supplied Canvas wrapper:
+// + A frame drag zone, to drag the frame around the map - the main navigation functionality (processingOrder: 20)
+// + A map drag zone, to drag the map around the Canvas wrapper's base Cell (processingOrder: 21)
+// + A keyboard zone - the frame and map can be moved using `ALT + arrows` keystrokes, and can be hidden/revealed using the `ALT + backspace` keystroke
+//
+// __Inputs to the `initializeMinimap` function__
+// + `canvas` - SC canvas wrapper object (required)
+// + `mainDimensions` - a Number, or an array of `[width, height]` Numbers, setting the size of the scene Cell which will be returned to the calling code (default: 1600)
+// + `mapDimensions` - a Number, or an array of `[width, height]` Numbers, setting the size of minimap that appears on the scene Cell (default: 200)
+//
+// __Output from the `initializeMinimap` function__ - is an object containing the following attributes:
+// + `checkForMinimapChanges` - a function that can be invoked by an animation object, to adjust responsively to changes in the host DOM canvas element's dimensions (responsive canvas)
+// + `mainCell` - the scene Cell wrapper object
+// + `killCanvasMinimap` - kill function, to remove everything associated with the scene Cell and minimap from the SC library
 
+
+// #### Initialization function (exported)
 const initializeMinimap = (args = {}, scrawl) => {
 
 
@@ -393,6 +406,7 @@ const initializeMinimap = (args = {}, scrawl) => {
         mapDragZone();
     };
 
+    // Return object
     return {
         mainCell,
         checkForMinimapChanges,

@@ -531,10 +531,10 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p><strong>addStrings</strong> adds the two arguments together and returns a percentage string value if either of the values was a string; </p>
+              <p><strong>addStrings</strong> adds the two arguments together and returns a percentage string value if either of the values was a string; or a sum of the two numbers.</p>
 <p>Examples:</p>
 <pre><code><span class="hljs-title function_">addStrings</span>(<span class="hljs-number">20</span>, <span class="hljs-number">40</span>);
--&gt; <span class="hljs-string">&#x27;60%&#x27;</span>
+-&gt; <span class="hljs-number">60</span>
    
 <span class="hljs-title function_">addStrings</span>(<span class="hljs-string">&#x27;20%&#x27;</span>, <span class="hljs-number">40</span>);
 -&gt; <span class="hljs-string">&#x27;60%&#x27;</span>
@@ -544,6 +544,9 @@
  
 <span class="hljs-title function_">addStrings</span>(<span class="hljs-string">&#x27;20%&#x27;</span>, <span class="hljs-string">&#x27;40%&#x27;</span>);
 -&gt; <span class="hljs-string">&#x27;60%&#x27;</span>
+ 
+<span class="hljs-title function_">addStrings</span>(<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-number">3</span>);
+-&gt; <span class="hljs-string">&#x27;53%&#x27;</span>
 </code></pre>
 
             </div>
@@ -553,7 +556,24 @@
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(delta)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities addStrings() error - no delta argument supplied <span class="hljs-subst">${current}</span>, <span class="hljs-subst">${delta}</span>`</span>);
 
-    <span class="hljs-keyword">if</span> ((delta != <span class="hljs-literal">null</span>)) {
+    <span class="hljs-keyword">if</span> ((delta != <span class="hljs-literal">null</span>)) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Correct for labels</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;left&#x27;</span> === current || <span class="hljs-string">&#x27;top&#x27;</span> === current) current = <span class="hljs-string">&#x27;0%&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;right&#x27;</span> === current || <span class="hljs-string">&#x27;bottom&#x27;</span> === current) current = <span class="hljs-string">&#x27;100%&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;center&#x27;</span> === current) current = <span class="hljs-string">&#x27;50%&#x27;</span>;
 
         <span class="hljs-keyword">let</span> stringFlag = (current.<span class="hljs-property">substring</span> || delta.<span class="hljs-property">substring</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 
@@ -568,11 +588,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p><strong>convertTime</strong> converts a time value into its component string suffix and (millisecond) number value properties; returns an array</p>
 <p>Examples:</p>
@@ -627,11 +647,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p><strong>correctAngle</strong> makes sure any degree-based angle is in the range <code>0-360</code></p>
 
@@ -658,11 +678,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>correctForZero</strong> checks and corrects for minor deviations from zero (eNumbers)</p>
 
@@ -681,11 +701,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>λ functions</strong> helps us avoid errors when invoking a function attribute settable by the coder</p>
 
@@ -700,11 +720,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>generateUuid</strong> is a simple (crude) uuid generator 
 <a href="http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript">http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript</a>
@@ -725,11 +745,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>generateUniqueString</strong> is a simple random String generator
 <a href="https://gist.github.com/SimonHoiberg/ad2710c8626c5a74cddd8f6385795cc0">https://gist.github.com/SimonHoiberg/ad2710c8626c5a74cddd8f6385795cc0</a>
@@ -745,11 +765,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>interpolate</strong> clamp a value between a maximum and minimum value</p>
 
@@ -762,11 +782,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>isa_boolean</strong> checks to make sure the argument is a boolean</p>
 
@@ -777,11 +797,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>isa_canvas</strong> checks to make sure the argument is a DOM &lt;canvas&gt; element</p>
 
@@ -792,11 +812,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>isa_dom</strong> checks to make sure the argument is a DOM element of some sort</p>
 
@@ -807,11 +827,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>isa_fn</strong> checks to make sure the argument is a JavaScript function object</p>
 
@@ -822,11 +842,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>isa_number</strong> checks to make sure the argument is true number (excluding NaN)</p>
 
@@ -837,11 +857,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>isa_obj</strong> checks to make sure the argument is a JavaScript Object</p>
 
@@ -852,11 +872,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><strong>isa_quaternion</strong> checks to make sure the argument is a Scrawl-canvas Quaternion object</p>
 
@@ -867,11 +887,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>mergeInto</strong> takes two objects and merges the attributes of one into the other. This function mutates the ‘original’ object rather than generating a third, new onject</p>
 <p>Example:</p>
@@ -898,11 +918,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><strong>mergeOver</strong> takes two objects and writes the attributes of one over the other. This function mutates the ‘original’ object rather than generating a third, new onject</p>
 <p>Example:</p>
@@ -929,11 +949,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>mergeDiscard</strong> iterates over the additional object to perform a mergeOver operation, and also removing attributes from the original object where they have been set to null in the additional object</p>
 <p>Example:</p>
@@ -961,11 +981,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>pushUnique</strong> adds a value to the end of an array, if that value is not already present in the array. This function mutates the array</p>
 <p>Example:</p>
@@ -1000,11 +1020,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><strong>removeItem</strong> removes a value from an array. This function mutates the array</p>
 <p>Example:</p>
@@ -1034,11 +1054,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><strong>xt</strong> checks to see if argument exists (is not ‘undefined’)</p>
 
@@ -1049,11 +1069,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><strong>xta</strong> checks to make sure that all the arguments supplied to the function exist (none are ‘undefined’)</p>
 
@@ -1064,11 +1084,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><strong>xtGet</strong> returns the first existing (not ‘undefined’) argument supplied to the function</p>
 
@@ -1079,11 +1099,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><strong>xto</strong> checks to make sure that at least one of the arguments supplied to the function exists (is not ‘undefined’)</p>
 
@@ -1094,11 +1114,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h5 id="easing-engines">Easing engines</h5>
 <p><code>easeEngines</code> - an object in which keys define various easing functions</p>
@@ -1110,11 +1130,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Legacy easings</p>
 
@@ -1191,11 +1211,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Noise functionality easing engines</p>
 
@@ -1208,11 +1228,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>The following easing variations come from the <a href="https://easings.net/">easings.net</a> web page</p>
 <ul>
@@ -1312,11 +1332,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>This is wrong</p>
 
@@ -1352,11 +1372,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Code to detect browser from Code Box: <a href="https://code-boxx.com/detect-browser-with-javascript/">https://code-boxx.com/detect-browser-with-javascript/</a></p>
 <ul>
@@ -1389,11 +1409,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

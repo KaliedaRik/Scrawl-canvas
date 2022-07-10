@@ -640,6 +640,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-005.html">
+                  ./demo/modules-005.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -1005,11 +1010,6 @@
                 </a>
               
                 
-                <a class="source" href="temp-302.html">
-                  ./demo/temp-302.js
-                </a>
-              
-                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -1050,7 +1050,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-canvas-062">Demo Canvas 062</h1>
-<p>Gradients stress test</p>
+<p>Group and ungroup entitys; create a bespoke drag-drop UX</p>
 
             </div>
             
@@ -1116,6 +1116,10 @@
         <span class="hljs-attr">roll</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">360</span>,
         <span class="hljs-attr">fillStyle</span>: colorEngine.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>()),
         <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.25</span>,
+        <span class="hljs-attr">delta</span>: {
+            <span class="hljs-attr">roll</span>: <span class="hljs-number">0.8</span>,
+        },
+        <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span>,
     });
 }
 
@@ -1218,28 +1222,21 @@
 
             boxGroup.<span class="hljs-title function_">setArtefacts</span>({
                 <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.25</span>,
-                <span class="hljs-attr">delta</span>: {
-                    <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,
-                },
+                <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span>,
             });
 
-            <span class="hljs-keyword">const</span> { here } = canvas;
+            <span class="hljs-keyword">const</span> {x, y} = here;
 
-            <span class="hljs-keyword">if</span> (here) {
+            startX = x;
+            startY = y;
 
-                <span class="hljs-keyword">const</span> {x, y} = here;
+            referenceBlock.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">start</span>: [x, y],
+                <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+            });
 
-                startX = x;
-                startY = y;
-
-                referenceBlock.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">start</span>: [x, y],
-                    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
-                });
-
-                isGathering = <span class="hljs-literal">true</span>;
-                isMoving = <span class="hljs-literal">false</span>;
-            }
+            isGathering = <span class="hljs-literal">true</span>;
+            isMoving = <span class="hljs-literal">false</span>;
         }
     }
 }
@@ -1286,9 +1283,7 @@
 
         gatherGroup.<span class="hljs-title function_">setArtefacts</span>({
             <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.25</span>,
-            <span class="hljs-attr">delta</span>: {
-                <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,
-            },
+            <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span>,
         });
 
         gatherGroup.<span class="hljs-title function_">clearArtefacts</span>();
@@ -1312,9 +1307,7 @@
 
         gatherGroup.<span class="hljs-title function_">setArtefacts</span>({
             <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">1</span>,
-            <span class="hljs-attr">delta</span>: {
-                <span class="hljs-attr">roll</span>: <span class="hljs-number">0.8</span>,
-            },
+            <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">false</span>,
         });
     }
 };

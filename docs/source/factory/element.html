@@ -873,6 +873,8 @@ P = <span class="hljs-title function_">domMix</span>(P);</pre></div></div>
         <span class="hljs-keyword">let</span> canvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>),
             el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
+        canvas.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-canvas`</span>;
+        
         <span class="hljs-keyword">let</span> rect = el.<span class="hljs-title function_">getBoundingClientRect</span>(),
             style = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(el);
 

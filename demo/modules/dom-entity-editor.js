@@ -4,10 +4,15 @@
 // Related files:
 // + [Accessible GUI-based simple canvas editor - main demo](../modules-005.html)
 //
-
-
 // #### Usage
-// TODO: add documentation
+// This sub-module creates accessible forms which can be used to update attributes to a selected entity, or group of entitys. The forms update in real-time as the user selects entitys for editing. The sub-module's output is required by the entity-navigation sub-module, to help build a fully accessible editing environment.
+//
+// __Inputs to the `initializeDomEntityEditor` function__
+// + `queryString` - CSS query string to locate the DOM element where the entity editor form will appear (required)
+//
+// __Output from the `initializeDomEntityEditor` function__ - is an object containing the following attributes:
+// + `dashboard` - an object containing functions - `refresh, update, queue` - which will be consumed by other sub-modules
+// + `killDomEntityEditor` - kill function, to remove everything associated with the DOM entity editor from the SC library
 
 
 // ### Template functions
@@ -179,6 +184,7 @@ const addFields = (entity) => {
     return elements;
 };
 
+// Definition objects - define the form inputs based on the entity type, or the inputs for group selections
 const groupRequirements = {
 
     method: {
@@ -707,8 +713,12 @@ const initializeDomEntityEditor = (items = {}, scrawl) => {
     };
 
     // #### Cleanup and return
-    const killDomEntityEditor = () => {};
+    const killDomEntityEditor = () => {
 
+        if (observer) observer();
+    };
+
+    // Return object
     return {
         dashboard: {
             refresh: updateDomEntityEditor,

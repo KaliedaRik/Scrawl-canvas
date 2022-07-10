@@ -20,6 +20,36 @@
             <div id="jump_page">
               
                 
+                <a class="source" href="canvas-minimap.html">
+                  ./demo/modules/canvas-minimap.js
+                </a>
+              
+                
+                <a class="source" href="canvas-scene-editor.html">
+                  ./demo/modules/canvas-scene-editor.js
+                </a>
+              
+                
+                <a class="source" href="dom-entity-editor.html">
+                  ./demo/modules/dom-entity-editor.js
+                </a>
+              
+                
+                <a class="source" href="entity-copy-paste.html">
+                  ./demo/modules/entity-copy-paste.js
+                </a>
+              
+                
+                <a class="source" href="entity-manipulation-gui.html">
+                  ./demo/modules/entity-manipulation-gui.js
+                </a>
+              
+                
+                <a class="source" href="entity-navigation.html">
+                  ./demo/modules/entity-navigation.js
+                </a>
+              
+                
                 <a class="source" href="entity-ring-builder.html">
                   ./demo/modules/entity-ring-builder.js
                 </a>
@@ -265,11 +295,13 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>The exported ‘build’ function</p>
+              <p>Accessibility</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, dataSet</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> selectedColumn = <span class="hljs-number">0</span>,
+    space = <span class="hljs-string">&#x27;&#x27;</span>,
+    currentData;</pre></div></div>
             
         </li>
         
@@ -279,6 +311,24 @@ Data supplied to graph module as Javascript object with structure:
               
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>The exported ‘build’ function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, dataSet</span>) {
+
+    space = namespace;
+    currentData = dataSet;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Only build the Groups and entitys if they don’t already exist</p>
 
@@ -292,11 +342,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>The ‘positions’ Group</p>
 <ul>
@@ -316,11 +366,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>The ‘lines’ Group</p>
 <ul>
@@ -341,11 +391,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>The ‘pins’ Group</p>
 <ul>
@@ -367,11 +417,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Build the entitys</p>
 
@@ -382,11 +432,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Hidden position Blocks</p>
 
@@ -410,11 +460,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Line Shapes</p>
 
@@ -443,11 +493,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Visible pin Wheels</p>
 
@@ -457,6 +507,7 @@ Data supplied to graph module as Javascript object with structure:
 
                 <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>-pin`</span>,
                 <span class="hljs-attr">group</span>: pinGroup,
+                <span class="hljs-attr">order</span>: index,
 
                 <span class="hljs-attr">radius</span>: <span class="hljs-number">8</span>,
 
@@ -477,26 +528,44 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>All further calculation happens in the ‘update’ function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">update</span>(namespace, dataSet);</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>All further calculation happens in the ‘update’ function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">update</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>Accessibility</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        frame.<span class="hljs-title function_">setArrowAction</span>(<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-function">() =&gt;</span> {});
+        frame.<span class="hljs-title function_">setArrowAction</span>(<span class="hljs-string">&#x27;down&#x27;</span>, <span class="hljs-function">() =&gt;</span> {});
+        frame.<span class="hljs-title function_">setArrowAction</span>(<span class="hljs-string">&#x27;left&#x27;</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;left&#x27;</span>));
+        frame.<span class="hljs-title function_">setArrowAction</span>(<span class="hljs-string">&#x27;right&#x27;</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;right&#x27;</span>));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Display the graph entitys</p>
 
@@ -509,13 +578,50 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p>Determine the range batch</p>
+              <p>Accessibility</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">doNavigation</span> = (<span class="hljs-params">direction</span>) =&gt; {
+
+    <span class="hljs-keyword">const</span> { yearLabels } = currentData;
+
+    <span class="hljs-keyword">const</span> len = yearLabels.<span class="hljs-property">length</span>;
+
+    <span class="hljs-keyword">switch</span> (direction) {
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;left&#x27;</span> : 
+            selectedColumn--;
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;right&#x27;</span> : 
+            selectedColumn++;
+            <span class="hljs-keyword">break</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (selectedColumn &lt; <span class="hljs-number">0</span>) selectedColumn = len - <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (selectedColumn &gt;= len) selectedColumn = <span class="hljs-number">0</span>;
+
+    <span class="hljs-title function_">updateSelected</span>();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>Processing</p>
+<p>Determine the range batch</p>
 <ul>
 <li>To make sure the graph covers as much vertical space as possible</li>
 </ul>
@@ -542,26 +648,26 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-17">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p>the exported ‘update’ function</p>
+              <p>The exported ‘update’ function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">update</span> = (<span class="hljs-params">namespace, dataSet</span>) =&gt; {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">update</span> = (<span class="hljs-params"></span>) =&gt; {</pre></div></div>
             
         </li>
         
         
-        <li id="section-18">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Only update if we have entitys to update</p>
 
@@ -572,18 +678,18 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-19">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Initial positioning calculations</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> yearLabels = dataSet.<span class="hljs-property">yearLabels</span>,
-            data = dataSet.<span class="hljs-property">data</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> yearLabels = currentData.<span class="hljs-property">yearLabels</span>,
+            data = currentData.<span class="hljs-property">data</span>,
             max = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(...data),
             min = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(...data),
             batch = <span class="hljs-title function_">calculateBatchValue</span>(max - min);
@@ -597,11 +703,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-20">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Grab a handle to the ‘entity’ section in the Scrawl-canvas library</p>
 
@@ -612,11 +718,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-21">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Reset any highlighted pin Wheel</p>
 
@@ -630,11 +736,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-22">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Final calculations and updates</p>
 
@@ -644,7 +750,7 @@ Data supplied to graph module as Javascript object with structure:
 
             <span class="hljs-keyword">let</span> pointDepth = (data[index] - min) * categoryValue,
                 yVal = yDepth + (graphHeight - pointDepth),
-                tempName = <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>`</span>;
+                tempName = <span class="hljs-string">`<span class="hljs-subst">${space}</span>-<span class="hljs-subst">${index}</span>`</span>;
 
             entity[<span class="hljs-string">`<span class="hljs-subst">${tempName}</span>-position`</span>].<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${yVal}</span>%`</span>,
@@ -654,17 +760,8 @@ Data supplied to graph module as Javascript object with structure:
 
                 <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-                    pinGroup.<span class="hljs-title function_">setArtefacts</span>({
-                        <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
-                        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
-                    });
-
-                    frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">`<span class="hljs-subst">${label}</span>: §RED§<span class="hljs-subst">${data[index].toLocaleString()}</span>`</span>);
-
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
-                        <span class="hljs-attr">scale</span>: <span class="hljs-number">1.5</span>,
-                        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-                    });
+                    selectedColumn = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;order&#x27;</span>);
+                    <span class="hljs-title function_">updateSelected</span>();
                 },
             });
         });</pre></div></div>
@@ -672,11 +769,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-23">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>Update the chart frame</p>
 
@@ -687,17 +784,52 @@ Data supplied to graph module as Javascript object with structure:
         frame.<span class="hljs-title function_">updateYBottom</span>(min.<span class="hljs-title function_">toLocaleString</span>());
         frame.<span class="hljs-title function_">updateXLeft</span>(yearLabels[<span class="hljs-number">0</span>]);
         frame.<span class="hljs-title function_">updateXRight</span>(yearLabels[yearLabels.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>]);
+
+        selectedColumn = <span class="hljs-number">0</span>;
+        <span class="hljs-title function_">updateSelected</span>();
     }
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p>Handles both mouse hover, and (accessibility) keyboard navigation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">updateSelected</span> = (<span class="hljs-params"></span>) =&gt; {
+
+    <span class="hljs-keyword">const</span> { yearLabels, data } = currentData;
+
+        <span class="hljs-keyword">const</span> entity = pinGroup.<span class="hljs-title function_">getArtefact</span>(pinGroup.<span class="hljs-property">artefacts</span>[selectedColumn]);
+
+        pinGroup.<span class="hljs-title function_">setArtefacts</span>({
+            <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
+            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
+        });
+
+        frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">`<span class="hljs-subst">${yearLabels[selectedColumn]}</span>: §RED§<span class="hljs-subst">${data[selectedColumn].toLocaleString()}</span>`</span>);
+
+        entity.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">scale</span>: <span class="hljs-number">1.5</span>,
+            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+        });
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>Exported ‘kill’ function</p>
 
@@ -720,11 +852,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-25">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Exported ‘hide’ function</p>
 
@@ -743,11 +875,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-26">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Exported ‘show’ function</p>
 

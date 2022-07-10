@@ -620,6 +620,13 @@
 
     <span class="hljs-keyword">if</span> (el) {
 
+        <span class="hljs-keyword">const</span> ds = el.<span class="hljs-property">dataset</span>;
+
+        <span class="hljs-keyword">if</span> (ds.<span class="hljs-property">isResponsive</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">isResponsive</span> = <span class="hljs-literal">true</span>;
+        }
+
         <span class="hljs-keyword">if</span> (el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>) === <span class="hljs-string">&#x27;root&#x27;</span>) {
 
             <span class="hljs-title function_">pushUnique</span>(rootElements, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
@@ -1282,6 +1289,13 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         items.<span class="hljs-property">host</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
         <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">position</span>) items.<span class="hljs-property">position</span> = <span class="hljs-string">&#x27;absolute&#x27;</span>;
+
+        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">dimensions</span> &amp;&amp; <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(items.<span class="hljs-property">dimensions</span>)) {
+
+            items.<span class="hljs-property">width</span> = items.<span class="hljs-property">dimensions</span>[<span class="hljs-number">0</span>] || <span class="hljs-number">100</span>;
+            items.<span class="hljs-property">height</span> = items.<span class="hljs-property">dimensions</span>[<span class="hljs-number">1</span>] || <span class="hljs-number">100</span>;
+        }
+
         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">width</span>)) items.<span class="hljs-property">width</span> = <span class="hljs-number">100</span>;
         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">height</span>)) items.<span class="hljs-property">height</span> = <span class="hljs-number">100</span>;
 

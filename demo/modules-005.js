@@ -6,12 +6,12 @@ import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
+// All the functionality required to set up this sort of editor is managed in the `canvas-scene-editor.js` module
 import { initializeCanvasSceneEditor } from './modules/canvas-scene-editor.js';
 
 
 // #### Scene setup
 const sceneCanvas = scrawl.library.canvas['scene-canvas'];
-const historyCanvas = scrawl.library.canvas['history-canvas'];
 
 sceneCanvas.set({
     label: 'A demonstration of a simple design system.',
@@ -28,7 +28,6 @@ const {
 
 } = initializeCanvasSceneEditor({
     sceneCanvas, 
-    historyCanvas, 
     domEntityEditor: '#scene-canvas-dahsboard',
     sceneDimensions: 1000,
 }, scrawl);

@@ -601,6 +601,7 @@ const forceUpdate = function () {
 // });
 // ```
 
+// __observeAndUpdate__ - exported function
 const observeAndUpdate = function (items = Ωempty) {
 
     if (!xta(items.event, items.origin, items.updates)) return false;
@@ -747,34 +748,41 @@ const observeAndUpdate = function (items = Ωempty) {
 
 // #### Drag-and-drop zones.
 //
-// __makeDragZone__ is an attempt to make setting up drag-and-drop functionality within a Scrawl-canvas stack or canvas as simple as possible
+// __makeDragZone__ is an attempt to make setting up drag-and-drop functionality within a Scrawl-canvas stack or canvas as simple as possible. The functionality has been designed to allow multiple drag zones to be set on a canvas or stack element, while limiting the number of event listeners that need to be applied to the element to make the magic happen.
 //
 // Required attribute of the argument object:
 // + __.zone__ - either the String name of the Stack or Canvas artefact which will host the zone, or the Stack or Canvas artefact itself
 //
 // Additional, optional, attributes in the argument object
 // + __.coordinateSource__ - an object containing a `here` object
+// + __.coordinateSource__ - an object containing a `here` object
 // + __.collisionGroup__ - String name of Group object, or Group object itself
 // + __.startOn__ - Array of Strings
 // + __.endOn__ - Array of Strings
-// + __.updateOnStart__, __.updateOnShiftStart__ - Function, or a `set` object to be applied to the current artefact
-// + __.updateOnEnd__, __.updateOnShiftEnd__ - Function, or a `set` object to be applied to the current artefact
-// + __.updateWhileMoving__, __.updateWhileShiftMoving__ - Function to be run while drag is in progress
 // + __.exposeCurrentArtefact__ - Boolean (default: false)
 // + __.preventTouchDefaultWhenDragging__ - Boolean (default: false)
 // + __.resetCoordsToZeroOnTouchEnd__ - Boolean (default: true)
 // 
-// If `exposeCurrentArtefact` attribute is true, the factory returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). 
+// At the heart of the drag zone are a set of functions (or alternatively, objects that can be applied to the selected artefact) which define the actions that happen when a user starts, continues and stops dragging an artefact in the zone. It is possible to set different actions depending on whether the user is pressing the shift button while they perform the drag action:
+// + __.updateOnStart__, __.updateOnShiftStart__ - Function, or a `set` object to be applied to the current artefact
+// + __.updateOnEnd__, __.updateOnShiftEnd__ - Function, or a `set` object to be applied to the current artefact
+// + __.updateWhileMoving__, __.updateWhileShiftMoving__ - Function to be run while drag is in progress
+// + __.updateOnPrematureExit__ - Function that will run when checks (defined in code elsewhere) trigger a premature exit from the drag zone. The triggering code can be used, for instance, to make sure an artefact does not leave a given area of the cell, within the canvas element boundaries
 //
-// Invoking the returned function with a single argument that evaluates to true will trigger the kill function.
+// Multiple drag zones can be defined on a canvas or stack element. When a user presses the mouse button to start a drag the code will interrogate each drag zone in turn to discover if one of them has an artefact which collides with the mouse cursor; if yes, that drag zone takes precedence for the subsequent move and drop actions
+// + __.processingOrder__ - positive integer Number - drag zones with a lower value will be interrogated ahead of those with a higher value
 //
-// If the exposeCurrentArtefact attribute is false, or omitted, the function returns a kill function that can be invoked to remove the event listeners from the Stack or Canvas zone's DOM element.
+// If the `exposeCurrentArtefact` attribute is true, the `makeDragZone` factory returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). The function can also be triggered with the following string arguments:
+// + `'exit'` or `'drop` - force the drag action to end
+// + any other truthy argument - kill the drag zone object. If it was the only drag zone object associated with a given canvas or stack element then the event listeners will also be removed from the element
+// + null, undefined, any other falsy argument - return the collision data object
+//
+// If the `exposeCurrentArtefact` attribute is false, or omitted, the function returns a kill function that can be invoked (with no arguments) to remove the event listeners from the Stack or Canvas zone's DOM element.
 // 
 // NOTE: drag-and-drop functionality using this factory function __is not guaranteed__ for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.
-
-// `Exported function` (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.
 const dragZones = {};
 
+// Generate the drag zone and associate it with the zone element
 const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveListeners) {
 
     let {
@@ -995,8 +1003,10 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
     };
 };
 
+// `Exported function` (to modules and the SC object). Add drag-and-drop functionality to a canvas or stack wrapper.
 const makeDragZone = function (items = Ωempty) {
 
+    // The exposed `pickup` function will search for the target element (if user has started the drag while the mouse cursor was over a child of the Stack wrapper) and then interrogate each drag zone associated with that target until it finds a zone reporting a hit
     const pickup = (e = Ωempty) => {
 
         if (e && e.target) {
@@ -1032,6 +1042,7 @@ const makeDragZone = function (items = Ωempty) {
         }
     };
 
+    // The exposed `move` and `drop` functions will change to match the equivalent funtions supplied by the zone selected during the `pickup` stage of the operation
     let currentMove = λnull;
     const move = (e = Ωempty) => {
 
@@ -1046,6 +1057,7 @@ const makeDragZone = function (items = Ωempty) {
         currentDrop = λnull;
     };
 
+    // Listeners are added to the DOM element when the first drag zone is created for that target
     const doAddListeners = (startOn, endOn, target) => {
 
         addListener(startOn, pickup, target);
@@ -1053,6 +1065,7 @@ const makeDragZone = function (items = Ωempty) {
         addListener(endOn, drop, target);
     };
 
+    // Listeners are only removed from the DOM element when all the drag zones associated with that target have been killed
     const doRemoveListeners = (startOn, endOn, target) => {
 
         removeListener(startOn, pickup, target);
@@ -1062,10 +1075,21 @@ const makeDragZone = function (items = Ωempty) {
 
     const processedData = processDragZoneData(items, doAddListeners, doRemoveListeners);
 
+    // Return the appropriate function based on the value of the `exposeCurrentArtefact` attribute
     if (processedData.exposeCurrentArtefact) return processedData.getCurrent;
     else return processedData.kill;
 };
 
+
+// #### Keyboard zones.
+//
+// __makeKeyboardZone__ is an attempt to make setting up keyboard listeners (for accessibility) within a Scrawl-canvas stack or canvas as simple as possible. Similar to the drag zone functionality, SC tries to limit the number of keyboard event listeners attached to a particular DOM element to the bare minimum
+//
+// Required attribute of the argument object:
+// + __.zone__ - either the String name of the Stack or Canvas artefact which will host the zone, or the Stack or Canvas artefact itself
+//
+// Additional, optional, attributes in the argument object
+// + `'none', 'shiftOnly', 'altOnly', 'ctrlOnly', 'metaOnly', 'shiftAlt', 'shiftCtrl', 'shiftMeta', 'altCtrl', 'altMeta', 'ctrlMeta', 'shiftAltCtrl', 'shiftAltMeta', 'shiftCtrlMeta', 'altCtrlMeta', 'all'` - a set of objects containing `keyboard Key: function` attributes defining the group of actions to take when the user presses the associated key or key-combination.
 const keyboardZones = {};
 
 const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRemoveListeners) {
@@ -1234,6 +1258,7 @@ const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRem
         };
     }
 
+    // __kill__ - A function to remove the internal key mappings associated with the target DOM element, and then remove the keyboard listeners attached to that element
     if (!zoneItem.kill) {
 
         zoneItem.kill = function () {
@@ -1243,6 +1268,8 @@ const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRem
         };
     }
 
+    // __getMappedKeys__ - A function which returns an Array of the defined keys for the given group, the name of which should be supplied as the function's argument
+    // + To update key mappings, invoke the `makeKeyboardZone` function again, including the new mappings as part of the argument object
     const getMappedKeys = (keyGroup = 'none') => {
 
         if (zoneItem.keyGroups[keyGroup] != null) {
@@ -1252,15 +1279,17 @@ const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRem
         return [];
     }
 
+    // The return includes both the `kill` and `getMappedKeys` functions
     return {
         kill: zoneItem.kill,
         getMappedKeys,
     }
 }
 
-
+// `Exported function` (to modules and the SC object). Add keyboard listenning functionality to a canvas or stack wrapper.
 const makeKeyboardZone = function (items = Ωempty) {
 
+    // The exposed `actionKeyDown` function will search for the target element (if user has started the drag while the mouse cursor was over a child of the Stack wrapper) and then apply the required keystroke actions while that element remains focussed
     const actionKeyDown = (e = Ωempty) => {
 
         if (e && e.target) {
@@ -1287,24 +1316,29 @@ const makeKeyboardZone = function (items = Ωempty) {
     };
 
 
+    // The exposed `actionKeyUp` function will change to match the equivalent funtions supplied by the zone selected during the `actionKeyDown` stage of the operation
     let currentKeyUp = λnull;
     const actionKeyUp = (e) => {
 
         currentKeyUp(e);
     };
 
+    // Listeners are added to the DOM element when the first keyboard zone is created for that target
     const doAddListeners = (target) => {
 
         addNativeListener('keydown', actionKeyDown, target);
         addNativeListener('keyup', actionKeyUp, target);
     };
 
+
+    // Listeners are only removed from the DOM element when all the keyboard zones associated with that target have been killed
     const doRemoveListeners = (target) => {
 
         removeNativeListener('keydown', actionKeyDown, target);
         removeNativeListener('keyup', actionKeyUp, target);
     };
 
+    // Returns an object containing the `kill` and `getMappedKeys` functions for this keyboard mapping
     return processKeyboardZoneData(items, doAddListeners, doRemoveListeners);
 };
 

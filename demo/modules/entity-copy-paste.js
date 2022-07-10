@@ -4,11 +4,23 @@
 // Related files:
 // + [Accessible GUI-based simple canvas editor - main demo](../modules-005.html)
 //
-
-
 // #### Usage
-// TODO: add documentation
+// This module initializes keyboard-based copy, paste and delete functionality. The module adds the following zone to the supplied Canvas wrapper:
+// + A keyboard zone - for the `CTRL + X`, `CTRL + C` and `CTRL + V` keystrokes
+//
+// __Inputs to the `initializeEntityCopyPaste` function__
+// + `canvas` - SC canvas wrapper object (required)
+// + `selectedEntitys` - A reference to the selected entitys Group object, from the entity-navigation module (required)
+// + `addControllerAttributes` - an object containing attributes that need to be added to entitys which will be controlled by the scene editor, from the entity-navigation module (required)
+// + `updateControllerDisplay` - an object containing functions for showing and hiding highlighted/selected entitys, from the entity-navigation module (required)
+// + `dashboard` - an object containing DOM form functions, from the dom-entity-editor module (required)
+// + `createGui` - function to create and show an editor GUI, from the entity-manipulation-gui module (required)
+//
+// __Output from the `initializeEntityCopyPaste` function__ - is an object containing the following attributes:
+// + `killEntityCopyPaste` - kill function, to remove everything associated with the scene editor's copy/paste/delete functionality
 
+
+// #### Initialization function (exported)
 const initializeEntityCopyPaste = (items = {}, scrawl) => {
 
     // Check we have required arguments/values
@@ -35,8 +47,8 @@ const initializeEntityCopyPaste = (items = {}, scrawl) => {
     if (argsCheck.length) throw new Error(`SC entity manipulation GUI module error: missing arguments${argsCheck}`);
 
 
-    // Packet-related code
-    // + Copying (and deleting) entitys generates SC packets (stringified JSON) which we can then in the browser's Navigator clipboard
+    // #### Packet-related code
+    // + Copying (and deleting) entitys generates SC packets (stringified JSON) which we can then insert into the browser's Navigator clipboard
     // + These packets can then be added/restored onto the canvas by reading the clipboard and actioning the results on the Canvas wrapper
     // + There's unsolved issues around entity function attributes which will currently fail (because: scope), hence the need to reinstall those functions on the newly generated entity objects
     const entityGroupGetPackets = () => {
@@ -107,60 +119,25 @@ const initializeEntityCopyPaste = (items = {}, scrawl) => {
         .catch(e => console.log('entityGroupDelete error', e.message));
     };
 
-    // Keyboard event listener functions
+    // #### Keyboard event listener functions
     // + Using the standard `CTRL+C`, `CTRL+V`, `CTRL+X` keyboard shortcuts as these are well understood UX for end users
-    const extraKeys = {
-        ctrlKey: false,
-    };
+    const keyboard = scrawl.makeKeyboardZone({
 
-    const copyPasteKeysDown = (e) => {
+        zone: canvas,
 
-        const { key } = e;
-
-        // Tab, Enter/Return, Esc
-        if ('Tab' === key || 'Escape' === key) {
-            canvas.domElement.blur();
-            return;
-        }
-
-        if ('Control' === key) extraKeys.ctrlKey = true;
-
-        if (extraKeys.ctrlKey) {
-
-            if ('c' === key) entityGroupCopy();
-            else if ('v' === key) entityGroupPaste();
-            else if ('x' === key) entityGroupDelete();
-        }
-        e.preventDefault();
-    }
-    scrawl.addNativeListener('keydown', copyPasteKeysDown, canvas.domElement);
-
-    const copyPasteKeysUp = (e) => {
-
-        const { key } = e;
-
-        if ('Control' === key) extraKeys.ctrlKey = false;
-
-        e.preventDefault();
-    }
-    scrawl.addNativeListener('keyup', copyPasteKeysUp, canvas.domElement);
+        ctrlOnly: {
+            c: () => entityGroupCopy(),
+            v: () => entityGroupPaste(),
+            x: () => entityGroupDelete(),
+        },
+    });
 
 
     // #### Cleanup and return
-    const killEntityCopyPaste = () => {
-        copyPasteKeysDown();
-        copyPasteKeysUp();
-    };
+    const killEntityCopyPaste = () => keyboard.kill();
 
+    // Return object
     return {
-        // ctrl: {
-        //     copy: entityGroupCopy,
-        //     paste: entityGroupPaste,
-        //     delete: entityGroupDelete,
-        // },
-        // entityGroupCopy,
-        // entityGroupPaste,
-        // entityGroupDelete,
         killEntityCopyPaste,
     };
 };

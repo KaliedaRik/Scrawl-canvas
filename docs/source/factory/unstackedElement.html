@@ -815,6 +815,8 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
         <span class="hljs-keyword">if</span> (style.<span class="hljs-property">position</span> === <span class="hljs-string">&#x27;static&#x27;</span>) style.<span class="hljs-property">position</span> = <span class="hljs-string">&#x27;relative&#x27;</span>;
 
+        canvas.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-canvas`</span>;
+        
         el.<span class="hljs-title function_">prepend</span>(canvas);
 
         <span class="hljs-keyword">let</span> art = <span class="hljs-title function_">makeCanvas</span>({

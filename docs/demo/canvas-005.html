@@ -640,6 +640,11 @@
                 </a>
               
                 
+                <a class="source" href="modules-005.html">
+                  ./demo/modules-005.js
+                </a>
+              
+                
                 <a class="source" href="packets-001.html">
                   ./demo/packets-001.js
                 </a>
@@ -1005,11 +1010,6 @@
                 </a>
               
                 
-                <a class="source" href="temp-302.html">
-                  ./demo/temp-302.js
-                </a>
-              
-                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -1050,7 +1050,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-canvas-005">Demo Canvas 005</h1>
-<p>Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween</p>
+<p>Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween; trigger canvas hover and drag UX</p>
 
             </div>
             
@@ -1093,7 +1093,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -1108,7 +1108,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myRadial = <span class="hljs-title function_">makeRadialGradient</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myRadial = <span class="hljs-title function_">makeRadialGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;circle-waves&#x27;</span>,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;30%&#x27;</span>,
@@ -1302,17 +1302,34 @@
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
-<p>Create the drag-and-drop zone</p>
+<p>Make an object to hold functions we’ll use for UI</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> current = <span class="hljs-title function_">makeDragZone</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setCursorTo = {
 
-    <span class="hljs-attr">zone</span>: canvas,
-    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
-    <span class="hljs-attr">exposeCurrentArtefact</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
-});</pre></div></div>
+    <span class="hljs-attr">auto</span>: <span class="hljs-function">() =&gt;</span> {
+        canvas.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">css</span>: {
+                <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
+            },
+        });
+    },
+    <span class="hljs-attr">pointer</span>: <span class="hljs-function">() =&gt;</span> {
+        canvas.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">css</span>: {
+                <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span>,
+            },
+        });
+    },
+    <span class="hljs-attr">grabbing</span>: <span class="hljs-function">() =&gt;</span> {
+        canvas.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">css</span>: {
+                <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;grabbing&#x27;</span>,
+            },
+        });
+    },
+};</pre></div></div>
             
         </li>
         
@@ -1323,15 +1340,19 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Tween, and the engine used by the tween to calculate values</p>
+              <p>Create the drag-and-drop zone</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">tweenEngine</span> = (<span class="hljs-params">start, change, position</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> current = <span class="hljs-title function_">makeDragZone</span>({
 
-    <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position,
-        val;</pre></div></div>
+    <span class="hljs-attr">zone</span>: canvas,
+    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
+    <span class="hljs-attr">exposeCurrentArtefact</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">updateOnStart</span>: setCursorTo.<span class="hljs-property">grabbing</span>,
+    <span class="hljs-attr">updateOnEnd</span>: setCursorTo.<span class="hljs-property">pointer</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1341,6 +1362,44 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Implement the hover check on the Canvas wrapper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">checkForEntityHover</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">onEntityHover</span>: setCursorTo.<span class="hljs-property">pointer</span>,
+    <span class="hljs-attr">onEntityNoHover</span>: setCursorTo.<span class="hljs-property">auto</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Tween, and the engine used by the tween to calculate values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">tweenEngine</span> = (<span class="hljs-params">start, change, position</span>) =&gt; {
+
+    <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position,
+        val;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>This is a fairly basic ease-in-out function: the tween will call the function with start, change and position arguments, and the function is required to return a value calculated from those arguments</p>
 
@@ -1353,11 +1412,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>We’re asking the tween to calculate an ease over 3000 steps, but the palette cursors (paletteStart, paletteEnd) are only permitted to have integer values between 0 and 999. Effectively we’re asking the tween to cycle through the palette 3 times.</p>
 
@@ -1366,7 +1425,7 @@
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> val % <span class="hljs-number">1000</span>;
 };
 
-<span class="hljs-keyword">let</span> tweeny = <span class="hljs-title function_">makeTween</span>({
+<span class="hljs-keyword">const</span> tweeny = <span class="hljs-title function_">makeTween</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mytween&#x27;</span>,
     <span class="hljs-attr">targets</span>: <span class="hljs-string">&#x27;colored-pipes&#x27;</span>,
     <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>,
@@ -1389,11 +1448,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
@@ -1412,17 +1471,17 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Function to animate the gradients</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> animateGradients = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> animateGradients = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     myRadial.<span class="hljs-title function_">updateByDelta</span>();
 
@@ -1440,11 +1499,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1453,19 +1512,65 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">commence</span>: animateGradients,
-    <span class="hljs-attr">afterShow</span>: report,
+    <span class="hljs-attr">target</span>: canvas,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>Gradient animation is not automatically handled by the Display cycle</p>
+<ul>
+<li>instead we have to trigger it manually</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">commence</span>: animateGradients,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>We have to tell the canvas to check UI for hovering states every Display cycle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCompile</span>: <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">checkHover</span>(),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>Display the current frame rate - calculated at the end of each Display cycle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-13">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
