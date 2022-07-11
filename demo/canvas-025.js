@@ -66,11 +66,13 @@ const demoBuilder = (name) => {
     scrawl.makeOval({
         name: `${name}-oval1`,
         group: c.base.name
+// @ts-expect-error
     }).set(oval1);
 
     scrawl.makeOval({
         name: `${name}-oval2`,
         group: c.base.name
+// @ts-expect-error
     }).set(oval2);
 };
 

@@ -54,9 +54,8 @@ const target = scrawl.makePicture({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    return `    matrix3 weights array: ${matrix3.weights}
-    matrix5 weights array: ${matrix5.weights}    
-    Opacity: ${opacity.value}`;
+// @ts-expect-error
+    return `    matrix3 weights array: ${matrix3.weights}\n    matrix5 weights array: ${matrix5.weights}    \n    Opacity: ${opacity.value}`;
 });
 
 

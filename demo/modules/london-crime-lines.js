@@ -100,7 +100,7 @@ const update = (namespace, canvas, category) => {
             graph.build(namespace, canvas, myData);
             isBuilt = true;
         }
-        else graph.update(namespace, myData);
+        else graph.update();
 
         frame.updateTitle(`${currentData.area} Crimes: ${category}`);
         frame.updateBackground(category);

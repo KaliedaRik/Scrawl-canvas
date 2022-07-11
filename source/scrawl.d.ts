@@ -862,9 +862,9 @@ interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaM
     stashX?: StringOrNumberInput;
     stashY?: StringOrNumberInput;
     useAsPattern?: boolean;
-    checkForEntityHover??: boolean;
-    onEntityHover??: DefaultInputFunction;
-    onEntityNoHover??: DefaultInputFunction;
+    checkForEntityHover?: boolean;
+    onEntityHover?: DefaultInputFunction;
+    onEntityNoHover?: DefaultInputFunction;
 }
 
 interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, CascadeMixinFunctions, AssetMixinFunctions, PatternMixinFunctions, FilterMixinFunctions {

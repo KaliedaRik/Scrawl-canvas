@@ -304,6 +304,7 @@ const pinFactory = function (items, canvas, pinTextGroup, pinTextBackgroundGroup
             lineHeight: 1.15,
 
             width: labelwidth,
+// @ts-expect-error
             handle,
 
             pivot: `${name}-pin`,
@@ -390,6 +391,7 @@ const linkFactory = function (items, canvas, linkTextGroup, colors) {
                 }
             });
 
+// @ts-expect-error
             this.set({
                 text: `§UNDERLINE§${this.text}`,
             });
@@ -403,6 +405,7 @@ const linkFactory = function (items, canvas, linkTextGroup, colors) {
                 }
             });
 
+// @ts-expect-error
             this.set({
                 text: this.text.replace('§UNDERLINE§', ''),
             });
@@ -410,6 +413,7 @@ const linkFactory = function (items, canvas, linkTextGroup, colors) {
 
         onUp: function () {
 
+// @ts-expect-error
             this.clickAnchor();
         },
 
@@ -901,6 +905,7 @@ export default function (el) {
 
                 updateOnStart: () => {
 
+// @ts-expect-error
                     dragBar.isBeingDragged = false;
                     dragBar.set({
                         lockXTo: 'mouse',
