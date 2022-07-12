@@ -40,11 +40,13 @@ let lorem = makePhrase({
     showBoundingBox: true,
 });
 
-lorem.addSectionClass('Red-Text', { fill: 'red' })
-.addSectionClass('size-24', { size: '24px' })
-.addSectionClass('Letter-spacing-10', { space: 10 })
-.addSectionClass('/Letter-spacing-10', { space: 0 })
-.addSectionClass('MONO', { family: 'monospace' });
+
+// Add additional section classes directly to the library
+L.sectionClasses['Red-Text'] = { fill: 'red' };
+L.sectionClasses['size-24'] = { size: '24px' };
+L.sectionClasses['Letter-spacing-10'] = { space: 10 };
+L.sectionClasses['/Letter-spacing-10'] = { space: 0 };
+L.sectionClasses['MONO'] = { family: 'monospace' };
 
 
 // Add a pivoted Wheel entity

@@ -122,6 +122,8 @@ let lorem = makePhrase({
     }
 });
 
+
+// Add additional section classes to the library, via our new Phrase entity
 lorem.addSectionClass('Red-Text', { fill: 'red' })
 .addSectionClass('size-24', { size: '24px' })
 .addSectionClass('Letter-spacing-10', { space: 10 })

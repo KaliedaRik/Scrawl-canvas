@@ -411,7 +411,7 @@ Data supplied to graph module as Javascript object with structure:
             graph.<span class="hljs-title function_">build</span>(namespace, canvas, myData);
             isBuilt = <span class="hljs-literal">true</span>;
         }
-        <span class="hljs-keyword">else</span> graph.<span class="hljs-title function_">update</span>(namespace, myData);
+        <span class="hljs-keyword">else</span> graph.<span class="hljs-title function_">update</span>();
 
         frame.<span class="hljs-title function_">updateTitle</span>(<span class="hljs-string">`<span class="hljs-subst">${currentData.area}</span> Crimes: <span class="hljs-subst">${category}</span>`</span>);
         frame.<span class="hljs-title function_">updateBackground</span>(category);

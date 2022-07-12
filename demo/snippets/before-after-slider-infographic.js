@@ -316,18 +316,7 @@ const pinFactory = function (items, canvas, pinTextGroup, pinTextBackgroundGroup
             exposeText: (suppressAccessibleText) ? false : true,
 
             visibility: false,
-
-            // Changing the section class markers to include angle-bracketed markup
-            // sectionClassMarker: '[§<>]',
         });
-
-        pinText.addSectionClass('span class="sc-red"', { fill: colors.red })
-        .addSectionClass('span class="sc-blue"', { fill: colors.blue })
-        .addSectionClass('span class="sc-green"', { fill: colors.green })
-        .addSectionClass('span class="sc-white"', { fill: colors.white })
-        .addSectionClass('span class="sc-black"', { fill: colors.black })
-        .addSectionClass('span class="sc-gray"', { fill: colors.gray })
-        .addSectionClass('/span', { fill: 'default' });
 
         pinTextGroup.addArtefacts(`${name}-label`);
 
@@ -653,6 +642,18 @@ export default function (el) {
             colors.black = cssColors.getPropertyValue('--sc-black');
             colors.white = cssColors.getPropertyValue('--sc-white');
             colors.gray = cssColors.getPropertyValue('--sc-gray');
+
+            // Add additional section classes to the library
+            const sect = scrawl.library.sectionClasses;
+
+            sect['span class="sc-red"'] = { fill: colors.red };
+            sect['span class="sc-blue"'] = { fill: colors.blue };
+            sect['span class="sc-green"'] = { fill: colors.green };
+            sect['span class="sc-white"'] = { fill: colors.white };
+            sect['span class="sc-black"'] = { fill: colors.black };
+            sect['span class="sc-gray"'] = { fill: colors.gray };
+            sect['/span'] = { fill: 'default' };
+
 
             // __8. Build the left-hand panel__
             const leftPanelName = leftPanel.name;

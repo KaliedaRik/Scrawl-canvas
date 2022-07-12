@@ -27,14 +27,84 @@
   <ul>
     <li><a href="source/scrawl.html">scrawl.js</a></li>
     <li><a href="source/core/init.html">core/init.js</a></li>
+    <ul>
+      <li>init</li>
+    </ul>
     <li><a href="source/core/library.html">core/library.js</a></li>
+    <ul>
+      <li>library.radian</li>
+      <li>library.version</li>
+    </ul>
+    <ul>
+      <li>library.sectionClasses</li>
+    </ul>
+    <ul>
+      <li>library.anchor</li>
+      <li>library.animation</li>
+      <li>library.animationtickers</li>
+      <li>library.artefact</li>
+      <li>library.asset</li>
+      <li>library.canvas</li>
+      <li>library.cell</li>
+      <li>library.element</li>
+      <li>library.entity</li>
+      <li>library.filter</li>
+      <li>library.force</li>
+      <li>library.group</li>
+      <li>library.particle</li>
+      <li>library.spring</li>
+      <li>library.stack</li>
+      <li>library.styles</li>
+      <li>library.tween</li>
+      <li>library.unstackedelement</li>
+      <li>library.world</li>
+    </ul>
   </ul>
 
   <h4>Core</h4>
   <ul>
     <li><a href="source/core/document.html">core/document.js</a></li>
+      <ul>
+        <li>addCanvas</li>
+        <li>addStack</li>
+        <li>getCanvas</li>
+        <li>getStack</li>
+        <li>setCurrentCanvas</li>
+      </ul>
+      <ul>
+        <li>clear</li>
+        <li>compile</li>
+        <li>show</li>
+        <li>render</li>
+      </ul>
     <li><a href="source/core/events.html">core/events.js</a></li>
+    <ul>
+      <li>addListener</li>
+      <li>addNativeListener</li>
+      <li>makeAnimationObserver</li>
+      <li>removeListener</li>
+      <li>removeNativeListener</li>
+    </ul>
+    <ul>
+      <li>getPixelRatio</li>
+      <li>getIgnorePixelRatio</li>
+      <li>setIgnorePixelRatio</li>
+      <li>setPixelRatioChangeAction</li>
+    </ul>
     <li><a href="source/core/userInteraction.html">core/userInteraction.js</a></li>
+    <ul>
+      <li>makeDragZone</li>
+      <li>makeKeyboardZone</li>
+      <li>observeAndUpdate</li>
+    </ul>
+    <ul>
+      <li>currentCorePosition</li>
+      <li>forceUpdate</li>
+      <li>getTouchActionChoke</li>
+      <li>setTouchActionChoke</li>
+      <li>startCoreListeners</li>
+      <li>stopCoreListeners</li>
+    </ul>
     <li><a href="source/mixin/base.html">mixin/base.js</a></li>
     <li><a href="source/mixin/delta.html">mixin/delta.js</a></li>
   </ul>
@@ -47,35 +117,120 @@
     <li><a href="source/mixin/position.html">mixin/position.js</a></li>
   </ul>
 
-  <h4>Canvas entity artefacts</h4>
+  <h4>Canvas basic entity artefacts</h4>
   <ul>
     <li><a href="source/mixin/entity.html">mixin/entity.js</a></li>
     <li><a href="source/factory/block.html">factory/block.js</a></li>
+    <ul>
+      <li>makeBlock</li>
+    </ul>
     <li><a href="source/factory/crescent.html">factory/crescent.js</a></li>
-    <li><a href="source/factory/grid.html">factory/grid.js</a></li>
-    <li><a href="source/factory/loom.html">factory/loom.js</a></li>
+    <ul>
+      <li>makeCrescent</li>
+    </ul>
     <li><a href="source/factory/phrase.html">factory/phrase.js</a></li>
+    <ul>
+      <li>makePhrase</li>
+    </ul>
     <li><a href="source/factory/picture.html">factory/picture.js</a></li>
+    <ul>
+      <li>makePicture</li>
+    </ul>
     <li><a href="source/factory/wheel.html">factory/wheel.js</a></li>
+    <ul>
+      <li>makeWheel</li>
+    </ul>
   </ul>
 
+  <h4>Canvas path-based entity artefacts</h4>
   <ul>
     <li><a href="source/mixin/shapeBasic.html">mixin/shapeBasic.js</a></li>
     <li><a href="source/mixin/shapeCurve.html">mixin/shapeCurve.js</a></li>
     <li><a href="source/mixin/shapePathCalculation.html">mixin/shapePathCalculation.js</a></li>
     <li><a href="source/factory/bezier.html">factory/bezier.js</a></li>
+    <ul>
+      <li>makeBezier</li>
+    </ul>
     <li><a href="source/factory/cog.html">factory/cog.js</a></li>
+    <ul>
+      <li>makeCog</li>
+    </ul>
     <li><a href="source/factory/line.html">factory/line.js</a></li>
+    <ul>
+      <li>makeLine</li>
+    </ul>
     <li><a href="source/factory/lineSpiral.html">factory/lineSpiral.js</a></li>
+    <ul>
+      <li>makeLineSpiral</li>
+    </ul>
     <li><a href="source/factory/oval.html">factory/oval.js</a></li>
+    <ul>
+      <li>makeOval</li>
+    </ul>
     <li><a href="source/factory/polygon.html">factory/polygon.js</a></li>
+    <ul>
+      <li>makePolygon</li>
+    </ul>
     <li><a href="source/factory/polyline.html">factory/polyline.js</a></li>
+    <ul>
+      <li>makePolyline</li>
+    </ul>
     <li><a href="source/factory/quadratic.html">factory/quadratic.js</a></li>
+    <ul>
+      <li>makeQuadratic</li>
+    </ul>
     <li><a href="source/factory/rectangle.html">factory/rectangle.js</a></li>
+    <ul>
+      <li>makeRectangle</li>
+    </ul>
     <li><a href="source/factory/shape.html">factory/shape.js</a></li>
+    <ul>
+      <li>makeShape</li>
+    </ul>
     <li><a href="source/factory/spiral.html">factory/spiral.js</a></li>
+    <ul>
+      <li>makeSpiral</li>
+    </ul>
     <li><a href="source/factory/star.html">factory/star.js</a></li>
+    <ul>
+      <li>makeStar</li>
+    </ul>
     <li><a href="source/factory/tetragon.html">factory/tetragon.js</a></li>
+    <ul>
+      <li>makeTetragon</li>
+    </ul>
+  </ul>
+
+  <h4>Canvas particle-based entity artefacts</h4>
+  <ul>
+    <li><a href="source/factory/emitter.html">factory/emitter.js</a></li>
+    <ul>
+      <li>makeEmitter</li>
+    </ul>
+    <li><a href="source/factory/net.html">factory/net.js</a></li>
+    <ul>
+      <li>makeNet</li>
+    </ul>
+    <li><a href="source/factory/tracer.html">factory/tracer.js</a></li>
+    <ul>
+      <li>makeTracer</li>
+    </ul>
+  </ul>
+
+  <h4>Canvas compound entity artefacts</h4>
+  <ul>
+    <li><a href="source/factory/grid.html">factory/grid.js</a></li>
+    <ul>
+      <li>makeGrid</li>
+    </ul>
+    <li><a href="source/factory/loom.html">factory/loom.js</a></li>
+    <ul>
+      <li>makeLoom</li>
+    </ul>
+    <li><a href="source/factory/mesh.html">factory/mesh.js</a> (particles)</li>
+    <ul>
+      <li>makeMesh</li>
+    </ul>
   </ul>
 
   <h4>Non-canvas artefacts</h4>
@@ -85,6 +240,9 @@
     <li><a href="source/factory/canvas.html">factory/canvas.js</a></li>
     <li><a href="source/factory/cell.html">factory/cell.js</a></li>
     <li><a href="source/factory/element.html">factory/element.js</a></li>
+    <ul>
+      <li>makeElement</li>
+    </ul>
     <li><a href="source/factory/stack.html">factory/stack.js</a></li>
   </ul>
 
@@ -94,10 +252,37 @@
     <li><a href="source/mixin/assetConsumer.html">mixin/assetConsumer.js</a></li>
     <li><a href="source/mixin/assetAdvancedFunctionality.html">mixin/assetAdvancedFunctionality.js</a></li>
     <li><a href="source/factory/imageAsset.html">factory/imageAsset.js</a></li>
+    <ul>
+      <li>importImage</li>
+      <li>importDomImage</li>
+    </ul>
+    <ul>
+      <li>createImageFromCell</li>
+      <li>createImageFromEntity</li>
+      <li>createImageFromGroup</li>
+    </ul>
     <li><a href="source/factory/noiseAsset.html">factory/noiseAsset.js</a> (for Perlin noise, etc)</li>
+    <ul>
+      <li>makeNoiseAsset</li>
+    </ul>
+    <li><a href="source/factory/rawAsset.html">factory/rawAsset.js</a></li>
+    <ul>
+      <li>makeRawAsset</li>
+    </ul>
     <li><a href="source/factory/rdAsset.html">factory/rdAsset.js</a> (for reaction-diffusion noise, etc)</li>
+    <ul>
+      <li>makeReactionDiffusionAsset</li>
+    </ul>
     <li><a href="source/factory/spriteAsset.html">factory/spriteAsset.js</a></li>
+    <ul>
+      <li>importSprite</li>
+    </ul>
     <li><a href="source/factory/videoAsset.html">factory/videoAsset.js</a></li>
+    <ul>
+      <li>importDomVideo</li>
+      <li>importMediaStream</li>
+      <li>importVideo</li>
+    </ul>
     <li><em>Note that Cells can also be used as assets</em></li>
   </ul>
 
@@ -106,51 +291,97 @@
     <li><a href="source/mixin/pattern.html">mixin/pattern.js</a></li>
     <li><a href="source/mixin/styles.html">mixin/styles.js</a></li>
     <li><a href="source/factory/color.html">factory/color.js</a></li>
+    <ul>
+      <li>makeColor</li>
+    </ul>
     <li><a href="source/factory/conicGradient.html">factory/conicGradient.js</a></li>
+    <ul>
+      <li>makeConicGradient</li>
+    </ul>
     <li><a href="source/factory/gradient.html">factory/gradient.js</a></li>
+    <ul>
+      <li>makeGradient</li>
+    </ul>
     <li><a href="source/factory/palette.html">factory/palette.js</a></li>
     <li><a href="source/factory/pattern.html">factory/pattern.js</a></li>
+    <ul>
+      <li>makePattern</li>
+    </ul>
     <li><a href="source/factory/radialGradient.html">factory/radialGradient.js</a></li>
+    <ul>
+      <li>makeRadialGradient</li>
+    </ul>
   </ul>
 
   <h4>Filters</h4>
   <ul>
     <li><a href="source/mixin/filter.html">mixin/filter.js</a></li>
     <li><a href="source/factory/filter.html">factory/filter.js</a></li>
+    <ul>
+      <li>makeFilter</li>
+    </ul>
     <li><a href="source/factory/filterEngine.html">factory/filterEngine.js</a></li>
+    <ul>
+      <li>setFilterMemoizationChoke</li>
+    </ul>
   </ul>
 
   <h4>Particles and Physics</h4>
   <ul>
     <li><a href="source/factory/particle.html">factory/particle.js</a></li>
     <li><a href="source/factory/particleForce.html">factory/particleForce.js</a></li>
+    <ul>
+      <li>makeForce</li>
+    </ul>
     <li><a href="source/factory/particleHistory.html">factory/particleHistory.js</a></li>
     <li><a href="source/factory/particleSpring.html">factory/particleSpring.js</a></li>
+    <ul>
+      <li>makeSpring</li>
+    </ul>
     <li><a href="source/factory/particleWorld.html">factory/particleWorld.js</a></li>
-  </ul>
-
-  <ul>
-    <li><a href="source/factory/emitter.html">factory/emitter.js</a></li>
-    <li><a href="source/factory/mesh.html">factory/mesh.js</a></li>
-    <li><a href="source/factory/net.html">factory/net.js</a></li>
-    <li><a href="source/factory/tracer.html">factory/tracer.js</a></li>
+    <ul>
+      <li>makeWorld</li>
+    </ul>
   </ul>
 
   <h4>Groups</h4>
   <ul>
     <li><a href="source/mixin/cascade.html">mixin/cascade.js</a></li>
     <li><a href="source/factory/group.html">factory/group.js</a></li>
+    <ul>
+      <li>makeGroup</li>
+    </ul>
   </ul>
 
   <h4>Animation</h4>
   <ul>
     <li><a href="source/core/animationloop.html">core/animationloop.js</a></li>
+    <ul>
+      <li>startCoreAnimationLoop</li>
+      <li>stopCoreAnimationLoop</li>
+    </ul>
     <li><a href="source/factory/animation.html">factory/animation.js</a></li>
+    <ul>
+      <li>makeAnimation</li>
+    </ul>
     <li><a href="source/factory/renderAnimation.html">factory/renderAnimation.js</a></li>
-    <li><a href="source/factory/ticker.html">factory/ticker.js</a></li>
-    <li><a href="source/mixin/tween.html">mixin/tween.js</a></li>
-    <li><a href="source/factory/tween.html">factory/tween.js</a></li>
+    <ul>
+      <li>makeRender</li>
+    </ul>
+  </ul>
+  <ul>
     <li><a href="source/factory/action.html">factory/action.js</a></li>
+    <ul>
+      <li>makeAction</li>
+    </ul>
+    <li><a href="source/factory/ticker.html">factory/ticker.js</a></li>
+    <ul>
+      <li>makeTicker</li>
+    </ul>
+    <li><a href="source/factory/tween.html">factory/tween.js</a></li>
+    <ul>
+      <li>makeTween</li>
+    </ul>
   </ul>
 
   <h4>Anchors</h4>
@@ -162,23 +393,44 @@
   <h4>Snippets (experimental)</h4>
   <ul>
     <li><a href="source/core/snippets.html">core/snippets.js</a></li>
+    <ul>
+      <li>makeSnippet</li>
+    </ul>
     <li><a href="source/factory/unstackedElement.html">factory/unstackedElement.js</a></li>
   </ul>
 
   <h4>Other modules</h4>
   <ul>
+    <li><a href="source/core/random-seed.html">core/random-seed.js</a></li>
+    <ul>
+      <li>seededRandomNumberGenerator</li>
+    </ul>
     <li><a href="source/core/utilities.html">core/utilities.js</a></li>
     <li><a href="source/factory/fontAttributes.html">factory/fontAttributes.js</a></li>
     <li><a href="source/factory/state.html">factory/state.js</a></li>
+  </ul>
+  <ul>
     <li><a href="source/factory/coordinate.html">factory/coordinate.js</a></li>
+    <ul>
+      <li>requestCoordinate</li>
+      <li>releaseCoordinate</li>
+    </ul>
     <li><a href="source/factory/quaternion.html">factory/quaternion.js</a></li>
+    <ul>
+      <li>requestQuaternion</li>
+      <li>releaseQuaternion</li>
+    </ul>
     <li><a href="source/factory/vector.html">factory/vector.js</a></li>
+    <ul>
+      <li>requestVector</li>
+      <li>releaseVector</li>
+    </ul>
   </ul>
 
   <h3>Scrawl Demo files</h3>
-  <p><a href="../demo">Test Demo Index Page</a></p>
+  <p><a href="../demo/">Test Demo Index Page</a></p>
 
-  <h4>Canvas-based demos</h4>
+  <h4>Canvas demos</h4>
   <ul>
     <li><a href="demo/canvas-001.html">Canvas-001</a> Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys</li>
     <li><a href="demo/canvas-002.html">Canvas-002</a> Block and wheel entity positioning (start, pivot, mimic, mouse)</li>
@@ -309,84 +561,95 @@
     <li><a href="demo/particles-016.html">Particles-016</a> Mesh entitys</li>
   </ul>
 
-  <h4>Module, packet and snippet demos</h4>
+  <h4>Module demos</h4>
   <ul>
     <li><a href="demo/modules-001.html">Modules-001</a> Scrawl-canvas modularized code - London crime charts (with accessible data)</li>
-    <li><a href="demo/modules/london-crime-lines.html">Module code</a> london-crime-lines.js</li>
-    <li><a href="demo/modules/london-crime-stacked-bars.html">Module code</a> london-crime-stacked-bars.js</li>
-    <li><a href="demo/modules/simple-chart-frame.html">Module code</a> simple-chart-frame.js</li>
-    <li><a href="demo/modules/simple-chart-frame-tests.html">Module code</a> simple-chart-frame-tests.js</li>
-    <li><a href="demo/modules/simple-graph-lines.html">Module code</a> simple-graph-lines.js</li>
-    <li><a href="demo/modules/simple-graph-stacked-bars.html">Module code</a> simple-graph-stacked-bars.js</li>
+    <ul>
+      <li><a href="demo/modules/london-crime-lines.html">Module code</a> london-crime-lines.js</li>
+      <li><a href="demo/modules/london-crime-stacked-bars.html">Module code</a> london-crime-stacked-bars.js</li>
+      <li><a href="demo/modules/simple-chart-frame.html">Module code</a> simple-chart-frame.js</li>
+      <li><a href="demo/modules/simple-chart-frame-tests.html">Module code</a> simple-chart-frame-tests.js</li>
+      <li><a href="demo/modules/simple-graph-lines.html">Module code</a> simple-graph-lines.js</li>
+      <li><a href="demo/modules/simple-graph-stacked-bars.html">Module code</a> simple-graph-stacked-bars.js</li>
+    </ul>
   </ul>
 
   <ul>
     <li><a href="demo/modules-002.html">Modules-002</a> Spiral charts</li>
-    <li><a href="demo/modules/wikipedia-views-spiral-chart.html">Module code</a> wikipedia-views-spiral-chart.js</li>
+    <ul>
+      <li><a href="demo/modules/wikipedia-views-spiral-chart.html">Module code</a> wikipedia-views-spiral-chart.js</li>
+    </ul>
   </ul>
 
   <ul>
     <li><a href="demo/modules-003.html">Modules-003</a> Factory functions to create more complex, compound entitys</li>
-    <li><a href="demo/modules/entity-ring-builder.html">Module code</a> entity-ring-builder.js</li>
+    <ul>
+      <li><a href="demo/modules/entity-ring-builder.html">Module code</a> entity-ring-builder.js</li>
+    </ul>
   </ul>
 
   <ul>
     <li><a href="demo/modules-004.html">Modules-004</a> Import and use Lottie animations</li>
-    <li><a href="demo/modules/lottie-loader.html">Module code</a> lottie-loader.js</li>
+    <ul>
+      <li><a href="demo/modules/lottie-loader.html">Module code</a> lottie-loader.js</li>
+    </ul>
   </ul>
 
   <ul>
     <li><a href="demo/modules-005.html">Modules-005</a> Accessible GUI-based simple canvas editor</li>
-    <li><a href="demo/modules/canvas-scene-editor.html">Module code</a> canvas-scene-editor.js</li>
-    <li><a href="demo/modules/canvas-minimap.html">Module code</a> canvas-minimap.js</li>
-    <li><a href="demo/modules/dom-entity-editor.html">Module code</a> dom-entity-editor.js</li>
-    <li><a href="demo/modules/entity-copy-paste.html">Module code</a> entity-copy-paste.js</li>
-    <li><a href="demo/modules/entity-manipulation-gui.html">Module code</a> entity-manipulation-gui.js</li>
-    <li><a href="demo/modules/entity-navigation.html">Module code</a> entity-navigation.js</li>
+    <ul>
+      <li><a href="demo/modules/canvas-scene-editor.html">Module code</a> canvas-scene-editor.js</li>
+      <li><a href="demo/modules/canvas-minimap.html">Module code</a> canvas-minimap.js</li>
+      <li><a href="demo/modules/dom-entity-editor.html">Module code</a> dom-entity-editor.js</li>
+      <li><a href="demo/modules/entity-copy-paste.html">Module code</a> entity-copy-paste.js</li>
+      <li><a href="demo/modules/entity-manipulation-gui.html">Module code</a> entity-manipulation-gui.js</li>
+      <li><a href="demo/modules/entity-navigation.html">Module code</a> entity-navigation.js</li>
+    </ul>
   </ul>
 
+  <h4>Packet demos</h4>
   <ul>
     <li><a href="demo/packets-001.html">Packets-001</a> Save and load Scrawl-canvas entity using text packets</li>
-  </ul>
-  <ul>
     <li><a href="demo/packets-002.html">Packets-002</a> Scrawl-canvas packets - save and load a range of different entitys</li>
   </ul>
 
+  <h4>Snippet demos</h4>
   <ul>
     <li><a href="demo/snippets-001.html">Snippets-001</a> Scrawl-canvas DOM element snippets</li>
     <li><a href="demo/snippets-002.html">Snippets-002</a> Scrawl-canvas stack element snippets</li>
     <li><a href="demo/snippets-003.html">Snippets-003</a> DOM element snippet - test canvas adaption to local element variations</li>
     <li><a href="demo/snippets-004.html">Snippets-004</a> Snippets included in the Scrawl-canvas demo/snippets folder</li>
+    <ul>
+      <li><a href="demo/snippets/animated-hover-gradient-snippet.html">Animated hover gradient snippet</a></li>
+      <li><a href="demo/snippets/animated-word-gradient-snippet.html">Animated word gradient snippet</a></li>
+      <li><a href="demo/snippets/green-box-snippet.html">Green box snippet</a></li>
+      <li><a href="demo/snippets/jazzy-button-snippet.html">Jazzy button snippet</a></li>
+      <li><a href="demo/snippets/page-performance-snippet.html">Page performance snippet</a></li>
+      <li><a href="demo/snippets/page-performance-snippet-test.html">Page performance snippet (test)</a></li>
+      <li><a href="demo/snippets/pan-image-snippet.html">Pan image snippet</a></li>
+      <li><a href="demo/snippets/placeholder-effect-snippet.html">Placeholder effect snippet</a></li>
+      <li><a href="demo/snippets/ripple-effect-snippet.html">Ripple effect snippet</a></li>
+      <li><a href="demo/snippets/spotlight-text-snippet.html">Spotlight text snippet</a></li>
+      <li><a href="demo/snippets/spotlight-text-snippet-test.html">Spotlight text snippet (test)</a></li>
+      <li><a href="demo/snippets/word-highlighter-snippet.html">Word highlighter snippet</a></li>
+    </ul>
     <li><a href="demo/snippets-005.html">Snippets-005</a> Create a responsive, interactive and accessible before/after slider infographic</li>
+    <ul>
+      <li><a href="demo/snippets/before-after-slider-infographic.html">Before/after slider infographic snippet</a></li>
+    </ul>
     <li><a href="demo/snippets-006.html">Snippets-006</a> Editable header text colorizer and animation effect snippets</li>
+    <ul>
+      <li><a href="demo/snippets/text-snippet-helper.html">Text snippet helper</a></li>
+      <li><a href="demo/snippets/animated-highlight-gradient-text-snippet.html">Animated highlight gradient text snippet</a></li>
+      <li><a href="demo/snippets/bubbles-text-snippet.html">Bubbles text snippet</a></li>
+      <li><a href="demo/snippets/risograph-text-gradient-snippet.html">Risograph text gradient snippet</a></li>
+      <li><a href="demo/snippets/swirling-stripes-text-snippet.html">Swirling stripes text snippet</a></li>
+      <li><a href="demo/snippets/worley-text-gradient-snippet.html">Worley text gradient snippet</a></li>
+    </ul>
   </ul>
 
-  <ul>
-    <li><a href="demo/snippets/animated-hover-gradient-snippet.html">Animated hover gradient snippet</a></li>
-    <li><a href="demo/snippets/animated-word-gradient-snippet.html">Animated word gradient snippet</a></li>
-    <li><a href="demo/snippets/before-after-slider-infographic.html">Before/after slider infographic snippet</a></li>
-    <li><a href="demo/snippets/green-box-snippet.html">Green box snippet</a></li>
-    <li><a href="demo/snippets/jazzy-button-snippet.html">Jazzy button snippet</a></li>
-    <li><a href="demo/snippets/page-performance-snippet.html">Page performance snippet</a></li>
-    <li><a href="demo/snippets/page-performance-snippet-test.html">Page performance snippet (test)</a></li>
-    <li><a href="demo/snippets/pan-image-snippet.html">Pan image snippet</a></li>
-    <li><a href="demo/snippets/placeholder-effect-snippet.html">Placeholder effect snippet</a></li>
-    <li><a href="demo/snippets/ripple-effect-snippet.html">Ripple effect snippet</a></li>
-    <li><a href="demo/snippets/spotlight-text-snippet.html">Spotlight text snippet</a></li>
-    <li><a href="demo/snippets/spotlight-text-snippet-test.html">Spotlight text snippet (test)</a></li>
-    <li><a href="demo/snippets/word-highlighter-snippet.html">Word highlighter snippet</a></li>
-  </ul>
 
-  <ul>
-    <li><a href="demo/snippets/text-snippet-helper.html">Text snippet helper</a></li>
-    <li><a href="demo/snippets/animated-highlight-gradient-text-snippet.html">Animated highlight gradient text snippet</a></li>
-    <li><a href="demo/snippets/bubbles-text-snippet.html">Bubbles text snippet</a></li>
-    <li><a href="demo/snippets/risograph-text-gradient-snippet.html">Risograph text gradient snippet</a></li>
-    <li><a href="demo/snippets/swirling-stripes-text-snippet.html">Swirling stripes text snippet</a></li>
-    <li><a href="demo/snippets/worley-text-gradient-snippet.html">Worley text gradient snippet</a></li>
-  </ul>
-
-  <h4>Other demos</h4>
+  <h4>DOM Stack demos</h4>
   <ul>
     <li><a href="demo/dom-001.html">DOM-001</a> Loading the scrawl-canvas library using a script tag in the HTML code</li>
     <li><a href="demo/dom-002.html">DOM-002</a> Element mouse, pivot and mimic functionality</li>

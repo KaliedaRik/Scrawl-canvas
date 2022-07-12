@@ -3045,7 +3045,7 @@ P.theBigActionsObject = {
 
         for (i = 0; i < len; i += 4) {
 
-            a = 1 + 3;
+            a = i + 3;
 
             if (iData[a]) {
 
