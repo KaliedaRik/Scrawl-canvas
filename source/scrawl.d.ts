@@ -2709,7 +2709,7 @@ export function observeAndUpdate(items: ObserveAndUpdateInputs): DefaultOutputFu
 // makeDragZone factory (not stored in library)
 // -------------------------------------
 interface MakeDragZoneInputs {
-    zone: StackInstance | CanvasInstance;
+    zone: StackInstance | CanvasInstance | string;
     coordinateSource?: any;
     collisionGroup?: any;
     startOn?: string | string[];
@@ -2738,7 +2738,7 @@ export function makeDragZone(items: MakeDragZoneInputs): DefaultOutputFunction |
 // makeDragZone factory (not stored in library)
 // -------------------------------------
 interface MakeKeyboardZoneInputs {
-    zone: StackInstance | CanvasInstance;
+    zone: StackInstance | CanvasInstance | string;
     none?: {[index: string]: DefaultInputFunction};
     shiftOnly?: {[index: string]: DefaultInputFunction};
     altOnly?: {[index: string]: DefaultInputFunction};
