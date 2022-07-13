@@ -111,8 +111,8 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
             });
 
             return [
-                minX + ([maxX - minX] / 2),
-                minY + ([maxY - minY] / 2),
+                minX + ((maxX - minX) / 2),
+                minY + ((maxY - minY) / 2),
             ];
         }
     };

@@ -1,4 +1,4 @@
-// Type definitions for Scrawl-canvas 8.9.0
+// Type definitions for Scrawl-canvas 8.9.1
 
 
 
@@ -745,7 +745,9 @@ interface BezierFactoryFunctions extends BaseMixinFunctions, ShapeCurveMixinFunc
     simpleStamp: (host: CellInstance, items?: BezierFactoryInputs) => void;
 }
 
-interface BezierInstance extends BezierFactoryInputs, BezierFactoryFunctions {}
+interface BezierInstance extends BezierFactoryInputs, BezierFactoryFunctions {
+    length: number;
+}
 
 
 
@@ -916,7 +918,9 @@ interface CogFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFunctio
     simpleStamp: (host: CellInstance, items?: CogFactoryInputs) => void;
 }
 
-interface CogInstance extends CogFactoryInputs, CogFactoryFunctions {}
+interface CogInstance extends CogFactoryInputs, CogFactoryFunctions {
+    length: number;
+}
 
 
 
@@ -1452,7 +1456,9 @@ interface LineFactoryFunctions extends BaseMixinFunctions, ShapeCurveMixinFuncti
     simpleStamp: (host: CellInstance, items?: LineFactoryInputs) => void;
 }
 
-interface LineInstance extends LineFactoryInputs, LineFactoryFunctions {}
+interface LineInstance extends LineFactoryInputs, LineFactoryFunctions {
+    length: number;
+}
 
 
 
@@ -1481,7 +1487,9 @@ interface LineSpiralFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixin
     simpleStamp: (host: CellInstance, items?: LineSpiralFactoryInputs) => void;
 }
 
-interface LineSpiralInstance extends LineSpiralFactoryInputs, LineSpiralFactoryFunctions {}
+interface LineSpiralInstance extends LineSpiralFactoryInputs, LineSpiralFactoryFunctions {
+    length: number;
+}
 
 
 
@@ -1711,7 +1719,9 @@ interface OvalFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFuncti
     simpleStamp: (host: CellInstance, items?: OvalFactoryInputs) => void;
 }
 
-interface OvalInstance extends OvalFactoryInputs, OvalFactoryFunctions {}
+interface OvalInstance extends OvalFactoryInputs, OvalFactoryFunctions {
+    length: number;
+}
 
 
 
@@ -1896,7 +1906,9 @@ interface PolygonFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFun
     simpleStamp: (host: CellInstance, items?: PolygonFactoryInputs) => void;
 }
 
-interface PolygonInstance extends PolygonFactoryInputs, PolygonFactoryFunctions {}
+interface PolygonInstance extends PolygonFactoryInputs, PolygonFactoryFunctions {
+    length: number;
+}
 
 
 
@@ -1930,7 +1942,9 @@ interface PolylineFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFu
     simpleStamp: (host: CellInstance, items?: PolylineFactoryInputs) => void;
 }
 
-interface PolylineInstance extends PolylineFactoryInputs, PolylineFactoryFunctions {}
+interface PolylineInstance extends PolylineFactoryInputs, PolylineFactoryFunctions {
+    length: number;
+}
 
 
 
@@ -1968,7 +1982,9 @@ interface QuadraticFactoryFunctions extends BaseMixinFunctions, ShapeCurveMixinF
     simpleStamp: (host: CellInstance, items?: QuadraticFactoryInputs) => void;
 }
 
-interface QuadraticInstance extends QuadraticFactoryInputs, QuadraticFactoryFunctions {}
+interface QuadraticInstance extends QuadraticFactoryInputs, QuadraticFactoryFunctions {
+    length: number;
+}
 
 
 
@@ -2133,7 +2149,9 @@ interface RectangleFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinF
     simpleStamp: (host: CellInstance, items?: RectangleFactoryInputs) => void;
 }
 
-interface RectangleInstance extends RectangleFactoryInputs, RectangleFactoryFunctions {}
+interface RectangleInstance extends RectangleFactoryInputs, RectangleFactoryFunctions {
+    length: number;
+}
 
 
 
@@ -2221,7 +2239,9 @@ interface SpiralFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFunc
     simpleStamp: (host: CellInstance, items?: SpiralFactoryInputs) => void;
 }
 
-interface SpiralInstance extends SpiralFactoryInputs, SpiralFactoryFunctions {}
+interface SpiralInstance extends SpiralFactoryInputs, SpiralFactoryFunctions {
+    length: number;
+}
 
 
 
@@ -2314,7 +2334,9 @@ interface StarFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFuncti
     simpleStamp: (host: CellInstance, items?: StarFactoryInputs) => void;
 }
 
-interface StarInstance extends StarFactoryInputs, StarFactoryFunctions {}
+interface StarInstance extends StarFactoryInputs, StarFactoryFunctions {
+    length: number;
+}
 
 
 
@@ -2381,7 +2403,9 @@ interface TetragonFactoryFunctions extends BaseMixinFunctions, ShapeBasicMixinFu
     simpleStamp: (host: CellInstance, items?: TetragonFactoryInputs) => void;
 }
 
-interface TetragonInstance extends TetragonFactoryInputs, TetragonFactoryFunctions {}
+interface TetragonInstance extends TetragonFactoryInputs, TetragonFactoryFunctions {
+    length: number;
+}
 
 
 
@@ -2685,7 +2709,7 @@ export function observeAndUpdate(items: ObserveAndUpdateInputs): DefaultOutputFu
 // makeDragZone factory (not stored in library)
 // -------------------------------------
 interface MakeDragZoneInputs {
-    zone: any;
+    zone: StackInstance | CanvasInstance;
     coordinateSource?: any;
     collisionGroup?: any;
     startOn?: string | string[];
@@ -2700,7 +2724,7 @@ interface MakeDragZoneInputs {
     exposeCurrentArtefact?: boolean;
     preventTouchDefaultWhenDragging?: boolean;
     resetCoordsToZeroOnTouchEnd?: boolean;
-    processOrder?: number;
+    processingOrder?: number;
 }
 
 type DragZoneOutput = () => HitOutput | boolean;
@@ -2714,22 +2738,7 @@ export function makeDragZone(items: MakeDragZoneInputs): DefaultOutputFunction |
 // makeDragZone factory (not stored in library)
 // -------------------------------------
 interface MakeKeyboardZoneInputs {
-    zone: any;
-    // coordinateSource?: any;
-    // collisionGroup?: any;
-    // startOn?: string | string[];
-    // endOn?: string | string[];
-    // updateOnStart?: {
-    //     [index: string]: any;
-    // } | DefaultInputFunction;
-    // updateOnEnd?: {
-    //     [index: string]: any;
-    // } | DefaultInputFunction;
-    // updateWhileMoving?: DefaultInputFunction;
-    // exposeCurrentArtefact?: boolean;
-    // preventTouchDefaultWhenDragging?: boolean;
-    // resetCoordsToZeroOnTouchEnd?: boolean;
-    // processOrder?: number;
+    zone: StackInstance | CanvasInstance;
 }
 
 type KeyboardZoneOutput = () => boolean;

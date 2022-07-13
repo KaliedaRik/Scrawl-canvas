@@ -1,5 +1,5 @@
 # Welcome to the Scrawl-canvas Library
-Version: `8.9.0 - 16 Jun 2022` 
+Version: `8.9.1 - 13 Jul 2022` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 + learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
@@ -58,7 +58,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the file to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.9.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-9-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-9-0.zip) - that package only includes the minified file.
+Alternatively, a zip package of the v8.9.1 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-9-1.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-9-1.zip) - that package only includes the minified file.
 
 ```html
 <!-- Hello world -->
@@ -106,7 +106,7 @@ Alternatively, a zip package of the v8.9.0 files can be downloaded from this lin
 This will pull the requested npm package directly into your web page:
 ```html
 <script type="module">
-    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.9.0';
+    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.9.1';
     [...]
 </script>
 ```

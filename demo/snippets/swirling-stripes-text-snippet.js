@@ -275,7 +275,7 @@ export default function (el, scrawl) {
 
             const {x, y, active} = canvas.here;
 
-            if (active & !isActive) {
+            if (active && !isActive) {
 
                 isActive = true;
 
