@@ -2739,11 +2739,25 @@ export function makeDragZone(items: MakeDragZoneInputs): DefaultOutputFunction |
 // -------------------------------------
 interface MakeKeyboardZoneInputs {
     zone: StackInstance | CanvasInstance;
+    none?: {[index: string]: DefaultInputFunction};
+    shiftOnly?: {[index: string]: DefaultInputFunction};
+    altOnly?: {[index: string]: DefaultInputFunction};
+    ctrlOnly?: {[index: string]: DefaultInputFunction};
+    metaOnly?: {[index: string]: DefaultInputFunction};
+    shiftAlt?: {[index: string]: DefaultInputFunction};
+    shiftCtrl?: {[index: string]: DefaultInputFunction};
+    shiftMeta?: {[index: string]: DefaultInputFunction};
+    altCtrl?: {[index: string]: DefaultInputFunction};
+    altMeta?: {[index: string]: DefaultInputFunction};
+    ctrlMeta?: {[index: string]: DefaultInputFunction};
+    shiftAltCtrl?: {[index: string]: DefaultInputFunction};
+    shiftAltMeta?: {[index: string]: DefaultInputFunction};
+    shiftCtrlMeta?: {[index: string]: DefaultInputFunction};
+    altCtrlMeta?: {[index: string]: DefaultInputFunction};
+    all?: {[index: string]: DefaultInputFunction};
 }
 
-type KeyboardZoneOutput = () => boolean;
-
-export function makeKeyboardZone(items: MakeKeyboardZoneInputs): DefaultOutputFunction | KeyboardZoneOutput;
+export function makeKeyboardZone(items: MakeKeyboardZoneInputs): DefaultOutputFunction | CommonObjectInput;
 
 
 
