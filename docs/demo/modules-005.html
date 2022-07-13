@@ -1308,9 +1308,7 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
     <span class="hljs-keyword">const</span> keys = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">prompt</span>(<span class="hljs-string">&#x27;To change the keyboard settings to move, scale and rotate selected entitys, enter the desired characters (11 in total) in the order MOVE-DELTA, MOVE-UP, MOVE-LEFT, MOVE-DOWN, MOVE-RIGHT, SCALE-DELTA, SCALE-GROW, SCALE-SHRINK, ROTATE-DELTA, ROTATE-CLOCKWISE, ROTATE-ANTI-CLOCKWISE (with no spaces or separating commas etc, though the comma key can be used as a shortcut). Character case will be ignored.&#x27;</span>, <span class="hljs-string">&#x27;QWASDBNMGJH&#x27;</span>);
     
     <span class="hljs-title function_">setGuiControlChars</span>(keys);
-};
-
-button.<span class="hljs-property">onclick</span> = buttonClickAction;</pre></div></div>
+};</pre></div></div>
             
         </li>
         
@@ -1320,6 +1318,21 @@ button.<span class="hljs-property">onclick</span> = buttonClickAction;</pre></di
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>button.<span class="hljs-property">onclick</span> = buttonClickAction;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1331,11 +1344,11 @@ button.<span class="hljs-property">onclick</span> = buttonClickAction;</pre></di
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1349,11 +1362,11 @@ button.<span class="hljs-property">onclick</span> = buttonClickAction;</pre></di
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
