@@ -116,8 +116,8 @@ P.unknit = function (image) {
 
     let len = data.length;
 
-    cache.source = new ImageData(data, width, height)
-    cache.work = new ImageData(data, width, height)
+    cache.source = new ImageData(data, width, height);
+    cache.work = new ImageData(data, width, height);
 };
 
 // `getAlphaData` - extract alpha channel data from (usually the source) ImageData object and populate the color channels of a new ImageData object with that data
@@ -2720,38 +2720,29 @@ P.theBigActionsObject = {
 
         const doCalculations = function (data, matrix, offset) {
 
-            let vals = [];
+            let max = 0,
+                min = 255,
+                matlen = matrix.length,
+                v, c;
 
-            for (let m = 0, mz = matrix.length; m < mz; m++) {
+            for (c = 0; c < matlen; c++) {
 
-                vals.push(data[matrix[m] + offset]);
+                v = data[matrix[c] + offset];
 
-                // need to remove the pixel's own value?
+                if (v < min) min = v;
+                else if (v > max) max = v;
             }
-
-            if (!vals.length) return 0;
 
             switch (operation) {
 
                 case 'lowest' :
-
-                    return Math.min(...vals);
+                    return min;
                 
                 case 'highest' :
-
-                    return Math.max(...vals);
+                    return max;
                 
-                case 'median' :
-
-                    let max = Math.max(...vals),
-                        min = Math.min(...vals);
-
-                    return Math.floor(min + ((max - min) / 2));
-
                 default :
-
-                    let total = vals.reduce((a, v) => a + v, 0);
-                    return Math.floor(total / vals.length);
+                    return mathFloor(min + ((max - min) / 2));
             }
         };
 
@@ -2759,7 +2750,8 @@ P.theBigActionsObject = {
 
         let iData = input.data,
             oData = output.data,
-            len = iData.length;
+            len = iData.length,
+            mathFloor = Math.floor;
 
         let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation, lineOut} = requirements;
 
@@ -2776,7 +2768,7 @@ P.theBigActionsObject = {
 
         let grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
 
-        let m = Math.floor(len / 4),
+        let m = mathFloor(len / 4),
             r, g, b, a, i;
 
         for (i = 0; i < m; i++) {
