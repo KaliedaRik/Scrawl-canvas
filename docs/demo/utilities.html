@@ -1129,7 +1129,7 @@
 
         <span class="hljs-keyword">let</span> <span class="hljs-title function_">checkGroupBucket</span> = (<span class="hljs-params">name, groupname</span>) =&gt; {
 
-            <span class="hljs-keyword">let</span> res = L.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
+            <span class="hljs-keyword">let</span> res = L.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
             <span class="hljs-keyword">return</span> (res.<span class="hljs-property">length</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
         };
 
@@ -1141,7 +1141,7 @@
         removed from entity: <span class="hljs-subst">${(L.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
         removed from entitynames: <span class="hljs-subst">${(L.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
         removed from group.artefacts: <span class="hljs-subst">${(L.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-        removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
+        removed from group.artefactCalculateBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
 
             packet = L.<span class="hljs-property">artefact</span>[name].<span class="hljs-title function_">saveAsPacket</span>();
 
@@ -1155,7 +1155,7 @@
         removed from entity: <span class="hljs-subst">${(L.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
         removed from entitynames: <span class="hljs-subst">${(L.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
         removed from group.artefacts: <span class="hljs-subst">${(L.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-        removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
+        removed from group.artefactCalculateBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
 
                 canvas.<span class="hljs-title function_">actionPacket</span>(packet);
 
@@ -1167,7 +1167,7 @@
         removed from entity: <span class="hljs-subst">${(L.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
         removed from entitynames: <span class="hljs-subst">${(L.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
         removed from group.artefacts: <span class="hljs-subst">${(L.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-        removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
+        removed from group.artefactCalculateBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
 
                     <span class="hljs-keyword">if</span> (finishResurrection) <span class="hljs-title function_">finishResurrection</span>();
 
@@ -1250,7 +1250,7 @@
 
     <span class="hljs-keyword">let</span> <span class="hljs-title function_">checkGroupBucket</span> = (<span class="hljs-params">name, groupname</span>) =&gt; {
 
-        <span class="hljs-keyword">let</span> res = L.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
+        <span class="hljs-keyword">let</span> res = L.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
         <span class="hljs-keyword">return</span> (res.<span class="hljs-property">length</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
     };
 
@@ -1262,7 +1262,7 @@
     removed from entity: <span class="hljs-subst">${(L.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from entitynames: <span class="hljs-subst">${(L.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from group.artefacts: <span class="hljs-subst">${(L.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
+    removed from group.artefactCalculateBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
     anchor removed: <span class="hljs-subst">${(L.anchor[anchorname]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
 
         packet = L.<span class="hljs-property">artefact</span>[name].<span class="hljs-title function_">saveAsPacket</span>();
@@ -1277,7 +1277,7 @@
     removed from entity: <span class="hljs-subst">${(L.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from entitynames: <span class="hljs-subst">${(L.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from group.artefacts: <span class="hljs-subst">${(L.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
+    removed from group.artefactCalculateBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
     anchor removed: <span class="hljs-subst">${(L.anchor[anchorname]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
 
             canvas.<span class="hljs-title function_">actionPacket</span>(packet);
@@ -1290,7 +1290,7 @@
     removed from entity: <span class="hljs-subst">${(L.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from entitynames: <span class="hljs-subst">${(L.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from group.artefacts: <span class="hljs-subst">${(L.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
+    removed from group.artefactCalculateBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
     anchor removed: <span class="hljs-subst">${(L.anchor[anchorname]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
 
                 <span class="hljs-title function_">finishResurrection</span>();
@@ -1320,7 +1320,7 @@
 
     <span class="hljs-keyword">let</span> <span class="hljs-title function_">checkGroupBucket</span> = (<span class="hljs-params">name, groupname</span>) =&gt; {
 
-        <span class="hljs-keyword">let</span> res = L.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
+        <span class="hljs-keyword">let</span> res = L.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
         <span class="hljs-keyword">return</span> (res.<span class="hljs-property">length</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
     };
 
@@ -1341,7 +1341,7 @@
     removed from entitynames: <span class="hljs-subst">${(L.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from polyline pins array: <span class="hljs-subst">${checkPinsArray(name)}</span>
     removed from group.artefacts: <span class="hljs-subst">${(L.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
+    removed from group.artefactCalculateBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
 
         packet = L.<span class="hljs-property">artefact</span>[name].<span class="hljs-title function_">saveAsPacket</span>();
 
@@ -1356,7 +1356,7 @@
     removed from entitynames: <span class="hljs-subst">${(L.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from polyline pins array: <span class="hljs-subst">${checkPinsArray(name)}</span>
     removed from group.artefacts: <span class="hljs-subst">${(L.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
+    removed from group.artefactCalculateBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
 
             canvas.<span class="hljs-title function_">actionPacket</span>(packet);
 
@@ -1371,7 +1371,7 @@
     removed from entitynames: <span class="hljs-subst">${(L.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from polyline pins array: <span class="hljs-subst">${checkPinsArray(name)}</span>
     removed from group.artefacts: <span class="hljs-subst">${(L.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
+    removed from group.artefactCalculateBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
 
                 <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(myline.<span class="hljs-title function_">saveAsPacket</span>());
 

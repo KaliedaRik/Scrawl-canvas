@@ -1,5 +1,5 @@
 // # Styles mixin
-// The styles mixin contains most of the code required for the [Gradient](../factory/gradient.html) and [RadialGradient](../factory/radialGradient.html) styles factories. It is not used by the other styles objects ([Color](../factory/color.html), [Pattern](../factory/pattern.html)).
+// The styles mixin contains most of the code required for the [Gradient](../factory/gradient.html), [RadialGradient](../factory/radialGradient.html) an [ConicGradient](../factory/conicGradient.html) styles factories. It is not used by the other styles objects ([Color](../factory/color.html), [Pattern](../factory/pattern.html)).
 // + the __start__ and __end__ positioning attributes are defined here rather than in the factories
 // + gradient-type styles manage their color stops in [Palette factory](../factory/palette.html) objects; that functionality is entirely defined here
 //
@@ -14,11 +14,28 @@
 
 
 // #### Imports
-import { entity, palette } from '../core/library.js';
+import { entity, palette, styles, stylesnames } from '../core/library.js';
 import { addStrings, λnull, mergeOver, xt, isa_obj, mergeDiscard, Ωempty } from '../core/utilities.js';
 
+import { makeAnimation } from '../factory/animation.js';
 import { makeCoordinate } from '../factory/coordinate.js';
 import { makePalette, paletteKeys } from '../factory/palette.js';
+
+
+// Create an animation to handle automated delta gradient animation
+makeAnimation({
+
+    name: 'SC-system-gradient-delta-animation',
+    fn: () => {
+
+        stylesnames.forEach(name => {
+
+            const style = styles[name];
+
+            if (style && style.animateByDelta) style.updateByDelta();
+        });
+    },
+});
 
 
 // #### Export function
@@ -53,6 +70,9 @@ export default function (P = Ωempty) {
 // + when false, we reverse the color stops
 // + when true, we keep the normal order of color stops and pass through the 1/0 border
         cyclePalette: false,
+
+// The __animateByDelta__ attribute, when true, will delta animate the gradient at the start of each Display cycle. When the gradient is used in the `mapToGradient`` filter, setting this attribute to `false` (default) should speed up the filter
+        animateByDelta: false,
 
 // The __delta__ object is not stored in the defs object; it acts in a similar way to the artefact delta object - though it is restricted to adding delta values to Number and 'String%' attributes.
 // + Unlike artefacts, where delta animation will be applied to artefacts by default as part of each Display cycle, gradient delta animations need to be explicitly invoked: `my_gradient.updateByDelta();`

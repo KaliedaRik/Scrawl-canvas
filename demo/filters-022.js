@@ -52,6 +52,8 @@ const animatedGradient1 = scrawl.makeGradient({
 
     easing: 'linear',
     precision: 1,
+
+    animateByDelta: true,
 })
 .updateColor(0, '#ff0000')
 .updateColor(83, '#000000')
@@ -80,6 +82,8 @@ const animatedGradient2 = scrawl.makeGradient({
 
     easing: 'linear',
     precision: 1,
+
+    animateByDelta: true,
 
     colors: [
         [0, 'red'],
@@ -152,12 +156,6 @@ const demoAnimation = scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,
-
-    commence: () => {
-        animatedGradient1.updateByDelta();
-        animatedGradient2.updateByDelta();
-    },
-
     afterShow: report,
 });
 

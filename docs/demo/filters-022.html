@@ -1139,6 +1139,8 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
     <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;linear&#x27;</span>,
     <span class="hljs-attr">precision</span>: <span class="hljs-number">1</span>,
+
+    <span class="hljs-attr">animateByDelta</span>: <span class="hljs-literal">true</span>,
 })
 .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;#ff0000&#x27;</span>)
 .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">83</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>)
@@ -1167,6 +1169,8 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
     <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;linear&#x27;</span>,
     <span class="hljs-attr">precision</span>: <span class="hljs-number">1</span>,
+
+    <span class="hljs-attr">animateByDelta</span>: <span class="hljs-literal">true</span>,
 
     <span class="hljs-attr">colors</span>: [
         [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
@@ -1307,12 +1311,6 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
-
-    <span class="hljs-attr">commence</span>: <span class="hljs-function">() =&gt;</span> {
-        animatedGradient1.<span class="hljs-title function_">updateByDelta</span>();
-        animatedGradient2.<span class="hljs-title function_">updateByDelta</span>();
-    },
-
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             

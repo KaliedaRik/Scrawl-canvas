@@ -542,6 +542,8 @@ interface StylesMixinDeltaInputs {
     start?: CommonTwoElementArrayInput;
     startX?: StringOrNumberInput;
     startY?: StringOrNumberInput;
+    animateByDelta?: boolean;
+
 }
 
 interface StylesMixinInputs {

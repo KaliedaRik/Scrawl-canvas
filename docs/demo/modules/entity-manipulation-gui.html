@@ -416,7 +416,7 @@
 
                 <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;gui-move-control&#x27;</span>,
                 <span class="hljs-attr">group</span>: gui,
-                <span class="hljs-attr">order</span>: <span class="hljs-number">20</span>,
+                <span class="hljs-attr">stampOrder</span>: <span class="hljs-number">20</span>,
 
                 <span class="hljs-attr">radius</span>: <span class="hljs-number">22</span>,
 
@@ -449,7 +449,8 @@
             scaleControl = moveControl.<span class="hljs-title function_">clone</span>({
 
                 <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;gui-scale-control&#x27;</span>,
-                <span class="hljs-attr">order</span>: <span class="hljs-number">10</span>,
+                <span class="hljs-attr">calculateOrder</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">stampOrder</span>: <span class="hljs-number">10</span>,
 
                 <span class="hljs-attr">pivot</span>: moveControl,
                 <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
@@ -470,7 +471,7 @@
             rotateControl = moveControl.<span class="hljs-title function_">clone</span>({
 
                 <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;gui-rotate-control&#x27;</span>,
-                <span class="hljs-attr">order</span>: <span class="hljs-number">10</span>,
+                <span class="hljs-attr">stampOrder</span>: <span class="hljs-number">10</span>,
 
                 <span class="hljs-attr">pivot</span>: moveControl,
                 <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
@@ -492,6 +493,7 @@
 
                 <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;gui-scale-control-line&#x27;</span>,
                 <span class="hljs-attr">group</span>: gui,
+                <span class="hljs-attr">calculateOrder</span>: <span class="hljs-number">2</span>,
 
                 <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
                 <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
@@ -525,6 +527,7 @@
 
                 <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-string`</span>,
                 <span class="hljs-attr">group</span>: gui,
+                <span class="hljs-attr">calculateOrder</span>: <span class="hljs-number">3</span>,
 
                 <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
                 <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,

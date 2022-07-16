@@ -27,6 +27,7 @@ let mygradient = scrawl.makeGradient({
     },
 
     cyclePalette: true,
+    animateByDelta: true,
 
     colors: [
         [0, 'black'],
@@ -216,8 +217,6 @@ scrawl.makeRender({
 
     name: 'demo-animation',
     target: canvas,
-
-    commence: () => mygradient.updateByDelta(),
     afterShow: report,
 });
 

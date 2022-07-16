@@ -59,9 +59,6 @@ P.action = function (packet) {
         }
     }
 
-    // TODO: work out why filter memoization destroys Safari-based browser performance
-    // + For now, we disable memoization for Safari-based browsers
-    // if (identifier && workstore[identifier] && !window.scrawlEnvironmentBrowserDetection.includes('safari')) {
     if (identifier && workstore[identifier]) {
 
         workstoreLastAccessed[identifier] = Date.now();
@@ -89,8 +86,6 @@ P.action = function (packet) {
             if (a) a.call(this, actData);
         }
 
-        // + For now, we disable memoization for Safari-based browsers
-        // if (identifier && !window.scrawlEnvironmentBrowserDetection.includes('safari')) {
         if (identifier) {
 
             workstore[identifier] = this.cache.work;
@@ -1143,27 +1138,58 @@ P.selectClosestGrays = function (data, ref) {
 // `getGradientData` - create an imageData object containing the 256 values from a gradient that we require for doing filters work
 P.getGradientData = function (gradient) {
 
-    const mycell = requestCell();
+    const { workstore, workstoreLastAccessed } = this;
 
-    const {engine, element} = mycell;
+    const name = `gradient-data-${gradient.name}`;
 
-    element.width = 256;
-    element.height = 1;
+    if (!workstore[name] || gradient.dirtyFilterIdentifier || gradient.animateByDelta) {
 
-    gradient.palette.recalculate();
+        const mycell = requestCell();
 
-    const G = engine.createLinearGradient(0, 0, 255, 0);
+        const {engine, element} = mycell;
 
-    gradient.addStopsToGradient(G, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
+        element.width = 256;
+        element.height = 1;
 
-    engine.fillStyle = G;
-    engine.fillRect(0, 0, 256, 1);
+        gradient.palette.recalculate();
 
-    let data = engine.getImageData(0, 0, 256, 1).data;
+        const G = engine.createLinearGradient(0, 0, 255, 0);
 
-    releaseCell(mycell);
+        gradient.addStopsToGradient(G, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
 
-    return data;
+        engine.fillStyle = G;
+        engine.fillRect(0, 0, 256, 1);
+
+        let data = engine.getImageData(0, 0, 256, 1).data;
+
+        releaseCell(mycell);
+
+        workstore[name] = data;
+    }
+
+    if (workstore[name]) {
+        workstoreLastAccessed[name] = Date.now();
+        return workstore[name];
+    }
+    return [];
+};
+
+P.transferDataUnchanged = function (oData, iData, len) {
+
+    let r, g, b, a, i;
+
+    for (i = 0; i < len; i += 4) {
+
+        r = i;
+        g = r + 1;
+        b = g + 1;
+        a = b + 1;
+
+        oData[r] = iData[r];
+        oData[g] = iData[g];
+        oData[b] = iData[b];
+        oData[a] = iData[a];
+    }
 };
 
 // ## Filter action functions
@@ -1221,7 +1247,7 @@ P.theBigActionsObject = {
             len = iData.length,
             r, g, b, a, i, j, jz, tVal;
 
-        let {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, lineOut} = requirements;
+        let {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, lineOut } = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == tileWidth) tileWidth = 1;
@@ -1234,16 +1260,8 @@ P.theBigActionsObject = {
 
         let tiles = this.buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
 
-        for (i = 0; i < len; i += 4) {
+        this.transferDataUnchanged(oData, iData, len);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-
-            oData[r] = iData[r];
-            oData[g] = iData[g];
-            oData[b] = iData[b];
-        }
         tiles.forEach((t, index) => {
 
             a = areaAlphaLevels[index % 4];
@@ -3538,44 +3556,38 @@ P.theBigActionsObject = {
 
             let rainbowData = this.getGradientData(gradient);
 
-            const gVal = this.getGrayscaleValue;
+            if (rainbowData.length) {
 
-            for (i = 0; i < len; i += 4) {
+                const gVal = this.getGrayscaleValue;
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+                for (i = 0; i < len; i += 4) {
 
-                if (iData[a]) {
+                    r = i;
+                    g = r + 1;
+                    b = g + 1;
+                    a = b + 1;
 
-                    if (useNaturalGrayscale) avg = gVal(iData[r], iData[g], iData[b]);
-                    else avg = Math.floor((0.3333 * iData[r]) + (0.3333 * iData[g]) + (0.3333 * iData[b]));
+                    if (iData[a]) {
 
-                    v = avg * 4;
+                        if (useNaturalGrayscale) avg = gVal(iData[r], iData[g], iData[b]);
+                        else avg = Math.floor((0.3333 * iData[r]) + (0.3333 * iData[g]) + (0.3333 * iData[b]));
 
-                    oData[r] = rainbowData[v];
-                    oData[g] = rainbowData[++v];
-                    oData[b] = rainbowData[++v];
-                    oData[a] = rainbowData[++v];
+                        v = avg * 4;
+
+                        oData[r] = rainbowData[v];
+                        v++;
+                        oData[g] = rainbowData[v];
+                        v++;
+                        oData[b] = rainbowData[v];
+                        v++;
+                        oData[a] = rainbowData[v];
+                    }
                 }
             }
+            else this.transferDataUnchanged(oData, iData, len);
         }
-        else {
+        else this.transferDataUnchanged(oData, iData, len);
 
-            for (i = 0; i < len; i += 4) {
-
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
-
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
-            }
-        }
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
@@ -4560,7 +4572,7 @@ P.theBigActionsObject = {
 
         if (null == opacity) opacity = 1;
 
-        this.copyOver(input, output);
+        this.transferDataUnchanged(input, output);
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);

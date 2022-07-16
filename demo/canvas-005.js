@@ -40,6 +40,7 @@ const myRadial = makeRadialGradient({
     },
 
     cyclePalette: true,
+    animateByDelta: true,
 
     colors: [
         [0, 'black'],
@@ -292,8 +293,6 @@ const report = reportSpeed('#reportmessage', function () {
 
 // Function to animate the gradients
 const animateGradients = function () {
-
-    myRadial.updateByDelta();
 
     const dragging = current();
 
