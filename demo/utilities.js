@@ -10,9 +10,21 @@ const reportSpeed = function (output = '', xtra = () => '') {
 
     if (!output) return function () {};
 
-    let testTicker = Date.now(),
-        testTime, testNow, dragging,
-        testMessage = document.querySelector(output);
+        let testTicker = Date.now(),
+            testTime, testNow,
+            testMessage = document.querySelector(output);
+
+        let history = [],
+            averageTime = 0;
+
+        const addTime = (t) => {
+
+            if (history.length > 60) history.shift();
+            history.push(t);
+            averageTime = history.reduce((p, c) => p + c, 0);
+            averageTime /= history.length;
+        }
+
 
     return function () {
 
@@ -23,7 +35,9 @@ const reportSpeed = function (output = '', xtra = () => '') {
             testTime = testNow - testTicker;
             testTicker = testNow;
 
-            let text = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+            addTime(testTime);
+
+            let text = `Screen refresh: ${Math.ceil(averageTime)}ms; fps: ${Math.floor(1000 / averageTime)}`;
 
             if (xtra) {
 
