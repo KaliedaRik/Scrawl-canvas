@@ -449,6 +449,8 @@ interface PositionMixinInputs {
     noPositionDependencies?: boolean;
     noUserInteraction?: boolean;
     order?: number;
+    calculateOrder?: number;
+    stampOrder?: number;
     particle?: ParticleInstance | string;
     purge?: PurgeValues;
     visibility?: boolean;
@@ -1522,6 +1524,8 @@ interface LoomFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, DeltaMix
     onLeave?: DefaultInputFunction;
     onUp?: DefaultInputFunction;
     order?: number;
+    compileOrder?: number;
+    showOrder?: number;
     showBoundingBox?: boolean;
     source?: PictureInstance | string;
     sourceIsVideoOrSprite?: boolean;
@@ -1562,6 +1566,8 @@ interface MeshFactoryInputs extends BaseMixinInputs, AnchorMixinInputs, DeltaMix
     sourceIsVideoOrSprite?: boolean;
     visibility?: boolean;
     order?: number;
+    compileOrder?: number;
+    showOrder?: number;
     delta?: MeshFactoryDeltaInputs;
     group?: GroupInstance | string;
     noCanvasEngineUpdates?: boolean;

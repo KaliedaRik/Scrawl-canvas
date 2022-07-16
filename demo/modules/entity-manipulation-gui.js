@@ -131,7 +131,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
 
                 name: 'gui-move-control',
                 group: gui,
-                order: 20,
+                stampOrder: 20,
 
                 radius: 22,
 
@@ -164,7 +164,8 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
             scaleControl = moveControl.clone({
 
                 name: 'gui-scale-control',
-                order: 10,
+                calculateOrder: 0,
+                stampOrder: 10,
 
                 pivot: moveControl,
                 lockTo: 'pivot',
@@ -185,7 +186,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
             rotateControl = moveControl.clone({
 
                 name: 'gui-rotate-control',
-                order: 10,
+                stampOrder: 10,
 
                 pivot: moveControl,
                 lockTo: 'pivot',
@@ -207,6 +208,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
 
                 name: 'gui-scale-control-line',
                 group: gui,
+                calculateOrder: 2,
 
                 method: 'draw',
                 strokeStyle: 'red',
@@ -240,6 +242,7 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
 
                 name: `${name}-string`,
                 group: gui,
+                calculateOrder: 3,
 
                 method: 'draw',
                 strokeStyle: 'red',

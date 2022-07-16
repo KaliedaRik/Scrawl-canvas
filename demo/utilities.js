@@ -47,7 +47,7 @@ const killArtefact = (canvas, name, time, finishResurrection = () => {}) => {
 
         let checkGroupBucket = (name, groupname) => {
 
-            let res = L.group[groupname].artefactBuckets.filter(e => e.name === name );
+            let res = L.group[groupname].artefactCalculateBuckets.filter(e => e.name === name );
             return (res.length) ? 'no' : 'yes';
         };
 
@@ -59,7 +59,7 @@ const killArtefact = (canvas, name, time, finishResurrection = () => {}) => {
         removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
         removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
         removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-        removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+        removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}`);
 
             packet = L.artefact[name].saveAsPacket();
 
@@ -73,7 +73,7 @@ const killArtefact = (canvas, name, time, finishResurrection = () => {}) => {
         removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
         removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
         removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-        removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+        removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}`);
 
                 canvas.actionPacket(packet);
 
@@ -85,7 +85,7 @@ const killArtefact = (canvas, name, time, finishResurrection = () => {}) => {
         removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
         removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
         removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-        removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+        removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}`);
 
                     if (finishResurrection) finishResurrection();
 
@@ -145,7 +145,7 @@ const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrectio
 
     let checkGroupBucket = (name, groupname) => {
 
-        let res = L.group[groupname].artefactBuckets.filter(e => e.name === name );
+        let res = L.group[groupname].artefactCalculateBuckets.filter(e => e.name === name );
         return (res.length) ? 'no' : 'yes';
     };
 
@@ -157,7 +157,7 @@ const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrectio
     removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
     removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}
+    removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}
     anchor removed: ${(L.anchor[anchorname]) ? 'no' : 'yes'}`);
 
         packet = L.artefact[name].saveAsPacket();
@@ -172,7 +172,7 @@ const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrectio
     removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
     removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}
+    removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}
     anchor removed: ${(L.anchor[anchorname]) ? 'no' : 'yes'}`);
 
             canvas.actionPacket(packet);
@@ -185,7 +185,7 @@ const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrectio
     removed from entity: ${(L.entity[name]) ? 'no' : 'yes'}
     removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}
+    removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}
     anchor removed: ${(L.anchor[anchorname]) ? 'no' : 'yes'}`);
 
                 finishResurrection();
@@ -203,7 +203,7 @@ const killPolylineArtefact = (canvas, name, time, myline, restore = () => {}) =>
 
     let checkGroupBucket = (name, groupname) => {
 
-        let res = L.group[groupname].artefactBuckets.filter(e => e.name === name );
+        let res = L.group[groupname].artefactCalculateBuckets.filter(e => e.name === name );
         return (res.length) ? 'no' : 'yes';
     };
 
@@ -224,7 +224,7 @@ const killPolylineArtefact = (canvas, name, time, myline, restore = () => {}) =>
     removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from polyline pins array: ${checkPinsArray(name)}
     removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+    removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}`);
 
         packet = L.artefact[name].saveAsPacket();
 
@@ -239,7 +239,7 @@ const killPolylineArtefact = (canvas, name, time, myline, restore = () => {}) =>
     removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from polyline pins array: ${checkPinsArray(name)}
     removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+    removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}`);
 
             canvas.actionPacket(packet);
 
@@ -254,7 +254,7 @@ const killPolylineArtefact = (canvas, name, time, myline, restore = () => {}) =>
     removed from entitynames: ${(L.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from polyline pins array: ${checkPinsArray(name)}
     removed from group.artefacts: ${(L.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+    removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}`);
 
                 console.log(myline.saveAsPacket());
 

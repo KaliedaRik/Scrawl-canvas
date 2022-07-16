@@ -178,10 +178,11 @@ export default function (P = Ωempty) {
 // The __order__ attribute - an integer Number (default: 0) - determines the order in which an artefact will be processed as part of a Group. 
 // + For instance, entity artefacts with higher order values will be processed after those with lower values, with the effect that the entity will be displayed on top of those other entitys (and stamping over them if they overlap)
 // + Note that Group objects also have an order attribute: all artefacts in a Group with a lower order value will be processed before those with a higher order value.
-// + Cell wrappers (a Canvas wrapper can have more than one Cell) have a `compileOrder` attribute which does the same job.
+// + Cell wrappers (a Canvas wrapper can have more than one Cell) have a `calculateOrder` attribute which does the same job.
 // + Finally, Animation objects have order values; the same effect applies.
 // + ___If the display of an artefact does not appear to be following the order value it has been given___, the problem may lie in either the order values assigned to that artefact's Group, or host (Cell, Canvas, Stack), or even the Animation object that contributes to the Display cycle.
-        order: 0,
+        calculateOrder: 0,
+        stampOrder: 0,
 
 
 // The __start__ attribute represents an artefact's ___Rotation-Reflexion point___, and is held in an `[x, y]` Coordinate Array. The default values are `[0, 0]`, placing the artifact at the container object's (Cell, Stack) top-left corner.
@@ -620,7 +621,14 @@ export default function (P = Ωempty) {
 
         this.setDeltaCoordinateHelper('dimensions', w, h);
         this.dirtyDimensions = true;
-    }
+    };
+
+// __order__
+    S.order = function (val) {
+
+        this.calculateOrder = val;
+        this.stampOrder = val;
+    };
 
 // __particle__
     S.particle = function (item) {
@@ -1617,7 +1625,7 @@ export default function (P = Ωempty) {
 
             if (this.bringToFrontOnDrag) {
 
-            	this.order += 9999;
+            	this.stampOrder += 9999;
 	            this.group.batchResort = true;
             }
 
@@ -1636,9 +1644,9 @@ export default function (P = Ωempty) {
 
         if (this.bringToFrontOnDrag) {
 
-        	this.order -= 9999;
+        	this.stampOrder -= 9999;
 
-        	if (this.order < 0) this.order = 0;
+        	if (this.stampOrder < 0) this.stampOrder = 0;
 
 	        this.group.batchResort = true;
         }

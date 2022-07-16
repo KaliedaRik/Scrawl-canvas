@@ -572,7 +572,7 @@ P.updateArtefacts = function (items = Ωempty) {
 
     for (i = 0, iz = gb.length; i < iz; i++) {
 
-        ab = gb[i].artefactBuckets;
+        ab = gb[i].artefactCalculateBuckets;
 
         for (j = 0, jz = ab.length; j < jz; j++) {
 

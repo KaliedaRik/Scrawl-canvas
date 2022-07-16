@@ -41,7 +41,8 @@ const Group = function (items = Ωempty) {
     this.register();
 
     this.artefacts = [];
-    this.artefactBuckets = [];
+    this.artefactCalculateBuckets = [];
+    this.artefactStampBuckets = [];
 
     this.set(this.defs);
 
@@ -98,7 +99,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
-P.packetExclusions = pushUnique(P.packetExclusions, ['artefactBuckets', 'batchResort']);
+P.packetExclusions = pushUnique(P.packetExclusions, ['artefactCalculateBuckets', 'artefactStampBuckets', 'batchResort']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['onEntityHover', 'onEntityNoHover']);
 
 
@@ -153,7 +154,7 @@ P.kill = function (killArtefacts = false) {
         };
     });
 
-    if (killArtefacts) this.artefactBuckets.forEach(item => item.kill());
+    if (killArtefacts) this.artefactCalculateBuckets.forEach(item => item.kill());
 
     // Remove Group object from the Scrawl-canvas library
     return this.deregister();
@@ -161,7 +162,7 @@ P.kill = function (killArtefacts = false) {
 
 P.killArtefacts = function () {
 
-    this.artefactBuckets.forEach(item => item.kill());
+    this.artefactCalculateBuckets.forEach(item => item.kill());
 
     return this;
 }
@@ -322,17 +323,30 @@ P.sortArtefacts = function () {
         let floor = Math.floor,
             buckets = [];
         
+        // Sort for artefact calculateOrder
         this.artefacts.forEach(name => {
 
             let obj = artefact[name],
-                order = floor(obj.order) || 0;
+                order = floor(obj.calculateOrder) || 0;
 
             if (!buckets[order]) buckets[order] = [];
 
             buckets[order].push(obj);
         });
+         this.artefactCalculateBuckets = buckets.reduce((a, v) => a.concat(v), []);
+        
+        // Sort for artefact stampOrder
+        buckets.length = 0;
+        this.artefacts.forEach(name => {
 
-         this.artefactBuckets = buckets.reduce((a, v) => a.concat(v), []);
+            let obj = artefact[name],
+                order = floor(obj.stampOrder) || 0;
+
+            if (!buckets[order]) buckets[order] = [];
+
+            buckets[order].push(obj);
+        });
+         this.artefactStampBuckets = buckets.reduce((a, v) => a.concat(v), []);
     }
 };
 
@@ -343,7 +357,7 @@ P.prepareStamp = function (myCell) {
 
     if (myCell) host = myCell;
 
-    this.artefactBuckets.forEach(art => {
+    this.artefactCalculateBuckets.forEach(art => {
 
         if (art.lib === 'entity') {
             
@@ -365,11 +379,11 @@ P.stampAction = function (myCell) {
 
     let mystash = (this.currentHost && this.currentHost.stashOutput) ? true : false;
 
-    let { dirtyFilters, currentFilters, artefactBuckets, noFilters, filters, stashOutput, currentHost } = this;
+    let { dirtyFilters, currentFilters, artefactStampBuckets, noFilters, filters, stashOutput, currentHost } = this;
 
     if (dirtyFilters || !currentFilters) this.cleanFilters();
 
-    artefactBuckets.forEach(art => {
+    artefactStampBuckets.forEach(art => {
 
         if (art && art.stamp) art.stamp();
     });
@@ -628,7 +642,8 @@ P.moveArtefactsIntoGroup = function (...args) {
 P.clearArtefacts = function () {
 
     this.artefacts.length = 0;
-    this.artefactBuckets.length = 0;
+    this.artefactCalculateBuckets.length = 0;
+    this.artefactStampBuckets.length = 0;
     this.batchResort = true;
     return this;
 };
@@ -694,7 +709,7 @@ P.cascadeAction = function (items, action) {
 // `setDeltaValues` - passes the __items__ argument object through to each of the Group's artefact's `setDeltaValues` function
 P.setDeltaValues = function (items = Ωempty) {
 
-    this.artefactBuckets.forEach(art => art.setDeltaValues(items));
+    this.artefactCalculateBuckets.forEach(art => art.setDeltaValues(items));
 
     return this;
 };
@@ -756,7 +771,7 @@ P.clearFiltersFromEntitys = function () {
 P.getArtefactAt = function (items) {
 
     let myCell = requestCell(),
-        artBuckets = this.artefactBuckets;
+        artBuckets = this.artefactStampBuckets;
 
     this.sortArtefacts();
 
@@ -787,7 +802,7 @@ P.getArtefactAt = function (items) {
 P.getAllArtefactsAt = function (items) {
 
     let myCell = requestCell(),
-        artBuckets = this.artefactBuckets,
+        artBuckets = this.artefactStampBuckets,
         resultNames = [],
         results = [];
 

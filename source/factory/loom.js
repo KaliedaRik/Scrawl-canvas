@@ -137,8 +137,8 @@ let defaultAttributes = {
 //
 // It does, however, use these attributes (alongside their setters and getters): __visibility__, __order__, __delta__, __host__, __group__, __anchor__, __collides__.
     visibility: true,
-    order: 0,
-    // delta: null,
+    calculateOrder: 0,
+    stampOrder: 0,
     host: null,
     group: null,
     anchor: null,
