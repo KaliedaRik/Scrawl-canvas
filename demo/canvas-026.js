@@ -47,7 +47,7 @@ scrawl.makeWheel({
 
     name: 'disc-1',
 
-    stampOrder: 1,
+    order: 1,
 
     radius: '12%',
 
@@ -68,7 +68,7 @@ scrawl.makeWheel({
 }).clone({
 
     name: 'disc-2',
-    stampOrder: 2,
+    order: 2,
     radius: '10%',
     fillStyle: 'lightblue',
     strokeStyle: 'blue',
@@ -76,7 +76,7 @@ scrawl.makeWheel({
 }).clone({
 
     name: 'disc-3',
-    stampOrder: 3,
+    order: 3,
     radius: '8%',
     fillStyle: 'yellow',
     strokeStyle: 'orange',
@@ -165,7 +165,7 @@ let checkPeg = function () {
 
         if (!pegState[mypeg.name].length) return true;
 
-        return pegState[mypeg.name].every(d => entity[d].stampOrder < mydisc.stampOrder);
+        return pegState[mypeg.name].every(d => entity[d].get('order') < mydisc.get('order'));
     }
 
     return function () {

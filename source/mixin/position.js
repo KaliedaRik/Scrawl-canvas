@@ -175,11 +175,12 @@ export default function (P = Ωempty) {
         visibility: true,
 
 
-// The __order__ attribute - an integer Number (default: 0) - determines the order in which an artefact will be processed as part of a Group. 
-// + For instance, entity artefacts with higher order values will be processed after those with lower values, with the effect that the entity will be displayed on top of those other entitys (and stamping over them if they overlap)
+// The __order__ pseudo-attribute - an integer Number (default: 0) - determines the order in which an artefact will be processed as part of a Group. Since v8.9.2 this attribute has been broken into two - __calculateOrder__ and __stampOrder__ so that the processing order of artefacts can be different in the `prestamp` and `stamp` parts of the `compile` step of the Display cycle.
+// + Artefacts with higher `calculateOrder` values will be processed after those with lower values - this is important for situations where an artefact relies on others for its positioning data (when it pivots, mimics other artefacts, or uses a path-pased artefact for position/rotation data), thus needs to calculate its data after the reference artefact has completed its calculations.
+// + Artefacts with higher `stampOrder` values will display (be stamped) over artefacts with lower `stampOrder` values.
 // + Note that Group objects also have an order attribute: all artefacts in a Group with a lower order value will be processed before those with a higher order value.
-// + Cell wrappers (a Canvas wrapper can have more than one Cell) have a `calculateOrder` attribute which does the same job.
-// + Finally, Animation objects have order values; the same effect applies.
+// + Cell wrappers (a Canvas wrapper can have more than one Cell) have `ccompileOrder` and `showOrder` attributes which do similar work.
+// + Finally, Animation objects (generated from `makeRender`, `makeAnimation`) can be given `order` values.
 // + ___If the display of an artefact does not appear to be following the order value it has been given___, the problem may lie in either the order values assigned to that artefact's Group, or host (Cell, Canvas, Stack), or even the Animation object that contributes to the Display cycle.
         calculateOrder: 0,
         stampOrder: 0,
@@ -623,7 +624,11 @@ export default function (P = Ωempty) {
         this.dirtyDimensions = true;
     };
 
-// __order__
+// __order__ - the `get` function returns the `stampOrder` value; while the `set` function applies the argument value to both the `calculateOrder` and`stampOrder` attributes
+    G.order = function () {
+
+        return this.stampOrder;
+    };
     S.order = function (val) {
 
         this.calculateOrder = val;
