@@ -3609,7 +3609,7 @@ P.theBigActionsObject = {
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            r, g, b, a, i, m;
+            r, g, b, a, i, pixels;
 
         let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, weights, lineOut} = requirements;
 
@@ -3629,21 +3629,21 @@ P.theBigActionsObject = {
 
         let grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
 
-        for (i = 0; i < len; i += 4) {
+        pixels = Math.floor(len / 4);
 
-            r = i;
+        for (i = 0; i < pixels; i++) {
+
+            r = i * 4;
             g = r + 1;
             b = g + 1;
             a = b + 1;
 
             if (iData[a]) {
 
-                m = Math.floor(i / 4);
-
-                oData[r] = (includeRed) ? doCalculations(iData, grid[m], 0) : iData[r];
-                oData[g] = (includeGreen) ? doCalculations(iData, grid[m], 1) : iData[g];
-                oData[b] = (includeBlue) ? doCalculations(iData, grid[m], 2) : iData[b];
-                oData[a] = (includeAlpha) ? doCalculations(iData, grid[m], 3) : iData[a];
+                oData[r] = (includeRed) ? doCalculations(iData, grid[i], 0) : iData[r];
+                oData[g] = (includeGreen) ? doCalculations(iData, grid[i], 1) : iData[g];
+                oData[b] = (includeBlue) ? doCalculations(iData, grid[i], 2) : iData[b];
+                oData[a] = (includeAlpha) ? doCalculations(iData, grid[i], 3) : iData[a];
             }
         }
 
