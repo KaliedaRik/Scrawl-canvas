@@ -713,427 +713,428 @@ P.colorEngine = makeColor({
     name: `filterEngine-colorEngine-do-not-overwrite`,
 });
 
-// ##### Dithering-related functions
+// // ##### Dithering-related functions
 
-// `initiateDithering` - internal function that initializes dithering-related objects and palettes
-P.initiateDithering = function () {
+// // `initiateDithering` - internal function that initializes dithering-related objects and palettes
+// P.initiateDithering = function () {
 
-    this.labReference = {};
-    this.predefinedPalette = {};
+//     this.labReference = {};
+//     this.predefinedPalette = {};
 
-    this.createPalette('black-white', ['#000', '#fff']);
-    this.createPalette('monochrome-4', ['#000', '#555', '#aaa', '#fff']);
-    this.createPalette('monochrome-8', ['#000', '#333', '#555', '#777', '#999', '#bbb', '#ddd', '#fff']);
-    this.createPalette('monochrome-16', ['#000', '#111', '#222', '#333', '#444', '#555', '#666', '#777', '#888', '#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee', '#fff']);
-    this.createPalette('RGBK-extended', [
-        '#000', '#fff',
-        '#003', '#007', '#337', '#00a', '#33a', '#77a', '#00f', '#33f', '#77f', '#aaf',
-        '#030', '#070', '#373', '#0a0', '#3a3', '#7a7', '#0f0', '#3f3', '#7f7', '#afa',
-        '#300', '#700', '#733', '#a00', '#a33', '#a77', '#f00', '#f33', '#f77', '#faa',
-    ]);
-    this.createPalette('CMYK-extended', [
-        '#000', '#fff',
-        '#033', '#077', '#377', '#0aa', '#3aa', '#7aa', '#0ff', '#3ff', '#7ff', '#aff',
-        '#303', '#707', '#737', '#a0a', '#a3a', '#a7a', '#f0f', '#f3f', '#f7f', '#faf',
-        '#330', '#770', '#733', '#aa0', '#aa3', '#aa7', '#ff0', '#ff3', '#ff7', '#ffa',
-    ]);
-    this.createPalette('extended', [
-        '#000', '#fff',
-        '#003', '#007', '#337', '#00a', '#33a', '#77a', '#00f', '#33f', '#77f', '#aaf',
-        '#030', '#070', '#373', '#0a0', '#3a3', '#7a7', '#0f0', '#3f3', '#7f7', '#afa',
-        '#300', '#700', '#733', '#a00', '#a33', '#a77', '#f00', '#f33', '#f77', '#faa',
-        '#033', '#077', '#377', '#0aa', '#3aa', '#7aa', '#0ff', '#3ff', '#7ff', '#aff',
-        '#303', '#707', '#737', '#a0a', '#a3a', '#a7a', '#f0f', '#f3f', '#f7f', '#faf',
-        '#330', '#770', '#733', '#aa0', '#aa3', '#aa7', '#ff0', '#ff3', '#ff7', '#ffa',
-    ]);
-    this.createPalette('RGBK', [
-        '#000', '#fff',
-        '#007', '#00f', '#77f',
-        '#070', '#0f0', '#7f7',
-        '#700', '#f00', '#f77',
-    ]);
-    this.createPalette('CMYK', [
-        '#000', '#fff',
-        '#077', '#0ff', '#7ff',
-        '#707', '#f0f', '#f7f',
-        '#770', '#ff0', '#ff7',
-    ]);
-    this.createPalette('basic', [
-        '#000', '#fff',
-        '#007', '#00f', '#77f',
-        '#070', '#0f0', '#7f7',
-        '#700', '#f00', '#f77',
-        '#077', '#0ff', '#7ff',
-        '#707', '#f0f', '#f7f',
-        '#770', '#ff0', '#ff7',
-    ]);
-};
+//     this.createPalette('black-white', ['#000', '#fff']);
+//     this.createPalette('monochrome-4', ['#000', '#555', '#aaa', '#fff']);
+//     this.createPalette('monochrome-8', ['#000', '#333', '#555', '#777', '#999', '#bbb', '#ddd', '#fff']);
+//     this.createPalette('monochrome-16', ['#000', '#111', '#222', '#333', '#444', '#555', '#666', '#777', '#888', '#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee', '#fff']);
+//     this.createPalette('RGBK-extended', [
+//         '#000', '#fff',
+//         '#003', '#007', '#337', '#00a', '#33a', '#77a', '#00f', '#33f', '#77f', '#aaf',
+//         '#030', '#070', '#373', '#0a0', '#3a3', '#7a7', '#0f0', '#3f3', '#7f7', '#afa',
+//         '#300', '#700', '#733', '#a00', '#a33', '#a77', '#f00', '#f33', '#f77', '#faa',
+//     ]);
+//     this.createPalette('CMYK-extended', [
+//         '#000', '#fff',
+//         '#033', '#077', '#377', '#0aa', '#3aa', '#7aa', '#0ff', '#3ff', '#7ff', '#aff',
+//         '#303', '#707', '#737', '#a0a', '#a3a', '#a7a', '#f0f', '#f3f', '#f7f', '#faf',
+//         '#330', '#770', '#733', '#aa0', '#aa3', '#aa7', '#ff0', '#ff3', '#ff7', '#ffa',
+//     ]);
+//     this.createPalette('extended', [
+//         '#000', '#fff',
+//         '#003', '#007', '#337', '#00a', '#33a', '#77a', '#00f', '#33f', '#77f', '#aaf',
+//         '#030', '#070', '#373', '#0a0', '#3a3', '#7a7', '#0f0', '#3f3', '#7f7', '#afa',
+//         '#300', '#700', '#733', '#a00', '#a33', '#a77', '#f00', '#f33', '#f77', '#faa',
+//         '#033', '#077', '#377', '#0aa', '#3aa', '#7aa', '#0ff', '#3ff', '#7ff', '#aff',
+//         '#303', '#707', '#737', '#a0a', '#a3a', '#a7a', '#f0f', '#f3f', '#f7f', '#faf',
+//         '#330', '#770', '#733', '#aa0', '#aa3', '#aa7', '#ff0', '#ff3', '#ff7', '#ffa',
+//     ]);
+//     this.createPalette('RGBK', [
+//         '#000', '#fff',
+//         '#007', '#00f', '#77f',
+//         '#070', '#0f0', '#7f7',
+//         '#700', '#f00', '#f77',
+//     ]);
+//     this.createPalette('CMYK', [
+//         '#000', '#fff',
+//         '#077', '#0ff', '#7ff',
+//         '#707', '#f0f', '#f7f',
+//         '#770', '#ff0', '#ff7',
+//     ]);
+//     this.createPalette('basic', [
+//         '#000', '#fff',
+//         '#007', '#00f', '#77f',
+//         '#070', '#0f0', '#7f7',
+//         '#700', '#f00', '#f77',
+//         '#077', '#0ff', '#7ff',
+//         '#707', '#f0f', '#f7f',
+//         '#770', '#ff0', '#ff7',
+//     ]);
+// };
 
-// `createPalette` - Returns two palette Arrays, the first containing RGB values for each palette element, the second holding the LAB values for each element
-// + name: String name of a predefined palette, or ''; or Number value if user wants to create a palette of the most popular colors
-// + items: an Array of CSS color Strings, or [] 
-// + For named palettes, will store color data in `labReference` and `rgbReference` objects
-P.createPalette = function (name, items) {
+// // `createPalette` - Returns two palette Arrays, the first containing RGB values for each palette element, the second holding the LAB values for each element
+// // + name: String name of a predefined palette, or ''; or Number value if user wants to create a palette of the most popular colors
+// // + items: an Array of CSS color Strings, or [] 
+// // + For named palettes, will store color data in `labReference` and `rgbReference` objects
+// P.createPalette = function (name, items) {
 
-    if (name && this.predefinedPalette[name]) return this.predefinedPalette[name];
+//     if (name && this.predefinedPalette[name]) return this.predefinedPalette[name];
 
-    const labRes = [],
-        rgbRes = [],
-        rgb = this.colorEngine.rgb,
-        lab = this.colorEngine.lab;
+//     const labRes = [],
+//         rgbRes = [],
+//         rgb = this.colorEngine.rgb,
+//         lab = this.colorEngine.lab;
 
-    const { labReference, truncateLabData } = this;
+//     const { labReference, truncateLabData } = this;
 
-    let colorName, myLab;
+//     let colorName, myLab;
 
-    items.forEach(color => {
+//     items.forEach(color => {
 
-        this.colorEngine.convert(color);
+//         this.colorEngine.convert(color);
 
-        colorName = `${rgb[0]}-${rgb[1]}-${rgb[2]}`;
+//         colorName = `${rgb[0]}-${rgb[1]}-${rgb[2]}`;
 
-        myLab = truncateLabData([...lab]);
+//         myLab = truncateLabData([...lab]);
 
-        if (!labReference[colorName]) labReference[colorName] = [myLab[0], myLab[1], myLab[2]];
+//         if (!labReference[colorName]) labReference[colorName] = [myLab[0], myLab[1], myLab[2]];
 
-        labRes.push(...myLab);
-        rgbRes.push(...rgb);
-    });
+//         labRes.push(...myLab);
+//         rgbRes.push(...rgb);
+//     });
 
-    if (name) this.predefinedPalette[name] = [[...rgbRes], [...labRes]];
+//     if (name) this.predefinedPalette[name] = [[...rgbRes], [...labRes]];
 
-    return [rgbRes, labRes];
-};
+//     return [rgbRes, labRes];
+// };
 
-// `createPopularColorsPalette` - separated out because requires a lot more work to generate the palette
-P.createCommonestColorsPalette = function (noOfColors, data, minimumColorDistance) {
+// // `createPopularColorsPalette` - separated out because requires a lot more work to generate the palette
+// P.createCommonestColorsPalette = function (noOfColors, data, minimumColorDistance) {
 
-    let r, g, b, a, tr, tg, tb, dr, dg, db, i, iz, c, name, element, val, tallyNames, tallyLen, distanceFlag, test, selection, pName;
+//     let r, g, b, a, tr, tg, tb, dr, dg, db, i, iz, c, name, element, val, tallyNames, tallyLen, distanceFlag, test, selection, pName;
 
-    const len = data.length,
-        tally = {},
-        finalPalette = [],
-        dataPalette = [];
+//     const len = data.length,
+//         tally = {},
+//         finalPalette = [],
+//         dataPalette = [];
 
-    for (i = 0; i < len; i += 4) {
+//     for (i = 0; i < len; i += 4) {
 
-        c = i;
+//         c = i;
 
-        r = data[c];
-        g = data[++c];
-        b = data[++c];
-        a = data[++c];
+//         r = data[c];
+//         g = data[++c];
+//         b = data[++c];
+//         a = data[++c];
 
-        if (a) {
+//         if (a) {
 
-            name = `rgb(${r} ${g} ${b})`;
+//             name = `rgb(${r} ${g} ${b})`;
 
-            if (!tally[name]) tally[name] = [r, g, b, 0];
+//             if (!tally[name]) tally[name] = [r, g, b, 0];
 
-            element = tally[name];
-            val = element[3];
-            element[3] = ++val;
-        }
-    }
+//             element = tally[name];
+//             val = element[3];
+//             element[3] = ++val;
+//         }
+//     }
 
-    tallyNames = Object.keys(tally);
-    tallyLen = tallyNames.length;
-    c = 0;
+//     tallyNames = Object.keys(tally);
+//     tallyLen = tallyNames.length;
+//     c = 0;
 
-    tallyNames.sort((a, b) => tally[b][3] - tally[a][3]);
+//     tallyNames.sort((a, b) => tally[b][3] - tally[a][3]);
 
-    while (c < tallyLen && finalPalette.length < noOfColors) {
+//     while (c < tallyLen && finalPalette.length < noOfColors) {
 
-        if (!c) {
+//         if (!c) {
 
-            finalPalette.push(tallyNames[c]);
-            dataPalette.push(tally[tallyNames[c]]);
-        }
-        else {
+//             finalPalette.push(tallyNames[c]);
+//             dataPalette.push(tally[tallyNames[c]]);
+//         }
+//         else {
 
-            distanceFlag = true;
+//             distanceFlag = true;
 
-            element = tally[tallyNames[c]];
-            [tr, tg, tb] = element;
+//             element = tally[tallyNames[c]];
+//             [tr, tg, tb] = element;
 
-            for (i = 0, iz = dataPalette.length; i < iz; i++) {
+//             for (i = 0, iz = dataPalette.length; i < iz; i++) {
 
-                [r, g, b] = dataPalette[i];
+//                 [r, g, b] = dataPalette[i];
 
-                dr = r - tr;
-                dg = g - tg;
-                db = b - tb;
+//                 dr = r - tr;
+//                 dg = g - tg;
+//                 db = b - tb;
 
-                if ((dr * dr) + (dg * dg) + (db * db) < minimumColorDistance) {
+//                 if ((dr * dr) + (dg * dg) + (db * db) < minimumColorDistance) {
 
-                    distanceFlag = false;
-                    break;
-                }
-            }
+//                     distanceFlag = false;
+//                     break;
+//                 }
+//             }
 
-            if (distanceFlag) {
+//             if (distanceFlag) {
 
-                finalPalette.push(tallyNames[c]);
-                dataPalette.push(tally[tallyNames[c]]);
-            }
-        }
-        c++;
-    }
-    return this.createPalette('', finalPalette);
-};
+//                 finalPalette.push(tallyNames[c]);
+//                 dataPalette.push(tally[tallyNames[c]]);
+//             }
+//         }
+//         c++;
+//     }
+//     return this.createPalette('', finalPalette);
+// };
 
-// `truncateLabData` - Internal helper function
-P.truncateLabData = function (item) {
+// // `truncateLabData` - Internal helper function
+// P.truncateLabData = function (item) {
 
-    if (Array.isArray(item)) {
+//     if (Array.isArray(item)) {
 
-        item[0] = parseInt(item[0] * 10000, 10) / 10000;
-        item[1] = parseInt(item[1] * 10000, 10) / 10000;
-        item[2] = parseInt(item[2] * 10000, 10) / 10000;
-    }
-    return item;
-};
+//         item[0] = parseInt(item[0] * 10000, 10) / 10000;
+//         item[1] = parseInt(item[1] * 10000, 10) / 10000;
+//         item[2] = parseInt(item[2] * 10000, 10) / 10000;
+//     }
+//     return item;
+// };
 
-// `convertToLabData` - Converts imageData.data RGB values to LAB color space
-// + data: imageData.data Array
-P.convertToLabData = function (data) {
+// // `convertToLabData` - Converts imageData.data RGB values to LAB color space
+// // + data: imageData.data Array
+// P.convertToLabData = function (data) {
 
-    const res = [];
+//     const res = [];
 
-    const { labReference, truncateLabData } = this;
+//     const { labReference, truncateLabData } = this;
 
-    const { convertXYZtoLAB, convertRGBtoXYZ } = this.colorEngine;
+//     const { convertXYZtoLAB, convertRGBtoXYZ } = this.colorEngine;
 
-    let red, green, blue, l, a, b, c, alpha, name, xyz, lab;
+//     let red, green, blue, l, a, b, c, alpha, name, xyz, lab;
     
-    for (let i = 0; i < data.length; i += 4) {
+//     for (let i = 0; i < data.length; i += 4) {
 
-        c = i;
-        red = data[c];
-        green = data[++c];
-        blue = data[++c];
-        alpha = data[++c];
+//         c = i;
+//         red = data[c];
+//         green = data[++c];
+//         blue = data[++c];
+//         alpha = data[++c];
 
-        name = `${red}-${green}-${blue}`;
+//         name = `${red}-${green}-${blue}`;
 
-        if (!alpha) {
+//         if (!alpha) {
 
-            res.push(0, 0, 0, 0);
-            continue;
-        }
+//             res.push(0, 0, 0, 0);
+//             continue;
+//         }
 
-        if (labReference[name]) {
+//         if (labReference[name]) {
 
-            res.push(...labReference[name], alpha);
-            continue;
-        }
+//             res.push(...labReference[name], alpha);
+//             continue;
+//         }
 
-        xyz = convertRGBtoXYZ(red, green, blue);
-        lab = convertXYZtoLAB(...xyz);
+//     const { convertXYZtoLAB, convertRGBtoXYZ } = this.colorEngine;
+//         xyz = convertRGBtoXYZ(red, green, blue);
+//         lab = convertXYZtoLAB(...xyz);
 
-        lab = truncateLabData(lab);
+//         lab = truncateLabData(lab);
 
-        labReference[name] = [...lab];
+//         labReference[name] = [...lab];
 
-        res.push(...lab, alpha);
-    }
-    return res;
-};
+//         res.push(...lab, alpha);
+//     }
+//     return res;
+// };
 
-// `getColorDistanceData` - Measures the LAB data for an image against the LAB data in a palette
-// + data: Array of imageData.data values in LAB color space
-// + ref: Array of palette values in LAB color space
-// + Returns an Array of Arrays containing all the measurements for each image pixel
-P.getColorDistanceData = function (data, ref) {
+// // `getColorDistanceData` - Measures the LAB data for an image against the LAB data in a palette
+// // + data: Array of imageData.data values in LAB color space
+// // + ref: Array of palette values in LAB color space
+// // + Returns an Array of Arrays containing all the measurements for each image pixel
+// P.getColorDistanceData = function (data, ref) {
 
-    let l, a, b, dl, da, db, dc, rl, ra, rb, rc, i, iz, j, jz;
+//     let l, a, b, dl, da, db, dc, rl, ra, rb, rc, i, iz, j, jz;
 
-    const dataRes = [];
+//     const dataRes = [];
 
-    for (i = 0, iz = data.length; i < iz; i += 4) {
+//     for (i = 0, iz = data.length; i < iz; i += 4) {
 
-        if (!data[i + 3]) {
+//         if (!data[i + 3]) {
 
-            dataRes.push([]);
-            continue;
-        }
+//             dataRes.push([]);
+//             continue;
+//         }
 
-        dc = i;
-        dl = data[dc];
-        da = data[++dc];
-        db = data[++dc];
+//         dc = i;
+//         dl = data[dc];
+//         da = data[++dc];
+//         db = data[++dc];
 
-        const pixelRes = [];
+//         const pixelRes = [];
 
-        for (j = 0, jz = ref.length; j < jz; j += 4) {
+//         for (j = 0, jz = ref.length; j < jz; j += 4) {
 
-            rc = j;
-            rl = ref[rc];
-            ra = ref[++rc];
-            rb = ref[++rc];
+//             rc = j;
+//             rl = ref[rc];
+//             ra = ref[++rc];
+//             rb = ref[++rc];
 
-            l = rl - dl;
-            a = ra - da;
-            b = rb - db;
+//             l = rl - dl;
+//             a = ra - da;
+//             b = rb - db;
 
-            pixelRes.push(Math.sqrt((l * l) + (a * a) + (b * b)));
-        }
-        dataRes.push(pixelRes);
-    }
-    return dataRes;
-};
+//             pixelRes.push(Math.sqrt((l * l) + (a * a) + (b * b)));
+//         }
+//         dataRes.push(pixelRes);
+//     }
+//     return dataRes;
+// };
 
-// `selectClosestColors` - Returns a propensity model of the liklihood of the pixel taking the closest colors to it. The model is an Array of Arrays (one per pixel), with the sub-arrays taking the form of `[palette-index-color, propensity, palette-index-color, propensity, etc]` to a maximum of four colors.
-// + data: Array of imageData.data values in LAB color space
-// + ref: Array of palette values in LAB color space
-// + Invokes `getColorDistanceData` internally 
-// + Transparent pixels are recorded as `-1`
-P.selectClosestColors = function (data, ref) {
+// // `selectClosestColors` - Returns a propensity model of the liklihood of the pixel taking the closest colors to it. The model is an Array of Arrays (one per pixel), with the sub-arrays taking the form of `[palette-index-color, propensity, palette-index-color, propensity, etc]` to a maximum of four colors.
+// // + data: Array of imageData.data values in LAB color space
+// // + ref: Array of palette values in LAB color space
+// // + Invokes `getColorDistanceData` internally 
+// // + Transparent pixels are recorded as `-1`
+// P.selectClosestColors = function (data, ref) {
 
-    const colDistances = this.getColorDistanceData(data, ref),
-        refLen = ref.length / 4,
-        refMax = (refLen < 3) ? 2 : 3,
-        temp = [],
-        dist = [],
-        hold = [],
-        res = [],
-        final = [],
-        min = Math.min;
+//     const colDistances = this.getColorDistanceData(data, ref),
+//         refLen = ref.length / 4,
+//         refMax = (refLen < 3) ? 2 : 3,
+//         temp = [],
+//         dist = [],
+//         hold = [],
+//         res = [],
+//         final = [],
+//         min = Math.min;
 
-    let val, i, iz, total, index, cd;
+//     let val, i, iz, total, index, cd;
 
-    for (i = 0, iz = colDistances.length; i < iz; i++) {
+//     for (i = 0, iz = colDistances.length; i < iz; i++) {
 
-        cd = colDistances[i];
-        dist.length = 0;
-        dist.push(...cd);
+//         cd = colDistances[i];
+//         dist.length = 0;
+//         dist.push(...cd);
 
-        if (dist.length) {
+//         if (dist.length) {
 
-            if (refLen === 1) final.push(0, 0, 0, 0, 0, 0);
-            else {
+//             if (refLen === 1) final.push(0, 0, 0, 0, 0, 0);
+//             else {
 
-                temp.length = 0;
-                hold.length = 0;
-                hold.push(...dist);
+//                 temp.length = 0;
+//                 hold.length = 0;
+//                 hold.push(...dist);
 
-                while (temp.length < refMax) {
+//                 while (temp.length < refMax) {
 
-                    val = min(...hold);
-                    index = hold.indexOf(val);
-                    temp.push(...hold.splice(index, 1));
-                }
+//                     val = min(...hold);
+//                     index = hold.indexOf(val);
+//                     temp.push(...hold.splice(index, 1));
+//                 }
 
-                total = temp.reduce((p, c) => p + c);
+//                 total = temp.reduce((p, c) => p + c);
 
-                res.length = 0;
+//                 res.length = 0;
 
-                temp.forEach(d => res.push(dist.indexOf(d), d / total));
+//                 temp.forEach(d => res.push(dist.indexOf(d), d / total));
 
-                while (res.length < 6) res.push(0, 0);
+//                 while (res.length < 6) res.push(0, 0);
 
-                res.length = 6;
+//                 res.length = 6;
 
-                final.push(...res);
-            }
-        }
-        else final.push(-1, 0, 0, 0, 0, 0);
-    }
-    return final;
-};
+//                 final.push(...res);
+//             }
+//         }
+//         else final.push(-1, 0, 0, 0, 0, 0);
+//     }
+//     return final;
+// };
 
-// `getGrayscaleDistanceData` - Measures the Rgba data for an image against the Rgb data in a palette
-// + data: Array of imageData.data values in RGBA color space
-// + ref: Array of palette values in RGB color space
-P.getGrayscaleDistanceData = function (data, ref) {
+// // `getGrayscaleDistanceData` - Measures the Rgba data for an image against the Rgb data in a palette
+// // + data: Array of imageData.data values in RGBA color space
+// // + ref: Array of palette values in RGB color space
+// P.getGrayscaleDistanceData = function (data, ref) {
 
-    let dataGray, refGray, gray, i, iz, j, jz;
+//     let dataGray, refGray, gray, i, iz, j, jz;
 
-    const dataRes = [],
-        refLen = ref.length / 4;
+//     const dataRes = [],
+//         refLen = ref.length / 4;
 
-    for (i = 0, iz = data.length; i < iz; i += 4) {
+//     for (i = 0, iz = data.length; i < iz; i += 4) {
 
-        if (!data[i + 3]) {
+//         if (!data[i + 3]) {
 
-            dataRes.push(-1);
-            for (j = 1; j < refLen; j++) {
+//             dataRes.push(-1);
+//             for (j = 1; j < refLen; j++) {
 
-                dataRes.push(0);
-            }
-            continue;
-        }
+//                 dataRes.push(0);
+//             }
+//             continue;
+//         }
 
-        dataGray = data[i];
+//         dataGray = data[i];
 
-        for (j = 0, jz = ref.length; j < jz; j += 4) {
+//         for (j = 0, jz = ref.length; j < jz; j += 4) {
 
-            refGray = ref[j];
+//             refGray = ref[j];
 
-            gray = refGray - dataGray
+//             gray = refGray - dataGray
 
-            dataRes.push(gray * gray);
-        }
-    }
-    return dataRes;
-};
+//             dataRes.push(gray * gray);
+//         }
+//     }
+//     return dataRes;
+// };
 
-P.selectClosestGrays = function (data, ref) {
+// P.selectClosestGrays = function (data, ref) {
 
-    const colDistances = this.getGrayscaleDistanceData(data, ref),
-        min = Math.min,
-        refLen = ref.length / 4,
-        refMax = (refLen < 3) ? 2 : 3,
-        final = [],
-        temp = [],
-        dist = [],
-        hold = [],
-        res = [];
+//     const colDistances = this.getGrayscaleDistanceData(data, ref),
+//         min = Math.min,
+//         refLen = ref.length / 4,
+//         refMax = (refLen < 3) ? 2 : 3,
+//         final = [],
+//         temp = [],
+//         dist = [],
+//         hold = [],
+//         res = [];
 
-    let val, i, iz, j, jz, total, index;
+//     let val, i, iz, j, jz, total, index;
     
-    for (i = 0, iz = colDistances.length; i < iz; i += refLen) {
+//     for (i = 0, iz = colDistances.length; i < iz; i += refLen) {
 
-        dist.length = 0;
+//         dist.length = 0;
 
-        for (j = i, jz = i + refLen; j < jz; j++) {
+//         for (j = i, jz = i + refLen; j < jz; j++) {
 
-            dist.push(colDistances[j]);
-        }
+//             dist.push(colDistances[j]);
+//         }
 
-        if (dist[0] >= 0) {
+//         if (dist[0] >= 0) {
 
-            if (refLen === 1) final.push(0, 0, 0, 0, 0, 0);
-            else {
+//             if (refLen === 1) final.push(0, 0, 0, 0, 0, 0);
+//             else {
 
-                temp.length = 0;
-                hold.length = 0;
-                hold.push(...dist);
+//                 temp.length = 0;
+//                 hold.length = 0;
+//                 hold.push(...dist);
 
-                while (temp.length < refMax) {
+//                 while (temp.length < refMax) {
 
-                    val = min(...hold);
-                    index = hold.indexOf(val);
+//                     val = min(...hold);
+//                     index = hold.indexOf(val);
 
-                    if (index < 0) break;
+//                     if (index < 0) break;
 
-                    temp.push(...hold.splice(index, 1));
-                }
+//                     temp.push(...hold.splice(index, 1));
+//                 }
 
-                total = temp.reduce((p, c) => p + c);
-                res.length = 0;
+//                 total = temp.reduce((p, c) => p + c);
+//                 res.length = 0;
 
-                temp.forEach(d => res.push(dist.indexOf(d), d / total));
+//                 temp.forEach(d => res.push(dist.indexOf(d), d / total));
 
-                while (res.length < 6) res.push(0, 1);
+//                 while (res.length < 6) res.push(0, 1);
 
-                final.push(...res);
-            }
-        }
-        else final.push(-1, 0, 0, 0, 0, 0);
-    }
-    return final;
-};
+//                 final.push(...res);
+//             }
+//         }
+//         else final.push(-1, 0, 0, 0, 0, 0);
+//     }
+//     return final;
+// };
 
 // `getGradientData` - create an imageData object containing the 256 values from a gradient that we require for doing filters work
 P.getGradientData = function (gradient) {
@@ -3415,8 +3416,6 @@ P.theBigActionsObject = {
 
         let iData = input.data,
             oData = output.data,
-            // len = iData.length,
-            // r, g, b, a, i, gray;
             len = iData.length,
             r, g, b, a, i, gray;
 
@@ -3979,17 +3978,173 @@ P.theBigActionsObject = {
 // __reducePalette__ - Reduce the number of colors in its palette. The `palette` attribute can be: a Number (for the commonest colors);  an Array of CSS color Strings to use as the palette; or  the String name of a pre-defined palette - default: 'black-white'
     'reduce-palette': function (requirements, identifier) {
 
-        if (!this.predefinedPalette) this.initiateDithering();
+        // Check to see if external objects have been set up by a previous run
+        // + If they are missing, create them
+        if (!this.predefinedPalette) this.predefinedPalette = {};
 
+        const grayPalettes = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'];
+
+        const tfx = 256,
+            tfx2 = tfx * 256,
+            tfx3 = tfx2 * 256;
+
+        const indicesLen = tfx3 * 3;
+
+        if (!this.reducePaletteLabIndices) {
+
+            this.reducePaletteRgbIndices = new Uint8ClampedArray(indicesLen);
+            this.reducePaletteLabIndices = new Float32Array(indicesLen);
+            this.reducePaletteMemoRecord = new Uint8ClampedArray(tfx3);
+        }
+
+        // Localize some handles to required functions/objects
+        const {reducePaletteRgbIndices:rgbIndices, reducePaletteLabIndices:labIndices, reducePaletteMemoRecord:memoRecord, colorEngine, predefinedPalette, getGrayscaleValue } = this;
+
+        const { convertXYZtoLAB:toLab, convertRGBtoXYZ:toXyz, convert:convertColor } = colorEngine;
+        let xyz, lab;
+
+        // Internal function - create and memoize a palette
+        const createPalette = (name, colors) => {
+
+            if (!name) name = colors.join(',');
+
+            if (name && predefinedPalette[name]) return predefinedPalette[name];
+
+            const p = [];
+
+            colors.forEach(color => {
+
+                colorEngine.convert(color);
+
+                const [pr, pg, pb] = colorEngine.rgb;
+                const pix = (pr * tfx2) + (pg * tfx) + pb
+                p.push(pix);
+
+                if (!memoRecord[pix]) {
+
+                    memoRecord[pix] = 1;
+                    const [l0, l1, l2] = colorEngine.lab;
+
+                    let ic = pix * 3;
+
+                    rgbIndices[ic] = pr;
+                    labIndices[ic] = l0;
+                    ic++;
+                    rgbIndices[ic] = pg;
+                    labIndices[ic] = l1;
+                    ic++;
+                    rgbIndices[ic] = pb;
+                    labIndices[ic] = l2;
+                }
+            });
+
+            predefinedPalette[name] = p.sort((a, b) => a - b);
+
+            return p;
+        };
+
+        // Setup predefined palettes if not done so by a previous run
+        if (!predefinedPalette['black-white']) {
+
+            createPalette('black-white', ['#000', '#fff']);
+            createPalette('monochrome-4', ['#000', '#555', '#aaa', '#fff']);
+            createPalette('monochrome-8', ['#000', '#333', '#555', '#777', '#999', '#bbb', '#ddd', '#fff']);
+            createPalette('monochrome-16', ['#000', '#111', '#222', '#333', '#444', '#555', '#666', '#777', '#888', '#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee', '#fff']);
+            createPalette('RGBK-extended', [
+                '#000', '#fff',
+                '#003', '#007', '#337', '#00a', '#33a', '#77a', '#00f', '#33f', '#77f', '#aaf',
+                '#030', '#070', '#373', '#0a0', '#3a3', '#7a7', '#0f0', '#3f3', '#7f7', '#afa',
+                '#300', '#700', '#733', '#a00', '#a33', '#a77', '#f00', '#f33', '#f77', '#faa',
+            ]);
+            createPalette('CMYK-extended', [
+                '#000', '#fff',
+                '#033', '#077', '#377', '#0aa', '#3aa', '#7aa', '#0ff', '#3ff', '#7ff', '#aff',
+                '#303', '#707', '#737', '#a0a', '#a3a', '#a7a', '#f0f', '#f3f', '#f7f', '#faf',
+                '#330', '#770', '#733', '#aa0', '#aa3', '#aa7', '#ff0', '#ff3', '#ff7', '#ffa',
+            ]);
+            createPalette('extended', [
+                '#000', '#fff',
+                '#003', '#007', '#337', '#00a', '#33a', '#77a', '#00f', '#33f', '#77f', '#aaf',
+                '#030', '#070', '#373', '#0a0', '#3a3', '#7a7', '#0f0', '#3f3', '#7f7', '#afa',
+                '#300', '#700', '#733', '#a00', '#a33', '#a77', '#f00', '#f33', '#f77', '#faa',
+                '#033', '#077', '#377', '#0aa', '#3aa', '#7aa', '#0ff', '#3ff', '#7ff', '#aff',
+                '#303', '#707', '#737', '#a0a', '#a3a', '#a7a', '#f0f', '#f3f', '#f7f', '#faf',
+                '#330', '#770', '#733', '#aa0', '#aa3', '#aa7', '#ff0', '#ff3', '#ff7', '#ffa',
+            ]);
+            createPalette('RGBK', [
+                '#000', '#fff',
+                '#007', '#00f', '#77f',
+                '#070', '#0f0', '#7f7',
+                '#700', '#f00', '#f77',
+            ]);
+            createPalette('CMYK', [
+                '#000', '#fff',
+                '#077', '#0ff', '#7ff',
+                '#707', '#f0f', '#f7f',
+                '#770', '#ff0', '#ff7',
+            ]);
+            createPalette('basic', [
+                '#000', '#fff',
+                '#007', '#00f', '#77f',
+                '#070', '#0f0', '#7f7',
+                '#700', '#f00', '#f77',
+                '#077', '#0ff', '#7ff',
+                '#707', '#f0f', '#f7f',
+                '#770', '#ff0', '#ff7',
+            ]);
+        }
+
+        // Internal function - calculate the color of a grayscale pixel
+        const getGrayPixel = function (pixel, pal) {
+
+            rndCursor++;
+
+            const pl = pal.length;
+
+            if (!pl) return 0;
+
+            if (pl === 1) return pal[0];
+
+            const pixelRef = rgbIndices[pixel * 3];
+            let palRef, pItem, diff;
+
+            const distance = [];
+
+            for (let j = 0; j < pl; j++) {
+
+                pItem = pal[j];
+                palRef = rgbIndices[pItem * 3];
+
+                diff = pixelRef - palRef;
+
+                distance.push([pItem, diff * diff]);
+            }
+
+            distance.sort((a, b) => a[1] - b[1]);
+
+            const [candidate0, distance0] = distance[0];
+            const [candidate1, distance1] = distance[1];
+            const totalscore = distance0 + distance1,
+                propensity0 = (totalscore - distance0) / totalscore;
+
+            const test = rnd[rndCursor];
+
+            return (test < propensity0) ? candidate0 : candidate1;
+        }
+
+        // Filter generics (as used by all filters)
         let [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
+            iWidth = input.width,
+            iHeight = input.height,
             oData = output.data,
             len = iData.length,
-            i, iz, j, r, g, b, a, index, p, test, c0, c1, c2, p0, p1, p2, cd0, pd0, rndCursor, labData, diffData, isGray, rgbPalette, labPalette;
-
-        const colIndex = [],
-            propensity = [];
+            quarterLen = len / 4,
+            i, iz, index,
+            r, g, b, a, red, green, blue, alpha, gray, 
+            rndCursor, indicesCursor, dataCursor,
+            selectedPalette;
 
         let {opacity, palette, seed, useBluenoise, minimumColorDistance, lineOut} = requirements;
 
@@ -3999,127 +4154,319 @@ P.theBigActionsObject = {
         if (null == palette) palette = 'black-white';
         if (null == minimumColorDistance) minimumColorDistance = 1000;
 
+
+        // Noise - used for dithering the output
         const rnd = (useBluenoise) ?
-            this.getRandomNumbers(seed, len / 4, input.width) :
-            this.getRandomNumbers(seed, len / 4);
+            this.getRandomNumbers(seed, quarterLen, iWidth) :
+            this.getRandomNumbers(seed, quarterLen);
 
         rndCursor = -1;
 
-        // For pre-defined palettes: `black-white`, `RGBK`, etc
-        if (palette.substring) {
+        // Grayscale vs non-grayscale palettes follow different computing paths
+        const isGray = grayPalettes.includes(palette);
 
-            [rgbPalette, labPalette] = this.createPalette(palette, []);
+        // Transfer input data over to a temporary object
+        // + if the palette is grayscale, we grayscale the input at this point
+        const tempInput = new ImageData(iWidth, iHeight),
+            tData = tempInput.data,
+            tWidth = tempInput.width,
+            tHeight = tempInput.height;
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            if (isGray) {
+
+                gray = getGrayscaleValue(iData[r], iData[g], iData[b]);
+
+                tData[r] = gray;
+                tData[g] = gray;
+                tData[b] = gray;
+                tData[a] = iData[a];
+            }
+            else {
+
+                tData[r] = iData[r];
+                tData[g] = iData[g];
+                tData[b] = iData[b];
+                tData[a] = iData[a];
+            }
         }
-        // User has supplied an Array of CSS color Strings, for processing
-        else if (Array.isArray(palette)) {
 
-            [rgbPalette, labPalette] = this.createPalette('', palette);
-        }
-        // User has requested a given sized palette be generated from the most popular colors in the image
-        else if (palette.toFixed) {
+        // Parse the input to determine what colors it contains, etc
+        // + If some LAB color data has not yet been memoized, we do it at this point
+        const pixelColorIndices = new Int32Array(len / 4);
+        const detectedColors = {};
 
-            [rgbPalette, labPalette] = this.createCommonestColorsPalette(palette, iData, minimumColorDistance);
-        }
-        // In case of error, default to 'black-white'
-        else  {
-
-            palette = 'black-white';
-            [rgbPalette, labPalette] = this.createPalette(palette, []);
-        }
-
-        isGray = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'].includes(palette);
-
-        if (isGray) {
-
-            diffData = this.selectClosestGrays(iData, rgbPalette);
-        }
-        else {
-
-            labData = this.convertToLabData(iData);
-            diffData = this.selectClosestColors(labData, labPalette);
-        }
-        const pLen = rgbPalette.length / 4;
-
-        for (i = 0, iz = len / 4; i < iz; i++) {
+        for (i = 0; i < quarterLen; i++) {
 
             r = i * 4;
             g = r + 1;
             b = g + 1;
             a = b + 1;
 
-            c0 = i * 6;
-            c1 = c0 + 2;
-            c2 = c1 + 2;
-            p0 = c0 + 1;
-            p1 = p0 + 2;
-            p2 = p1 + 2;
+            red = tData[r];
+            green = tData[g];
+            blue = tData[b];
+            alpha = tData[a];
 
-            cd0 = diffData[c0];
-            pd0 = diffData[p0]
+            if (alpha) {
 
-            if (!pLen || cd0 < 0) {
+                index = (red * tfx2) + (green * tfx) + blue;
 
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
+                pixelColorIndices[i] = index;
 
-                ++rndCursor;
-            }
-            else if (!cd0 && !pd0) {
+                if (detectedColors[index] == null) {
 
-                oData[r] = rgbPalette[0];
-                oData[g] = rgbPalette[1];
-                oData[b] = rgbPalette[2];
-                oData[a] = iData[a];
+                   detectedColors[index] = 0;
 
-                ++rndCursor;
-            }
-            else {
+                    if (!memoRecord[index]) {
 
-                colIndex.length = 0;
-                propensity.length = 0;
-                colIndex.push(diffData[c0], diffData[c1], diffData[c2]);
-                propensity.push(diffData[p0], diffData[p1], diffData[p2]);
+                        memoRecord[index] = 1;
+                        xyz = toXyz(red, green, blue);
+                        lab = toLab(...xyz);
 
-                p = 0;
+                        indicesCursor = index * 3;
 
-                if (pLen < 3) {
-
-                    for (j = 0; j < 2; j++) {
-
-                        p += (1 - propensity[j]);
-                        propensity[j] = p;
+                        rgbIndices[indicesCursor] = red;
+                        labIndices[indicesCursor] = lab[0];
+                        indicesCursor++;
+                        rgbIndices[indicesCursor] = green;
+                        labIndices[indicesCursor] = lab[1];
+                        indicesCursor++;
+                        rgbIndices[indicesCursor] = blue;
+                        labIndices[indicesCursor] = lab[2];
                     }
+                }
+                detectedColors[index] = detectedColors[index] + 1;
+            }
+            else pixelColorIndices[i] = -1;
+        }
+
+        // Get the appropriate array of palette colors
+        // + For commonest colors, we have to calculate a new best-fit palette for this image
+        if (palette.substring) selectedPalette = predefinedPalette[palette] || [];
+        else if (Array.isArray(palette)) selectedPalette = createPalette('', palette);
+        else if (palette.toFixed) selectedPalette = [];
+        else selectedPalette = [];
+
+        if (!selectedPalette.length) selectedPalette = predefinedPalette['black-white'];
+
+        // Calculate output
+        // + Grayscale palettes and non-grayscale palettes follow different paths
+        if (isGray) {
+
+            for (i = 0; i < quarterLen; i++) {
+
+                index = pixelColorIndices[i];
+
+                dataCursor = i * 4;
+
+                if (index < 0) {
+
+                    oData[dataCursor] = tData[dataCursor];
+                    dataCursor++;
+                    oData[dataCursor] = tData[dataCursor];
+                    dataCursor++;
+                    oData[dataCursor] = tData[dataCursor];
+                    dataCursor++;
+                    oData[dataCursor] = tData[dataCursor];
                 }
                 else {
 
-                    for (j = 0; j < 3; j++) {
+                    indicesCursor = getGrayPixel(index, selectedPalette) * 3;
 
-                        p += (1 - propensity[j]);
-                        propensity[j] = p / 2;
-                    }
-                }
-
-                test = rnd[++rndCursor];
-
-                for (j = 0; j < 3; j++) {
-
-                    if (test > propensity[j] && j < 2) continue;
-
-                    index = colIndex[j] * 4;
-
-                    oData[r] = rgbPalette[index];
-                    oData[g] = rgbPalette[++index];
-                    oData[b] = rgbPalette[++index];
-                    oData[a] = iData[a];
-
-                    break;
+                    oData[dataCursor] = rgbIndices[indicesCursor];
+                    dataCursor++;
+                    indicesCursor++;
+                    oData[dataCursor] = rgbIndices[indicesCursor];
+                    dataCursor++;
+                    indicesCursor++;
+                    oData[dataCursor] = rgbIndices[indicesCursor];
+                    dataCursor++;
+                    oData[dataCursor] = tData[dataCursor];
                 }
             }
         }
+        else {
+
+            for (i = 0; i < quarterLen; i++) {
+
+                index = pixelColorIndices[i];
+
+                dataCursor = i * 4;
+
+                if (index < 0) {
+
+                    oData[dataCursor] = tData[dataCursor];
+                    dataCursor++;
+                    oData[dataCursor] = tData[dataCursor];
+                    dataCursor++;
+                    oData[dataCursor] = tData[dataCursor];
+                    dataCursor++;
+                    oData[dataCursor] = tData[dataCursor];
+                }
+                else {
+
+                    indicesCursor = index * 3;
+
+                    oData[dataCursor] = rgbIndices[indicesCursor];
+                    dataCursor++;
+                    indicesCursor++;
+                    oData[dataCursor] = rgbIndices[indicesCursor];
+                    dataCursor++;
+                    indicesCursor++;
+                    oData[dataCursor] = rgbIndices[indicesCursor];
+                    dataCursor++;
+                    oData[dataCursor] = tData[dataCursor];
+                }
+            }
+        }
+
+        // Boilerplate filter post-processing
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // if (!this.predefinedPalette) this.initiateDithering();
+
+        // let iData = input.data,
+        //     oData = output.data,
+        //     len = iData.length,
+        //     i, iz, j, r, g, b, a, index, p, test, c0, c1, c2, p0, p1, p2, cd0, pd0, rndCursor, labData, diffData, isGray, rgbPalette, labPalette;
+
+        // const colIndex = [],
+        //     propensity = [];
+
+        // // For pre-defined palettes: `black-white`, `RGBK`, etc
+        // if (palette.substring) {
+
+        //     [rgbPalette, labPalette] = this.createPalette(palette, []);
+        // }
+        // // User has supplied an Array of CSS color Strings, for processing
+        // else if (Array.isArray(palette)) {
+
+        //     [rgbPalette, labPalette] = this.createPalette('', palette);
+        // }
+        // // User has requested a given sized palette be generated from the most popular colors in the image
+        // else if (palette.toFixed) {
+
+        //     [rgbPalette, labPalette] = this.createCommonestColorsPalette(palette, iData, minimumColorDistance);
+        // }
+        // // In case of error, default to 'black-white'
+        // else  {
+
+        //     palette = 'black-white';
+        //     [rgbPalette, labPalette] = this.createPalette(palette, []);
+        // }
+
+        // isGray = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'].includes(palette);
+
+        // if (isGray) {
+
+        //     diffData = this.selectClosestGrays(iData, rgbPalette);
+        // }
+        // else {
+
+        //     labData = this.convertToLabData(iData);
+        //     diffData = this.selectClosestColors(labData, labPalette);
+        // }
+        // const pLen = rgbPalette.length / 4;
+
+        // for (i = 0, iz = len / 4; i < iz; i++) {
+
+        //     r = i * 4;
+        //     g = r + 1;
+        //     b = g + 1;
+        //     a = b + 1;
+
+        //     c0 = i * 6;
+        //     c1 = c0 + 2;
+        //     c2 = c1 + 2;
+        //     p0 = c0 + 1;
+        //     p1 = p0 + 2;
+        //     p2 = p1 + 2;
+
+        //     cd0 = diffData[c0];
+        //     pd0 = diffData[p0]
+
+        //     if (!pLen || cd0 < 0) {
+
+        //         oData[r] = iData[r];
+        //         oData[g] = iData[g];
+        //         oData[b] = iData[b];
+        //         oData[a] = iData[a];
+
+        //         ++rndCursor;
+        //     }
+        //     else if (!cd0 && !pd0) {
+
+        //         oData[r] = rgbPalette[0];
+        //         oData[g] = rgbPalette[1];
+        //         oData[b] = rgbPalette[2];
+        //         oData[a] = iData[a];
+
+        //         ++rndCursor;
+        //     }
+        //     else {
+
+        //         colIndex.length = 0;
+        //         propensity.length = 0;
+        //         colIndex.push(diffData[c0], diffData[c1], diffData[c2]);
+        //         propensity.push(diffData[p0], diffData[p1], diffData[p2]);
+
+        //         p = 0;
+
+        //         if (pLen < 3) {
+
+        //             for (j = 0; j < 2; j++) {
+
+        //                 p += (1 - propensity[j]);
+        //                 propensity[j] = p;
+        //             }
+        //         }
+        //         else {
+
+        //             for (j = 0; j < 3; j++) {
+
+        //                 p += (1 - propensity[j]);
+        //                 propensity[j] = p / 2;
+        //             }
+        //         }
+
+        //         test = rnd[++rndCursor];
+
+        //         for (j = 0; j < 3; j++) {
+
+        //             if (test > propensity[j] && j < 2) continue;
+
+        //             index = colIndex[j] * 4;
+
+        //             oData[r] = rgbPalette[index];
+        //             oData[g] = rgbPalette[++index];
+        //             oData[b] = rgbPalette[++index];
+        //             oData[a] = iData[a];
+
+        //             break;
+        //         }
+        //     }
+        // }
     },
 
 // __set-channel-to-level__ - Sets the value of each pixel's included channel to the value supplied in the "level" argument.
