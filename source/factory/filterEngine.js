@@ -3980,34 +3980,18 @@ P.theBigActionsObject = {
             }
             else {
 
-                if (isGray) {
+                if (isGray) indicesCursor = getGrayPixel(index, selectedPalette) * 3;
+                else indicesCursor = getColorPixel(index, selectedPalette) * 3;
 
-                    indicesCursor = getGrayPixel(index, selectedPalette) * 3;
-
-                    oData[dataCursor] = rgbIndices[indicesCursor];
-                    dataCursor++;
-                    indicesCursor++;
-                    oData[dataCursor] = rgbIndices[indicesCursor];
-                    dataCursor++;
-                    indicesCursor++;
-                    oData[dataCursor] = rgbIndices[indicesCursor];
-                    dataCursor++;
-                    oData[dataCursor] = tData[dataCursor];
-                }
-                else {
-
-                    indicesCursor = getColorPixel(index, selectedPalette) * 3;
-
-                    oData[dataCursor] = rgbIndices[indicesCursor];
-                    dataCursor++;
-                    indicesCursor++;
-                    oData[dataCursor] = rgbIndices[indicesCursor];
-                    dataCursor++;
-                    indicesCursor++;
-                    oData[dataCursor] = rgbIndices[indicesCursor];
-                    dataCursor++;
-                    oData[dataCursor] = tData[dataCursor];
-                }
+                oData[dataCursor] = rgbIndices[indicesCursor];
+                dataCursor++;
+                indicesCursor++;
+                oData[dataCursor] = rgbIndices[indicesCursor];
+                dataCursor++;
+                indicesCursor++;
+                oData[dataCursor] = rgbIndices[indicesCursor];
+                dataCursor++;
+                oData[dataCursor] = tData[dataCursor];
             }
         }
 
