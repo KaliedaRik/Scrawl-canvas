@@ -219,6 +219,7 @@ let defaultAttributes = {
 // + [Filters-016](../../demo/filters-016.html) - Filter blend operation
 // + [Filters-017](../../demo/filters-017.html) - Parameters for: displace filter
 // + [Filters-018](../../demo/filters-018.html) - Parameters for: emboss filter
+// + [Filters-019](../../demo/filters-019.html) - Parameters for: edgeDetect, sharpen filters
 // + [Filters-020](../../demo/filters-020.html) - Parameters for: clampChannels filter
 // + [Filters-021](../../demo/filters-021.html) - Parameters for: corrode filter
 // + [Filters-022](../../demo/filters-022.html) - Parameters for: mapToGradient filter
@@ -226,6 +227,7 @@ let defaultAttributes = {
 // + [Filters-024](../../demo/filters-024.html) - Parameters for: curveNoise filter
 // + [Filters-025](../../demo/filters-025.html) - Parameters for: glitch filter
 // + [Filters-026](../../demo/filters-026.html) - Parameters for: swirl filter
+// + [Filters-027](../../demo/filters-027.html) - Parameters for: reducePalette filter
     alpha: 255,
     angle: 0,
     areaAlphaLevels: null,
@@ -330,6 +332,7 @@ let defaultAttributes = {
     transparentAt: 0,
     transparentEdges: false,
     useBluenoise: false,
+    useLabForPaletteDistance: false,
     useMixedChannel: true,
     useNaturalGrayscale: false,
     weights: null,
@@ -1292,6 +1295,7 @@ const setActionsArray = {
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             seed: (f.seed != null) ? f.seed : 'some-random-string-or-other',
             minimumColorDistance: (f.minimumColorDistance != null) ? f.minimumColorDistance : 1000,
+            useLabForPaletteDistance: (f.useLabForPaletteDistance != null) ? f.useLabForPaletteDistance : false,
             palette,
             useBluenoise: (f.useBluenoise != null) ? f.useBluenoise : false,
             opacity: (f.opacity != null) ? f.opacity : 1,

@@ -1309,7 +1309,7 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
 
         <span class="hljs-keyword">if</span> (!pegState[mypeg.<span class="hljs-property">name</span>].<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">return</span> pegState[mypeg.<span class="hljs-property">name</span>].<span class="hljs-title function_">every</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> entity[d].<span class="hljs-property">order</span> &lt; mydisc.<span class="hljs-property">order</span>);
+        <span class="hljs-keyword">return</span> pegState[mypeg.<span class="hljs-property">name</span>].<span class="hljs-title function_">every</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> entity[d].<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;order&#x27;</span>) &lt; mydisc.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;order&#x27;</span>));
     }
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {

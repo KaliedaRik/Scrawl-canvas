@@ -744,12 +744,13 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>The <strong>order</strong> attribute - an integer Number (default: 0) - determines the order in which an artefact will be processed as part of a Group. </p>
+              <p>The <strong>order</strong> pseudo-attribute - an integer Number (default: 0) - determines the order in which an artefact will be processed as part of a Group. Since v8.9.2 this attribute has been broken into two - <strong>calculateOrder</strong> and <strong>stampOrder</strong> so that the processing order of artefacts can be different in the <code>prestamp</code> and <code>stamp</code> parts of the <code>compile</code> step of the Display cycle.</p>
 <ul>
-<li>For instance, entity artefacts with higher order values will be processed after those with lower values, with the effect that the entity will be displayed on top of those other entitys (and stamping over them if they overlap)</li>
+<li>Artefacts with higher <code>calculateOrder</code> values will be processed after those with lower values - this is important for situations where an artefact relies on others for its positioning data (when it pivots, mimics other artefacts, or uses a path-pased artefact for position/rotation data), thus needs to calculate its data after the reference artefact has completed its calculations.</li>
+<li>Artefacts with higher <code>stampOrder</code> values will display (be stamped) over artefacts with lower <code>stampOrder</code> values.</li>
 <li>Note that Group objects also have an order attribute: all artefacts in a Group with a lower order value will be processed before those with a higher order value.</li>
-<li>Cell wrappers (a Canvas wrapper can have more than one Cell) have a <code>calculateOrder</code> attribute which does the same job.</li>
-<li>Finally, Animation objects have order values; the same effect applies.</li>
+<li>Cell wrappers (a Canvas wrapper can have more than one Cell) have <code>ccompileOrder</code> and <code>showOrder</code> attributes which do similar work.</li>
+<li>Finally, Animation objects (generated from <code>makeRender</code>, <code>makeAnimation</code>) can be given <code>order</code> values.</li>
 <li><em><strong>If the display of an artefact does not appear to be following the order value it has been given</strong></em>, the problem may lie in either the order values assigned to that artefact’s Group, or host (Cell, Canvas, Stack), or even the Animation object that contributes to the Display cycle.</li>
 </ul>
 
@@ -1569,11 +1570,15 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
-              <p><strong>order</strong></p>
+              <p><strong>order</strong> - the <code>get</code> function returns the <code>stampOrder</code> value; while the <code>set</code> function applies the argument value to both the <code>calculateOrder</code> and<code>stampOrder</code> attributes</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">order</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">order</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampOrder</span>;
+    };
+    S.<span class="hljs-property">order</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">calculateOrder</span> = val;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampOrder</span> = val;

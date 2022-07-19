@@ -3734,37 +3734,74 @@ P.theBigActionsObject = {
 
                     kIndex = candidate[0] * 3;
 
-                    kr = rgbIndices[kIndex];
-                    kIndex++;
-                    kg = rgbIndices[kIndex];
-                    kIndex++;
-                    kb = rgbIndices[kIndex];
+                    if (useLabForPaletteDistance) {
 
-                    dFlag = true;
+                        kr = labIndices[kIndex];
+                        kIndex++;
+                        kg = labIndices[kIndex];
+                        kIndex++;
+                        kb = labIndices[kIndex];
 
-                    for (f = 0, fz = final.length; f < fz; f++) {
+                        dFlag = true;
 
-                        fIndex = final[f] * 3;
+                        for (f = 0, fz = final.length; f < fz; f++) {
 
-                        fr = rgbIndices[fIndex];
-                        fIndex++;
-                        fg = rgbIndices[fIndex];
-                        fIndex++;
-                        fb = rgbIndices[fIndex];
+                            fIndex = final[f] * 3;
 
-                        dr = kr - fr;
-                        dg = kg - fg;
-                        db = kb - fb;
+                            fr = labIndices[fIndex];
+                            fIndex++;
+                            fg = labIndices[fIndex];
+                            fIndex++;
+                            fb = labIndices[fIndex];
 
-                        if ((dr * dr) + (dg * dg) + (db * db) < distance) {
+                            dr = kr - fr;
+                            dg = kg - fg;
+                            db = kb - fb;
 
-                            dFlag = false;
-                            break;
+                            if ((dr * dr) + (dg * dg) + (db * db) < distance) {
+
+                                dFlag = false;
+                                break;
+                            }
                         }
-                    }
-                    if (dFlag) final.push(candidate[0]);
+                        if (dFlag) final.push(candidate[0]);
 
-                    if (final.length >= limit) break;
+                        if (final.length >= limit) break;
+                    }
+                    else {
+
+                        kr = rgbIndices[kIndex];
+                        kIndex++;
+                        kg = rgbIndices[kIndex];
+                        kIndex++;
+                        kb = rgbIndices[kIndex];
+
+                        dFlag = true;
+
+                        for (f = 0, fz = final.length; f < fz; f++) {
+
+                            fIndex = final[f] * 3;
+
+                            fr = rgbIndices[fIndex];
+                            fIndex++;
+                            fg = rgbIndices[fIndex];
+                            fIndex++;
+                            fb = rgbIndices[fIndex];
+
+                            dr = kr - fr;
+                            dg = kg - fg;
+                            db = kb - fb;
+
+                            if ((dr * dr) + (dg * dg) + (db * db) < distance) {
+
+                                dFlag = false;
+                                break;
+                            }
+                        }
+                        if (dFlag) final.push(candidate[0]);
+
+                        if (final.length >= limit) break;
+                    }
                 }
             }
             return final;
@@ -3794,7 +3831,7 @@ P.theBigActionsObject = {
             counter++;
             palB = labIndices[counter];
 
-            const distance = [];
+            const distArray = [];
 
             for (j = 0; j < pl; j++) {
 
@@ -3814,13 +3851,13 @@ P.theBigActionsObject = {
 
                 diff = Math.sqrt((dL * dL) + (dA * dA) + (dB * dB));
 
-                distance.push([palIndex, diff]);
+                distArray.push([palIndex, diff]);
             }
 
-            distance.sort((a, b) => a[1] - b[1]);
+            distArray.sort((a, b) => a[1] - b[1]);
 
-            const [candidate0, distance0] = distance[0];
-            const [candidate1, distance1] = distance[1];
+            const [candidate0, distance0] = distArray[0];
+            const [candidate1, distance1] = distArray[1];
 
             let test = rnd[rndCursor];
 
@@ -3847,11 +3884,12 @@ P.theBigActionsObject = {
             rndCursor, indicesCursor, dataCursor,
             selectedPalette;
 
-        let {opacity, palette, seed, useBluenoise, minimumColorDistance, lineOut} = requirements;
+        let {opacity, palette, seed, useBluenoise, minimumColorDistance, useLabForPaletteDistance, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == seed) seed = 'some-random-string-or-other';
         if (null == useBluenoise) useBluenoise = false;
+        if (null == useLabForPaletteDistance) useLabForPaletteDistance = false;
         if (null == palette) palette = 'black-white';
         if (null == minimumColorDistance) minimumColorDistance = 1000;
 

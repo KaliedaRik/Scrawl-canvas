@@ -9,7 +9,7 @@
 
 
 // Current version
-export const version = '8.9.1';
+export const version = '8.9.2';
 
 
 // Objects created using the __makeAnchor__ factory

@@ -1081,9 +1081,21 @@
 
     <span class="hljs-keyword">if</span> (!output) <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {};
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
-        testTime, testNow, dragging,
-        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(output);
+        <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
+            testTime, testNow,
+            testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(output);
+
+        <span class="hljs-keyword">let</span> history = [],
+            averageTime = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">addTime</span> = (<span class="hljs-params">t</span>) =&gt; {
+
+            <span class="hljs-keyword">if</span> (history.<span class="hljs-property">length</span> &gt; <span class="hljs-number">60</span>) history.<span class="hljs-title function_">shift</span>();
+            history.<span class="hljs-title function_">push</span>(t);
+            averageTime = history.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">p, c</span>) =&gt;</span> p + c, <span class="hljs-number">0</span>);
+            averageTime /= history.<span class="hljs-property">length</span>;
+        }
+
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -1094,7 +1106,9 @@
             testTime = testNow - testTicker;
             testTicker = testNow;
 
-            <span class="hljs-keyword">let</span> text = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+            <span class="hljs-title function_">addTime</span>(testTime);
+
+            <span class="hljs-keyword">let</span> text = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(averageTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / averageTime)}</span>`</span>;
 
             <span class="hljs-keyword">if</span> (xtra) {
 

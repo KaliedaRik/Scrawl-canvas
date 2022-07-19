@@ -1237,6 +1237,7 @@ scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
         <span class="hljs-attr">minimumColorDistance</span>: [<span class="hljs-string">&#x27;minimumColorDistance&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">seed</span>: [<span class="hljs-string">&#x27;seed&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
         <span class="hljs-attr">useBluenoise</span>: [<span class="hljs-string">&#x27;useBluenoise&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">useLabForPaletteDistance</span>: [<span class="hljs-string">&#x27;useLabForPaletteDistance&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
         <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
     },
 });
@@ -1394,11 +1395,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+              <p>@ts-expect-error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, [dithered, original]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#useLabForPaletteDistance&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -1408,6 +1409,21 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, [dithered, original]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

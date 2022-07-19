@@ -807,6 +807,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 <li><a href="../../demo/filters-016.html">Filters-016</a> - Filter blend operation</li>
 <li><a href="../../demo/filters-017.html">Filters-017</a> - Parameters for: displace filter</li>
 <li><a href="../../demo/filters-018.html">Filters-018</a> - Parameters for: emboss filter</li>
+<li><a href="../../demo/filters-019.html">Filters-019</a> - Parameters for: edgeDetect, sharpen filters</li>
 <li><a href="../../demo/filters-020.html">Filters-020</a> - Parameters for: clampChannels filter</li>
 <li><a href="../../demo/filters-021.html">Filters-021</a> - Parameters for: corrode filter</li>
 <li><a href="../../demo/filters-022.html">Filters-022</a> - Parameters for: mapToGradient filter</li>
@@ -814,6 +815,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 <li><a href="../../demo/filters-024.html">Filters-024</a> - Parameters for: curveNoise filter</li>
 <li><a href="../../demo/filters-025.html">Filters-025</a> - Parameters for: glitch filter</li>
 <li><a href="../../demo/filters-026.html">Filters-026</a> - Parameters for: swirl filter</li>
+<li><a href="../../demo/filters-027.html">Filters-027</a> - Parameters for: reducePalette filter</li>
 </ul>
 
             </div>
@@ -922,6 +924,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">transparentAt</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">transparentEdges</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">useBluenoise</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">useLabForPaletteDistance</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">useMixedChannel</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useNaturalGrayscale</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">weights</span>: <span class="hljs-literal">null</span>,
@@ -2506,15 +2509,6 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
     			palette = palette.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);
     		    palette.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">trim</span>());
             }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;black-white&#x27;</span>, <span class="hljs-string">&#x27;monochrome-4&#x27;</span>, <span class="hljs-string">&#x27;monochrome-8&#x27;</span>, <span class="hljs-string">&#x27;monochrome-16&#x27;</span>].<span class="hljs-title function_">includes</span>(palette)) {
-
-                f.<span class="hljs-property">actions</span>.<span class="hljs-title function_">push</span>({
-                    <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
-                    <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-                    <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-                    <span class="hljs-attr">opacity</span>: <span class="hljs-number">1</span>,
-                });
-            }
     	}
         f.<span class="hljs-property">actions</span>.<span class="hljs-title function_">push</span>({
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;reduce-palette&#x27;</span>,
@@ -2522,6 +2516,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
             <span class="hljs-attr">minimumColorDistance</span>: (f.<span class="hljs-property">minimumColorDistance</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">minimumColorDistance</span> : <span class="hljs-number">1000</span>,
+            <span class="hljs-attr">useLabForPaletteDistance</span>: (f.<span class="hljs-property">useLabForPaletteDistance</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useLabForPaletteDistance</span> : <span class="hljs-literal">false</span>,
             palette,
             <span class="hljs-attr">useBluenoise</span>: (f.<span class="hljs-property">useBluenoise</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useBluenoise</span> : <span class="hljs-literal">false</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,

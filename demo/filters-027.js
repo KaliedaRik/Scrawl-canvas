@@ -94,6 +94,7 @@ scrawl.observeAndUpdate({
         minimumColorDistance: ['minimumColorDistance', 'round'],
         seed: ['seed', 'raw'],
         useBluenoise: ['useBluenoise', 'boolean'],
+        useLabForPaletteDistance: ['useLabForPaletteDistance', 'boolean'],
         opacity: ['opacity', 'float'],
     },
 });
@@ -128,6 +129,8 @@ document.querySelector('#paletteNumber').options.selectedIndex = 1;
 document.querySelector('#seed').value = 'some-random-string-or-other';
 // @ts-expect-error
 document.querySelector('#useBluenoise').options.selectedIndex = 0;
+// @ts-expect-error
+document.querySelector('#useLabForPaletteDistance').options.selectedIndex = 0;
 
 
 // #### Drag-and-Drop image loading functionality
