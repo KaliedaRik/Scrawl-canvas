@@ -24,13 +24,17 @@ export default function (P = Ωempty) {
 // __filters__ - An array of filter object String names. If only one filter is to be applied, then it is enough to use the String name of that filter object - Scrawl-canvas will make sure it gets added to the Array.
 // + To add/remove new filters to the filters array, use the `addFilters` and `removeFilters` functions. Note that the `set` function will replace all the existing filters in the array with the new filters. To remove all existing filters from the array, use the `clearFilters` function
 // + Multiple filters will be batch-applied to an entity, group of entitys, or an entire cell in one operation. Filters are applied in the order that they appear in in the filters array.
-// + ___Be aware that the "filters" (plural) attribute is different to the CSS/SVG "filter" (singular) attribute___ - details about how Scrawl-canvas uses CSS/SVG filter Strings to produce filtering effects (at the entity and Cell levels only) are investigated in the Filter Demos 051 to 055. CSS/SVG filter Strings can be applied in addition to Scrawl-canvas filters Array objects, and will be applied after them.
+// + ___Be aware that the "filters" (plural) attribute is different to the CSS/SVG "filter" (singular) attribute___ - details about how Scrawl-canvas uses CSS/SVG filter Strings to produce filtering effects (at the entity and Cell levels only) are investigated in the Filter Demos 501 to 505. CSS/SVG filter Strings can be applied in addition to Scrawl-canvas filters Array objects, and will be applied after them.
         filters: null,
 
 // __isStencil__ - Use the entity as a stencil. When this flag is set filter effects will be applied to the background imagery covered by the entity (or Group of entitys, or Cell), the results of which will replace the entity/Group/Cell in the final display.
         isStencil: false,
 
-// __memoizeFilterOutput__ - 
+// __memoizeFilterOutput__ - SC uses memoization as a means to enhance the speed of filter application. When an entity has filters sety on it, and the `memoizeFilterOutput` flag is set to `true`, the filter engine will cache the generated output after its first run and, for subsequent Display cycles, serve up the cached result rather than perform the filter calculations again. Things to note:
+// + Entitys will automatically request their filters to recalculate and re-memoize after any start, handle, offset, scale, rotation or flip change. They also request re-memoization when other attributes change, for instance: dimensions, fill or stroke styles, line parameters, font or text updates (Phrase), etc.
+// + Re-memoization is also triggered by any changes to the entity's `filters` array, or when the attributes of a filter in the array update.
+// + Memoization is limited to entitys (not Groups or Cells). If the `isStencil` flag is set to `true` the `memoizeFilterOutput` flag is ignored.
+// + Memoization is also ignored for Picture entitys using a spritesheet or video asset for their source.
         memoizeFilterOutput: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
@@ -66,12 +70,14 @@ export default function (P = Ωempty) {
         }
     };
 
-// `memoizeFilterOutput` - tell the filter engine to cache its output. Cache is namestring-controlled, and tied to the entity/group/cell. Various updates to the entity/etc - including positional, rotational and scaling updates - will lead to the generation of a new namestring and forcing the filter to serve a newly created output rather than the cached output. Cached outputs are removed if they are not used again within 1 second.
+// `memoizeFilterOutput`
     S.memoizeFilterOutput = function (item) {
 
         this.memoizeFilterOutput = item;
         this.updateFilterIdentifier(!!item);
     };
+
+// `updateFilterIdentifier` - manually trigger re-memoization. The function's (optional) argument is a boolean. 
     P.updateFilterIdentifier = function (item) {
 
         this.dirtyFilterIdentifier = false;
@@ -131,7 +137,8 @@ export default function (P = Ωempty) {
     };
 
 
-// `addFilters`, `removeFilters` - Add or remove one or more filter name strings to/from the filters array. Filter name strings can be supplied as comma-separated arguments to the function
+// `addFilters`, `removeFilters` - Add or remove one or more filter name strings to/from the filters array. Filter name strings, or the filter objects themselves, can be supplied as comma-separated arguments to the function.
+// + Filters are added to the end of the `filters` array. If the filters need to be reordered, use the `set` functionality instead to replace the array with an array containing the desired filter order
     P.addFilters = function (...args) {
 
         if (!Array.isArray(this.filters)) this.filters = [];
