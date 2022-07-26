@@ -14,6 +14,7 @@ import { makeColor } from './color.js';
 
 import { bluenoise } from './filterEngine-bluenoiseData.js';
 
+
 // #### FilterEngine constructor
 const FilterEngine = function () {
 

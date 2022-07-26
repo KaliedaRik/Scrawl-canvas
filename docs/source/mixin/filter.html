@@ -572,7 +572,7 @@
 <ul>
 <li>To add/remove new filters to the filters array, use the <code>addFilters</code> and <code>removeFilters</code> functions. Note that the <code>set</code> function will replace all the existing filters in the array with the new filters. To remove all existing filters from the array, use the <code>clearFilters</code> function</li>
 <li>Multiple filters will be batch-applied to an entity, group of entitys, or an entire cell in one operation. Filters are applied in the order that they appear in in the filters array.</li>
-<li><em><strong>Be aware that the “filters” (plural) attribute is different to the CSS/SVG “filter” (singular) attribute</strong></em> - details about how Scrawl-canvas uses CSS/SVG filter Strings to produce filtering effects (at the entity and Cell levels only) are investigated in the Filter Demos 051 to 055. CSS/SVG filter Strings can be applied in addition to Scrawl-canvas filters Array objects, and will be applied after them.</li>
+<li><em><strong>Be aware that the “filters” (plural) attribute is different to the CSS/SVG “filter” (singular) attribute</strong></em> - details about how Scrawl-canvas uses CSS/SVG filter Strings to produce filtering effects (at the entity and Cell levels only) are investigated in the Filter Demos 501 to 505. CSS/SVG filter Strings can be applied in addition to Scrawl-canvas filters Array objects, and will be applied after them.</li>
 </ul>
 
             </div>
@@ -603,7 +603,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p><strong>memoizeFilterOutput</strong> - </p>
+              <p><strong>memoizeFilterOutput</strong> - SC uses memoization as a means to enhance the speed of filter application. When an entity has filters sety on it, and the <code>memoizeFilterOutput</code> flag is set to <code>true</code>, the filter engine will cache the generated output after its first run and, for subsequent Display cycles, serve up the cached result rather than perform the filter calculations again. Things to note:</p>
+<ul>
+<li>Entitys will automatically request their filters to recalculate and re-memoize after any start, handle, offset, scale, rotation or flip change. They also request re-memoization when other attributes change, for instance: dimensions, fill or stroke styles, line parameters, font or text updates (Phrase), etc.</li>
+<li>Re-memoization is also triggered by any changes to the entity’s <code>filters</code> array, or when the attributes of a filter in the array update.</li>
+<li>Memoization is limited to entitys (not Groups or Cells). If the <code>isStencil</code> flag is set to <code>true</code> the <code>memoizeFilterOutput</code> flag is ignored.</li>
+<li>Memoization is also ignored for Picture entitys using a spritesheet or video asset for their source.</li>
+</ul>
 
             </div>
             
@@ -673,7 +679,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p><code>memoizeFilterOutput</code> - tell the filter engine to cache its output. Cache is namestring-controlled, and tied to the entity/group/cell. Various updates to the entity/etc - including positional, rotational and scaling updates - will lead to the generation of a new namestring and forcing the filter to serve a newly created output rather than the cached output. Cached outputs are removed if they are not used again within 1 second.</p>
+              <p><code>memoizeFilterOutput</code></p>
 
             </div>
             
@@ -681,8 +687,22 @@
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">memoizeFilterOutput</span> = item;
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateFilterIdentifier</span>(!!item);
-    };
-    P.<span class="hljs-property">updateFilterIdentifier</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p><code>updateFilterIdentifier</code> - manually trigger re-memoization. The function’s (optional) argument is a boolean. </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">updateFilterIdentifier</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">false</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">false</span>;
@@ -695,28 +715,14 @@
         </li>
         
         
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality defined here</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality defined here</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality defined here</p>
 
             </div>
             
@@ -729,8 +735,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality defined here</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality defined here</p>
 
             </div>
             
@@ -743,8 +749,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
-<p>No additional functionality defined here</p>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality defined here</p>
 
             </div>
             
@@ -756,6 +762,20 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+<p>No additional functionality defined here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p><code>cleanFilters</code> - Internal housekeeping</p>
@@ -794,13 +814,16 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p><code>addFilters</code>, <code>removeFilters</code> - Add or remove one or more filter name strings to/from the filters array. Filter name strings can be supplied as comma-separated arguments to the function</p>
+              <p><code>addFilters</code>, <code>removeFilters</code> - Add or remove one or more filter name strings to/from the filters array. Filter name strings, or the filter objects themselves, can be supplied as comma-separated arguments to the function.</p>
+<ul>
+<li>Filters are added to the end of the <code>filters</code> array. If the filters need to be reordered, use the <code>set</code> functionality instead to replace the array with an array containing the desired filter order</li>
+</ul>
 
             </div>
             
@@ -843,11 +866,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>clearFilters</code> - Clears the filters array</p>
 
@@ -869,11 +892,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>preprocessFilters</code> - internal function called as part of the Display cycle. The <strong>process-image</strong> filter action loads a Scrawl-canvas asset into the filters engine, where it can be used as a lineIn or lineMix argument for other filter actions.</p>
 
@@ -1033,11 +1056,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 
