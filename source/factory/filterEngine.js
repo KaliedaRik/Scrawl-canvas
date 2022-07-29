@@ -660,6 +660,40 @@ P.getInputAndOutputLines = function (requirements) {
         else if (cache[requirements.lineIn]) lineIn = cache[requirements.lineIn];
     }
 
+    let {width:sWidth, height:sHeight} = sourceData;
+    let {width:iWidth, height:iHeight, data:iData} = lineIn;
+
+    if (iWidth !== sWidth || iHeight !== sHeight) {
+
+        let temp = new ImageData(sWidth, sHeight),
+            tempData = temp.data,
+            tx, ty, tempCursor, inputCursor;
+
+        for (ty = 0; ty < sHeight; ty++) {
+            for (tx = 0; tx < sWidth; tx++) {
+
+                tempCursor = ((ty * sWidth) + tx) * 4;
+
+                if (tx < iWidth && ty < iHeight) {
+
+                    inputCursor = ((ty * iWidth) + tx) * 4;
+
+                    tempData[tempCursor] = iData[inputCursor];
+                    tempCursor++;
+                    inputCursor++;
+                    tempData[tempCursor] = iData[inputCursor];
+                    tempCursor++;
+                    inputCursor++;
+                    tempData[tempCursor] = iData[inputCursor];
+                    tempCursor++;
+                    inputCursor++;
+                    tempData[tempCursor] = iData[inputCursor];
+                }
+            }
+        }
+        lineIn = temp;
+    }
+
     if (requirements.lineMix) {
 
         if (requirements.lineMix == 'source') lineMix = sourceData;
@@ -987,7 +1021,6 @@ P.theBigActionsObject = {
 
         const alphaCalc = (dA, mA) => (dA + (mA * (1 - dA))) * 255;
 
-        // const { getHSLfromRGB, getRGBfromHSL } = this.colorEngine;
         const colorEngine = this.colorEngine;
 
         let [input, output, mix] = this.getInputAndOutputLines(requirements);
@@ -1993,6 +2026,8 @@ P.theBigActionsObject = {
         };
 
         let [input, output, mix] = this.getInputAndOutputLines(requirements);
+
+        // console.log(input, output, mix)
 
         let {width:iWidth, height:iHeight, data:iData} = input;
         let {width:oWidth, height:oHeight, data:oData} = output;

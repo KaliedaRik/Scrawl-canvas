@@ -254,11 +254,16 @@ export default function (P = Ωempty) {
                             if (copyY.substring) copyY = (parseFloat(copyY) / 100) * height;
                             if (copyWidth.substring) copyWidth = (parseFloat(copyWidth) / 100) * width;
                             if (copyHeight.substring) copyHeight = (parseFloat(copyHeight) / 100) * height;
+                            if (destWidth.substring) destWidth = (parseFloat(destWidth) / 100) * width;
+                            if (destHeight.substring) destHeight = (parseFloat(destHeight) / 100) * height;
+
 
                             copyX = Math.abs(copyX);
                             copyY = Math.abs(copyY);
                             copyWidth = Math.abs(copyWidth);
                             copyHeight = Math.abs(copyHeight);
+                            destWidth = Math.abs(destWidth);
+                            destHeight = Math.abs(destHeight);
 
                             if (copyX > width) {
                                 copyX = width - 2;

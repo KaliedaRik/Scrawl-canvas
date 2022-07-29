@@ -107,13 +107,10 @@ const imageFilter = scrawl.makeFilter({
 
     asset: 'iris',
 
-    width: 200,
-    height: 200,
-    
-    copyX: '25%',
-    copyY: 100,
-    copyWidth: '50%',
-    copyHeight: 200,
+    width: '80%',
+    height: '80%',
+    copyWidth: '100%',
+    copyHeight: '100%',
 
     lineOut: 'flower',
 });

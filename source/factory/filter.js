@@ -457,6 +457,11 @@ P.setDelta = function (items = Ωempty) {
     return this;
 };
 
+S.actions = function (item) {
+
+	if (item != null) this.actions = item;
+};
+
 // #### Compatibility with Scrawl-canvas legacy filters functionality
 // The Scrawl-canvas filters code was rewritten from scratch for version 8.4.0. The new functionality introduced the concept of "line processing" - `lineIn`, `lineMix`, `lineOut` (analagous to SVG `in`, `in2` and `result` attributes) - alongside the addition of more sophisticated image processing tools such as blend modes, compositing, more adaptable matrices, image loading, displacement mapping, etc.
 //

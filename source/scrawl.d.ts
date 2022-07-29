@@ -1167,7 +1167,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     greenInRed?: number;
     gutterHeight?: number;
     gutterWidth?: number;
-    height?: number;
+    height?: StringOrNumberInput;
     highAlpha?: number;
     highBlue?: number;
     highGreen?: number;
@@ -1219,7 +1219,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     tileWidth?: number;
     tolerance?: number;
     transparentAt?: number;
-    width?: number;
+    width?: StringOrNumberInput;
 }
 
 interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs {
