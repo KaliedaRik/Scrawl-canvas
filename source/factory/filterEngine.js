@@ -660,44 +660,11 @@ P.getInputAndOutputLines = function (requirements) {
         else if (cache[requirements.lineIn]) lineIn = cache[requirements.lineIn];
     }
 
-    let {width:sWidth, height:sHeight} = sourceData;
-    let {width:iWidth, height:iHeight, data:iData} = lineIn;
-
-    if (iWidth !== sWidth || iHeight !== sHeight) {
-
-        let temp = new ImageData(sWidth, sHeight),
-            tempData = temp.data,
-            tx, ty, tempCursor, inputCursor;
-
-        for (ty = 0; ty < sHeight; ty++) {
-            for (tx = 0; tx < sWidth; tx++) {
-
-                tempCursor = ((ty * sWidth) + tx) * 4;
-
-                if (tx < iWidth && ty < iHeight) {
-
-                    inputCursor = ((ty * iWidth) + tx) * 4;
-
-                    tempData[tempCursor] = iData[inputCursor];
-                    tempCursor++;
-                    inputCursor++;
-                    tempData[tempCursor] = iData[inputCursor];
-                    tempCursor++;
-                    inputCursor++;
-                    tempData[tempCursor] = iData[inputCursor];
-                    tempCursor++;
-                    inputCursor++;
-                    tempData[tempCursor] = iData[inputCursor];
-                }
-            }
-        }
-        lineIn = temp;
-    }
-
     if (requirements.lineMix) {
 
         if (requirements.lineMix == 'source') lineMix = sourceData;
         else if (requirements.lineMix == 'source-alpha') lineMix = alphaData;
+        else if (requirements.lineMix == 'current') lineMix = cache.work;
         else if (cache[requirements.lineMix]) lineMix = cache[requirements.lineMix];
     }
 
@@ -3483,17 +3450,63 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __process-image__ - Add an asset image to the filter process chain. The asset - the String name of the asset object - must be pre-loaded before it can be included in the filter. The "width" and "height" arguments are measured in integer Number pixels; the "copy" arguments can be either percentage Strings (relative to the asset's natural dimensions) or absolute Number values (in pixels). The "lineOut" argument is required - be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset's data.
+// __process-image__ - Add an asset to the filter, which can then be used by other filters as either their `lineIn` or `lineMix` inputs. 
+// + `asset` - the String name of the asset object. The asset must be pre-loaded before it can be included in the filter; where things go wrong, the system will attempt to load a 1x1 transparent pixel in place of the asset.
+// + `width` and `height` - arguments are measured in integer Number pixels, or % strings (relative to the source entity/Group/Cell dimensions). 
+// + `copyX`, `copyY`, `copyWidth`, `copyHeight` - the start and dimensions of the area of the image to be used in the filter; values are integer Number pixels, or % strings relative to the image's natural dimensions.
+// + If the image's dimensions differ from the source entity/Group/Cell dimensions then, where a given dimension is smaller than source, that dimension will be centered; where the image dimension is larger then that dimension will be pinned to the top, or left.
+// + Filters will run faster when the asset's dimensions match the dimensions of the entity/Group/Cell to which the filter is being applied.
+// + `lineOut` - required. The image will be stored in the filter engine's cache using this name. Be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset's data.
+// + Assets are loaded into the filter engine each time the filter runs and are not persisted when the filter completes.
+// + Adding assets to a filter chain will very often disable filter memoization functionality!
     'process-image': function (requirements) {
 
         const {assetData, lineOut} = requirements;
 
         if (lineOut && lineOut.substring && lineOut.length) {
 
-            const {width, height, data} = assetData;
+            let {width, height, data} = assetData;
 
             if (width && height && data) {
 
+                let {width:sWidth, height:sHeight} = this.cache.source;
+
+                if (sWidth !== width || sHeight !== height) {
+
+                    let temp = new ImageData(sWidth, sHeight),
+                        tempData = temp.data,
+                        tx, ty, tempCursor, inputCursor,
+                        dx = (sWidth - width) / 2, 
+                        dy = (sHeight - height) / 2;
+
+                    if (dx < 0) dx = 0;
+                    if (dy < 0) dy = 0;
+
+                    for (ty = 0; ty < sHeight; ty++) {
+                        for (tx = 0; tx < sWidth; tx++) {
+
+                            if (tx < width && ty < height) {
+
+                                tempCursor = (((ty + dy) * sWidth) + (tx + dx)) * 4;
+                                inputCursor = ((ty * width) + tx) * 4;
+
+                                tempData[tempCursor] = data[inputCursor];
+                                tempCursor++;
+                                inputCursor++;
+                                tempData[tempCursor] = data[inputCursor];
+                                tempCursor++;
+                                inputCursor++;
+                                tempData[tempCursor] = data[inputCursor];
+                                tempCursor++;
+                                inputCursor++;
+                                tempData[tempCursor] = data[inputCursor];
+                            }
+                        }
+                    }
+                    data = tempData;
+                    width = sWidth;
+                    height = sHeight;
+                }
                 this.cache[lineOut] = new ImageData(data, width, height);
             }
         }
@@ -4385,8 +4398,8 @@ P.theBigActionsObject = {
         let {opacity, low, high, level, red, green, blue, alpha, includeRed, includeGreen, includeBlue, includeAlpha, useMixedChannel, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
-        if (null == low) low = [0,0,0];
-        if (null == high) high = [255,255,255];
+        if (null == low) low = [0,0,0,0];
+        if (null == high) high = [255,255,255,255];
         if (null == level) level = 128;
         if (null == red) red = 128;
         if (null == green) green = 128;

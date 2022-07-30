@@ -157,11 +157,16 @@ const getDisplaceFilter = () => {
     }];
 };
 
+// Several filters require the image to be grayscaled at the start of the processing chain
+const getGrayscaleFilter = () => {
+    return [{
+        action: 'grayscale',
+    }];
+};
+
 // Filters to configure the image (make it green) before applying the blend filter
 const getMonitorFilter = () => {
     return [{
-        action: 'grayscale',
-    }, {
         action: 'modulate-channels',
         red: 0,
         green: 1.3,
@@ -172,8 +177,6 @@ const getMonitorFilter = () => {
 // Filters to configure the image (give it a black-white drawing effect) before applying the blend filter
 const getEtchFilter = () => {
     return [{
-        action: 'grayscale',
-    }, {
         action: 'gaussian-blur',
         radius: 1,
     }, {
@@ -207,6 +210,7 @@ const updateFilters = () => {
     etchingFilter.set({
         actions: [
             ...getProcessImageFilter(),
+            ...getGrayscaleFilter(),
             ...getEtchFilter(),
             ...getBlendFilter(),
         ],
@@ -215,6 +219,7 @@ const updateFilters = () => {
     greenMonitorFilter.set({
         actions: [
             ...getProcessImageFilter(),
+            ...getGrayscaleFilter(),
             ...getMonitorFilter(),
             ...getBlendFilter(),
         ],
@@ -429,6 +434,8 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
             shiftY.value = 0;
             filterBlend.value = 'multiply';
             patternGradient.value = 'bar-cell-gradient';
+            patternWidth.value = 80;
+            patternHeight.value = 80;
 
             break;
 
@@ -463,6 +470,8 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
             shiftY.value = 0;
             filterBlend.value = 'multiply';
             patternGradient.value = 'ring-cell-gradient';
+            patternWidth.value = 80;
+            patternHeight.value = 80;
 
             break;
 
@@ -497,6 +506,8 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
             shiftY.value = 0;
             filterBlend.value = 'screen';
             patternGradient.value = 'bar-cell-gradient';
+            patternWidth.value = 80;
+            patternHeight.value = 80;
 
             break;
 
@@ -531,6 +542,8 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
             shiftY.value = 0;
             filterBlend.value = 'luminosity';
             patternGradient.value = 'bar-cell-gradient';
+            patternWidth.value = 80;
+            patternHeight.value = 80;
 
             break;
     }
@@ -547,8 +560,6 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
     });
 
     opacity.value = 1;
-    patternWidth.value = 80;
-    patternHeight.value = 80;
     filterWidth.value = 100;
     filterHeight.value = 100;
     filterOffsetX.value = 0;
