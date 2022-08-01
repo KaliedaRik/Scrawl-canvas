@@ -966,11 +966,16 @@
                             <span class="hljs-keyword">if</span> (copyY.<span class="hljs-property">substring</span>) copyY = (<span class="hljs-built_in">parseFloat</span>(copyY) / <span class="hljs-number">100</span>) * height;
                             <span class="hljs-keyword">if</span> (copyWidth.<span class="hljs-property">substring</span>) copyWidth = (<span class="hljs-built_in">parseFloat</span>(copyWidth) / <span class="hljs-number">100</span>) * width;
                             <span class="hljs-keyword">if</span> (copyHeight.<span class="hljs-property">substring</span>) copyHeight = (<span class="hljs-built_in">parseFloat</span>(copyHeight) / <span class="hljs-number">100</span>) * height;
+                            <span class="hljs-keyword">if</span> (destWidth.<span class="hljs-property">substring</span>) destWidth = (<span class="hljs-built_in">parseFloat</span>(destWidth) / <span class="hljs-number">100</span>) * width;
+                            <span class="hljs-keyword">if</span> (destHeight.<span class="hljs-property">substring</span>) destHeight = (<span class="hljs-built_in">parseFloat</span>(destHeight) / <span class="hljs-number">100</span>) * height;
+
 
                             copyX = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(copyX);
                             copyY = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(copyY);
                             copyWidth = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(copyWidth);
                             copyHeight = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(copyHeight);
+                            destWidth = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(destWidth);
+                            destHeight = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(destHeight);
 
                             <span class="hljs-keyword">if</span> (copyX &gt; width) {
                                 copyX = width - <span class="hljs-number">2</span>;

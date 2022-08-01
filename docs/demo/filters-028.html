@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo Filters 027</title>
+  <title>Demo Filters 028</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -1064,8 +1064,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="demo-filters-027">Demo Filters 027</h1>
-<p>Filter parameters: reducePalette</p>
+              <h1 id="demo-filters-028">Demo Filters 028</h1>
+<p>Filter parameters: tiles</p>
 
             </div>
             
@@ -1078,7 +1078,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p><a href="../../demo/filters-027.html">Run code</a></p>
+              <p><a href="../../demo/filters-028.html">Run code</a></p>
 
             </div>
             
@@ -1101,11 +1101,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
-
-<span class="hljs-keyword">const</span> colorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-color-factory&#x27;</span>,
-});</pre></div></div>
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1122,9 +1118,16 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;reducePalette&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;reducePalette&#x27;</span>,
-    <span class="hljs-attr">palette</span>: <span class="hljs-string">&#x27;black-white&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
+
+    <span class="hljs-attr">points</span>: <span class="hljs-string">&#x27;rect-grid&#x27;</span>,
+
+    <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">14</span>,
+    <span class="hljs-attr">offsetX</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">200</span>,
 });</pre></div></div>
             
         </li>
@@ -1140,13 +1143,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dithered = scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;dithered-image&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
 
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
 
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
     <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
@@ -1154,14 +1157,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;reducePalette&#x27;</span>],
-});
-
-<span class="hljs-keyword">const</span> original = dithered.<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;original-image&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-    <span class="hljs-attr">filters</span>: [],
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;tiles&#x27;</span>],
 });</pre></div></div>
             
         </li>
@@ -1193,7 +1189,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Minimum color distance: <span class="hljs-subst">${minimumColorDistance.value}</span>\n    Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Tile dimensions - width: <span class="hljs-subst">${tile_width.value}</span>px height: <span class="hljs-subst">${tile_height.value}</span>px radius: <span class="hljs-subst">${tile_radius.value}</span>px\n    Origin offset - x: <span class="hljs-subst">${offset_x.value}</span>px y: <span class="hljs-subst">${offset_y.value}</span>px\n    Angle: <span class="hljs-subst">${angle.value}</span>\n    Random points: <span class="hljs-subst">${randomPoints.value}</span>\n    Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
 });</pre></div></div>
             
         </li>
@@ -1226,17 +1222,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
-<p>Use a color object to convert between CSS hexadecimal and RGB decimal colors</p>
+<p>Setup form observer functionality</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> converter = scrawl.<span class="hljs-title function_">makeColor</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;converter&#x27;</span>,
-});
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
-scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
-
-    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;change&#x27;</span>],
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
 
     <span class="hljs-attr">target</span>: myFilter,
@@ -1246,24 +1238,21 @@ scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">updates</span>: {
 
-        <span class="hljs-attr">palette</span>: [<span class="hljs-string">&#x27;palette&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">paletteString</span>: [<span class="hljs-string">&#x27;palette&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">paletteNumber</span>: [<span class="hljs-string">&#x27;palette&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">minimumColorDistance</span>: [<span class="hljs-string">&#x27;minimumColorDistance&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">seed</span>: [<span class="hljs-string">&#x27;seed&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">useBluenoise</span>: [<span class="hljs-string">&#x27;useBluenoise&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
-        <span class="hljs-attr">useLabForPaletteDistance</span>: [<span class="hljs-string">&#x27;useLabForPaletteDistance&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">tile_width</span>: [<span class="hljs-string">&#x27;tileWidth&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">tile_height</span>: [<span class="hljs-string">&#x27;tileHeight&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">tile_radius</span>: [<span class="hljs-string">&#x27;tileRadius&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">offset_x</span>: [<span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">offset_y</span>: [<span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">angle</span>: [<span class="hljs-string">&#x27;angle&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+
+        <span class="hljs-attr">includeRed</span>: [<span class="hljs-string">&#x27;includeRed&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">includeGreen</span>: [<span class="hljs-string">&#x27;includeGreen&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">includeBlue</span>: [<span class="hljs-string">&#x27;includeBlue&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">includeAlpha</span>: [<span class="hljs-string">&#x27;includeAlpha&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+
         <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
     },
-});
-
-scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-
-    <span class="hljs-keyword">const</span> val = (e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;0&#x27;</span>) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;
-
-    dithered.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">memoizeFilterOutput</span>: val });
-
-}, <span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>);</pre></div></div>
+});</pre></div></div>
             
         </li>
         
@@ -1274,12 +1263,19 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Setup form</p>
+              <p>Update points value selector</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
-<span class="hljs-keyword">const</span> minimumColorDistance = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#minimumColorDistance&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">const</span> t = e.<span class="hljs-property">target</span>,
+        value = t.<span class="hljs-property">value</span>;
+
+    <span class="hljs-keyword">switch</span> (value) {
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;random&#x27;</span> :
+            myFilter.<span class="hljs-title function_">set</span>({</pre></div></div>
             
         </li>
         
@@ -1294,7 +1290,9 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-attr">points</span>: <span class="hljs-built_in">parseInt</span>(randomPoints.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>),
+                <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">100</span>,
+            });</pre></div></div>
             
         </li>
         
@@ -1309,7 +1307,15 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>minimumColorDistance.<span class="hljs-property">value</span> = <span class="hljs-number">1000</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            tile_radius.<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;hex-grid&#x27;</span> :
+            myFilter.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">points</span>: value,
+                <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">20</span>,
+                <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">40</span>,
+            });</pre></div></div>
             
         </li>
         
@@ -1324,7 +1330,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#palette&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            tile_radius.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;</pre></div></div>
             
         </li>
         
@@ -1339,7 +1345,15 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            tile_height.<span class="hljs-property">value</span> = <span class="hljs-number">40</span>;
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;rect-grid&#x27;</span> :
+            myFilter.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">points</span>: value,
+                <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
+                <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">20</span>,
+            });</pre></div></div>
             
         </li>
         
@@ -1354,7 +1368,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteString&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;yellow, green, darkgreen, limegreen, olivedrab, mediumseagreen, seagreen, lightblue, darkslategray, lavender, slateblue, mediumslateblue, black, indigo, brown, antiquewhite&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            tile_width.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;</pre></div></div>
             
         </li>
         
@@ -1369,7 +1383,10 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteNumber&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            tile_height.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;
+            <span class="hljs-keyword">break</span>;
+    }
+}, <span class="hljs-string">&#x27;#points&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1380,11 +1397,14 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Update random-points value range</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#seed&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">const</span> t = e.<span class="hljs-property">target</span>,
+        value = t.<span class="hljs-property">value</span>;</pre></div></div>
             
         </li>
         
@@ -1399,7 +1419,13 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#useBluenoise&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (points.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;random&#x27;</span>) {
+
+            myFilter.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">points</span>: <span class="hljs-built_in">parseInt</span>(value, <span class="hljs-number">10</span>),
+            });
+        }
+}, <span class="hljs-string">&#x27;#random-points&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1410,11 +1436,19 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Setup form</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#useLabForPaletteDistance&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> points = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#points&#x27;</span>),
+    tile_width = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#tile_width&#x27;</span>),
+    tile_height = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#tile_height&#x27;</span>),
+    tile_radius = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#tile_radius&#x27;</span>),
+    offset_x = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_x&#x27;</span>),
+    offset_y = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_y&#x27;</span>),
+    angle = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#angle&#x27;</span>),
+    randomPoints = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#random-points&#x27;</span>),
+    opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1425,11 +1459,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+              <p>@ts-expect-error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, [dithered, original]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>points.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;rect-grid&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1439,6 +1473,201 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>tile_width.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>tile_height.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>tile_radius.<span class="hljs-property">value</span> = <span class="hljs-number">14</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>offset_x.<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>offset_y.<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>angle.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>randomPoints.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeRed&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeGreen&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeBlue&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeAlpha&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

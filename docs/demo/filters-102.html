@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo Filters 027</title>
+  <title>Demo Filters 102</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -1064,8 +1064,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="demo-filters-027">Demo Filters 027</h1>
-<p>Filter parameters: reducePalette</p>
+              <h1 id="demo-filters-102">Demo Filters 102</h1>
+<p>Use entitys to generate points for the tiles filter</p>
 
             </div>
             
@@ -1078,7 +1078,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p><a href="../../demo/filters-027.html">Run code</a></p>
+              <p><a href="../../demo/filters-102.html">Run code</a></p>
 
             </div>
             
@@ -1101,11 +1101,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
-
-<span class="hljs-keyword">const</span> colorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-color-factory&#x27;</span>,
-});</pre></div></div>
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1122,9 +1118,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;reducePalette&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;reducePalette&#x27;</span>,
-    <span class="hljs-attr">palette</span>: <span class="hljs-string">&#x27;black-white&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
+    <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">50</span>,
+    <span class="hljs-attr">offsetX</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">200</span>,
 });</pre></div></div>
             
         </li>
@@ -1140,13 +1138,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dithered = scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;dithered-image&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
 
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
 
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
     <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
@@ -1154,14 +1152,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;reducePalette&#x27;</span>],
-});
-
-<span class="hljs-keyword">const</span> original = dithered.<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;original-image&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-    <span class="hljs-attr">filters</span>: [],
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;tiles&#x27;</span>],
 });</pre></div></div>
             
         </li>
@@ -1173,12 +1164,22 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <p>Create the line spiral</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> spiral = scrawl.<span class="hljs-title function_">makeLineSpiral</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;points-from-spiral&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">200</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">radiusIncrement</span>: <span class="hljs-number">0.05</span>,
+    <span class="hljs-attr">radiusIncrementAdjust</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">stepLimit</span>: <span class="hljs-number">1500</span>,
+    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+    <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.3</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1189,12 +1190,15 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>To make show/hide for the paths (once we have more than one of them) easier</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Minimum color distance: <span class="hljs-subst">${minimumColorDistance.value}</span>\n    Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pathGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;paths-group&#x27;</span>,
+
+}).<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">&#x27;points-from-spiral&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1205,16 +1209,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Create the Display cycle animation</p>
+              <p>Current paths, and their shared step distance
+TODO: add more path options, for testing/general interest</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> distance = <span class="hljs-number">50</span>,
+    currentPaths = spiral.<span class="hljs-property">name</span>;</pre></div></div>
             
         </li>
         
@@ -1225,45 +1226,45 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <h4 id="user-interaction">User interaction</h4>
-<p>Use a color object to convert between CSS hexadecimal and RGB decimal colors</p>
+              <p>Update filter with spiral points data</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> converter = scrawl.<span class="hljs-title function_">makeColor</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;converter&#x27;</span>,
-});
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">getPointsFromSpiral</span> = (<span class="hljs-params"></span>) =&gt; {
 
-scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
+    <span class="hljs-keyword">const</span> len = spiral.<span class="hljs-property">length</span>,
+        step = (<span class="hljs-number">1</span> / (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(len / distance))),
+        points = [],
+        coord = scrawl.<span class="hljs-title function_">requestCoordinate</span>(),
+        pos = spiral.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>);
 
-    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;change&#x27;</span>],
-    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
+    <span class="hljs-keyword">let</span> x, y;
 
-    <span class="hljs-attr">target</span>: myFilter,
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = step; i &lt;= <span class="hljs-number">1</span>; i += step) {
 
-    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+        [x, y] = coord.<span class="hljs-title function_">setFromVector</span>(spiral.<span class="hljs-title function_">getPathPositionData</span>(i)).<span class="hljs-title function_">subtract</span>(pos);
+        points.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(x), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(y));
+    }
+    [x, y] = coord.<span class="hljs-title function_">setFromVector</span>(spiral.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">0.00000001</span>)).<span class="hljs-title function_">subtract</span>(pos);
+    points.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(x), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(y));
 
-    <span class="hljs-attr">updates</span>: {
+    [x, y] = coord.<span class="hljs-title function_">setFromVector</span>(spiral.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">0.99999999</span>)).<span class="hljs-title function_">subtract</span>(pos);
+    points.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(x), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(y));
 
-        <span class="hljs-attr">palette</span>: [<span class="hljs-string">&#x27;palette&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">paletteString</span>: [<span class="hljs-string">&#x27;palette&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">paletteNumber</span>: [<span class="hljs-string">&#x27;palette&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">minimumColorDistance</span>: [<span class="hljs-string">&#x27;minimumColorDistance&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">seed</span>: [<span class="hljs-string">&#x27;seed&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
-        <span class="hljs-attr">useBluenoise</span>: [<span class="hljs-string">&#x27;useBluenoise&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
-        <span class="hljs-attr">useLabForPaletteDistance</span>: [<span class="hljs-string">&#x27;useLabForPaletteDistance&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
-        <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-    },
-});
+    scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
 
-scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+    myFilter.<span class="hljs-title function_">set</span>({ points });
+};
 
-    <span class="hljs-keyword">const</span> val = (e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;0&#x27;</span>) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateFilterPoints</span> = (<span class="hljs-params"></span>) =&gt; {
 
-    dithered.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">memoizeFilterOutput</span>: val });
+    <span class="hljs-keyword">switch</span> (currentPaths) {
 
-}, <span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>);</pre></div></div>
+        <span class="hljs-keyword">case</span> spiral.<span class="hljs-property">name</span> :
+            <span class="hljs-title function_">getPointsFromSpiral</span>();
+            <span class="hljs-keyword">break</span>;
+    }
+};</pre></div></div>
             
         </li>
         
@@ -1274,12 +1275,12 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Setup form</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
-<span class="hljs-keyword">const</span> minimumColorDistance = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#minimumColorDistance&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1290,11 +1291,12 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>// @ts-expect-error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Tile dimensions - radius: <span class="hljs-subst">${tile_radius.value}</span>px\n    Origin offset - x: <span class="hljs-subst">${offset_x.value}</span>px y: <span class="hljs-subst">${offset_y.value}</span>px\n    Step along path: <span class="hljs-subst">${distance}</span>\n    Spiral: radiusIncrement: <span class="hljs-subst">${spiralRadius.value}</span>; radiusIncrementAdjust: <span class="hljs-subst">${spiralRadiusAdjust.value}</span>\n    Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
+});</pre></div></div>
             
         </li>
         
@@ -1305,11 +1307,17 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Create the Display cycle animation</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>minimumColorDistance.<span class="hljs-property">value</span> = <span class="hljs-number">1000</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
+    <span class="hljs-attr">target</span>: canvas,
+    <span class="hljs-attr">afterShow</span>: report,
+    <span class="hljs-attr">afterCreated</span>: updateFilterPoints,
+});</pre></div></div>
             
         </li>
         
@@ -1320,11 +1328,28 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Filter updates</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#palette&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
+
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.filter-control&#x27;</span>,
+
+    <span class="hljs-attr">target</span>: myFilter,
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+        <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+        <span class="hljs-attr">offset_x</span>: [<span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">offset_y</span>: [<span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">tile_radius</span>: [<span class="hljs-string">&#x27;tileRadius&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+    },
+});</pre></div></div>
             
         </li>
         
@@ -1335,11 +1360,20 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Update step limit along paths</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">const</span> t = e.<span class="hljs-property">target</span>,
+        value = t.<span class="hljs-property">value</span>;
+
+    distance = <span class="hljs-built_in">parseInt</span>(value, <span class="hljs-number">10</span>);
+
+    <span class="hljs-title function_">updateFilterPoints</span>();
+
+}, <span class="hljs-string">&#x27;#path-step&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1350,11 +1384,20 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Show or hide the paths</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteString&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;yellow, green, darkgreen, limegreen, olivedrab, mediumseagreen, seagreen, lightblue, darkslategray, lavender, slateblue, mediumslateblue, black, indigo, brown, antiquewhite&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">const</span> t = e.<span class="hljs-property">target</span>,
+        value = t.<span class="hljs-property">value</span>;
+
+    pathGroup.<span class="hljs-title function_">setArtefacts</span>({
+        <span class="hljs-attr">method</span>: (value === <span class="hljs-string">&#x27;show&#x27;</span>) ? <span class="hljs-string">&#x27;draw&#x27;</span> : <span class="hljs-string">&#x27;none&#x27;</span>,
+    });
+
+}, <span class="hljs-string">&#x27;#show-path&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1365,11 +1408,17 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Move the paths</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#paletteNumber&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    pathGroup.<span class="hljs-title function_">setArtefacts</span>({
+        <span class="hljs-attr">start</span>: [<span class="hljs-built_in">parseInt</span>(offset_x.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>), <span class="hljs-built_in">parseInt</span>(offset_y.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>)],
+    });
+
+}, <span class="hljs-string">&#x27;.move-paths&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1380,11 +1429,20 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>LineSpiral adjustments</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#seed&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    spiral.<span class="hljs-title function_">set</span>({
+        <span class="hljs-attr">radiusIncrement</span>: <span class="hljs-built_in">parseFloat</span>(spiralRadius.<span class="hljs-property">value</span>),
+        <span class="hljs-attr">radiusIncrementAdjust</span>: <span class="hljs-built_in">parseFloat</span>(spiralRadiusAdjust.<span class="hljs-property">value</span>),
+    });
+
+    <span class="hljs-title function_">updateFilterPoints</span>();
+
+}, <span class="hljs-string">&#x27;.spiral-control&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1395,11 +1453,18 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p>Setup form</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#useBluenoise&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pathStep = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#path-step&#x27;</span>),
+    offset_x = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_x&#x27;</span>),
+    offset_y = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_y&#x27;</span>),
+    tile_radius = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#tile_radius&#x27;</span>),
+    opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>),
+    spiralRadius = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#spiral-radius&#x27;</span>),
+    spiralRadiusAdjust = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#spiral-radius-adjust&#x27;</span>),
+    showPath = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#show-path&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1414,7 +1479,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#useLabForPaletteDistance&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>pathStep.<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
             
         </li>
         
@@ -1425,11 +1490,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+              <p>@ts-expect-error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, [dithered, original]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         
@@ -1439,6 +1504,111 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>showPath.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;show&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>offset_x.<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>offset_y.<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>tile_radius.<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>spiralRadius.<span class="hljs-property">value</span> = <span class="hljs-number">0.05</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>spiralRadiusAdjust.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

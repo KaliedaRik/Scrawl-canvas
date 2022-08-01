@@ -900,6 +900,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">outerRadius</span>: <span class="hljs-string">&#x27;30%&#x27;</span>,
     <span class="hljs-attr">palette</span>: <span class="hljs-string">&#x27;black-white&#x27;</span>, 
     <span class="hljs-attr">passes</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">points</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">postProcessResults</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">processHorizontal</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">processVertical</span>: <span class="hljs-literal">true</span>,
@@ -922,6 +923,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">staticSwirls</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">tolerance</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">transparentAt</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">transparentEdges</span>: <span class="hljs-literal">false</span>,
@@ -1137,6 +1139,11 @@ P.<span class="hljs-property">setDelta</span> = <span class="hljs-keyword">funct
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};
+
+S.<span class="hljs-property">actions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+	<span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">actions</span> = item;
 };</pre></div></div>
             
         </li>
@@ -2407,7 +2414,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
               <div class="sswrap ">
                 <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
-              <p><strong>pixelate</strong> - averages the colors in a block to produce a series of obscuring tiles</p>
+              <p><strong>pixelate</strong> - averages the colors in a block to produce a series of obscuring tiles. This is a simplified version of the <code>tiles</code> filter</p>
 
             </div>
             
@@ -2741,6 +2748,40 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
               <div class="sswrap ">
                 <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
+              <p><strong>tiles</strong> - averages the colors in a group of pixels to produce a series of obscuring tiles. This is a more complex version of the <code>pixelate</code> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">tiles</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">tileWidth</span>: (f.<span class="hljs-property">tileWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileWidth</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">tileHeight</span>: (f.<span class="hljs-property">tileHeight</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileHeight</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">tileRadius</span>: (f.<span class="hljs-property">tileRadius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileRadius</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">angle</span>: (f.<span class="hljs-property">angle</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">angle</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">points</span>: (f.<span class="hljs-property">points</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">points</span> : <span class="hljs-string">&#x27;rect-grid&#x27;</span>,
+            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
+            <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">false</span>,
+        }];
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-71">&#x00a7;</a>
+              </div>
               <p><strong>tint</strong> - has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels.</p>
 
             </div>
@@ -2822,11 +2863,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><strong>userDefined</strong> - DEPRECATED - this filter method no longer has any effect, returning an unchanged image</p>
 
@@ -2844,11 +2885,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><strong>yellow</strong> - removes blue channel color from the image, and averages the remaining channel colors</p>
 
@@ -2870,11 +2911,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>No additional prototype functions defined</p>
@@ -2884,11 +2925,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2905,11 +2946,11 @@ constructors.<span class="hljs-property">Filter</span> = <span class="hljs-title
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

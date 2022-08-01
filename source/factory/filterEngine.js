@@ -473,36 +473,32 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
 
         if (req === 'unset') return [];
 
-        if (req !== 'points-array') {
+        if (tileWidth.substring) tileW = Math.round((parseFloat(tileWidth) / 100) * iWidth);
+        else if (tileWidth.toFixed && !isNaN(tileWidth)) tileW = tileWidth;
+        if (tileW < 1) tileW = 1;
 
-            if (tileWidth.substring) tileW = Math.round((parseFloat(tileWidth) / 100) * iWidth);
-            else if (tileWidth.toFixed && !isNaN(tileWidth)) tileW = tileWidth;
-            if (tileW < 1) tileW = 1;
+        if (tileHeight.substring) tileH = Math.round((parseFloat(tileHeight) / 100) * iHeight);
+        else if (tileHeight.toFixed && !isNaN(tileHeight)) tileH = tileHeight;
+        if (tileH < 1) tileH = 1;
 
-            if (tileHeight.substring) tileH = Math.round((parseFloat(tileHeight) / 100) * iHeight);
-            else if (tileHeight.toFixed && !isNaN(tileHeight)) tileH = tileHeight;
-            if (tileH < 1) tileH = 1;
+        if (tileRadius.substring) tileR = Math.round((parseFloat(tileRadius) / 100) * iWidth);
+        else if (tileRadius.toFixed && !isNaN(tileRadius)) tileR = tileRadius;
+        if (tileR < 1) tileR = 1;
 
-            if (tileRadius.substring) tileR = Math.round((parseFloat(tileRadius) / 100) * iWidth);
-            else if (tileRadius.toFixed && !isNaN(tileRadius)) tileR = tileRadius;
-            if (tileR < 1) tileR = 1;
+        if (offsetX.substring) offX = Math.round((parseFloat(offsetX) / 100) * iWidth);
+        else if (offsetX.toFixed && !isNaN(offsetX)) offX = offsetX;
+        if (offX < 0) offX = 0;
+        else if (offX >= iWidth) offX = iWidth - 1;
 
-            if (offsetX.substring) offX = Math.round((parseFloat(offsetX) / 100) * iWidth);
-            else if (offsetX.toFixed && !isNaN(offsetX)) offX = offsetX;
-            if (offX < 0) offX = 0;
-            else if (offX >= iWidth) offX = iWidth - 1;
+        if (offsetY.substring) offY = Math.round((parseFloat(offsetY) / 100) * iHeight);
+        else if (offsetY.toFixed && !isNaN(offsetY)) offY = offsetY;
+        if (offY < 0) offY = 0;
+        else if (offY >= iHeight) offY = iHeight - 1;
 
-            if (offsetY.substring) offY = Math.round((parseFloat(offsetY) / 100) * iHeight);
-            else if (offsetY.toFixed && !isNaN(offsetY)) offY = offsetY;
-            if (offY < 0) offY = 0;
-            else if (offY >= iHeight) offY = iHeight - 1;
-
-            if (angle.toFixed && !isNaN(angle)) ang = angle;
-
-        }
+        if (angle.toFixed && !isNaN(angle)) ang = angle;
 
         let name = `${req}-tileset-${iWidth}-${iHeight}-${tileW}-${tileH}-${tileR}-${offX}-${offY}-${ang}`;
-        if (req === 'points-array') name += `-${points.join(',')}`;
+        if (req === 'points-array') name += `-${pointVals.join(',')}`;
         else if (req === 'random-points') name += `-${pointVals}-${seed}`;
 
         if (workstore[name]) {
@@ -618,6 +614,21 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                         points.push(Math.round(x), Math.round(y));
                     }
                 }
+                tileW = tileR;
+                tileH = tileR;
+                break;
+
+            case 'points-array' :
+
+                pointsName = `defined-points-${iWidth}-${iHeight}-${tileR}-${pointVals}`;
+
+                if (workstore[pointsName]) {
+
+                    workstoreLastAccessed[pointsName] = Date.now();
+                    points = workstore[pointsName];
+                }
+                else points.push(...pointVals);
+
                 tileW = tileR;
                 tileH = tileR;
                 break;
