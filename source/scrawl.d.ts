@@ -1198,8 +1198,8 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     offsetRedMin?: number;
     offsetRedX?: number;
     offsetRedY?: number;
-    offsetX?: number;
-    offsetY?: number;
+    offsetX?: StringOrNumberInput;
+    offsetY?: StringOrNumberInput;
     opacity?: number;
     opaqueAt?: number;
     passes?: number;
@@ -1215,8 +1215,9 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     startY?: StringOrNumberInput;
     step?: number;
     strength?: number;
-    tileHeight?: number;
-    tileWidth?: number;
+    tileHeight?: StringOrNumberInput;
+    tileRadius?: number;
+    tileWidth?: StringOrNumberInput;
     tolerance?: number;
     transparentAt?: number;
     width?: StringOrNumberInput;
@@ -1257,6 +1258,7 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     method?: string;
     operation?: string;
     palette?: string | number;
+    points?: string | number | number[];
     postProcessResults?: boolean;
     processHorizontal?: boolean;
     processVertical?: boolean;

@@ -308,6 +308,7 @@ let defaultAttributes = {
     outerRadius: '30%',
     palette: 'black-white', 
     passes: 1,
+    points: null,
     postProcessResults: true,
     processHorizontal: true,
     processVertical: true,
@@ -330,6 +331,7 @@ let defaultAttributes = {
     staticSwirls: null,
     tileHeight: 1,
     tileWidth: 1,
+    tileRadius: 1,
     tolerance: 0,
     transparentAt: 0,
     transparentEdges: false,
@@ -1230,7 +1232,7 @@ const setActionsArray = {
         }];
     },
 
-// __pixelate__ - averages the colors in a block to produce a series of obscuring tiles
+// __pixelate__ - averages the colors in a block to produce a series of obscuring tiles. This is a simplified version of the `tiles` filter
     pixelate: function (f) {
         f.actions = [{
             action: 'pixelate',
@@ -1449,6 +1451,28 @@ const setActionsArray = {
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
             useMixedChannel: (f.useMixedChannel != null) ? f.useMixedChannel : true,
+        }];
+    },
+
+// __tiles__ - averages the colors in a group of pixels to produce a series of obscuring tiles. This is a more complex version of the `pixelate` filter
+    tiles: function (f) {
+        f.actions = [{
+            action: 'tiles',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,
+            tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,
+            tileRadius: (f.tileRadius != null) ? f.tileRadius : 1,
+            offsetX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetY: (f.offsetY != null) ? f.offsetY : 0,
+            angle: (f.angle != null) ? f.angle : 0,
+            points: (f.points != null) ? f.points : 'rect-grid',
+            seed: (f.seed != null) ? f.seed : 'some-random-string-or-other',
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
         }];
     },
 

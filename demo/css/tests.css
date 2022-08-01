@@ -106,24 +106,32 @@ code {
   font-weight: bold;
 }
 
-.blue {
-  background-color: lightblue;
-}
-
-.green {
-  background-color: palegreen;
-}
-
 .pink {
-  background-color: pink;
+  background-color: #fce1e1;
+}
+
+.orange {
+  background-color: #fcf2e1;
 }
 
 .yellow {
-  background-color: palegoldenrod;
+  background-color: #fafce1;
+}
+
+.green {
+  background-color: #edfce1;
+}
+
+.bluegreen {
+  background-color: #e1fcf8;
+}
+
+.blue {
+  background-color: #e1effc;
 }
 
 .lavender {
-  background-color: lavender;
+  background-color: #ede1fc;
 }
 
 .controls select {

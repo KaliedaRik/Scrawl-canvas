@@ -50,7 +50,7 @@ const piccy = scrawl.makePicture({
 const report = reportSpeed('#reportmessage', function () {
 
 // @ts-expect-error
-    return `    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}\n    Offset - x: ${offset_x.value} y: ${offset_y.value}\n    Opacity: ${opacity.value}`;
+    return `    Tile dimensions - width: ${tile_width.value}px height: ${tile_height.value}px\n    Tile offset offset - x: ${offset_x.value}px y: ${offset_y.value}px\n    Opacity: ${opacity.value}`;
 });
 
 

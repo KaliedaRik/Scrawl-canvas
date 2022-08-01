@@ -414,7 +414,7 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
         if (offsetY < 0) offsetY = 0;
         if (offsetY >= tileHeight) offsetY = tileHeight - 1;
 
-        const name = `imagetileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`;
+        const name = `simple-tileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`;
 
         if (workstore[name]) {
             workstoreLastAccessed[name] = Date.now();
@@ -447,6 +447,271 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
         return tiles;
     }
     return false;
+};
+
+// `buildGeneralTileSets` - creates a record of which pixels belong to which tile - used for manipulating color channels values. Resulting object will be cached in the store
+P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, seed, image) {
+
+    const { cache, workstore, workstoreLastAccessed } = this;
+
+    if (!image) image = cache.source;
+    const { width:iWidth, height:iHeight } = image;
+
+    if (iWidth && iHeight) {
+
+        let tileW = 1, 
+            tileH = 1, 
+            tileR = 1,
+            offX = 0, 
+            offY = 0,
+            ang = 0,
+            req = 'unset';
+
+        if (pointVals.substring) req = pointVals;
+        else if (Array.isArray(pointVals)) req = 'points-array';
+        else if (pointVals.toFixed && !isNaN(pointVals)) req = 'random-points';
+
+        if (req === 'unset') return [];
+
+        if (req !== 'points-array') {
+
+            if (tileWidth.substring) tileW = Math.round((parseFloat(tileWidth) / 100) * iWidth);
+            else if (tileWidth.toFixed && !isNaN(tileWidth)) tileW = tileWidth;
+            if (tileW < 1) tileW = 1;
+
+            if (tileHeight.substring) tileH = Math.round((parseFloat(tileHeight) / 100) * iHeight);
+            else if (tileHeight.toFixed && !isNaN(tileHeight)) tileH = tileHeight;
+            if (tileH < 1) tileH = 1;
+
+            if (tileRadius.substring) tileR = Math.round((parseFloat(tileRadius) / 100) * iWidth);
+            else if (tileRadius.toFixed && !isNaN(tileRadius)) tileR = tileRadius;
+            if (tileR < 1) tileR = 1;
+
+            if (offsetX.substring) offX = Math.round((parseFloat(offsetX) / 100) * iWidth);
+            else if (offsetX.toFixed && !isNaN(offsetX)) offX = offsetX;
+            if (offX < 0) offX = 0;
+            else if (offX >= iWidth) offX = iWidth - 1;
+
+            if (offsetY.substring) offY = Math.round((parseFloat(offsetY) / 100) * iHeight);
+            else if (offsetY.toFixed && !isNaN(offsetY)) offY = offsetY;
+            if (offY < 0) offY = 0;
+            else if (offY >= iHeight) offY = iHeight - 1;
+
+            if (angle.toFixed && !isNaN(angle)) ang = angle;
+
+        }
+
+        let name = `${req}-tileset-${iWidth}-${iHeight}-${tileW}-${tileH}-${tileR}-${offX}-${offY}-${ang}`;
+        if (req === 'points-array') name += `-${points.join(',')}`;
+        else if (req === 'random-points') name += `-${pointVals}-${seed}`;
+
+        if (workstore[name]) {
+
+            workstoreLastAccessed[name] = Date.now();
+            return workstore[name];
+        }
+
+        if (req === 'rect-grid' && tileW === 1 && tileH === 1) {
+
+            workstore[name] = [];
+            workstoreLastAccessed[name] = Date.now();
+            return [];
+        }
+
+        const coord = requestCoordinate(),
+            origin = [offX, offY],
+            test = [0, 0];
+
+        let tiles = [],
+            points = [],
+            referencePoints = [],
+            neighbourPoints = [];
+
+        let h, hz, w, wz, x, xz, y, yz,
+            pointsName = ''; 
+
+        if (req === 'hex-grid' && tileH / tileR < 1.05) tileH = tileR * 1.05;
+
+        let i, iz, cursor, ref, 
+            counter = 0,
+            halfW = Math.floor(tileW / 2),
+            halfH = Math.floor(tileH / 2),
+            doubleR = tileR * 2,
+            hexDown = Math.round((tileH / tileR) * tileR),
+            hexOffset = 0;
+
+        switch (req) {
+
+            case 'rect-grid' :
+
+                pointsName = `rect-grid-points-${iWidth}-${iHeight}-${tileW}-${tileH}-${offX}-${offY}`;
+
+                if (workstore[pointsName]) {
+
+                    workstoreLastAccessed[pointsName] = Date.now();
+                    points = workstore[pointsName];
+                }
+                else {
+
+                    // Generates a set of initial points in an overlarge grid (for square tiles)
+                    for (y = offY - (iHeight * 2) + halfH, yz = offY + (iHeight * 2) + halfH; y < yz; y += tileH) {
+
+                        for (x = offX - (iWidth * 2) + halfW, xz = offX + (iWidth * 2) + halfW; x < xz; x += tileW) {
+
+                            points.push(x, y);
+                        }
+                    }
+                    workstoreLastAccessed[pointsName] = Date.now();
+                    workstore[pointsName] = points;
+                }
+                break;
+
+            case 'hex-grid' :
+
+                pointsName = `hex-grid-points-${iWidth}-${iHeight}-${tileR}-${offX}-${offY}`;
+
+                if (workstore[pointsName]) {
+
+                    workstoreLastAccessed[pointsName] = Date.now();
+                    points = workstore[pointsName];
+                }
+                else {
+
+                    // Generates a set of initial points in an overlarge grid (for hexagonal tiles)
+                    counter = 0;
+                    for (y = offY - (iHeight * 2) + tileR, yz = offY + (iHeight * 2) + tileR; y < yz; y += hexDown) {
+
+                        hexOffset = (counter % 2 === 0) ? tileR : 0;
+
+                        for (x = offX - (iWidth * 2) + tileR + hexOffset, xz = offX + (iWidth * 2) + tileR; x < xz; x += doubleR) {
+
+                            points.push(x, y);
+                        }
+                        counter++;
+                    }
+                    workstoreLastAccessed[pointsName] = Date.now();
+                    workstore[pointsName] = points;
+                }
+                tileW = doubleR * 2;
+                tileH = hexDown * 2;
+                break;
+
+            case 'random-points' :
+
+                pointsName = `random-points-${iWidth}-${iHeight}-${tileR}-${offX}-${offY}-${points}-${seed}`;
+
+                if (workstore[pointsName]) {
+
+                    workstoreLastAccessed[pointsName] = Date.now();
+                    points = workstore[pointsName];
+                }
+                else {
+
+                    const rnd = this.getRandomNumbers(seed, pointVals * 3);
+                    let rndCursor = -1;
+
+                    for (i = 0; i < pointVals; i++) {
+
+                        coord.zero().add([rnd[++rndCursor], rnd[++rndCursor]]).rotate(rnd[++rndCursor] * 360).rotate(ang).scalarMultiply(tileR);
+
+                        [x, y] = coord;
+                        points.push(Math.round(x), Math.round(y));
+                    }
+                }
+                tileW = tileR;
+                tileH = tileR;
+                break;
+        }
+
+        // Go through initial set of points
+        counter = 0;
+
+        for (i = 0, iz = points.length; i < iz; i += 2) {
+
+            test[0] = points[i];
+            test[1] = points[i + 1];
+
+            coord.zero().add(test).rotate(ang).add(origin);
+
+            [x, y] = coord;
+            x = Math.round(x);
+            y = Math.round(y);
+
+            if ((x > -tileW) && (x < iWidth + tileW) && (y > -tileH) && (y < iHeight + tileH)) {
+
+                cursor = ((iWidth * 2) * (iHeight * 2)) + ((y + Math.floor(iHeight / 2)) * iWidth) + (x + Math.floor(iWidth / 2));
+
+                referencePoints[counter] = [x, y, cursor];
+                tiles[cursor] = [];
+
+                for (h = y - tileH, hz = y + tileH; h < hz; h++) {
+
+                    for (w = x - tileW, wz = x + tileW; w < wz; w++) {
+
+                        if (w >= 0 && w < iWidth && h >= 0 && h < iHeight) {
+
+                            if (req === 'random-points') {
+
+                                if (coord.zero().subtract(origin).add([w, h]).getMagnitude() > tileR) continue;
+                            }
+
+                            ref = (h * iWidth) + w;
+                            if (!neighbourPoints[ref]) neighbourPoints[ref] = [];
+                            neighbourPoints[ref].push(counter);
+                        }
+                    }
+                }
+                counter++;
+            }
+        }
+
+        if (!referencePoints.length) return referencePoints;
+
+        // Assign pixels to tile buckets
+        let minref, minlen, pixel, pixelRefs, distance;
+
+        for (h = 0; h < iHeight; h++) {
+
+            for (w = 0; w < iWidth; w++) {
+
+                pixel = (h * iWidth) + w;
+
+                test[0] = w;
+                test[1] = h;
+
+                pixelRefs = neighbourPoints[pixel];
+                minref = -1;
+                minlen = 0;
+
+                if (pixelRefs) {
+
+                    pixelRefs.forEach(r => {
+
+                        [x, y, cursor] = referencePoints[r];
+
+                        distance = coord.zero().add(test).subtract([x, y]).getMagnitude();
+
+                        if (minref < 0 || distance < minlen) {
+
+                            minref = cursor;
+                            minlen = distance;
+                        }
+                    });
+                }
+                if (minref >= 0) tiles[minref].push(pixel);
+            }
+        }
+
+        releaseCoordinate(coord);
+
+        tiles = tiles.filter(t => t != null);
+
+        // need to return the finalised tiles array of arrays
+        workstore[name] = tiles;
+        workstoreLastAccessed[name] = Date.now();
+        return tiles;
+    }
+    return [];
 };
 
 // `buildHorizontalBlur` - creates an Array of Arrays detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Resulting object will be cached in the store
@@ -4469,6 +4734,83 @@ P.theBigActionsObject = {
                 }
                 else oData[a] = pa;
             }
+        }
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
+// __tiles__ - Cover the image with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a Delauney-like output
+// + `points='rect-grid'` - generate a regular grid of tiles, where: `offsetX`, `offsetY` represent the origin coordinate from which the grid will be calculated; `tileWidth`, `tileHeight` supply the dimensions of the rectangular tiles; `angle` is the amount of tile rotation.
+// + `points='hex-grid'` - generate a hexagonal grid of tiles, where: `offsetX`, `offsetY` represent the origin coordinate from which the grid will be calculated; `tileRadius` supplies the radius for each hexagonal tile; `angle` is the amount of tile rotation.
+// + `points=50` - TODO
+// + `points=[100, 100, 100, 300, 300, 100, 300, 300]` - TODO
+    'tiles': function (requirements) {
+
+        const doCalculations = function (inChannel, outChannel, tile, offset) {
+
+            let avg = tile.reduce((a, v) => a + inChannel[(v * 4) + offset], 0);
+
+            avg = Math.floor(avg / tile.length);
+
+            for (let i = 0, iz = tile.length; i < iz; i++) {
+
+                outChannel[(tile[i] * 4) + offset] = avg;
+            }
+        }
+
+        const setOutValueToInValue = function (inChannel, outChannel, tile, offset) {
+
+            let cell;
+
+            for (let i = 0, iz = tile.length; i < iz; i++) {
+
+                cell = (tile[i] * 4) + offset;
+                outChannel[cell] = inChannel[cell];
+            }
+        };
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        let {opacity, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, points, seed, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == includeRed) includeRed = true;
+        if (null == includeGreen) includeGreen = true;
+        if (null == includeBlue) includeBlue = true;
+        if (null == includeAlpha) includeAlpha = false;
+        if (null == tileWidth) tileWidth = 1;
+        if (null == tileHeight) tileHeight = 1;
+        if (null == tileRadius) tileRadius = 1;
+        if (null == offsetX) offsetX = 0;
+        if (null == offsetY) offsetY = 0;
+        if (null == angle) angle = 0;
+        if (null == points) points = 'rect-grid';
+        if (null == seed) seed = 'some-random-string-or-other';
+
+        const tiles = this.buildGeneralTileSets(points, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, seed);
+
+        if (!tiles.length) this.transferDataUnchanged(oData, iData, len);
+        else {
+
+            tiles.forEach(t => {
+
+                if (includeRed) doCalculations(iData, oData, t, 0);
+                else setOutValueToInValue(iData, oData, t, 0);
+
+                if (includeGreen) doCalculations(iData, oData, t, 1);
+                else setOutValueToInValue(iData, oData, t, 1);
+
+                if (includeBlue) doCalculations(iData, oData, t, 2);
+                else setOutValueToInValue(iData, oData, t, 2);
+
+                if (includeAlpha) doCalculations(iData, oData, t, 3);
+                else setOutValueToInValue(iData, oData, t, 3);
+            });
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);

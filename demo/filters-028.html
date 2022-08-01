@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Filters 009</title>
+  <title>Demo Filters 028</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
@@ -20,23 +20,41 @@
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 009</h1>
-  <h2>Parameters for: pixelate filter</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 028</h1>
+  <h2>Parameters for: tiles filter</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
 
+    <div class="orange label">Points value</div>
+    <div class="orange">
+      <select class="controlItem" id="points">
+        <option value="rect-grid">Rectangular grid (predefined)</option>
+        <option value="hex-grid">Hexagonal grid (predefined)</option>
+        <option value="random">Random points</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Tile radius (hex)</div>
+    <div class="yellow"><input class="controlItem" id="tile_radius" type="range" value="14" min="1" max="200" step="1" /></div>
+
     <div class="yellow label">Tile width</div>
-    <div class="yellow"><input class="controlItem" id="tile_width" type="range" value="10" min="1" max="200" step="1" /></div>
+    <div class="yellow"><input class="controlItem" id="tile_width" type="range" value="20" min="1" max="200" step="1" /></div>
 
     <div class="yellow label">Tile height</div>
-    <div class="yellow"><input class="controlItem" id="tile_height" type="range" value="10" min="1" max="200" step="1" /></div>
+    <div class="yellow"><input class="controlItem" id="tile_height" type="range" value="20" min="1" max="200" step="1" /></div>
 
-    <div class="yellow label">Tile offset X</div>
+    <div class="yellow label">Origin offset X</div>
     <div class="yellow"><input class="controlItem" id="offset_x" type="range" value="200" min="0" max="400" step="1" /></div>
 
-    <div class="yellow label">Tile offset Y</div>
+    <div class="yellow label">Origin offset Y</div>
     <div class="yellow"><input class="controlItem" id="offset_y" type="range" value="200" min="0" max="400" step="1" /></div>
+
+    <div class="yellow label">Rotation angle</div>
+    <div class="yellow"><input class="controlItem" id="angle" type="range" value="0" min="0" max="360" step="1" /></div>
+
+    <div class="yellow label">Random points</div>
+    <div class="yellow"><input class="controlItem" id="random-points" type="range" value="20" min="5" max="200" step="1" /></div>
 
     <div class="pink label">Include red</div>
     <div class="pink">
@@ -95,14 +113,14 @@
 
     <p><b>Touch test:</b> not required</p>
 
-    <p><a href="../docs/demo/filters-009.html">Annotated code</a></p>
+    <p><a href="../docs/demo/filters-028.html">Annotated code</a></p>
   </div>
 
   <div id="my-image-store">
     <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
-  <script src="filters-009.js" type="module"></script>
+  <script src="filters-028.js" type="module"></script>
 
 </body>
 
