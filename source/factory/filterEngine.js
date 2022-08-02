@@ -449,7 +449,8 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
     return false;
 };
 
-// `buildGeneralTileSets` - creates a record of which pixels belong to which tile - used for manipulating color channels values. Resulting object will be cached in the store
+// `buildGeneralTileSets` - separate the available space into a set of groups (tiles) and assign pixels to each group. Each tile centers on a `point` - an x/y coordinate; the calculations assign each pixel in the image to the group whose point it is closest to. Resulting object will be cached in the store
+// + Used by the `tile` filter, but separated out as the data it generates may have uses elsewhere
 P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, seed, image) {
 
     const { cache, workstore, workstoreLastAccessed } = this;
@@ -467,12 +468,19 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
             ang = 0,
             req = 'unset';
 
+        // The `pointVals` data can be supplied in a number of different formats:
+        // + As a String: `'rect-grid'` - the function will calculate a set of suitable points based on the source image's dimensions, and the user-defined `tileWidth`, `tileHeight`, `offsetX`, `offsetY` and `angle` arguments. This results in a rectangular grid of tiles (at most dimensions) which can be rotated to the required angle.
+        // + As a String: `'hex-grid'` - the function will calculate a set of suitable points based on the source image's dimensions, and the user-defined `tileHeight`, `tileRadius`, `offsetX`, `offsetY` and `angle` arguments. This results in a hexagonal grid of tiles (at most dimensions) which can be rotated to the required angle. The shape of the hexagons in the grid depend on the interplay between the `tileHeight` and `tileRadius` values.
+        // + As a positive integer Number - this is a request by the user for the function to semi-randomly generate a set of points to the given value, constrained to an area determined by the `tileRadius`, `offsetX`, `offsetY` and `angle` arguments. Unlike other versions, this version will only include pixels within the bounds of circle of the given radius centered on the supplied offset coordinate values. To vary the randomness of point generation, the user can supply a `seed` argument, used when initializing the pseudo-random number generator.
+        // + As an Array of Numbers, which represent user-defined points across the image. Pixel selection for each point is constrained by the supplied `tileRadius`, `offsetX` and `offsetY` arguments.
         if (pointVals.substring) req = pointVals;
         else if (Array.isArray(pointVals)) req = 'points-array';
         else if (pointVals.toFixed && !isNaN(pointVals)) req = 'random-points';
 
         if (req === 'unset') return [];
 
+        // The `tileWidth`, `tileHeight`, `tileRadius`, `offsetX` and `offsetY` arguments can be supplied as absolute Number values (in px), or as a String % value relative to the source image dimensions.
+        // + `tileRadius` is relative to the source image's width
         if (tileWidth.substring) tileW = Math.round((parseFloat(tileWidth) / 100) * iWidth);
         else if (tileWidth.toFixed && !isNaN(tileWidth)) tileW = tileWidth;
         if (tileW < 1) tileW = 1;
@@ -495,18 +503,21 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         if (offY < 0) offY = 0;
         else if (offY >= iHeight) offY = iHeight - 1;
 
+        // The `angle` argument is the rotation applied to the points (using the offset coordinate as the rotation point), measured in degrees.
         if (angle.toFixed && !isNaN(angle)) ang = angle;
 
         let name = `${req}-tileset-${iWidth}-${iHeight}-${tileW}-${tileH}-${tileR}-${offX}-${offY}-${ang}`;
         if (req === 'points-array') name += `-${pointVals.join(',')}`;
         else if (req === 'random-points') name += `-${pointVals}-${seed}`;
 
+        // To save time, previous invocations of the function store their end result - an Array of Arrays containing the index position of each pixel in the source image, assigned to each tile.
         if (workstore[name]) {
 
             workstoreLastAccessed[name] = Date.now();
             return workstore[name];
         }
 
+        // Returning an empty array to the tile filter results in the filter taking no action beyond copying the input image data into the output image data.
         if (req === 'rect-grid' && tileW === 1 && tileH === 1) {
 
             workstore[name] = [];
@@ -526,6 +537,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         let h, hz, w, wz, x, xz, y, yz,
             pointsName = ''; 
 
+        // Check to stop the hex grid breaking when user supplies an inappropriately low `tileHeight` argument value, compared to the value supplied in the `tileRadius` argument.
         if (req === 'hex-grid' && tileH / tileR < 1.05) tileH = tileR * 1.05;
 
         let i, iz, cursor, ref, 
@@ -603,6 +615,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                 }
                 else {
 
+                    // Generates a set of initial random points withing the given constraints
                     const rnd = this.getRandomNumbers(seed, pointVals * 3);
                     let rndCursor = -1;
 
@@ -627,6 +640,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                     workstoreLastAccessed[pointsName] = Date.now();
                     points = workstore[pointsName];
                 }
+                // User-generated points are not pre-processed. Note that the positioning of these points is relative to the offset coordinate values; users, when generating the point values, need to take this into account otherwise the end result may unexpectedly move towards (or beyond) the bottom-right part of the final image.
                 else points.push(...pointVals);
 
                 tileW = tileR;
@@ -676,6 +690,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
             }
         }
 
+        // Sanity check, in case none of the points survived the previous manipulation
         if (!referencePoints.length) return referencePoints;
 
         // Assign pixels to tile buckets
@@ -715,9 +730,9 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
 
         releaseCoordinate(coord);
 
+        // Filter the tiles Array to remove undefined indexes, then stash the result in the workstore (for future quick-serve) and return the array.
         tiles = tiles.filter(t => t != null);
 
-        // need to return the finalised tiles array of arrays
         workstore[name] = tiles;
         workstoreLastAccessed[name] = Date.now();
         return tiles;
@@ -4754,8 +4769,9 @@ P.theBigActionsObject = {
 // __tiles__ - Cover the image with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a Delauney-like output
 // + `points='rect-grid'` - generate a regular grid of tiles, where: `offsetX`, `offsetY` represent the origin coordinate from which the grid will be calculated; `tileWidth`, `tileHeight` supply the dimensions of the rectangular tiles; `angle` is the amount of tile rotation.
 // + `points='hex-grid'` - generate a hexagonal grid of tiles, where: `offsetX`, `offsetY` represent the origin coordinate from which the grid will be calculated; `tileRadius` supplies the radius for each hexagonal tile; `angle` is the amount of tile rotation.
-// + `points=50` - TODO
-// + `points=[100, 100, 100, 300, 300, 100, 300, 300]` - TODO
+// + `points=50` - generate a pseudo-random set of points based on `offsetX`, `offsetY` and `tileRadius` arguments
+// + `points=[100, 100, 100, 300, 300, 100, 300, 300]` - action the points as described in the array
+// + More documentation can be found with the `buildGeneralTileSets` code, near the top of this file.
     'tiles': function (requirements) {
 
         const doCalculations = function (inChannel, outChannel, tile, offset) {

@@ -1570,19 +1570,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Filter dimensions - 
-        width: <span class="hljs-subst">${filterWidth.value}</span>%; height: <span class="hljs-subst">${filterHeight.value}</span>%
-    Filter offset - 
-        x: <span class="hljs-subst">${filterOffsetX.value}</span>px; y: <span class="hljs-subst">${filterOffsetY.value}</span>px
-    Pattern dimensions - 
-        width: <span class="hljs-subst">${patternWidth.value}</span>px; height: <span class="hljs-subst">${patternHeight.value}</span>px
-    Pattern matrix -
-        shiftX: <span class="hljs-subst">${shiftX.value}</span>; shiftY: <span class="hljs-subst">${shiftY.value}</span>
-        skewX: <span class="hljs-subst">${skewX.value}</span>; skewY: <span class="hljs-subst">${skewY.value}</span>
-        stretchX: <span class="hljs-subst">${stretchX.value}</span>; stretchY: <span class="hljs-subst">${stretchY.value}</span>
-    Displace filter scaling - 
-        x: <span class="hljs-subst">${filterScaleX.value}</span>; y: <span class="hljs-subst">${filterScaleY.value}</span>
-    Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Filter dimensions - \n        width: <span class="hljs-subst">${filterWidth.value}</span>%; height: <span class="hljs-subst">${filterHeight.value}</span>%\n    Filter offset - \n        x: <span class="hljs-subst">${filterOffsetX.value}</span>px; y: <span class="hljs-subst">${filterOffsetY.value}</span>px\n    Pattern dimensions - \n        width: <span class="hljs-subst">${patternWidth.value}</span>px; height: <span class="hljs-subst">${patternHeight.value}</span>px\n    Pattern matrix -\n        shiftX: <span class="hljs-subst">${shiftX.value}</span>; shiftY: <span class="hljs-subst">${shiftY.value}</span>\n        skewX: <span class="hljs-subst">${skewX.value}</span>; skewY: <span class="hljs-subst">${skewY.value}</span>\n        stretchX: <span class="hljs-subst">${stretchX.value}</span>; stretchY: <span class="hljs-subst">${stretchY.value}</span>\n    Displace filter scaling - \n        x: <span class="hljs-subst">${filterScaleX.value}</span>; y: <span class="hljs-subst">${filterScaleY.value}</span>\n    Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
 });</pre></div></div>
             
         </li>
@@ -1815,18 +1803,157 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 
             filterBlock.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>,
-            });
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-            skewX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            skewY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            stretchX.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-            stretchY.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-            shiftX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            shiftY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            filterBlend.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;multiply&#x27;</span>;
-            patternGradient.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>;
-            patternWidth.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
-            patternHeight.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            skewX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            skewY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            stretchX.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            stretchY.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            shiftX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            shiftY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            filterBlend.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;multiply&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            patternGradient.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            patternWidth.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            patternHeight.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
 
             <span class="hljs-keyword">break</span>;
 
@@ -1851,18 +1978,157 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 
             filterBlock.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;ring-cell-gradient&#x27;</span>,
-            });
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-            skewX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            skewY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            stretchX.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-            stretchY.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-            shiftX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            shiftY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            filterBlend.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;multiply&#x27;</span>;
-            patternGradient.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;ring-cell-gradient&#x27;</span>;
-            patternWidth.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
-            patternHeight.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            skewX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            skewY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            stretchX.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            stretchY.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            shiftX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            shiftY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            filterBlend.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;multiply&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            patternGradient.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;ring-cell-gradient&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            patternWidth.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            patternHeight.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
 
             <span class="hljs-keyword">break</span>;
 
@@ -1887,18 +2153,157 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 
             filterBlock.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>,
-            });
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-            skewX.<span class="hljs-property">value</span> = -<span class="hljs-number">0.65</span>;
-            skewY.<span class="hljs-property">value</span> = -<span class="hljs-number">0.31</span>;
-            stretchX.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-            stretchY.<span class="hljs-property">value</span> = <span class="hljs-number">0.26</span>;
-            shiftX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            shiftY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            filterBlend.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;screen&#x27;</span>;
-            patternGradient.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>;
-            patternWidth.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
-            patternHeight.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            skewX.<span class="hljs-property">value</span> = -<span class="hljs-number">0.65</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-50">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            skewY.<span class="hljs-property">value</span> = -<span class="hljs-number">0.31</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-51">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            stretchX.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            stretchY.<span class="hljs-property">value</span> = <span class="hljs-number">0.26</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-53">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            shiftX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-54">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            shiftY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-55">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            filterBlend.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;screen&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-56">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            patternGradient.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-57">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            patternWidth.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-58">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            patternHeight.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
 
             <span class="hljs-keyword">break</span>;
 
@@ -1923,18 +2328,157 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 
             filterBlock.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>,
-            });
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-59">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-            skewX.<span class="hljs-property">value</span> = <span class="hljs-number">1.04</span>;
-            skewY.<span class="hljs-property">value</span> = <span class="hljs-number">0.05</span>;
-            stretchX.<span class="hljs-property">value</span> = <span class="hljs-number">0.35</span>;
-            stretchY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            shiftX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            shiftY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-            filterBlend.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;luminosity&#x27;</span>;
-            patternGradient.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>;
-            patternWidth.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
-            patternHeight.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            skewX.<span class="hljs-property">value</span> = <span class="hljs-number">1.04</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            skewY.<span class="hljs-property">value</span> = <span class="hljs-number">0.05</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            stretchX.<span class="hljs-property">value</span> = <span class="hljs-number">0.35</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-62">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            stretchY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-63">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            shiftX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            shiftY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-65">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            filterBlend.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;luminosity&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-66">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            patternGradient.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;bar-cell-gradient&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-67">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            patternWidth.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-68">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            patternHeight.<span class="hljs-property">value</span> = <span class="hljs-number">80</span>;
 
             <span class="hljs-keyword">break</span>;
     }
@@ -1948,29 +2492,153 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-title function_">updateGradients</span>({
         <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;linear&#x27;</span>,
-    });
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-69">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-    opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
-    filterWidth.<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
-    filterHeight.<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
-    filterOffsetX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-    filterOffsetY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-    filterScaleX.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;
-    filterScaleY.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;
-    easing.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;linear&#x27;</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-70">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-    target.<span class="hljs-title function_">clearFilters</span>().<span class="hljs-title function_">addFilters</span>(value);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    filterWidth.<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-71">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    filterHeight.<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-72">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    filterOffsetX.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-73">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    filterOffsetY.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-74">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    filterScaleX.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-75">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    filterScaleY.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-76">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easing.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;linear&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-77">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    target.<span class="hljs-title function_">clearFilters</span>().<span class="hljs-title function_">addFilters</span>(value);
 
 }, <span class="hljs-string">&#x27;.filterEffect&#x27;</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-29">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <h4 id="setup-form-on-page-load">Setup form on page load</h4>
 
@@ -1998,11 +2666,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-30">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2013,11 +2681,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-31">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2028,11 +2696,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-32">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2043,11 +2711,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-33">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2058,11 +2726,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-34">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2073,11 +2741,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-35">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2088,11 +2756,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-36">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2103,11 +2771,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-37">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2118,11 +2786,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-38">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2133,11 +2801,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-39">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2148,11 +2816,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-40">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-89">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2163,11 +2831,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-41">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-90">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2178,11 +2846,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-42">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-91">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2193,11 +2861,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-43">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-92">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2208,11 +2876,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-44">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-93">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2223,11 +2891,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-45">
+        <li id="section-94">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-94">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2238,11 +2906,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-46">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-95">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -2253,28 +2921,41 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-47">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-96">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>easing.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;linear&#x27;</span>;
-
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#filterEffect&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;glass-bars&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>easing.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;linear&#x27;</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-48">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-97">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#filterEffect&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;glass-bars&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-98">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-98">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

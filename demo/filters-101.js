@@ -262,19 +262,7 @@ addImageDragAndDrop(canvas, '#my-image-store', target);
 const report = reportSpeed('#reportmessage', function () {
 
 // @ts-expect-error
-    return `    Filter dimensions - 
-        width: ${filterWidth.value}%; height: ${filterHeight.value}%
-    Filter offset - 
-        x: ${filterOffsetX.value}px; y: ${filterOffsetY.value}px
-    Pattern dimensions - 
-        width: ${patternWidth.value}px; height: ${patternHeight.value}px
-    Pattern matrix -
-        shiftX: ${shiftX.value}; shiftY: ${shiftY.value}
-        skewX: ${skewX.value}; skewY: ${skewY.value}
-        stretchX: ${stretchX.value}; stretchY: ${stretchY.value}
-    Displace filter scaling - 
-        x: ${filterScaleX.value}; y: ${filterScaleY.value}
-    Opacity: ${opacity.value}`;
+    return `    Filter dimensions - \n        width: ${filterWidth.value}%; height: ${filterHeight.value}%\n    Filter offset - \n        x: ${filterOffsetX.value}px; y: ${filterOffsetY.value}px\n    Pattern dimensions - \n        width: ${patternWidth.value}px; height: ${patternHeight.value}px\n    Pattern matrix -\n        shiftX: ${shiftX.value}; shiftY: ${shiftY.value}\n        skewX: ${skewX.value}; skewY: ${skewY.value}\n        stretchX: ${stretchX.value}; stretchY: ${stretchY.value}\n    Displace filter scaling - \n        x: ${filterScaleX.value}; y: ${filterScaleY.value}\n    Opacity: ${opacity.value}`;
 });
 
 // Create the Display cycle animation
@@ -426,15 +414,25 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 fillStyle: 'bar-cell-gradient',
             });
 
+// @ts-expect-error
             skewX.value = 0;
+// @ts-expect-error
             skewY.value = 0;
+// @ts-expect-error
             stretchX.value = 1;
+// @ts-expect-error
             stretchY.value = 1;
+// @ts-expect-error
             shiftX.value = 0;
+// @ts-expect-error
             shiftY.value = 0;
+// @ts-expect-error
             filterBlend.value = 'multiply';
+// @ts-expect-error
             patternGradient.value = 'bar-cell-gradient';
+// @ts-expect-error
             patternWidth.value = 80;
+// @ts-expect-error
             patternHeight.value = 80;
 
             break;
@@ -462,15 +460,25 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 fillStyle: 'ring-cell-gradient',
             });
 
+// @ts-expect-error
             skewX.value = 0;
+// @ts-expect-error
             skewY.value = 0;
+// @ts-expect-error
             stretchX.value = 1;
+// @ts-expect-error
             stretchY.value = 1;
+// @ts-expect-error
             shiftX.value = 0;
+// @ts-expect-error
             shiftY.value = 0;
+// @ts-expect-error
             filterBlend.value = 'multiply';
+// @ts-expect-error
             patternGradient.value = 'ring-cell-gradient';
+// @ts-expect-error
             patternWidth.value = 80;
+// @ts-expect-error
             patternHeight.value = 80;
 
             break;
@@ -498,15 +506,25 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 fillStyle: 'bar-cell-gradient',
             });
 
+// @ts-expect-error
             skewX.value = -0.65;
+// @ts-expect-error
             skewY.value = -0.31;
+// @ts-expect-error
             stretchX.value = 1;
+// @ts-expect-error
             stretchY.value = 0.26;
+// @ts-expect-error
             shiftX.value = 0;
+// @ts-expect-error
             shiftY.value = 0;
+// @ts-expect-error
             filterBlend.value = 'screen';
+// @ts-expect-error
             patternGradient.value = 'bar-cell-gradient';
+// @ts-expect-error
             patternWidth.value = 80;
+// @ts-expect-error
             patternHeight.value = 80;
 
             break;
@@ -534,15 +552,25 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
                 fillStyle: 'bar-cell-gradient',
             });
 
+// @ts-expect-error
             skewX.value = 1.04;
+// @ts-expect-error
             skewY.value = 0.05;
+// @ts-expect-error
             stretchX.value = 0.35;
+// @ts-expect-error
             stretchY.value = 0;
+// @ts-expect-error
             shiftX.value = 0;
+// @ts-expect-error
             shiftY.value = 0;
+// @ts-expect-error
             filterBlend.value = 'luminosity';
+// @ts-expect-error
             patternGradient.value = 'bar-cell-gradient';
+// @ts-expect-error
             patternWidth.value = 80;
+// @ts-expect-error
             patternHeight.value = 80;
 
             break;
@@ -559,15 +587,24 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
         easing: 'linear',
     });
 
+// @ts-expect-error
     opacity.value = 1;
+// @ts-expect-error
     filterWidth.value = 100;
+// @ts-expect-error
     filterHeight.value = 100;
+// @ts-expect-error
     filterOffsetX.value = 0;
+// @ts-expect-error
     filterOffsetY.value = 0;
+// @ts-expect-error
     filterScaleX.value = 10;
+// @ts-expect-error
     filterScaleY.value = 10;
+// @ts-expect-error
     easing.value = 'linear';
 
+// @ts-expect-error
     target.clearFilters().addFilters(value);
 
 }, '.filterEffect');
@@ -631,6 +668,7 @@ patternGradient.value = 'bar-cell-gradient';
 // @ts-expect-error
 easing.value = 'linear';
 
+// @ts-expect-error
 document.querySelector('#filterEffect').value = 'glass-bars';
 
 

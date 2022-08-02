@@ -1242,14 +1242,56 @@ TODO: add more path options, for testing/general interest</p>
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = step; i &lt;= <span class="hljs-number">1</span>; i += step) {
 
-        [x, y] = coord.<span class="hljs-title function_">setFromVector</span>(spiral.<span class="hljs-title function_">getPathPositionData</span>(i)).<span class="hljs-title function_">subtract</span>(pos);
-        points.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(x), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(y));
-    }
-    [x, y] = coord.<span class="hljs-title function_">setFromVector</span>(spiral.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">0.00000001</span>)).<span class="hljs-title function_">subtract</span>(pos);
-    points.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(x), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(y));
+        [x, y] = coord.<span class="hljs-title function_">setFromVector</span>(spiral.<span class="hljs-title function_">getPathPositionData</span>(i)).<span class="hljs-title function_">subtract</span>(pos);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
 
-    [x, y] = coord.<span class="hljs-title function_">setFromVector</span>(spiral.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">0.99999999</span>)).<span class="hljs-title function_">subtract</span>(pos);
-    points.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(x), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(y));
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        points.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(x), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(y));
+    }
+    [x, y] = coord.<span class="hljs-title function_">setFromVector</span>(spiral.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">0.00000001</span>)).<span class="hljs-title function_">subtract</span>(pos);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    points.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(x), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(y));
+
+    [x, y] = coord.<span class="hljs-title function_">setFromVector</span>(spiral.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">0.99999999</span>)).<span class="hljs-title function_">subtract</span>(pos);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    points.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(x), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(y));
 
     scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);
 
@@ -1269,11 +1311,11 @@ TODO: add more path options, for testing/general interest</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1285,13 +1327,13 @@ TODO: add more path options, for testing/general interest</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>// @ts-expect-error</p>
+              <p>@ts-expect-error</p>
 
             </div>
             
@@ -1301,11 +1343,11 @@ TODO: add more path options, for testing/general interest</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1322,11 +1364,11 @@ TODO: add more path options, for testing/general interest</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Filter updates</p>
@@ -1354,11 +1396,11 @@ TODO: add more path options, for testing/general interest</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Update step limit along paths</p>
 
@@ -1378,11 +1420,11 @@ TODO: add more path options, for testing/general interest</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Show or hide the paths</p>
 
@@ -1402,11 +1444,11 @@ TODO: add more path options, for testing/general interest</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Move the paths</p>
 
@@ -1414,8 +1456,22 @@ TODO: add more path options, for testing/general interest</p>
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    pathGroup.<span class="hljs-title function_">setArtefacts</span>({
-        <span class="hljs-attr">start</span>: [<span class="hljs-built_in">parseInt</span>(offset_x.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>), <span class="hljs-built_in">parseInt</span>(offset_y.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>)],
+    pathGroup.<span class="hljs-title function_">setArtefacts</span>({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">start</span>: [<span class="hljs-built_in">parseInt</span>(offset_x.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>), <span class="hljs-built_in">parseInt</span>(offset_y.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>)],
     });
 
 }, <span class="hljs-string">&#x27;.move-paths&#x27;</span>);</pre></div></div>
@@ -1423,11 +1479,11 @@ TODO: add more path options, for testing/general interest</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>LineSpiral adjustments</p>
 
@@ -1435,9 +1491,37 @@ TODO: add more path options, for testing/general interest</p>
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    spiral.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">radiusIncrement</span>: <span class="hljs-built_in">parseFloat</span>(spiralRadius.<span class="hljs-property">value</span>),
-        <span class="hljs-attr">radiusIncrementAdjust</span>: <span class="hljs-built_in">parseFloat</span>(spiralRadiusAdjust.<span class="hljs-property">value</span>),
+    spiral.<span class="hljs-title function_">set</span>({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">radiusIncrement</span>: <span class="hljs-built_in">parseFloat</span>(spiralRadius.<span class="hljs-property">value</span>),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">radiusIncrementAdjust</span>: <span class="hljs-built_in">parseFloat</span>(spiralRadiusAdjust.<span class="hljs-property">value</span>),
     });
 
     <span class="hljs-title function_">updateFilterPoints</span>();
@@ -1447,11 +1531,11 @@ TODO: add more path options, for testing/general interest</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Setup form</p>
 
@@ -1469,96 +1553,6 @@ TODO: add more path options, for testing/general interest</p>
         </li>
         
         
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>pathStep.<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>showPath.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;show&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>offset_x.<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>offset_y.<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>tile_radius.<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-25">
             <div class="annotation">
               
@@ -1569,7 +1563,7 @@ TODO: add more path options, for testing/general interest</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>spiralRadius.<span class="hljs-property">value</span> = <span class="hljs-number">0.05</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>pathStep.<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
             
         </li>
         
@@ -1584,7 +1578,7 @@ TODO: add more path options, for testing/general interest</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>spiralRadiusAdjust.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         
@@ -1595,11 +1589,11 @@ TODO: add more path options, for testing/general interest</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+              <p>@ts-expect-error</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>showPath.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;show&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1609,6 +1603,96 @@ TODO: add more path options, for testing/general interest</p>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>offset_x.<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>offset_y.<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>tile_radius.<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>spiralRadius.<span class="hljs-property">value</span> = <span class="hljs-number">0.05</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>spiralRadiusAdjust.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
