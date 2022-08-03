@@ -1022,8 +1022,6 @@ P.clear = function () {
     const {element, engine, backgroundColor, clearAlpha, currentDimensions} = this;
     const [width, height] = currentDimensions;
 
-    this.prepareStamp();
-
     let dpr = checkEngineScale(engine);
 
     let w = width * dpr,
@@ -1087,7 +1085,6 @@ P.compile = function(){
     let mystash = this.stashOutput;
 
     this.sortGroups();
-    this.prepareStamp();
 
     if(this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 

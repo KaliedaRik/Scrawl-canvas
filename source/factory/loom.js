@@ -758,8 +758,6 @@ P.prepareStamp = function() {
         }
         else this.dirtyPathData = true;
     }
-
-    if (this.sourceIsVideoOrSprite) this.dirtyInput = true;
 };
 
 // `setSourceDimension` - internal function called by `prepareStamp`.
@@ -840,12 +838,9 @@ P.stamp = function (force = false, host, changes) {
 
     if (this.visibility) {
 
-        let dirtyInput = this.dirtyInput,
-            dirtyOutput = this.dirtyOutput;
+        if (this.sourceIsVideoOrSprite || this.dirtyInput) this.sourceImageData = this.cleanInput();
 
-        if (dirtyInput) this.sourceImageData = this.cleanInput();
-
-        if (dirtyOutput) this.output = this.cleanOutput();
+        if (this.dirtyOutput) this.output = this.cleanOutput();
 
         this.regularStamp();
     }
@@ -857,8 +852,6 @@ P.stamp = function (force = false, host, changes) {
 P.cleanInput = function () {
 
     this.dirtyInput = false;
-
-    this.setSourceDimension();
 
     let sourceDimension = this.sourceDimension;
 
@@ -900,8 +893,6 @@ P.cleanOutput = function () {
     
     this.dirtyOutput = false;
 
-    this.setSourceDimension();
-    
     let sourceDimension = this.sourceDimension, 
         sourceData = this.sourceImageData;
 
