@@ -1063,6 +1063,22 @@ P.transferDataUnchanged = function (oData, iData, len) {
     }
 };
 
+P.newspaperPatterns = [
+    [0, 0, 0, 0], 
+    [0, 0, 0, 180], 
+    [180, 0, 0, 0], 
+    [180, 0, 0, 180], 
+    [0, 180, 180, 180],
+    [180, 180, 180, 0], 
+    [180, 180, 180, 180], 
+    [180, 180, 180, 255], 
+    [255, 180, 180, 180], 
+    [255, 180, 180, 255], 
+    [180, 255, 255, 255], 
+    [255, 255, 255, 180], 
+    [255, 255, 255, 255]
+];
+
 // ## Filter action functions
 // Each function is held in the `theBigActionsObject` object, for convenience
 P.theBigActionsObject = {
@@ -3578,6 +3594,110 @@ P.theBigActionsObject = {
                 oData[a] = iData[a] * alpha;
             }
         }
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
+// __newsprint__ - TODO documentation
+    'newsprint': function (requirements) {
+
+        const doCalculations = function (inChannel, outChannel, tile) {
+
+            grays.length = 0;
+            calcGrays.length = 0;
+
+            let avg = 0, 
+                i, w, h, j, jz, k, kz, r, g, b, a, gray,
+                l = tile.length,
+                pattern,
+                topLeft = tile[0],
+                down = 0,
+                along = 0;
+
+            for (i = 0; i < l; i++) {
+
+                r = tile[i];
+                g = r + 1;
+                b = g + 1;
+
+                gray = gVal(inChannel[r], inChannel[g], inChannel[b]);
+
+                avg += gray;
+            }
+            avg /= l;
+
+            pattern = patterns[Math.floor((avg / 255) * 13)];
+
+            if (width === 1) grays.push(...pattern);
+            else {
+                
+                gray = pattern[0];
+                for (i = 0; i < width; i++) {
+                    calcGrays.push(gray);
+                }
+                gray = pattern[1];
+                for (i = 0; i < width; i++) {
+                    calcGrays.push(gray);
+                }
+                for (i = 0; i < width; i++) {
+                    grays.push(...calcGrays);
+                }
+                gray = pattern[2];
+                calcGrays.length = 0;
+                for (i = 0; i < width; i++) {
+                    calcGrays.push(gray);
+                }
+                gray = pattern[3];
+                for (i = 0; i < width; i++) {
+                    calcGrays.push(gray);
+                }
+                for (i = 0; i < width; i++) {
+                    grays.push(...calcGrays);
+                }
+            }
+
+            for (i = 0; i < l; i++) {
+
+                gray = grays[i];
+
+                r = tile[i];
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                outChannel[r] = gray;
+                outChannel[g] = gray;
+                outChannel[b] = gray;
+                outChannel[a] = inChannel[a];
+            }
+        }
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iWidth = input.width,
+            iHeight = input.height,
+            iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        let {opacity, width, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == width) width = 1;
+
+        if (width < 1) width = 1;
+
+        const tileDimensions = width * 2;
+
+        const tiles = this.buildImageTileSets(tileDimensions, tileDimensions, 0, 0);
+
+        const gVal = this.getGrayscaleValue;
+        const patterns = this.newspaperPatterns;
+        const grays = [],
+            calcGrays = [];
+
+        tiles.forEach(t => doCalculations(iData, oData, t));
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);

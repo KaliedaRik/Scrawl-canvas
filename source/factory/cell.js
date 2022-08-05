@@ -1022,6 +1022,8 @@ P.clear = function () {
     const {element, engine, backgroundColor, clearAlpha, currentDimensions} = this;
     const [width, height] = currentDimensions;
 
+    this.prepareStamp();
+
     let dpr = checkEngineScale(engine);
 
     let w = width * dpr,
@@ -1086,6 +1088,8 @@ P.compile = function(){
 
     this.sortGroups();
 
+    if (!this.cleared) this.prepareStamp();
+
     if(this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 
     checkEngineScale(this.engine);
@@ -1138,7 +1142,7 @@ P.show = function () {
             paste = this.basePaste;
 
             // copy the base canvas over to the display canvas. This copy operation ignores any scale, roll or position attributes set on the base cell, instead complying with the controller's fit attribute requirements
-            this.prepareStamp();
+            if (!this.cleared && !this.compiled) this.prepareStamp();
 
             engine.globalCompositeOperation = 'source-over';
             engine.globalAlpha = 1;
@@ -1220,7 +1224,7 @@ P.show = function () {
 
             if (!this.noDeltaUpdates) this.setDelta(this.delta);
 
-            this.prepareStamp();
+            if (!this.cleared && !this.compiled) this.prepareStamp();
 
             engine.globalCompositeOperation = composite;
             engine.globalAlpha = alpha;

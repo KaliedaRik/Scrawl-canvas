@@ -1,5 +1,5 @@
 // # Demo Filters 101 
-// Compound filters: Glass bars/rings, Displace bars/rings, Etching, Green monitor
+// Compound filters: Use a white-transparent gradient as a filter input
 
 // [Run code](../../demo/filters-101.html)
 import * as scrawl from '../source/scrawl.js';

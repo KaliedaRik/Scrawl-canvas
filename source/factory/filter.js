@@ -12,7 +12,7 @@
 // 
 // `average-channels` - Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue`.
 // 
-// `binary` - deprecated - functionality moved over to `threshold`.
+// `binary` - DEPRECATED - functionality moved over to `threshold`.
 // 
 // `blend` - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations). The blending method is determined by the String value supplied in the `blend` argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments. Object attributes: `action, lineIn, lineOut, lineMix, opacity, blend, offsetX, offsetY`.
 // 
@@ -1157,6 +1157,17 @@ const setActionsArray = {
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
             weights: (f.weights != null) ? f.weights : [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+        }];
+    },
+
+// __newsprint__ - removes red and green channel color from the image
+    newsprint: function (f) {
+        f.actions = [{
+            action: 'newsprint',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            width: (f.width != null) ? f.width : 1,
         }];
     },
 

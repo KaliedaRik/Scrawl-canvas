@@ -314,6 +314,10 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
 
     let counter = 0;
 
+    const wrappers = [];
+    if (Array.isArray(canvas)) wrappers.push(...canvas);
+    else wrappers.push(canvas);
+
     if (!Array.isArray(targets)) targets = [targets];
 
     addNativeListener(['dragenter', 'dragover', 'dragleave'], (e) => {
@@ -321,7 +325,7 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
         e.preventDefault();
         e.stopPropagation();
 
-    }, canvas.domElement);
+    }, wrappers.map(w => w.domElement));
 
     addNativeListener('drop', (e) => {
 
@@ -332,7 +336,7 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
 
         if (dt) [...dt.files].forEach(addImageAsset);
 
-    }, canvas.domElement);
+    }, wrappers.map(w => w.domElement));
 
     const addImageAsset = (file) => {
 
@@ -361,9 +365,18 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
                 // Update our Picture entity's asset attribute so it displays the new image
                 targets.forEach(target => {
 
-                    target.set({
-                        asset: name,
-                    });
+                    if (target.type === 'Group') {
+
+                        target.setArtefacts({
+                            asset: name,
+                        });
+                    }
+                    else {
+
+                        target.set({
+                            asset: name,
+                        });
+                    }
                 });
 
                 // HOW TO: set the Picture entity's copy dimensions to take into account any difference between the old and new image's dimensions

@@ -26,7 +26,7 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 101</h1>
-  <h2>Compound filters: Glass bars/rings, Displace bars/rings, Etching, Green monitor</h2>
+  <h2>Compound filters: Use a white-transparent gradient as a filter input</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls controls-6">
@@ -135,8 +135,16 @@
 
     <ul>
       <li>Create a test Picture entity</li>
-      <li>Create a threshold filter and apply it to the test entity</li>
-      <li>Update filter attributes and observe the effect they have on the entity</li>
+      <li>Create a set of transparent-white gradients to be loaded into the example filters</li>
+      <li>Create the example filters:</li>
+      <ul>
+        <li>Glass bars/rings - super-imposes a set of bars (or rings) over the image, using: 'process-image (linear gradient); blend (multiply)</li>
+        <li>Displace bars/rings - use the gradient to displace parst of the image, using: process-image (radial gradient); displace</li>
+        <li>Etching - create a black-white rough drawing effect, as seen in old books with illustrations, using: process-image (linear gradient); grayscale; gaussian-blur; matrix; invert-channels; threshold; blend (screen)</li>
+        <li>Green monitor - create a late-20th-century computer green-screen monitor effect, using: process-image (linear gradient); grayscale; modulate-channels; blend (luminosity)</li>
+      </ul>
+      <li>Manipulate the gradient Cell size, matrix, and easing settings to change the appearance of the output.</li>
+      <li>Manipulate the filter settings to change the appearance of the output.</li>
     </ul>
 
     <p><b>Touch test:</b> not required</p>
