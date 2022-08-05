@@ -2346,7 +2346,8 @@ DPR is detected in the <code>core/events.js</code> file, but mainly handled here
     <span class="hljs-keyword">let</span> mystash = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutput</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortGroups</span>();
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStamp</span>();
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">cleared</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStamp</span>();
 
     <span class="hljs-keyword">if</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilters</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanFilters</span>();
 
@@ -2448,7 +2449,7 @@ DPR is detected in the <code>core/events.js</code> file, but mainly handled here
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStamp</span>();
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">cleared</span> &amp;&amp; !<span class="hljs-variable language_">this</span>.<span class="hljs-property">compiled</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStamp</span>();
 
             engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-over&#x27;</span>;
             engine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
@@ -2594,7 +2595,7 @@ DPR is detected in the <code>core/events.js</code> file, but mainly handled here
             <div class="content"><div class='highlight'><pre>
             <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noDeltaUpdates</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDelta</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">delta</span>);
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStamp</span>();
+            <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">cleared</span> &amp;&amp; !<span class="hljs-variable language_">this</span>.<span class="hljs-property">compiled</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStamp</span>();
 
             engine.<span class="hljs-property">globalCompositeOperation</span> = composite;
             engine.<span class="hljs-property">globalAlpha</span> = alpha;

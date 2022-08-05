@@ -1884,8 +1884,6 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         }
         <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathData</span> = <span class="hljs-literal">true</span>;
     }
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceIsVideoOrSprite</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyInput</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -2037,12 +2035,9 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">visibility</span>) {
 
-        <span class="hljs-keyword">let</span> dirtyInput = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyInput</span>,
-            dirtyOutput = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceIsVideoOrSprite</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyInput</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceImageData</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanInput</span>();
 
-        <span class="hljs-keyword">if</span> (dirtyInput) <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceImageData</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanInput</span>();
-
-        <span class="hljs-keyword">if</span> (dirtyOutput) <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOutput</span>();
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOutput</span>();
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();
     }
@@ -2077,8 +2072,6 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanInput</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyInput</span> = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setSourceDimension</span>();
 
     <span class="hljs-keyword">let</span> sourceDimension = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceDimension</span>;
 
@@ -2134,8 +2127,6 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
     
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setSourceDimension</span>();
-    
     <span class="hljs-keyword">let</span> sourceDimension = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceDimension</span>, 
         sourceData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceImageData</span>;
 

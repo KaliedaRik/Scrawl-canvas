@@ -585,6 +585,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-029.html">
+                  ./demo/filters-029.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -592,6 +597,11 @@
                 
                 <a class="source" href="filters-102.html">
                   ./demo/filters-102.js
+                </a>
+              
+                
+                <a class="source" href="filters-103.html">
+                  ./demo/filters-103.js
                 </a>
               
                 
@@ -1458,6 +1468,10 @@
 
     <span class="hljs-keyword">let</span> counter = <span class="hljs-number">0</span>;
 
+    <span class="hljs-keyword">const</span> wrappers = [];
+    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(canvas)) wrappers.<span class="hljs-title function_">push</span>(...canvas);
+    <span class="hljs-keyword">else</span> wrappers.<span class="hljs-title function_">push</span>(canvas);
+
     <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(targets)) targets = [targets];
 
     <span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;dragenter&#x27;</span>, <span class="hljs-string">&#x27;dragover&#x27;</span>, <span class="hljs-string">&#x27;dragleave&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
@@ -1465,7 +1479,7 @@
         e.<span class="hljs-title function_">preventDefault</span>();
         e.<span class="hljs-title function_">stopPropagation</span>();
 
-    }, canvas.<span class="hljs-property">domElement</span>);
+    }, wrappers.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">w</span> =&gt;</span> w.<span class="hljs-property">domElement</span>));
 
     <span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;drop&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
@@ -1476,7 +1490,7 @@
 
         <span class="hljs-keyword">if</span> (dt) [...dt.<span class="hljs-property">files</span>].<span class="hljs-title function_">forEach</span>(addImageAsset);
 
-    }, canvas.<span class="hljs-property">domElement</span>);
+    }, wrappers.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">w</span> =&gt;</span> w.<span class="hljs-property">domElement</span>));
 
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">addImageAsset</span> = (<span class="hljs-params">file</span>) =&gt; {
 
@@ -1553,9 +1567,18 @@
             
             <div class="content"><div class='highlight'><pre>                targets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
 
-                    target.<span class="hljs-title function_">set</span>({
-                        <span class="hljs-attr">asset</span>: name,
-                    });
+                    <span class="hljs-keyword">if</span> (target.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Group&#x27;</span>) {
+
+                        target.<span class="hljs-title function_">setArtefacts</span>({
+                            <span class="hljs-attr">asset</span>: name,
+                        });
+                    }
+                    <span class="hljs-keyword">else</span> {
+
+                        target.<span class="hljs-title function_">set</span>({
+                            <span class="hljs-attr">asset</span>: name,
+                        });
+                    }
                 });</pre></div></div>
             
         </li>
