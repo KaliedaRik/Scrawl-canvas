@@ -126,7 +126,7 @@ scrawl.makeFilter({
 });
 
 
-// Line drawing effect
+// Brass rubbing effect
 scrawl.makeFilter({
 
     name: 'brass-rubbing',
