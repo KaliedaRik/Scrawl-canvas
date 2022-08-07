@@ -39,8 +39,10 @@ const RenderAnimation = function (items = Ωempty) {
 
     let target;
 
+    this.noTarget = (items.noTarget != null) ? items.noTarget : false;
+
     // Handle cases where no target has been defined - the animation will affect all stacks and canvases
-    if (!items.target) target = {
+    if (!items.target && !items.noTarget) target = {
         clear: clear,
         compile: compile,
         show: show,
@@ -64,10 +66,10 @@ const RenderAnimation = function (items = Ωempty) {
     }
 
     // Default case where we have a single target
-    else target = (items.target.substring) ? artefact[items.target] : items.target;
+    else target = (items.target && items.target.substring) ? artefact[items.target] : items.target;
 
     // Without a target, we can progress no further
-    if (!target || !target.clear || !target.compile || !target.show) return false;
+    // if (!target || !target.clear || !target.compile || !target.show) return false;
 
     // All should be good - proceed with animation creation
     this.makeName(items.name);
@@ -94,20 +96,36 @@ const RenderAnimation = function (items = Ωempty) {
     // ##### The Display cycle Promise chain
     this.fn = function () {
 
-        this.commence();
-        this.target.clear();
-        this.afterClear();
-        this.target.compile();
-        this.afterCompile();
-        this.target.show();
-        this.afterShow();
+        if (this.noTarget) {
 
-        if (this.readyToInitialize) {
+            this.commence();
+            this.afterClear();
+            this.afterCompile();
+            this.afterShow();
 
-            this.target.checkAccessibilityValues();
+            if (this.readyToInitialize) {
 
-            this.afterCreated(this);
-            this.readyToInitialize = false;
+                this.afterCreated(this);
+                this.readyToInitialize = false;
+            }
+        }
+        else if (this.isRunning()) {
+
+            this.commence();
+            this.target.clear();
+            this.afterClear();
+            this.target.compile();
+            this.afterCompile();
+            this.target.show();
+            this.afterShow();
+
+            if (this.readyToInitialize) {
+
+                this.target.checkAccessibilityValues();
+
+                this.afterCreated(this);
+                this.readyToInitialize = false;
+            }
         }
     }
 
@@ -227,10 +245,10 @@ P.run = function () {
     pushUnique(animate, this.name);
     resortAnimations();
 
-    this.target.checkAccessibilityValues();
+    if (this.target) this.target.checkAccessibilityValues();
     
     setTimeout(() => forceUpdate(), 20);
-    
+
     return this;
 };
 

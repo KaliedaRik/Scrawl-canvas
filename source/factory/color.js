@@ -993,7 +993,7 @@ P.getColorFromCanvas = function (color) {
     return [r, g, b, a];
 };
 
-// From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/#rgb-to-hsl) - which is wrong because when I checked it sets up the hue value as NaN (!!!?!). So instead I've gone with the suggested answer in [this CSS-Tricks article](https://css-tricks.com/converting-color-spaces-in-javascript/)
+// From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/#rgb-to-hsl) - which is weird because when I checked it sets up the hue value as NaN (!!!?!). So instead I've gone with the suggested answer in [this CSS-Tricks article](https://css-tricks.com/converting-color-spaces-in-javascript/)
 P.convertRGBtoHSL = function (red, green, blue) {
 
     red /= 256;
