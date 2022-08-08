@@ -406,12 +406,24 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
 
                     targets.forEach(target => {
 
-                        target.set({
-                            copyStartX,
-                            copyStartY,
-                            copyWidth: dim,
-                            copyHeight: dim,
-                        });
+                        if (target.type === 'Group') {
+
+                            target.setArtefacts({
+                                copyStartX,
+                                copyStartY,
+                                copyWidth: dim,
+                                copyHeight: dim,
+                            });
+                        }
+                        else {
+
+                            target.set({
+                                copyStartX,
+                                copyStartY,
+                                copyWidth: dim,
+                                copyHeight: dim,
+                            });
+                        }
                     })
 
                     if (callback) setTimeout(callback, timeoutDelay);

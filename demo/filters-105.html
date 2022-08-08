@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 105</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    #my-image-store {
+      display: none;
+    }
+
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 105</h1>
+  <h2>Use entitys to generate points for the tiles filter</h2>
+  <h3>To change image, drag-and-drop an image file over the canvas</h3>
+
+  <div class="controls">
+
+    <div class="orange label">Generate points from</div>
+    <div class="orange">
+      <select class="controlItem" id="points">
+        <option value="spiral">A LineSpiral entity</option>
+        <option value="ovals" disabled>A set of Oval entitys</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Opacity</div>
+    <div class="lavender"><input class="controlItem filter-control" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+  </div>
+
+  <canvas 
+    id="mycanvas" 
+    width="400" 
+    height="400"
+    data-scrawl-canvas
+  ></canvas>
+
+  <div class="controls">
+
+    <div class="yellow label">Step along path</div>
+    <div class="yellow"><input class="controlItem" id="path-step" type="range" value="50" min="5" max="100" step="5" /></div>
+
+    <div class="yellow label">Show path</div>
+    <div class="yellow">
+      <select class="controlItem" id="show-path">
+        <option value="hide">Hide</option>
+        <option value="show">Show</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Origin offset X</div>
+    <div class="yellow"><input class="controlItem filter-control move-paths" id="offset_x" type="range" value="200" min="0" max="400" step="1" /></div>
+
+    <div class="yellow label">Origin offset Y</div>
+    <div class="yellow"><input class="controlItem filter-control move-paths" id="offset_y" type="range" value="200" min="0" max="400" step="1" /></div>
+
+    <div class="yellow label">Tile radius</div>
+    <div class="yellow"><input class="controlItem filter-control" id="tile_radius" type="range" value="50" min="1" max="100" step="1" /></div>
+
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+
+    <div class="green label">Spiral radius increment</div>
+    <div class="green"><input class="controlItem spiral-control" id="spiral-radius" type="range" value="0.05" min="0.03" max="0.07" step="0.001" /></div>
+
+    <div class="green label">spiral rad inc adjust</div>
+    <div class="green"><input class="controlItem spiral-control" id="spiral-radius-adjust" type="range" value="1" min="0.998" max="1.002" step="0.00001" /></div>
+
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create a LineSpiral entity, from which we can generate point coordinates to feed into the tiles filter</li>
+      <li>Create the tiles filter and apply it to the test image</li>
+      <li>Manipulate the LineSpiral entity parameters; check the effect the manipulations have on the output</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required</p>
+
+    <p><a href="../docs/demo/filters-105.html">Annotated code</a></p>
+  </div>
+
+  <div id="my-image-store">
+    <img id="iris" src="img/iris.png" class="flowers" />
+  </div>
+
+  <script src="filters-105.js" type="module"></script>
+
+</body>
+
+</html>

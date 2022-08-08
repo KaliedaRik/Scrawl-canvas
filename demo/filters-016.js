@@ -1,5 +1,5 @@
 // # Demo Filters 016 
-// Filter blend operation
+// Filter parameters: newsprint
 
 // [Run code](../../demo/filters-016.html)
 import * as scrawl from '../source/scrawl.js';
@@ -10,156 +10,34 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.setBase({
-    compileOrder: 1,
-});
-
-// Create the assets
 scrawl.importDomImage('.flowers');
 
-canvas.buildCell({
 
-    name: 'star-cell',
-    dimensions: [400, 400],
-    shown: false,
-});
+// Create the filter
+const myFilter = scrawl.makeFilter({
 
-scrawl.makeStar({
-
-    name: 'my-star',
-    group: 'star-cell',
-
-    radius1: 200,
-    radius2: 100,
-
-    roll: 60,
-
-    points: 4,
-
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-
-    fillStyle: 'blue',
-    strokeStyle: 'red',
-    lineWidth: 10,
-    method: 'fillThenDraw',
-});
-
-canvas.buildCell({
-
-    name: 'wheel-cell',
-    dimensions: [400, 400],
-    shown: false,
-});
-
-scrawl.makeWheel({
-
-    name: 'my-wheel',
-    group: 'wheel-cell',
-
-    radius: 150,
-
-    startAngle: 30,
-    endAngle: -30,
-    includeCenter: true,
-
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-
-    fillStyle: 'green',
-    strokeStyle: 'yellow',
-    lineWidth: 10,
-    method: 'fillThenDraw',
-
-    delta: {
-        roll: -0.3,
-    },
+    name: 'newsprint',
+    method: 'newsprint',
+    width: 1,
 });
 
 
-// Create the filters
-scrawl.makeFilter({
+// Create the target entity
+const piccy = scrawl.makePicture({
 
-    name: 'star-filter',
-    method: 'image',
-
-    asset: 'star-cell',
-
-    width: 400,
-    height: 400,
-
-    copyWidth: 400,
-    copyHeight: 400,
-
-    lineOut: 'star',
-
-}).clone({
-
-    name: 'wheel-filter',
-    asset: 'wheel-cell',
-    lineOut: 'wheel',
-});
-
-const imageFilter = scrawl.makeFilter({
-
-    name: 'flower-filter',
-    method: 'image',
+    name: 'base-piccy',
 
     asset: 'iris',
 
-    width: '80%',
-    height: '80%',
+    width: '100%',
+    height: '100%',
+
     copyWidth: '100%',
     copyHeight: '100%',
 
-    lineOut: 'flower',
-});
+    method: 'fill',
 
-let composeFilter = scrawl.makeFilter({
-
-    name: 'block-filter',
-    method: 'blend',
-
-    lineIn: 'source',
-    lineMix: 'star',
-
-    offsetX: 30,
-    offsetY: 30,
-
-    compose: 'normal',
-});
-
-// Display the filter in a Block entity
-
-scrawl.makeGradient({
-    name: 'linear',
-    endX: '100%',
-    colors: [
-        [0, 'blue'],
-        [495, 'red'],
-        [500, 'yellow'],
-        [505, 'red'],
-        [999, 'green']
-    ],
-});
-
-scrawl.makeBlock({
-
-    name: 'display-block',
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-    dimensions: ['90%', '90%'],
-    roll: -20,
-
-    lineWidth: 10,
-    fillStyle: 'linear',
-    lockFillStyleToEntity: true,
-    strokeStyle: 'coral',
-    method: 'fillThenDraw',
-
-    // Load in the three image filters, then the compose filter to combine two of them
-    // + the results display in a Block entity!
-    filters: ['star-filter', 'wheel-filter', 'flower-filter', 'block-filter'],
+    filters: ['newsprint'],
 });
 
 
@@ -168,7 +46,7 @@ scrawl.makeBlock({
 const report = reportSpeed('#reportmessage', function () {
 
 // @ts-expect-error
-    return `    Offset - x: ${ox.value}, y: ${oy.value}\n    Opacity: ${opacity.value}`;
+    return `    Effect width: ${width.value}px\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -188,44 +66,31 @@ scrawl.observeAndUpdate({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: composeFilter,
+    target: myFilter,
 
     useNativeListener: true,
     preventDefault: true,
 
     updates: {
 
-        source: ['lineIn', 'raw'],
-        destination: ['lineMix', 'raw'],
-        blend: ['blend', 'raw'],
+        width: ['width', 'round'],
         opacity: ['opacity', 'float'],
-        'offset-x': ['offsetX', 'round'],
-        'offset-y': ['offsetY', 'round'],
     },
 });
 
+
 // Setup form
-const ox = document.querySelector('#offset-x'),
-    oy = document.querySelector('#offset-y'),
+const width = document.querySelector('#width'),
     opacity = document.querySelector('#opacity');
 
 // @ts-expect-error
+width.value = 1;
+// @ts-expect-error
 opacity.value = 1;
-// @ts-expect-error
-ox.value = 30;
-// @ts-expect-error
-oy.value = 30;
-
-// @ts-expect-error
-document.querySelector('#source').options.selectedIndex = 0;
-// @ts-expect-error
-document.querySelector('#destination').options.selectedIndex = 2;
-// @ts-expect-error
-document.querySelector('#blend').options.selectedIndex = 0;
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', imageFilter);
+addImageDragAndDrop(canvas, '#my-image-store', piccy);
 
 
 // #### Development and testing

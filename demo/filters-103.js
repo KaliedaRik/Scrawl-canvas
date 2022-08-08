@@ -81,7 +81,7 @@ scrawl.makePicture({
 
     name: 'canvas-output-9',
     group: canvas9.base.name,
-    filters: ['auras-ephemerals'],
+    filters: ['watermark'],
 
 }). clone({
 
@@ -392,53 +392,67 @@ scrawl.makeFilter({
 });
 
 
-// Auras and ephemerals effect
-const [nghRed, nghGreen, nghBlue] = window.scrawlEnvironmentColorChecker.extractRGBfromColor('#1fa32e');
+// Watermark effect
+canvas9.setBase({
+    compileOrder: 2,
+});
+
+canvas9.buildCell({
+
+    name: 'watermark-pattern-cell',
+    shown: false,
+    dimensions: [200, 150],
+    useAsPattern: true,
+    skewX: 0.2,
+    skewY: -0.4,
+    compileOrder: 0,
+});
+
+scrawl.makePhrase({
+
+    name: 'watermark-text',
+    group: 'watermark-pattern-cell',
+    text: 'Scrawl-canvas',
+    family: 'Arial, sans-serif',
+    weight: 'bold',
+    size: '25px',
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    method: 'draw',
+});
+
+canvas9.buildCell({
+
+    name: 'watermark-display-cell',
+    shown: false,
+    dimensions: ['100%', '100%'],
+    compileOrder: 1,
+});
+
+scrawl.makeBlock({
+
+    name: 'watermark-block',
+    group: 'watermark-display-cell',
+    dimensions: ['100%', '100%'],
+    fillStyle: 'watermark-pattern-cell',
+});
 
 scrawl.makeFilter({
 
-    name: 'auras-ephemerals',
+    name: 'watermark',
     actions: [{
-        action: 'colors-to-alpha',
-        lineOut: 'stencil',
-        red: nghRed,
-        green: nghGreen,
-        blue: nghBlue,
-        transparentAt: 0.37,
-        opaqueAt: 0.6,
-     }, {
-        action: 'threshold',
-        lineIn: 'stencil',
-        lineOut: 'stencil',
-        includeRed: false,
-        includeGreen: false,
-        includeBlue: false,
-        includeAlpha: true,
-        useMixedChannel: false,
-        low: [0, 0, 0, 0],
-        high: [0, 0, 0, 255],
-        alpha: 1,
-     }, {
-        action: 'gaussian-blur',
-        radius: 4,
-        lineIn: 'stencil',
-        lineOut: 'neon-haze',
-    }, {
-        action: 'flood',
-        lineIn: 'neon-haze',
-        lineOut: 'neon-haze',
-        red: 28,
-        green: 252,
-        blue: 245,
-        excludeAlpha: true,
+        action: 'process-image',
+        asset: 'watermark-display-cell',
+        width: '100%',
+        height: '100%',
+        copyWidth: '100%',
+        copyHeight: '100%',
+        lineOut: 'watermark-panel',
     }, {
         action: 'compose',
-        compose: 'source-out',
-        lineMix: 'neon-haze',
-    }, {
-        action: 'compose',
-        compose: 'source-over',
-        lineMix: 'stencil',
+        compose: 'destination-over',
+        lineMix: 'watermark-panel',
+        opacity: 0.7,
     }],
 });
 

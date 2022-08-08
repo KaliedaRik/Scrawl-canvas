@@ -1,5 +1,5 @@
 // # Demo Filters 015 
-// Using assets in the filter stream; filter compositing
+// Filter parameters: tiles
 
 // [Run code](../../demo/filters-015.html)
 import * as scrawl from '../source/scrawl.js';
@@ -10,155 +10,41 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-canvas.setBase({
-    compileOrder: 1,
-});
-
-// Create the assets
 scrawl.importDomImage('.flowers');
 
-canvas.buildCell({
 
-    name: 'star-cell',
-    dimensions: [400, 400],
-    shown: false,
-});
+// Create the filter
+const myFilter = scrawl.makeFilter({
 
-scrawl.makeStar({
+    name: 'tiles',
+    method: 'tiles',
 
-    name: 'my-star',
-    group: 'star-cell',
+    points: 'rect-grid',
 
-    radius1: 200,
-    radius2: 100,
-
-    roll: 60,
-
-    points: 4,
-
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-
-    fillStyle: 'blue',
-    strokeStyle: 'red',
-    lineWidth: 10,
-    method: 'fillThenDraw',
-});
-
-canvas.buildCell({
-
-    name: 'wheel-cell',
-    dimensions: [400, 400],
-    shown: false,
-});
-
-scrawl.makeWheel({
-
-    name: 'my-wheel',
-    group: 'wheel-cell',
-
-    radius: 150,
-
-    startAngle: 30,
-    endAngle: -30,
-    includeCenter: true,
-
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-
-    fillStyle: 'green',
-    strokeStyle: 'yellow',
-    lineWidth: 10,
-    method: 'fillThenDraw',
-
-    delta: {
-        roll: -0.3,
-    },
+    tileWidth: 20,
+    tileHeight: 20,
+    tileRadius: 14,
+    offsetX: 200,
+    offsetY: 200,
 });
 
 
-// Create the filters
-scrawl.makeFilter({
+// Create the target entity
+const piccy = scrawl.makePicture({
 
-    name: 'star-filter',
-    method: 'image',
-
-    asset: 'star-cell',
-
-    width: 400,
-    height: 400,
-
-    copyWidth: 400,
-    copyHeight: 400,
-
-    lineOut: 'star',
-
-}).clone({
-
-    name: 'wheel-filter',
-    asset: 'wheel-cell',
-    lineOut: 'wheel',
-});
-
-const imageFilter = scrawl.makeFilter({
-
-    name: 'flower-filter',
-    method: 'image',
+    name: 'base-piccy',
 
     asset: 'iris',
 
-    width: '80%',
-    height: '80%',
+    width: '100%',
+    height: '100%',
+
     copyWidth: '100%',
     copyHeight: '100%',
 
-    lineOut: 'flower',
-});
+    method: 'fill',
 
-let composeFilter = scrawl.makeFilter({
-
-    name: 'block-filter',
-    method: 'compose',
-
-    lineIn: 'star',
-    lineMix: 'source',
-
-    offsetX: 30,
-    offsetY: 30,
-
-    compose: 'source-over',
-});
-
-// Display the filter in a Block entity
-scrawl.makeGradient({
-    name: 'linear',
-    endX: '100%',
-    colors: [
-        [0, 'blue'],
-        [495, 'red'],
-        [500, 'yellow'],
-        [505, 'red'],
-        [999, 'green']
-    ],
-});
-
-scrawl.makeBlock({
-
-    name: 'display-block',
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-    dimensions: ['90%', '90%'],
-    roll: -20,
-
-    lineWidth: 10,
-    fillStyle: 'linear',
-    lockFillStyleToEntity: true,
-    strokeStyle: 'coral',
-    method: 'fillThenDraw',
-
-    // Load in the three image filters, then the compose filter to combine two of them
-    // + the results display in a Block entity!
-    filters: ['star-filter', 'wheel-filter', 'flower-filter', 'block-filter'],
+    filters: ['tiles'],
 });
 
 
@@ -167,7 +53,7 @@ scrawl.makeBlock({
 const report = reportSpeed('#reportmessage', function () {
 
 // @ts-expect-error
-    return `    Offset - x: ${ox.value}, y: ${oy.value}\n    Opacity: ${opacity.value}`;
+    return `    Tile dimensions - width: ${tile_width.value}px height: ${tile_height.value}px radius: ${tile_radius.value}px\n    Origin offset - x: ${offset_x.value}px y: ${offset_y.value}px\n    Angle: ${angle.value}\n    Random points: ${randomPoints.value}\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -187,44 +73,131 @@ scrawl.observeAndUpdate({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: composeFilter,
+    target: myFilter,
 
     useNativeListener: true,
     preventDefault: true,
 
     updates: {
 
-        source: ['lineIn', 'raw'],
-        destination: ['lineMix', 'raw'],
-        composite: ['compose', 'raw'],
+        tile_width: ['tileWidth', 'round'],
+        tile_height: ['tileHeight', 'round'],
+        tile_radius: ['tileRadius', 'round'],
+        offset_x: ['offsetX', 'round'],
+        offset_y: ['offsetY', 'round'],
+        angle: ['angle', 'round'],
+
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
+        includeAlpha: ['includeAlpha', 'boolean'],
+
         opacity: ['opacity', 'float'],
-        'offset-x': ['offsetX', 'round'],
-        'offset-y': ['offsetY', 'round'],
     },
 });
 
+// Update points value selector
+scrawl.addNativeListener(['change', 'input'], (e) => {
+
+    const t = e.target,
+        value = t.value;
+
+    switch (value) {
+
+        case 'random' :
+            myFilter.set({
+// @ts-expect-error
+                points: parseInt(randomPoints.value, 10),
+                tileRadius: 100,
+            });
+// @ts-expect-error
+            tile_radius.value = 100;
+            break;
+
+        case 'hex-grid' :
+            myFilter.set({
+                points: value,
+                tileRadius: 20,
+                tileHeight: 40,
+            });
+// @ts-expect-error
+            tile_radius.value = 20;
+// @ts-expect-error
+            tile_height.value = 40;
+            break;
+
+        case 'rect-grid' :
+            myFilter.set({
+                points: value,
+                tileWidth: 20,
+                tileHeight: 20,
+            });
+// @ts-expect-error
+            tile_width.value = 20;
+// @ts-expect-error
+            tile_height.value = 20;
+            break;
+    }
+}, '#points');
+
+// Update random-points value range
+scrawl.addNativeListener(['change', 'input'], (e) => {
+
+    const t = e.target,
+        value = t.value;
+
+// @ts-expect-error
+        if (points.value === 'random') {
+
+            myFilter.set({
+                points: parseInt(value, 10),
+            });
+        }
+}, '#random-points');
+
+
 // Setup form
-const ox = document.querySelector('#offset-x'),
-    oy = document.querySelector('#offset-y'),
+const points = document.querySelector('#points'),
+    tile_width = document.querySelector('#tile_width'),
+    tile_height = document.querySelector('#tile_height'),
+    tile_radius = document.querySelector('#tile_radius'),
+    offset_x = document.querySelector('#offset_x'),
+    offset_y = document.querySelector('#offset_y'),
+    angle = document.querySelector('#angle'),
+    randomPoints = document.querySelector('#random-points'),
     opacity = document.querySelector('#opacity');
 
 // @ts-expect-error
+points.value = 'rect-grid';
+// @ts-expect-error
+tile_width.value = 20;
+// @ts-expect-error
+tile_height.value = 20;
+// @ts-expect-error
+tile_radius.value = 14;
+// @ts-expect-error
+offset_x.value = 200;
+// @ts-expect-error
+offset_y.value = 200;
+// @ts-expect-error
+angle.value = 0;
+// @ts-expect-error
+randomPoints.value = 20;
+// @ts-expect-error
 opacity.value = 1;
-// @ts-expect-error
-ox.value = 30;
-// @ts-expect-error
-oy.value = 30;
 
 // @ts-expect-error
-document.querySelector('#source').options.selectedIndex = 2;
+document.querySelector('#includeRed').options.selectedIndex = 1;
 // @ts-expect-error
-document.querySelector('#destination').options.selectedIndex = 0;
+document.querySelector('#includeGreen').options.selectedIndex = 1;
 // @ts-expect-error
-document.querySelector('#composite').options.selectedIndex = 0;
+document.querySelector('#includeBlue').options.selectedIndex = 1;
+// @ts-expect-error
+document.querySelector('#includeAlpha').options.selectedIndex = 0;
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', imageFilter);
+addImageDragAndDrop(canvas, '#my-image-store', piccy);
 
 
 // #### Development and testing

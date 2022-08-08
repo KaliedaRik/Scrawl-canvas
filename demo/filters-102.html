@@ -21,21 +21,64 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 102</h1>
-  <h2>Use entitys to generate points for the tiles filter</h2>
+  <h2>Filter blend operation</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
 
-    <div class="orange label">Generate points from</div>
-    <div class="orange">
-      <select class="controlItem" id="points">
-        <option value="spiral">A LineSpiral entity</option>
-        <option value="ovals" disabled>A set of Oval entitys</option>
+    <div class="yellow label">Line IN</div>
+    <div class="yellow">
+      <select class="controlItem" id="source">
+        <option value="source">source</option>
+        <option value="source-alpha">source-alpha</option>
+        <option value="star">star</option>
+        <option value="wheel">wheel</option>
+        <option value="flower">flower</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Line MIX</div>
+    <div class="yellow">
+      <select class="controlItem" id="destination">
+        <option value="source">source</option>
+        <option value="source-alpha">source-alpha</option>
+        <option value="star">star</option>
+        <option value="wheel">wheel</option>
+        <option value="flower">flower</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Blend operation</div>
+    <div class="yellow">
+      <select class="controlItem" id="blend">
+        <option value="normal">normal</option>
+        <option value="color-burn">color-burn</option>
+        <option value="color-dodge">color-dodge</option>
+        <option value="darken">darken</option>
+        <option value="difference">difference</option>
+        <option value="exclusion">exclusion</option>
+        <option value="hard-light">hard-light</option>
+        <option value="lighten">lighten</option>
+        <option value="lighter">lighter</option>
+        <option value="multiply">multiply</option>
+        <option value="overlay">overlay</option>
+        <option value="screen">screen</option>
+        <option value="soft-light">soft-light</option>
+        <option value="color">color</option>
+        <option value="hue">hue</option>
+        <option value="luminosity">luminosity</option>
+        <option value="saturation">saturation</option>
       </select>
     </div>
 
     <div class="lavender label">Opacity</div>
-    <div class="lavender"><input class="controlItem filter-control" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div class="pink label">Offset - X</div>
+    <div class="pink"><input class="controlItem" id="offset-x" type="range" value="30" min="-250" max="250" step="1" /></div>
+
+    <div class="pink label">Offset - Y</div>
+    <div class="pink"><input class="controlItem" id="offset-y" type="range" value="30" min="-250" max="250" step="1" /></div>
 
   </div>
 
@@ -46,50 +89,23 @@
     data-scrawl-canvas
   ></canvas>
 
-  <div class="controls">
-
-    <div class="yellow label">Step along path</div>
-    <div class="yellow"><input class="controlItem" id="path-step" type="range" value="50" min="5" max="100" step="5" /></div>
-
-    <div class="yellow label">Show path</div>
-    <div class="yellow">
-      <select class="controlItem" id="show-path">
-        <option value="hide">Hide</option>
-        <option value="show">Show</option>
-      </select>
-    </div>
-
-    <div class="yellow label">Origin offset X</div>
-    <div class="yellow"><input class="controlItem filter-control move-paths" id="offset_x" type="range" value="200" min="0" max="400" step="1" /></div>
-
-    <div class="yellow label">Origin offset Y</div>
-    <div class="yellow"><input class="controlItem filter-control move-paths" id="offset_y" type="range" value="200" min="0" max="400" step="1" /></div>
-
-    <div class="yellow label">Tile radius</div>
-    <div class="yellow"><input class="controlItem filter-control" id="tile_radius" type="range" value="50" min="1" max="100" step="1" /></div>
-
-    <div>&nbsp;</div>
-    <div>&nbsp;</div>
-
-    <div class="green label">Spiral radius increment</div>
-    <div class="green"><input class="controlItem spiral-control" id="spiral-radius" type="range" value="0.05" min="0.03" max="0.07" step="0.001" /></div>
-
-    <div class="green label">spiral rad inc adjust</div>
-    <div class="green"><input class="controlItem spiral-control" id="spiral-radius-adjust" type="range" value="1" min="0.998" max="1.002" step="0.00001" /></div>
-
-  </div>
-
   <p id="reportmessage"></p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
 
     <ul>
-      <li>Create a test Picture entity</li>
-      <li>Create a LineSpiral entity, from which we can generate point coordinates to feed into the tiles filter</li>
-      <li>Create the tiles filter and apply it to the test image</li>
-      <li>Manipulate the LineSpiral entity parameters; check the effect the manipulations have on the output</li>
+      <li>Create two Cells which we can use to generate images for the filter</li>
+      <li>Load an additional image from the DOM</li>
+      <li>For each of our assets, create an image filter to load the assets into the filter pipeline</li>
+      <li>Create a blend filter</li>
+      <li>Create a Block entity, using a gradient for its fill, and apply the blend filter to it</li>
+      <li>Update the filter's lineIn and lineMix attributes and note the effect</li>
+      <li>Update the blend operation, check that the choice changes the display appropriately</li>
+      <li>In particular make sure the lineMix asset moves when the filter offset values are updated</li>
     </ul>
+
+    <p>Note that filter memoization would provide no benefit in this demo because of the way we include the (rotating) cell-based wheel image filter in the display block filters array, even though that filter will only be displayed (as part of the compositing filter) if selected. Moral: only load process-image filters into a filter array if you intend to use them!</p>
 
     <p><b>Touch test:</b> not required</p>
 

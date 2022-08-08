@@ -16,64 +16,83 @@
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
+    canvas {
+      margin: 0 auto;
+    }
   </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 015</h1>
-  <h2>Using assets in the filter stream; filter compositing</h2>
+  <h2>Parameters for: tiles filter</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
 
-    <div class="yellow label">Line IN</div>
-    <div class="yellow">
-      <select class="controlItem" id="source">
-        <option value="source">source</option>
-        <option value="source-alpha">source-alpha</option>
-        <option value="star">star</option>
-        <option value="wheel">wheel</option>
-        <option value="flower">flower</option>
+    <div class="orange label">Points value</div>
+    <div class="orange">
+      <select class="controlItem" id="points">
+        <option value="rect-grid">Rectangular grid (predefined)</option>
+        <option value="hex-grid">Hexagonal grid (predefined)</option>
+        <option value="random">Random points</option>
       </select>
     </div>
 
-    <div class="yellow label">Line MIX</div>
-    <div class="yellow">
-      <select class="controlItem" id="destination">
-        <option value="source">source</option>
-        <option value="source-alpha">source-alpha</option>
-        <option value="star">star</option>
-        <option value="wheel">wheel</option>
-        <option value="flower">flower</option>
+    <div class="yellow label">Tile radius (hex)</div>
+    <div class="yellow"><input class="controlItem" id="tile_radius" type="range" value="14" min="1" max="200" step="1" /></div>
+
+    <div class="yellow label">Tile width</div>
+    <div class="yellow"><input class="controlItem" id="tile_width" type="range" value="20" min="1" max="200" step="1" /></div>
+
+    <div class="yellow label">Tile height</div>
+    <div class="yellow"><input class="controlItem" id="tile_height" type="range" value="20" min="1" max="200" step="1" /></div>
+
+    <div class="yellow label">Origin offset X</div>
+    <div class="yellow"><input class="controlItem" id="offset_x" type="range" value="200" min="0" max="400" step="1" /></div>
+
+    <div class="yellow label">Origin offset Y</div>
+    <div class="yellow"><input class="controlItem" id="offset_y" type="range" value="200" min="0" max="400" step="1" /></div>
+
+    <div class="yellow label">Rotation angle</div>
+    <div class="yellow"><input class="controlItem" id="angle" type="range" value="0" min="0" max="360" step="1" /></div>
+
+    <div class="yellow label">Random points</div>
+    <div class="yellow"><input class="controlItem" id="random-points" type="range" value="20" min="5" max="200" step="1" /></div>
+
+    <div class="pink label">Include red</div>
+    <div class="pink">
+      <select class="controlItem" id="includeRed">
+        <option value="0">false</option>
+        <option value="1">true</option>
       </select>
     </div>
 
-    <div class="yellow label">Composite operation</div>
-    <div class="yellow">
-      <select class="controlItem" id="composite">
-        <option value="source-over">source-over</option>
-        <option value="source-in">source-in</option>
-        <option value="source-out">source-out</option>
-        <option value="source-atop">source-atop</option>
-        <option value="source-only">source-only</option>
-        <option value="destination-over">destination-over</option>
-        <option value="destination-in">destination-in</option>
-        <option value="destination-out">destination-out</option>
-        <option value="destination-atop">destination-atop</option>
-        <option value="destination-only">destination-only</option>
-        <option value="xor">xor</option>
-        <option value="clear">clear</option>
+    <div class="green label">Include green</div>
+    <div class="green">
+      <select class="controlItem" id="includeGreen">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="blue label">Include blue</div>
+    <div class="blue">
+      <select class="controlItem" id="includeBlue">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="bluegreen label">Include alpha</div>
+    <div class="bluegreen">
+      <select class="controlItem" id="includeAlpha">
+        <option value="0">false</option>
+        <option value="1">true</option>
       </select>
     </div>
 
     <div class="lavender label">Opacity</div>
     <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
-
-    <div class="pink label">Offset - X</div>
-    <div class="pink"><input class="controlItem" id="offset-x" type="range" value="30" min="-250" max="250" step="1" /></div>
-
-    <div class="pink label">Offset - Y</div>
-    <div class="pink"><input class="controlItem" id="offset-y" type="range" value="30" min="-250" max="250" step="1" /></div>
 
   </div>
 
@@ -90,17 +109,10 @@
     <h4>Test purpose</h4>
 
     <ul>
-      <li>Create two Cells which we can use to generate images for the filter</li>
-      <li>Load an additional image from the DOM</li>
-      <li>For each of our assets, create an image filter to load the assets into the filter pipeline</li>
-      <li>Create a compositing filter</li>
-      <li>Create a Block entity, using a gradient for its fill, and apply the compositing filter to it</li>
-      <li>Update the filter's lineIn and lineMix attributes and note the effect</li>
-      <li>Update the composite operation, check that the choice changes the display appropriately</li>
-      <li>In particular make sure the lineMix asset moves when the filter offset values are updated</li>
+      <li>Create a test Picture entity</li>
+      <li>Create a pixelate filter and apply it to the test entity</li>
+      <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
-
-    <p>Note that filter memoization would provide no benefit in this demo because of the way we include the (rotating) cell-based wheel image filter in the display block filters array, even though that filter will only be displayed (as part of the compositing filter) if selected. Moral: only load process-image filters into a filter array if you intend to use them!</p>
 
     <p><b>Touch test:</b> not required</p>
 

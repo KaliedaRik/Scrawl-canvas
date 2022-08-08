@@ -770,10 +770,10 @@ P.clearFiltersFromEntitys = function () {
 // This function forms part of the Scrawl-canvas library's __drag-and-drop__ functionality.
 P.getArtefactAt = function (items) {
 
+    this.sortArtefacts();
+
     let myCell = requestCell(),
         artBuckets = this.artefactStampBuckets;
-
-    this.sortArtefacts();
 
     for (let i = artBuckets.length - 1; i >= 0; i--) {
 
@@ -801,13 +801,13 @@ P.getArtefactAt = function (items) {
 // The function will always return an array of hit reports, or an empty array if no hits are reported.
 P.getAllArtefactsAt = function (items) {
 
+    this.sortArtefacts();
+    
     let myCell = requestCell(),
         artBuckets = this.artefactStampBuckets,
         resultNames = [],
         results = [];
 
-    this.sortArtefacts();
-    
     for (let i = artBuckets.length - 1; i >= 0; i--) {
 
         let art = artBuckets[i];

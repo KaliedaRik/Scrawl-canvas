@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 104</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    #my-image-store {
+      display: none;
+    }
+    canvas {
+      margin: 0 auto;
+    }
+    .controls-6 {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    .controls-7 {
+      grid-template-columns: 1fr 2fr 2fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 104</h1>
+  <h2>Compound filters: Use a white-transparent gradient as a filter input</h2>
+  <h3>To change image, drag-and-drop an image file over the canvas</h3>
+
+  <div class="controls controls-6">
+    <div class="pink label">Filter effect</div>
+    <div class="pink">
+      <select class="controlItem filterEffect" id="filterEffect">
+        <option value="glass-bars">Glass bars/rings</option>
+        <option value="displace-bars">Displace bars/rings</option>
+        <option value="etching">Etching</option>
+        <option value="green-monitor">Green monitor</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Final filter opacity</div>
+    <div class="lavender"><input class="controlItem filterObject" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div class="yellow label">Pattern gradient</div>
+    <div class="yellow">
+      <select class="controlItem filterBlock" id="patternGradient">
+        <option value="bar-cell-gradient">Vertical bars</option>
+        <option value="ring-cell-gradient">Rings</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Gradient easing</div>
+    <div class="yellow">
+      <select class="controlItem gradient" id="easing">
+        <option value="linear">linear</option>
+        <option value="easeIn">easeIn</option>
+        <option value="easeInOut">easeInOut</option>
+        <option value="easeOutIn">easeOutIn</option>
+        <option value="easeOut">easeOut</option>
+      </select>
+    </div>
+
+    <div class="pink label">Blend filter</div>
+    <div class="pink">
+      <select class="controlItem filterObject" id="blend">
+        <option value="color-burn">color-burn</option>
+        <option value="color-dodge">color-dodge</option>
+        <option value="darken">darken</option>
+        <option value="difference">difference</option>
+        <option value="exclusion">exclusion</option>
+        <option value="hard-light">hard-light</option>
+        <option value="lighten">lighten</option>
+        <option value="lighter">lighter</option>
+        <option value="multiply">multiply</option>
+        <option value="overlay">overlay</option>
+        <option value="screen">screen</option>
+        <option value="soft-light">soft-light</option>
+        <option value="color">color</option>
+        <option value="hue">hue</option>
+        <option value="luminosity">luminosity</option>
+        <option value="saturation">saturation</option>
+      </select>
+    </div>
+
+  </div>
+
+  <canvas 
+    id="mycanvas" 
+    width="400" 
+    height="400"
+    data-scrawl-canvas
+  ></canvas>
+
+  <div class="controls controls-7">
+    <div class="pink label">Displace filter scaling</div>
+    <div class="pink">Scale X: <input class="controlItem filterObject" id="filter-scale-x" type="range" value="10" min="-50" max="50" step="1" /></div>
+    <div class="pink">Scale Y: <input class="controlItem filterObject" id="filter-scale-y" type="range" value="10" min="-50" max="50" step="1" /></div>
+    <div class="pink">&nbsp;</div>
+
+
+    <div class="green label">Filter dimensions</div>
+    <div class="green">Width: <input class="controlItem filterCell" id="filter-width" type="range" value="100" min="0" max="100" step="1" /></div>
+    <div class="green">Height: <input class="controlItem filterCell" id="filter-height" type="range" value="100" min="0" max="100" step="1" /></div>
+    <div class="green">&nbsp;</div>
+
+
+    <div class="green label">Filter offset</div>
+    <div class="green">Offset X: <input class="controlItem filterObject" id="filter-offset-x" type="range" value="0" min="-400" max="400" step="10" /></div>
+    <div class="green">Offset Y: <input class="controlItem filterObject" id="filter-offset-y" type="range" value="0" min="-400" max="400" step="10" /></div>
+    <div class="green">&nbsp;</div>
+
+
+    <div class="blue label">Pattern dimensions</div>
+    <div class="blue">Width: <input class="controlItem patternCell" id="pattern-width" type="range" value="80" min="1" max="200" step="1" /></div>
+    <div class="blue">Height: <input class="controlItem patternCell" id="pattern-height" type="range" value="80" min="1" max="200" step="1" /></div>
+    <div class="blue">&nbsp;</div>
+
+
+    <div class="blue label">Pattern matrix</div>
+    <div class="blue">Shift X: <input class="controlItem patternCell" id="shiftX" type="range" value="0" min="-100" max="100" step="1" /></div>
+    <div class="blue">Skew X: <input class="controlItem patternCell" id="skewX" type="range" value="0" min="-2" max="2" step="0.01" /></div>
+    <div class="blue">Stretch X: <input class="controlItem patternCell" id="stretchX" type="range" value="1" min="-2" max="2" step="0.01" /></div>
+    <div class="blue">&nbsp;</div>
+    <div class="blue">Shift Y: <input class="controlItem patternCell" id="shiftY" type="range" value="0" min="-100" max="100" step="1" /></div>
+    <div class="blue">Skew Y: <input class="controlItem patternCell" id="skewY" type="range" value="0" min="-2" max="2" step="0.01" /></div>
+    <div class="blue">Stretch Y: <input class="controlItem patternCell" id="stretchY" type="range" value="1" min="-2" max="2" step="0.01" /></div>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create a set of transparent-white gradients to be loaded into the example filters</li>
+      <li>Create the example filters:</li>
+      <ul>
+        <li>Glass bars/rings - super-imposes a set of bars (or rings) over the image, using: 'process-image (linear gradient); blend (multiply)</li>
+        <li>Displace bars/rings - use the gradient to displace parst of the image, using: process-image (radial gradient); displace</li>
+        <li>Etching - create a black-white rough drawing effect, as seen in old books with illustrations, using: process-image (linear gradient); grayscale; gaussian-blur; matrix; invert-channels; threshold; blend (screen)</li>
+        <li>Green monitor - create a late-20th-century computer green-screen monitor effect, using: process-image (linear gradient); grayscale; modulate-channels; blend (luminosity)</li>
+      </ul>
+      <li>Manipulate the gradient Cell size, matrix, and easing settings to change the appearance of the output.</li>
+      <li>Manipulate the filter settings to change the appearance of the output.</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required</p>
+
+    <p><a href="../docs/demo/filters-104.html">Annotated code</a></p>
+  </div>
+
+  <div id="my-image-store">
+    <img id="iris" src="img/iris.png" class="flowers" />
+  </div>
+
+  <script src="filters-104.js" type="module"></script>
+
+</body>
+
+</html>

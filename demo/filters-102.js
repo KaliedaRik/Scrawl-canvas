@@ -1,5 +1,5 @@
 // # Demo Filters 102 
-// Use entitys to generate points for the tiles filter
+// Filter blend operation
 
 // [Run code](../../demo/filters-102.html)
 import * as scrawl from '../source/scrawl.js';
@@ -10,107 +10,157 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
+canvas.setBase({
+    compileOrder: 1,
+});
+
+// Create the assets
 scrawl.importDomImage('.flowers');
 
+canvas.buildCell({
 
-// Create the filter
-const myFilter = scrawl.makeFilter({
+    name: 'star-cell',
+    dimensions: [400, 400],
+    shown: false,
+});
 
-    name: 'tiles',
-    method: 'tiles',
-    tileRadius: 50,
-    offsetX: 200,
-    offsetY: 200,
+scrawl.makeStar({
+
+    name: 'my-star',
+    group: 'star-cell',
+
+    radius1: 200,
+    radius2: 100,
+
+    roll: 60,
+
+    points: 4,
+
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+
+    fillStyle: 'blue',
+    strokeStyle: 'red',
+    lineWidth: 10,
+    method: 'fillThenDraw',
+});
+
+canvas.buildCell({
+
+    name: 'wheel-cell',
+    dimensions: [400, 400],
+    shown: false,
+});
+
+scrawl.makeWheel({
+
+    name: 'my-wheel',
+    group: 'wheel-cell',
+
+    radius: 150,
+
+    startAngle: 30,
+    endAngle: -30,
+    includeCenter: true,
+
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+
+    fillStyle: 'green',
+    strokeStyle: 'yellow',
+    lineWidth: 10,
+    method: 'fillThenDraw',
+
+    delta: {
+        roll: -0.3,
+    },
 });
 
 
-// Create the target entity
-const piccy = scrawl.makePicture({
+// Create the filters
+scrawl.makeFilter({
 
-    name: 'base-piccy',
+    name: 'star-filter',
+    method: 'image',
+
+    asset: 'star-cell',
+
+    width: 400,
+    height: 400,
+
+    copyWidth: 400,
+    copyHeight: 400,
+
+    lineOut: 'star',
+
+}).clone({
+
+    name: 'wheel-filter',
+    asset: 'wheel-cell',
+    lineOut: 'wheel',
+});
+
+const imageFilter = scrawl.makeFilter({
+
+    name: 'flower-filter',
+    method: 'image',
 
     asset: 'iris',
 
-    width: '100%',
-    height: '100%',
-
+    width: '80%',
+    height: '80%',
     copyWidth: '100%',
     copyHeight: '100%',
 
-    method: 'fill',
-
-    filters: ['tiles'],
+    lineOut: 'flower',
 });
 
+let composeFilter = scrawl.makeFilter({
 
-// Create the line spiral
-const spiral = scrawl.makeLineSpiral({
+    name: 'block-filter',
+    method: 'blend',
 
-    name: 'points-from-spiral',
-    start: [200, 200],
+    lineIn: 'source',
+    lineMix: 'star',
+
+    offsetX: 30,
+    offsetY: 30,
+
+    compose: 'normal',
+});
+
+// Display the filter in a Block entity
+
+scrawl.makeGradient({
+    name: 'linear',
+    endX: '100%',
+    colors: [
+        [0, 'blue'],
+        [495, 'red'],
+        [500, 'yellow'],
+        [505, 'red'],
+        [999, 'green']
+    ],
+});
+
+scrawl.makeBlock({
+
+    name: 'display-block',
+    start: ['center', 'center'],
     handle: ['center', 'center'],
-    radiusIncrement: 0.05,
-    radiusIncrementAdjust: 1,
-    stepLimit: 1500,
-    useAsPath: true,
-    method: 'draw',
-    globalAlpha: 0.3,
+    dimensions: ['90%', '90%'],
+    roll: -20,
+
+    lineWidth: 10,
+    fillStyle: 'linear',
+    lockFillStyleToEntity: true,
+    strokeStyle: 'coral',
+    method: 'fillThenDraw',
+
+    // Load in the three image filters, then the compose filter to combine two of them
+    // + the results display in a Block entity!
+    filters: ['star-filter', 'wheel-filter', 'flower-filter', 'block-filter'],
 });
-
-
-// To make show/hide for the paths (once we have more than one of them) easier
-const pathGroup = scrawl.makeGroup({
-
-    name: 'paths-group',
-
-}).addArtefacts('points-from-spiral');
-
-
-// Current paths, and their shared step distance
-// TODO: add more path options, for testing/general interest
-let distance = 50,
-    currentPaths = spiral.name;
-
-
-// Update filter with spiral points data
-const getPointsFromSpiral = () => {
-
-    const len = spiral.length,
-        step = (1 / (Math.floor(len / distance))),
-        points = [],
-        coord = scrawl.requestCoordinate(),
-        pos = spiral.get('position');
-
-    let x, y;
-
-    for (let i = step; i <= 1; i += step) {
-
-        [x, y] = coord.setFromVector(spiral.getPathPositionData(i)).subtract(pos);
-// @ts-expect-error
-        points.push(Math.round(x), Math.round(y));
-    }
-    [x, y] = coord.setFromVector(spiral.getPathPositionData(0.00000001)).subtract(pos);
-// @ts-expect-error
-    points.push(Math.round(x), Math.round(y));
-
-    [x, y] = coord.setFromVector(spiral.getPathPositionData(0.99999999)).subtract(pos);
-// @ts-expect-error
-    points.push(Math.round(x), Math.round(y));
-
-    scrawl.releaseCoordinate(coord);
-
-    myFilter.set({ points });
-};
-
-const updateFilterPoints = () => {
-
-    switch (currentPaths) {
-
-        case spiral.name :
-            getPointsFromSpiral();
-            break;
-    }
-};
 
 
 // #### Scene animation
@@ -118,7 +168,7 @@ const updateFilterPoints = () => {
 const report = reportSpeed('#reportmessage', function () {
 
 // @ts-expect-error
-    return `    Tile dimensions - radius: ${tile_radius.value}px\n    Origin offset - x: ${offset_x.value}px y: ${offset_y.value}px\n    Step along path: ${distance}\n    Spiral: radiusIncrement: ${spiralRadius.value}; radiusIncrementAdjust: ${spiralRadiusAdjust.value}\n    Opacity: ${opacity.value}`;
+    return `    Offset - x: ${ox.value}, y: ${oy.value}\n    Opacity: ${opacity.value}`;
 });
 
 
@@ -128,109 +178,54 @@ const demoAnimation = scrawl.makeRender({
     name: "demo-animation",
     target: canvas,
     afterShow: report,
-    afterCreated: updateFilterPoints,
 });
 
 
 // #### User interaction
-// Filter updates
+// Setup form observer functionality
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
-    origin: '.filter-control',
+    origin: '.controlItem',
 
-    target: myFilter,
+    target: composeFilter,
 
     useNativeListener: true,
     preventDefault: true,
 
     updates: {
+
+        source: ['lineIn', 'raw'],
+        destination: ['lineMix', 'raw'],
+        blend: ['blend', 'raw'],
         opacity: ['opacity', 'float'],
-        offset_x: ['offsetX', 'round'],
-        offset_y: ['offsetY', 'round'],
-        tile_radius: ['tileRadius', 'round'],
+        'offset-x': ['offsetX', 'round'],
+        'offset-y': ['offsetY', 'round'],
     },
 });
 
-// Update step limit along paths
-scrawl.addNativeListener(['change', 'input'], (e) => {
-
-    const t = e.target,
-        value = t.value;
-
-    distance = parseInt(value, 10);
-
-    updateFilterPoints();
-
-}, '#path-step');
-
-// Show or hide the paths
-scrawl.addNativeListener(['change', 'input'], (e) => {
-
-    const t = e.target,
-        value = t.value;
-
-    pathGroup.setArtefacts({
-        method: (value === 'show') ? 'draw' : 'none',
-    });
-
-}, '#show-path');
-
-// Move the paths
-scrawl.addNativeListener(['change', 'input'], (e) => {
-
-    pathGroup.setArtefacts({
-// @ts-expect-error
-        start: [parseInt(offset_x.value, 10), parseInt(offset_y.value, 10)],
-    });
-
-}, '.move-paths');
-
-// LineSpiral adjustments
-scrawl.addNativeListener(['change', 'input'], (e) => {
-
-    spiral.set({
-// @ts-expect-error
-        radiusIncrement: parseFloat(spiralRadius.value),
-// @ts-expect-error
-        radiusIncrementAdjust: parseFloat(spiralRadiusAdjust.value),
-    });
-
-    updateFilterPoints();
-
-}, '.spiral-control');
-
-
 // Setup form
-const pathStep = document.querySelector('#path-step'),
-    offset_x = document.querySelector('#offset_x'),
-    offset_y = document.querySelector('#offset_y'),
-    tile_radius = document.querySelector('#tile_radius'),
-    opacity = document.querySelector('#opacity'),
-    spiralRadius = document.querySelector('#spiral-radius'),
-    spiralRadiusAdjust = document.querySelector('#spiral-radius-adjust'),
-    showPath = document.querySelector('#show-path');
+const ox = document.querySelector('#offset-x'),
+    oy = document.querySelector('#offset-y'),
+    opacity = document.querySelector('#opacity');
 
-// @ts-expect-error
-pathStep.value = 50;
 // @ts-expect-error
 opacity.value = 1;
 // @ts-expect-error
-showPath.value = 'show';
+ox.value = 30;
 // @ts-expect-error
-offset_x.value = 200;
+oy.value = 30;
+
 // @ts-expect-error
-offset_y.value = 200;
+document.querySelector('#source').options.selectedIndex = 0;
 // @ts-expect-error
-tile_radius.value = 50;
+document.querySelector('#destination').options.selectedIndex = 2;
 // @ts-expect-error
-spiralRadius.value = 0.05;
-// @ts-expect-error
-spiralRadiusAdjust.value = 1;
+document.querySelector('#blend').options.selectedIndex = 0;
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop(canvas, '#my-image-store', imageFilter);
 
 
 // #### Development and testing

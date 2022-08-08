@@ -611,11 +611,15 @@ P.cleanPathObject = function () {
 
     if (!this.noPathUpdates || !this.pathObject) {
 
-        if (!this.pasteArray) this.preparePasteObject();
+        if (!this.pasteArray || this.pasteArray.length !== 4) this.preparePasteObject();
 
-        let p = this.pathObject = new Path2D();
+        if (this.pasteArray.length !== 4) this.dirtyPathObject = true;
+        else {
 
-        p.rect(...this.pasteArray);
+            let p = this.pathObject = new Path2D();
+
+            p.rect(...this.pasteArray);
+        }
     }
 };
 
