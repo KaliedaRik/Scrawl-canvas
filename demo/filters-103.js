@@ -138,8 +138,8 @@ const points1 = [],
     points2 = [];
 
 for (let i = 0; i < 2000; i++) {
-    points1.push(parseInt(Math.random() * 400, 10))
-    points2.push(parseInt(Math.random() * 400, 10))
+    points1.push(Math.floor(Math.random() * 400));
+    points2.push(Math.floor(Math.random() * 400));
 }
 
 scrawl.makeFilter({
@@ -473,7 +473,6 @@ scrawl.makeConicGradient({
 
     name: 'rays-filter',
     start: ['center', 'center'],
-    radius: '130%',
     colors: [
         [0, 'red'],
         [9, 'red'],

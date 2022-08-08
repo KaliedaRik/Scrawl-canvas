@@ -2183,6 +2183,7 @@ interface RenderFactoryInputs extends BaseMixinInputs, RenderFactoryDeltaInputs 
     order?: number;
     target?: string | TargetInstance | Array<string | TargetInstance>;
     observer?: boolean;
+    noTarget?: boolean;
 }
 
 interface RenderSaveInputs extends RenderFactoryInputs, SaveInputs {}
