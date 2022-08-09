@@ -580,16 +580,6 @@
                 </a>
               
                 
-                <a class="source" href="filters-028.html">
-                  ./demo/filters-028.js
-                </a>
-              
-                
-                <a class="source" href="filters-029.html">
-                  ./demo/filters-029.js
-                </a>
-              
-                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -602,6 +592,16 @@
                 
                 <a class="source" href="filters-103.html">
                   ./demo/filters-103.js
+                </a>
+              
+                
+                <a class="source" href="filters-104.html">
+                  ./demo/filters-104.js
+                </a>
+              
+                
+                <a class="source" href="filters-105.html">
+                  ./demo/filters-105.js
                 </a>
               
                 
@@ -1108,28 +1108,6 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="create-the-filters">Create the filters</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
-    <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">50</span>,
-    <span class="hljs-attr">offsetX</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">200</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
-              </div>
               <h4 id="scene-setup-and-animation">Scene setup and animation</h4>
 
             </div>
@@ -1139,16 +1117,22 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
     <span class="hljs-string">&#x27;canvas-2&#x27;</span>:canvas2, 
     <span class="hljs-string">&#x27;canvas-3&#x27;</span>:canvas3, 
     <span class="hljs-string">&#x27;canvas-4&#x27;</span>:canvas4,
+    <span class="hljs-string">&#x27;canvas-5&#x27;</span>:canvas5,
+    <span class="hljs-string">&#x27;canvas-6&#x27;</span>:canvas6,
+    <span class="hljs-string">&#x27;canvas-7&#x27;</span>:canvas7,
+    <span class="hljs-string">&#x27;canvas-8&#x27;</span>:canvas8,
+    <span class="hljs-string">&#x27;canvas-9&#x27;</span>:canvas9,
+    <span class="hljs-string">&#x27;canvas-10&#x27;</span>:canvas10,
 } = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Create the target entitys</p>
 
@@ -1161,42 +1145,93 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
     <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">filters</span>: [],
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;blotchy-newsprint&#x27;</span>],
+    <span class="hljs-attr">memoizeFilterOutput</span>: <span class="hljs-literal">true</span>,
 
 }). <span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-2&#x27;</span>,
     <span class="hljs-attr">group</span>: canvas2.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [],
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;jagged-shapes&#x27;</span>],
 
 }). <span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-3&#x27;</span>,
     <span class="hljs-attr">group</span>: canvas3.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [],
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;brass-rubbing&#x27;</span>],
 
 }). <span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-4&#x27;</span>,
     <span class="hljs-attr">group</span>: canvas4.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">filters</span>: [],
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;blueprint&#x27;</span>],
+
+}). <span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-5&#x27;</span>,
+    <span class="hljs-attr">group</span>: canvas5.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;comic&#x27;</span>],
+
+}). <span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-6&#x27;</span>,
+    <span class="hljs-attr">group</span>: canvas6.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;square-quilt&#x27;</span>],
+
+}). <span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-7&#x27;</span>,
+    <span class="hljs-attr">group</span>: canvas7.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;raised-tiles&#x27;</span>],
+
+}). <span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-8&#x27;</span>,
+    <span class="hljs-attr">group</span>: canvas8.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;blotches&#x27;</span>],
+
+}). <span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-9&#x27;</span>,
+    <span class="hljs-attr">group</span>: canvas9.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;watermark&#x27;</span>],
+
+}). <span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;canvas-output-10&#x27;</span>,
+    <span class="hljs-attr">group</span>: canvas10.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;rays&#x27;</span>],
 });
 
 <span class="hljs-keyword">const</span> pictures = scrawl.<span class="hljs-title function_">makeGroup</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;target-images&#x27;</span>,
-}).<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">&#x27;canvas-output-1&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-2&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-3&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-4&#x27;</span>)
+}).<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">&#x27;canvas-output-1&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-2&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-3&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-4&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-5&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-6&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-7&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-8&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-9&#x27;</span>, <span class="hljs-string">&#x27;canvas-output-10&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Animation</p>
 
-<span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
-
-scrawl.<span class="hljs-title function_">makeRender</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
-    <span class="hljs-attr">target</span>: [canvas1, canvas2, canvas3, canvas4],
-});
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
 scrawl.<span class="hljs-title function_">makeRender</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-reporter&quot;</span>,
+    <span class="hljs-attr">noTarget</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">afterShow</span>: report,
+});
+
+scrawl.<span class="hljs-title function_">makeRender</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-canvases&quot;</span>,
+    <span class="hljs-attr">target</span>: [canvas1, canvas2, canvas3, canvas4, canvas5, canvas6, canvas7, canvas8, canvas9, canvas10],
+    <span class="hljs-attr">observer</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
         </li>
@@ -1208,11 +1243,29 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+              <h4 id="filter-setup">Filter setup</h4>
+<p>Blotchy newsprint</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>([canvas1, canvas2, canvas3, canvas4], <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, pictures);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blotchy-newsprint&#x27;</span>,
+    <span class="hljs-attr">actions</span>: [{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;newsprint&#x27;</span>,
+        <span class="hljs-attr">width</span>: <span class="hljs-number">3</span>,
+        <span class="hljs-attr">opacity</span>: <span class="hljs-number">0.5</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">2</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;step-channels&#x27;</span>,
+        <span class="hljs-attr">red</span>: <span class="hljs-number">31</span>,
+        <span class="hljs-attr">green</span>: <span class="hljs-number">31</span>,
+        <span class="hljs-attr">blue</span>: <span class="hljs-number">31</span>,
+        <span class="hljs-attr">clamp</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+    }],
+});</pre></div></div>
             
         </li>
         
@@ -1222,6 +1275,520 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Translucent jagged edges effect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> points1 = [],
+    points2 = [];
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2000</span>; i++) {
+    points1.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">400</span>));
+    points2.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">400</span>));
+}
+
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;jagged-shapes&#x27;</span>,
+    <span class="hljs-attr">actions</span>: [{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
+        <span class="hljs-attr">points</span>: points1,
+        <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">30</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
+        <span class="hljs-attr">points</span>: points2,
+        <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">30</span>,
+        <span class="hljs-attr">opacity</span>: <span class="hljs-number">0.5</span>
+    }],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Brass rubbing effect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;brass-rubbing&#x27;</span>,
+    <span class="hljs-attr">actions</span>: [{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">2</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
+        <span class="hljs-attr">width</span>: <span class="hljs-number">3</span>,
+        <span class="hljs-attr">height</span>: <span class="hljs-number">3</span>,
+        <span class="hljs-attr">offsetX</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">offsetY</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">weights</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">4</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>],
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;channels-to-alpha&#x27;</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;flood&#x27;</span>,
+        <span class="hljs-attr">red</span>: <span class="hljs-number">180</span>,
+    }],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>Blueprint effect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blueprint&#x27;</span>,
+    <span class="hljs-attr">actions</span>: [{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">1</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
+        <span class="hljs-attr">width</span>: <span class="hljs-number">3</span>,
+        <span class="hljs-attr">height</span>: <span class="hljs-number">3</span>,
+        <span class="hljs-attr">offsetX</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">offsetY</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">weights</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">4</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>],
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
+        <span class="hljs-attr">level</span>: <span class="hljs-number">6</span>,
+        <span class="hljs-attr">high</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>],
+        <span class="hljs-attr">low</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">120</span>, <span class="hljs-number">255</span>],
+    }],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>Comic effect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;comic&#x27;</span>,
+    <span class="hljs-attr">actions</span>: [{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;outline1&#x27;</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;outline1&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;outline2&#x27;</span>,
+        <span class="hljs-attr">width</span>: <span class="hljs-number">3</span>,
+        <span class="hljs-attr">height</span>: <span class="hljs-number">3</span>,
+        <span class="hljs-attr">offsetX</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">offsetY</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">weights</span>: [<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,-<span class="hljs-number">4</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>],
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;outline2&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;outline3&#x27;</span>,
+        <span class="hljs-attr">level</span>: <span class="hljs-number">6</span>,
+        <span class="hljs-attr">high</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>],
+        <span class="hljs-attr">low</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+        <span class="hljs-attr">includeAlpha</span>: <span class="hljs-literal">true</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;outline3&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;outline4&#x27;</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;step-channels&#x27;</span>,
+        <span class="hljs-attr">clamp</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;color1&#x27;</span>,
+        <span class="hljs-attr">red</span>: <span class="hljs-number">16</span>,
+        <span class="hljs-attr">green</span>: <span class="hljs-number">16</span>,
+        <span class="hljs-attr">blue</span>: <span class="hljs-number">16</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">4</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;color1&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;color2&#x27;</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+        <span class="hljs-attr">compose</span>: <span class="hljs-string">&#x27;destination-over&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;color2&#x27;</span>,
+        <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;outline4&#x27;</span>,
+    }],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>Square quilt effect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;square-quilt&#x27;</span>,
+    <span class="hljs-attr">actions</span>: [{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;pixelate&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;large&#x27;</span>,
+        <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">24</span>,
+        <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">24</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;area-alpha&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;large&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;large&#x27;</span>,
+        <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">12</span>,
+        <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">12</span>,
+        <span class="hljs-attr">gutterWidth</span>: <span class="hljs-number">12</span>,
+        <span class="hljs-attr">gutterHeight</span>: <span class="hljs-number">12</span>,
+        <span class="hljs-attr">areaAlphaLevels</span>: [<span class="hljs-number">255</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">255</span>],
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;pixelate&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;medium&#x27;</span>,
+        <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">12</span>,
+        <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">12</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;area-alpha&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;medium&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;medium&#x27;</span>,
+        <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">6</span>,
+        <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">6</span>,
+        <span class="hljs-attr">gutterWidth</span>: <span class="hljs-number">6</span>,
+        <span class="hljs-attr">gutterHeight</span>: <span class="hljs-number">6</span>,
+        <span class="hljs-attr">areaAlphaLevels</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>],
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;pixelate&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;small&#x27;</span>,
+        <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">3</span>,
+        <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">3</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+        <span class="hljs-attr">compose</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;medium&#x27;</span>,
+        <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;small&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;mixed&#x27;</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+        <span class="hljs-attr">compose</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;large&#x27;</span>,
+        <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;mixed&#x27;</span>,
+    }],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>Raised tiles effect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;raised-tiles&#x27;</span>,
+    <span class="hljs-attr">actions</span>: [{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;area-alpha&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;image-grid&#x27;</span>,
+        <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">30</span>,
+        <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">30</span>,
+        <span class="hljs-attr">gutterWidth</span>: <span class="hljs-number">4</span>,
+        <span class="hljs-attr">gutterHeight</span>: <span class="hljs-number">4</span>,
+        <span class="hljs-attr">areaAlphaLevels</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;flood&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;shadow-grid&#x27;</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;area-alpha&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;shadow-grid&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;shadow-grid&#x27;</span>,
+        <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">30</span>,
+        <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">30</span>,
+        <span class="hljs-attr">gutterWidth</span>: <span class="hljs-number">4</span>,
+        <span class="hljs-attr">gutterHeight</span>: <span class="hljs-number">4</span>,
+        <span class="hljs-attr">areaAlphaLevels</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;shadow-grid&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;shadow-grid&#x27;</span>,
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">2</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+        <span class="hljs-attr">compose</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;image-grid&#x27;</span>,
+        <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;shadow-grid&#x27;</span>,
+        <span class="hljs-attr">offsetX</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">offsetY</span>: <span class="hljs-number">2</span>,
+    }],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>Blotchy color effect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;worley-basic&#x27;</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">400</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>noiseEngine: ‘worley-euclidean’,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>]
+    ],
+
+    <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;easeOut&#x27;</span>,
+})
+
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blotches&#x27;</span>,
+    <span class="hljs-attr">actions</span>: [{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;process-image&#x27;</span>,
+        <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;worley-basic&#x27;</span>,
+        <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;noise&#x27;</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;gray&#x27;</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+        <span class="hljs-attr">compose</span>: <span class="hljs-string">&#x27;source-in&#x27;</span>,
+        <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;noise&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;color&#x27;</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+        <span class="hljs-attr">compose</span>: <span class="hljs-string">&#x27;destination-over&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;gray&#x27;</span>,
+        <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;color&#x27;</span>,
+    }],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>Watermark effect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>canvas9.<span class="hljs-title function_">setBase</span>({
+    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">2</span>,
+});
+
+canvas9.<span class="hljs-title function_">buildCell</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;watermark-pattern-cell&#x27;</span>,
+    <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">150</span>],
+    <span class="hljs-attr">useAsPattern</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">skewX</span>: <span class="hljs-number">0.2</span>,
+    <span class="hljs-attr">skewY</span>: -<span class="hljs-number">0.4</span>,
+    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">0</span>,
+});
+
+scrawl.<span class="hljs-title function_">makePhrase</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;watermark-text&#x27;</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;watermark-pattern-cell&#x27;</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Scrawl-canvas&#x27;</span>,
+    <span class="hljs-attr">family</span>: <span class="hljs-string">&#x27;Arial, sans-serif&#x27;</span>,
+    <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;bold&#x27;</span>,
+    <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;25px&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+});
+
+canvas9.<span class="hljs-title function_">buildCell</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;watermark-display-cell&#x27;</span>,
+    <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeBlock</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;watermark-block&#x27;</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;watermark-display-cell&#x27;</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;watermark-pattern-cell&#x27;</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;watermark&#x27;</span>,
+    <span class="hljs-attr">actions</span>: [{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;process-image&#x27;</span>,
+        <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;watermark-display-cell&#x27;</span>,
+        <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;watermark-panel&#x27;</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+        <span class="hljs-attr">compose</span>: <span class="hljs-string">&#x27;destination-over&#x27;</span>,
+        <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;watermark-panel&#x27;</span>,
+        <span class="hljs-attr">opacity</span>: <span class="hljs-number">0.7</span>,
+    }],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>Animated rays effect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>canvas10.<span class="hljs-title function_">buildCell</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rays-cell&#x27;</span>,
+    <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+});
+
+canvas10.<span class="hljs-title function_">setBase</span>({
+    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeConicGradient</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rays-filter&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
+        [<span class="hljs-number">9</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
+        [<span class="hljs-number">239</span>, <span class="hljs-string">&#x27;green&#x27;</span>],
+        [<span class="hljs-number">259</span>, <span class="hljs-string">&#x27;green&#x27;</span>],
+        [<span class="hljs-number">489</span>, <span class="hljs-string">&#x27;gold&#x27;</span>],
+        [<span class="hljs-number">509</span>, <span class="hljs-string">&#x27;gold&#x27;</span>],
+        [<span class="hljs-number">739</span>, <span class="hljs-string">&#x27;blue&#x27;</span>],
+        [<span class="hljs-number">759</span>, <span class="hljs-string">&#x27;blue&#x27;</span>],
+        [<span class="hljs-number">989</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
+    ],
+    <span class="hljs-attr">colorSpace</span>: <span class="hljs-string">&#x27;LAB&#x27;</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeWheel</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;ray-wheel&#x27;</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;rays-cell&#x27;</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-string">&#x27;150%&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;rays-filter&#x27;</span>,
+    <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">delta</span>: {
+        <span class="hljs-attr">roll</span>: <span class="hljs-number">0.5</span>,
+    }
+});
+
+scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rays&#x27;</span>,
+    <span class="hljs-attr">actions</span>: [{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;process-image&#x27;</span>,
+        <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;rays-cell&#x27;</span>,
+        <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;rays-panel&#x27;</span>,
+    }, {
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;blend&#x27;</span>,
+        <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;rays-panel&#x27;</span>,
+        <span class="hljs-attr">blend</span>: <span class="hljs-string">&#x27;difference&#x27;</span>,
+    }],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>([canvas1, canvas2, canvas3, canvas4, canvas5, canvas6, canvas7, canvas8, canvas9, canvas10], <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, pictures);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

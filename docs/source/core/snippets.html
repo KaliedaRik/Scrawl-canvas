@@ -651,6 +651,7 @@
         <span class="hljs-keyword">if</span> (!animationHooks.<span class="hljs-property">afterClear</span>) animationHooks.<span class="hljs-property">afterClear</span> = <span class="hljs-function">() =&gt;</span> myElement.<span class="hljs-title function_">updateCanvas</span>();
         animationHooks.<span class="hljs-property">target</span> = myCanvas;
     }
+    <span class="hljs-keyword">else</span> animationHooks.<span class="hljs-property">noTarget</span> = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">let</span> myAnimation = <span class="hljs-title function_">makeRender</span>(animationHooks);
 

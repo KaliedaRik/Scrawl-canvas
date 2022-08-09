@@ -580,16 +580,6 @@
                 </a>
               
                 
-                <a class="source" href="filters-028.html">
-                  ./demo/filters-028.js
-                </a>
-              
-                
-                <a class="source" href="filters-029.html">
-                  ./demo/filters-029.js
-                </a>
-              
-                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -602,6 +592,16 @@
                 
                 <a class="source" href="filters-103.html">
                   ./demo/filters-103.js
+                </a>
+              
+                
+                <a class="source" href="filters-104.html">
+                  ./demo/filters-104.js
+                </a>
+              
+                
+                <a class="source" href="filters-105.html">
+                  ./demo/filters-105.js
                 </a>
               
                 
@@ -1438,8 +1438,15 @@
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: [canvases[<span class="hljs-string">&#x27;hackney&#x27;</span>], canvases[<span class="hljs-string">&#x27;heathrow&#x27;</span>], canvases[<span class="hljs-string">&#x27;kingston&#x27;</span>], canvases[<span class="hljs-string">&#x27;burglary&#x27;</span>]],
+    <span class="hljs-attr">observer</span>: <span class="hljs-literal">true</span>,
 
     <span class="hljs-attr">commence</span>: <span class="hljs-function">() =&gt;</span> checkFunctions.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> <span class="hljs-title function_">f</span>()),
+});
+
+<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-speed&#x27;</span>,
+    <span class="hljs-attr">noTarget</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             

@@ -2045,10 +2045,10 @@ TODO: don’t think this is tested anywhere - build test!</p>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getArtefactAt</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortArtefacts</span>();
+
     <span class="hljs-keyword">let</span> myCell = <span class="hljs-title function_">requestCell</span>(),
         artBuckets = <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactStampBuckets</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortArtefacts</span>();
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = artBuckets.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
 
@@ -2086,13 +2086,13 @@ TODO: don’t think this is tested anywhere - build test!</p>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getAllArtefactsAt</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortArtefacts</span>();
+    
     <span class="hljs-keyword">let</span> myCell = <span class="hljs-title function_">requestCell</span>(),
         artBuckets = <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactStampBuckets</span>,
         resultNames = [],
         results = [];
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortArtefacts</span>();
-    
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = artBuckets.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
 
         <span class="hljs-keyword">let</span> art = artBuckets[i];

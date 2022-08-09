@@ -567,7 +567,9 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">RenderAnimation</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">let</span> target;</pre></div></div>
+    <span class="hljs-keyword">let</span> target;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">noTarget</span> = (items.<span class="hljs-property">noTarget</span> != <span class="hljs-literal">null</span>) ? items.<span class="hljs-property">noTarget</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -582,7 +584,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">target</span>) target = {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">target</span> &amp;&amp; !items.<span class="hljs-property">noTarget</span>) target = {
         <span class="hljs-attr">clear</span>: clear,
         <span class="hljs-attr">compile</span>: compile,
         <span class="hljs-attr">show</span>: show,
@@ -630,7 +632,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> target = (items.<span class="hljs-property">target</span>.<span class="hljs-property">substring</span>) ? artefact[items.<span class="hljs-property">target</span>] : items.<span class="hljs-property">target</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> target = (items.<span class="hljs-property">target</span> &amp;&amp; items.<span class="hljs-property">target</span>.<span class="hljs-property">substring</span>) ? artefact[items.<span class="hljs-property">target</span>] : items.<span class="hljs-property">target</span>;</pre></div></div>
             
         </li>
         
@@ -641,11 +643,10 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Without a target, we can progress no further</p>
+              <p>Without a target, we can progress no further
+if (!target || !target.clear || !target.compile || !target.show) return false;</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!target || !target.<span class="hljs-property">clear</span> || !target.<span class="hljs-property">compile</span> || !target.<span class="hljs-property">show</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -720,20 +721,36 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">fn</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">commence</span>();
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">clear</span>();
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterClear</span>();
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">compile</span>();
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterCompile</span>();
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">show</span>();
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterShow</span>();
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">noTarget</span>) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">readyToInitialize</span>) {
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">commence</span>();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterClear</span>();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterCompile</span>();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterShow</span>();
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">checkAccessibilityValues</span>();
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">readyToInitialize</span>) {
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterCreated</span>(<span class="hljs-variable language_">this</span>);
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">readyToInitialize</span> = <span class="hljs-literal">false</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterCreated</span>(<span class="hljs-variable language_">this</span>);
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">readyToInitialize</span> = <span class="hljs-literal">false</span>;
+            }
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">isRunning</span>()) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">commence</span>();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">clear</span>();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterClear</span>();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">compile</span>();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterCompile</span>();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">show</span>();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterShow</span>();
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">readyToInitialize</span>) {
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">checkAccessibilityValues</span>();
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterCreated</span>(<span class="hljs-variable language_">this</span>);
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">readyToInitialize</span> = <span class="hljs-literal">false</span>;
+            }
         }
     }</pre></div></div>
             
@@ -1040,10 +1057,10 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
     <span class="hljs-title function_">pushUnique</span>(animate, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
     <span class="hljs-title function_">resortAnimations</span>();
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">checkAccessibilityValues</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">checkAccessibilityValues</span>();
     
     <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">forceUpdate</span>(), <span class="hljs-number">20</span>);
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             

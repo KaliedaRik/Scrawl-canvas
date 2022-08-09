@@ -580,16 +580,6 @@
                 </a>
               
                 
-                <a class="source" href="filters-028.html">
-                  ./demo/filters-028.js
-                </a>
-              
-                
-                <a class="source" href="filters-029.html">
-                  ./demo/filters-029.js
-                </a>
-              
-                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -602,6 +592,16 @@
                 
                 <a class="source" href="filters-103.html">
                   ./demo/filters-103.js
+                </a>
+              
+                
+                <a class="source" href="filters-104.html">
+                  ./demo/filters-104.js
+                </a>
+              
+                
+                <a class="source" href="filters-105.html">
+                  ./demo/filters-105.js
                 </a>
               
                 
@@ -1126,23 +1126,20 @@
 
         testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
 
-        <span class="hljs-keyword">if</span> (testNow - testTicker &gt; <span class="hljs-number">2</span>) {
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-            testTime = testNow - testTicker;
-            testTicker = testNow;
+        <span class="hljs-title function_">addTime</span>(testTime);
 
-            <span class="hljs-title function_">addTime</span>(testTime);
+        <span class="hljs-keyword">let</span> text = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(averageTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / averageTime)}</span>`</span>;
 
-            <span class="hljs-keyword">let</span> text = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(averageTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / averageTime)}</span>`</span>;
+        <span class="hljs-keyword">if</span> (xtra) {
 
-            <span class="hljs-keyword">if</span> (xtra) {
-
-                text += <span class="hljs-string">`
+            text += <span class="hljs-string">`
 <span class="hljs-subst">${xtra()}</span>`</span>;
-            }
-
-            testMessage.<span class="hljs-property">textContent</span> = text;
         }
+
+        testMessage.<span class="hljs-property">textContent</span> = text;
     };
 };</pre></div></div>
             
@@ -1622,12 +1619,24 @@
 
                     targets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
 
-                        target.<span class="hljs-title function_">set</span>({
-                            copyStartX,
-                            copyStartY,
-                            <span class="hljs-attr">copyWidth</span>: dim,
-                            <span class="hljs-attr">copyHeight</span>: dim,
-                        });
+                        <span class="hljs-keyword">if</span> (target.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Group&#x27;</span>) {
+
+                            target.<span class="hljs-title function_">setArtefacts</span>({
+                                copyStartX,
+                                copyStartY,
+                                <span class="hljs-attr">copyWidth</span>: dim,
+                                <span class="hljs-attr">copyHeight</span>: dim,
+                            });
+                        }
+                        <span class="hljs-keyword">else</span> {
+
+                            target.<span class="hljs-title function_">set</span>({
+                                copyStartX,
+                                copyStartY,
+                                <span class="hljs-attr">copyWidth</span>: dim,
+                                <span class="hljs-attr">copyHeight</span>: dim,
+                            });
+                        }
                     })
 
                     <span class="hljs-keyword">if</span> (callback) <span class="hljs-built_in">setTimeout</span>(callback, timeoutDelay);

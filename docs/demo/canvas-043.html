@@ -580,16 +580,6 @@
                 </a>
               
                 
-                <a class="source" href="filters-028.html">
-                  ./demo/filters-028.js
-                </a>
-              
-                
-                <a class="source" href="filters-029.html">
-                  ./demo/filters-029.js
-                </a>
-              
-                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -602,6 +592,16 @@
                 
                 <a class="source" href="filters-103.html">
                   ./demo/filters-103.js
+                </a>
+              
+                
+                <a class="source" href="filters-104.html">
+                  ./demo/filters-104.js
+                </a>
+              
+                
+                <a class="source" href="filters-105.html">
+                  ./demo/filters-105.js
                 </a>
               
                 
@@ -1092,7 +1092,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1301,9 +1303,6 @@ scrawl.<span class="hljs-title function_">makeStar</span>({
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>We’re not interested with associating the canvas 1 drag group with the canvas’s base cell - the entitys in this group will already be assigned to the clip groups, thus will already be included in the canvas’s Display cycle</p>
-<ul>
-<li>KNOWN BUG - the entitys are not draggable on first user mousedown, but are draggable afterwards</li>
-</ul>
 
             </div>
             
@@ -1508,9 +1507,6 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>create our drag group and dragzone, if they don’t already exist</p>
-<ul>
-<li>KNOWN BUG - the entitys are not draggable on first user mousedown, but are draggable afterwards</li>
-</ul>
 
             </div>
             
@@ -1682,9 +1678,6 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>create our drag group and dragzone, if they don’t already exist</p>
-<ul>
-<li>KNOWN BUG - the entitys are not draggable on first user mousedown, but are draggable afterwards</li>
-</ul>
 
             </div>
             
@@ -1839,12 +1832,7 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;canvas2&#x27;</span> === target) <span class="hljs-title function_">canvasTwoPostInitialization</span>();
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;canvas3&#x27;</span> === target) <span class="hljs-title function_">canvasThreePostInitialization</span>();
-};
-
-scrawl.<span class="hljs-title function_">makeRender</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-    <span class="hljs-attr">target</span>: [canvas1, canvas2, canvas3],</pre></div></div>
+};</pre></div></div>
             
         </li>
         
@@ -1855,12 +1843,16 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
-              <p>Note that this function will be run three times - once for each of the canvases targeted. Thus we need to code the function defensively so that code related to a particular canvas runs only once </p>
+              <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCreated</span>: postInitialization,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+
+scrawl.<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">target</span>: [canvas1, canvas2, canvas3],</pre></div></div>
             
         </li>
         
@@ -1870,6 +1862,29 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p>Note that this function will be run three times - once for each of the canvases targeted. Thus we need to code the function defensively so that code related to a particular canvas runs only once </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCreated</span>: postInitialization,
+});
+
+scrawl.<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-speed&#x27;</span>,
+    <span class="hljs-attr">noTarget</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
