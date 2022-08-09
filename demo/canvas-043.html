@@ -24,12 +24,23 @@
     .testinfo p {
       text-align: left;
     }
+    #reportmessage {
+      width: 80%;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background-color: #60d060;
+      padding: 0.5em 1em;
+      margin: 0 auto 1em;
+    }
   </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 043</h1>
   <h2>Test various clipping strategies</h2>
+
+  <p id="reportmessage"></p>
 
   <p>Applying more than one clipped region to a scene, using Groups to separate them:</p>
   <canvas 

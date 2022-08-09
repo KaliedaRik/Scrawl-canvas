@@ -359,6 +359,22 @@ makeFilter({
     blue: 64,
 });
 
+// __Tiles__ filter
+makeFilter({
+    name: 'tiles',
+    method: 'tiles',
+    points: 'hex-grid',
+    tileHeight: 40,
+    tileRadius: 24,
+});
+
+// __Newsprint__ filter
+makeFilter({
+    name: 'newsprint',
+    method: 'newsprint',
+    width: 2,
+});
+
 // __Tint__ filter
 makeFilter({
     name: 'tint',

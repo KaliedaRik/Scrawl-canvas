@@ -92,6 +92,7 @@ const makeUnstackedSnippet = function (domElement, canvasSpecs, animationHooks, 
         if (!animationHooks.afterClear) animationHooks.afterClear = () => myElement.updateCanvas();
         animationHooks.target = myCanvas;
     }
+    else animationHooks.noTarget = true;
 
     let myAnimation = makeRender(animationHooks);
 

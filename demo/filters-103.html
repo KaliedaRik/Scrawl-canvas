@@ -27,6 +27,15 @@
       padding: 1em;
       border: 1px solid black;
     }
+    #reportmessage {
+      width: 80%;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background-color: #60d060;
+      padding: 0.5em 1em;
+      margin: 0 auto 1em;
+    }
   </style>
 </head>
 
@@ -34,6 +43,8 @@
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 103</h1>
   <h2>A gallery of compound filter effects</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
+
+  <p id="reportmessage"></p>
 
   <div class="canvas-hold">
     <div>
@@ -137,8 +148,6 @@
     </div>
 
   </div>
-
-  <p id="reportmessage"></p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

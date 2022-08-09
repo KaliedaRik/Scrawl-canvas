@@ -30,23 +30,20 @@ const reportSpeed = function (output = '', xtra = () => '') {
 
         testNow = Date.now();
 
-        if (testNow - testTicker > 2) {
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-            testTime = testNow - testTicker;
-            testTicker = testNow;
+        addTime(testTime);
 
-            addTime(testTime);
+        let text = `Screen refresh: ${Math.ceil(averageTime)}ms; fps: ${Math.floor(1000 / averageTime)}`;
 
-            let text = `Screen refresh: ${Math.ceil(averageTime)}ms; fps: ${Math.floor(1000 / averageTime)}`;
+        if (xtra) {
 
-            if (xtra) {
-
-                text += `
+            text += `
 ${xtra()}`;
-            }
-
-            testMessage.textContent = text;
         }
+
+        testMessage.textContent = text;
     };
 };
 

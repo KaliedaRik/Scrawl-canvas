@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-043.html)
 import * as scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 
 // #### Scene setup
 const {canvas1, canvas2, canvas3} = scrawl.library.canvas;
@@ -121,7 +123,6 @@ scrawl.makePicture({
 });
 
 // We're not interested with associating the canvas 1 drag group with the canvas's base cell - the entitys in this group will already be assigned to the clip groups, thus will already be included in the canvas's Display cycle
-// + KNOWN BUG - the entitys are not draggable on first user mousedown, but are draggable afterwards
 scrawl.makeGroup({
 
     name: 'canvas1-drag-group',
@@ -244,7 +245,6 @@ const canvasTwoPostInitialization = function () {
     let drag = scrawl.library.group['canvas2-drag-group'];
 
     // create our drag group and dragzone, if they don't already exist
-    // + KNOWN BUG - the entitys are not draggable on first user mousedown, but are draggable afterwards
     if (!drag) {
 
         drag = scrawl.makeGroup({
@@ -346,7 +346,6 @@ const canvasThreePostInitialization = function () {
     let drag = scrawl.library.group['canvas3-drag-group'];
 
     // create our drag group and dragzone, if they don't already exist
-    // + KNOWN BUG - the entitys are not draggable on first user mousedown, but are draggable afterwards
     if (!drag) {
 
         drag = scrawl.makeGroup({
@@ -440,6 +439,9 @@ const postInitialization = function (anim) {
     else if ('canvas3' === target) canvasThreePostInitialization();
 };
 
+// Function to display frames-per-second data, and other information relevant to the demo
+const report = reportSpeed('#reportmessage');
+
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -447,6 +449,13 @@ scrawl.makeRender({
 
     // Note that this function will be run three times - once for each of the canvases targeted. Thus we need to code the function defensively so that code related to a particular canvas runs only once 
     afterCreated: postInitialization,
+});
+
+scrawl.makeRender({
+
+    name: 'demo-speed',
+    noTarget: true,
+    afterShow: report,
 });
 
 

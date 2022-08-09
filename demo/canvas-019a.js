@@ -175,8 +175,15 @@ makeRender({
 
     name: 'demo-animation',
     target: [canvases['hackney'], canvases['heathrow'], canvases['kingston'], canvases['burglary']],
+    observer: true,
 
     commence: () => checkFunctions.forEach(f => f()),
+});
+
+makeRender({
+
+    name: 'demo-speed',
+    noTarget: true,
     afterShow: report,
 });
 

@@ -165,9 +165,16 @@ makeRender({
 
     name: 'demo-animation',
     target: [c1, c2, c3, c4],
+    observer: true,
 
     afterCreated: postInitialization,
     commence: () => checkFunctions.forEach(f => f()),
+});
+
+makeRender({
+
+    name: 'demo-speed',
+    noTarget: true,
     afterShow: report,
 });
 
