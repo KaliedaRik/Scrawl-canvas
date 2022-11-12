@@ -22,6 +22,8 @@ const {
     'canvas-8':canvas8,
     'canvas-9':canvas9,
     'canvas-10':canvas10,
+    'canvas-11':canvas11,
+    'canvas-12':canvas12,
 } = scrawl.library.canvas;
 
 // Create the target entitys
@@ -88,11 +90,23 @@ scrawl.makePicture({
     name: 'canvas-output-10',
     group: canvas10.base.name,
     filters: ['rays'],
+
+}). clone({
+
+    name: 'canvas-output-11',
+    group: canvas11.base.name,
+    filters: ['grayscale-crt'],
+
+}). clone({
+
+    name: 'canvas-output-12',
+    group: canvas12.base.name,
+    filters: ['color-crt'],
 });
 
 const pictures = scrawl.makeGroup({
     name: 'target-images',
-}).addArtefacts('canvas-output-1', 'canvas-output-2', 'canvas-output-3', 'canvas-output-4', 'canvas-output-5', 'canvas-output-6', 'canvas-output-7', 'canvas-output-8', 'canvas-output-9', 'canvas-output-10');
+}).addArtefacts('canvas-output-1', 'canvas-output-2', 'canvas-output-3', 'canvas-output-4', 'canvas-output-5', 'canvas-output-6', 'canvas-output-7', 'canvas-output-8', 'canvas-output-9', 'canvas-output-10', 'canvas-output-11', 'canvas-output-12');
 
 
 // Animation
@@ -106,7 +120,7 @@ scrawl.makeRender({
 
 scrawl.makeRender({
     name: "demo-canvases",
-    target: [canvas1, canvas2, canvas3, canvas4, canvas5, canvas6, canvas7, canvas8, canvas9, canvas10],
+    target: [canvas1, canvas2, canvas3, canvas4, canvas5, canvas6, canvas7, canvas8, canvas9, canvas10, canvas11, canvas12],
     observer: true,
 });
 
@@ -521,11 +535,57 @@ scrawl.makeFilter({
 });
 
 
+// Grayscale cathode ray tube
+scrawl.makeFilter({
+
+    name: 'grayscale-crt',
+    actions: [{
+        action: 'area-alpha',
+        tileWidth: 20,
+        tileHeight: 2,
+        gutterWidth: 1,
+        gutterHeight: 1,
+        areaAlphaLevels: [255, 100, 255, 100],
+    }, {
+        action: 'modulate-channels',
+        red: 0.7,
+        green: 0.7,
+        blue: 0.7,
+    }, {
+        action: 'gaussian-blur',
+        radius: 1.2,
+    }, {
+        action: 'grayscale',
+    }],
+});
+
+
+// Color cathode ray tube
+scrawl.makeFilter({
+
+    name: 'color-crt',
+    actions: [{
+        action: 'area-alpha',
+        tileWidth: 20,
+        tileHeight: 2,
+        gutterWidth: 1,
+        gutterHeight: 1,
+        areaAlphaLevels: [255, 100, 255, 100],
+    }, {
+        action: 'modulate-channels',
+        red: 0.7,
+        green: 0.7,
+        blue: 0.7,
+    }, {
+        action: 'gaussian-blur',
+        radius: 1.2,
+    }],
+});
 
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop([canvas1, canvas2, canvas3, canvas4, canvas5, canvas6, canvas7, canvas8, canvas9, canvas10], '#my-image-store', pictures);
+addImageDragAndDrop([canvas1, canvas2, canvas3, canvas4, canvas5, canvas6, canvas7, canvas8, canvas9, canvas10, canvas11, canvas12], '#my-image-store', pictures);
 
 
 // #### Development and testing
