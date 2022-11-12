@@ -657,6 +657,54 @@ P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
     }
 };
 
+// `getAlphaValue` - internal helper function
+P.getAlphaValue = function (alpha) {
+
+    let a = 1;
+
+    if (alpha != null) {
+
+        if (alpha.indexOf('%') > 0) a = parseFloat(alpha) / 100;
+        else a = parseFloat(alpha);
+    }
+    if (isNaN(a)) a = 1;
+    else if (a > 1) a = 1;
+    else if ( a < 0) a = 0;
+
+    return a;
+};
+
+P.getHueValue = function (hue) {
+
+    if (hue === 'none') return 0;
+
+    if (hue.indexOf('deg') >= 0) hue = parseFloat(hue)
+    else if (hue.indexOf('rad') >= 0) hue = parseFloat(hue) / radian;
+    else if (hue.indexOf('grad') >= 0) hue = (parseFloat(hue) / 400) * 360;
+    else if (hue.indexOf('turn') >= 0) hue = parseFloat(hue) * 360;
+    else hue = parseFloat(hue);
+
+    if (isNaN(hue)) return 0;
+
+    return correctAngle(hue);
+};
+
+P.getColorValuesFromString = function(str, col) {
+
+    str = str.replace(col, '');
+    str = str.replace('(', '');
+    str = str.replace(')', '');
+    str = str.replace('/', '');
+
+    const res = str.split(' ').filter(e => e != null && e !== '');
+
+    if (res[0] == null || res[0] === 'none') res[0] = '0';
+    if (res[1] == null || res[1] === 'none') res[1] = '0';
+    if (res[2] == null || res[2] === 'none') res[2] = '0';
+
+    return res;
+};
+
 // `convert` - internal function. Takes a color string and converts it into a variety of color space values. Makes use of the following functions:
 // + `convertHSLtoRGB`, `convertRGBtoHSL`
 // + `convertHWBtoRGB`, `convertRGBtoHWB`, `convertRGBHtoHWB`
@@ -664,6 +712,8 @@ P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
 // + `convertXYZtoLAB`, `convertLABtoXYZ`
 // + `convertLABtoLCH`, `convertLCHtoLAB`
 P.convert = function (color, suffix = '') {
+
+    const { getAlphaValue, getHueValue, getColorValuesFromString } = this;
 
     // Currently converting to as many color spaces as possible - we can make this more sane by only converting for the colors we want to convert (RGB + the internal color space + the returned color space)
 
@@ -686,42 +736,18 @@ P.convert = function (color, suffix = '') {
     lab.length = 0;
     lch.length = 0;
 
-    let r = 0,
-        g = 0,
-        b = 0,
-        a = 0;
+    let vals, a, b, c, d, hue, white, black;
 
-    // TODO: make this more efficient so we only convert to the color spaces we need (RGB, internal color space, return color space)
     if (color.indexOf('hwb') >= 0 && !supportsHWB) {
 
-        // This could be handled better via a regex, but also need to deal with angle units
-        color = color.replace('hwb', '');
-        color = color.replace('(', '');
-        color = color.replace(')', '');
-        color = color.replace('/', '');
+        vals = getColorValuesFromString(color, 'hwb');
 
-        const vals = color.split(' ').filter(e => e != null && e !== '');
+        hue = getHueValue(vals[0]);
+        white = parseFloat(vals[1]);
+        black = parseFloat(vals[2]);
+        a = getAlphaValue(vals[3]);
 
-        let hue = vals[0];
-        if (hue.indexOf('deg') >= 0) hue = parseFloat(hue)
-        else if (hue.indexOf('rad') >= 0) hue = parseFloat(hue) / radian;
-        else if (hue.indexOf('grad') >= 0) hue = (parseFloat(hue) / 400) * 360;
-        else if (hue.indexOf('turn') >= 0) hue = parseFloat(hue) * 360;
-        else hue = parseFloat(hue);
-
-        hue = correctAngle(hue);
-
-       let white = parseFloat(vals[1]),
-           black = parseFloat(vals[2]),
-           alpha = vals[3];
-
-        if (alpha != null) {
-
-            a = (alpha.indexOf('%') >= 0) ? parseFloat(alpha) / 100 : parseFloat(alpha);
-        }
-        else a = 1;
-
-        let [b, c, d] = this.convertHWBtoRGB(hue, white, black);
+        [b, c, d] = this.convertHWBtoRGB(hue, white, black);
 
         b = Math.floor(b * 255);
         if (b > 255) b = 255;
@@ -747,42 +773,35 @@ P.convert = function (color, suffix = '') {
     // + `xyz(x-value y-value z-value / alpha-value)`
     else if (color.indexOf('xyz') >= 0) {
         
-        color = color.replace('xyz', '');
-        color = color.replace('(', '');
-        color = color.replace(')', '');
-        color = color.replace('/', '');
+        vals = getColorValuesFromString(color, 'xyz');
+        b = parseFloat(vals[0]);
+        c = parseFloat(vals[1]);
+        d = parseFloat(vals[2]);
+        a = getAlphaValue(vals[3]);
 
-        const vals = color.split(' ').filter(e => e != null && e !== '');
-
-        const x = parseFloat(vals[0]),
-            y = parseFloat(vals[1]),
-            z = parseFloat(vals[2]),
-            alpha = vals[3];
-
-        a = (alpha != null) ? parseFloat(alpha) : 1;
-
-        rgb.push(...this.convertXYZtoRGB(x, y, z), a);
+        rgb.push(...this.convertXYZtoRGB(b, c, d), a);
         hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
         hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
-        xyz.push(x, y, z, a);
-        lab.push(...this.convertXYZtoLAB(x, y, z), a);
+        xyz.push(b, c, d, a);
+        lab.push(...this.convertXYZtoLAB(b, c, d), a);
         lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
     }
     else if (color.indexOf('lab') >= 0 && !supportsLAB) {
 
-        color = color.replace('lab', '');
-        color = color.replace('(', '');
-        color = color.replace(')', '');
-        color = color.replace('/', '');
+        vals = getColorValuesFromString(color, 'lab');
+        b = parseFloat(vals[0]);
+        if (b > 100) b = 100;
+        if (b < 0) b = 0;
 
-        const vals = color.split(' ').filter(e => e != null && e !== '');
+        c = (vals[1].indexOf('%') > 0) ? parseFloat(vals[1]) * 1.25 : parseFloat(vals[1]);
+        if (c > 160) c = 160;
+        if (c < -160) c = -160;
 
-        const b = parseFloat(vals[0]),
-            c = parseFloat(vals[1]),
-            d = parseFloat(vals[2]),
-            alpha = vals[3];
+        d = (vals[2].indexOf('%') > 0) ? parseFloat(vals[2]) * 1.25 : parseFloat(vals[2]);
+        if (d > 160) d = 160;
+        if (d < -160) d = -160;
 
-        a = (alpha != null) ? parseFloat(alpha) : 1;
+        a = getAlphaValue(vals[3]);
 
         lab.push(b, c, d, a);
         xyz.push(...this.convertLABtoXYZ(b, c, d), a);
@@ -793,19 +812,17 @@ P.convert = function (color, suffix = '') {
     }
     else if (color.indexOf('lch') >= 0 && !supportsLCH) {
 
-        color = color.replace('lch', '');
-        color = color.replace('(', '');
-        color = color.replace(')', '');
-        color = color.replace('/', '');
+        vals = getColorValuesFromString(color, 'lch');
+        b = parseFloat(vals[0]);
+        if (b > 100) b = 100;
+        if (b < 0) b = 0;
 
-        const vals = color.split(' ').filter(e => e != null && e !== '');
+        c = (vals[1].indexOf('%') > 0) ? parseFloat(vals[1]) * 1.5 : parseFloat(vals[1]);
+        if (c > 230) c = 230;
+        if (c < 0) c = 0;
 
-        const b = parseFloat(vals[0]),
-            c = parseFloat(vals[1]),
-            d = parseFloat(vals[2]),
-            alpha = vals[3];
-
-        a = (alpha != null) ? parseFloat(alpha) : 1;
+        d = getHueValue(vals[2]);
+        a = getAlphaValue(vals[3]);
 
         lch.push(b, c, d, a);
         lab.push(...this.convertLCHtoLAB(b, c, d), a);
@@ -816,11 +833,12 @@ P.convert = function (color, suffix = '') {
     }
     else {
 
-        [r, g, b, a] = this.getColorFromCanvas(color);
-        rgb.push(r, g, b, a);
-        hsl.push(...this.convertRGBtoHSL(r, g, b), a);
-        hwb.push(...this.convertRGBHtoHWB(r, g, b, hsl[0]), a);
-        xyz.push(...this.convertRGBtoXYZ(r, g, b), a);
+        [b, c, d, a] = this.getColorFromCanvas(color);
+
+        rgb.push(b, c, d, a);
+        hsl.push(...this.convertRGBtoHSL(b, c, d), a);
+        hwb.push(...this.convertRGBHtoHWB(b, c, d, hsl[0]), a);
+        xyz.push(...this.convertRGBtoXYZ(b, c, d), a);
         lab.push(...this.convertXYZtoLAB(xyz[0], xyz[1], xyz[2]), a);
         lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
     }
@@ -830,39 +848,19 @@ P.convert = function (color, suffix = '') {
 // `extractRGBfromColor` - takes a color string and returns it's RGB equivalent channel values:
 P.extractRGBfromColor = function (color) {
 
+    const { getAlphaValue, getHueValue, getColorValuesFromString } = this;
+
     color = color.toLowerCase();
 
     let b, c, d, a, vals, alpha, hue, white, black;
 
-    // TODO: make this more efficient so we only convert to the color spaces we need (RGB, internal color space, return color space)
     if (color.includes('hwb') && !supportsHWB) {
 
-        // This could be handled better via a regex, but also need to deal with angle units
-        color = color.replace('hwb', '');
-        color = color.replace('(', '');
-        color = color.replace(')', '');
-        color = color.replace('/', '');
-
-        const vals = color.split(' ').filter(e => e != null && e !== '');
-
-        hue = vals[0];
-        if (hue.indexOf('deg') >= 0) hue = parseFloat(hue)
-        else if (hue.indexOf('rad') >= 0) hue = parseFloat(hue) / radian;
-        else if (hue.indexOf('grad') >= 0) hue = (parseFloat(hue) / 400) * 360;
-        else if (hue.indexOf('turn') >= 0) hue = parseFloat(hue) * 360;
-        else hue = parseFloat(hue);
-
-        hue = correctAngle(hue);
-
+        vals = getColorValuesFromString(color, 'hwb');
+        hue = getHueValue(vals[0]);
         white = parseFloat(vals[1]);
         black = parseFloat(vals[2]);
-        alpha = vals[3];
-
-        if (alpha != null) {
-
-            a = (alpha.indexOf('%') >= 0) ? parseFloat(alpha) / 100 : parseFloat(alpha);
-        }
-        else a = 1;
+        a = getAlphaValue(vals[3]);
 
         [b, c, d] = this.convertHWBtoRGB(hue, white, black);
 
@@ -882,62 +880,50 @@ P.extractRGBfromColor = function (color) {
     } 
     else if (color.includes('xyz')) {
         
-        color = color.replace('xyz', '');
-        color = color.replace('(', '');
-        color = color.replace(')', '');
-        color = color.replace('/', '');
-
-        vals = color.split(' ').filter(e => e != null && e !== '');
-
+        vals = getColorValuesFromString(color, 'xyz');
         b = parseFloat(vals[0]);
         c = parseFloat(vals[1]);
         d = parseFloat(vals[2]);
-        alpha = vals[3];
-
-        a = (alpha != null) ? parseFloat(alpha) : 1;
+        a = getAlphaValue(vals[3]);
 
         return [...this.convertXYZtoRGB(b, c, d), a];
     }
     else if (color.includes('lab') && !supportsLAB) {
 
-        color = color.replace('lab', '');
-        color = color.replace('(', '');
-        color = color.replace(')', '');
-        color = color.replace('/', '');
-
-        vals = color.split(' ').filter(e => e != null && e !== '');
-
+        vals = getColorValuesFromString(color, 'lab');
         b = parseFloat(vals[0]);
-        c = parseFloat(vals[1]);
-        d = parseFloat(vals[2]);
-        alpha = vals[3];
+        if (b > 100) b = 100;
+        if (b < 0) b = 0;
 
-        a = (alpha != null) ? parseFloat(alpha) : 1;
+        c = (vals[1].indexOf('%') > 0) ? parseFloat(vals[1]) * 1.25 : parseFloat(vals[1]);
+        if (c > 160) c = 160;
+        if (c < -160) c = -160;
+
+        d = (vals[2].indexOf('%') > 0) ? parseFloat(vals[2]) * 1.25 : parseFloat(vals[2]);
+        if (d > 160) d = 160;
+        if (d < -160) d = -160;
+
+        a = getAlphaValue(vals[3]);
 
         return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(b, c, d)), a]; 
     }
     else if (color.indexOf('lch') >= 0 && !supportsLCH) {
 
-        color = color.replace('lch', '');
-        color = color.replace('(', '');
-        color = color.replace(')', '');
-        color = color.replace('/', '');
-
-        vals = color.split(' ').filter(e => e != null && e !== '');
-
+        vals = getColorValuesFromString(color, 'lch');
         b = parseFloat(vals[0]);
-        c = parseFloat(vals[1]);
-        d = parseFloat(vals[2]);
-        alpha = vals[3];
+        if (b > 100) b = 100;
+        if (b < 0) b = 0;
 
-        a = (alpha != null) ? parseFloat(alpha) : 1;
+        c = (vals[1].indexOf('%') > 0) ? parseFloat(vals[1]) * 1.5 : parseFloat(vals[1]);
+        if (c > 230) c = 230;
+        if (c < 0) c = 0;
+
+        d = getHueValue(vals[2]);
+        a = getAlphaValue(vals[3]);
 
         return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(...this.convertLCHtoLAB(b, c, d))), a]; 
     }
-    else {
-
-        return this.getColorFromCanvas(color);
-    }
+    else return this.getColorFromCanvas(color);
 };
 
 // `convertRGBtoHex` - takes 3 rgb color values (range 0-255) and returns a #hex string:
