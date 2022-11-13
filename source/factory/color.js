@@ -674,6 +674,7 @@ P.getAlphaValue = function (alpha) {
     return a;
 };
 
+// `getAlphaValue` - internal helper function
 P.getHueValue = function (hue) {
 
     if (hue === 'none') return 0;
@@ -689,6 +690,8 @@ P.getHueValue = function (hue) {
     return correctAngle(hue);
 };
 
+// `getColorValuesFromString` - internal helper function
+// + We test and correct for the `none` value here (excluding alpha channel)
 P.getColorValuesFromString = function(str, col) {
 
     str = str.replace(col, '');
@@ -705,6 +708,102 @@ P.getColorValuesFromString = function(str, col) {
     return res;
 };
 
+// `extractFromHwbColorString` - internal helper function
+// + TODO: this function differs from other `extractFrom...` functions in that it returns RGB color values - consider changing this so that it better matches the operation of the other functions?
+P.extractFromHwbColorString = function (color) {
+
+    const { getAlphaValue, getHueValue, getColorValuesFromString } = this;
+    let vals, a, b, c, d, hue, white, black;
+
+    vals = getColorValuesFromString(color, 'hwb');
+
+    hue = getHueValue(vals[0]);
+    white = parseFloat(vals[1]);
+    black = parseFloat(vals[2]);
+    a = getAlphaValue(vals[3]);
+
+    [b, c, d] = this.convertHWBtoRGB(hue, white, black);
+
+    b = Math.floor(b * 255);
+    if (b > 255) b = 255;
+    if (b < 0) b = 0;
+
+    c = Math.floor(c * 255);
+    if (c > 255) c = 255;
+    if (c < 0) c = 0;
+
+    d = Math.floor(d * 255);
+    if (d > 255) d = 255;
+    if (d < 0) d = 0;
+
+    return [a, b, c, d];
+};
+
+// `extractFromXyzColorString` - internal helper function
+// + Note: The Color specification doesn't define an XYZ standard input for CSS. So we have to make one up ourselves. SC expects to receive colors defined in the XYZ color space to be raw float Numbers separated by spaces and (if required) a slash followed by the alpha value
+// + `xyz(x-value y-value z-value)` (with alpha = 1, opaque)
+// + `xyz(x-value y-value z-value / alpha-value)`
+P.extractFromXyzColorString = function (color) {
+
+    const { getAlphaValue, getColorValuesFromString } = this;
+    let vals, a, b, c, d;
+
+    vals = getColorValuesFromString(color, 'xyz');
+    b = parseFloat(vals[0]);
+    c = parseFloat(vals[1]);
+    d = parseFloat(vals[2]);
+    a = getAlphaValue(vals[3]);
+
+    return [a, b, c, d];
+};
+
+// `extractFromLabColorString` - internal helper function
+// + Corrects for channel bounds, as suggested in the CSS Color Module spec
+P.extractFromLabColorString = function (color) {
+
+    const { getAlphaValue, getColorValuesFromString } = this;
+    let vals, a, b, c, d;
+
+    vals = getColorValuesFromString(color, 'lab');
+    b = parseFloat(vals[0]);
+    if (b > 100) b = 100;
+    if (b < 0) b = 0;
+
+    c = (vals[1].indexOf('%') > 0) ? parseFloat(vals[1]) * 1.25 : parseFloat(vals[1]);
+    if (c > 160) c = 160;
+    if (c < -160) c = -160;
+
+    d = (vals[2].indexOf('%') > 0) ? parseFloat(vals[2]) * 1.25 : parseFloat(vals[2]);
+    if (d > 160) d = 160;
+    if (d < -160) d = -160;
+
+    a = getAlphaValue(vals[3]);
+
+    return [a, b, c, d];
+};
+
+// `extractFromLchColorString` - internal helper function
+// + Corrects for channel bounds, as suggested in the CSS Color Module spec
+P.extractFromLchColorString = function (color) {
+
+    const { getAlphaValue, getHueValue, getColorValuesFromString } = this;
+    let vals, a, b, c, d;
+
+    vals = getColorValuesFromString(color, 'lch');
+    b = parseFloat(vals[0]);
+    if (b > 100) b = 100;
+    if (b < 0) b = 0;
+
+    c = (vals[1].indexOf('%') > 0) ? parseFloat(vals[1]) * 1.5 : parseFloat(vals[1]);
+    if (c > 230) c = 230;
+    if (c < 0) c = 0;
+
+    d = getHueValue(vals[2]);
+    a = getAlphaValue(vals[3]);
+
+    return [a, b, c, d];
+};
+
 // `convert` - internal function. Takes a color string and converts it into a variety of color space values. Makes use of the following functions:
 // + `convertHSLtoRGB`, `convertRGBtoHSL`
 // + `convertHWBtoRGB`, `convertRGBtoHWB`, `convertRGBHtoHWB`
@@ -712,8 +811,6 @@ P.getColorValuesFromString = function(str, col) {
 // + `convertXYZtoLAB`, `convertLABtoXYZ`
 // + `convertLABtoLCH`, `convertLCHtoLAB`
 P.convert = function (color, suffix = '') {
-
-    const { getAlphaValue, getHueValue, getColorValuesFromString } = this;
 
     // Currently converting to as many color spaces as possible - we can make this more sane by only converting for the colors we want to convert (RGB + the internal color space + the returned color space)
 
@@ -736,30 +833,11 @@ P.convert = function (color, suffix = '') {
     lab.length = 0;
     lch.length = 0;
 
-    let vals, a, b, c, d, hue, white, black;
+    let a, b, c, d;
 
     if (color.indexOf('hwb') >= 0 && !supportsHWB) {
 
-        vals = getColorValuesFromString(color, 'hwb');
-
-        hue = getHueValue(vals[0]);
-        white = parseFloat(vals[1]);
-        black = parseFloat(vals[2]);
-        a = getAlphaValue(vals[3]);
-
-        [b, c, d] = this.convertHWBtoRGB(hue, white, black);
-
-        b = Math.floor(b * 255);
-        if (b > 255) b = 255;
-        if (b < 0) b = 0;
-
-        c = Math.floor(c * 255);
-        if (c > 255) c = 255;
-        if (c < 0) c = 0;
-
-        d = Math.floor(d * 255);
-        if (d > 255) d = 255;
-        if (d < 0) d = 0;
+        [a, b, c, d] = this.extractFromHwbColorString(color);
 
         rgb.push(b, c, d, a);
         hsl.push(...this.convertRGBtoHSL(b, c, d), a);
@@ -768,16 +846,9 @@ P.convert = function (color, suffix = '') {
         lab.push(...this.convertXYZtoLAB(xyz[0], xyz[1], xyz[2]), a);
         lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
     } 
-    // The Color specification doesn't define an XYZ standard input for CSS. So we have to make one up ourselves. SC expects to receive colors defined in the XYZ color space to be raw float Numbers separated by spaces and (if required) a slash followed by the alpha value
-    // + `xyz(x-value y-value z-value)` (with alpha = 1, opaque)
-    // + `xyz(x-value y-value z-value / alpha-value)`
     else if (color.indexOf('xyz') >= 0) {
         
-        vals = getColorValuesFromString(color, 'xyz');
-        b = parseFloat(vals[0]);
-        c = parseFloat(vals[1]);
-        d = parseFloat(vals[2]);
-        a = getAlphaValue(vals[3]);
+        [a, b, c, d] = this.extractFromXyzColorString(color);
 
         rgb.push(...this.convertXYZtoRGB(b, c, d), a);
         hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
@@ -788,20 +859,7 @@ P.convert = function (color, suffix = '') {
     }
     else if (color.indexOf('lab') >= 0 && !supportsLAB) {
 
-        vals = getColorValuesFromString(color, 'lab');
-        b = parseFloat(vals[0]);
-        if (b > 100) b = 100;
-        if (b < 0) b = 0;
-
-        c = (vals[1].indexOf('%') > 0) ? parseFloat(vals[1]) * 1.25 : parseFloat(vals[1]);
-        if (c > 160) c = 160;
-        if (c < -160) c = -160;
-
-        d = (vals[2].indexOf('%') > 0) ? parseFloat(vals[2]) * 1.25 : parseFloat(vals[2]);
-        if (d > 160) d = 160;
-        if (d < -160) d = -160;
-
-        a = getAlphaValue(vals[3]);
+        [a, b, c, d] = this.extractFromLabColorString(color);
 
         lab.push(b, c, d, a);
         xyz.push(...this.convertLABtoXYZ(b, c, d), a);
@@ -812,17 +870,7 @@ P.convert = function (color, suffix = '') {
     }
     else if (color.indexOf('lch') >= 0 && !supportsLCH) {
 
-        vals = getColorValuesFromString(color, 'lch');
-        b = parseFloat(vals[0]);
-        if (b > 100) b = 100;
-        if (b < 0) b = 0;
-
-        c = (vals[1].indexOf('%') > 0) ? parseFloat(vals[1]) * 1.5 : parseFloat(vals[1]);
-        if (c > 230) c = 230;
-        if (c < 0) c = 0;
-
-        d = getHueValue(vals[2]);
-        a = getAlphaValue(vals[3]);
+        [a, b, c, d] = this.extractFromLchColorString(color);
 
         lch.push(b, c, d, a);
         lab.push(...this.convertLCHtoLAB(b, c, d), a);
@@ -848,79 +896,28 @@ P.convert = function (color, suffix = '') {
 // `extractRGBfromColor` - takes a color string and returns it's RGB equivalent channel values:
 P.extractRGBfromColor = function (color) {
 
-    const { getAlphaValue, getHueValue, getColorValuesFromString } = this;
-
     color = color.toLowerCase();
 
-    let b, c, d, a, vals, alpha, hue, white, black;
+    let a, b, c, d;
 
     if (color.includes('hwb') && !supportsHWB) {
 
-        vals = getColorValuesFromString(color, 'hwb');
-        hue = getHueValue(vals[0]);
-        white = parseFloat(vals[1]);
-        black = parseFloat(vals[2]);
-        a = getAlphaValue(vals[3]);
-
-        [b, c, d] = this.convertHWBtoRGB(hue, white, black);
-
-        b = Math.floor(b * 256);
-        if (b > 255) b = 255;
-        if (b < 0) b = 0;
-
-        c = Math.floor(c * 256);
-        if (c > 255) c = 255;
-        if (c < 0) c = 0;
-
-        d = Math.floor(d * 256);
-        if (d > 255) d = 255;
-        if (d < 0) d = 0;
-
+        [a, b, c, d] = this.extractFromHwbColorString(color);
         return [b, c, d, a];
     } 
     else if (color.includes('xyz')) {
         
-        vals = getColorValuesFromString(color, 'xyz');
-        b = parseFloat(vals[0]);
-        c = parseFloat(vals[1]);
-        d = parseFloat(vals[2]);
-        a = getAlphaValue(vals[3]);
-
+        [a, b, c, d] = this.extractFromXyzColorString(color);
         return [...this.convertXYZtoRGB(b, c, d), a];
     }
     else if (color.includes('lab') && !supportsLAB) {
 
-        vals = getColorValuesFromString(color, 'lab');
-        b = parseFloat(vals[0]);
-        if (b > 100) b = 100;
-        if (b < 0) b = 0;
-
-        c = (vals[1].indexOf('%') > 0) ? parseFloat(vals[1]) * 1.25 : parseFloat(vals[1]);
-        if (c > 160) c = 160;
-        if (c < -160) c = -160;
-
-        d = (vals[2].indexOf('%') > 0) ? parseFloat(vals[2]) * 1.25 : parseFloat(vals[2]);
-        if (d > 160) d = 160;
-        if (d < -160) d = -160;
-
-        a = getAlphaValue(vals[3]);
-
+        [a, b, c, d] = this.extractFromLabColorString(color);
         return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(b, c, d)), a]; 
     }
     else if (color.indexOf('lch') >= 0 && !supportsLCH) {
 
-        vals = getColorValuesFromString(color, 'lch');
-        b = parseFloat(vals[0]);
-        if (b > 100) b = 100;
-        if (b < 0) b = 0;
-
-        c = (vals[1].indexOf('%') > 0) ? parseFloat(vals[1]) * 1.5 : parseFloat(vals[1]);
-        if (c > 230) c = 230;
-        if (c < 0) c = 0;
-
-        d = getHueValue(vals[2]);
-        a = getAlphaValue(vals[3]);
-
+        [a, b, c, d] = this.extractFromLchColorString(color);
         return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(...this.convertLCHtoLAB(b, c, d))), a]; 
     }
     else return this.getColorFromCanvas(color);
