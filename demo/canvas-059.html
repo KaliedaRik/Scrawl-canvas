@@ -19,11 +19,11 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 059</h1>
-  <h2>CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab()</h3>
+  <h2>CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lab(), lch(), oklab(), oklch()</h3>
 
   <canvas 
     id="mycanvas" 
-    width="600" 
+    width="800" 
     height="600"
     data-scrawl-canvas
   ></canvas>
@@ -42,7 +42,7 @@
     <p><a href="../docs/demo/canvas-059.html">Annotated code</a></p>
   </div>
 
-  <p>Test if color strings work for CSS in this browser:</p>
+  <p>&nbsp;<br />Test if color strings work for CSS in this browser:</p>
   <div class="css-tests">
     <div style="background-color: red;">red</div>
     <div style="background-color: orange;">orange</div>
@@ -65,12 +65,18 @@
     <div style="background-color: hwb(90 10% 10%);">hwb(90 10% 10%)</div>
     <div style="background-color: hwb(90deg 10% 10% / 0.5);">hwb(90deg 10% 10% / 0.5)</div>
     <div style="background-color: hwb(.25turn 0% 40% / 50%);">hwb(.25turn 0% 40% / 50%)</div>
-    <div style="background-color: lch(29.2345% 44.2 27);">lch(29.2345% 44.2 27)</div>
-    <div style="background-color: lch(52.2345% 72.2 56.2);">lch(52.2345% 72.2 56.2)</div>
-    <div style="background-color: lch(52.2345% 72.2 56.2 / .5);">lch(52.2345% 72.2 56.2 / .5)</div>
     <div style="background-color: lab(29.2345% 39.3825 20.0664);">lab(29.2345% 39.3825 20.0664)</div>
     <div style="background-color: lab(52.2345% 40.1645 59.9971);">lab(52.2345% 40.1645 59.9971)</div>
     <div style="background-color: lab(52.2345% 40.1645 59.9971 / .5);">lab(52.2345% 40.1645 59.9971 / .5)</div>
+    <div style="background-color: lch(29.2345% 44.2 27);">lch(29.2345% 44.2 27)</div>
+    <div style="background-color: lch(52.2345% 72.2 56.2);">lch(52.2345% 72.2 56.2)</div>
+    <div style="background-color: lch(52.2345% 72.2 56.2 / .5);">lch(52.2345% 72.2 56.2 / .5)</div>
+    <div style="background-color: oklab(59.686% 0.1009 0.1192);">oklab(59.686% 0.1009 0.1192)</div>
+    <div style="background-color: oklab(0.65125 -0.0320 0.1274);">oklab(0.65125 -0.0320 0.1274)</div>
+    <div style="background-color: oklab(42.1% 41% -25% / .5);">oklab(42.1% 41% -25% / .5)</div>
+    <div style="background-color: oklch(59.686% 0.15619 49.7694);">oklch(59.686% 0.15619 49.7694)</div>
+    <div style="background-color: oklch(0.65125 0.13138 104.097);">oklch(0.65125 0.13138 104.097)</div>
+    <div style="background-color: oklch(42.1% 48.25% 328.4 / .5);">oklch(42.1% 48.25% 328.4 / .5)</div>
   </div>
 
   <script src="canvas-059.js" type="module"></script>

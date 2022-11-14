@@ -931,8 +931,8 @@ interface CogInstance extends CogFactoryInputs, CogFactoryFunctions {
 
 // ColorInstance factory
 // -------------------------------------
-type ColorSpacesValues = 'RGB' | 'HSL' | 'HWB' | 'XYZ' | 'LAB' | 'LCH';
-type ReturnColorValues = 'RGB' | 'HSL' | 'HWB' | 'LAB' | 'LCH';
+type ColorSpacesValues = 'RGB' | 'HSL' | 'HWB' | 'XYZ' | 'LAB' | 'LCH' | 'OKLAB' | 'OKLCH';
+type ReturnColorValues = 'RGB' | 'HSL' | 'HWB' | 'LAB' | 'LCH' | 'OKLAB' | 'OKLCH';
 
 interface ColorFactoryDeltaInputs extends BaseMixinDeltaInputs {}
 

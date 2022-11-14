@@ -107,15 +107,13 @@ const correctAngle = (item) => {
         return item;
     }
 
-    if (item >= 0 && item < 360) return item;
+    item = item % 360;
 
-    while (item < 0 || item >= 360) {
-
-        if (item < 0) item += 360;
-        else item -= 360;
+    if (item < 0) {
+        item += 360;
     }
     return item;
-}
+};
 
 
 // __correctForZero__ checks and corrects for minor deviations from zero (eNumbers)

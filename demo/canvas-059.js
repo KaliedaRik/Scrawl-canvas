@@ -18,8 +18,10 @@ const data = [
     ['hsl()', 'hsl(30, 100%, 50%)', 'hsl(30 100% 50%)', 'hsl(30.0 100% 50% / 60%)'],
     ['hsla()', 'hsla(30, 100%, 50%, 0.6)', 'hsla(30 100% 50% / 0.6)', 'hsla(30.2 100% 50% / 60%)'],
     ['hwb()', 'hwb(90 10% 10%)', 'hwb(90deg 10% 10% / 0.5)', 'hwb(.25turn 0% 40% / 50%)'],
-    ['lch()', 'lch(29.2345% 44.2 27)', 'lch(52.2345% 72.2 56.2)', 'lch(52.2345% 72.2 56.2 / .5)'],
     ['lab()', 'lab(29.2345% 39.3825 20.0664)', 'lab(52.2345% 40.1645 59.9971)', 'lab(52.2345% 40.1645 59.9971 / .5)'],
+    ['lch()', 'lch(29.2345% 44.2 27)', 'lch(52.2345% 72.2 56.2)', 'lch(52.2345% 72.2 56.2 / .5)'],
+    ['oklab()', 'oklab(59.686% 0.1009 0.1192)', 'oklab(0.65125 -0.0320 0.1274)', 'oklab(42.1% 41% -25% / .5)'],
+    ['oklch()', 'oklch(59.686% 0.15619 49.7694)', 'oklch(0.65125 0.13138 104.097)', 'oklch(42.1% 48.25% 328.4 / .5)'],
 ];
 
 const len = data.length;
@@ -27,50 +29,50 @@ const blockWidth = ((width * 0.9) / len) - 10;
 
 data.forEach((d, index) => {
 
-    const [label, col, max, min] = d;
+    const [label, top, mid, base] = d;
 
     scrawl.makeBlock({
-        name: `${label}-col`,
+        name: `${label}-top`,
         startX: (blockWidth * index) + (index * 10) + 10,
         startY: '10%',
         width: blockWidth,
         height: '28%',
-        fillStyle: col,
+        fillStyle: top,
     }).clone({
-        name: `${label}-min`,
+        name: `${label}-mid`,
         startY: '40%',
-        fillStyle: min,
+        fillStyle: mid,
     }).clone({
-        name: `${label}-max`,
+        name: `${label}-base`,
         startY: '70%',
-        fillStyle: max,
+        fillStyle: base,
     });
 
     scrawl.makePhrase({
-        name: `${label}-main-label`,
+        name: `label-${label}-main`,
         text: label,
         startX: (blockWidth * index) + (index * 10) + 10,
         startY: '3%',
     })
 
     scrawl.makePhrase({
-        name: `${label}-col-label`,
-        pivot: `${label}-col`,
+        name: `label-${label}-top`,
+        pivot: `${label}-top`,
         lockTo: 'pivot',
-        text: col,
+        text: top,
         fillStyle: 'black',
         shadowColor: 'white',
         shadowBlur: 5,
         roll: 53,
         order: 1,
     }).clone({
-        name: `${label}-min-label`,
-        pivot: `${label}-min`,
-        text: min,
+        name: `label-${label}-mid`,
+        pivot: `${label}-mid`,
+        text: mid,
     }).clone({
-        name: `${label}-max-label`,
-        pivot: `${label}-max`,
-        text: max,
+        name: `label-${label}-base`,
+        pivot: `${label}-base`,
+        text: base,
     });
 });
 
