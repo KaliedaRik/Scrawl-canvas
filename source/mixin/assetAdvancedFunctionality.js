@@ -32,10 +32,10 @@ export default function (P = Ωempty) {
 // The __precision__ _pseudo-attribute_ - value is passed through to the Gradient Palette object
 
 // The __colorSpace__ - String _pseudo-attribute_ defines the color space to be used by the Gradient Palette's Color object for its internal calculations - value is passed through to the Palette object
-// + Accepted values from: `'RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH'` with `RGB` as the default
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'` with `RGB` as the default
 //
 // The __returnColorAs__ - String _pseudo-attribute_ defines the type of color String the Gradient Palette's Color object will return - value is passed through to the Gradient Palette object
-// + Accepted values from: `'RGB', 'HSL', 'HWB', 'LAB', 'LCH'` with `RGB` as the default
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH'` with `RGB` as the default
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 

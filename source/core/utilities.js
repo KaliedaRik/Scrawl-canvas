@@ -160,6 +160,7 @@ const generateUniqueString = () => {
 
 // __interpolate__ clamp a value between a maximum and minimum value
 const interpolate = function (val, min, max) {
+    
     return min + val * (max - min);
 };
 

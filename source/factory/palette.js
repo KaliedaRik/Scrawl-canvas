@@ -50,6 +50,8 @@
 // + [Canvas-004](../../demo/canvas-004.html) - Radial gradients
 // + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
 // + [Canvas-022](../../demo/canvas-022.html) - Grid entity - basic functionality (color, gradients)
+// + [Canvas-049](../../demo/canvas-049.html) - Conic gradients
+// + [Canvas-061](../../demo/canvas-061.html) - Gradients stress test
 
 
 // #### Imports
@@ -123,11 +125,11 @@ let defaultAttributes = {
 // ##### Non-retained argument attributes (for factory, clone, set functions) - these attributes get passed on to the Palette's Color object
 
 // __colorSpace__ - String value defining the color space to be used by the Palette's Color object for its internal calculations.
-// + Accepted values from: `'RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH'` with `RGB` as the default
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'` with `RGB` as the default
 //
 // __returnColorAs__ - String value defining the type of color String the Palette's Color object will return.
 // + This is a shorter list than the internal colorSpace attribute as we only return values for CSS specified color spaces. Note that some of these color spaces are not widely supported across browsers and will lead to errors in canvases displayed on non-supported browsers
-// + Accepted values from: `'RGB', 'HSL', 'HWB', 'LAB', 'LCH'` with `RGB` as the default
+// + Accepted values from: `'RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH'` with `RGB` as the default
 
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -160,7 +162,7 @@ let G = P.getters,
 
 // __colors__ - an array of arrays, each sub-array being in the form `[Number, String]` where:
 // + Number is a positive integer in the range 0-999
-// + String is any legitimate CSS color string value (rgb-key, rgb-hex, `rgb()`, `rgba()`, `hsl()`, `hsla()`, `hwb()`, `lch()`, `lab()`). Also accepts xyz color space colors in the format `xyz(x-value y-value z-value)` or `xyz(x-value y-value z-value / alpha-value)`
+// + String is any legitimate CSS color string value (rgb-key, rgb-hex, `rgb()`, `rgba()`, `hsl()`, `hsla()`, `hwb()`, `lch()`, `lab()`, `oklch()`, `oklab()`). Also accepts xyz color space colors in the format `xyz(x-value y-value z-value)` or `xyz(x-value y-value z-value / alpha-value)`
 G.colors = function () {
 
     const f = this.factory,
@@ -248,7 +250,7 @@ S.colorSpace = function (item) {
         const ITM = item.toUpperCase();
         const itm = item.toLowerCase();
 
-        if (['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH'].includes(ITM)) {
+        if (['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'].includes(ITM)) {
 
             const oldColors = Object.assign({}, this.colors);
 
@@ -347,8 +349,6 @@ P.recalculate = function () {
 
         factory.setMinimumColor(factory.buildColorString(...currentVals, colorSpace));
         factory.setMaximumColor(factory.buildColorString(...nextVals, colorSpace));
-
-        // There's a bug with getting over-vibrant range colors in the HSL/HWB/LCH color spaces
 
         diff = nextKey - currentKey;
 

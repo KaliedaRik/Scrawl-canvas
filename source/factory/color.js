@@ -513,11 +513,11 @@ P.buildColorString = function (a, b, c, d, req) {
         case 'RGB' : return `rgba(${Math.round(a)} ${Math.round(b)} ${Math.round(c)} / ${d})`;
         case 'HSL' : return `hsl(${a} ${b}% ${c}% / ${d})`;
         case 'HWB' : return `hwb(${a} ${b}% ${c}% / ${d})`;
-        case 'LAB' : return `lab(${a}% ${b} ${c} / ${d})`;
-        case 'LCH' : return `lch(${a}% ${b} ${c} / ${d})`;
-        case 'OKLAB' : return `oklab(${a}% ${b} ${c} / ${d})`;
-        case 'OKLCH' : return `oklch(${a}% ${b} ${c} / ${d})`;
-        case 'XYZ' : return `xyz(${a}% ${b} ${c} / ${d})`;
+        case 'LAB' : return `lab(${a} ${b} ${c} / ${d})`;
+        case 'LCH' : return `lch(${a} ${b} ${c} / ${d})`;
+        case 'OKLAB' : return `oklab(${a} ${b} ${c} / ${d})`;
+        case 'OKLCH' : return `oklch(${a} ${b} ${c} / ${d})`;
+        case 'XYZ' : return `xyz(${a} ${b} ${c} / ${d})`;
         default : return 'rgba(0 0 0 / 0)';
     }
 }
@@ -1113,13 +1113,15 @@ P.getColorFromCanvas = function (color) {
     return [r, g, b, a];
 };
 
+// #### Color space conversions
+// The following functionality has been lifted/adapted from [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/)
+
 // `convertRGBtoHSL` - internal helper function
-// + From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/#rgb-to-hsl)
 P.convertRGBtoHSL = function (red, green, blue) {
 
-    red /= 256;
-    green /= 256;
-    blue /= 256;
+    red /= 255;
+    green /= 255;
+    blue /= 255;
 
     let max = Math.max(red, green, blue);
     let min = Math.min(red, green, blue);
@@ -1144,7 +1146,6 @@ P.convertRGBtoHSL = function (red, green, blue) {
 };
 
 // `convertHSLtoRGB` - internal helper function
-// + From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/#hsl-to-rgb)
 P.convertHSLtoRGB = function (hue, sat, light) {
     
     hue = correctAngle(hue);
@@ -1160,7 +1161,6 @@ P.convertHSLtoRGB = function (hue, sat, light) {
 };
 
 // `convertRGBtoHWB` - internal helper function
-// + From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/#rgb-to-hwb)
 P.convertRGBtoHWB = function (red, green, blue) {
 
     let hsl = this.convertRGBtoHSL(red, green, blue, suffix);
@@ -1176,7 +1176,6 @@ P.convertRGBtoHWB = function (red, green, blue) {
 };
 
 // `convertRGBHtoHWB` - internal helper function
-// + From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/#rgb-to-hwb)
 P.convertRGBHtoHWB = function (red, green, blue, hue) {
 
     red /= 256;
@@ -1190,7 +1189,6 @@ P.convertRGBHtoHWB = function (red, green, blue, hue) {
 };
 
 // `convertHWBtoRGB` - internal helper function
-// + From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/#hwb-to-rgb)
 P.convertHWBtoRGB = function (hue, white, black) {
     
     white /= 100;
@@ -1215,40 +1213,47 @@ P.convertHWBtoRGB = function (hue, white, black) {
 // `multiplyMatrices` - internal helper function
 // + From [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/multiply-matrices.js)
 P.multiplyMatrices = function (A, B) {
-    let m = A.length;
 
-    if (!Array.isArray(A[0])) {
-        // A is vector, convert to [[a, b, c, ...]]
-        A = [A];
-    }
+    const m = A.length;
 
-    if (!Array.isArray(B[0])) {
-        // B is vector, convert to [[a], [b], [c], ...]]
-        B = B.map(x => [x]);
-    }
+    if (!Array.isArray(A[0])) A = [A];
+    if (!Array.isArray(B[0])) B = B.map(x => [x]);
 
-    let p = B[0].length;
-    let B_cols = B[0].map((_, i) => B.map(x => x[i])); // transpose B
+    const p = B[0].length;
+    const B_cols = B[0].map((_, i) => B.map(x => x[i]));
+
     let product = A.map(row => B_cols.map(col => {
+
         if (!Array.isArray(row)) {
+
             return col.reduce((a, c) => a + c * row, 0);
         }
-
         return row.reduce((a, c, i) => a + c * (col[i] || 0), 0);
     }));
 
-    if (m === 1) {
-        product = product[0]; // Avoid [[a, b, c, ...]]
-    }
+    if (m === 1) product = product[0];
 
-    if (p === 1) {
-        return product.map(x => x[0]); // Avoid [[a], [b], [c], ...]]
-    }
+    if (p === 1) return product.map(x => x[0]);
 
     return product;
 };
 
 // `convertRGBtoXYZ` - internal helper function
+P.D50 = [0.3457 / 0.3585, 1.00000, (1.0 - 0.3457 - 0.3585) / 0.3585];
+P.D65 = [0.3127 / 0.3290, 1.00000, (1.0 - 0.3127 - 0.3290) / 0.3290];
+
+P.D65_to_D50_matrix = [
+    [  1.0479298208405488,    0.022946793341019088,  -0.05019222954313557 ],
+    [  0.029627815688159344,  0.990434484573249,     -0.01707382502938514 ],
+    [ -0.009243058152591178,  0.015055144896577895,   0.7518742899580008  ]
+];
+
+P.D50_to_D65_matrix = [
+    [  0.9554734527042182,   -0.023098536874261423,  0.0632593086610217   ],
+    [ -0.028369706963208136,  1.0099954580058226,    0.021041398966943008 ],
+    [  0.012314001688319899, -0.020507696433477912,  1.3303659366080753   ]
+];
+
 P.convertRGBtoXYZ_matrix = [
     [ 506752 / 1228815,  87881 / 245763,   12673 /   70218 ],
     [  87098 /  409605, 175762 / 245763,   12673 /  175545 ],
@@ -1270,7 +1275,7 @@ P.convertRGBtoXYZ = function (r, g, b) {
     const sRGB = [r / 255, g / 255, b / 255];
     const lRGB = this.lin_sRGB(sRGB)
 
-    return this.multiplyMatrices(this.convertRGBtoXYZ_matrix, lRGB);
+    return this.multiplyMatrices([...this.convertRGBtoXYZ_matrix], [...lRGB]);
 };
 
 // `convertXYZtoRGB` - internal helper function
@@ -1292,7 +1297,7 @@ P.gam_sRGB = function (RGB) {
 }
 P.convertXYZtoRGB = function (x, y, z) {
 
-    const lRGB = this.multiplyMatrices(this.convertXYZtoRGB_matrix, [x, y, z]);
+    const lRGB = this.multiplyMatrices([...this.convertXYZtoRGB_matrix], [x, y, z]);
     const sRGB = this.gam_sRGB(lRGB);
     const round = Math.round;
 
@@ -1303,8 +1308,6 @@ P.convertXYZtoRGB = function (x, y, z) {
     ];
 };
 
-P.D50 = [0.3457 / 0.3585, 1.00000, (1.0 - 0.3457 - 0.3585) / 0.3585];
-P.D65 = [0.3127 / 0.3290, 1.00000, (1.0 - 0.3127 - 0.3290) / 0.3290];
 P.E = 216/24389;
 P.K = 24389/27;
 P.cbrt = (Math.cbrt != null) ? Math.cbrt : (val) => Math.pow(val, 1 / 3);
@@ -1314,7 +1317,8 @@ P.convertXYZtoLAB = function (x, y, z) {
 
     const { D50, K, E, cbrt } = this;
 
-    const xyz = [x, y, z].map((val, i) => val / D50[i]);
+    const toD50 = this.multiplyMatrices([...this.D65_to_D50_matrix], [x, y, z]);
+    const xyz = toD50.map((val, i) => val / D50[i]);
     const f = xyz.map(val => val > E ? cbrt(val) : (K * val + 16) / 116);
 
     return [
@@ -1341,7 +1345,9 @@ P.convertLABtoXYZ = function (l, a, b) {
         (pow(f[2], 3) > E) ? pow(f[2], 3) : (116 * f[2] - 16) / K,
     ];
 
-    return xyz.map((val, i) => val * D50[i]);
+    const toD50 = xyz.map((val, i) => val * D50[i]);
+
+    return this.multiplyMatrices([...this.D50_to_D65_matrix], [...toD50]);
 };
 
 // `convertLABtoLCH` - internal helper function
@@ -1426,6 +1432,7 @@ P.convertOKLCHtoOKLAB = function (l, c, h) {
 };
 
 
+// #### Color blending
 // The following functions are used by the Blend filter
 // + Input is the six RGB parts (Integers clamped to the 0-255 range) of the input and mix channels
 // + Output is the RGB version of the mixed HSL colors generated from the RGB inputs
@@ -1475,10 +1482,12 @@ P.calculateLuminosityBlend = function (iR, iG, iB, mR, mG, mB) {
 };
 
 
+// #### Browser color space support
 // We need to check whether the browser supports various color spaces. The simplest way to do that is to feed a color into a canvas element's engine, stamp a pixel, then check to see if the pixel is black (space not supported)
 // + We check for HWB, LAB andf LCH color space support
 // + We assume that the browser always supports RGB and HSL  color spaces
 // + We don't check for XYZ color space support because it is not part of the [CSS Color Module Level 4 specification](https://www.w3.org/TR/css-color-4/)
+// + We don't check for OKLAB, OKLCH support at this time (Nov 2022)
 let supportsHWB = false;
 let supportsLAB = false;
 let supportsLCH = false;
@@ -1603,6 +1612,7 @@ const browserChecker = function () {
 };
 browserChecker();
 
+
 // #### Factory
 // ```
 // scrawl.makeColor({
@@ -1634,6 +1644,7 @@ const makeColor = function (items) {
 };
 
 constructors.Color = Color;
+
 
 // #### Exports
 export {

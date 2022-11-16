@@ -39,6 +39,12 @@
     #lch {
       background: linear-gradient(0.25turn, lch(0% 0 0), lch(53.23288178584245% 104.57551843993618 40.00015790646365) 35%, lch(32.302586667249486% 133.81586201619493 306.2872015643272) 65%, lch(100% 0.011662039483869973 296.81292623674057));
     }
+    #oklab {
+      background: linear-gradient(0.25turn, oklab(0 0 0), oklab(0.62796, 0.22486, 0.12585) 35%, oklab(0.45201, -0.03246, -0.31153) 65%, oklab(1, 0, 0));
+    }
+    #oklch {
+      background: linear-gradient(0.25turn, oklch(0, 0, 0), oklch(0.62796, 0.25768, 29.23388) 35%, oklch(0.45201, 0.31321, 264.05203) 65%, oklch(1, 0, 0));
+    }
   </style>
 
 </head>
@@ -74,6 +80,8 @@
           <option value="HWB">HWB</option>
           <option value="LAB">LAB</option>
           <option value="LCH">LCH</option>
+          <option value="OKLAB">OKLAB</option>
+          <option value="OKLCH">OKLCH</option>
           <option value="XYZ">XYZ</option>
       </select>
     </div>
@@ -86,6 +94,8 @@
           <option value="HWB">HWB</option>
           <option value="LAB">LAB</option>
           <option value="LCH">LCH</option>
+          <option value="OKLAB">OKLAB</option>
+          <option value="OKLCH">OKLCH</option>
       </select>
     </div>
 
@@ -200,6 +210,8 @@
   <div class="css-gradients" id="hwb">HWB</div>
   <div class="css-gradients" id="lab">LAB</div>
   <div class="css-gradients" id="lch">LCH</div>
+  <div class="css-gradients" id="oklab">OKLAB</div>
+  <div class="css-gradients" id="oklch">OKLCH</div>
 
   <p id="reportmessage"></p>
 

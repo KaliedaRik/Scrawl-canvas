@@ -61,6 +61,7 @@ makeBlock({
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
+    // if (L.palette.mygradient_palette) console.log(L.palette.mygradient_palette.colors);
 // @ts-expect-error
     return `    Palette - start: ${paletteStart.value}; end: ${paletteEnd.value}\n    Start - x: ${startX.value}%; y: ${startY.value}%\n    End - x: ${endX.value}%; y: ${endY.value}%\n    Precision: ${precision.value}`;
 });
