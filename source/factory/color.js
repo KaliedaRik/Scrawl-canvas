@@ -513,10 +513,10 @@ P.buildColorString = function (a, b, c, d, req) {
         case 'RGB' : return `rgba(${Math.round(a)} ${Math.round(b)} ${Math.round(c)} / ${d})`;
         case 'HSL' : return `hsl(${a} ${b}% ${c}% / ${d})`;
         case 'HWB' : return `hwb(${a} ${b}% ${c}% / ${d})`;
-        case 'LAB' : return `lab(${a} ${b} ${c} / ${d})`;
-        case 'LCH' : return `lch(${a} ${b} ${c} / ${d})`;
-        case 'OKLAB' : return `oklab(${a} ${b} ${c} / ${d})`;
-        case 'OKLCH' : return `oklch(${a} ${b} ${c} / ${d})`;
+        case 'LAB' : return `lab(${a}% ${b} ${c} / ${d})`;
+        case 'LCH' : return `lch(${a}% ${b} ${c} / ${d})`;
+        case 'OKLAB' : return `oklab(${a * 100}% ${b} ${c} / ${d})`;
+        case 'OKLCH' : return `oklch(${a * 100}% ${b} ${c} / ${d})`;
         case 'XYZ' : return `xyz(${a} ${b} ${c} / ${d})`;
         default : return 'rgba(0 0 0 / 0)';
     }
@@ -1276,6 +1276,25 @@ P.convertRGBtoXYZ = function (r, g, b) {
     const lRGB = this.lin_sRGB(sRGB)
 
     return this.multiplyMatrices([...this.convertRGBtoXYZ_matrix], [...lRGB]);
+};
+
+P.convertRGBtoOKLAB = function (r, g, b) {
+
+    const [_r, _g, _b] = this.lin_sRGB([r / 255, g / 255, b / 255])
+
+    const l = 0.4122214708 * _r + 0.5363325363 * _g + 0.0514459929 * _b;
+    const m = 0.2119034982 * _r + 0.6806995451 * _g + 0.1073969566 * _b;
+    const s = 0.0883024619 * _r + 0.2817188376 * _g + 0.6299787005 * _b;
+
+    const _l = this.cbrt(l);
+    const _m = this.cbrt(m);
+    const _s = this.cbrt(s);
+
+    return [
+        0.2104542553 * _l + 0.7936177850 * _m - 0.0040720468 * _s,
+        1.9779984951 * _l - 2.4285922050 * _m + 0.4505937099 * _s,
+        0.0259040371 * _l + 0.7827717662 * _m - 0.8086757660 * _s,
+    ];
 };
 
 // `convertXYZtoRGB` - internal helper function

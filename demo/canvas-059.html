@@ -35,7 +35,9 @@
       <li>Check that the expected color displays in the canvas.</li>
       <li>For comparison, create a set of &lt;div> elements with their backgroundColor values set to those same color strings.</li>
     </ul>
-    <p>Note that browser support for different color spaces is somewhat patchy. Browsers that do support the newer color spacess in CSS may not support them in &lt;canvas> elements.</p>
+    <p><b>Note that:</b> browser support for different color spaces is somewhat patchy. Browsers that do support the newer color spacess in CSS may not support them in &lt;canvas> elements.</p>
+
+    <p><b>Safari issue:</b> while the browser currently supports LAB/LCH and OKLAB/OKLCH color spaces, it only supports them when formatted with L as a percentage value and A, B, C, H as number values. Where presented with alternative formats, Safari will ignore the color value in CSS, and render it as black on the canvas. For this reason, Scrawl-canvas does not attempt to check if browsers support OKLAB/OKLCH color spaces; instead it will parse all OKLAB/OKLCH color strings as set out in the CSS Color Module Level 4 specification and render them as their nearest equivalent sRGB color space colors.</p>
 
     <p><b>Touch test:</b> not required</p>
 

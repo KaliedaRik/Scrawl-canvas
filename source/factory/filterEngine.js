@@ -4037,7 +4037,6 @@ P.theBigActionsObject = {
         // Localize some handles to required functions/objects
         const {reducePaletteRgbIndices:rgbIndices, reducePaletteLabIndices:labIndices, reducePaletteMemoRecord:memoRecord, colorEngine, predefinedPalette, getGrayscaleValue } = this;
 
-        const { convertXYZtoLAB:toLab, convertRGBtoXYZ:toXyz, convert:convertColor } = colorEngine;
         let xyz, lab;
 
         // Internal function - create and memoize a palette
@@ -4353,7 +4352,6 @@ P.theBigActionsObject = {
         if (null == palette) palette = 'black-white';
         if (null == minimumColorDistance) minimumColorDistance = 1000;
 
-
         // Noise - used for dithering the output
         const rnd = (useBluenoise) ?
             this.getRandomNumbers(seed, quarterLen, iWidth) :
@@ -4426,19 +4424,18 @@ P.theBigActionsObject = {
                     if (!memoRecord[index]) {
 
                         memoRecord[index] = 1;
-                        xyz = toXyz(red, green, blue);
-                        lab = toLab(...xyz);
+                        lab = colorEngine.convertRGBtoOKLAB(red, green, blue);
 
                         indicesCursor = index * 3;
 
                         rgbIndices[indicesCursor] = red;
-                        labIndices[indicesCursor] = lab[0];
+                        labIndices[indicesCursor] = lab[0] * 500;
                         indicesCursor++;
                         rgbIndices[indicesCursor] = green;
-                        labIndices[indicesCursor] = lab[1];
+                        labIndices[indicesCursor] = lab[1] * 500;
                         indicesCursor++;
                         rgbIndices[indicesCursor] = blue;
-                        labIndices[indicesCursor] = lab[2];
+                        labIndices[indicesCursor] = lab[2] * 500;
                     }
                 }
                 detectedColors[index] = detectedColors[index] + 1;
