@@ -975,7 +975,6 @@ P.convert = function (color, suffix = '') {
         rgb.push(...this.convertXYZtoRGB(xyz[0], xyz[1], xyz[2]), a);
         hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
         hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
-        console.log('rgb', rgb, 'oklch', oklch)
     }
     else if (color.indexOf('lab') >= 0 && !supportsLAB) {
 

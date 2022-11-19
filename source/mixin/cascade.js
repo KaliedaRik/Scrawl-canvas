@@ -133,8 +133,6 @@ export default function (P = Ωempty) {
 
         let grp;
 
-        console.log('cascadeAction')
-
         this.groups.forEach( groupname => {
 
             grp = group[groupname];

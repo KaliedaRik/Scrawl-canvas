@@ -329,13 +329,11 @@ P.checkResponsive = function () {
         // If last display cycle responded to dimension changes, need to finalise height now
         if (this.dirtyHeight && this.containElementsInHeight) {
 
-            console.log('stack height final fixes need to be done');
             this.dirtyHeight = false;
         }
 
         if (this.currentVportWidth !== currentCorePosition.w) {
 
-            console.log('need to update for resized viewport width');
             this.currentVportWidth = currentCorePosition.w;
 
             if (this.containElementsInHeight) {
@@ -348,7 +346,6 @@ P.checkResponsive = function () {
 
         if (this.currentVportHeight !== currentCorePosition.h) {
 
-            console.log('need to update for resized viewport height');
             this.currentVportHeight = currentCorePosition.h;
         }
     }
