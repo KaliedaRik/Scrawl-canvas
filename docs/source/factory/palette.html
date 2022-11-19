@@ -560,6 +560,8 @@
 <li><a href="../../demo/canvas-004.html">Canvas-004</a> - Radial gradients</li>
 <li><a href="../../demo/canvas-005.html">Canvas-005</a> - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween</li>
 <li><a href="../../demo/canvas-022.html">Canvas-022</a> - Grid entity - basic functionality (color, gradients)</li>
+<li><a href="../../demo/canvas-049.html">Canvas-049</a> - Conic gradients</li>
+<li><a href="../../demo/canvas-061.html">Canvas-061</a> - Gradients stress test</li>
 </ul>
 
             </div>
@@ -774,12 +776,12 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               </div>
               <p><strong>colorSpace</strong> - String value defining the color space to be used by the Palette’s Color object for its internal calculations.</p>
 <ul>
-<li>Accepted values from: <code>&#39;RGB&#39;, &#39;HSL&#39;, &#39;HWB&#39;, &#39;XYZ&#39;, &#39;LAB&#39;, &#39;LCH&#39;</code> with <code>RGB</code> as the default</li>
+<li>Accepted values from: <code>&#39;RGB&#39;, &#39;HSL&#39;, &#39;HWB&#39;, &#39;XYZ&#39;, &#39;LAB&#39;, &#39;LCH&#39;, &#39;OKLAB&#39;, &#39;OKLCH&#39;</code> with <code>RGB</code> as the default</li>
 </ul>
 <p><strong>returnColorAs</strong> - String value defining the type of color String the Palette’s Color object will return.</p>
 <ul>
 <li>This is a shorter list than the internal colorSpace attribute as we only return values for CSS specified color spaces. Note that some of these color spaces are not widely supported across browsers and will lead to errors in canvases displayed on non-supported browsers</li>
-<li>Accepted values from: <code>&#39;RGB&#39;, &#39;HSL&#39;, &#39;HWB&#39;, &#39;LAB&#39;, &#39;LCH&#39;</code> with <code>RGB</code> as the default</li>
+<li>Accepted values from: <code>&#39;RGB&#39;, &#39;HSL&#39;, &#39;HWB&#39;, &#39;LAB&#39;, &#39;LCH&#39;, &#39;OKLAB&#39;, &#39;OKLCH&#39;</code> with <code>RGB</code> as the default</li>
 </ul>
 
             </div>
@@ -868,7 +870,7 @@ P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title 
               <p><strong>colors</strong> - an array of arrays, each sub-array being in the form <code>[Number, String]</code> where:</p>
 <ul>
 <li>Number is a positive integer in the range 0-999</li>
-<li>String is any legitimate CSS color string value (rgb-key, rgb-hex, <code>rgb()</code>, <code>rgba()</code>, <code>hsl()</code>, <code>hsla()</code>, <code>hwb()</code>, <code>lch()</code>, <code>lab()</code>). Also accepts xyz color space colors in the format <code>xyz(x-value y-value z-value)</code> or <code>xyz(x-value y-value z-value / alpha-value)</code></li>
+<li>String is any legitimate CSS color string value (rgb-key, rgb-hex, <code>rgb()</code>, <code>rgba()</code>, <code>hsl()</code>, <code>hsla()</code>, <code>hwb()</code>, <code>lch()</code>, <code>lab()</code>, <code>oklch()</code>, <code>oklab()</code>). Also accepts xyz color space colors in the format <code>xyz(x-value y-value z-value)</code> or <code>xyz(x-value y-value z-value / alpha-value)</code></li>
 </ul>
 
             </div>
@@ -986,7 +988,7 @@ S.<span class="hljs-property">colorSpace</span> = <span class="hljs-keyword">fun
         <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ITM</span> = item.<span class="hljs-title function_">toUpperCase</span>();
         <span class="hljs-keyword">const</span> itm = item.<span class="hljs-title function_">toLowerCase</span>();
 
-        <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;RGB&#x27;</span>, <span class="hljs-string">&#x27;HSL&#x27;</span>, <span class="hljs-string">&#x27;HWB&#x27;</span>, <span class="hljs-string">&#x27;XYZ&#x27;</span>, <span class="hljs-string">&#x27;LAB&#x27;</span>, <span class="hljs-string">&#x27;LCH&#x27;</span>].<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">ITM</span>)) {
+        <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;RGB&#x27;</span>, <span class="hljs-string">&#x27;HSL&#x27;</span>, <span class="hljs-string">&#x27;HWB&#x27;</span>, <span class="hljs-string">&#x27;XYZ&#x27;</span>, <span class="hljs-string">&#x27;LAB&#x27;</span>, <span class="hljs-string">&#x27;LCH&#x27;</span>, <span class="hljs-string">&#x27;OKLAB&#x27;</span>, <span class="hljs-string">&#x27;OKLCH&#x27;</span>].<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">ITM</span>)) {
 
             <span class="hljs-keyword">const</span> oldColors = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>);
 
@@ -1154,22 +1156,8 @@ P.<span class="hljs-property">getReturnColorAs</span> = <span class="hljs-keywor
         nextVals = colors[<span class="hljs-string">`<span class="hljs-subst">${nextKey}</span> `</span>];
 
         factory.<span class="hljs-title function_">setMinimumColor</span>(factory.<span class="hljs-title function_">buildColorString</span>(...currentVals, colorSpace));
-        factory.<span class="hljs-title function_">setMaximumColor</span>(factory.<span class="hljs-title function_">buildColorString</span>(...nextVals, colorSpace));</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p>There’s a bug with getting over-vibrant range colors in the HSL/HWB/LCH color spaces</p>
+        factory.<span class="hljs-title function_">setMaximumColor</span>(factory.<span class="hljs-title function_">buildColorString</span>(...nextVals, colorSpace));
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
         diff = nextKey - currentKey;
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = currentKey + <span class="hljs-number">1</span>; j &lt;= nextKey; j++) {
@@ -1182,11 +1170,11 @@ P.<span class="hljs-property">getReturnColorAs</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>updateColor</code> - add or update a gradient-type style’s Palette object with a color.</p>
 <ul>
@@ -1218,11 +1206,11 @@ P.<span class="hljs-property">getReturnColorAs</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>removeColor</code> - remove a gradient-type style’s Palette object color from a specified index</p>
 <ul>
@@ -1249,11 +1237,11 @@ P.<span class="hljs-property">getReturnColorAs</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>addStopsToGradient</code> - complete the construction of the Canvas API CanvasGradient object</p>
 
@@ -1264,11 +1252,11 @@ P.<span class="hljs-property">getReturnColorAs</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>It’s at this point that we apply the easing function</p>
 
@@ -1300,11 +1288,11 @@ P.<span class="hljs-property">getReturnColorAs</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Option 1 start == end, cycle irrelevant</p>
 
@@ -1315,11 +1303,11 @@ P.<span class="hljs-property">getReturnColorAs</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Option 2: start &lt; end, cycle irrelevant</p>
 
@@ -1376,11 +1364,11 @@ P.<span class="hljs-property">getReturnColorAs</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Option 3: start &gt; end, cycle = true</p>
 
@@ -1431,11 +1419,11 @@ P.<span class="hljs-property">getReturnColorAs</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Option 4: start &gt; end, cycle = false</p>
 
@@ -1482,11 +1470,11 @@ P.<span class="hljs-property">getReturnColorAs</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>No gradient: no colors</p>
 
@@ -1498,11 +1486,11 @@ P.<span class="hljs-property">getReturnColorAs</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -1521,11 +1509,11 @@ constructors.<span class="hljs-property">Palette</span> = <span class="hljs-titl
         </li>
         
         
-        <li id="section-40">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

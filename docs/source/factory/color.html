@@ -490,15 +490,6 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="color-factory">Color factory</h1>
-<p>Color objects generate CSS rgb() or rgba() color strings, which can then be used to set an entity’s <a href="./state.html">State</a> object’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
-<ul>
-<li>Factory can accept any legal CSS color keyword as an attribute, alongside ‘#nnn’ and ‘#nnnnnn’ hexadecimal Strings. It will accept ‘rgb()’ and ‘rgba()’ strings under certain conditions.</li>
-<li>It can also accept <strong>r</strong>, <strong>g</strong>, <strong>b</strong> and <strong>a</strong> channel Number attributes (0-255 integers for r, g, b; 0-1 float Number for a), from which a color can be constructed.</li>
-<li>It can be used to generate random colors, using channel <strong>max</strong> and <strong>min</strong> integer Number attributes to limit the range of the random colors.</li>
-<li>It can be deltaAnimated by setting channel <strong>shift</strong> float Number attributes and setting the <strong>autoUpdate</strong> Boolean flag to true. Delta animations can run until values hit their set max/min values, or can bounce between min and max values, depending on the setting of the channel <strong>bounce</strong> Boolean flags.</li>
-<li>It can also be animated directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
-<li>Colors can be cloned, and killed.</li>
-</ul>
 
             </div>
             
@@ -511,11 +502,17 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>TODO: The color object does not yet handle the following color inputs:</p>
+              <h4 id="demos">Demos:</h4>
+<p>While any entity using a color style will make use of color functionality, the following demos are most relevant for testing this functionality</p>
 <ul>
-<li><code>hsl[a](H, S, L[, A])</code> - color will be treated as transparent black</li>
-<li><code>hsl[a](H S L[ / A])</code> - color will be treated as transparent black</li>
-<li>for <code>rgb()</code> and <code>rgba()</code>, if any of the values (including alpha) is given as a %Number, all values will be treated as percentages (in the spec, rgb values all need to be either integer Number 0-255, or %Number 0%-100%, but channels cannot mix the two notations, whereas the alpha value format <em>can</em> differ from rgb value format)</li>
+<li><a href="../../demo/canvas-003.html">Canvas-003</a> - Linear gradients</li>
+<li><a href="../../demo/canvas-031.html">Canvas-031</a> - Cell generation and processing order - kaleidoscope clock</li>
+<li><a href="../../demo/canvas-047.html">Canvas-047</a> - Easing functions for Color and Tween factories</li>
+<li><a href="../../demo/canvas-059.html">Canvas-059</a> - CSS color space strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lab(), lch(), oklab(), oklch()</li>
+<li><a href="../../demo/filters-027.html">Filters-027</a> - Parameters for: reducePalette filter</li>
+<li><a href="../../demo/packets-002.html">Packets-002</a> - Scrawl-canvas packets; save and load a range of different entitys</li>
+<li><a href="../../demo/dom-009.html">DOM-009</a> - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate</li>
+<li><a href="../../demo/dom-012.html">DOM-012</a> - Add and remove (kill) Scrawl-canvas canvas elements programmatically</li>
 </ul>
 
             </div>
@@ -528,25 +525,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
-              <h4 id="demos">Demos:</h4>
-<ul>
-<li><a href="../../demo/canvas-031.html">Canvas-031</a> - Cell generation and processing order - kaleidoscope clock</li>
-<li><a href="../../demo/packets-002.html">Packets-002</a> - Scrawl-canvas packets; save and load a range of different entitys</li>
-<li><a href="../../demo/dom-009.html">DOM-009</a> - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate</li>
-<li><a href="../../demo/dom-012.html">DOM-012</a> - Add and remove (kill) Scrawl-canvas canvas elements programmatically</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -562,11 +540,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="color-constructor">Color constructor</h4>
 
@@ -602,6 +580,14 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">lch_max</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">lch_min</span> = [];
 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">oklab</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">oklab_max</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">oklab_min</span> = [];
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">oklch</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">oklch_max</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">oklch_min</span> = [];
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">easingFunction</span> = λfirstArg;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convert</span>(<span class="hljs-string">&#x27;transparent&#x27;</span>);
@@ -616,11 +602,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="color-prototype">Color prototype</h4>
 
@@ -635,11 +621,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -650,11 +636,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="color-attributes">Color attributes</h4>
 <ul>
@@ -668,11 +654,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>A Color object can hold details of three colors</p>
 <ul>
@@ -680,7 +666,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 <li>The ‘maximum’ range color; relevant attributes are suffixed with <code>_max</code></li>
 <li>The ‘minimum’ range color; relevant attributes are suffixed with <code>_min</code></li>
 </ul>
-<p>On recieving a color to store or process, the Color object will calculate the color’s values in several different color spaces: <code>RGB</code>, <code>HSL</code>, <code>HWB</code>, <code>XYZ</code>, <code>LAB</code>, <code>LCH</code></p>
+<p>On recieving a color to store or process, the Color object will calculate the color’s values in several different color spaces: <code>RGB</code>, <code>HSL</code>, <code>HWB</code>, <code>XYZ</code>, <code>LAB</code>, <code>LCH</code>, <code>OKLAB</code>, <code>OKLCH</code></p>
 
             </div>
             
@@ -695,11 +681,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>hwb() color Strings are not yet widely supported as valid input into browser canvas engines</p>
 
@@ -712,11 +698,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>xyz() colors are not valid CSS color strings; they are an intermediary step on the way to converting rgb color values into lab notation</p>
 
@@ -729,11 +715,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>lab() color Strings are not yet widely supported as valid input into browser canvas engines</p>
 
@@ -746,11 +732,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>lch() color Strings are not yet widely supported as valid input into browser canvas engines</p>
 
@@ -763,11 +749,45 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>oklab() color Strings are not yet widely supported as valid input into browser canvas engines</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">oklab</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">oklab_max</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">oklab_min</span>: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>oklch() color Strings are not yet widely supported as valid input into browser canvas engines</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">oklch</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">oklch_max</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">oklch_min</span>: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>The <strong>easing</strong> and <strong>easingFunction</strong> attributes affect the <code>getRangeColor</code> function, applying an easing function to those requests. Value may be a predefined easing String name, or a function accepting a Number value and returning a Number value, both values to be positive floats in the range 0-1</p>
 
@@ -779,15 +799,15 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>colorSpace</strong> - String value defining the color space to be used by the Color object for its internal calculations.</p>
 <ul>
-<li>Accepted values from: <code>&#39;RGB&#39;, &#39;HSL&#39;, &#39;HWB&#39;, &#39;XYZ&#39;, &#39;LAB&#39;, &#39;LCH&#39;</code></li>
+<li>Accepted values from: <code>&#39;RGB&#39;, &#39;HSL&#39;, &#39;HWB&#39;, &#39;XYZ&#39;, &#39;LAB&#39;, &#39;LCH&#39;, &#39;OKLAB&#39;, &#39;OKLCH&#39;</code></li>
 </ul>
 
             </div>
@@ -797,16 +817,16 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>returnColorAs</strong> - String value defining the type of color String the Color object will return.</p>
 <ul>
 <li>This is a shorter list than the internal colorSpace attribute as we only return values for CSS specified color spaces. Note that some of these color spaces are not widely supported across browsers and will lead to errors in canvases displayed on non-supported browsers</li>
-<li>Accepted values from: <code>&#39;RGB&#39;, &#39;HSL&#39;, &#39;HWB&#39;, &#39;LAB&#39;, &#39;LCH&#39;</code></li>
+<li>Accepted values from: <code>&#39;RGB&#39;, &#39;HSL&#39;, &#39;HWB&#39;, &#39;LAB&#39;, &#39;LCH&#39;, &#39;OKLAB&#39;, &#39;OKLCH&#39;</code></li>
 </ul>
 
             </div>
@@ -816,11 +836,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h5 id="non-retained-argument-attributes-for-factory-clone-set-functions">Non-retained argument attributes (for factory, clone, set functions)</h5>
 <p><strong>color</strong>, <strong>minimumColor</strong>, <strong>maximumColor</strong> - CSS color definition Strings which the Color object will attempt to convert into various color space values.</p>
@@ -833,11 +853,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -848,11 +868,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -862,11 +882,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>Overwrites ./mixin/base.js</p>
@@ -880,11 +900,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Remove style from all entity state objects</p>
 
@@ -909,11 +929,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Remove style from the Scrawl-canvas library</p>
 
@@ -927,11 +947,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -940,11 +960,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>get</code> - overrides function in mixin/base.js</p>
 
@@ -996,11 +1016,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>set</code> - overrides function in mixin/base.js - see above for the additional attributes the set object argument can use.</p>
 
@@ -1039,11 +1059,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1054,17 +1074,17 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>The <code>color</code>, <code>minimumColor</code> and <code>maximumColor</code> functions take in a CSS color String and converts it into a set of arrays containing data relevant to various color spaces. <strong>Note that browsers vary in the range of color spaces they support.</strong></p>
 <ul>
 <li>Widely supported: various RGB space color Strings - keywords, hex values, <code>rgb()</code>, <code>rgba()</code></li>
 <li>Widely supported: HSL space color Strings - <code>hsl()</code>, <code>hsla()</code></li>
-<li>Valid, but poorly supported: HWB, LAB, LCH color spaces - <code>hwb()</code>, <code>lab()</code>, <code>lch()</code></li>
+<li>Valid, but poorly supported: HWB, LAB, LCH, OKLAB, OKLCH color spaces - <code>hwb()</code>, <code>lab()</code>, <code>lch()</code>, <code>oklab()</code>, <code>oklch()</code></li>
 <li>Not valid or supported: XYZ color space - <code>xyz()</code> - used internally to convert between RGB and LAB spaces</li>
 </ul>
 <p>These setter functions have complementary Color object functions: <code>setColor</code>, <code>setMinimumColor</code>, <code>setMaximumColor</code></p>
@@ -1105,11 +1125,11 @@ P.<span class="hljs-property">setMaximumColor</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>easing</code> (and its complementary Color object functions: <code>setEasing</code>) - we can apply easing functions to colors, for instance when invoking the Color object’s <code>getRangeColor()</code> function to return the most appropriate color between the Color object’s minimum and maximum color values</p>
 <ul>
@@ -1150,7 +1170,7 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
     }
 };
 
-P.<span class="hljs-property">internalColorSpaces</span> = [<span class="hljs-string">&#x27;RGB&#x27;</span>, <span class="hljs-string">&#x27;HSL&#x27;</span>, <span class="hljs-string">&#x27;HWB&#x27;</span>, <span class="hljs-string">&#x27;XYZ&#x27;</span>, <span class="hljs-string">&#x27;LAB&#x27;</span>, <span class="hljs-string">&#x27;LCH&#x27;</span>];
+P.<span class="hljs-property">internalColorSpaces</span> = [<span class="hljs-string">&#x27;RGB&#x27;</span>, <span class="hljs-string">&#x27;HSL&#x27;</span>, <span class="hljs-string">&#x27;HWB&#x27;</span>, <span class="hljs-string">&#x27;XYZ&#x27;</span>, <span class="hljs-string">&#x27;LAB&#x27;</span>, <span class="hljs-string">&#x27;LCH&#x27;</span>, <span class="hljs-string">&#x27;OKLAB&#x27;</span>, <span class="hljs-string">&#x27;OKLCH&#x27;</span>];
 S.<span class="hljs-property">colorSpace</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setColorSpaceHelper</span>(item);
@@ -1178,7 +1198,7 @@ P.<span class="hljs-property">setColorSpaceHelper</span> = <span class="hljs-key
     }
 };
 
-P.<span class="hljs-property">returnedColorSpaces</span> = [<span class="hljs-string">&#x27;RGB&#x27;</span>, <span class="hljs-string">&#x27;HSL&#x27;</span>, <span class="hljs-string">&#x27;HWB&#x27;</span>, <span class="hljs-string">&#x27;LAB&#x27;</span>, <span class="hljs-string">&#x27;LCH&#x27;</span>];
+P.<span class="hljs-property">returnedColorSpaces</span> = [<span class="hljs-string">&#x27;RGB&#x27;</span>, <span class="hljs-string">&#x27;HSL&#x27;</span>, <span class="hljs-string">&#x27;HWB&#x27;</span>, <span class="hljs-string">&#x27;LAB&#x27;</span>, <span class="hljs-string">&#x27;LCH&#x27;</span>, <span class="hljs-string">&#x27;OKLAB&#x27;</span>, <span class="hljs-string">&#x27;OKLCH&#x27;</span>];
 S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setReturnColorAsHelper</span>(item);
@@ -1209,11 +1229,11 @@ P.<span class="hljs-property">setReturnColorAsHelper</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1230,11 +1250,11 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>getData</code> function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
 
@@ -1243,31 +1263,83 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCurrentColor</span>();
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <p><code>getCurrentColor</code> - returns current color</p>
 
-P.<span class="hljs-property">getCurrentColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getCurrentColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> { rgb, hsl, hwb, lab, lch } = <span class="hljs-variable language_">this</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">returnColor</span>(rgb, hsl, hwb, lab, lch);
-};
+    <span class="hljs-keyword">const</span> { rgb, hsl, hwb, lab, lch, oklab, oklch } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">returnColor</span>(rgb, hsl, hwb, lab, lch, oklab, oklch);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <p><code>getMinimumColor</code> - returns current color</p>
 
-P.<span class="hljs-property">getMinimumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getMinimumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> { rgb_min, hsl_min, hwb_min, lab_min, lch_min } = <span class="hljs-variable language_">this</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">returnColor</span>(rgb_min, hsl_min, hwb_min, lab_min, lch_min);
-};
+    <span class="hljs-keyword">const</span> { rgb_min, hsl_min, hwb_min, lab_min, lch_min, oklab_min, oklch_min } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">returnColor</span>(rgb_min, hsl_min, hwb_min, lab_min, lch_min, oklab_min, oklch_min);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <p><code>getMaximumColor</code> - returns current color</p>
 
-P.<span class="hljs-property">getMaximumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getMaximumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> { rgb_max, hsl_max, hwb_max, lab_max, lch_max } = <span class="hljs-variable language_">this</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">returnColor</span>(rgb_max, hsl_max, hwb_max, lab_max, lch_max);
-};
+    <span class="hljs-keyword">const</span> { rgb_max, hsl_max, hwb_max, lab_max, lch_max, oklab_max, oklch_max } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">returnColor</span>(rgb_max, hsl_max, hwb_max, lab_max, lch_max, oklab_max, oklch_max);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
+              </div>
+              <p><code>returnColor</code> - internal helper function</p>
 
-P.<span class="hljs-property">returnColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">rgb, hsl, hwb, lab, lch</span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">returnColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">rgb, hsl, hwb, lab, lch, oklab, oklch</span>) {
 
     <span class="hljs-keyword">if</span> (rgb == <span class="hljs-literal">null</span>) {
 
-        ({rgb, hsl, hwb, lab, lch} = <span class="hljs-variable language_">this</span>);
+        ({rgb, hsl, hwb, lab, lch, oklab, oklch} = <span class="hljs-variable language_">this</span>);
     }
 
     <span class="hljs-keyword">const</span> { buildColorString, returnColorAs } = <span class="hljs-variable language_">this</span>;
@@ -1290,12 +1362,33 @@ P.<span class="hljs-property">returnColor</span> = <span class="hljs-keyword">fu
             <span class="hljs-keyword">if</span> (!supportsLCH) <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...rgb, <span class="hljs-string">&#x27;RGB&#x27;</span>);
             <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...lch, <span class="hljs-string">&#x27;LCH&#x27;</span>);
 
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;OKLAB&#x27;</span> :
+            <span class="hljs-keyword">if</span> (!supportsOKLAB) <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...rgb, <span class="hljs-string">&#x27;RGB&#x27;</span>);
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...oklab, <span class="hljs-string">&#x27;OKLAB&#x27;</span>);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;OKLCH&#x27;</span> :
+            <span class="hljs-keyword">if</span> (!supportsOKLCH) <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...rgb, <span class="hljs-string">&#x27;RGB&#x27;</span>);
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildColorString</span>(...oklch, <span class="hljs-string">&#x27;OKLCH&#x27;</span>);
+
         <span class="hljs-keyword">default</span> :
             <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>;
     }
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <p><code>returnColorFromValues</code> - internal helper function</p>
 
-P.<span class="hljs-property">returnColorFromValues</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">b, c, d, a</span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">returnColorFromValues</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">b, c, d, a</span>) {
 
     <span class="hljs-keyword">const</span> { colorSpace, returnColorAs } = <span class="hljs-variable language_">this</span>;
 
@@ -1307,6 +1400,8 @@ P.<span class="hljs-property">returnColorFromValues</span> = <span class="hljs-k
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;HWB&#x27;</span> === returnColorAs &amp;&amp; !supportsHWB) flag = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;LAB&#x27;</span> === returnColorAs &amp;&amp; !supportsLAB) flag = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;LCH&#x27;</span> === returnColorAs &amp;&amp; !supportsLCH) flag = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;OKLAB&#x27;</span> === returnColorAs &amp;&amp; !supportsOKLAB) flag = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;OKLCH&#x27;</span> === returnColorAs &amp;&amp; !supportsOKLCH) flag = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">if</span> (flag) {
 
@@ -1314,9 +1409,22 @@ P.<span class="hljs-property">returnColorFromValues</span> = <span class="hljs-k
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">returnColor</span>();
     }
     <span class="hljs-keyword">return</span> col;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
+              </div>
+              <p><code>buildColorString</code> - internal helper function</p>
 
-P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">a, b, c, d, req</span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">a, b, c, d, req</span>) {
 
     <span class="hljs-keyword">if</span> (!req) req = <span class="hljs-variable language_">this</span>.<span class="hljs-property">returnColorAs</span>;
 
@@ -1327,7 +1435,9 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;HWB&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`hwb(<span class="hljs-subst">${a}</span> <span class="hljs-subst">${b}</span>% <span class="hljs-subst">${c}</span>% / <span class="hljs-subst">${d}</span>)`</span>;
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;LAB&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`lab(<span class="hljs-subst">${a}</span>% <span class="hljs-subst">${b}</span> <span class="hljs-subst">${c}</span> / <span class="hljs-subst">${d}</span>)`</span>;
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;LCH&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`lch(<span class="hljs-subst">${a}</span>% <span class="hljs-subst">${b}</span> <span class="hljs-subst">${c}</span> / <span class="hljs-subst">${d}</span>)`</span>;
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;XYZ&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`xyz(<span class="hljs-subst">${a}</span>% <span class="hljs-subst">${b}</span> <span class="hljs-subst">${c}</span> / <span class="hljs-subst">${d}</span>)`</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;OKLAB&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`oklab(<span class="hljs-subst">${a * <span class="hljs-number">100</span>}</span>% <span class="hljs-subst">${b}</span> <span class="hljs-subst">${c}</span> / <span class="hljs-subst">${d}</span>)`</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;OKLCH&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`oklch(<span class="hljs-subst">${a * <span class="hljs-number">100</span>}</span>% <span class="hljs-subst">${b}</span> <span class="hljs-subst">${c}</span> / <span class="hljs-subst">${d}</span>)`</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;XYZ&#x27;</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">`xyz(<span class="hljs-subst">${a}</span> <span class="hljs-subst">${b}</span> <span class="hljs-subst">${c}</span> / <span class="hljs-subst">${d}</span>)`</span>;
         <span class="hljs-keyword">default</span> : <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>;
     }
 }</pre></div></div>
@@ -1335,11 +1445,11 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-31">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>generateRandomColor</code> - generate a random, fully opaque color</p>
 
@@ -1361,11 +1471,11 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-32">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>checkColor</code> - input is a CSS color string; output will be a color string which is displayable on the user’s device/browser</p>
 
@@ -1379,6 +1489,8 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
 
         <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;hsl&#x27;</span>)) colSpace = <span class="hljs-string">&#x27;HSL&#x27;</span>;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;hwb&#x27;</span>)) colSpace = <span class="hljs-string">&#x27;HWB&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;oklab&#x27;</span>)) colSpace = <span class="hljs-string">&#x27;OKLAB&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;oklch&#x27;</span>)) colSpace = <span class="hljs-string">&#x27;OKLCH&#x27;</span>;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;lab&#x27;</span>)) colSpace = <span class="hljs-string">&#x27;LAB&#x27;</span>;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;lch&#x27;</span>)) colSpace = <span class="hljs-string">&#x27;LCH&#x27;</span>;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;xyz&#x27;</span>)) colSpace = <span class="hljs-string">&#x27;XYZ&#x27;</span>;
@@ -1402,11 +1514,11 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-33">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>getRangeColor</code> - function which generates a color in the range between the minimum and maximum colors. </p>
 <ul>
@@ -1427,18 +1539,19 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-34">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
-              <p>KNOWN issue with HSL/HWB/LCH gradients which this line attempts to fix</p>
+              <p>KNOWN issue with HSL/HWB/LCH/OKLCH gradients which this line attempts to fix</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (internalGradientBuild &amp;&amp; [<span class="hljs-string">&#x27;HSL&#x27;</span>, <span class="hljs-string">&#x27;HWB&#x27;</span>].<span class="hljs-title function_">includes</span>(col)) col = <span class="hljs-string">&#x27;RGB&#x27;</span>;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (internalGradientBuild &amp;&amp; <span class="hljs-string">&#x27;LCH&#x27;</span> === col) col = <span class="hljs-string">&#x27;LAB&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (internalGradientBuild &amp;&amp; <span class="hljs-string">&#x27;OKLCH&#x27;</span> === col) col = <span class="hljs-string">&#x27;OKLAB&#x27;</span>;
 
         <span class="hljs-keyword">const</span> vals = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">calculateRangeColorValues</span>(item, internalGradientBuild),
             res = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildColorString</span>(...vals, col);
@@ -1451,11 +1564,11 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-35">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>calculateRangeColorValues</code> - internal helper function</p>
 
@@ -1472,11 +1585,11 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-36">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>KNOWN issue with HSL/HWB/LCH gradients which this line attempts to fix</p>
 
@@ -1484,6 +1597,7 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (internalGradientBuild &amp;&amp; [<span class="hljs-string">&#x27;HSL&#x27;</span>, <span class="hljs-string">&#x27;HWB&#x27;</span>].<span class="hljs-title function_">includes</span>(colorSpace)) col = <span class="hljs-string">&#x27;rgb&#x27;</span>;
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (internalGradientBuild &amp;&amp; <span class="hljs-string">&#x27;LCH&#x27;</span> === colorSpace) col = <span class="hljs-string">&#x27;lab&#x27;</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (internalGradientBuild &amp;&amp; <span class="hljs-string">&#x27;OKLCH&#x27;</span> === colorSpace) col = <span class="hljs-string">&#x27;oklab&#x27;</span>;
 
     <span class="hljs-keyword">const</span> [bMin, cMin, dMin, aMin] = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${col}</span>_min`</span>];
     <span class="hljs-keyword">const</span> [bMax, cMax, dMax, aMax] = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${col}</span>_max`</span>];
@@ -1499,11 +1613,11 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-37">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>These aren’t producing colors like CSS gradients - something wierd about seeing bright violet between red/blue, instead of a more muddy purple (matching what gets presented in the RGB color space) which CSS gradients present.</p>
 
@@ -1539,17 +1653,18 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-38">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
-              <p>LCH also has the HSL/HWB issue, but not as pronounced</p>
+              <p>LCH, OKLCH also has the HSL/HWB issue, but not as pronounced</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;lch&#x27;</span> :
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;oklch&#x27;</span> :
 
             test = dMax - dMin;
 
@@ -1578,13 +1693,13 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-39">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
-              <p>RGB/LAB generate color gradients matching CSS. XYZ also looks good.</p>
+              <p>RGB/LAB/OKLAB generate color gradients matching CSS. XYZ also looks good.</p>
 
             </div>
             
@@ -1609,11 +1724,364 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-40">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
+              <p><code>getAlphaValue</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getAlphaValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">alpha</span>) {
+
+    <span class="hljs-keyword">let</span> a = <span class="hljs-number">1</span>;
+
+    <span class="hljs-keyword">if</span> (alpha != <span class="hljs-literal">null</span>) {
+
+        <span class="hljs-keyword">if</span> (alpha.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;%&#x27;</span>) &gt; <span class="hljs-number">0</span>) a = <span class="hljs-built_in">parseFloat</span>(alpha) / <span class="hljs-number">100</span>;
+        <span class="hljs-keyword">else</span> a = <span class="hljs-built_in">parseFloat</span>(alpha);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
+              </div>
+              <p>This test should capture alpha values of <code>none</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(a)) a = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (a &gt; <span class="hljs-number">1</span>) a = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( a &lt; <span class="hljs-number">0</span>) a = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">return</span> a;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
+              </div>
+              <p><code>getHueValue</code> - internal helper function - because the CSS <code>hue</code> definition is massively overloaded with possibilities</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getHueValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">hue</span>) {
+
+    <span class="hljs-keyword">if</span> (hue === <span class="hljs-string">&#x27;none&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;deg&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = <span class="hljs-built_in">parseFloat</span>(hue)
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;rad&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = <span class="hljs-built_in">parseFloat</span>(hue) / radian;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;grad&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = (<span class="hljs-built_in">parseFloat</span>(hue) / <span class="hljs-number">400</span>) * <span class="hljs-number">360</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;turn&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = <span class="hljs-built_in">parseFloat</span>(hue) * <span class="hljs-number">360</span>;
+    <span class="hljs-keyword">else</span> hue = <span class="hljs-built_in">parseFloat</span>(hue);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-50">&#x00a7;</a>
+              </div>
+              <p>We test and correct for the hue-related <code>none</code> value here</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(hue)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-title function_">correctAngle</span>(hue);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-51">&#x00a7;</a>
+              </div>
+              <p><code>getColorValuesFromString</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getColorValuesFromString</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">str, col</span>) {
+
+    str = str.<span class="hljs-title function_">replace</span>(col, <span class="hljs-string">&#x27;&#x27;</span>);
+    str = str.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+    str = str.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+    str = str.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+
+    <span class="hljs-keyword">const</span> res = str.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
+              </div>
+              <p>We test and correct for the <code>none</code> value here (excluding alpha channel)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (res[<span class="hljs-number">0</span>] == <span class="hljs-literal">null</span> || res[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;none&#x27;</span>) res[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;0&#x27;</span>;
+    <span class="hljs-keyword">if</span> (res[<span class="hljs-number">1</span>] == <span class="hljs-literal">null</span> || res[<span class="hljs-number">1</span>] === <span class="hljs-string">&#x27;none&#x27;</span>) res[<span class="hljs-number">1</span>] = <span class="hljs-string">&#x27;0&#x27;</span>;
+    <span class="hljs-keyword">if</span> (res[<span class="hljs-number">2</span>] == <span class="hljs-literal">null</span> || res[<span class="hljs-number">2</span>] === <span class="hljs-string">&#x27;none&#x27;</span>) res[<span class="hljs-number">2</span>] = <span class="hljs-string">&#x27;0&#x27;</span>;
+
+    <span class="hljs-keyword">return</span> res;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-53">&#x00a7;</a>
+              </div>
+              <p><code>extractFromHwbColorString</code> - internal helper function</p>
+<ul>
+<li>TODO: this function differs from other <code>extractFrom...</code> functions in that it returns RGB color values - consider changing this so that it better matches the operation of the other functions?</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractFromHwbColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
+
+    <span class="hljs-keyword">const</span> { getAlphaValue, getHueValue, getColorValuesFromString } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">let</span> vals, a, b, c, d, hue, white, black;
+
+    vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, <span class="hljs-string">&#x27;hwb&#x27;</span>);
+
+    hue = <span class="hljs-title function_">getHueValue</span>(vals[<span class="hljs-number">0</span>]);
+    white = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]);
+    black = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]);
+    a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
+
+    [b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertHWBtoRGB</span>(hue, white, black);
+
+    b = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(b * <span class="hljs-number">255</span>);
+    <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">255</span>) b = <span class="hljs-number">255</span>;
+    <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">0</span>) b = <span class="hljs-number">0</span>;
+
+    c = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(c * <span class="hljs-number">255</span>);
+    <span class="hljs-keyword">if</span> (c &gt; <span class="hljs-number">255</span>) c = <span class="hljs-number">255</span>;
+    <span class="hljs-keyword">if</span> (c &lt; <span class="hljs-number">0</span>) c = <span class="hljs-number">0</span>;
+
+    d = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(d * <span class="hljs-number">255</span>);
+    <span class="hljs-keyword">if</span> (d &gt; <span class="hljs-number">255</span>) d = <span class="hljs-number">255</span>;
+    <span class="hljs-keyword">if</span> (d &lt; <span class="hljs-number">0</span>) d = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">return</span> [a, b, c, d];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-54">&#x00a7;</a>
+              </div>
+              <p><code>extractFromXyzColorString</code> - internal helper function</p>
+<ul>
+<li>Note: The Color specification doesn’t define an XYZ standard input for CSS. So we have to make one up ourselves. SC expects to receive colors defined in the XYZ color space to be raw float Numbers separated by spaces and (if required) a slash followed by the alpha value</li>
+<li><code>xyz(x-value y-value z-value)</code> (with alpha = 1, opaque)</li>
+<li><code>xyz(x-value y-value z-value / alpha-value)</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractFromXyzColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
+
+    <span class="hljs-keyword">const</span> { getAlphaValue, getColorValuesFromString } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">let</span> vals, a, b, c, d;
+
+    vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, <span class="hljs-string">&#x27;xyz&#x27;</span>);
+    b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
+    c = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]);
+    d = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]);
+    a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
+
+    <span class="hljs-keyword">return</span> [a, b, c, d];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-55">&#x00a7;</a>
+              </div>
+              <p><code>extractFromLabColorString</code> - internal helper function</p>
+<ul>
+<li>Corrects for channel bounds, as suggested in the CSS Color Module spec</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractFromLabColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
+
+    <span class="hljs-keyword">const</span> { getAlphaValue, getColorValuesFromString } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">let</span> vals, a, b, c, d;
+
+    vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, <span class="hljs-string">&#x27;lab&#x27;</span>);
+    b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
+    <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">100</span>) b = <span class="hljs-number">100</span>;
+    <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">0</span>) b = <span class="hljs-number">0</span>;
+
+    c = (vals[<span class="hljs-number">1</span>].<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;%&#x27;</span>) &gt; <span class="hljs-number">0</span>) ? <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]) * <span class="hljs-number">1.25</span> : <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]);
+    <span class="hljs-keyword">if</span> (c &gt; <span class="hljs-number">160</span>) c = <span class="hljs-number">160</span>;
+    <span class="hljs-keyword">if</span> (c &lt; -<span class="hljs-number">160</span>) c = -<span class="hljs-number">160</span>;
+
+    d = (vals[<span class="hljs-number">2</span>].<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;%&#x27;</span>) &gt; <span class="hljs-number">0</span>) ? <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]) * <span class="hljs-number">1.25</span> : <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]);
+    <span class="hljs-keyword">if</span> (d &gt; <span class="hljs-number">160</span>) d = <span class="hljs-number">160</span>;
+    <span class="hljs-keyword">if</span> (d &lt; -<span class="hljs-number">160</span>) d = -<span class="hljs-number">160</span>;
+
+    a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
+
+    <span class="hljs-keyword">return</span> [a, b, c, d];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-56">&#x00a7;</a>
+              </div>
+              <p><code>extractFromOklabColorString</code> - internal helper function</p>
+<ul>
+<li>Corrects for channel bounds, as suggested in the CSS Color Module spec</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractFromOklabColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
+
+    <span class="hljs-keyword">const</span> { getAlphaValue, getColorValuesFromString } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">let</span> vals, a, b, c, d;
+
+    vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, <span class="hljs-string">&#x27;oklab&#x27;</span>);
+    b = (vals[<span class="hljs-number">0</span>].<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;%&#x27;</span>) &gt; <span class="hljs-number">0</span>) ? <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]) / <span class="hljs-number">100</span> : <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
+    <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">1</span>) b = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">0</span>) b = <span class="hljs-number">0</span>;
+
+    c = (vals[<span class="hljs-number">1</span>].<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;%&#x27;</span>) &gt; <span class="hljs-number">0</span>) ? (<span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]) / <span class="hljs-number">100</span>) * <span class="hljs-number">0.4</span> : <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]);
+    <span class="hljs-keyword">if</span> (c &gt; <span class="hljs-number">0.5</span>) c = <span class="hljs-number">0.5</span>;
+    <span class="hljs-keyword">if</span> (c &lt; -<span class="hljs-number">0.5</span>) c = -<span class="hljs-number">0.5</span>;
+
+    d = (vals[<span class="hljs-number">2</span>].<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;%&#x27;</span>) &gt; <span class="hljs-number">0</span>) ? (<span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]) / <span class="hljs-number">100</span>) * <span class="hljs-number">0.4</span> : <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]);
+    <span class="hljs-keyword">if</span> (d &gt; <span class="hljs-number">0.5</span>) d = <span class="hljs-number">0.5</span>;
+    <span class="hljs-keyword">if</span> (d &lt; -<span class="hljs-number">0.5</span>) d = -<span class="hljs-number">0.5</span>;
+
+    a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
+
+    <span class="hljs-keyword">return</span> [a, b, c, d];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-57">&#x00a7;</a>
+              </div>
+              <p><code>extractFromLchColorString</code> - internal helper function</p>
+<ul>
+<li>Corrects for channel bounds, as suggested in the CSS Color Module spec</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractFromLchColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
+
+    <span class="hljs-keyword">const</span> { getAlphaValue, getHueValue, getColorValuesFromString } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">let</span> vals, a, b, c, d;
+
+    vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, <span class="hljs-string">&#x27;lch&#x27;</span>);
+    b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
+    <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">100</span>) b = <span class="hljs-number">100</span>;
+    <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">0</span>) b = <span class="hljs-number">0</span>;
+
+    c = (vals[<span class="hljs-number">1</span>].<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;%&#x27;</span>) &gt; <span class="hljs-number">0</span>) ? <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]) * <span class="hljs-number">1.5</span> : <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]);
+    <span class="hljs-keyword">if</span> (c &gt; <span class="hljs-number">230</span>) c = <span class="hljs-number">230</span>;
+    <span class="hljs-keyword">if</span> (c &lt; <span class="hljs-number">0</span>) c = <span class="hljs-number">0</span>;
+
+    d = <span class="hljs-title function_">getHueValue</span>(vals[<span class="hljs-number">2</span>]);
+    a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
+
+    <span class="hljs-keyword">return</span> [a, b, c, d];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-58">&#x00a7;</a>
+              </div>
+              <p><code>extractFromOklchColorString</code> - internal helper function</p>
+<ul>
+<li>Corrects for channel bounds, as suggested in the CSS Color Module spec</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractFromOklchColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
+
+    <span class="hljs-keyword">const</span> { getAlphaValue, getHueValue, getColorValuesFromString } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">let</span> vals, a, b, c, d;
+
+    vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, <span class="hljs-string">&#x27;oklch&#x27;</span>);
+    b = b = (vals[<span class="hljs-number">0</span>].<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;%&#x27;</span>) &gt; <span class="hljs-number">0</span>) ? <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]) / <span class="hljs-number">100</span> : <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
+    <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">1</span>) b = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">0</span>) b = <span class="hljs-number">0</span>;
+
+    c = (vals[<span class="hljs-number">1</span>].<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;%&#x27;</span>) &gt; <span class="hljs-number">0</span>) ? (<span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]) / <span class="hljs-number">100</span>) * <span class="hljs-number">0.4</span> : <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]);
+    <span class="hljs-keyword">if</span> (c &gt; <span class="hljs-number">0.4</span>) c = <span class="hljs-number">0.4</span>;
+    <span class="hljs-keyword">if</span> (c &lt; <span class="hljs-number">0</span>) c = <span class="hljs-number">0</span>;
+
+    d = <span class="hljs-title function_">getHueValue</span>(vals[<span class="hljs-number">2</span>]);
+    a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
+
+    <span class="hljs-keyword">return</span> [a, b, c, d];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>convert</code> - internal function. Takes a color string and converts it into a variety of color space values. Makes use of the following functions:</p>
 <ul>
@@ -1622,6 +2090,8 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
 <li><code>convertXYZtoRGB</code>, <code>convertRGBtoXYZ</code></li>
 <li><code>convertXYZtoLAB</code>, <code>convertLABtoXYZ</code></li>
 <li><code>convertLABtoLCH</code>, <code>convertLCHtoLAB</code></li>
+<li><code>convertXYZtoOKLAB</code>, <code>convertOKLABtoXYZ</code></li>
+<li><code>convertOKLABtoOKLCH</code>, <code>convertOKLCHtoOKLAB</code></li>
 </ul>
 
             </div>
@@ -1631,11 +2101,11 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-41">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p>Currently converting to as many color spaces as possible - we can make this more sane by only converting for the colors we want to convert (RGB + the internal color space + the returned color space)</p>
 
@@ -1649,16 +2119,18 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
     <span class="hljs-keyword">const</span> hwb = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`hwb<span class="hljs-subst">${suffix}</span>`</span>];
     <span class="hljs-keyword">const</span> xyz = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`xyz<span class="hljs-subst">${suffix}</span>`</span>];
     <span class="hljs-keyword">const</span> lab = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`lab<span class="hljs-subst">${suffix}</span>`</span>];
-    <span class="hljs-keyword">const</span> lch = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`lch<span class="hljs-subst">${suffix}</span>`</span>];</pre></div></div>
+    <span class="hljs-keyword">const</span> lch = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`lch<span class="hljs-subst">${suffix}</span>`</span>];
+    <span class="hljs-keyword">const</span> oklab = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`oklab<span class="hljs-subst">${suffix}</span>`</span>];
+    <span class="hljs-keyword">const</span> oklch = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`oklch<span class="hljs-subst">${suffix}</span>`</span>];</pre></div></div>
             
         </li>
         
         
-        <li id="section-42">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>Initializing defs in the constructor causes an error - this should avoid it</p>
 
@@ -1672,79 +2144,14 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
     xyz.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
     lab.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
     lch.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    oklab.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    oklch.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">let</span> r = <span class="hljs-number">0</span>,
-        g = <span class="hljs-number">0</span>,
-        b = <span class="hljs-number">0</span>,
-        a = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
-              </div>
-              <p>TODO: make this more efficient so we only convert to the color spaces we need (RGB, internal color space, return color space)</p>
+    <span class="hljs-keyword">let</span> a, b, c, d;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;hwb&#x27;</span>) &gt;= <span class="hljs-number">0</span> &amp;&amp; !supportsHWB) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
-              </div>
-              <p>This could be handled better via a regex, but also need to deal with angle units</p>
+    <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;hwb&#x27;</span>) &gt;= <span class="hljs-number">0</span> &amp;&amp; !supportsHWB) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;hwb&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-
-        <span class="hljs-keyword">const</span> vals = color.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);
-
-        <span class="hljs-keyword">let</span> hue = vals[<span class="hljs-number">0</span>];
-        <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;deg&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = <span class="hljs-built_in">parseFloat</span>(hue)
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;rad&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = <span class="hljs-built_in">parseFloat</span>(hue) / radian;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;grad&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = (<span class="hljs-built_in">parseFloat</span>(hue) / <span class="hljs-number">400</span>) * <span class="hljs-number">360</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;turn&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = <span class="hljs-built_in">parseFloat</span>(hue) * <span class="hljs-number">360</span>;
-        <span class="hljs-keyword">else</span> hue = <span class="hljs-built_in">parseFloat</span>(hue);
-
-        hue = <span class="hljs-title function_">correctAngle</span>(hue);
-
-       <span class="hljs-keyword">let</span> white = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]),
-           black = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]),
-           alpha = vals[<span class="hljs-number">3</span>];
-
-        <span class="hljs-keyword">if</span> (alpha != <span class="hljs-literal">null</span>) {
-
-            a = (alpha.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;%&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-built_in">parseFloat</span>(alpha) / <span class="hljs-number">100</span> : <span class="hljs-built_in">parseFloat</span>(alpha);
-        }
-        <span class="hljs-keyword">else</span> a = <span class="hljs-number">1</span>;
-
-        <span class="hljs-keyword">let</span> [b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertHWBtoRGB</span>(hue, white, black);
-
-        b = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(b * <span class="hljs-number">255</span>);
-        <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">255</span>) b = <span class="hljs-number">255</span>;
-        <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">0</span>) b = <span class="hljs-number">0</span>;
-
-        c = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(c * <span class="hljs-number">255</span>);
-        <span class="hljs-keyword">if</span> (c &gt; <span class="hljs-number">255</span>) c = <span class="hljs-number">255</span>;
-        <span class="hljs-keyword">if</span> (c &lt; <span class="hljs-number">0</span>) c = <span class="hljs-number">0</span>;
-
-        d = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(d * <span class="hljs-number">255</span>);
-        <span class="hljs-keyword">if</span> (d &gt; <span class="hljs-number">255</span>) d = <span class="hljs-number">255</span>;
-        <span class="hljs-keyword">if</span> (d &lt; <span class="hljs-number">0</span>) d = <span class="hljs-number">0</span>;
+        [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromHwbColorString</span>(color);
 
         rgb.<span class="hljs-title function_">push</span>(b, c, d, a);
         hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(b, c, d), a);
@@ -1752,63 +2159,52 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         xyz.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoXYZ</span>(b, c, d), a);
         lab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
         lch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoLCH</span>(lab[<span class="hljs-number">0</span>], lab[<span class="hljs-number">1</span>], lab[<span class="hljs-number">2</span>]), a);
-    }</pre></div></div>
-            
-        </li>
+        oklab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoOKLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        oklch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoOKLCH</span>(oklab[<span class="hljs-number">0</span>], oklab[<span class="hljs-number">1</span>], oklab[<span class="hljs-number">2</span>]), a);
+    } 
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;xyz&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
         
-        
-        <li id="section-45">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
-              </div>
-              <p>The Color specification doesn’t define an XYZ standard input for CSS. So we have to make one up ourselves. SC expects to receive colors defined in the XYZ color space to be raw float Numbers separated by spaces and (if required) a slash followed by the alpha value</p>
-<ul>
-<li><code>xyz(x-value y-value z-value)</code> (with alpha = 1, opaque)</li>
-<li><code>xyz(x-value y-value z-value / alpha-value)</code></li>
-</ul>
+        [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromXyzColorString</span>(color);
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;xyz&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
-        
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;xyz&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-
-        <span class="hljs-keyword">const</span> vals = color.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);
-
-        <span class="hljs-keyword">const</span> x = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]),
-            y = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]),
-            z = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]),
-            alpha = vals[<span class="hljs-number">3</span>];
-
-        a = (alpha != <span class="hljs-literal">null</span>) ? <span class="hljs-built_in">parseFloat</span>(alpha) : <span class="hljs-number">1</span>;
-
-        rgb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(x, y, z), a);
+        rgb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(b, c, d), a);
         hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>]), a);
         hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>], hsl[<span class="hljs-number">0</span>]), a);
-        xyz.<span class="hljs-title function_">push</span>(x, y, z, a);
-        lab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoLAB</span>(x, y, z), a);
+        xyz.<span class="hljs-title function_">push</span>(b, c, d, a);
+        lab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoLAB</span>(b, c, d), a);
         lch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoLCH</span>(lab[<span class="hljs-number">0</span>], lab[<span class="hljs-number">1</span>], lab[<span class="hljs-number">2</span>]), a);
+        oklab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoOKLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        oklch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoOKLCH</span>(oklab[<span class="hljs-number">0</span>], oklab[<span class="hljs-number">1</span>], oklab[<span class="hljs-number">2</span>]), a);
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;oklab&#x27;</span>) &gt;= <span class="hljs-number">0</span> &amp;&amp; !supportsOKLAB) {
+
+        [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromOklabColorString</span>(color);
+
+        oklab.<span class="hljs-title function_">push</span>(b, c, d, a);
+        oklch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoOKLCH</span>(b, c, d), a);
+        xyz.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoXYZ</span>(b, c, d), a);
+        lab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        lch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoLCH</span>(lab[<span class="hljs-number">0</span>], lab[<span class="hljs-number">1</span>], lab[<span class="hljs-number">2</span>]), a);
+        rgb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>]), a);
+        hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>], hsl[<span class="hljs-number">0</span>]), a);
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;oklch&#x27;</span>) &gt;= <span class="hljs-number">0</span> &amp;&amp; !supportsOKLCH) {
+
+        [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromOklchColorString</span>(color);
+
+        oklch.<span class="hljs-title function_">push</span>(b, c, d, a);
+        oklab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLCHtoOKLAB</span>(b, c, d), a);
+        xyz.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoXYZ</span>(oklab[<span class="hljs-number">0</span>], oklab[<span class="hljs-number">1</span>], oklab[<span class="hljs-number">2</span>]), a);
+        lab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        lch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoLCH</span>(lab[<span class="hljs-number">0</span>], lab[<span class="hljs-number">1</span>], lab[<span class="hljs-number">2</span>]), a);
+        rgb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>]), a);
+        hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>], hsl[<span class="hljs-number">0</span>]), a);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;rgb&#x27;</span>, rgb, <span class="hljs-string">&#x27;oklch&#x27;</span>, oklch)
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;lab&#x27;</span>) &gt;= <span class="hljs-number">0</span> &amp;&amp; !supportsLAB) {
 
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;lab&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-
-        <span class="hljs-keyword">const</span> vals = color.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);
-
-        <span class="hljs-keyword">const</span> b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]),
-            c = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]),
-            d = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]),
-            alpha = vals[<span class="hljs-number">3</span>];
-
-        a = (alpha != <span class="hljs-literal">null</span>) ? <span class="hljs-built_in">parseFloat</span>(alpha) : <span class="hljs-number">1</span>;
+        [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromLabColorString</span>(color);
 
         lab.<span class="hljs-title function_">push</span>(b, c, d, a);
         xyz.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoXYZ</span>(b, c, d), a);
@@ -1816,22 +2212,12 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>]), a);
         hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>], hsl[<span class="hljs-number">0</span>]), a);
         lch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoLCH</span>(b, c, d), a);
+        oklab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoOKLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        oklch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoOKLCH</span>(oklab[<span class="hljs-number">0</span>], oklab[<span class="hljs-number">1</span>], oklab[<span class="hljs-number">2</span>]), a);
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;lch&#x27;</span>) &gt;= <span class="hljs-number">0</span> &amp;&amp; !supportsLCH) {
 
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;lch&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-
-        <span class="hljs-keyword">const</span> vals = color.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);
-
-        <span class="hljs-keyword">const</span> b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]),
-            c = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]),
-            d = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]),
-            alpha = vals[<span class="hljs-number">3</span>];
-
-        a = (alpha != <span class="hljs-literal">null</span>) ? <span class="hljs-built_in">parseFloat</span>(alpha) : <span class="hljs-number">1</span>;
+        [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromLchColorString</span>(color);
 
         lch.<span class="hljs-title function_">push</span>(b, c, d, a);
         lab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLCHtoLAB</span>(b, c, d), a);
@@ -1839,16 +2225,21 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         rgb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
         hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>]), a);
         hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>], hsl[<span class="hljs-number">0</span>]), a);
+        oklab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoOKLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        oklch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoOKLCH</span>(oklab[<span class="hljs-number">0</span>], oklab[<span class="hljs-number">1</span>], oklab[<span class="hljs-number">2</span>]), a);
     }
     <span class="hljs-keyword">else</span> {
 
-        [r, g, b, a] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getColorFromCanvas</span>(color);
-        rgb.<span class="hljs-title function_">push</span>(r, g, b, a);
-        hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(r, g, b), a);
-        hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(r, g, b, hsl[<span class="hljs-number">0</span>]), a);
-        xyz.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoXYZ</span>(r, g, b), a);
+        [b, c, d, a] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getColorFromCanvas</span>(color);
+
+        rgb.<span class="hljs-title function_">push</span>(b, c, d, a);
+        hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(b, c, d), a);
+        hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(b, c, d, hsl[<span class="hljs-number">0</span>]), a);
+        xyz.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoXYZ</span>(b, c, d), a);
         lab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
         lch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoLCH</span>(lab[<span class="hljs-number">0</span>], lab[<span class="hljs-number">1</span>], lab[<span class="hljs-number">2</span>]), a);
+        oklab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoOKLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
+        oklch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoOKLCH</span>(oklab[<span class="hljs-number">0</span>], oklab[<span class="hljs-number">1</span>], oklab[<span class="hljs-number">2</span>]), a);
     }
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -1856,11 +2247,11 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-46">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>extractRGBfromColor</code> - takes a color string and returns it’s RGB equivalent channel values:</p>
 
@@ -1870,146 +2261,49 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
 
     color = color.<span class="hljs-title function_">toLowerCase</span>();
 
-    <span class="hljs-keyword">let</span> b, c, d, a, vals, alpha, hue, white, black;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-47">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
-              </div>
-              <p>TODO: make this more efficient so we only convert to the color spaces we need (RGB, internal color space, return color space)</p>
+    <span class="hljs-keyword">let</span> a, b, c, d;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;hwb&#x27;</span>) &amp;&amp; !supportsHWB) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-48">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
-              </div>
-              <p>This could be handled better via a regex, but also need to deal with angle units</p>
+    <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;hwb&#x27;</span>) &amp;&amp; !supportsHWB) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;hwb&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-
-        <span class="hljs-keyword">const</span> vals = color.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);
-
-        hue = vals[<span class="hljs-number">0</span>];
-        <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;deg&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = <span class="hljs-built_in">parseFloat</span>(hue)
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;rad&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = <span class="hljs-built_in">parseFloat</span>(hue) / radian;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;grad&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = (<span class="hljs-built_in">parseFloat</span>(hue) / <span class="hljs-number">400</span>) * <span class="hljs-number">360</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hue.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;turn&#x27;</span>) &gt;= <span class="hljs-number">0</span>) hue = <span class="hljs-built_in">parseFloat</span>(hue) * <span class="hljs-number">360</span>;
-        <span class="hljs-keyword">else</span> hue = <span class="hljs-built_in">parseFloat</span>(hue);
-
-        hue = <span class="hljs-title function_">correctAngle</span>(hue);
-
-        white = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]);
-        black = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]);
-        alpha = vals[<span class="hljs-number">3</span>];
-
-        <span class="hljs-keyword">if</span> (alpha != <span class="hljs-literal">null</span>) {
-
-            a = (alpha.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;%&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-built_in">parseFloat</span>(alpha) / <span class="hljs-number">100</span> : <span class="hljs-built_in">parseFloat</span>(alpha);
-        }
-        <span class="hljs-keyword">else</span> a = <span class="hljs-number">1</span>;
-
-        [b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertHWBtoRGB</span>(hue, white, black);
-
-        b = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(b * <span class="hljs-number">256</span>);
-        <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">255</span>) b = <span class="hljs-number">255</span>;
-        <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">0</span>) b = <span class="hljs-number">0</span>;
-
-        c = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(c * <span class="hljs-number">256</span>);
-        <span class="hljs-keyword">if</span> (c &gt; <span class="hljs-number">255</span>) c = <span class="hljs-number">255</span>;
-        <span class="hljs-keyword">if</span> (c &lt; <span class="hljs-number">0</span>) c = <span class="hljs-number">0</span>;
-
-        d = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(d * <span class="hljs-number">256</span>);
-        <span class="hljs-keyword">if</span> (d &gt; <span class="hljs-number">255</span>) d = <span class="hljs-number">255</span>;
-        <span class="hljs-keyword">if</span> (d &lt; <span class="hljs-number">0</span>) d = <span class="hljs-number">0</span>;
-
+        [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromHwbColorString</span>(color);
         <span class="hljs-keyword">return</span> [b, c, d, a];
     } 
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;xyz&#x27;</span>)) {
         
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;xyz&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-
-        vals = color.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);
-
-        b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
-        c = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]);
-        d = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]);
-        alpha = vals[<span class="hljs-number">3</span>];
-
-        a = (alpha != <span class="hljs-literal">null</span>) ? <span class="hljs-built_in">parseFloat</span>(alpha) : <span class="hljs-number">1</span>;
-
+        [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromXyzColorString</span>(color);
         <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(b, c, d), a];
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;oklab&#x27;</span>) &amp;&amp; !supportsOKLAB) {
+
+        [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromOklabColorString</span>(color);
+        <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoXYZ</span>(b, c, d)), a]; 
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;oklch&#x27;</span>) &gt;= <span class="hljs-number">0</span> &amp;&amp; !supportsOKLCH) {
+
+        [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromOklchColorString</span>(color);
+        <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoXYZ</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLCHtoOKLAB</span>(b, c, d))), a]; 
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;lab&#x27;</span>) &amp;&amp; !supportsLAB) {
 
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;lab&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-
-        vals = color.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);
-
-        b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
-        c = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]);
-        d = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]);
-        alpha = vals[<span class="hljs-number">3</span>];
-
-        a = (alpha != <span class="hljs-literal">null</span>) ? <span class="hljs-built_in">parseFloat</span>(alpha) : <span class="hljs-number">1</span>;
-
+        [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromLabColorString</span>(color);
         <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoXYZ</span>(b, c, d)), a]; 
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;lch&#x27;</span>) &gt;= <span class="hljs-number">0</span> &amp;&amp; !supportsLCH) {
 
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;lch&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;(&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;)&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-        color = color.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-
-        vals = color.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e != <span class="hljs-literal">null</span> &amp;&amp; e !== <span class="hljs-string">&#x27;&#x27;</span>);
-
-        b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
-        c = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]);
-        d = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]);
-        alpha = vals[<span class="hljs-number">3</span>];
-
-        a = (alpha != <span class="hljs-literal">null</span>) ? <span class="hljs-built_in">parseFloat</span>(alpha) : <span class="hljs-number">1</span>;
-
+        [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromLchColorString</span>(color);
         <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoXYZ</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLCHtoLAB</span>(b, c, d))), a]; 
     }
-    <span class="hljs-keyword">else</span> {
-
-        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getColorFromCanvas</span>(color);
-    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getColorFromCanvas</span>(color);
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-49">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>convertRGBtoHex</code> - takes 3 rgb color values (range 0-255) and returns a #hex string:</p>
 
@@ -2030,9 +2324,22 @@ P.<span class="hljs-property">buildColorString</span> = <span class="hljs-keywor
         <span class="hljs-keyword">return</span> <span class="hljs-string">`#<span class="hljs-subst">${r}</span><span class="hljs-subst">${g}</span><span class="hljs-subst">${b}</span>`</span>;
     }
     <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;#000000&#x27;</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
+              </div>
+              <p><code>getColorFromCanvas</code> - internal helper function</p>
 
-P.<span class="hljs-property">getColorFromCanvas</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getColorFromCanvas</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
 
     <span class="hljs-keyword">let</span> r = <span class="hljs-number">0</span>,
         g = <span class="hljs-number">0</span>,
@@ -2070,21 +2377,35 @@ P.<span class="hljs-property">getColorFromCanvas</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-50">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
-              <p>From <a href="https://www.w3.org/TR/css-color-4/#rgb-to-hsl">CSS Color Module Level 4</a> - which is weird because when I checked it sets up the hue value as NaN (!!!?!). So instead I’ve gone with the suggested answer in <a href="https://css-tricks.com/converting-color-spaces-in-javascript/">this CSS-Tricks article</a></p>
+              <h4 id="color-space-conversions">Color space conversions</h4>
+<p>The following functionality has been lifted/adapted from <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4</a></p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-66">&#x00a7;</a>
+              </div>
+              <p><code>convertRGBtoHSL</code> - internal helper function</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertRGBtoHSL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">red, green, blue</span>) {
 
-    red /= <span class="hljs-number">256</span>;
-    green /= <span class="hljs-number">256</span>;
-    blue /= <span class="hljs-number">256</span>;
+    red /= <span class="hljs-number">255</span>;
+    green /= <span class="hljs-number">255</span>;
+    blue /= <span class="hljs-number">255</span>;
 
     <span class="hljs-keyword">let</span> max = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(red, green, blue);
     <span class="hljs-keyword">let</span> min = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(red, green, blue);
@@ -2111,24 +2432,19 @@ P.<span class="hljs-property">getColorFromCanvas</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-51">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
-              <p>From <a href="https://www.w3.org/TR/css-color-4/#hsl-to-rgb">CSS Color Module Level 4</a></p>
+              <p><code>convertHSLtoRGB</code> - internal helper function</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertHSLtoRGB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">hue, sat, light</span>) {
     
-    hue = hue % <span class="hljs-number">360</span>;
-
-    <span class="hljs-keyword">if</span> (hue &lt; <span class="hljs-number">0</span>) {
-        hue += <span class="hljs-number">360</span>;
-    }
-
+    hue = <span class="hljs-title function_">correctAngle</span>(hue);
     sat /= <span class="hljs-number">100</span>;
     light /= <span class="hljs-number">100</span>;
 
@@ -2143,13 +2459,13 @@ P.<span class="hljs-property">getColorFromCanvas</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-52">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
-              <p>From <a href="https://www.w3.org/TR/css-color-4/#rgb-to-hwb">CSS Color Module Level 4</a></p>
+              <p><code>convertRGBtoHWB</code> - internal helper function</p>
 
             </div>
             
@@ -2170,13 +2486,13 @@ P.<span class="hljs-property">getColorFromCanvas</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-53">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
-              <p>From <a href="https://www.w3.org/TR/css-color-4/#rgb-to-hwb">CSS Color Module Level 4</a></p>
+              <p><code>convertRGBHtoHWB</code> - internal helper function</p>
 
             </div>
             
@@ -2195,13 +2511,13 @@ P.<span class="hljs-property">getColorFromCanvas</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-54">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
-              <p>From <a href="https://www.w3.org/TR/css-color-4/#hwb-to-rgb">CSS Color Module Level 4</a></p>
+              <p><code>convertHWBtoRGB</code> - internal helper function</p>
 
             </div>
             
@@ -2229,145 +2545,405 @@ P.<span class="hljs-property">getColorFromCanvas</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-55">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
-              <p>Code relating to XYZ conversion taken and adapted from the <a href="https://github.com/vinaypillai/ac-colors/blob/master/index.js">vinaypillai/ac-colors repository</a> on GitHub</p>
+              <p><code>multiplyMatrices</code> - internal helper function</p>
+<ul>
+<li>From <a href="https://www.w3.org/TR/css-color-4/multiply-matrices.js">CSS Color Module Level 4</a></li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertRGBtoXYZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">red, green, blue</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">multiplyMatrices</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">A, B</span>) {
 
-    <span class="hljs-keyword">const</span> invertGammaCorrection = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+    <span class="hljs-keyword">const</span> m = A.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">if</span> (val &lt;= <span class="hljs-number">0.04045</span>) <span class="hljs-keyword">return</span> val / <span class="hljs-number">12.92</span>;
-        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>((val + <span class="hljs-number">0.055</span>) / <span class="hljs-number">1.055</span>, <span class="hljs-number">2.4</span>);
-    };
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(A[<span class="hljs-number">0</span>])) A = [A];
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(B[<span class="hljs-number">0</span>])) B = B.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> [x]);
 
-    red /= <span class="hljs-number">255</span>;
-    green /= <span class="hljs-number">255</span>;
-    blue /= <span class="hljs-number">255</span>;
+    <span class="hljs-keyword">const</span> p = B[<span class="hljs-number">0</span>].<span class="hljs-property">length</span>;
+    <span class="hljs-keyword">const</span> B_cols = B[<span class="hljs-number">0</span>].<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">_, i</span>) =&gt;</span> B.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x[i]));
 
-    <span class="hljs-keyword">const</span> r = <span class="hljs-title function_">invertGammaCorrection</span>(red),
-        g = <span class="hljs-title function_">invertGammaCorrection</span>(green),
-        b = <span class="hljs-title function_">invertGammaCorrection</span>(blue);
+    <span class="hljs-keyword">let</span> product = A.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">row</span> =&gt;</span> B_cols.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">col</span> =&gt;</span> {
 
-    <span class="hljs-keyword">const</span> x = (<span class="hljs-number">0.4124</span> * r) + (<span class="hljs-number">0.3576</span> * g) + (<span class="hljs-number">0.1805</span> * b),
-        y = (<span class="hljs-number">0.2126</span> * r) + (<span class="hljs-number">0.7152</span> * g) + (<span class="hljs-number">0.0722</span> * b),
-        z = (<span class="hljs-number">0.0193</span> * r) + (<span class="hljs-number">0.1192</span> * g) + (<span class="hljs-number">0.9505</span> * b);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(row)) {
 
-    <span class="hljs-keyword">return</span> [x * <span class="hljs-number">100</span> + <span class="hljs-number">0</span>, y * <span class="hljs-number">100</span> + <span class="hljs-number">0</span>, z * <span class="hljs-number">100</span> + <span class="hljs-number">0</span>];
-};
+            <span class="hljs-keyword">return</span> col.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, c</span>) =&gt;</span> a + c * row, <span class="hljs-number">0</span>);
+        }
+        <span class="hljs-keyword">return</span> row.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, c, i</span>) =&gt;</span> a + c * (col[i] || <span class="hljs-number">0</span>), <span class="hljs-number">0</span>);
+    }));
 
-P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
+    <span class="hljs-keyword">if</span> (m === <span class="hljs-number">1</span>) product = product[<span class="hljs-number">0</span>];
 
-    <span class="hljs-keyword">const</span> addGammaCorrection = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+    <span class="hljs-keyword">if</span> (p === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> product.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x[<span class="hljs-number">0</span>]);
 
-        <span class="hljs-keyword">if</span> (val &lt;= <span class="hljs-number">0.0031308</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">12.92</span> * val;
-        <span class="hljs-keyword">return</span> (<span class="hljs-number">1.055</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(val, <span class="hljs-number">1</span> / <span class="hljs-number">2.4</span>)) - <span class="hljs-number">0.055</span>;
-    };
-
-    x /= <span class="hljs-number">100</span>;
-    y /= <span class="hljs-number">100</span>;
-    z /= <span class="hljs-number">100</span>;
-
-    <span class="hljs-keyword">const</span> r = (<span class="hljs-number">3.2406254773200533</span> * x) - (<span class="hljs-number">1.5372079722103187</span> * y) - (<span class="hljs-number">0.4986285986982479</span> * z),
-      g = (-<span class="hljs-number">0.9689307147293197</span> * x) + (<span class="hljs-number">1.8757560608852415</span> * y) + (<span class="hljs-number">0.041517523842953964</span> * z),
-      b = (<span class="hljs-number">0.055710120445510616</span> * x) + (-<span class="hljs-number">0.2040210505984867</span> * y) + (<span class="hljs-number">1.0569959422543882</span> * z);
-
-    <span class="hljs-keyword">const</span> red = <span class="hljs-title function_">addGammaCorrection</span>(r),
-        green = <span class="hljs-title function_">addGammaCorrection</span>(g),
-        blue = <span class="hljs-title function_">addGammaCorrection</span>(b);
-
-    <span class="hljs-keyword">return</span> [<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(red * <span class="hljs-number">255</span>) + <span class="hljs-number">0</span>, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(green * <span class="hljs-number">255</span>) + <span class="hljs-number">0</span>, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(blue * <span class="hljs-number">255</span>) + <span class="hljs-number">0</span>];
-};
-
-P.<span class="hljs-property">convertXYZtoLAB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
-
-    <span class="hljs-keyword">const</span> iX = <span class="hljs-number">95.05</span>,
-        iY = <span class="hljs-number">100</span>,
-        iZ = <span class="hljs-number">108.9</span>,
-        eps = <span class="hljs-number">216</span> / <span class="hljs-number">24389</span>,
-        kap = <span class="hljs-number">24389</span> / <span class="hljs-number">27</span>;
-
-    <span class="hljs-keyword">const</span> cbrt = (<span class="hljs-title class_">Math</span>.<span class="hljs-property">cbrt</span> != <span class="hljs-literal">null</span>) ? <span class="hljs-title class_">Math</span>.<span class="hljs-property">cbrt</span> : <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(val, <span class="hljs-number">1</span> / <span class="hljs-number">3</span>);
-
-    <span class="hljs-keyword">const</span> <span class="hljs-title function_">fwdTrans</span> = (<span class="hljs-params">val</span>) =&gt; (val &gt; eps) ? <span class="hljs-title function_">cbrt</span>(val) : ((kap * val) + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>;
-
-    x /= iX;
-    y /= iY;
-    z /= iZ;
-
-    <span class="hljs-keyword">const</span> fX = <span class="hljs-title function_">fwdTrans</span>(x),
-        fY = <span class="hljs-title function_">fwdTrans</span>(y),
-        fZ = <span class="hljs-title function_">fwdTrans</span>(z);
-
-    <span class="hljs-keyword">const</span> l = <span class="hljs-number">116</span> * fY - <span class="hljs-number">16</span>,
-        a = <span class="hljs-number">500</span> * (fX - fY),
-        b = <span class="hljs-number">200</span> * (fY - fZ);
-
-    <span class="hljs-keyword">return</span> [l + <span class="hljs-number">0</span>, a + <span class="hljs-number">0</span>, b + <span class="hljs-number">0</span>];
-};
-
-P.<span class="hljs-property">convertLABtoXYZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, a, b</span>) {
-
-    <span class="hljs-keyword">const</span> iX = <span class="hljs-number">95.05</span>,
-        iY = <span class="hljs-number">100</span>,
-        iZ = <span class="hljs-number">108.9</span>,
-        eps = <span class="hljs-number">216</span> / <span class="hljs-number">24389</span>,
-        kap = <span class="hljs-number">24389</span> / <span class="hljs-number">27</span>;
-
-    <span class="hljs-keyword">const</span> fY = (l + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>,
-        fZ = (fY - b / <span class="hljs-number">200</span>),
-        fX = a / <span class="hljs-number">500</span> + fY;
-
-    <span class="hljs-keyword">const</span> xR = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(fX, <span class="hljs-number">3</span>) &gt; eps) ? <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(fX, <span class="hljs-number">3</span>) : (<span class="hljs-number">116</span> * fX - <span class="hljs-number">16</span>) / kap,
-        yR = (l &gt; kap * eps) ? <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>((l + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>, <span class="hljs-number">3</span>) : l / kap,
-        zR = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(fZ, <span class="hljs-number">3</span>) &gt; eps) ? <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(fZ, <span class="hljs-number">3</span>) : (<span class="hljs-number">116</span> * fZ - <span class="hljs-number">16</span>) / kap;
-
-    <span class="hljs-keyword">return</span> [xR * iX + <span class="hljs-number">0</span>, yR * iY + <span class="hljs-number">0</span>, zR * iZ];
-};
-
-P.<span class="hljs-property">convertLABtoLCH</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, a, b</span>) {
-
-    <span class="hljs-keyword">const</span> maxZeroTolerance = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">10</span>, -<span class="hljs-number">12</span>);
-
-    b = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(b) &lt; <span class="hljs-title class_">Color</span>.<span class="hljs-property">maxZeroTolerance</span>) ? <span class="hljs-number">0</span> : b;
-
-    <span class="hljs-keyword">const</span> c = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(a * a + b * b);
-
-    <span class="hljs-keyword">const</span> h = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">atan2</span>(b, a) &gt;= <span class="hljs-number">0</span>) ?
-        <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">atan2</span>(b, a) / <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">180</span> :
-        <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">atan2</span>(b, a) / <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">180</span> + <span class="hljs-number">360</span>;
-
-    <span class="hljs-keyword">return</span> [l + <span class="hljs-number">0</span>, c + <span class="hljs-number">0</span>, h + <span class="hljs-number">0</span>];
-};
-
-P.<span class="hljs-property">convertLCHtoLAB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, c, h</span>) {
-
-    <span class="hljs-keyword">const</span> a = c * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>(h / <span class="hljs-number">180</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>);
-    <span class="hljs-keyword">const</span> b = c * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>(h / <span class="hljs-number">180</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>);
-
-    <span class="hljs-keyword">return</span> [l + <span class="hljs-number">0</span>, a + <span class="hljs-number">0</span>, b + <span class="hljs-number">0</span>];
+    <span class="hljs-keyword">return</span> product;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-56">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
-              <p>The following functions are used by the Blend filter</p>
+              <p><code>convertRGBtoXYZ</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">D50</span> = [<span class="hljs-number">0.3457</span> / <span class="hljs-number">0.3585</span>, <span class="hljs-number">1.00000</span>, (<span class="hljs-number">1.0</span> - <span class="hljs-number">0.3457</span> - <span class="hljs-number">0.3585</span>) / <span class="hljs-number">0.3585</span>];
+P.<span class="hljs-property">D65</span> = [<span class="hljs-number">0.3127</span> / <span class="hljs-number">0.3290</span>, <span class="hljs-number">1.00000</span>, (<span class="hljs-number">1.0</span> - <span class="hljs-number">0.3127</span> - <span class="hljs-number">0.3290</span>) / <span class="hljs-number">0.3290</span>];
+
+P.<span class="hljs-property">D65_to_D50_matrix</span> = [
+    [  <span class="hljs-number">1.0479298208405488</span>,    <span class="hljs-number">0.022946793341019088</span>,  -<span class="hljs-number">0.05019222954313557</span> ],
+    [  <span class="hljs-number">0.029627815688159344</span>,  <span class="hljs-number">0.990434484573249</span>,     -<span class="hljs-number">0.01707382502938514</span> ],
+    [ -<span class="hljs-number">0.009243058152591178</span>,  <span class="hljs-number">0.015055144896577895</span>,   <span class="hljs-number">0.7518742899580008</span>  ]
+];
+
+P.<span class="hljs-property">D50_to_D65_matrix</span> = [
+    [  <span class="hljs-number">0.9554734527042182</span>,   -<span class="hljs-number">0.023098536874261423</span>,  <span class="hljs-number">0.0632593086610217</span>   ],
+    [ -<span class="hljs-number">0.028369706963208136</span>,  <span class="hljs-number">1.0099954580058226</span>,    <span class="hljs-number">0.021041398966943008</span> ],
+    [  <span class="hljs-number">0.012314001688319899</span>, -<span class="hljs-number">0.020507696433477912</span>,  <span class="hljs-number">1.3303659366080753</span>   ]
+];
+
+P.<span class="hljs-property">convertRGBtoXYZ_matrix</span> = [
+    [ <span class="hljs-number">506752</span> / <span class="hljs-number">1228815</span>,  <span class="hljs-number">87881</span> / <span class="hljs-number">245763</span>,   <span class="hljs-number">12673</span> /   <span class="hljs-number">70218</span> ],
+    [  <span class="hljs-number">87098</span> /  <span class="hljs-number">409605</span>, <span class="hljs-number">175762</span> / <span class="hljs-number">245763</span>,   <span class="hljs-number">12673</span> /  <span class="hljs-number">175545</span> ],
+    [   <span class="hljs-number">7918</span> /  <span class="hljs-number">409605</span>,  <span class="hljs-number">87881</span> / <span class="hljs-number">737289</span>, <span class="hljs-number">1001167</span> / <span class="hljs-number">1053270</span> ],
+];
+P.<span class="hljs-property">lin_sRGB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">RGB</span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">RGB</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> sign = val &lt; <span class="hljs-number">0</span> ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">let</span> abs = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(val);
+
+        <span class="hljs-keyword">if</span> (abs &lt; <span class="hljs-number">0.04045</span>) <span class="hljs-keyword">return</span> val / <span class="hljs-number">12.92</span>;
+        <span class="hljs-keyword">return</span> sign * (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>((abs + <span class="hljs-number">0.055</span>) / <span class="hljs-number">1.055</span>, <span class="hljs-number">2.4</span>));
+    });
+}
+P.<span class="hljs-property">convertRGBtoXYZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">r, g, b</span>) {
+
+    <span class="hljs-keyword">const</span> sRGB = [r / <span class="hljs-number">255</span>, g / <span class="hljs-number">255</span>, b / <span class="hljs-number">255</span>];
+    <span class="hljs-keyword">const</span> lRGB = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">lin_sRGB</span>(sRGB)
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...<span class="hljs-variable language_">this</span>.<span class="hljs-property">convertRGBtoXYZ_matrix</span>], [...lRGB]);
+};
+
+P.<span class="hljs-property">convertRGBtoOKLAB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">r, g, b</span>) {
+
+    <span class="hljs-keyword">const</span> [_r, _g, _b] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">lin_sRGB</span>([r / <span class="hljs-number">255</span>, g / <span class="hljs-number">255</span>, b / <span class="hljs-number">255</span>])
+
+    <span class="hljs-keyword">const</span> l = <span class="hljs-number">0.4122214708</span> * _r + <span class="hljs-number">0.5363325363</span> * _g + <span class="hljs-number">0.0514459929</span> * _b;
+    <span class="hljs-keyword">const</span> m = <span class="hljs-number">0.2119034982</span> * _r + <span class="hljs-number">0.6806995451</span> * _g + <span class="hljs-number">0.1073969566</span> * _b;
+    <span class="hljs-keyword">const</span> s = <span class="hljs-number">0.0883024619</span> * _r + <span class="hljs-number">0.2817188376</span> * _g + <span class="hljs-number">0.6299787005</span> * _b;
+
+    <span class="hljs-keyword">const</span> _l = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cbrt</span>(l);
+    <span class="hljs-keyword">const</span> _m = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cbrt</span>(m);
+    <span class="hljs-keyword">const</span> _s = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cbrt</span>(s);
+
+    <span class="hljs-keyword">return</span> [
+        <span class="hljs-number">0.2104542553</span> * _l + <span class="hljs-number">0.7936177850</span> * _m - <span class="hljs-number">0.0040720468</span> * _s,
+        <span class="hljs-number">1.9779984951</span> * _l - <span class="hljs-number">2.4285922050</span> * _m + <span class="hljs-number">0.4505937099</span> * _s,
+        <span class="hljs-number">0.0259040371</span> * _l + <span class="hljs-number">0.7827717662</span> * _m - <span class="hljs-number">0.8086757660</span> * _s,
+    ];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-73">&#x00a7;</a>
+              </div>
+              <p><code>convertXYZtoRGB</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertXYZtoRGB_matrix</span> = [
+    [   <span class="hljs-number">12831</span> /   <span class="hljs-number">3959</span>,    -<span class="hljs-number">329</span> /    <span class="hljs-number">214</span>, -<span class="hljs-number">1974</span> /   <span class="hljs-number">3959</span> ],
+    [ -<span class="hljs-number">851781</span> / <span class="hljs-number">878810</span>, <span class="hljs-number">1648619</span> / <span class="hljs-number">878810</span>, <span class="hljs-number">36519</span> / <span class="hljs-number">878810</span> ],
+    [     <span class="hljs-number">705</span> /  <span class="hljs-number">12673</span>,   -<span class="hljs-number">2585</span> /  <span class="hljs-number">12673</span>,   <span class="hljs-number">705</span> /    <span class="hljs-number">667</span> ],
+];
+P.<span class="hljs-property">gam_sRGB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">RGB</span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">RGB</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> sign = val &lt; <span class="hljs-number">0</span> ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">let</span> abs = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(val);
+
+        <span class="hljs-keyword">if</span> (abs &gt; <span class="hljs-number">0.0031308</span>) <span class="hljs-keyword">return</span> sign * (<span class="hljs-number">1.055</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(abs, <span class="hljs-number">1</span>/<span class="hljs-number">2.4</span>) - <span class="hljs-number">0.055</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">12.92</span> * val;
+    });
+}
+P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
+
+    <span class="hljs-keyword">const</span> lRGB = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...<span class="hljs-variable language_">this</span>.<span class="hljs-property">convertXYZtoRGB_matrix</span>], [x, y, z]);
+    <span class="hljs-keyword">const</span> sRGB = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">gam_sRGB</span>(lRGB);
+    <span class="hljs-keyword">const</span> round = <span class="hljs-title class_">Math</span>.<span class="hljs-property">round</span>;
+
+    <span class="hljs-keyword">return</span> [
+        <span class="hljs-title function_">round</span>(sRGB[<span class="hljs-number">0</span>] * <span class="hljs-number">255</span>),
+        <span class="hljs-title function_">round</span>(sRGB[<span class="hljs-number">1</span>] * <span class="hljs-number">255</span>),
+        <span class="hljs-title function_">round</span>(sRGB[<span class="hljs-number">2</span>] * <span class="hljs-number">255</span>),
+    ];
+};
+
+P.<span class="hljs-property">E</span> = <span class="hljs-number">216</span>/<span class="hljs-number">24389</span>;
+P.<span class="hljs-property">K</span> = <span class="hljs-number">24389</span>/<span class="hljs-number">27</span>;
+P.<span class="hljs-property">cbrt</span> = (<span class="hljs-title class_">Math</span>.<span class="hljs-property">cbrt</span> != <span class="hljs-literal">null</span>) ? <span class="hljs-title class_">Math</span>.<span class="hljs-property">cbrt</span> : <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(val, <span class="hljs-number">1</span> / <span class="hljs-number">3</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-74">&#x00a7;</a>
+              </div>
+              <p><code>convertXYZtoLAB</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertXYZtoLAB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
+
+    <span class="hljs-keyword">const</span> { <span class="hljs-variable constant_">D50</span>, K, E, cbrt } = <span class="hljs-variable language_">this</span>;
+
+    <span class="hljs-keyword">const</span> toD50 = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...<span class="hljs-variable language_">this</span>.<span class="hljs-property">D65_to_D50_matrix</span>], [x, y, z]);
+    <span class="hljs-keyword">const</span> xyz = toD50.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">val, i</span>) =&gt;</span> val / <span class="hljs-variable constant_">D50</span>[i]);
+    <span class="hljs-keyword">const</span> f = xyz.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> val &gt; E ? <span class="hljs-title function_">cbrt</span>(val) : (K * val + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>);
+
+    <span class="hljs-keyword">return</span> [
+        (<span class="hljs-number">116</span> * f[<span class="hljs-number">1</span>]) - <span class="hljs-number">16</span>,
+        <span class="hljs-number">500</span> * (f[<span class="hljs-number">0</span>] - f[<span class="hljs-number">1</span>]),
+        <span class="hljs-number">200</span> * (f[<span class="hljs-number">1</span>] - f[<span class="hljs-number">2</span>]),
+    ];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-75">&#x00a7;</a>
+              </div>
+              <p><code>convertLABtoXYZ</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertLABtoXYZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, a, b</span>) {
+
+    <span class="hljs-keyword">const</span> { <span class="hljs-variable constant_">D50</span>, K, E, cbrt } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">const</span> f = [];
+    <span class="hljs-keyword">const</span> pow = <span class="hljs-title class_">Math</span>.<span class="hljs-property">pow</span>;
+
+    f[<span class="hljs-number">1</span>] = (l + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>;
+    f[<span class="hljs-number">0</span>] = a / <span class="hljs-number">500</span> + f[<span class="hljs-number">1</span>];
+    f[<span class="hljs-number">2</span>] = f[<span class="hljs-number">1</span>] - b / <span class="hljs-number">200</span>;
+
+    <span class="hljs-keyword">const</span> xyz = [
+        (<span class="hljs-title function_">pow</span>(f[<span class="hljs-number">0</span>], <span class="hljs-number">3</span>) &gt; E) ? <span class="hljs-title function_">pow</span>(f[<span class="hljs-number">0</span>], <span class="hljs-number">3</span>) : (<span class="hljs-number">116</span> * f[<span class="hljs-number">0</span>] - <span class="hljs-number">16</span>) / K,
+        (l &gt; K * E) ? <span class="hljs-title function_">pow</span>((l + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>, <span class="hljs-number">3</span>) : l / K,
+        (<span class="hljs-title function_">pow</span>(f[<span class="hljs-number">2</span>], <span class="hljs-number">3</span>) &gt; E) ? <span class="hljs-title function_">pow</span>(f[<span class="hljs-number">2</span>], <span class="hljs-number">3</span>) : (<span class="hljs-number">116</span> * f[<span class="hljs-number">2</span>] - <span class="hljs-number">16</span>) / K,
+    ];
+
+    <span class="hljs-keyword">const</span> toD50 = xyz.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">val, i</span>) =&gt;</span> val * <span class="hljs-variable constant_">D50</span>[i]);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...<span class="hljs-variable language_">this</span>.<span class="hljs-property">D50_to_D65_matrix</span>], [...toD50]);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-76">&#x00a7;</a>
+              </div>
+              <p><code>convertLABtoLCH</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertLABtoLCH</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, a, b</span>) {
+
+    <span class="hljs-keyword">const</span> pow = <span class="hljs-title class_">Math</span>.<span class="hljs-property">pow</span>;
+    <span class="hljs-keyword">const</span> hue = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">atan2</span>(b, a) * <span class="hljs-number">180</span> / <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>;
+
+    <span class="hljs-keyword">return</span> [
+        l,
+        <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-title function_">pow</span>(a, <span class="hljs-number">2</span>) + <span class="hljs-title function_">pow</span>(b, <span class="hljs-number">2</span>)),
+        (hue &gt;= <span class="hljs-number">0</span>) ? hue : hue + <span class="hljs-number">360</span>
+    ];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-77">&#x00a7;</a>
+              </div>
+              <p><code>convertLCHtoLAB</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertLCHtoLAB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, c, h</span>) {
+
+    <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">PI</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>;
+    <span class="hljs-keyword">return</span> [
+        l,
+        c * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>(h * <span class="hljs-variable constant_">PI</span> / <span class="hljs-number">180</span>),
+        c * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>(h * <span class="hljs-variable constant_">PI</span> / <span class="hljs-number">180</span>),
+    ];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-78">&#x00a7;</a>
+              </div>
+              <p><code>convertXYZtoOKLAB</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">XYZtoLMS</span> = [
+    [ <span class="hljs-number">0.8190224432164319</span>,    <span class="hljs-number">0.3619062562801221</span>,   -<span class="hljs-number">0.12887378261216414</span>  ],
+    [ <span class="hljs-number">0.0329836671980271</span>,    <span class="hljs-number">0.9292868468965546</span>,     <span class="hljs-number">0.03614466816999844</span> ],
+    [ <span class="hljs-number">0.048177199566046255</span>,  <span class="hljs-number">0.26423952494422764</span>,    <span class="hljs-number">0.6335478258136937</span>  ]
+];
+P.<span class="hljs-property">LMStoOKLab</span> = [
+    [  <span class="hljs-number">0.2104542553</span>,   <span class="hljs-number">0.7936177850</span>,  -<span class="hljs-number">0.0040720468</span> ],
+    [  <span class="hljs-number">1.9779984951</span>,  -<span class="hljs-number">2.4285922050</span>,   <span class="hljs-number">0.4505937099</span> ],
+    [  <span class="hljs-number">0.0259040371</span>,   <span class="hljs-number">0.7827717662</span>,  -<span class="hljs-number">0.8086757660</span> ]
+];
+P.<span class="hljs-property">convertXYZtoOKLAB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
+
+    <span class="hljs-keyword">const</span> cbrt = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cbrt</span>;
+    <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">LMS</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...<span class="hljs-variable language_">this</span>.<span class="hljs-property">XYZtoLMS</span>], [x, y, z]);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...<span class="hljs-variable language_">this</span>.<span class="hljs-property">LMStoOKLab</span>], <span class="hljs-variable constant_">LMS</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> <span class="hljs-title function_">cbrt</span>(c)));
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-79">&#x00a7;</a>
+              </div>
+              <p><code>convertOKLABtoXYZ</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">LMStoXYZ</span> =  [
+    [  <span class="hljs-number">1.2268798733741557</span>,  -<span class="hljs-number">0.5578149965554813</span>,   <span class="hljs-number">0.28139105017721583</span> ],
+    [ -<span class="hljs-number">0.04057576262431372</span>,  <span class="hljs-number">1.1122868293970594</span>,  -<span class="hljs-number">0.07171106666151701</span> ],
+    [ -<span class="hljs-number">0.07637294974672142</span>, -<span class="hljs-number">0.4214933239627914</span>,   <span class="hljs-number">1.5869240244272418</span>  ]
+];
+P.<span class="hljs-property">OKLabtoLMS</span> = [
+    [ <span class="hljs-number">0.99999999845051981432</span>,  <span class="hljs-number">0.39633779217376785678</span>,   <span class="hljs-number">0.21580375806075880339</span>  ],
+    [ <span class="hljs-number">1.0000000088817607767</span>,  -<span class="hljs-number">0.1055613423236563494</span>,   -<span class="hljs-number">0.063854174771705903402</span> ],
+    [ <span class="hljs-number">1.0000000546724109177</span>,  -<span class="hljs-number">0.089484182094965759684</span>, -<span class="hljs-number">1.2914855378640917399</span>   ]
+];
+P.<span class="hljs-property">convertOKLABtoXYZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, a, b</span>) {
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title class_">LMSnl</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...<span class="hljs-variable language_">this</span>.<span class="hljs-property">OKLabtoLMS</span>], [l, a, b]);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...<span class="hljs-variable language_">this</span>.<span class="hljs-property">LMStoXYZ</span>], <span class="hljs-title class_">LMSnl</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c ** <span class="hljs-number">3</span>));
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-80">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-80">&#x00a7;</a>
+              </div>
+              <p><code>convertOKLABtoOKLCH</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertOKLABtoOKLCH</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, a, b</span>) {
+
+    <span class="hljs-keyword">const</span> hue = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">atan2</span>(b, a) * <span class="hljs-number">180</span> / <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>;
+
+    <span class="hljs-keyword">return</span> [
+        l,
+        <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(a ** <span class="hljs-number">2</span> + b ** <span class="hljs-number">2</span>),
+        hue &gt;= <span class="hljs-number">0</span> ? hue : hue + <span class="hljs-number">360</span>,
+    ];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-81">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-81">&#x00a7;</a>
+              </div>
+              <p><code>convertOKLCHtoOKLAB</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertOKLCHtoOKLAB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, c, h</span>) {
+
+    <span class="hljs-keyword">return</span> [
+        l,
+        c * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>(h * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> / <span class="hljs-number">180</span>),
+        c * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>(h * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> / <span class="hljs-number">180</span>),
+    ];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-82">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-82">&#x00a7;</a>
+              </div>
+              <h4 id="color-blending">Color blending</h4>
+<p>The following functions are used by the Blend filter</p>
 <ul>
 <li>Input is the six RGB parts (Integers clamped to the 0-255 range) of the input and mix channels</li>
 <li>Output is the RGB version of the mixed HSL colors generated from the RGB inputs</li>
 </ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-83">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-83">&#x00a7;</a>
+              </div>
+              <p><code>calculateColorBlend</code> - internal helper function</p>
 
             </div>
             
@@ -2379,8 +2955,22 @@ P.<span class="hljs-property">convertLCHtoLAB</span> = <span class="hljs-keyword
     <span class="hljs-keyword">const</span> [r, g, b] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertHSLtoRGB</span>(iH, iS, mL);
 
     <span class="hljs-keyword">return</span> [<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(r * <span class="hljs-number">255</span>), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(g * <span class="hljs-number">255</span>), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(b * <span class="hljs-number">255</span>)];
-};
-P.<span class="hljs-property">calculateHueBlend</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">iR, iG, iB, mR, mG, mB</span>) {
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-84">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-84">&#x00a7;</a>
+              </div>
+              <p><code>calculateHueBlend</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">calculateHueBlend</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">iR, iG, iB, mR, mG, mB</span>) {
 
     <span class="hljs-keyword">const</span> [iH, iS, iL] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(iR, iG, iB);
     <span class="hljs-keyword">const</span> [mH, mS, mL] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(mR, mG, mB);
@@ -2388,8 +2978,22 @@ P.<span class="hljs-property">calculateHueBlend</span> = <span class="hljs-keywo
     <span class="hljs-keyword">const</span> [r, g, b] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertHSLtoRGB</span>(iH, mS, mL);
 
     <span class="hljs-keyword">return</span> [<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(r * <span class="hljs-number">255</span>), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(g * <span class="hljs-number">255</span>), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(b * <span class="hljs-number">255</span>)];
-};
-P.<span class="hljs-property">calculateSaturationBlend</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">iR, iG, iB, mR, mG, mB</span>) {
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-85">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-85">&#x00a7;</a>
+              </div>
+              <p><code>calculateSaturationBlend</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">calculateSaturationBlend</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">iR, iG, iB, mR, mG, mB</span>) {
 
     <span class="hljs-keyword">const</span> [iH, iS, iL] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(iR, iG, iB);
     <span class="hljs-keyword">const</span> [mH, mS, mL] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(mR, mG, mB);
@@ -2397,8 +3001,22 @@ P.<span class="hljs-property">calculateSaturationBlend</span> = <span class="hlj
     <span class="hljs-keyword">const</span> [r, g, b] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertHSLtoRGB</span>(mH, iS, mL);
 
     <span class="hljs-keyword">return</span> [<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(r * <span class="hljs-number">255</span>), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(g * <span class="hljs-number">255</span>), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(b * <span class="hljs-number">255</span>)];
-};
-P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">iR, iG, iB, mR, mG, mB</span>) {
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-86">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-86">&#x00a7;</a>
+              </div>
+              <p><code>calculateLuminosityBlend</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">iR, iG, iB, mR, mG, mB</span>) {
 
     <span class="hljs-keyword">const</span> [iH, iS, iL] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(iR, iG, iB);
     <span class="hljs-keyword">const</span> [mH, mS, mL] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(mR, mG, mB);
@@ -2411,17 +3029,19 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
         </li>
         
         
-        <li id="section-57">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
-              <p>We need to check whether the browser supports various color spaces. The simplest way to do that is to feed a color into a canvas element’s engine, stamp a pixel, then check to see if the pixel is black (space not supported)</p>
+              <h4 id="browser-color-space-support">Browser color space support</h4>
+<p>We need to check whether the browser supports various color spaces. The simplest way to do that is to feed a color into a canvas element’s engine, stamp a pixel, then check to see if the pixel is black (space not supported)</p>
 <ul>
 <li>We check for HWB, LAB andf LCH color space support</li>
 <li>We assume that the browser always supports RGB and HSL  color spaces</li>
 <li>We don’t check for XYZ color space support because it is not part of the <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4 specification</a></li>
+<li>We don’t check for OKLAB, OKLCH support at this time (Nov 2022)</li>
 </ul>
 
             </div>
@@ -2429,6 +3049,8 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> supportsHWB = <span class="hljs-literal">false</span>;
 <span class="hljs-keyword">let</span> supportsLAB = <span class="hljs-literal">false</span>;
 <span class="hljs-keyword">let</span> supportsLCH = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">let</span> supportsOKLAB = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">let</span> supportsOKLCH = <span class="hljs-literal">false</span>;
 
 <span class="hljs-keyword">const</span> browserChecker = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -2453,11 +3075,11 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
         </li>
         
         
-        <li id="section-58">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <p>Test for HWB support</p>
 
@@ -2477,11 +3099,11 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
         </li>
         
         
-        <li id="section-59">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-89">&#x00a7;</a>
               </div>
               <p>Firefox (v96.0.1) fails silently when setting engine to unsupported color, leaving engine value unchanged, which in turn leaves our test rgb values unchanged, thus giving us a false positive for the test</p>
 <ul>
@@ -2496,11 +3118,11 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
         </li>
         
         
-        <li id="section-60">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-90">&#x00a7;</a>
               </div>
               <p>Test for LAB support</p>
 
@@ -2521,11 +3143,11 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
         </li>
         
         
-        <li id="section-61">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-91">&#x00a7;</a>
               </div>
               <p>Firefox safety net</p>
 
@@ -2537,11 +3159,11 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
         </li>
         
         
-        <li id="section-62">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-92">&#x00a7;</a>
               </div>
               <p>Test for LCH support</p>
 
@@ -2562,18 +3184,116 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
         </li>
         
         
-        <li id="section-63">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-93">&#x00a7;</a>
               </div>
               <p>Firefox safety net</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (supportsLCH &amp;&amp; col === engine.<span class="hljs-property">fillStyle</span>) supportsLCH = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">else</span> col = engine.<span class="hljs-property">fillStyle</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-94">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-94">&#x00a7;</a>
+              </div>
+              <p>Test for OKLAB support</p>
+<ul>
+<li>Assume no browser supports OKLAB. Safari’s implementation is incomplete (Nov 2022)</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-comment">/*
+    engine.fillStyle = &#x27;oklab(59.686% 0.1009 0.1192)&#x27;;
+    engine.clearRect(0, 0, 1, 1);
+    engine.fillRect(0, 0, 1, 1);
+
+    image = engine.getImageData(0, 0, 1, 1);
+
+    if (image &amp;&amp; image.data) {
+
+        [r, g, b, a] = image.data;
+    }
+    if (r || g || b) supportsOKLAB = true;
+
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-95">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-95">&#x00a7;</a>
+              </div>
+              <p>Firefox safety net</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (supportsOKLAB &amp;&amp; col === engine.<span class="hljs-property">fillStyle</span>) supportsOKLAB = <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">else</span> col = engine.<span class="hljs-property">fillStyle</span>;
+    */</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-96">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-96">&#x00a7;</a>
+              </div>
+              <p>Test for OKLCH support</p>
+<ul>
+<li>Assume no browser supports OKLCH. Safari’s implementation is incomplete (Nov 2022)</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-comment">/*
+    engine.fillStyle = &#x27;oklch(59.686% 0.15619 49.7694)&#x27;;
+    engine.clearRect(0, 0, 1, 1);
+    engine.fillRect(0, 0, 1, 1);
+
+    image = engine.getImageData(0, 0, 1, 1);
+
+    if (image &amp;&amp; image.data) {
+
+        [r, g, b, a] = image.data;
+    }
+    if (r || g || b) supportsOKLCH = true;
+
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-97">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-97">&#x00a7;</a>
+              </div>
+              <p>Firefox safety net</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (supportsOKLCH &amp;&amp; col === engine.<span class="hljs-property">fillStyle</span>) supportsOKLCH = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">else</span> col = engine.<span class="hljs-property">fillStyle</span>;
+    */
 
     engine.<span class="hljs-title function_">restore</span>();
     <span class="hljs-title function_">releaseCell</span>(cell);
@@ -2583,11 +3303,11 @@ P.<span class="hljs-property">calculateLuminosityBlend</span> = <span class="hlj
         </li>
         
         
-        <li id="section-64">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-98">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeColor</span>({
@@ -2626,11 +3346,11 @@ constructors.<span class="hljs-property">Color</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-65">
+        <li id="section-99">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-99">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

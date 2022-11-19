@@ -1119,8 +1119,10 @@
     [<span class="hljs-string">&#x27;hsl()&#x27;</span>, <span class="hljs-string">&#x27;hsl(30, 100%, 50%)&#x27;</span>, <span class="hljs-string">&#x27;hsl(30 100% 50%)&#x27;</span>, <span class="hljs-string">&#x27;hsl(30.0 100% 50% / 60%)&#x27;</span>],
     [<span class="hljs-string">&#x27;hsla()&#x27;</span>, <span class="hljs-string">&#x27;hsla(30, 100%, 50%, 0.6)&#x27;</span>, <span class="hljs-string">&#x27;hsla(30 100% 50% / 0.6)&#x27;</span>, <span class="hljs-string">&#x27;hsla(30.2 100% 50% / 60%)&#x27;</span>],
     [<span class="hljs-string">&#x27;hwb()&#x27;</span>, <span class="hljs-string">&#x27;hwb(90 10% 10%)&#x27;</span>, <span class="hljs-string">&#x27;hwb(90deg 10% 10% / 0.5)&#x27;</span>, <span class="hljs-string">&#x27;hwb(.25turn 0% 40% / 50%)&#x27;</span>],
-    [<span class="hljs-string">&#x27;lch()&#x27;</span>, <span class="hljs-string">&#x27;lch(29.2345% 44.2 27)&#x27;</span>, <span class="hljs-string">&#x27;lch(52.2345% 72.2 56.2)&#x27;</span>, <span class="hljs-string">&#x27;lch(52.2345% 72.2 56.2 / .5)&#x27;</span>],
     [<span class="hljs-string">&#x27;lab()&#x27;</span>, <span class="hljs-string">&#x27;lab(29.2345% 39.3825 20.0664)&#x27;</span>, <span class="hljs-string">&#x27;lab(52.2345% 40.1645 59.9971)&#x27;</span>, <span class="hljs-string">&#x27;lab(52.2345% 40.1645 59.9971 / .5)&#x27;</span>],
+    [<span class="hljs-string">&#x27;lch()&#x27;</span>, <span class="hljs-string">&#x27;lch(29.2345% 44.2 27)&#x27;</span>, <span class="hljs-string">&#x27;lch(52.2345% 72.2 56.2)&#x27;</span>, <span class="hljs-string">&#x27;lch(52.2345% 72.2 56.2 / .5)&#x27;</span>],
+    [<span class="hljs-string">&#x27;oklab()&#x27;</span>, <span class="hljs-string">&#x27;oklab(59.686% 0.1009 0.1192)&#x27;</span>, <span class="hljs-string">&#x27;oklab(0.65125 -0.0320 0.1274)&#x27;</span>, <span class="hljs-string">&#x27;oklab(42.1% 41% -25% / .5)&#x27;</span>],
+    [<span class="hljs-string">&#x27;oklch()&#x27;</span>, <span class="hljs-string">&#x27;oklch(59.686% 0.15619 49.7694)&#x27;</span>, <span class="hljs-string">&#x27;oklch(0.65125 0.13138 104.097)&#x27;</span>, <span class="hljs-string">&#x27;oklch(42.1% 48.25% 328.4 / .5)&#x27;</span>],
 ];
 
 <span class="hljs-keyword">const</span> len = data.<span class="hljs-property">length</span>;
@@ -1128,50 +1130,50 @@
 
 data.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">d, index</span>) =&gt;</span> {
 
-    <span class="hljs-keyword">const</span> [label, col, max, min] = d;
+    <span class="hljs-keyword">const</span> [label, top, mid, base] = d;
 
     scrawl.<span class="hljs-title function_">makeBlock</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-col`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-top`</span>,
         <span class="hljs-attr">startX</span>: (blockWidth * index) + (index * <span class="hljs-number">10</span>) + <span class="hljs-number">10</span>,
         <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
         <span class="hljs-attr">width</span>: blockWidth,
         <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;28%&#x27;</span>,
-        <span class="hljs-attr">fillStyle</span>: col,
+        <span class="hljs-attr">fillStyle</span>: top,
     }).<span class="hljs-title function_">clone</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-min`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-mid`</span>,
         <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;40%&#x27;</span>,
-        <span class="hljs-attr">fillStyle</span>: min,
+        <span class="hljs-attr">fillStyle</span>: mid,
     }).<span class="hljs-title function_">clone</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-max`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-base`</span>,
         <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;70%&#x27;</span>,
-        <span class="hljs-attr">fillStyle</span>: max,
+        <span class="hljs-attr">fillStyle</span>: base,
     });
 
     scrawl.<span class="hljs-title function_">makePhrase</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-main-label`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`label-<span class="hljs-subst">${label}</span>-main`</span>,
         <span class="hljs-attr">text</span>: label,
         <span class="hljs-attr">startX</span>: (blockWidth * index) + (index * <span class="hljs-number">10</span>) + <span class="hljs-number">10</span>,
         <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;3%&#x27;</span>,
     })
 
     scrawl.<span class="hljs-title function_">makePhrase</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-col-label`</span>,
-        <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-col`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`label-<span class="hljs-subst">${label}</span>-top`</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-top`</span>,
         <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-        <span class="hljs-attr">text</span>: col,
+        <span class="hljs-attr">text</span>: top,
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
         <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
         <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">5</span>,
         <span class="hljs-attr">roll</span>: <span class="hljs-number">53</span>,
         <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
     }).<span class="hljs-title function_">clone</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-min-label`</span>,
-        <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-min`</span>,
-        <span class="hljs-attr">text</span>: min,
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`label-<span class="hljs-subst">${label}</span>-mid`</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-mid`</span>,
+        <span class="hljs-attr">text</span>: mid,
     }).<span class="hljs-title function_">clone</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-max-label`</span>,
-        <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-max`</span>,
-        <span class="hljs-attr">text</span>: max,
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`label-<span class="hljs-subst">${label}</span>-base`</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${label}</span>-base`</span>,
+        <span class="hljs-attr">text</span>: base,
     });
 });</pre></div></div>
             

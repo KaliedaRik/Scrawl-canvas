@@ -77,7 +77,7 @@ let colorFactory = scrawl.makeColor({
     name: 'color-factory',
     minimumColor: 'red',
     maximumColor: 'blue',
-    colorSpace: 'LAB',
+    colorSpace: 'OKLAB',
 });
 
 const snakeScale = scrawl.makeWheel({

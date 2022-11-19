@@ -665,15 +665,13 @@
         <span class="hljs-keyword">return</span> item;
     }
 
-    <span class="hljs-keyword">if</span> (item &gt;= <span class="hljs-number">0</span> &amp;&amp; item &lt; <span class="hljs-number">360</span>) <span class="hljs-keyword">return</span> item;
+    item = item % <span class="hljs-number">360</span>;
 
-    <span class="hljs-keyword">while</span> (item &lt; <span class="hljs-number">0</span> || item &gt;= <span class="hljs-number">360</span>) {
-
-        <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item += <span class="hljs-number">360</span>;
-        <span class="hljs-keyword">else</span> item -= <span class="hljs-number">360</span>;
+    <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) {
+        item += <span class="hljs-number">360</span>;
     }
     <span class="hljs-keyword">return</span> item;
-}</pre></div></div>
+};</pre></div></div>
             
         </li>
         
@@ -776,6 +774,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> interpolate = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, min, max</span>) {
+    
     <span class="hljs-keyword">return</span> min + val * (max - min);
 };</pre></div></div>
             

@@ -4429,13 +4429,13 @@ P.theBigActionsObject = {
                         indicesCursor = index * 3;
 
                         rgbIndices[indicesCursor] = red;
-                        labIndices[indicesCursor] = lab[0] * 500;
+                        labIndices[indicesCursor] = lab[0] * 510;
                         indicesCursor++;
                         rgbIndices[indicesCursor] = green;
-                        labIndices[indicesCursor] = lab[1] * 500;
+                        labIndices[indicesCursor] = lab[1] * 510;
                         indicesCursor++;
                         rgbIndices[indicesCursor] = blue;
-                        labIndices[indicesCursor] = lab[2] * 500;
+                        labIndices[indicesCursor] = lab[2] * 510;
                     }
                 }
                 detectedColors[index] = detectedColors[index] + 1;

@@ -105,7 +105,8 @@ scrawl.makeGradient({
         [0, "#fff"],
         [499, "#f00"],
         [999, "#000"]
-    ]
+    ],
+    colorSpace: 'OKLAB',
 
 }).clone({
 
