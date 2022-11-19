@@ -1089,13 +1089,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHeight</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">containElementsInHeight</span>) {
 
-            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;stack height final fixes need to be done&#x27;</span>);
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHeight</span> = <span class="hljs-literal">false</span>;
         }
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentVportWidth</span> !== currentCorePosition.<span class="hljs-property">w</span>) {
 
-            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;need to update for resized viewport width&#x27;</span>);
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentVportWidth</span> = currentCorePosition.<span class="hljs-property">w</span>;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">containElementsInHeight</span>) {</pre></div></div>
@@ -1122,7 +1120,6 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentVportHeight</span> !== currentCorePosition.<span class="hljs-property">h</span>) {
 
-            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;need to update for resized viewport height&#x27;</span>);
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentVportHeight</span> = currentCorePosition.<span class="hljs-property">h</span>;
         }
     }

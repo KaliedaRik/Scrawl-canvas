@@ -2200,7 +2200,6 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         rgb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
         hsl.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>]), a);
         hwb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBHtoHWB</span>(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>], hsl[<span class="hljs-number">0</span>]), a);
-        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;rgb&#x27;</span>, rgb, <span class="hljs-string">&#x27;oklch&#x27;</span>, oklch)
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;lab&#x27;</span>) &gt;= <span class="hljs-number">0</span> &amp;&amp; !supportsLAB) {
 
