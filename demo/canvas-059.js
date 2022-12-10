@@ -53,7 +53,7 @@ data.forEach((d, index) => {
         text: label,
         startX: (blockWidth * index) + (index * 10) + 10,
         startY: '3%',
-    })
+    });
 
     scrawl.makePhrase({
         name: `label-${label}-top`,
@@ -61,8 +61,6 @@ data.forEach((d, index) => {
         lockTo: 'pivot',
         text: top,
         fillStyle: 'black',
-        shadowColor: 'white',
-        shadowBlur: 5,
         roll: 53,
         order: 1,
     }).clone({

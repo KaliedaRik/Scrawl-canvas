@@ -1586,7 +1586,6 @@ const browserChecker = function () {
     // Test for OKLAB support
     // + Assume no browser supports OKLAB. Safari's implementation is incomplete (Nov 2022)
 
-    /*
     engine.fillStyle = 'oklab(59.686% 0.1009 0.1192)';
     engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
@@ -1602,12 +1601,10 @@ const browserChecker = function () {
     // Firefox safety net
     if (supportsOKLAB && col === engine.fillStyle) supportsOKLAB = false;
     else col = engine.fillStyle;
-    */
 
     // Test for OKLCH support
     // + Assume no browser supports OKLCH. Safari's implementation is incomplete (Nov 2022)
 
-    /*
     engine.fillStyle = 'oklch(59.686% 0.15619 49.7694)';
     engine.clearRect(0, 0, 1, 1);
     engine.fillRect(0, 0, 1, 1);
@@ -1623,7 +1620,6 @@ const browserChecker = function () {
     // Firefox safety net
     if (supportsOKLCH && col === engine.fillStyle) supportsOKLCH = false;
     else col = engine.fillStyle;
-    */
 
     engine.restore();
     releaseCell(cell);
