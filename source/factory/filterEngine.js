@@ -105,6 +105,22 @@ P.action = function (packet) {
 P.workstore = {},
 P.workstoreLastAccessed = {};
 
+// ColorSpaceIndices are used by the reducePalette filter. Hoping to expand this to other filters to allow a wider use of OKLAB/OKLCH color spaces.
+P.colorSpaceIndices = function () {
+
+    if (!this.tfx) {
+
+        this.tfx = 256
+        this.tfx2 = this.tfx * 256;
+        this.tfx3 = this.tfx2 * 256;
+
+        this.indicesLen = this.tfx3 * 3;
+
+        this.rgbIndices = new Uint8ClampedArray(this.indicesLen);
+        this.labIndices = new Float32Array(this.indicesLen);
+        this.indicesMemoRecord = new Uint8ClampedArray(this.tfx3);
+    }
+};
 
 // `unknit` - called at the start of each new message action chain. Creates and populates the __source__ and __work__ objects from the image data supplied in the message
 P.unknit = function (image) {
@@ -4021,21 +4037,11 @@ P.theBigActionsObject = {
 
         const grayPalettes = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'];
 
-        const tfx = 256,
-            tfx2 = tfx * 256,
-            tfx3 = tfx2 * 256;
-
-        const indicesLen = tfx3 * 3;
-
-        if (!this.reducePaletteLabIndices) {
-
-            this.reducePaletteRgbIndices = new Uint8ClampedArray(indicesLen);
-            this.reducePaletteLabIndices = new Float32Array(indicesLen);
-            this.reducePaletteMemoRecord = new Uint8ClampedArray(tfx3);
-        }
+        // Check to see if colorSpaceIndices have been created; if not, create them.
+        this.colorSpaceIndices();
 
         // Localize some handles to required functions/objects
-        const {reducePaletteRgbIndices:rgbIndices, reducePaletteLabIndices:labIndices, reducePaletteMemoRecord:memoRecord, colorEngine, predefinedPalette, getGrayscaleValue } = this;
+        const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, colorEngine, predefinedPalette, getGrayscaleValue, tfx, tfx2, tfx3, indicesLen } = this;
 
         let xyz, lab;
 
@@ -4083,51 +4089,9 @@ P.theBigActionsObject = {
         if (!predefinedPalette['black-white']) {
 
             createPalette('black-white', ['#000', '#fff']);
-            createPalette('monochrome-4', ['#000', '#555', '#aaa', '#fff']);
+            createPalette('monochrome-4', ['#222', '#777', '#bbb', '#fff']);
             createPalette('monochrome-8', ['#000', '#333', '#555', '#777', '#999', '#bbb', '#ddd', '#fff']);
             createPalette('monochrome-16', ['#000', '#111', '#222', '#333', '#444', '#555', '#666', '#777', '#888', '#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee', '#fff']);
-            createPalette('RGBK-extended', [
-                '#000', '#fff',
-                '#003', '#007', '#337', '#00a', '#33a', '#77a', '#00f', '#33f', '#77f', '#aaf',
-                '#030', '#070', '#373', '#0a0', '#3a3', '#7a7', '#0f0', '#3f3', '#7f7', '#afa',
-                '#300', '#700', '#733', '#a00', '#a33', '#a77', '#f00', '#f33', '#f77', '#faa',
-            ]);
-            createPalette('CMYK-extended', [
-                '#000', '#fff',
-                '#033', '#077', '#377', '#0aa', '#3aa', '#7aa', '#0ff', '#3ff', '#7ff', '#aff',
-                '#303', '#707', '#737', '#a0a', '#a3a', '#a7a', '#f0f', '#f3f', '#f7f', '#faf',
-                '#330', '#770', '#733', '#aa0', '#aa3', '#aa7', '#ff0', '#ff3', '#ff7', '#ffa',
-            ]);
-            createPalette('extended', [
-                '#000', '#fff',
-                '#003', '#007', '#337', '#00a', '#33a', '#77a', '#00f', '#33f', '#77f', '#aaf',
-                '#030', '#070', '#373', '#0a0', '#3a3', '#7a7', '#0f0', '#3f3', '#7f7', '#afa',
-                '#300', '#700', '#733', '#a00', '#a33', '#a77', '#f00', '#f33', '#f77', '#faa',
-                '#033', '#077', '#377', '#0aa', '#3aa', '#7aa', '#0ff', '#3ff', '#7ff', '#aff',
-                '#303', '#707', '#737', '#a0a', '#a3a', '#a7a', '#f0f', '#f3f', '#f7f', '#faf',
-                '#330', '#770', '#733', '#aa0', '#aa3', '#aa7', '#ff0', '#ff3', '#ff7', '#ffa',
-            ]);
-            createPalette('RGBK', [
-                '#000', '#fff',
-                '#007', '#00f', '#77f',
-                '#070', '#0f0', '#7f7',
-                '#700', '#f00', '#f77',
-            ]);
-            createPalette('CMYK', [
-                '#000', '#fff',
-                '#077', '#0ff', '#7ff',
-                '#707', '#f0f', '#f7f',
-                '#770', '#ff0', '#ff7',
-            ]);
-            createPalette('basic', [
-                '#000', '#fff',
-                '#007', '#00f', '#77f',
-                '#070', '#0f0', '#7f7',
-                '#700', '#f00', '#f77',
-                '#077', '#0ff', '#7ff',
-                '#707', '#f0f', '#f7f',
-                '#770', '#ff0', '#ff7',
-            ]);
         }
 
         // Perform test to discover pixel's closest palette gray, after dithering
