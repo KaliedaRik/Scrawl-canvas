@@ -116,6 +116,10 @@ P.colorSpaceIndices = function () {
 
         this.indicesLen = this.tfx3 * 3;
 
+        this.labIndicesMultiplier = 512;
+
+
+
         this.rgbIndices = new Uint8ClampedArray(this.indicesLen);
         this.labIndices = new Float32Array(this.indicesLen);
         this.indicesMemoRecord = new Uint8ClampedArray(this.tfx3);
@@ -4041,7 +4045,7 @@ P.theBigActionsObject = {
         this.colorSpaceIndices();
 
         // Localize some handles to required functions/objects
-        const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, colorEngine, predefinedPalette, getGrayscaleValue, tfx, tfx2, tfx3, indicesLen } = this;
+        const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, colorEngine, predefinedPalette, getGrayscaleValue, tfx, tfx2, tfx3, indicesLen, labIndicesMultiplier } = this;
 
         let xyz, lab;
 
@@ -4065,18 +4069,18 @@ P.theBigActionsObject = {
                 if (!memoRecord[pix]) {
 
                     memoRecord[pix] = 1;
-                    const [l0, l1, l2] = colorEngine.lab;
+                    const [l0, l1, l2] = colorEngine.convertRGBtoOKLAB(pr, pg, pb);
 
                     let ic = pix * 3;
 
                     rgbIndices[ic] = pr;
-                    labIndices[ic] = l0;
+                    labIndices[ic] = l0 * labIndicesMultiplier;
                     ic++;
                     rgbIndices[ic] = pg;
-                    labIndices[ic] = l1;
+                    labIndices[ic] = l1 * labIndicesMultiplier;
                     ic++;
                     rgbIndices[ic] = pb;
-                    labIndices[ic] = l2;
+                    labIndices[ic] = l2 * labIndicesMultiplier;
                 }
             });
 
@@ -4272,7 +4276,7 @@ P.theBigActionsObject = {
                 dA = palA - pixA;
                 dB = palB - pixB;
 
-                diff = Math.sqrt((dL * dL) + (dA * dA) + (dB * dB));
+                diff = (dL * dL) + (dA * dA) + (dB * dB);
 
                 distArray.push([palIndex, diff]);
             }
@@ -4393,13 +4397,13 @@ P.theBigActionsObject = {
                         indicesCursor = index * 3;
 
                         rgbIndices[indicesCursor] = red;
-                        labIndices[indicesCursor] = lab[0] * 510;
+                        labIndices[indicesCursor] = lab[0] * labIndicesMultiplier;
                         indicesCursor++;
                         rgbIndices[indicesCursor] = green;
-                        labIndices[indicesCursor] = lab[1] * 510;
+                        labIndices[indicesCursor] = lab[1] * labIndicesMultiplier;
                         indicesCursor++;
                         rgbIndices[indicesCursor] = blue;
-                        labIndices[indicesCursor] = lab[2] * 510;
+                        labIndices[indicesCursor] = lab[2] * labIndicesMultiplier;
                     }
                 }
                 detectedColors[index] = detectedColors[index] + 1;
