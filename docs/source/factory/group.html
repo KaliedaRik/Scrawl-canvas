@@ -810,6 +810,8 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefacts = <span class="hljs-literal">false</span></span>) {
 
+    <span class="hljs-keyword">if</span> (killArtefacts) [...<span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactCalculateBuckets</span>].<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-title function_">kill</span>());
+
     <span class="hljs-keyword">let</span> myname = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;</pre></div></div>
             
         </li>
@@ -841,9 +843,7 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
             <span class="hljs-title function_">removeItem</span>(obj.<span class="hljs-property">groups</span>, myname);
             obj.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
         };
-    });
-
-    <span class="hljs-keyword">if</span> (killArtefacts) <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-title function_">kill</span>());</pre></div></div>
+    });</pre></div></div>
             
         </li>
         

@@ -490,7 +490,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="renderanimation-factory">RenderAnimation factory</h1>
-<p>RenderAnimation objects are animations that aim to simplify coding up Display cycles. They remove the need to worry about Promises, while at the same time exposing a suite of Display cycle hooks - attributes which can accept a function to be run at various points during a Display cycle </p>
+<p>RenderAnimation objects are animations that aim to simplify coding up Display cycles. They remove the worry of dealing with the Scrawl-canvas <strong>Display cycle</strong> while also exposing a suite of Display cycle hook functions - attributes which can accept a function to be run at various points during each Display cycle:</p>
 <ul>
 <li><code>commence</code> - triggers at the start of the Display cycle, before the <code>clear</code> cascade begins.</li>
 <li><code>afterClear</code> - triggers when the <code>clear</code> cascade completes, before the <code>compile</code> cascade begins.</li>
@@ -499,17 +499,17 @@
 <li><code>afterCreated</code> - triggers once, after the first Display cycle completes.</li>
 <li><code>error</code> - triggers when the Display cycle throws an error.</li>
 </ul>
-<p>Note that all the above functions should be normal, synchronous functions. The Animation object will run them within its main, asynchronous (Promise-based) function.</p>
 <p>The RenderAnimation object also supports the Animation object’s <strong>animation hook functions</strong>:</p>
 <ul>
 <li><code>onRun</code> - triggers each time the RenderAnimation object’s <code>run</code> function is invoked</li>
 <li><code>onHalt</code> - triggers each time the RenderAnimation object’s <code>halt</code> function is invoked</li>
 <li><code>onKill</code> - triggers each time the RenderAnimation object’s <code>kill</code> function is invoked</li>
 </ul>
-<p>In addition to RenderAnimation attributes, the factory’s argument object can include two additional flags, which influence the make functionality:</p>
+<p>In addition to RenderAnimation attributes, the factory’s argument object can include three additional boolean flags, which influence the make functionality:</p>
 <ul>
-<li><strong>delay</strong> - when set to true, will prevent the animation running immediately; to start the animation, invoke its <strong>run</strong> function</li>
-<li><strong>observe</strong> - when set to true, will add an IntersectionObserver to the target’s DOM element, which in turn assigns a disconnect function to the <code>RenderAnimation.observe</code> attribute</li>
+<li><strong>delay</strong> - default: <code>false</code>. When set to true, will prevent the animation running immediately; to start the animation, invoke its <strong>run</strong> function</li>
+<li><strong>observe</strong> - default: <code>false</code>. When set to true, will add an IntersectionObserver to the target’s DOM element, which in turn assigns a disconnect function to the <code>RenderAnimation.observe</code> attribute. The attribute can also be a Javascript object containing options to be applied to the observer (<code>root</code>, <code>rootMargin</code>, <code>threshold</code>)</li>
+<li><strong>noTarget</strong> - default: <code>false</code>. the <code>renderAnimation</code> factory function expects to receive a Canvas or Stack artefact (or an array of such artefacts) in the <code>target</code> attribute of its argument object. When no target attribute is supplied, the RenderAnimation object will operate across all Canvas and Stack elements on the page. If the target is not a Canvas or Stack, then set the <code>noTarget</code> attribute to <code>true</code>.</li>
 </ul>
 
             </div>
@@ -632,7 +632,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> target = (items.<span class="hljs-property">target</span> &amp;&amp; items.<span class="hljs-property">target</span>.<span class="hljs-property">substring</span>) ? artefact[items.<span class="hljs-property">target</span>] : items.<span class="hljs-property">target</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> target = (items.<span class="hljs-property">target</span> &amp;&amp; items.<span class="hljs-property">target</span>.<span class="hljs-property">substring</span>) ? artefact[items.<span class="hljs-property">target</span>] : items.<span class="hljs-property">target</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);</pre></div></div>
             
         </li>
         
@@ -642,35 +644,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <p>Without a target, we can progress no further
-if (!target || !target.clear || !target.compile || !target.show) return false;</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>All should be good - proceed with animation creation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>These attributes are the same as for the Animation object</p>
 
@@ -685,11 +658,11 @@ if (!target || !target.clear || !target.compile || !target.show) return false;</
         </li>
         
         
-        <li id="section-11">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>These attributes are specific to RenderAnimation</p>
 
@@ -709,13 +682,13 @@ if (!target || !target.clear || !target.compile || !target.show) return false;</
         </li>
         
         
-        <li id="section-12">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <h5 id="the-display-cycle-promise-chain">The Display cycle Promise chain</h5>
+              <h5 id="the-display-cycle-animation-function">The Display cycle animation function</h5>
 
             </div>
             
@@ -757,11 +730,11 @@ if (!target || !target.clear || !target.compile || !target.show) return false;</
         </li>
         
         
-        <li id="section-13">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Register in Scrawl-canvas library</p>
 
@@ -772,11 +745,11 @@ if (!target || !target.clear || !target.compile || !target.show) return false;</
         </li>
         
         
-        <li id="section-14">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>The <code>observer</code> attribute</p>
 
@@ -793,11 +766,11 @@ if (!target || !target.clear || !target.compile || !target.show) return false;</
         </li>
         
         
-        <li id="section-15">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Start the animation immediately, unless flagged otherwise</p>
 
@@ -811,11 +784,11 @@ if (!target || !target.clear || !target.compile || !target.show) return false;</
         </li>
         
         
-        <li id="section-16">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="renderanimation-prototype">RenderAnimation prototype</h4>
 
@@ -831,11 +804,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-17">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -846,11 +819,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-18">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="renderanimation-attributes">RenderAnimation attributes</h4>
 <ul>
@@ -864,11 +837,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-19">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>order</strong> - positive integer Number. Determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations.</p>
 
@@ -879,11 +852,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-20">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>onRun</strong>, <strong>onHalt</strong>, <strong>onKill</strong></p>
 <p>The <a href="./animation.html">Animation object</a> supports the following <em><strong>animation hook functions</strong></em>:</p>
@@ -902,11 +875,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><strong>commence</strong>, <strong>afterClear</strong>, <strong>afterCompile</strong>, <strong>afterShow</strong>, <strong>afterCreated</strong>, <strong>error</strong></p>
 <p>RenderAnimation objects support the following <em><strong>Display cycle hook functions</strong></em>:</p>
@@ -931,16 +904,17 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-22">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>target</strong> - handle to the <a href="./stack.html">Stack</a> or <a href="./cell.html">Cell</a> wrapper object; each can have its own Display cycle animation.</p>
 <ul>
 <li>Can be supplied in the argument object as either a name-String for the target object, or the target object itself</li>
-<li>Will also accept an Array of Strings and/or obvjects</li>
+<li>Will also accept an Array of Strings and/or objects</li>
+<li>Artefacts that are not Canvases or Stacks can be targets - in such cases the <code>noTarget</code> attribute in the factory function’s argument object should be set to <code>true</code></li>
 </ul>
 
             </div>
@@ -952,11 +926,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-23">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>Animations do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions</p>
@@ -974,11 +948,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-24">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 
@@ -989,11 +963,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-25">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>Stops the animation if it is already running, and removes it from the Scrawl-canvas library</p>
@@ -1014,11 +988,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-26">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 <p>No additional get/set functionality required</p>
@@ -1028,11 +1002,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-27">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1041,11 +1015,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-28">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>run</code> - start the animation, if it is not already running</p>
 
@@ -1067,11 +1041,30 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-29">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p><code>start</code> - start the animation, if it is not already running. Will re-run the <code>afterCreated</code> hook, which is ignored by the <code>run()</code> function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">start</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">readyToInitialize</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">run</span>();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>isRunning</code> - returns Boolean true if animation is running; false otherwise</p>
 
@@ -1085,11 +1078,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>halt</code> - stop the animation, if it is already running</p>
 
@@ -1106,11 +1099,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
@@ -1150,11 +1143,11 @@ constructors.<span class="hljs-property">RenderAnimation</span> = <span class="h
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

@@ -3213,20 +3213,17 @@ P.<span class="hljs-property">convertOKLABtoXYZ</span> = <span class="hljs-keywo
             </div>
             
             <div class="content"><div class='highlight'><pre>
-    <span class="hljs-comment">/*
-    engine.fillStyle = &#x27;oklab(59.686% 0.1009 0.1192)&#x27;;
-    engine.clearRect(0, 0, 1, 1);
-    engine.fillRect(0, 0, 1, 1);
+    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;oklab(59.686% 0.1009 0.1192)&#x27;</span>;
+    engine.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
 
-    image = engine.getImageData(0, 0, 1, 1);
+    image = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
 
-    if (image &amp;&amp; image.data) {
+    <span class="hljs-keyword">if</span> (image &amp;&amp; image.<span class="hljs-property">data</span>) {
 
-        [r, g, b, a] = image.data;
+        [r, g, b, a] = image.<span class="hljs-property">data</span>;
     }
-    if (r || g || b) supportsOKLAB = true;
-
-</span></pre></div></div>
+    <span class="hljs-keyword">if</span> (r || g || b) supportsOKLAB = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -3242,8 +3239,7 @@ P.<span class="hljs-property">convertOKLABtoXYZ</span> = <span class="hljs-keywo
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (supportsOKLAB &amp;&amp; col === engine.<span class="hljs-property">fillStyle</span>) supportsOKLAB = <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">else</span> col = engine.<span class="hljs-property">fillStyle</span>;
-    */</pre></div></div>
+    <span class="hljs-keyword">else</span> col = engine.<span class="hljs-property">fillStyle</span>;</pre></div></div>
             
         </li>
         
@@ -3262,20 +3258,17 @@ P.<span class="hljs-property">convertOKLABtoXYZ</span> = <span class="hljs-keywo
             </div>
             
             <div class="content"><div class='highlight'><pre>
-    <span class="hljs-comment">/*
-    engine.fillStyle = &#x27;oklch(59.686% 0.15619 49.7694)&#x27;;
-    engine.clearRect(0, 0, 1, 1);
-    engine.fillRect(0, 0, 1, 1);
+    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;oklch(59.686% 0.15619 49.7694)&#x27;</span>;
+    engine.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+    engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
 
-    image = engine.getImageData(0, 0, 1, 1);
+    image = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
 
-    if (image &amp;&amp; image.data) {
+    <span class="hljs-keyword">if</span> (image &amp;&amp; image.<span class="hljs-property">data</span>) {
 
-        [r, g, b, a] = image.data;
+        [r, g, b, a] = image.<span class="hljs-property">data</span>;
     }
-    if (r || g || b) supportsOKLCH = true;
-
-</span></pre></div></div>
+    <span class="hljs-keyword">if</span> (r || g || b) supportsOKLCH = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -3292,7 +3285,6 @@ P.<span class="hljs-property">convertOKLABtoXYZ</span> = <span class="hljs-keywo
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (supportsOKLCH &amp;&amp; col === engine.<span class="hljs-property">fillStyle</span>) supportsOKLCH = <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">else</span> col = engine.<span class="hljs-property">fillStyle</span>;
-    */
 
     engine.<span class="hljs-title function_">restore</span>();
     <span class="hljs-title function_">releaseCell</span>(cell);
