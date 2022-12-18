@@ -3,6 +3,7 @@
   "version": "8.9.4",
   "description": "Version 8.9.4 - 19 Nov 2022",
   "main": "min/scrawl.js",
+  "type": "module",
   "types": "./scrawl.d.ts",
   "scripts": {
     "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",

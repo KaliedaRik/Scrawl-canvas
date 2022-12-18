@@ -1,5 +1,5 @@
 // # RenderAnimation factory
-// RenderAnimation objects are animations that aim to simplify coding up Display cycles. They remove the need to worry about Promises, while at the same time exposing a suite of Display cycle hooks - attributes which can accept a function to be run at various points during a Display cycle 
+// RenderAnimation objects are animations that aim to simplify coding up Display cycles. They remove the worry of dealing with the Scrawl-canvas __Display cycle__ while also exposing a suite of Display cycle hook functions - attributes which can accept a function to be run at various points during each Display cycle:
 // + `commence` - triggers at the start of the Display cycle, before the `clear` cascade begins.
 // + `afterClear` - triggers when the `clear` cascade completes, before the `compile` cascade begins.
 // + `afterCompile` - triggers when the `compile` cascade completes, before the `show` cascade begins.
@@ -7,16 +7,15 @@
 // + `afterCreated` - triggers once, after the first Display cycle completes.
 // + `error` - triggers when the Display cycle throws an error.
 //
-// Note that all the above functions should be normal, synchronous functions. The Animation object will run them within its main, asynchronous (Promise-based) function.
-//
 // The RenderAnimation object also supports the Animation object's __animation hook functions__:
 // + `onRun` - triggers each time the RenderAnimation object's `run` function is invoked
 // + `onHalt` - triggers each time the RenderAnimation object's `halt` function is invoked
 // + `onKill` - triggers each time the RenderAnimation object's `kill` function is invoked
 //
-// In addition to RenderAnimation attributes, the factory's argument object can include two additional flags, which influence the make functionality:
-// + __delay__ - when set to true, will prevent the animation running immediately; to start the animation, invoke its __run__ function
-// + __observe__ - when set to true, will add an IntersectionObserver to the target's DOM element, which in turn assigns a disconnect function to the `RenderAnimation.observe` attribute
+// In addition to RenderAnimation attributes, the factory's argument object can include three additional boolean flags, which influence the make functionality:
+// + __delay__ - default: `false`. When set to true, will prevent the animation running immediately; to start the animation, invoke its __run__ function
+// + __observe__ - default: `false`. When set to true, will add an IntersectionObserver to the target's DOM element, which in turn assigns a disconnect function to the `RenderAnimation.observe` attribute. The attribute can also be a Javascript object containing options to be applied to the observer (`root`, `rootMargin`, `threshold`)
+// + __noTarget__ - default: `false`. the `renderAnimation` factory function expects to receive a Canvas or Stack artefact (or an array of such artefacts) in the `target` attribute of its argument object. When no target attribute is supplied, the RenderAnimation object will operate across all Canvas and Stack elements on the page. If the target is not a Canvas or Stack, then set the `noTarget` attribute to `true`.
 
 
 // #### Demos:
@@ -68,10 +67,6 @@ const RenderAnimation = function (items = Ωempty) {
     // Default case where we have a single target
     else target = (items.target && items.target.substring) ? artefact[items.target] : items.target;
 
-    // Without a target, we can progress no further
-    // if (!target || !target.clear || !target.compile || !target.show) return false;
-
-    // All should be good - proceed with animation creation
     this.makeName(items.name);
 
     // These attributes are the same as for the Animation object
@@ -93,7 +88,7 @@ const RenderAnimation = function (items = Ωempty) {
 
     this.readyToInitialize = true;
 
-    // ##### The Display cycle Promise chain
+    // ##### The Display cycle animation function
     this.fn = function () {
 
         if (this.noTarget) {
@@ -196,7 +191,8 @@ let defaultAttributes = {
 
 // __target__ - handle to the [Stack](./stack.html) or [Cell](./cell.html) wrapper object; each can have its own Display cycle animation.
 // + Can be supplied in the argument object as either a name-String for the target object, or the target object itself
-// + Will also accept an Array of Strings and/or obvjects
+// + Will also accept an Array of Strings and/or objects
+// + Artefacts that are not Canvases or Stacks can be targets - in such cases the `noTarget` attribute in the factory function's argument object should be set to `true`
     target: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -250,6 +246,14 @@ P.run = function () {
     setTimeout(() => forceUpdate(), 20);
 
     return this;
+};
+
+
+// `start` - start the animation, if it is not already running. Will re-run the `afterCreated` hook, which is ignored by the `run()` function.
+P.start = function () {
+
+    this.readyToInitialize = true;
+    this.run();
 };
 
 

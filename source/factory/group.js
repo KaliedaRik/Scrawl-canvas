@@ -133,6 +133,8 @@ P.postCloneAction = function(clone, items) {
 // #### Kill management
 P.kill = function (killArtefacts = false) {
 
+    if (killArtefacts) [...this.artefactCalculateBuckets].forEach(item => item.kill());
+
     let myname = this.name;
 
     // Remove the Group object from affected Stack and Cell objects' `groups` attribute
@@ -153,8 +155,6 @@ P.kill = function (killArtefacts = false) {
             obj.batchResort = true;
         };
     });
-
-    if (killArtefacts) this.artefactCalculateBuckets.forEach(item => item.kill());
 
     // Remove Group object from the Scrawl-canvas library
     return this.deregister();
