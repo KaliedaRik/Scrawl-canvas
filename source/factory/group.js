@@ -133,7 +133,7 @@ P.postCloneAction = function(clone, items) {
 // #### Kill management
 P.kill = function (killArtefacts = false) {
 
-    if (killArtefacts) [...this.artefactCalculateBuckets].forEach(item => item.kill());
+    if (killArtefacts) this.artefactCalculateBuckets.forEach(item => item.kill());
 
     let myname = this.name;
 
