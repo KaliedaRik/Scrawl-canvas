@@ -399,8 +399,8 @@ const initializeMinimap = (args = {}, scrawl) => {
     const killCanvasMinimap = () => {
         pivotGroup.kill(true);
         myFrameGroup.kill(true);
-        scrawl.library.group[mainCell.name].kill(true);
-        scrawl.library.group[mapCell.name].kill(true);
+        mainCell.get('group').kill(true);
+        mapCell.get('group').kill(true);
         keyboard.kill();
         frameDragZone();
         mapDragZone();

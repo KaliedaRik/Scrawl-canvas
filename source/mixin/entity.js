@@ -270,7 +270,7 @@ export default function (P = Ωempty) {
 
             let val;
 
-            if (typeof def != 'undefined') {
+            if (def != null) {
 
                 val = this[item];
                 return (typeof val != 'undefined') ? val : def;
@@ -278,7 +278,7 @@ export default function (P = Ωempty) {
 
             def = state.defs[item];
 
-            if (typeof def != 'undefined') {
+            if (def != null) {
 
                 val = state[item];
                 return (typeof val != 'undefined') ? val : def;

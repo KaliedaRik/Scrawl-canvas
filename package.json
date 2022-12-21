@@ -2,9 +2,9 @@
   "name": "scrawl-canvas",
   "version": "8.9.5",
   "description": "Version 8.9.5 - 20 Dec 2022",
-  "main": "min/scrawl.js",
+  "main": "./source/scrawl.js",
   "type": "module",
-  "types": "./scrawl.d.ts",
+  "types": "./source/scrawl.d.ts",
   "scripts": {
     "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
     "dev": "light-server -p 8000 --serve . --open",

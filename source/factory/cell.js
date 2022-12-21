@@ -546,6 +546,13 @@ S.onEntityNoHover = function (item) {
     });
 };
 
+// `group` - get the Cell's namesake group
+// + Note that Cell wrappers can action more than one group
+G.group = function () {
+
+    return group[this.name];
+};
+
 
 // #### Prototype functions
 

@@ -284,12 +284,12 @@ P.get = function (item) {
 
     else {
 
-        const def = this.defs[item],
+        let def = this.defs[item],
             state = this.state;
 
         let val;
 
-        if (typeof def != 'undefined') {
+        if (def != null) {
 
             val = this[item];
             return (typeof val != 'undefined') ? val : def;
@@ -297,7 +297,7 @@ P.get = function (item) {
 
         def = state.defs[item];
 
-        if (typeof def != 'undefined') {
+        if (def != null) {
 
             val = state[item];
             return (typeof val != 'undefined') ? val : def;

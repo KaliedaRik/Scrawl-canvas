@@ -117,7 +117,7 @@ export default function (page, canvasWrapper, reqs = {}) {
             backgroundColor: reqs.backgroundColor || 'transparent',
         });
 
-        const chartGroup = scrawl.library.group[cell.name];
+        const chartGroup = cell.get('group');
 
         // Use Color objects to determine the appropriate color for each charted view value. Again, we'll kill these objects once we've finished with them
         const lowViewsFactory = scrawl.makeColor({

@@ -271,7 +271,7 @@ scrawl.makeRender({
 let events = function () {
 
     let base = canvas.base,
-        group = scrawl.library.group[base.name],
+        group = base.get('group'),
         currentTarget;
 
     return function (e) {

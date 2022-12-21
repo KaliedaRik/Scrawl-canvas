@@ -646,7 +646,7 @@ makeRender({
 let events = function () {
 
     let base = canvas.base,
-        group = L.group[base.name],
+        group = base.get('group'),
         currentTarget, currentFilter;
 
     return function (e) {

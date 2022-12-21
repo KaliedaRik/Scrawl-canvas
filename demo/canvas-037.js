@@ -29,7 +29,7 @@ let naturalWidth = 4160,
 // Convenience variables to access key Scrawl-canvas objects stored in the library
 let canvas = scrawl.library.canvas.mycanvas, 
     base = canvas.base,
-    baseGroup = scrawl.library.group[base.name];
+    baseGroup = base.get('group');
 
 
 // #### Scene setup

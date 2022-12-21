@@ -171,7 +171,7 @@ const updateRc2 = () => {
     const {here} = rc2;
     let { inViewportTop, inViewportCenter, inViewportBase } = here;
 
-    const group = scrawl.library.group[rc2.base.name];
+    const group = rc2.get('baseGroup');
 
     if (inViewportTop < 0) inViewportTop = 0;
     else if (inViewportTop > 1) inViewportTop = 1;

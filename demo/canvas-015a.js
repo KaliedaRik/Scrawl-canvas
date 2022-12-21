@@ -147,7 +147,7 @@ makeRender({
     // + As the content and display of the text does not change (only their positions change when users drag-and-drop them), we can treat the creation of the cache images and associated entitys as a one-off job
     afterCreated: () => {
 
-        let g = L.group[canvas.base.name];
+        let g = canvas.get('baseGroup');
 
         // Switch off the Phrase entitys via a set call to their Group (which, in this instance is the canvas.base Cell's default Group)
         g.setArtefacts({

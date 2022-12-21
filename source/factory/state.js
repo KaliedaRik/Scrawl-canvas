@@ -48,8 +48,8 @@ P.defs = {
 // + GRADIENTNAME String
 // + RADIALGRADIENTNAME String
 // + PATTERNNAME String
-    fillStyle: 'rgba(0,0,0,1)',
-    strokeStyle: 'rgba(0,0,0,1)',
+    fillStyle: 'rgba(0 0 0 / 1)',
+    strokeStyle: 'rgba(0 0 0 / 1)',
 
 
 // ##### Miscellaneous engine settings
@@ -124,7 +124,7 @@ P.defs = {
 // __shadowColor__ - the color used for an entity's shadow effect. Can be:
 // + CSS format color String - `#fff`, `#ffffff`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
 // + COLORNAME String
-    shadowColor: 'rgba(0,0,0,0)',
+    shadowColor: 'rgba(0 0 0 / 0)',
 
 
 // ##### Font styling
@@ -220,10 +220,10 @@ P.get = function (item) {
 
     d = this.defs[item];
 
-    if (typeof d !== 'undefined') {
+    if (d != null) {
     
         i = this[item];
-        return (typeof i !== 'undefined') ? i : d;
+        return (i != null) ? i : d;
     }
     else return undef;
 };

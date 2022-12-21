@@ -198,5 +198,11 @@ makeRender({
 console.log(L);
 
 console.log('Performing tests ...');
+
+// Test to make sure the shorthand ways to find a Canvas wrapper's base Cell's group are working as expected
+console.log('canvas.get(\'baseGroup\')', canvas.get('baseGroup'));
+console.log('canvas.base.get(\'group\')', canvas.base.get('group'));
+
+// Kill, and packet, functionality tests
 killArtefact(canvas, 'myblock-fill', 4000);
 killArtefact(canvas, 'mywheel-fillAndDraw', 6000);

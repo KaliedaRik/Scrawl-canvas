@@ -452,6 +452,12 @@ S.onEntityNoHover = function (item) {
     });
 };
 
+// `baseGroup` - get the Canvas wrapper's base Cell's named group 
+G.baseGroup = function () {
+
+    return group[this.base.name];
+};
+
 
 // #### Prototype functions
 

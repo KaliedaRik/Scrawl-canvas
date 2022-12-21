@@ -115,7 +115,7 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
     // + keyboardEntitys group two beneath the canvas base group
     // + selectedEntitys group above keyboardEntitys group
     // + the canvas base group needs to be raised by two to accommodate these additional groups
-    const canvasGroup = scrawl.library.group[cell.name];
+    const canvasGroup = cell.get('group');
     let canvasOrder = 2;
 
     if (canvasGroup) {

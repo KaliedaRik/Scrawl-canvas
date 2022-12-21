@@ -12,8 +12,6 @@ const canvas = scrawl.library.canvas.mycanvas;
 
 scrawl.importDomImage('.flowers');
 
-// + TODO: concurrency - want to be able to process more than one swirl in the same filter. When concurrency flag is true, then each pixels value, when the pixel is affected by more than one swirl, needs to pro-rata the effects of those swirls; when concurrency is false, need to process the entire image for each swirl in turn.
-// + TODO: this filter is too slow - we need to cache the calculations as a lookup table to speed things up.
 const swirl = scrawl.makeFilter({
 
     name: 'swirl',
