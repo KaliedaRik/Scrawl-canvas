@@ -874,8 +874,8 @@
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">killCanvasMinimap</span> = (<span class="hljs-params"></span>) =&gt; {
         pivotGroup.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
         myFrameGroup.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
-        scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">group</span>[mainCell.<span class="hljs-property">name</span>].<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
-        scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">group</span>[mapCell.<span class="hljs-property">name</span>].<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
+        mainCell.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;group&#x27;</span>).<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
+        mapCell.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;group&#x27;</span>).<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
         keyboard.<span class="hljs-title function_">kill</span>();
         <span class="hljs-title function_">frameDragZone</span>();
         <span class="hljs-title function_">mapDragZone</span>();

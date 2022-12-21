@@ -1320,7 +1320,7 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-keyword">const</span> {here} = rc2;
     <span class="hljs-keyword">let</span> { inViewportTop, inViewportCenter, inViewportBase } = here;
 
-    <span class="hljs-keyword">const</span> group = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">group</span>[rc2.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>];
+    <span class="hljs-keyword">const</span> group = rc2.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>);
 
     <span class="hljs-keyword">if</span> (inViewportTop &lt; <span class="hljs-number">0</span>) inViewportTop = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (inViewportTop &gt; <span class="hljs-number">1</span>) inViewportTop = <span class="hljs-number">1</span>;

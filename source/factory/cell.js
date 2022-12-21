@@ -301,18 +301,18 @@ P.get = function (item) {
             state = this.state,
             val;
 
-        if (typeof def != 'undefined') {
+        if (def != null) {
 
             val = this[item];
-            return (typeof val != 'undefined') ? val : def;
+            return (val != null) ? val : def;
         }
 
         def = state.defs[item];
 
-        if (typeof def != 'undefined') {
+        if (def != null) {
 
             val = state[item];
-            return (typeof val != 'undefined') ? val : def;
+            return (val != null) ? val : def;
         }
         return undef;
     }

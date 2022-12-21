@@ -1063,7 +1063,7 @@
 
             <span class="hljs-keyword">let</span> val;
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-string">&#x27;undefined&#x27;</span>) {
+            <span class="hljs-keyword">if</span> (def != <span class="hljs-literal">null</span>) {
 
                 val = <span class="hljs-variable language_">this</span>[item];
                 <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-string">&#x27;undefined&#x27;</span>) ? val : def;
@@ -1071,7 +1071,7 @@
 
             def = state.<span class="hljs-property">defs</span>[item];
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-string">&#x27;undefined&#x27;</span>) {
+            <span class="hljs-keyword">if</span> (def != <span class="hljs-literal">null</span>) {
 
                 val = state[item];
                 <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-string">&#x27;undefined&#x27;</span>) ? val : def;

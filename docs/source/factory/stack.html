@@ -939,9 +939,17 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <p><code>group</code> - get the Stack’s namesake group</p>
+<ul>
+<li>Note that Stack wrappers can action more than one group</li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">group</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> group[<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>];
+};</pre></div></div>
             
         </li>
         
@@ -951,6 +959,19 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
               
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>updateArtefacts</code> - internal function. Iterate through all Element and Canvas wrappers associated with the Stack wrapper’s Group object and set a range of dirty flags on them, for future processing by each as appropriate.</p>
 
@@ -977,11 +998,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwrites mixin/position function. Promulgates Stack dimension changes through to all Element and Canvas wrappers associated with the Stack wrapper’s Group object.</p>
 
@@ -1010,11 +1031,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>cleanPerspective</code> - internal function</p>
 
@@ -1041,11 +1062,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>TODO - experimental! <code>checkResponsive</code></p>
 <p>Scrawl-canvas Stack artefacts - at the <strong>root</strong> level - cannot have ‘String%’ dimensions, which means they have absolute dimensions - because everything that relies on ‘String%’ dimensions needs an absolute (number) value for their calculations at the root, which is the stack. </p>
@@ -1061,11 +1082,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Start keeping track of the viewport dimensions</p>
 
@@ -1077,11 +1098,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>If last display cycle responded to dimension changes, need to finalise height now</p>
 
@@ -1101,11 +1122,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>Won’t be updated until the next display cycle, but flag it now for action</p>
 <ul>
@@ -1128,11 +1149,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h5 id="display-cycle-functions">Display cycle functions</h5>
 
@@ -1141,11 +1162,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -1159,11 +1180,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>compile</code></p>
 
@@ -1181,11 +1202,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>show</code></p>
 
@@ -1199,11 +1220,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>render</code></p>
 
@@ -1218,11 +1239,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><code>addExistingDomElements</code> - argument is a CSS query search String. All elements in the DOM matching the search will be <strong>moved</strong> into the Stack wrapper’s DOM element and given Scrawl-canvas Element wrappers. While Scrawl-canvas will try its best to respect the elements’ CSS attributes, they will be <strong>positioned absolutely</strong> within the Stack and given start, handle and offset values of <code>[0, 0]</code>. </p>
 
@@ -1261,11 +1282,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><code>addNewElement</code> - takes an ‘items’ object as an argument. The only required attribute of the argument is <strong>tag</strong>, which determines the type of element that will be created (for example - setting tag to ‘div’ will create a new &lt;div&gt; element)</p>
 <ul>
@@ -1313,11 +1334,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -1334,11 +1355,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

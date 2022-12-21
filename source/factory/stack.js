@@ -248,6 +248,13 @@ D.perspectiveY = function (item) {
     this.dirtyPerspective = true;
 };
 
+// `group` - get the Stack's namesake group
+// + Note that Stack wrappers can action more than one group
+G.group = function () {
+
+    return group[this.name];
+};
+
 
 // #### Prototype functions
 

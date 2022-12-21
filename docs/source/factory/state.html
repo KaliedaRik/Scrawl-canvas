@@ -626,8 +626,8 @@ P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Stat
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;rgba(0,0,0,1)&#x27;</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;rgba(0,0,0,1)&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -840,7 +840,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Stat
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1026,10 +1026,10 @@ P.<span class="hljs-property">get</span> = <span class="hljs-keyword">function</
 
     d = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item];
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> d !== <span class="hljs-string">&#x27;undefined&#x27;</span>) {
+    <span class="hljs-keyword">if</span> (d != <span class="hljs-literal">null</span>) {
     
         i = <span class="hljs-variable language_">this</span>[item];
-        <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> i !== <span class="hljs-string">&#x27;undefined&#x27;</span>) ? i : d;
+        <span class="hljs-keyword">return</span> (i != <span class="hljs-literal">null</span>) ? i : d;
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> undef;
 };
