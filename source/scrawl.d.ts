@@ -93,7 +93,7 @@ interface AssetConsumerMixinDeltaInputs {}
 
 interface AssetConsumerMixinInputs {
     asset?: string | AssetInstance,
-    removeAssetOnKill?: string;
+    removeAssetOnKill?: string | boolean;
 
     imageSource?: string;
 

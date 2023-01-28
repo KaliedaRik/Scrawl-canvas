@@ -71,11 +71,9 @@ const buildSmokeRing = function (namespace, canvasWrapper, color) {
     cell.clear();
     scrawl.createImageFromCell(cell, true);
     cell.compile();
-    snake.kill();
-    cell.kill();
 
     // Create the Picture entity which will destroy the (dearly departed) Polyline on the canvas
-    let img = scrawl.makePicture({
+    const img = scrawl.makePicture({
         name: `${namespace}-smokering`,
         group: canvasWrapper.base.name,
 
@@ -98,12 +96,13 @@ const buildSmokeRing = function (namespace, canvasWrapper, color) {
         duration: '16s',
         targets: `${namespace}-smokering`,
 
-        // The Tween will run once and then destroy the Picture, the &lt;img> element and its asset wrapper, and then itself
+        // The Tween will run once and then destroy all the scrawl.library objects associated with the namespace supplied to the `buildSmokeRing` function, including itself and its ticker.
         cycles: 1,
         killOnComplete: true,
         completeAction: () => {
 
-            img.kill(true);
+            // Object cleanup acomplished via SC's `library.purge()` function
+            scrawl.library.purge(namespace);
 
             counter++;
             buildSmokeRing(`ring${counter}`, canvas, colorMaker.getRangeColor(Math.random()));
