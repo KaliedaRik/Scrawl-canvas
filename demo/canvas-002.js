@@ -15,14 +15,20 @@ import { reportSpeed, killArtefact } from './utilities.js';
 
 
 // #### Scene setup
+// Get a handle to the Canvas wrapper
 let canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create and clone block and wheel entitys. For the sake of safety and sanity, create the (reference) entitys on which other artefacts will pivot and mimic first. Then create those other artefacts.
 //
 // Note: setting this entity's `method` value to __none__ means that while it will perform all necessary calculations as part of the Display cycle, it will not complete its stamp action, thus will not appear on the display. This differs from setting its `visibility` attribute to false, which will make the entity skip both calculation and stamp operations
 let myPivot = makeWheel({
-    name: 'mouse-pivot',
+    name: name('mouse-pivot'),
     method: 'none',
 
     startX: 'center',
@@ -30,7 +36,7 @@ let myPivot = makeWheel({
 });
 
 let myblock = makeBlock({
-    name: 'base-block',
+    name: name('base-block'),
 
     width: 150,
     height: 100,
@@ -42,7 +48,7 @@ let myblock = makeBlock({
     offsetY: -50,
 
     // To pivot this entity to the reference entity, we need to set both its `pivot` attribute (to the reference entity's name, or the entity itself) __and also__ set the `lockTo` attribute to the value __'pivot'__
-    pivot: 'mouse-pivot',
+    pivot: name('mouse-pivot'),
     lockTo: 'pivot',
 
     fillStyle: 'darkblue',
@@ -58,7 +64,7 @@ let myblock = makeBlock({
 });
 
 let mywheel = makeWheel({
-    name: 'base-wheel',
+    name: name('base-wheel'),
 
     radius: 60,
     startAngle: 35,
@@ -70,7 +76,7 @@ let mywheel = makeWheel({
     offsetX: 140,
     offsetY: 50,
 
-    pivot: 'mouse-pivot',
+    pivot: name('mouse-pivot'),
     lockTo: 'pivot',
 
     fillStyle: 'purple',
@@ -86,7 +92,7 @@ let mywheel = makeWheel({
 });
 
 myblock.clone({
-    name: 'pivot-block',
+    name: name('pivot-block'),
 
     height: 30,
 
@@ -97,7 +103,7 @@ myblock.clone({
     lineWidth: 3,
     method: 'draw',
 
-    pivot: 'base-block',
+    pivot: name('base-block'),
     lockTo: 'pivot',
 
     offsetX: 0,
@@ -109,9 +115,9 @@ myblock.clone({
     },
 
 }).clone({
-    name: 'pivot-wheel',
+    name: name('pivot-wheel'),
 
-    pivot: 'base-wheel',
+    pivot: name('base-wheel'),
     addPivotRotation: true,
 
     handleX: 0,
@@ -120,10 +126,10 @@ myblock.clone({
     offsetY: 0,
 
 }).clone({
-    name: 'mimic-wheel',
+    name: name('mimic-wheel'),
 
     // `mimic` is an extended form of `pivot`
-    mimic: 'base-wheel',
+    mimic: name('base-wheel'),
     lockTo: 'mimic',
 
     // When an entity mimics another entity's dimensions, its own dimensions (width, height) can be added to the mimic dimensions
@@ -154,9 +160,9 @@ myblock.clone({
 });
 
 mywheel.clone({
-    name: 'mimic-block',
+    name: name('mimic-block'),
 
-    mimic: 'base-block',
+    mimic: name('base-block'),
     lockTo: 'mimic',
 
     width: 60,
@@ -238,7 +244,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     commence: mouseCheck,
     afterShow: report,
@@ -250,21 +256,21 @@ console.log(L);
 
 console.log('Performing tests ...');
 
-killArtefact(canvas, 'mouse-pivot', 4000, () => {
+killArtefact(canvas, name('mouse-pivot'), 4000, () => {
 
-    myPivot = L.entity['mouse-pivot'];
+    myPivot = L.entity[name('mouse-pivot')];
 
-    L.entity['base-block'].set({
+    L.entity[name('base-block')].set({
 
         pivot: myPivot,
         lockTo: 'pivot',
     });
 
-    L.entity['base-wheel'].set({
+    L.entity[name('base-wheel')].set({
 
         pivot: myPivot,
         lockTo: 'pivot',
     });
 });
 
-killArtefact(canvas, 'mimic-block', 6000);
+killArtefact(canvas, name('mimic-block'), 6000);

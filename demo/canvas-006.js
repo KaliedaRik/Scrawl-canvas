@@ -16,6 +16,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
+// Get a handle to the Canvas wrapper
 let porthole = L.artefact.porthole;
 
 porthole.set({
@@ -25,12 +26,17 @@ porthole.set({
 });
 
 
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
+
+
 // ##### Star generation functionality
 
 // We use this entity as a template for cloning new stars
 let starling = makeWheel({
 
-    name: 'starling',
+    name: name('starling'),
 
     radius: 3,
     handleX: 'center',
@@ -65,7 +71,7 @@ let makeStars = function (buildNumber) {
         // Clone the entity template
         star = starling.clone({
 
-            name: `star_${starCount}`,
+            name: name(`star_${starCount}`),
 
             // Additional flags for speeding up the Display cycle
             noCanvasEngineUpdates: true,
@@ -136,7 +142,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: porthole,
     afterShow: report,
 });
@@ -152,3 +158,7 @@ let addStars = (e) => {
     makeStars(addNumber);
 };
 addNativeListener('click', addStars, porthole.domElement);
+
+
+// #### Development and testing
+console.log(L);

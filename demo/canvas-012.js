@@ -14,11 +14,17 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
+// Namespacing boilerplate
+// + We don't need to give SC objects a `name` attribute - it's just a lot more convenient if we do.
+// + In particular, namespacing SC objects names helps make clearing them up after we've finished with them a lot easier!
+// + For this test demo, we forgo names and namespaces to make sure things still get generated and lodged in the library
+
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
+
 
 // Create Shape entity
 let arrow = makeShape({
-
-    name: 'myArrow',
 
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 
@@ -53,14 +59,12 @@ let arrow = makeShape({
 // Create Wheel entity to pivot to the arrow
 makeWheel({
 
-    // We don't need to give artefacts a `name` attribute - it's just a lot more convenient if we do.
-
     fillStyle: 'blue',
     radius: 5,
     handleX: 'center',
     handleY: 'center',
 
-    pivot: 'myArrow',
+    pivot: arrow,
     lockTo: 'pivot',
 });
 
@@ -77,7 +81,7 @@ let myWheel = makeWheel({
     startAngle: 90,
     endAngle: -90,
 
-    path: 'myArrow',
+    path: arrow,
     pathPosition: 0,
     addPathRotation: true,
     lockTo: 'path',
@@ -130,7 +134,6 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
     target: L.artefact.mycanvas,
     afterShow: report,
 });
@@ -224,4 +227,4 @@ document.querySelector('#reverse').options.selectedIndex = 0;
 
 
 // #### Development and testing
-console.log(L.entity.myArrow);
+console.log(L);

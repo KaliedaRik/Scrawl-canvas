@@ -14,15 +14,22 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
+// Get a handle to the Canvas wrapper
 let canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Import image from DOM, and create Picture entity using it
 importDomImage('.flowers');
 
+
 let piccy = makePicture({
 
-    name: 'myFlower',
+    name: name('myFlower'),
     asset: 'iris',
 
     width: 200,
@@ -49,7 +56,7 @@ let piccy = makePicture({
 // Create a second Picture entity, this time pulling in the image dynamically
 piccy.clone({
 
-    name: 'myFactory',
+    name: name('myFactory'),
     imageSource: 'img/canalFactory-800.png',
 
     width: 600,
@@ -94,7 +101,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

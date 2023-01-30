@@ -40,7 +40,13 @@ ga(function() {
 
 
 // #### Scene setup
+// Get a handle to the Canvas wrapper
 let canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Get images from DOM
@@ -50,12 +56,12 @@ importDomImage('.mypatterns');
 // Create Pattern styles using imported images
 makePattern({
 
-    name: 'brick-pattern',
+    name: name('brick-pattern'),
     asset: 'brick',
 
 }).clone({
 
-    name: 'leaves-pattern',
+    name: name('leaves-pattern'),
     asset: 'leaves',
 
 });
@@ -63,12 +69,12 @@ makePattern({
 // Create Pattern styles dynamically
 makePattern({
 
-    name: 'water-pattern',
+    name: name('water-pattern'),
     imageSource: 'img/water.png',
 
 }).clone({
 
-    name: 'marble-pattern',
+    name: name('marble-pattern'),
     imageSource: 'img/marble.png',
 
 });
@@ -76,7 +82,7 @@ makePattern({
 // Create a canvas-based Cell pattern
 canvas.buildCell({
 
-    name: 'cell-pattern',
+    name: name('cell-pattern'),
 
     width: 50,
     height: 50,
@@ -95,8 +101,8 @@ canvas.base.set({
 // Create a Block entity to display in the new Cell pattern
 makeBlock({
 
-    name: 'cell-pattern-block',
-    group: 'cell-pattern',
+    name: name('cell-pattern-block'),
+    group: name('cell-pattern'),
 
     width: 40,
     height: 40,
@@ -109,7 +115,7 @@ makeBlock({
 
     method: 'fill',
 
-    fillStyle: 'water-pattern',
+    fillStyle: name('water-pattern'),
 
     delta: {
         roll: -0.3
@@ -120,8 +126,8 @@ makeBlock({
 // Main canvas display - create Block entitys which will use the patterns defined above
 makeBlock({
 
-    name: 'water-in-leaves',
-    group: canvas.base.name,
+    name: name('water-in-leaves'),
+    group: canvas.get('baseGroup'),
 
     width: '40%',
     height: '40%',
@@ -137,8 +143,8 @@ makeBlock({
 
     method: 'fillThenDraw',
 
-    fillStyle: 'cell-pattern',
-    strokeStyle: 'leaves-pattern',
+    fillStyle: name('cell-pattern'),
+    strokeStyle: name('leaves-pattern'),
 
     shadowOffsetX: 5,
     shadowOffsetY: 5,
@@ -222,12 +228,12 @@ makeBlock({
 
 }).clone({
 
-    name: 'leaves-in-brick',
+    name: name('leaves-in-brick'),
 
     startX: '75%',
 
-    fillStyle: 'leaves-pattern',
-    strokeStyle: 'brick-pattern',
+    fillStyle: name('leaves-pattern'),
+    strokeStyle: name('brick-pattern'),
 
     anchor: {
         name: 'wikipedia-leaf-link',
@@ -237,12 +243,12 @@ makeBlock({
 
 }).clone({
     
-    name: 'brick-in-marble',
+    name: name('brick-in-marble'),
 
     startY: '75%',
 
-    fillStyle: 'brick-pattern',
-    strokeStyle: 'marble-pattern',
+    fillStyle: name('brick-pattern'),
+    strokeStyle: name('marble-pattern'),
 
     anchor: {
         name: 'wikipedia-brick-link',
@@ -252,12 +258,12 @@ makeBlock({
 
 }).clone({
     
-    name: 'marble-in-water',
+    name: name('marble-in-water'),
 
     startX: '25%',
 
-    fillStyle: 'marble-pattern',
-    strokeStyle: 'water-pattern',
+    fillStyle: name('marble-pattern'),
+    strokeStyle: name('water-pattern'),
 
     anchor: {
         name: 'wikipedia-marble-link',
@@ -304,7 +310,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -316,9 +322,9 @@ console.log(L);
 console.log('Performing tests ...');
 
 // We use the __canvas__ and __myTracker__ variables in our blocks' onEnter, onLeave and onUp functions. While this works fine for the blocks created in the scope of this module file's code, it will fail when we kill and resurrect a block - in the resurrected block the canvas and myTracker variables will be 'undefined'. So we need to reset the block's 'on...' functions (in this module file's code) after the block has resurrected
-killArtefactAndAnchor(canvas, 'brick-in-marble', 'wikipedia-brick-link', 2000, () => {
+killArtefactAndAnchor(canvas, name('brick-in-marble'), 'wikipedia-brick-link', 2000, () => {
 
-    L.artefact['brick-in-marble'].set({
+    L.artefact[name('brick-in-marble')].set({
 
         onEnter: function () {
             this.set({ lineWidth: 30 });
@@ -343,15 +349,15 @@ killArtefactAndAnchor(canvas, 'brick-in-marble', 'wikipedia-brick-link', 2000, (
     });
 });
 
-killStyle(canvas, 'marble-pattern', 3000, () => {
+killStyle(canvas, name('marble-pattern'), 3000, () => {
 
     // Reset entitys, whose fill/strokeStyles will have been set to default values when the Pattern died
-    L.entity['brick-in-marble'].set({
-        strokeStyle: 'marble-pattern',
+    L.entity[name('brick-in-marble')].set({
+        strokeStyle: name('marble-pattern'),
     });
 
-    L.entity['marble-in-water'].set({
-        fillStyle: 'marble-pattern',
+    L.entity[name('marble-in-water')].set({
+        fillStyle: name('marble-pattern'),
     });
 });
 

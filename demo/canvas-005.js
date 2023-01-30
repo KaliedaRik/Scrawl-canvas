@@ -17,12 +17,18 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
+// Get a handle to the Canvas wrapper
 const canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Build the gradient objects
 const myRadial = makeRadialGradient({
-    name: 'circle-waves',
+    name: name('circle-waves'),
 
     startX: '30%',
     startY: '30%',
@@ -58,7 +64,7 @@ const myRadial = makeRadialGradient({
 });
 
 makeGradient({
-    name: 'colored-pipes',
+    name: name('colored-pipes'),
     endX: '100%',
     cyclePalette: true,
 
@@ -91,7 +97,7 @@ makeGradient({
 });
 
 makeGradient({
-    name: 'linear',
+    name: name('linear'),
     endX: '100%',
 
     colors: [
@@ -106,7 +112,7 @@ makeGradient({
 
 // Build the block and wheel entitys
 makeBlock({
-    name: 'cell-locked-block',
+    name: name('cell-locked-block'),
 
     width: 150,
     height: 150,
@@ -117,7 +123,7 @@ makeBlock({
     handleX: 'center',
     handleY: 'center',
 
-    fillStyle: 'linear',
+    fillStyle: name('linear'),
     strokeStyle: 'coral',
     lineWidth: 6,
 
@@ -128,7 +134,7 @@ makeBlock({
     method: 'fillAndDraw',
 
 }).clone({
-    name: 'entity-locked-block',
+    name: name('entity-locked-block'),
 
     scale: 1.2,
     startY: 480,
@@ -136,14 +142,14 @@ makeBlock({
     lockFillStyleToEntity: true,
 
 }).clone({
-    name: 'animated-block',
+    name: name('animated-block'),
 
     width: 160,
     height: 90,
 
     startY: 300,
 
-    fillStyle: 'colored-pipes',
+    fillStyle: name('colored-pipes'),
     lineWidth: 2,
 
     delta: {
@@ -152,7 +158,7 @@ makeBlock({
 });
 
 makeWheel({
-    name: 'cell-locked-wheel',
+    name: name('cell-locked-wheel'),
 
     radius: 75,
 
@@ -161,7 +167,7 @@ makeWheel({
     handleX: 'center',
     handleY: 'center',
 
-    fillStyle: 'linear',
+    fillStyle: name('linear'),
     strokeStyle: 'coral',
     lineWidth: 6,
     lineDash: [4, 4],
@@ -173,7 +179,7 @@ makeWheel({
     method: 'fillAndDraw',
 
 }).clone({
-    name: 'entity-locked-wheel',
+    name: name('entity-locked-wheel'),
 
     scale: 1.2,
     startY: 480,
@@ -181,7 +187,7 @@ makeWheel({
     lockFillStyleToEntity: true,
 
 }).clone({
-    name: 'animated-wheel',
+    name: name('animated-wheel'),
 
     scale: 0.9,
     startY: 300,
@@ -259,8 +265,8 @@ const tweenEngine = (start, change, position) => {
 };
 
 const tweeny = makeTween({
-    name: 'mytween',
-    targets: 'colored-pipes',
+    name: name('mytween'),
+    targets: name('colored-pipes'),
     duration: 5000,
     cycles: 1,
     definitions: [{
@@ -300,7 +306,7 @@ const animateGradients = function () {
 
         if (typeof dragging !== 'boolean' && dragging) {
 
-            if (dragging.artefact && dragging.artefact.name === 'animated-block') tweeny.run();
+            if (dragging.artefact && dragging.artefact.name === name('animated-block')) tweeny.run();
         }
     }
 };
@@ -309,7 +315,7 @@ const animateGradients = function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
 
     // Gradient animation is not automatically handled by the Display cycle

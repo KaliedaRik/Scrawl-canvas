@@ -39,12 +39,18 @@ import { reportSpeed, killArtefact } from './utilities.js';
 
 
 // #### Scene setup
+// Get a handle to the Canvas wrapper
 let canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create and clone block entitys
 makeBlock({
-    name: 'myblock-fill',
+    name: name('block-fill'),
     width: 100,
     height: 100,
     startX: 25,
@@ -61,35 +67,35 @@ makeBlock({
     shadowColor: 'black',
 
 }).clone({
-    name: 'myblock-draw',
+    name: name('block-draw'),
     startX: 175,
     method: 'draw',
     sharedState: true
 
 }).clone({
-    name: 'myblock-drawAndFill',
+    name: name('block-drawAndFill'),
     startX: 325,
     method: 'drawAndFill',
 
 }).clone({
-    name: 'myblock-fillAndDraw',
+    name: name('block-fillAndDraw'),
     startX: 475,
     method: 'fillAndDraw',
     sharedState: true
 
 }).clone({
-    name: 'myblock-drawThenFill',
+    name: name('block-drawThenFill'),
     startY: 175,
     method: 'drawThenFill'
 
 }).clone({
-    name: 'myblock-fillThenDraw',
+    name: name('block-fillThenDraw'),
     startX: 325,
     method: 'fillThenDraw',
     sharedState: true
 
 }).clone({
-    name: 'myblock-clear',
+    name: name('block-clear'),
     startX: 175,
     method: 'clear'
 });
@@ -97,7 +103,7 @@ makeBlock({
 
 // Create and clone Wheel entitys
 makeWheel({
-    name: 'mywheel-fill',
+    name: name('wheel-fill'),
     radius: 50,
     startAngle: 15,
     endAngle: -15,
@@ -119,48 +125,48 @@ makeWheel({
     purge: 'all',
 
 }).clone({
-    name: 'mywheel-draw',
+    name: name('wheel-draw'),
     startX: 325,
     method: 'draw',
     sharedState: true
 
 }).clone({
-    name: 'mywheel-drawAndFill',
+    name: name('wheel-drawAndFill'),
     startX: 175,
     method: 'drawAndFill',
 
 }).clone({
-    name: 'mywheel-fillAndDraw',
+    name: name('wheel-fillAndDraw'),
     startX: 25,
     method: 'fillAndDraw',
     sharedState: true
 
 }).clone({
-    name: 'mywheel-drawThenFill',
+    name: name('wheel-drawThenFill'),
     startY: 325,
     method: 'drawThenFill'
 
 }).clone({
-    name: 'mywheel-fillThenDraw',
+    name: name('wheel-fillThenDraw'),
     startX: 175,
     method: 'fillThenDraw',
     sharedState: true
 
 }).clone({
-    name: 'mywheel-clear',
+    name: name('wheel-clear'),
     startX: 325,
     method: 'clear'
 });
 
 
 // Change the fill and stroke styles on one of the blocks, and one of the wheels, and any entitys sharing their respective states
-L.artefact['myblock-fillAndDraw'].set({
+L.artefact[name('block-fillAndDraw')].set({
     fillStyle: 'blue',
     strokeStyle: 'coral'
 });
 
 // Entitys can be found in both the 'artefact' and 'entity' sections of the library
-L.entity['mywheel-fillAndDraw'].set({
+L.entity[name('wheel-fillAndDraw')].set({
     fillStyle: 'blue',
     strokeStyle: 'coral'
 });
@@ -188,7 +194,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -204,5 +210,5 @@ console.log('canvas.get(\'baseGroup\')', canvas.get('baseGroup'));
 console.log('canvas.base.get(\'group\')', canvas.base.get('group'));
 
 // Kill, and packet, functionality tests
-killArtefact(canvas, 'myblock-fill', 4000);
-killArtefact(canvas, 'mywheel-fillAndDraw', 6000);
+killArtefact(canvas, name('block-fill'), 4000);
+killArtefact(canvas, name('wheel-fillAndDraw'), 6000);

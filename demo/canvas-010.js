@@ -16,7 +16,13 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
+// Get a handle to the Canvas wrapper
 let canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // ##### Importing video sources
@@ -31,7 +37,7 @@ importDomVideo('.myvideo');
 // __Create Picture entity__ from video entity included in the DOM
 let viddyOne = makePicture({
 
-    name: 'first-video',
+    name: name('first-video'),
     asset: 'waves',
 
     width: 200,
@@ -58,7 +64,7 @@ let viddyOne = makePicture({
 // __Import a video from a remote server__
 let viddyTwo = makePicture({
 
-    name: 'second-video',
+    name: name('second-video'),
     videoSource: 'img/Motion - 18249.mp4',
 
     width: '100%',
@@ -84,7 +90,7 @@ importMediaStream({
 
     viddyThree = makePicture({
 
-        name: 'mediastream-video',
+        name: name('mediastream-video'),
         asset: myface.name,
 
         startX: '20%',
@@ -161,7 +167,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
