@@ -15,13 +15,19 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
+// Get a handle to the Canvas wrapper
 let canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create Phrase entity
 let lorem = makePhrase({
 
-    name: 'myPhrase',
+    name: name('myPhrase'),
     order: 1,
 
     startX: 300,
@@ -47,7 +53,7 @@ let lorem = makePhrase({
 // Add a background entity which will mimic the Phrase entity
 makeBlock({
 
-    name: 'writing-paper',
+    name: name('writing-paper'),
     order: 0,
 
     width: 20,
@@ -58,7 +64,7 @@ makeBlock({
     fillStyle: 'rgb(240, 245, 255)',
     method: 'fillAndDraw',
 
-    mimic: 'myPhrase',
+    mimic: name('myPhrase'),
     lockTo: 'mimic',
 
     useMimicDimensions: true,
@@ -80,9 +86,10 @@ makeBlock({
 // Add a pivot wheel
 makeWheel({
 
+    name: name('pin'),
     fillStyle: 'red',
     radius: 5,
-    pivot: 'myPhrase',
+    pivot: name('myPhrase'),
     lockTo: 'pivot',
     handleX: 'center',
     handleY: 'center',
@@ -115,7 +122,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

@@ -458,6 +458,12 @@ G.baseGroup = function () {
     return group[this.base.name];
 };
 
+// `baseGroup` - get the Canvas wrapper's base Cell's name 
+G.baseName = function () {
+
+    return this.base.name;
+};
+
 
 // #### Prototype functions
 

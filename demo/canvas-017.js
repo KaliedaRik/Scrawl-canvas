@@ -14,13 +14,19 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
+// Get a handle to the Canvas wrapper
 let canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create Phrase entity
 let lorem = makePhrase({
 
-    name: 'myPhrase',
+    name: name('myPhrase'),
 
     startX: 300,
     startY: 200,
@@ -28,8 +34,9 @@ let lorem = makePhrase({
     handleY: '50%',
     width: '50%',
 
-    sectionClassMarker: '[§<>]',
-
+    // To make the initial italic styling stick, we need to insert a soft hyphen
+    // + Yes, this is a bug
+    // + We have no plans to fix this issue in the near future
     text: '&shy;§ITALIC§Lorem§/ITALIC§ ipsum §Red-Text§har varit <ITALIC>standard</ITALIC> &auml;nda sedan §SMALL-CAPS§1500-talet§/SMALL-CAPS§, när-en-ok&aring;nd-§BOLD§bok§DEFAULTS§sättare-tog att antal §BOLD§bok§/BOLD§stäver §OVERLINE§och <HIGHLIGHT>blandade§/OVERLINE§ dem</HIGHLIGHT> för §size-24§Red-Text§att§DEFAULTS§ g&ouml;ra, §Letter-spacing-10§ett prov§UNDERLINE§exemplar</UNDERLINE>§/Letter-spacing-10§ §MONO§av en §BOLD§b&oacute;k.',
 
     font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
@@ -52,6 +59,7 @@ L.sectionClasses['MONO'] = { family: 'monospace' };
 // Add a pivoted Wheel entity
 makeWheel({
 
+    name: name('pin'),
     method: 'fillAndDraw',
     fillStyle: 'gold',
     strokeStyle: 'darkblue',
@@ -60,7 +68,7 @@ makeWheel({
     handleX: 'center',
     handleY: 'center',
 
-    pivot: 'myPhrase',
+    pivot: name('myPhrase'),
     lockTo: 'pivot',
 });
 
@@ -85,7 +93,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

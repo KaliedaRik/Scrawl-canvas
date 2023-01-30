@@ -13,12 +13,18 @@ import { reportSpeed, killArtefact } from './utilities.js';
 
 
 // #### Scene setup
+// Get a handle to the Canvas wrapper
 let canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create and clone Phrase entitys
 makePhrase({
-    name: 'myphrase_fill',
+    name: name('myphrase_fill'),
 
     text: 'H&epsilon;lj&ouml;!',
     font: 'bold 40px Garamond, serif',
@@ -42,39 +48,39 @@ makePhrase({
     boundingBoxColor: 'red',
 
 }).clone({
-    name: 'myphrase_draw',
+    name: name('myphrase_draw'),
     startX: '38%',
     method: 'draw',
 
 }).clone({
-    name: 'myphrase_drawAndFill',
+    name: name('myphrase_drawAndFill'),
     startX: '84%',
     method: 'drawAndFill',
 
 }).clone({
-    name: 'myphrase_fillAndDraw',
+    name: name('myphrase_fillAndDraw'),
     startX: '62%',
     method: 'fillAndDraw',
     sharedState: true
 
 }).clone({
-    name: 'myphrase_drawThenFill',
+    name: name('myphrase_drawThenFill'),
     startX: '14%',
     startY: '67%',
     method: 'drawThenFill'
 
 }).clone({
-    name: 'myphrase_fillThenDraw',
+    name: name('myphrase_fillThenDraw'),
     startX: '38%',
     method: 'fillThenDraw',
 
 }).clone({
-    name: 'myphrase_clear',
+    name: name('myphrase_clear'),
     startX: '62%',
     method: 'clear'
 
 }).clone({
-    name: 'myphrase_multiline',
+    name: name('myphrase_multiline'),
 
     text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
 
@@ -94,7 +100,7 @@ makePhrase({
 
 
 // Change the fill and stroke styles on one of the phrase entitys, and any entity sharing that phrase's state
-L.artefact.myphrase_fillAndDraw.set({
+L.artefact[name('myphrase_fillAndDraw')].set({
     fillStyle: 'blue',
     strokeStyle: 'coral'
 });
@@ -122,7 +128,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -132,6 +138,6 @@ makeRender({
 console.log(L);
 
 console.log('Performing tests ...');
-killArtefact(canvas, 'myphrase_fill', 4000);
-killArtefact(canvas, 'myphrase_fillAndDraw', 5000);
-killArtefact(canvas, 'myphrase_multiline', 6000);
+killArtefact(canvas, name('myphrase_fill'), 4000);
+killArtefact(canvas, name('myphrase_fillAndDraw'), 5000);
+killArtefact(canvas, name('myphrase_multiline'), 6000);
