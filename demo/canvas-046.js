@@ -10,27 +10,28 @@ import { reportSpeed } from './utilities.js';
 // #### Smoke ring generator
 // We could place this code in its own module then import it into this code
 // + The generator creates a new Cell, adds a Polyline entity to it, compiles the Cell and captures the output into a DOM image. 
-// + It then destroys the Cell and Polyline and creates a Picture entity from the asset they produced
-// + Finally it constructs a Tween to animate various aspects of the Picture entity
-// + When the Tween completes it will destroy the image asset wrapper and the Picture entity, then remove the &lt;img> element from the DOM, after which it will destroy itself
-// + In other words, by the time the Tween completes, none of the objects generated for the smoke ring effect should remain in the Scrawl-canvas library or the page DOM.
+// + It then creates a Picture entity from the asset captured from the Cell.
+// + Finally it constructs a Tween to animate various aspects of the Picture entity.
+// + When the Tween completes it will destroy all the objects - including the DOM &lt;img> element - associated with the smoke ring, and then destroy itself.
 
-// Use a Color object to generate colors on demand, in a restricted color range
-const colorMaker = scrawl.makeColor({
-    name: 'color-maker',
-    minimumColor: 'blue',
-    maximumColor: 'green',
-});
+// Smoke ring factory
+const buildSmokeRing = function (namespace, canvasWrapper) {
 
-// To avoid nameclashes, we're using a counter as part of the smokering's name
-let counter = 0;
+    // A line of boilerplate to help with namespacing various objects
+    const getName = (name) => `${namespace}-${name}`;
 
-// The main function
-const buildSmokeRing = function (namespace, canvasWrapper, color) {
+    // Use a Color object to generate colors on demand, in a restricted color range
+    // + Not efficient - doing it this way to test `scrawl.purge()` functionality
+    const colorMaker = scrawl.makeColor({
+        name: getName('color-maker'),
+        minimumColor: 'blue',
+        maximumColor: 'red',
+        colorSpace: 'OKLAB',
+    });
 
     // Create new Cell
     const cell = canvasWrapper.buildCell({
-        name: `${namespace}-cell`,
+        name: getName('cell'),
         width: 600,
         height: 600,
         cleared: false,
@@ -51,8 +52,8 @@ const buildSmokeRing = function (namespace, canvasWrapper, color) {
     // Create Polyline entity
     let snake = scrawl.makePolyline({
 
-        name: `${namespace}-snake`,
-        group: `${namespace}-cell`,
+        name: getName('snake'),
+        group: getName('cell'),
 
         pins: pins,
         start: ['center', 'center'],
@@ -61,29 +62,34 @@ const buildSmokeRing = function (namespace, canvasWrapper, color) {
         lineWidth: 2,
         lineJoin: 'round',
         tension: 1,
-        strokeStyle: color,
+        strokeStyle: colorMaker.getRangeColor(Math.random()),
 
         method: 'draw',
         globalAlpha: 0.1,
     });
 
-    // We need to perform a clear-compile on the Cell, outside of the Display cycle
-    cell.clear();
+    // Tell SC that we want to capture the results of our Cell's next compile action in a DOM &lt;img> object
+    // + This is a one-off action that has to be set up again each time we want to capture an image
     scrawl.createImageFromCell(cell, true);
+
+    // Now we can perform a clear-compile on the Cell, outside of the Display cycle
+    cell.clear();
     cell.compile();
 
-    // Create the Picture entity which will destroy the (dearly departed) Polyline on the canvas
+    // Create the Picture entity, which uses the image asset created in the previous step
     const img = scrawl.makePicture({
-        name: `${namespace}-smokering`,
-        group: canvasWrapper.base.name,
+        name: getName('smoke-ring'),
+        group: canvasWrapper.get('baseGroup'),
 
         start: ['center', 'center'],
         handle: ['center', 'center'],
 
-        asset: `${namespace}-cell-image`,
+        // When we create an image from a Cell, the resulting asset is automatically named by adding `-image` to that Cell's name
+        // + We named our Cell `getName('cell')`, so the image asset generated from it will be called `getName('cell-image')`
+        asset: getName('cell-image'),
 
-        // 'dom' - is the magic String that tells Scrawl-canvas to remove both the asset wrapper object, and the &lt;img> element itself. Any other non-false value will cause only the asset wrapper object to remove itself.
-        removeAssetOnKill: 'dom',
+        // The image asset generated from our Cell has been stored in a dynamically created &lt;img> element on the DOM. We need to clear this out too when the smoke ring dies
+        removeAssetOnKill: true,
 
         dimensions: [600, 600],
         copyDimensions: [600, 600],
@@ -92,20 +98,22 @@ const buildSmokeRing = function (namespace, canvasWrapper, color) {
     // Create the Tween that will animate the Picture entity
     scrawl.makeTween({
 
-        name: `${namespace}-tween`,
+        name: getName('tween'),
         duration: '16s',
-        targets: `${namespace}-smokering`,
+        targets: getName('smoke-ring'),
 
         // The Tween will run once and then destroy all the scrawl.library objects associated with the namespace supplied to the `buildSmokeRing` function, including itself and its ticker.
         cycles: 1,
         killOnComplete: true,
+
         completeAction: () => {
 
             // Object cleanup acomplished via SC's `library.purge()` function
             scrawl.library.purge(namespace);
 
-            counter++;
-            buildSmokeRing(`ring${counter}`, canvas, colorMaker.getRangeColor(Math.random()));
+            // Recreate the smoke ring
+            // + We do this in a `setTimeout` to make sure it runs __after__ the current `requestAnimationFrame` tick completes
+            setTimeout(() => buildSmokeRing(namespace, canvasWrapper), 0);
         },
 
         definitions: [
@@ -145,6 +153,7 @@ const report = reportSpeed('#reportmessage', function () {
 Groups: ${lib.groupnames.join(', ')}
 Assets: ${lib.assetnames.join(', ')}
 Entitys: ${lib.entitynames.join(', ')}
+Styles: ${lib.stylesnames.join(', ')}
 Tickers: ${lib.animationtickersnames.join(', ')}
 Tweens: ${lib.tweennames.join(', ')}`;
 });
@@ -160,34 +169,35 @@ const render = scrawl.makeRender({
 
 
 // The tween runs for 16 seconds, and we want a regular supply of rings ... so we release some initially to get the scene running
-setTimeout(() => buildSmokeRing(`initRingFirst`, canvas, colorMaker.getRangeColor(Math.random())), 0);
-setTimeout(() => buildSmokeRing(`initRingSecond`, canvas, colorMaker.getRangeColor(Math.random())), 3700);
-setTimeout(() => buildSmokeRing(`initRingThird`, canvas, colorMaker.getRangeColor(Math.random())), 8100);
-setTimeout(() => buildSmokeRing(`initRingFourth`, canvas, colorMaker.getRangeColor(Math.random())), 12300);
+setTimeout(() => buildSmokeRing(`first`, canvas), 0);
+setTimeout(() => buildSmokeRing(`second`, canvas), 3700);
+setTimeout(() => buildSmokeRing(`third`, canvas), 8100);
+setTimeout(() => buildSmokeRing(`fourth`, canvas), 12300);
 
-// We also want to halt the animation when the browser page loses focus, and resume them when it regains focus
+
+// #### Additional testing
+// Test ticker halt/resume: halt when the browser loses focus, and resume them when it regains focus
+// + Focus can be lost anytime user clicks away from the browser window, or clicks on a different browser window tab, or even clicking in the dev inspector panel
 // + We could use` scrawl.stopCoreAnimationLoop()` and `scrawl.startCoreAnimationLoop()` to achieve this, but that action will stop ALL canvas animations on the page, not just this demo.
-// + Instead, we can halt/resume/run our render animation, and also any existing smoke ring Tweens.
-window.addEventListener('blur', () => {
-    scrawl.library.animationtickersnames.forEach(t => {
-        if (t.indexOf('ring') === 0) {
-            let ticker = scrawl.library.animationtickers[t];
-            if (ticker) ticker.halt();
-        }
-    });
+// + Instead, we halt/resume the Tweens themselves, alongside the RenderAnimation object.
+
+const actionBlur = () => scrawl.library.tweennames.forEach(t => {
+
+    const tween = scrawl.library.tween[t];
+    if (tween && tween.isRunning()) tween.halt();
+
     render.halt();
 });
+scrawl.addNativeListener('blur', actionBlur, window);
 
-// We could add the focus event listener the same as we did the blur listener, or we can add it using Scrawl-canvas functionality:
-scrawl.addNativeListener('focus', () => {
-    scrawl.library.animationtickersnames.forEach(t => {
-        if(t.indexOf('ring') === 0) {
-            let ticker = scrawl.library.animationtickers[t];
-            if (ticker) ticker.resume();
-        }
-    });
+const actionFocus = () => scrawl.library.tweennames.forEach(t => {
+
+    const tween = scrawl.library.tween[t];
+    if (tween && !tween.isRunning()) tween.resume();
+
     render.run();
-}, window);
+});
+scrawl.addNativeListener('focus', actionFocus, window);
 
 
 // #### Development and testing
