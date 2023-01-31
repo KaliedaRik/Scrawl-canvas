@@ -8,13 +8,19 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.canvas.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = scrawl.library.canvas.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Importing the video file programmatically
-let myvideo = scrawl.makePicture({
+const myvideo = scrawl.makePicture({
 
-    name: 'test-video',
+    name: name('test-video'),
 
     videoSource: 'img/swans.mp4',
 
@@ -25,7 +31,7 @@ let myvideo = scrawl.makePicture({
     copyHeight: '100%',
 });
 
-let initialVideoStart = scrawl.addListener('up', () => {
+const initialVideoStart = scrawl.addListener('up', () => {
 
     myvideo.set({
 
@@ -42,7 +48,7 @@ let initialVideoStart = scrawl.addListener('up', () => {
 // canvas-based buttons
 scrawl.makePhrase({
 
-    name: 'test-button-play-pause',
+    name: name('test-button-play-pause'),
     order: 2,
 
     text: 'PLAY',
@@ -115,7 +121,7 @@ scrawl.makePhrase({
 
 }).clone({
 
-    name: 'test-button-listen-mute',
+    name: name('test-button-listen-mute'),
 
     text: 'LISTEN',
 
@@ -151,7 +157,7 @@ scrawl.makePhrase({
 // Turn the swans pink
 scrawl.makeFilter({
 
-    name: 'swan-mask',
+    name: name('swan-mask'),
 
     actions: [
         {
@@ -170,7 +176,7 @@ scrawl.makeFilter({
 
 scrawl.makePicture({
 
-    name: 'test-swan-image',
+    name: name('test-swan-image'),
 
     asset: 'swans',
 
@@ -184,7 +190,7 @@ scrawl.makePicture({
 
     copyStartY: '25%',
 
-    filters: ['swan-mask'],
+    filters: [name('swan-mask')],
 
     globalAlpha: 0.01,
 
@@ -223,7 +229,7 @@ scrawl.makePicture({
     },
 
     anchor: {
-        name: 'wikipedia-swan-link',
+        name: name('wikipedia-swan-link'),
         href: 'https://en.wikipedia.org/wiki/Swan',
         description: 'Link to the Wikipedia article on swans',
 
@@ -236,18 +242,18 @@ scrawl.makePicture({
 
 
 // Ticker
-let myticker = scrawl.makeTicker({
+const myticker = scrawl.makeTicker({
 
-    name: 'test-video-ticker',
+    name: name('test-video-ticker'),
     duration: '22.55s',
     cycles: 0,
 });
 
-let myLocalTweenFactory = function (name, ticker, target, data) {
+const myLocalTweenFactory = function (name, ticker, target, data) {
 
     for (let i = 0, iz = data.length; i < iz; i++) {
 
-        let [start, duration, x0, y0, x1, y1] = data[i];
+        const [start, duration, x0, y0, x1, y1] = data[i];
 
         scrawl.makeTween({
 
@@ -277,9 +283,9 @@ let myLocalTweenFactory = function (name, ticker, target, data) {
 };
 
 // Goose 1
-let mygoose = scrawl.makeBlock({
+const mygoose = scrawl.makeBlock({
 
-    name: 'test-goose1-hitzone',
+    name: name('test-goose1-hitzone'),
     order: 1,
 
     width: '15%',
@@ -328,7 +334,7 @@ let mygoose = scrawl.makeBlock({
     },
 
     anchor: {
-        name: 'wikipedia-goose-link',
+        name: name('wikipedia-goose-link'),
         href: 'https://en.wikipedia.org/wiki/Goose',
         description: 'Link to the Wikipedia article on geese',
 
@@ -337,21 +343,25 @@ let mygoose = scrawl.makeBlock({
     },
 });
 
-myLocalTweenFactory('test-goose1-tween', 'test-video-ticker', 'test-goose1-hitzone', [
-
-    [0, '3s', '27%', '73%', '12%', '66%'],
-    ['3s', '3s', '12%', '66%', '-3%', '68%']
-]);
+myLocalTweenFactory(
+    name('test-goose1-tween'), 
+    name('test-video-ticker'), 
+    name('test-goose1-hitzone'), 
+    [
+        [0, '3s', '27%', '73%', '12%', '66%'],
+        ['3s', '3s', '12%', '66%', '-3%', '68%']
+    ],
+);
 
 scrawl.makeAction({
 
-    name: 'test-goose1-action-show',
+    name: name('test-goose1-action-show'),
 
-    ticker: 'test-video-ticker',
+    ticker: name('test-video-ticker'),
 
     time: 0,
 
-    targets: ['test-goose1-hitzone'],
+    targets: [name('test-goose1-hitzone')],
 
     action: function () { 
 
@@ -363,7 +373,7 @@ scrawl.makeAction({
 
 }).clone({
 
-    name: 'test-goose1-action-hide',
+    name: name('test-goose1-action-hide'),
     time: '6s',
 
     action: function () { 
@@ -378,7 +388,7 @@ scrawl.makeAction({
 // Goose 2
 mygoose.clone({
 
-    name: 'test-goose2-hitzone',
+    name: name('test-goose2-hitzone'),
 
     width: '22%',
     height: '16%',
@@ -391,15 +401,19 @@ mygoose.clone({
     anchor: null,
 });
 
-myLocalTweenFactory('test-goose2-tween', 'test-video-ticker', 'test-goose2-hitzone', [
-
-    [0,       '4s',   '89%', '89%', '77%', '80%'],
-    ['4s',    '4s',   '77%', '80%', '65%', '80%'],
-    ['8s',    '2.5s', '65%', '80%', '63%', '74%'],
-    ['10.5s', '6s',   '63%', '74%', '43%', '68%'],
-    ['16.5s', '3s',   '43%', '68%', '33%', '66%'],
-    ['19.5s', '3s',   '33%', '66%', '31%', '64%']
-]);
+myLocalTweenFactory(
+    name('test-goose2-tween'), 
+    name('test-video-ticker'), 
+    name('test-goose2-hitzone'), 
+    [
+        [0,       '4s',   '89%', '89%', '77%', '80%'],
+        ['4s',    '4s',   '77%', '80%', '65%', '80%'],
+        ['8s',    '2.5s', '65%', '80%', '63%', '74%'],
+        ['10.5s', '6s',   '63%', '74%', '43%', '68%'],
+        ['16.5s', '3s',   '43%', '68%', '33%', '66%'],
+        ['19.5s', '3s',   '33%', '66%', '31%', '64%'],
+    ],
+);
 
 scrawl.addListener('move', () => canvas.cascadeEventAction('move'), canvas.domElement);
 scrawl.addNativeListener(['touchstart', 'touchmove'], () => canvas.cascadeEventAction('move'), canvas.domElement);
@@ -407,9 +421,9 @@ scrawl.addNativeListener(['click', 'touchend'], () => canvas.cascadeEventAction(
 
 
 // Video time bar
-let vtBackground = scrawl.makeBlock({
+const vtBackground = scrawl.makeBlock({
 
-    name: 'test-video-time-background',
+    name: name('test-video-time-background'),
 
     width: '100%',
     height: 10,
@@ -417,17 +431,17 @@ let vtBackground = scrawl.makeBlock({
     fillStyle: 'white',
 });
 
-let vtTime = vtBackground.clone({
+const vtTime = vtBackground.clone({
 
-    name: 'test-video-time-bar',
+    name: name('test-video-time-bar'),
 
     width: 0,
     fillStyle: 'red',
 })
 
-let vtPhrase = scrawl.makePhrase({
+const vtPhrase = scrawl.makePhrase({
 
-    name: 'test-video-time-phrase',
+    name: name('test-video-time-phrase'),
 
     family: 'monospace',
     size: '1em',
@@ -440,7 +454,7 @@ let vtPhrase = scrawl.makePhrase({
     fillStyle: 'yellow',
 });
 
-let videoTimeBar = function () {
+const videoTimeBar = function () {
 
     let currentVideoTime,
         videoDuration;
@@ -476,7 +490,7 @@ const report = reportSpeed('#reportmessage');
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
-    name: 'test-animation',
+    name: name('animation'),
     target: canvas,
 
     commence: videoTimeBar,

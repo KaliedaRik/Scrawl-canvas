@@ -8,7 +8,13 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.canvas.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = scrawl.library.canvas.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Import image from DOM
@@ -17,16 +23,16 @@ scrawl.importDomImage('.flowers');
 
 // Define some filters to play with
 scrawl.makeFilter({
-    name: 'grayscale',
+    name: name('grayscale'),
     method: 'grayscale',
 }).clone({
-    name: 'sepia',
+    name: name('sepia'),
     method: 'sepia',
 }).clone({
-    name: 'cyan',
+    name: name('cyan'),
     method: 'cyan',
 }).clone({
-    name: 'pixelate',
+    name: name('pixelate'),
     method: 'pixelate',
     tileWidth: 8,
     tileHeight: 8,
@@ -36,7 +42,7 @@ scrawl.makeFilter({
 // Define the artefacts that will be used as `pivots` and `paths` before the artefacts that use them as such
 scrawl.makeWheel({
 
-    name: 'pin-1',
+    name: name('pin-1'),
     order: 2,
 
     startX: 100,
@@ -52,29 +58,29 @@ scrawl.makeWheel({
     method: 'fillAndDraw',
 
 }).clone({
-    name: 'pin-2',
+    name: name('pin-2'),
     startY: 300,
 
 }).clone({
-    name: 'pin-3',
+    name: name('pin-3'),
     startY: 500,
 
 }).clone({
-    name: 'pin-4',
+    name: name('pin-4'),
     fillStyle: 'green',
     startX: 500,
     startY: 100,
 
 }).clone({
-    name: 'pin-5',
+    name: name('pin-5'),
     startY: 230,
 
 }).clone({
-    name: 'pin-6',
+    name: name('pin-6'),
     startY: 370,
 
 }).clone({
-    name: 'pin-7',
+    name: name('pin-7'),
     startY: 500,
 });
 
@@ -105,32 +111,40 @@ const setCursorTo = {
 };
 
 // Create a Group to hold the draggable artefacts, for easier user action collision detection
-let pins = scrawl.makeGroup({
+const pins = scrawl.makeGroup({
 
-    name: 'my-pins',
-    host: canvas.base.name,
+    name: name('my-pins'),
+    host: canvas.get('baseName'),
     checkForEntityHover: true,
     onEntityHover: setCursorTo.pointer,
     onEntityNoHover: setCursorTo.auto,
 
-}).addArtefacts('pin-1', 'pin-2', 'pin-3', 'pin-4', 'pin-5', 'pin-6', 'pin-7');
+}).addArtefacts(
+    name('pin-1'), 
+    name('pin-2'), 
+    name('pin-3'), 
+    name('pin-4'), 
+    name('pin-5'), 
+    name('pin-6'), 
+    name('pin-7'),
+);
 
 
 // Create the Shape entitys the Loom will use as its tracks - `fromPath`, `toPath`
 scrawl.makeQuadratic({
 
-    name: 'my-quad',
+    name: name('my-quad'),
 
-    pivot: 'pin-1',
+    pivot: name('pin-1'),
     lockTo: 'pivot',
     useStartAsControlPoint: true,
 
     precision: 0.05,
 
-    controlPivot: 'pin-2',
+    controlPivot: name('pin-2'),
     controlLockTo: 'pivot',
 
-    endPivot: 'pin-3',
+    endPivot: name('pin-3'),
     endLockTo: 'pivot',
 
     method: 'none',
@@ -139,23 +153,23 @@ scrawl.makeQuadratic({
     useAsPath: true,
 });
 
-let myBez = scrawl.makeBezier({
+const myBez = scrawl.makeBezier({
 
-    name: 'my-bezier',
+    name: name('my-bezier'),
 
-    pivot: 'pin-4',
+    pivot: name('pin-4'),
     lockTo: 'pivot',
     useStartAsControlPoint: true,
 
     precision: 0.05,
 
-    startControlPivot: 'pin-5',
+    startControlPivot: name('pin-5'),
     startControlLockTo: 'pivot',
 
-    endControlPivot: 'pin-6',
+    endControlPivot: name('pin-6'),
     endControlLockTo: 'pivot',
 
-    endPivot: 'pin-7',
+    endPivot: name('pin-7'),
     endLockTo: 'pivot',
 
     method: 'none',
@@ -166,9 +180,9 @@ let myBez = scrawl.makeBezier({
 
 
 // Every Loom needs a source image
-let piccy = scrawl.makePicture({
+const piccy = scrawl.makePicture({
 
-    name: 'myFlower',
+    name: name('myFlower'),
     asset: 'iris',
 
     copyStartX: 0,
@@ -182,15 +196,15 @@ let piccy = scrawl.makePicture({
 
 
 // ___The Loom entity definition___
-let myLoom = scrawl.makeLoom({
+const myLoom = scrawl.makeLoom({
 
-    name: 'display-loom',
+    name: name('display-loom'),
 
     // Check to see that paths can be loaded either as picture name strings, or as the entity itself
-    fromPath: 'my-quad',
+    fromPath: name('my-quad'),
     toPath: myBez,
 
-    source: 'myFlower',
+    source: name('myFlower'),
 
     lineWidth: 2,
     lineCap: 'round',
@@ -210,7 +224,7 @@ let myLoom = scrawl.makeLoom({
 
 // #### User interaction
 // Mouse movement over and away from the Loom (emulates CSS element `hover` functionality)
-let interactions = function () { canvas.cascadeEventAction('move') };
+const interactions = function () { canvas.cascadeEventAction('move') };
 scrawl.addListener('move', interactions, canvas.domElement);
 
 
@@ -235,7 +249,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -271,12 +285,12 @@ scrawl.observeAndUpdate({
 });
 
 // Delta animation controls handler
-let updateAnimation = (e) => {
+const updateAnimation = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     switch (val) {
 
@@ -311,12 +325,12 @@ let updateAnimation = (e) => {
 scrawl.addNativeListener(['input', 'change'], updateAnimation, '#animation');
 
 // Picture entity filters
-let updateFilter = (e) => {
+const updateFilter = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     piccy.clearFilters();
 

@@ -8,7 +8,9 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = scrawl.library.artefact.mycanvas;
+
 
 // Import assets
 scrawl.importDomVideo('.myvideo');
@@ -16,10 +18,15 @@ scrawl.importDomImage('.flowers');
 scrawl.importSprite('img/cat-sprite.png');
 
 
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
+
+
 // Create the picture entitys
 scrawl.makePicture({
 
-    name: 'myFlower',
+    name: name('myFlower'),
     asset: 'iris',
 
     visibility: false,
@@ -34,9 +41,9 @@ scrawl.makePicture({
     copyStartY: 100,
 });
 
-let viddyOne = scrawl.makePicture({
+const viddyOne = scrawl.makePicture({
 
-    name: 'first-video',
+    name: name('first-video'),
     asset: 'waves',
 
     width: '100%',
@@ -53,7 +60,7 @@ let viddyOne = scrawl.makePicture({
 
 scrawl.makePicture({
 
-    name: 'walking-cat',
+    name: name('walking-cat'),
     asset: 'cat-sprite',
     spriteTrack: 'walk',
     spriteFrameDuration: 100,
@@ -67,40 +74,40 @@ scrawl.makePicture({
 }).playSprite();
 
 // Assign pictures to `gridSource` objects
-let imageGrid = {
+const imageGrid = {
     type: 'gridPicture',
-    source: 'myFlower',
+    source: name('myFlower'),
 };
 
-let imageTile = {
+const imageTile = {
     type: 'tilePicture',
-    source: 'myFlower',
+    source: name('myFlower'),
 };
 
-let videoGrid = {
+const videoGrid = {
     type: 'gridPicture',
-    source: 'first-video',
+    source: name('first-video'),
 };
 
-let videoTile = {
+const videoTile = {
     type: 'tilePicture',
-    source: 'first-video',
+    source: name('first-video'),
 };
 
-let spriteGrid = {
+const spriteGrid = {
     type: 'gridPicture',
-    source: 'walking-cat',
+    source: name('walking-cat'),
 };
 
-let spriteTile = {
+const spriteTile = {
     type: 'tilePicture',
-    source: 'walking-cat',
+    source: name('walking-cat'),
 };
 
 // Create the Grid entity
-let myGrid = scrawl.makeGrid({
+const myGrid = scrawl.makeGrid({
 
-    name: 'test-grid',
+    name: name('test-grid'),
 
     startX: 'center',
     startY: 'center',
@@ -123,9 +130,9 @@ let myGrid = scrawl.makeGrid({
 // + if the pointer is over a Grid tile, it will show the Grid's highlight fill (tile source 1)
 // + other Grid tiles will show the Grid's base fill (tile source 0)
 let hitReport = '';
-let checkHitTiles = () => {
+const checkHitTiles = () => {
 
-    let hits = myGrid.checkHit(canvas.here);
+    const hits = myGrid.checkHit(canvas.here);
 
     myGrid.setAllTilesTo(0);
 
@@ -141,14 +148,14 @@ let checkHitTiles = () => {
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let [startX, startY] = myGrid.start;
-    let [handleX, handleY] = myGrid.handle;
-    let [offsetX, offsetY] = myGrid.offset;
-    let [width, height] = myGrid.dimensions;
+    const [startX, startY] = myGrid.start;
+    const [handleX, handleY] = myGrid.handle;
+    const [offsetX, offsetY] = myGrid.offset;
+    const [width, height] = myGrid.dimensions;
 
-    let here = canvas.here;
+    const here = canvas.here;
 
-    let {roll, scale, columns, rows, columnGutterWidth, rowGutterWidth} = myGrid;
+    const {roll, scale, columns, rows, columnGutterWidth, rowGutterWidth} = myGrid;
 
     return `    Grid - columns: ${columns.toFixed(0)}; rows: ${rows.toFixed(0)}
     Grid dimensions - width: ${width}; height: ${height}
@@ -164,7 +171,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     commence: checkHitTiles,
     afterShow: report,
@@ -228,12 +235,12 @@ scrawl.observeAndUpdate({
 });
 
 // Event listeners for setting Grid tile fills
-let updateBaseFill = (e) => {
+const updateBaseFill = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     switch (val) {
 
@@ -265,12 +272,12 @@ let updateBaseFill = (e) => {
 scrawl.addNativeListener(['input', 'change'], updateBaseFill, '#baseFill');
 
 
-let updateHighlightFill = (e) => {
+const updateHighlightFill = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     switch (val) {
 
@@ -303,12 +310,12 @@ scrawl.addNativeListener(['input', 'change'], updateHighlightFill, '#highlightFi
 
 
 // Event listener for setting Grid gutter fills
-let updateGridStroke = (e) => {
+const updateGridStroke = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     switch (val) {
 

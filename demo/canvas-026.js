@@ -8,12 +8,18 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.canvas.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = scrawl.library.canvas.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 scrawl.makeBlock({
 
-    name: 'peg-1',
+    name: name('peg-1'),
 
     width: '30%',
     height: '90%',
@@ -32,20 +38,20 @@ scrawl.makeBlock({
 
 }).clone({
 
-    name: 'peg-2',
+    name: name('peg-2'),
     startX: '50%',
     strokeStyle: 'blue',
 
 }).clone({
 
-    name: 'peg-3',
+    name: name('peg-3'),
     startX: '83%',
     strokeStyle: 'orange',
 });
 
 scrawl.makeWheel({
 
-    name: 'disc-1',
+    name: name('disc-1'),
 
     order: 1,
 
@@ -54,7 +60,7 @@ scrawl.makeWheel({
     handleX: 'center',
     handleY: 'center',
 
-    pivot: 'peg-1',
+    pivot: name('peg-1'),
     lockTo: 'pivot',
 
     fillStyle: 'pink',
@@ -67,7 +73,7 @@ scrawl.makeWheel({
 
 }).clone({
 
-    name: 'disc-2',
+    name: name('disc-2'),
     order: 2,
     radius: '10%',
     fillStyle: 'lightblue',
@@ -75,22 +81,22 @@ scrawl.makeWheel({
 
 }).clone({
 
-    name: 'disc-3',
+    name: name('disc-3'),
     order: 3,
     radius: '8%',
     fillStyle: 'yellow',
     strokeStyle: 'orange',
 });
 
-let discGroup = scrawl.makeGroup({
+const discGroup = scrawl.makeGroup({
 
-    name: 'discs',
+    name: name('discs'),
 });
 
-let dragActions = scrawl.makeDragZone({
+const dragActions = scrawl.makeDragZone({
 
     zone: canvas,
-    collisionGroup: 'discs',
+    collisionGroup: name('discs'),
     endOn: ['up', 'leave'],
     exposeCurrentArtefact: true,
 
@@ -109,30 +115,38 @@ let dragActions = scrawl.makeDragZone({
     },
 });
 
-let checkPeg = function () {
+const checkPeg = function () {
 
     let peg, disc;
 
-    let pegGroup = scrawl.makeGroup({
+    const pegGroup = scrawl.makeGroup({
 
-        name: 'pegs',
+        name: name('pegs'),
 
-    }).addArtefacts('peg-1', 'peg-2', 'peg-3');
+    }).addArtefacts(
+        name('peg-1'), 
+        name('peg-2'), 
+        name('peg-3'),
+    );
 
     // Setup the game's initial state
-    let pegState = {
+    const pegState = {
 
-        'peg-1': ['disc-1', 'disc-2', 'disc-3'],
-        'peg-2': [],
-        'peg-3': [],
+        [name('peg-1')]: [
+            name('disc-1'), 
+            name('disc-2'), 
+            name('disc-3'),
+        ],
+        [name('peg-2')]: [],
+        [name('peg-3')]: [],
     };
 
     // Function to update the game's state
     // - mydisc will always be the last member of an array, 
     // - so we can pop it when found, then push it onto mypeg
-    let updateState = function (mypeg, mydisc) {
+    const updateState = function (mypeg, mydisc) {
 
-        for (let [pName, pState] of Object.entries(pegState)) {
+        for (const [pName, pState] of Object.entries(pegState)) {
 
             if (pState.includes(mydisc.name)) pState.pop();
         }
@@ -141,11 +155,11 @@ let checkPeg = function () {
 
     // Function to update the disc group's membership
     // - a disc can only be moved if it is a member of this group
-    let updateDiscGroup = function () {
+    const updateDiscGroup = function () {
 
         discGroup.clearArtefacts();
 
-        for (let [pName, pState] of Object.entries(pegState)) {
+        for (const [pName, pState] of Object.entries(pegState)) {
 
             if (pState.length) discGroup.addArtefacts(pState[pState.length - 1]);
         }
@@ -159,9 +173,9 @@ let checkPeg = function () {
 
     // Enforce the game rules
     // - a disc can only move to a peg if no smaller discs are already on that peg
-    let entity = scrawl.library.entity;
+    const entity = scrawl.library.entity;
 
-    let checkForLegalMove = function (mypeg, mydisc) {
+    const checkForLegalMove = function (mypeg, mydisc) {
 
         if (!pegState[mypeg.name].length) return true;
 
@@ -170,12 +184,12 @@ let checkPeg = function () {
 
     return function () {
 
-        let hit = pegGroup.getArtefactAt(canvas.here);
+        const hit = pegGroup.getArtefactAt(canvas.here);
 
         if (typeof hit !== 'boolean' && hit) peg = hit.artefact;
         else peg = false;
 
-        let checkDrag = dragActions();
+        const checkDrag = dragActions();
 
         if (typeof checkDrag !== 'boolean' && checkDrag) disc = checkDrag.artefact;
 
@@ -205,7 +219,7 @@ const report = reportSpeed('#reportmessage');
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
-    name: `${canvas.name}-render`,
+    name: name('render'),
     target: canvas,
     commence: checkPeg,
     afterShow: report,

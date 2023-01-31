@@ -10,12 +10,18 @@ import { reportSpeed } from './utilities.js';
 // #### Scene setup
 scrawl.importDomImage('.angels');
 
-let canvas = scrawl.library.canvas.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = scrawl.library.canvas.mycanvas;
 
 
-let magnifier = scrawl.makeGroup({
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
-    name: 'magnifier-group',
+
+const magnifier = scrawl.makeGroup({
+
+    name: name('magnifier-group'),
     host: canvas.base.name,
     order: 1,
 
@@ -23,17 +29,17 @@ let magnifier = scrawl.makeGroup({
 
 scrawl.makeGroup({
 
-    name: 'background-group',
+    name: name('background-group'),
     host: canvas.base.name,
     order: 2
 });
 
-let myradius = 80;
+const myradius = 80;
 
-let mybackground = scrawl.makePicture({
+const mybackground = scrawl.makePicture({
 
-    name: 'background',
-    group: 'background-group',
+    name: name('background'),
+    group: name('background-group'),
 
     asset: 'small-angels',
 
@@ -48,8 +54,8 @@ let mybackground = scrawl.makePicture({
 
 scrawl.makeWheel({
 
-    name: 'magnifier',
-    group: 'magnifier-group',
+    name: name('magnifier'),
+    group: name('magnifier-group'),
 
     order: 1,
 
@@ -64,7 +70,7 @@ scrawl.makeWheel({
 
 }).clone({
 
-    name: 'magnifier-rim',
+    name: name('magnifier-rim'),
 
     order: 3,
 
@@ -74,10 +80,10 @@ scrawl.makeWheel({
     method: 'draw',
 });
 
-let myMagnifierImage = scrawl.makePicture({
+const myMagnifierImage = scrawl.makePicture({
 
-    name: 'enlarged',
-    group: 'magnifier-group',
+    name: name('enlarged'),
+    group: name('magnifier-group'),
 
     order: 2,
 
@@ -97,7 +103,7 @@ let myMagnifierImage = scrawl.makePicture({
     globalCompositeOperation: 'source-in',
 });
 
-let checkMagnifier = function () {
+const checkMagnifier = function () {
 
     let display, base;
 
@@ -106,7 +112,7 @@ let checkMagnifier = function () {
         if (!display) display = canvas.here;
         if (!base) base = canvas.base.here;
 
-        let active = display.active;
+        const active = display.active;
 
         magnifier.set({
             visibility: (active) ? true : false,
@@ -137,7 +143,7 @@ scrawl.addNativeListener('touchmove', (e) => {
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let displayed = canvas.here,
+    const displayed = canvas.here,
         hidden = canvas.base.here;
 
     return `Display canvas mouse - x: ${displayed.x}, y: ${displayed.y}
@@ -148,7 +154,7 @@ Base canvas mouse - x: ${hidden.x}, y: ${hidden.y}`;
 
 // Create the Display cycle animation
 scrawl.makeRender({
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
 
     commence: checkMagnifier,
