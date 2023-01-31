@@ -107,6 +107,8 @@ makeGradient({
         [505, 'red'],
         [999, 'green']
     ],
+    colorSpace: 'OKLAB',
+    precision: 5,
 });
 
 
@@ -252,11 +254,10 @@ canvas.set({
 // Tween, and the engine used by the tween to calculate values
 const tweenEngine = (start, change, position) => {
 
-    let temp = 1 - position,
-        val;
+    const temp = 1 - position;
 
     // This is a fairly basic ease-in-out function: the tween will call the function with start, change and position arguments, and the function is required to return a value calculated from those arguments
-    val = (position < 0.5) ?
+    const val = (position < 0.5) ?
         start + ((position * position) * change * 2) :
         (start + change) + ((temp * temp) * -change * 2);
 

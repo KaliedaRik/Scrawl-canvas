@@ -20,7 +20,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 
 // Namespacing boilerplate
@@ -33,7 +33,7 @@ importDomImage('.filter-image');
 
 
 // Create gradients
-let myGrad = makeGradient({
+const myGrad = makeGradient({
     name: name('linear1'),
     endX: '100%',
     colors: [
@@ -62,7 +62,7 @@ let myGrad = makeGradient({
 
 
 // Create entitys
-let block1 = makeBlock({
+const block1 = makeBlock({
     name: name('b1'),
     width: '70%',
     height: '70%',
@@ -76,7 +76,7 @@ let block1 = makeBlock({
     memoizeFilterOutput: true,
 });
 
-let block2 = block1.clone({
+const block2 = block1.clone({
     name: name('b2'),
     startX: '45%',
     startY: '47%',
@@ -92,7 +92,7 @@ let block2 = block1.clone({
     memoizeFilterOutput: false,
 });
 
-let wheel1 = makeWheel({
+const wheel1 = makeWheel({
     name: name('w1'),
     radius: '20%',
     startX: '70%',
@@ -107,7 +107,7 @@ let wheel1 = makeWheel({
     memoizeFilterOutput: true,
 });
 
-let wheel2 = wheel1.clone({
+const wheel2 = wheel1.clone({
     name: name('w2'),
     startX: '32%',
     startY: '82%',
@@ -654,9 +654,10 @@ makeRender({
 // Event listeners function
 let events = function () {
 
-    let base = canvas.base,
-        group = base.get('group'),
-        currentTarget, currentFilter;
+    const base = canvas.base,
+        group = base.get('group');
+
+    let currentTarget, currentFilter;
 
     return function (e) {
 

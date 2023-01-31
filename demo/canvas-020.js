@@ -9,7 +9,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrappers
-let canvas = scrawl.library.artefact.mycanvas,
+const canvas = scrawl.library.artefact.mycanvas,
     hold = scrawl.library.artefact.holdcanvas;
 
 
@@ -19,7 +19,7 @@ const name = (n) => `${namespace}-${n}`;
 
 
 // Create gradients
-let myGrad = scrawl.makeGradient({
+const myGrad = scrawl.makeGradient({
     name: name('linear1'),
     endX: '100%',
     colors: [
@@ -48,7 +48,7 @@ let myGrad = scrawl.makeGradient({
 
 
 // Create entitys
-let block1 = scrawl.makeBlock({
+const block1 = scrawl.makeBlock({
     name: name('b1'),
     group: canvas.base.name,
 
@@ -64,7 +64,7 @@ let block1 = scrawl.makeBlock({
     method: 'fillThenDraw',
 });
 
-let block2 = block1.clone({
+const block2 = block1.clone({
     name: name('b2'),
     startX: '70%',
     startY: '65%',
@@ -80,7 +80,7 @@ let block2 = block1.clone({
     order: 1,
 });
 
-let wheel1 = scrawl.makeWheel({
+const wheel1 = scrawl.makeWheel({
     name: name('w1'),
     group: canvas.base.name,
 
@@ -96,7 +96,7 @@ let wheel1 = scrawl.makeWheel({
     method: 'fillThenDraw',
 });
 
-let wheel2 = wheel1.clone({
+const wheel2 = wheel1.clone({
     name: name('w2'),
     startX: '30%',
     startY: '60%',
@@ -139,7 +139,7 @@ scrawl.makeBlock({
 // Functionality to capture cell, group and entity images
 let captureImages = false;
 
-let imageCapture = function () {
+const imageCapture = function () {
 
     if (captureImages) {
 
@@ -274,18 +274,19 @@ scrawl.makeRender({
 
 // #### User interaction
 // Event listeners
-let events = function () {
+const events = function () {
 
-    let base = canvas.base,
-        group = base.get('group'),
-        currentTarget;
+    const base = canvas.base,
+        group = base.get('group');
+    
+    let currentTarget;
 
     return function (e) {
 
         e.preventDefault();
         e.returnValue = false;
 
-        let val = e.target.value;
+        const val = e.target.value;
 
         if (val !== currentTarget) {
 

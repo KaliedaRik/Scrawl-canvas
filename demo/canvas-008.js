@@ -15,7 +15,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 
 // Namespacing boilerplate
@@ -27,7 +27,7 @@ const name = (n) => `${namespace}-${n}`;
 importDomImage('.flowers');
 
 
-let piccy = makePicture({
+const piccy = makePicture({
 
     name: name('myFlower'),
     asset: 'iris',

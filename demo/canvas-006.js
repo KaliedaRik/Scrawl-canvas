@@ -8,6 +8,7 @@ import {
     makeRender,
     makeTween,
     makeWheel,
+    makeColor,
     releaseVector,
     requestVector,
 } from '../source/scrawl.js'
@@ -17,7 +18,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let porthole = L.artefact.porthole;
+const porthole = L.artefact.porthole;
 
 porthole.set({
     css: {
@@ -32,9 +33,8 @@ const name = (n) => `${namespace}-${n}`;
 
 
 // ##### Star generation functionality
-
 // We use this entity as a template for cloning new stars
-let starling = makeWheel({
+const starling = makeWheel({
 
     name: name('starling'),
 
@@ -54,22 +54,33 @@ let starling = makeWheel({
     purge: 'all',
 });
 
+
+// Useful variables
 let starCount = 0,
     addNumber = 100;
 
+
+// Color factory will generate a new star color on each user click
+const colorBuilder = makeColor({
+    name: name('my-color-builder'),
+    minimumColor: '#fcc',
+    maximumColor: '#ccf',
+    colorSpace: 'OKLAB',
+});
+
+
 // `makeStar` function
-let makeStars = function (buildNumber) {
+const makeStars = function (buildNumber) {
 
     // We use a Vector for calculating the new star's direction
-    let v = requestVector(),
-        star, i, myRandom;
+    const v = requestVector();
 
-    for (i = 0; i < buildNumber; i++) {
+    for (let i = 0; i < buildNumber; i++) {
 
         starCount++;
 
         // Clone the entity template
-        star = starling.clone({
+        const star = starling.clone({
 
             name: name(`star_${starCount}`),
 
@@ -80,7 +91,7 @@ let makeStars = function (buildNumber) {
             sharedState: true,
         });
 
-        myRandom = Math.random();
+        const myRandom = Math.random();
 
         v.setXY(1, 0).rotate(Math.random() * 360).scalarMultiply(300);
 
@@ -97,12 +108,10 @@ let makeStars = function (buildNumber) {
             // We will animate the star's `start` Coordinate (using __startX__ and __startY__ pseudo-attributes)
             definitions: [{
                 attribute: 'startX',
-                // integer: true,
                 start: 300,
                 end: 300 + v.x
             }, {
                 attribute: 'startY',
-                // integer: true,
                 start: 300,
                 end: 300 + v.y
             }, {
@@ -124,9 +133,10 @@ let makeStars = function (buildNumber) {
 
     // Change the color of the stars each time the user clicks on the porthole
     starling.set({
-        fillStyle: `rgb(${Math.floor(Math.random() * 55) + 200}, ${Math.floor(Math.random() * 55) + 200}, ${Math.floor(Math.random() * 55) + 200})`
+        fillStyle: colorBuilder.getRangeColor(Math.random()),
     });
 };
+
 
 // Generate the initial stars
 makeStars(100);
@@ -150,7 +160,7 @@ makeRender({
 
 // #### User interaction
 // Event listeners
-let addStars = (e) => {
+const addStars = (e) => {
 
     e.preventDefault();
     e.returnValue = false;

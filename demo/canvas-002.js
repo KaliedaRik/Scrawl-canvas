@@ -16,7 +16,7 @@ import { reportSpeed, killArtefact } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 
 // Namespacing boilerplate
@@ -35,7 +35,7 @@ let myPivot = makeWheel({
     startY: 'center',
 });
 
-let myblock = makeBlock({
+const myblock = makeBlock({
     name: name('base-block'),
 
     width: 150,
@@ -63,7 +63,7 @@ let myblock = makeBlock({
     },
 });
 
-let mywheel = makeWheel({
+const mywheel = makeWheel({
     name: name('base-wheel'),
 
     radius: 60,
@@ -182,7 +182,7 @@ mywheel.clone({
 
 // #### User interaction
 // Function to check whether mouse cursor is over canvas, and lock the reference entity accordingly
-let mouseCheck = function () {
+const mouseCheck = function () {
 
     let active = false;
 

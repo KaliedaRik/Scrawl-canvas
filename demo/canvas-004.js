@@ -16,7 +16,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 
 // Namespacing boilerplate
@@ -25,7 +25,7 @@ const name = (n) => `${namespace}-${n}`;
 
 
 // Create the radial gradient
-let graddy = makeRadialGradient({
+const graddy = makeRadialGradient({
     name: name('mygradient'),
     startX: '50%',
     startY: '50%',
@@ -126,7 +126,7 @@ addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
-    let val = parseInt(e.target.value, 10);
+    const val = parseInt(e.target.value, 10);
 
     switch (e.target.id) {
 
@@ -146,7 +146,7 @@ addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     if (['user-steps', 'user-repeat'].includes(val)) {
         graddy.set({

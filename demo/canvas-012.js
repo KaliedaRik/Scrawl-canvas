@@ -24,7 +24,7 @@ const name = (n) => `${namespace}-${n}`;
 
 
 // Create Shape entity
-let arrow = makeShape({
+const arrow = makeShape({
 
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 
@@ -70,7 +70,7 @@ makeWheel({
 
 // Create the Wheel entitys that will use the arrow as their path
 // + This Wheel is a template from which we clone the other Wheels
-let myWheel = makeWheel({
+const myWheel = makeWheel({
 
     fillStyle: 'red',
     radius: 3,
@@ -117,11 +117,11 @@ for (let i = 0.01; i < 1; i += 0.01) {
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let [startX, startY] = arrow.start;
-    let [handleX, handleY] = arrow.handle;
-    let [offsetX, offsetY] = arrow.offset;
+    const [startX, startY] = arrow.start;
+    const [handleX, handleY] = arrow.handle;
+    const [offsetX, offsetY] = arrow.offset;
 
-    let {roll, scale, length} = arrow;
+    const {roll, scale, length} = arrow;
 
     return `    Arrow path length: ${length}
     Start - x: ${startX}, y: ${startY}

@@ -174,7 +174,7 @@ L.entity[name('wheel-fillAndDraw')].set({
 
 // #### User interaction
 // Create the drag-and-drop zone
-let current = makeDragZone({
+const current = makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],

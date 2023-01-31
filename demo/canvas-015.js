@@ -14,7 +14,7 @@ import { reportSpeed, killArtefact } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 
 // Namespacing boilerplate
@@ -108,7 +108,7 @@ L.artefact[name('myphrase_fillAndDraw')].set({
 
 // #### User interaction
 // Create the drag-and-drop zone
-let current = makeDragZone({
+const current = makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],

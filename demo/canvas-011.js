@@ -14,7 +14,7 @@ import { reportSpeed, killArtefact } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 
 // Namespacing boilerplate
@@ -405,7 +405,7 @@ makeWheel({
 
 // #### User interaction
 // Create the drag-and-drop zone
-let current = makeDragZone({
+const current = makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],

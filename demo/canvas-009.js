@@ -41,7 +41,7 @@ ga(function() {
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 
 // Namespacing boilerplate
@@ -283,7 +283,7 @@ makeBlock({
 //
 // The cascadeEventAction function returns an Array of name Strings for the entitys at the current mouse cursor coordinates 
 let interactionResults = '';
-let interactions = function () {
+const interactions = function () {
 
     if (canvas.here.active) interactionResults = canvas.cascadeEventAction('move');
     else interactionResults = '';
@@ -293,7 +293,7 @@ addListener('move', interactions, canvas.domElement);
 // To capture other user interaction with the &lt;a> DOM elements which, while being visually hidden, are still accessible - for instance when a user keyboard-tabs through the web page
 //
 // In this case, clicking on one of the tiles will open a related Wikipedia page in a new browser tab - as defined in the  __onUp__ function in the block factories above
-let mylinks = function () {
+const mylinks = function () {
 
     if (canvas.here.active) canvas.cascadeEventAction('up');
 };

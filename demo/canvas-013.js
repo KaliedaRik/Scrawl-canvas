@@ -23,7 +23,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let canvas = L.canvas.mycanvas
+const canvas = L.canvas.mycanvas
 
 
 // Namespacing boilerplate

@@ -71,7 +71,7 @@ data.forEach(scene => {
 
     // Firstly, build the blurred image in its own cell
     // + We only need to compile this once, thus don't include the cell in any part of the Display cycle
-    let mycell = scene.canvas.buildCell({
+    const mycell = scene.canvas.buildCell({
 
         name: name(`${scene.image}-blurred-cell`),
         dimensions: ['100%', '100%'],

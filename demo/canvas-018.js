@@ -19,7 +19,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 
 // Namespacing boilerplate
@@ -46,7 +46,7 @@ makeOval({
     useAsPath: true,
 });
 
-let spiral = makeSpiral({
+const spiral = makeSpiral({
 
     name: name('spiral-path'),
 
@@ -106,7 +106,7 @@ makePhrase({
     }
 });
 
-let lorem = makePhrase({
+const lorem = makePhrase({
 
     name: name('myPhrase'),
 

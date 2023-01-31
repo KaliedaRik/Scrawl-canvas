@@ -16,7 +16,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let canvas = L.artefact.mycanvas,
+const canvas = L.artefact.mycanvas,
     entitys = L.entity;
 
 
@@ -124,7 +124,7 @@ createImageFromEntity(entitys[name('myphrase_multiline')], true);
 
 // #### User interaction
 // Create the drag-and-drop zone
-let current = makeDragZone({
+const current = makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],
@@ -153,19 +153,19 @@ makeRender({
     // + As the content and display of the text does not change (only their positions change when users drag-and-drop them), we can treat the creation of the cache images and associated entitys as a one-off job
     afterCreated: () => {
 
-        let g = canvas.get('baseGroup');
+        const g = canvas.get('baseGroup');
 
         // Switch off the Phrase entitys via a set call to their Group (which, in this instance is the canvas.base Cell's default Group)
         g.setArtefacts({
             visibility: false,
         });
 
-        let keys = g.artefacts;
+        const keys = g.artefacts;
 
         // Generate Picture entitys, using the existing Phrase entitys for positional and dimensional data
         keys.forEach(name => {
 
-            let e = entitys[name];
+            const e = entitys[name];
 
             if (e) {
 

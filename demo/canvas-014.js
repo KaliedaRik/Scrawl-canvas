@@ -20,7 +20,7 @@ import { reportSpeed, killArtefact } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let canvas = L.canvas.mycanvas;
+const canvas = L.canvas.mycanvas;
 
 
 // Namespacing boilerplate
@@ -75,7 +75,7 @@ makeWheel({
 
 
 // Create a group to hold the draggable artefacts, for easier user action collision detection
-let pins = makeGroup({
+const pins = makeGroup({
 
     name: name('my-pins'),
     host: canvas.get('baseName'),
@@ -238,7 +238,7 @@ makeWheel({
 
 
 // We can always grab a handle to any canvas entity by reference to its entry in the Scrawl-canvas library. Entitys are stored in both the `artefact` and the `entity` sections of the library
-let arrow = L.entity[name('mouse-line')];
+const arrow = L.entity[name('mouse-line')];
 
 
 // Testing to make sure artefacts stick to their paths, even when those paths are animated or manipulated in various ways
@@ -281,7 +281,7 @@ makeDragZone({
 
 
 // Function to check whether mouse cursor is over canvas, and lock the arrow's end point accordingly
-let mouseCheck = function () {
+const mouseCheck = function () {
 
     let active = false;
 

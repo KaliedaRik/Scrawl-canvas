@@ -8,22 +8,29 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = scrawl.library.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create gradients
-let cellGradient = scrawl.makeGradient({
-    name: 'blue-green',
+const cellGradient = scrawl.makeGradient({
+    name: name('blue-green'),
     endX: '100%',
     colors: [
         [0, 'blue'],
         [500, 'gold'],
         [999, 'green']
     ],
+    colorSpace: 'OKLAB',
 });
 
-let gridGradient = scrawl.makeGradient({
-    name: 'red-blue',
+const gridGradient = scrawl.makeGradient({
+    name: name('red-blue'),
     endX: '100%',
     endY: '100%',
     colors: [
@@ -31,35 +38,36 @@ let gridGradient = scrawl.makeGradient({
         [500, 'gold'],
         [999, 'lightblue']
     ],
+    colorSpace: 'OKLAB',
 });
 
 
 // Define Grid `tileSource` Array objects
-let blueSource = {
+const blueSource = {
     type: 'color',
     source: 'aliceblue',
 };
 
-let redSource = {
+const redSource = {
     type: 'color',
     source: 'red',
 };
 
-let cellGradientSource = {
+const cellGradientSource = {
     type: 'cellGradient',
     source: cellGradient,
 };
 
-let gridGradientSource = {
+const gridGradientSource = {
     type: 'gridGradient',
     source: gridGradient,
 };
 
 
 // Create the Grid entity
-let myGrid = scrawl.makeGrid({
+const myGrid = scrawl.makeGrid({
 
-    name: 'test-grid',
+    name: name('test-grid'),
 
     startX: 'center',
     startY: 'center',
@@ -80,9 +88,9 @@ let myGrid = scrawl.makeGrid({
 // #### User interaction
 // Function to check for mouse position hits over the Grid entity, and adapt it accordingly
 let hitReport = '';
-let checkHitTiles = () => {
+const checkHitTiles = () => {
 
-    let hits = myGrid.checkHit(canvas.here);
+    const hits = myGrid.checkHit(canvas.here);
 
     myGrid.setAllTilesTo(0);
 
@@ -107,14 +115,14 @@ scrawl.addNativeListener('touchmove', (e) => {
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let [startX, startY] = myGrid.start;
-    let [handleX, handleY] = myGrid.handle;
-    let [offsetX, offsetY] = myGrid.offset;
-    let [width, height] = myGrid.dimensions;
+    const [startX, startY] = myGrid.start;
+    const [handleX, handleY] = myGrid.handle;
+    const [offsetX, offsetY] = myGrid.offset;
+    const [width, height] = myGrid.dimensions;
 
-    let here = canvas.here;
+    const here = canvas.here;
 
-    let {roll, scale, columns, rows, columnGutterWidth, rowGutterWidth} = myGrid;
+    const {roll, scale, columns, rows, columnGutterWidth, rowGutterWidth} = myGrid;
 
     return `    Grid - columns: ${columns.toFixed(0)}; rows: ${rows.toFixed(0)}
     Grid dimensions - width: ${width}; height: ${height}
@@ -130,7 +138,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     commence: checkHitTiles,
     afterShow: report,
@@ -193,12 +201,12 @@ scrawl.observeAndUpdate({
     },
 });
 
-let updateBaseFill = (e) => {
+const updateBaseFill = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     switch (val) {
 
@@ -221,12 +229,12 @@ let updateBaseFill = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateBaseFill, '#baseFill');
 
-let updateHighlightFill = (e) => {
+const updateHighlightFill = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     switch (val) {
 
@@ -249,12 +257,12 @@ let updateHighlightFill = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateHighlightFill, '#highlightFill');
 
-let updateGridStroke = (e) => {
+const updateGridStroke = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     switch (val) {
 

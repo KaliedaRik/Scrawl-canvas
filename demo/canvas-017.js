@@ -15,7 +15,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 
 // Namespacing boilerplate
@@ -24,7 +24,7 @@ const name = (n) => `${namespace}-${n}`;
 
 
 // Create Phrase entity
-let lorem = makePhrase({
+const lorem = makePhrase({
 
     name: name('myPhrase'),
 
@@ -77,11 +77,11 @@ makeWheel({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let [startX, startY] = lorem.start;
-    let [handleX, handleY] = lorem.handle;
-    let [width, height] = lorem.dimensions;
+    const [startX, startY] = lorem.start;
+    const [handleX, handleY] = lorem.handle;
+    const [width, height] = lorem.dimensions;
 
-    let {roll, scale, lineHeight, letterSpacing, overlinePosition} = lorem;
+    const {roll, scale, lineHeight, letterSpacing, overlinePosition} = lorem;
 
     return `    Start - x: ${startX}, y: ${startY}
     Handle - x: ${handleX}, y: ${handleY}

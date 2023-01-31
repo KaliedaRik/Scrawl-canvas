@@ -16,7 +16,7 @@ import { reportSpeed, killStyle } from './utilities.js';
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 
 // Namespacing boilerplate
@@ -83,7 +83,7 @@ makeRender({
 
 // #### User interaction
 // Setup form observer functionality. We're doing it this way (wrapped in a function) so we can test that it can be killed, and then recreated, later
-let makeObserver = () => {
+const makeObserver = () => {
 
     return observeAndUpdate({
 
@@ -130,7 +130,7 @@ addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
-    let val = parseInt(e.target.value, 10);
+    const val = parseInt(e.target.value, 10);
 
     switch (e.target.id) {
 
@@ -150,7 +150,7 @@ addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     if (['user-steps', 'user-repeat'].includes(val)) {
         graddy.set({
