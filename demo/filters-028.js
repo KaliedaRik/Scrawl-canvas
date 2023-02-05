@@ -1,26 +1,15 @@
-// # Demo Canvas 007 
-// Apply filters at the entity, group and cell level
+// # Demo Filters 028 
+// Stencil (background) filter functionality
 
-// [Run code](../../demo/canvas-007.html)
-import {
-    addNativeListener,
-    importDomImage,
-    library as L,
-    makeBlock,
-    makeFilter,
-    makeGradient,
-    makeNoiseAsset,
-    makePicture,
-    makeRender,
-    makeWheel,
-} from '../source/scrawl.js';
+// [Run code](../../demo/filters-028.html)
+import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
 // Get a handle to the Canvas wrapper
-const canvas = L.artefact.mycanvas;
+const canvas = scrawl.library.canvas.mycanvas;
 
 
 // Namespacing boilerplate
@@ -28,105 +17,12 @@ const namespace = 'demo';
 const name = (n) => `${namespace}-${n}`;
 
 
-// Import asset
-importDomImage('.filter-image');
-
-
-// Create gradients
-const myGrad = makeGradient({
-    name: name('linear1'),
-    endX: '100%',
-    colors: [
-        [0, 'pink'],
-        [999, 'darkgreen']
-    ],
-}).clone({
-    name: name('linear2'),
-    colors: [
-        [0, 'darkblue'],
-        [999, 'white']
-    ],
-}).clone({
-    name: name('linear3'),
-    colors: [
-        [0, 'yellow'],
-        [999, 'purple']
-    ],
-}).clone({
-    name: name('linear4'),
-    colors: [
-        [0, 'black'],
-        [999, 'coral']
-    ],
-});
-
-
-// Create entitys
-const block1 = makeBlock({
-    name: name('b1'),
-    width: '70%',
-    height: '70%',
-    startX: '5%',
-    startY: '5%',
-    fillStyle: name('linear1'),
-    lockFillStyleToEntity: true,
-    strokeStyle: 'coral',
-    lineWidth: 4,
-    method: 'fillAndDraw',
-    memoizeFilterOutput: true,
-});
-
-const block2 = block1.clone({
-    name: name('b2'),
-    startX: '45%',
-    startY: '47%',
-    handleX: 'center',
-    handleY: 'center',
-    scale: 0.5,
-    fillStyle: name('linear2'),
-    strokeStyle: 'red',
-    delta: {
-        roll: -0.5
-    },
-    order: 1,
-    memoizeFilterOutput: false,
-});
-
-const wheel1 = makeWheel({
-    name: name('w1'),
-    radius: '20%',
-    startX: '70%',
-    startY: '30%',
-    handleX: 'center',
-    handleY: 'center',
-    fillStyle: name('linear3'),
-    lockFillStyleToEntity: true,
-    strokeStyle: 'orange',
-    lineWidth: 4,
-    method: 'fillAndDraw',
-    memoizeFilterOutput: true,
-});
-
-const wheel2 = wheel1.clone({
-    name: name('w2'),
-    startX: '32%',
-    startY: '82%',
-    handleX: '15%',
-    handleY: 'center',
-    scale: 0.7,
-    fillStyle: name('linear4'),
-    strokeStyle: 'lightblue',
-    delta: {
-        roll: 1
-    },
-    order: 1,
-    memoizeFilterOutput: false,
-});
+scrawl.importDomImage('.flowers');
 
 
 // #### Define filters - need to test them all, plus some user-defined filters
 // Asset generator
-makeNoiseAsset({
+scrawl.makeNoiseAsset({
 
     name: name('my-noise-generator'),
     width: 400,
@@ -140,7 +36,7 @@ makeNoiseAsset({
 });
 
 // Required, otherwise the asset generator doesn't produce anything for the filter
-makePicture({
+scrawl.makePicture({
     name: name('temp-1'),
     asset: name('my-noise-generator'),
     dimensions: [100, 100],
@@ -148,7 +44,7 @@ makePicture({
     method: 'none',
 });
 
-makePicture({
+scrawl.makePicture({
     name: name('temp-2'),
     asset: 'iris',
     dimensions: [400, 400],
@@ -157,7 +53,7 @@ makePicture({
 });
 
 // __Displace__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('displace'),
     actions: [
         {
@@ -180,7 +76,7 @@ makeFilter({
 });
 
 // __Blend__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('blend'),
     actions: [
         {
@@ -201,7 +97,7 @@ makeFilter({
 });
 
 // __Compose__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('compose'),
     actions: [
         {
@@ -223,7 +119,7 @@ makeFilter({
 });
 
 // __Gray__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('gray'),
     method: 'gray',
 
@@ -299,7 +195,7 @@ makeFilter({
 });
 
 // __Emboss__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('emboss'),
     method: 'emboss',
     angle: 225,
@@ -308,14 +204,14 @@ makeFilter({
 });
 
 // __Chroma__ (green screen) filter
-makeFilter({
+scrawl.makeFilter({
     name: name('chroma'),
     method: 'chroma',
     ranges: [[0, 0, 0, 80, 80, 80], [180, 180, 180, 255, 255, 255]],
 });
 
 // __Brightness__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('brightness'),
     method: 'brightness',
     level: 0.5,
@@ -340,7 +236,7 @@ makeFilter({
 });
 
 // __Swirl__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('swirl'),
     method: 'swirl',
     startX: '50%',
@@ -352,7 +248,7 @@ makeFilter({
 });
 
 // __Channels__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('channels'),
     method: 'channels',
     red: 0.4,
@@ -369,7 +265,7 @@ makeFilter({
 });
 
 // __Tiles__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('tiles'),
     method: 'tiles',
     points: 'hex-grid',
@@ -378,14 +274,14 @@ makeFilter({
 });
 
 // __Newsprint__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('newsprint'),
     method: 'newsprint',
     width: 2,
 });
 
 // __Tint__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('tint'),
     method: 'tint',
     redInRed: 0.5,
@@ -400,7 +296,7 @@ makeFilter({
 });
 
 // __Offset__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('offset'),
     method: 'offset',
     offsetX: 12,
@@ -409,7 +305,7 @@ makeFilter({
 });
 
 // __Glitch__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('glitch'),
     method: 'glitch',
     level: 0.3,
@@ -423,7 +319,7 @@ makeFilter({
 });
 
 // __Offset Channels__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('offsetChannels'),
     method: 'offsetChannels',
     offsetRedX: -12,
@@ -435,7 +331,7 @@ makeFilter({
 });
 
 // __Pixellate__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('pixelate'),
     method: 'pixelate',
     tileWidth: 20,
@@ -445,7 +341,7 @@ makeFilter({
 });
 
 // __Blur__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('blur'),
     method: 'blur',
     radius: 8,
@@ -454,14 +350,14 @@ makeFilter({
 });
 
 // __Gaussian Blur__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('gaussianBlur'),
     method: 'gaussianBlur',
-    radius: 30,
+    radius: 4,
 });
 
 // __AreaAlpha__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('areaAlpha'),
     method: 'areaAlpha',
     tileWidth: 20,
@@ -474,7 +370,7 @@ makeFilter({
 });
 
 // __Matrix__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('matrix'),
     method: 'matrix',
     weights: [-1, -1, 0, -1, 1, 1, 0, 1, 1],
@@ -487,7 +383,7 @@ makeFilter({
 });
 
 // __ChannelLevels__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('channelLevels'),
     method: 'channelLevels',
     red: [50, 200],
@@ -497,7 +393,7 @@ makeFilter({
 });
 
 // __Chrome key__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('chromakey'),
     method: 'chromakey',
     red: 0,
@@ -508,7 +404,7 @@ makeFilter({
 });
 
 // __Alpha to channels__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('alphaToChannels'),
     method: 'alphaToChannels',
     includeRed: false,
@@ -517,13 +413,13 @@ makeFilter({
 });
 
 // __Channels to alpha__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('channelsToAlpha'),
     method: 'channelsToAlpha',
 });
 
 // __Clamp channels__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('clampChannels'),
     method: 'clampChannels',
     lowRed: 0,
@@ -535,7 +431,7 @@ makeFilter({
 });
 
 // __Corrode__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('corrode'),
     method: 'corrode',
     width: 5,
@@ -544,7 +440,7 @@ makeFilter({
 });
 
 // __Curve weights__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('curveWeights'),
     method: 'curveWeights',
     useMixedChannel: false,
@@ -552,14 +448,14 @@ makeFilter({
 });
 
 // __Flood__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('flood'),
     method: 'flood',
     alpha: 100,
 });
 
 // __Random noise__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('randomNoise'),
     method: 'randomNoise',
     width: 10,
@@ -568,12 +464,12 @@ makeFilter({
 });
 
 // __Reduce palette__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('reducePalette'),
     method: 'reducePalette',
 });
 
-makeGradient({
+scrawl.makeGradient({
     name: name('red-to-blue'),
     endX: '100%',
 
@@ -584,7 +480,7 @@ makeGradient({
 });
 
 // __Map to gradient__ filter
-const myFilter = makeFilter({
+const myFilter = scrawl.makeFilter({
 
     name: name('mapToGradient'),
     method: 'mapToGradient',
@@ -594,7 +490,7 @@ const myFilter = makeFilter({
 
 
 // __Bespoke (drop shadow)__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('dropShadow'),
     actions: [
         {
@@ -614,7 +510,7 @@ makeFilter({
 });
 
 // __Bespoke (red border)__ filter
-makeFilter({
+scrawl.makeFilter({
     name: name('redBorder'),
     actions: [
         {
@@ -638,141 +534,148 @@ makeFilter({
 });
 
 
+// #### Scene entitys
+const piccy = scrawl.makePicture({
+
+    name: name('background'),
+
+    asset: 'iris',
+
+    width: '100%',
+    height: '100%',
+
+    copyWidth: '100%',
+    copyHeight: '100%',
+
+    method: 'fill',
+});
+
+
+const stencil = scrawl.makeCog({
+    name: name('stencil'),
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    outerRadius: 120,
+    innerRadius: 80,
+    outerControlsDistance: 20,
+    innerControlsDistance: 16,
+    points: 12,
+    fillStyle: 'red',
+    delta: {
+        roll: 0.5,
+    },
+    isStencil: true,
+});
+
+stencil.clone({
+    name: name('stencil-outline'),
+    strokeStyle: 'white',
+    lineWidth: 2,
+    method: 'draw',
+    pivot: name('stencil'),
+    lockTo: 'pivot',
+});
+
+
+
 // #### Scene animation
-const report = reportSpeed('#reportmessage');
+// Function to check whether mouse cursor is over canvas, and lock the reference entity accordingly
+const mouseCheck = function () {
+
+    let active = false;
+
+    return function () {
+
+        if (canvas.here.active !== active) {
+
+            active = canvas.here.active;
+
+            stencil.set({
+                lockTo: (active) ? 'mouse' : 'start'
+            });
+        }
+    };
+}();
+
+
+// For this demo we will suppress touchmove functionality over the canvas
+scrawl.addNativeListener('touchmove', (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+}, canvas.domElement);
+
+
+// Function to display frames-per-second data, and other information relevant to the demo
+const report = reportSpeed('#reportmessage', function () {
+
+// @ts-expect-error
+    return `    globalAlpha - ${globalAlpha.value}`;
+});
+
 
 // Create the Display cycle animation
-makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
+    commence: mouseCheck,
     afterShow: report,
 });
 
 
 // #### User interaction
-// Event listeners function
-let events = function () {
+scrawl.addNativeListener(['input', 'change'], (e) => {
 
-    const base = canvas.base,
-        group = base.get('group');
+    e.preventDefault();
+    e.returnValue = false;
 
-    let currentTarget, currentFilter;
+    let val = e.target.value;
 
-    return function (e) {
+    if (val) {
 
-        e.preventDefault();
-        e.returnValue = false;
+        stencil.set({
+            filters: [name(val)],
+        });
+    }
+    else {
 
-        let action = false, 
-            val;
+        stencil.set({
+            filters: [],
+        });
+    }
+}, '#filter');
 
-        switch (e.target.id) {
+scrawl.observeAndUpdate({
 
-            case 'target':
-                val = e.target.value;
+    event: ['change'],
+    origin: '.controlItem',
 
-                if (val !== currentTarget) {
+    target: stencil,
 
-                    currentTarget = val;
-                    action = true;
-                }
-                break;
+    useNativeListener: true,
+    preventDefault: true,
 
-            case 'filter':
-                val = e.target.value;
+    updates: {
 
-                if(val !== currentFilter){
+        globalAlpha: ['globalAlpha', 'float'],
+        globalCompositeOperation: ['globalCompositeOperation', 'raw'],
+    },
+});
 
-                    currentFilter = val.split(',').map(f => name(f));
-                    action = true;
-                }
-                break;
-        }
-
-        if (action) {
-
-            base.clearFilters();
-            group.clearFilters();
-            group.clearFiltersFromEntitys();
-
-            if (currentTarget && currentFilter) {
-
-                switch (currentTarget) {
-
-                    case 'block1' :
-                        block1.addFilters(...currentFilter);
-                        break;
-
-                    case 'block2' :
-                        block2.addFilters(...currentFilter);
-                        break;
-
-                    case 'wheel1' :
-                        wheel1.addFilters(...currentFilter);
-                        break;
-
-                    case 'wheel2' :
-                        wheel2.addFilters(...currentFilter);
-                        break;
-
-                    case 'group' :
-                        group.addFilters(...currentFilter);
-                        break;
-
-                    case 'cell' :
-                        base.addFilters(...currentFilter);
-                        break;
-                }
-            }
-        }
-    };
-}();
-
-// Event listeners
-addNativeListener(['input', 'change'], events, '.controlItem');
-
-// Set DOM form initial input values
+// Setup form
+const globalAlpha = document.querySelector('#globalAlpha');
 // @ts-expect-error
-document.querySelector('#target').value = '';
+globalAlpha.value = 1;
+
 // @ts-expect-error
-document.querySelector('#filter').value = '';
+document.querySelector('#filter').options.selectedIndex = 0;
+
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, '#my-image-store', piccy);
 
 
 // #### Development and testing
-console.log(L);
-
-// Gradient packet test
-console.log(myGrad.saveAsPacket());
-console.log(myGrad.palette.saveAsPacket());
-
-// RESULT:
-// ```
-// [
-//     "linear4",
-//     "Gradient",
-//     "styles",
-//     {
-//         "name":"linear4",
-//         "start":[0,0],
-//         "end":["100%",0],
-//         "palette":"linear4_palette",
-//         "colors":{
-//             "0 ":[0,0,0,1],
-//             "999 ":[255,127,80,1]
-//         }
-//     }
-// ]
-// [
-//     "linear4_palette",
-//     "Palette",
-//     "palette",
-//     {
-//         "name":"linear4_palette",
-//         "colors":{
-//             "0 ":[0,0,0,1],
-//             "999 ":[255,127,80,1]
-//         }
-//     }
-// ]
-// ```
+console.log(scrawl.library);
