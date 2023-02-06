@@ -234,7 +234,7 @@ export default function (P = Ωempty) {
 
         let asset = this.asset;
 
-        if (asset && asset.type === 'Sprite') {
+        if (asset && asset.type === 'Sprite' && asset.manifest) {
 
             let copyArray = this.copyArray;
 

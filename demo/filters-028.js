@@ -550,9 +550,21 @@ const piccy = scrawl.makePicture({
     method: 'fill',
 });
 
+const group = scrawl.makeGroup({
+    name: name('mouse-group'),
+    host: canvas.get('baseName'),
+});
 
-const stencil = scrawl.makeCog({
-    name: name('stencil'),
+const outlineGroup = scrawl.makeGroup({
+    name: name('outline-group'),
+    host: canvas.get('baseName'),
+});
+
+// Note: stencil filters cannot be memoized, which makes them slow
+// + We can't memoize what we don't know, and we have no way of knowing what the canvas behind the entity will look like, or if it has changed since the last Display cycle
+const cog = scrawl.makeCog({
+    name: name('cog'),
+    group,
     start: ['center', 'center'],
     handle: ['center', 'center'],
     outerRadius: 120,
@@ -565,16 +577,70 @@ const stencil = scrawl.makeCog({
         roll: 0.5,
     },
     isStencil: true,
+    visibility: false,
 });
 
-stencil.clone({
-    name: name('stencil-outline'),
+cog.clone({
+    name: name('cog-outline'),
+    group: outlineGroup,
     strokeStyle: 'white',
     lineWidth: 2,
     method: 'draw',
-    pivot: name('stencil'),
+    pivot: name('cog'),
     lockTo: 'pivot',
+    isStencil: false,
 });
+
+const block = scrawl.makeBlock({
+    name: name('block'),
+    group,
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    dimensions: [200, 120],
+    fillStyle: 'red',
+    isStencil: true,
+});
+
+block.clone({
+    name: name('block-outline'),
+    group: outlineGroup,
+    strokeStyle: 'white',
+    lineWidth: 2,
+    method: 'draw',
+    pivot: name('block'),
+    lockTo: 'pivot',
+    isStencil: false,
+});
+
+// Cat spritesheet image file taken from https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/
+scrawl.importSprite('img/cat-sprite.png');
+
+const cat = scrawl.makePicture({
+    name: name('cat'),
+    group,
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    dimensions: [300, 150],
+    roll: 20,
+    asset: 'cat-sprite',
+    spriteTrack: 'walk',
+    spriteFrameDuration: 100,
+    isStencil: true,
+    visibility: false,
+});
+
+cat.clone({
+    name: name('cat-outline'),
+    group: outlineGroup,
+    strokeStyle: 'white',
+    lineWidth: 2,
+    method: 'draw',
+    pivot: name('cat'),
+    lockTo: 'pivot',
+    isStencil: false,
+});
+
+let stencil = block;
 
 
 
@@ -635,17 +701,50 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
     if (val) {
 
-        stencil.set({
+        group.setArtefacts({
             filters: [name(val)],
         });
     }
     else {
 
-        stencil.set({
+        group.setArtefacts({
             filters: [],
         });
     }
 }, '#filter');
+
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+    let val = e.target.value;
+
+    if (val) {
+
+        group.setArtefacts({
+            visibility: false,
+        });
+
+        outlineGroup.setArtefacts({
+            visibility: false,
+        });
+
+        cat.haltSprite();
+
+        stencil = group.getArtefact(name(val));
+
+        stencil.set({
+            visibility: true,
+        });
+
+        if (val === 'cat') cat.playSprite();
+
+        outlineGroup.getArtefact(name(`${val}-outline`)).set({
+            visibility: true,
+        });
+    }
+}, '#entity');
 
 scrawl.observeAndUpdate({
 
