@@ -219,12 +219,16 @@ P.getOrAddWorkstore = function (name) {
     return workstore[name];
 };
 
-// `getRandomNumbers` creates an Array and populates it with random numbers
-P.getRandomNumbers = function (seed, length, imgWidth = 0) {
+P.getRandomNumbers = function (items = {}) {
 
-    let name = `random-${seed}-${length}`;
+    let {
+        seed = 'some-random-string-or-other', 
+        length = 0, 
+        imgWidth = 0, 
+        type = 'random'
+    } = items;
 
-    if (imgWidth) name += '-bluenoise';
+    const name = `random-${seed}-${length}-${type}`;
 
     const { workstore, workstoreLastAccessed } = this;
 
@@ -235,7 +239,7 @@ P.getRandomNumbers = function (seed, length, imgWidth = 0) {
 
     const vals = [];
 
-    if (imgWidth) {
+    if (type === 'bluenoise' && imgWidth) {
 
         const bLen = bluenoise.length,
             blueDims = Math.sqrt(bLen),
@@ -257,6 +261,35 @@ P.getRandomNumbers = function (seed, length, imgWidth = 0) {
                 for (let bCol = imgWidth; bCol > 0; bCol -= blueDims) {
 
                     if (bCol < blueDims) vals.push(...currentRow.slice(0, bCol));
+                    else vals.push(...currentRow);
+                }
+            }
+        }
+    }
+    else if (type === 'ordered' && imgWidth) {
+
+        const orderedNoise = [0.00,0.50,0.13,0.63,0.03,0.53,0.16,0.66,0.75,0.25,0.88,0.38,0.78,0.28,0.91,0.41,0.19,0.69,0.06,0.56,0.22,0.72,0.09,0.59,0.94,0.44,0.81,0.31,0.97,0.47,0.84,0.34,0.05,0.55,0.17,0.67,0.02,0.52,0.14,0.64,0.80,0.30,0.92,0.42,0.77,0.27,0.89,0.39,0.23,0.73,0.11,0.61,0.20,0.70,0.08,0.58,0.98,0.48,0.86,0.36,0.95,0.45,0.83,0.33];
+
+        const oLen = orderedNoise.length,
+            oDims = Math.sqrt(oLen),
+            imgHeight = length / imgWidth,
+            oLines = [];
+
+        for (let i = 0; i < oLen; i += oDims) {
+
+            let temp = orderedNoise.slice(i, i + oDims);
+            oLines.push(temp);
+        }
+
+        for (let bigRows = imgHeight; bigRows > 0; bigRows -= oDims) {
+
+            for (let bRow = 0; bRow < oDims; bRow++) {
+
+                let currentRow = oLines[bRow];
+
+                for (let bCol = imgWidth; bCol > 0; bCol -= oDims) {
+
+                    if (bCol < oDims) vals.push(...currentRow.slice(0, bCol));
                     else vals.push(...currentRow);
                 }
             }
@@ -636,7 +669,10 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                 else {
 
                     // Generates a set of initial random points withing the given constraints
-                    const rnd = this.getRandomNumbers(seed, pointVals * 3);
+                    const rnd = this.getRandomNumbers({
+                        seed,
+                        length: pointVals * 3,
+                    });
                     let rndCursor = -1;
 
                     for (i = 0; i < pointVals; i++) {
@@ -3226,8 +3262,12 @@ P.theBigActionsObject = {
         if (null == offsetAlphaMax) offsetAlphaMax = 0;
         if (null == transparentEdges) transparentEdges = false;
 
-        const rnd = this.getRandomNumbers(seed, iHeight * 5),
-            range = offsetMax - offsetMin,
+        const rnd = this.getRandomNumbers({
+            seed, 
+            length: iHeight * 5,
+        });
+
+        const range = offsetMax - offsetMin,
             redRange = offsetRedMax - offsetRedMin,
             greenRange = offsetGreenMax - offsetGreenMin,
             blueRange = offsetBlueMax - offsetBlueMin,
@@ -3954,13 +3994,14 @@ P.theBigActionsObject = {
             iWidth = input.width,
             r, g, b, a, i, dw, dh, source;
 
-        let {opacity, width, height, level, seed, noWrap, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, lineOut} = requirements;
+        let {opacity, width, height, level, seed, noiseType, noWrap, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == width) width = 1;
         if (null == height) height = 1;
         if (null == level) level = 0.5;
         if (null == seed) seed = 'some-random-string-or-other';
+        if (null == noiseType) noiseType = 'random';
         if (null == noWrap) noWrap = false;
         if (null == includeRed) includeRed = true;
         if (null == includeGreen) includeGreen = true;
@@ -3968,8 +4009,16 @@ P.theBigActionsObject = {
         if (null == includeAlpha) includeAlpha = true;
         if (null == excludeTransparentPixels) excludeTransparentPixels = true;
 
-        const rnd = this.getRandomNumbers(seed, Math.ceil((len / 4) * 3));
-        let rndCursor = -1;
+        const rnd = this.getRandomNumbers({
+            seed, 
+            length: Math.ceil((len / 4) * 3),
+            imgWidth: iWidth,
+            type: noiseType,
+        });
+        let rndCursor = -1,
+            rndLevel,
+            rndWidth,
+            rndHeight;
 
         const halfWidth = width / 2,
             halfHeight = height / 2;
@@ -3981,10 +4030,24 @@ P.theBigActionsObject = {
             b = g + 1;
             a = b + 1;
 
-            if (rnd[++rndCursor] < level) {
+            if (noiseType === 'random') {
+                
+                rndLevel = rnd[++rndCursor];
+                rndWidth = rnd[++rndCursor];
+                rndHeight = rnd[++rndCursor];
+            }
+            else {
 
-                dw = Math.floor((rnd[++rndCursor] * width) - halfWidth);
-                dh = Math.floor((rnd[++rndCursor] * height) - halfHeight);
+                const temp = rnd[++rndCursor];
+                rndLevel = temp;
+                rndWidth = temp;
+                rndHeight = temp;
+            }
+
+            if (rndLevel < level) {
+
+                dw = Math.floor((rndWidth * width) - halfWidth);
+                dh = Math.floor((rndHeight * height) - halfHeight);
 
                 source = i + ((dh * iWidth) + dw) * 4;
 
@@ -4018,7 +4081,6 @@ P.theBigActionsObject = {
                         oData[a] = (includeAlpha) ? iData[source] : iData[a];
                     }
                 }
-
             }
             else {
 
@@ -4311,20 +4373,27 @@ P.theBigActionsObject = {
             rndCursor, indicesCursor, dataCursor,
             selectedPalette;
 
-        let {opacity, palette, seed, useBluenoise, minimumColorDistance, useLabForPaletteDistance, lineOut} = requirements;
+        let {opacity, palette, seed, noiseType, useBluenoise, minimumColorDistance, useLabForPaletteDistance, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == seed) seed = 'some-random-string-or-other';
+        if (null == noiseType) noiseType = 'random';
         if (null == useBluenoise) useBluenoise = false;
         if (null == useLabForPaletteDistance) useLabForPaletteDistance = false;
         if (null == palette) palette = 'black-white';
         if (null == minimumColorDistance) minimumColorDistance = 1000;
 
-        // Noise - used for dithering the output
-        const rnd = (useBluenoise) ?
-            this.getRandomNumbers(seed, quarterLen, iWidth) :
-            this.getRandomNumbers(seed, quarterLen);
+        // `useBluenoise` is deprecated
+        // + use `noiseType: 'bluenoise'` instead
+        if (useBluenoise) noiseType = 'bluenoise';
 
+        // Noise - used for dithering the output
+        const rnd = this.getRandomNumbers({
+            seed,
+            length: quarterLen,
+            imgWidth: iWidth,
+            type: noiseType,
+        });
         rndCursor = -1;
 
         // Grayscale vs non-grayscale palettes follow different computing paths

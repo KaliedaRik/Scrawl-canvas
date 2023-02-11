@@ -282,6 +282,7 @@ let defaultAttributes = {
     lowGreen: 0,
     lowRed: 0,
     minimumColorDistance: 1000,
+    noiseType: 'random',
     noWrap: false,
     offsetAlphaX: 0,
     offsetAlphaY: 0,
@@ -461,7 +462,7 @@ P.setDelta = function (items = Ωempty) {
 
 S.actions = function (item) {
 
-	if (item != null) this.actions = item;
+    if (item != null) this.actions = item;
 };
 
 // #### Compatibility with Scrawl-canvas legacy filters functionality
@@ -689,7 +690,7 @@ const setActionsArray = {
 // + Since v8.7.0 we can also define range Arrays as `[CSS-color-string, CSS-color-string]`
     chroma: function (f) {
 
-    	const processedRanges = [],
+        const processedRanges = [],
             res = [];
 
         if ((f.ranges != null)) {
@@ -1263,6 +1264,9 @@ const setActionsArray = {
 
 // __randomNoise__ (new in v8.6.0) - creates a stippling effect across the image
     randomNoise: function (f) {
+
+        const noiseType = (['random', 'ordered', 'bluenoise'].includes(f.noiseType)) ? f.noiseType : 'random';
+
         f.actions = [{
             action: 'random-noise',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
@@ -1271,6 +1275,7 @@ const setActionsArray = {
             width: (f.width != null) ? f.width : 1,
             height: (f.height != null) ? f.height : 1,
             seed: (f.seed != null) ? f.seed : 'some-random-string-or-other',
+            noiseType,
             level: (f.level != null) ? f.level : 0,
             noWrap: (f.noWrap != null) ? f.noWrap : false,
             includeRed: (f.includeRed != null) ? f.includeRed : true,
@@ -1295,19 +1300,25 @@ const setActionsArray = {
 
 // __reducePalette__ - reduce the number of colors in its palette
     reducePalette: function (f) {
-    	
-    	let palette = (f.palette != null) ? f.palette : 'black-white';
+        
+        let palette = (f.palette != null) ? f.palette : 'black-white';
 
         f.actions = [];
 
-    	if (palette.substring) {
+        if (palette.substring) {
 
-    		if (palette.includes(',')) {
+            if (palette.includes(',')) {
 
-    			palette = palette.split(',');
-    		    palette.forEach(p => p.trim());
+                palette = palette.split(',');
+                palette.forEach(p => p.trim());
             }
-    	}
+        }
+
+        // `useBluenoise` is deprecated
+        // + use `noiseType: 'bluenoise'` instead
+        let noiseType = (f.useBluenoise) ? 'bluenoise' : f.noiseType ?? 'random';
+        if (!['random', 'ordered', 'bluenoise'].includes(noiseType)) noiseType = 'random';
+
         f.actions.push({
             action: 'reduce-palette',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
@@ -1316,7 +1327,7 @@ const setActionsArray = {
             minimumColorDistance: (f.minimumColorDistance != null) ? f.minimumColorDistance : 1000,
             useLabForPaletteDistance: (f.useLabForPaletteDistance != null) ? f.useLabForPaletteDistance : false,
             palette,
-            useBluenoise: (f.useBluenoise != null) ? f.useBluenoise : false,
+            noiseType,
             opacity: (f.opacity != null) ? f.opacity : 1,
         });
     },
@@ -1378,7 +1389,7 @@ const setActionsArray = {
 // __swirl__ - for each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
 // + This filter can handle multiple swirls in a single pass
     swirl: function (f) {
-    	let startX = (f.startX != null) ? f.startX : '50%',
+        let startX = (f.startX != null) ? f.startX : '50%',
             startY = (f.startY != null) ? f.startY : '50%',
             innerRadius = (f.innerRadius != null) ? f.innerRadius : 0,
             outerRadius = (f.outerRadius != null) ? f.outerRadius : '30%',

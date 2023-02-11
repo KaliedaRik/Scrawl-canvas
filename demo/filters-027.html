@@ -43,7 +43,7 @@
     <div class="blue"><input class="controlItem" id="paletteNumber" type="range" value="10" min="2" max="48" step="1" /></div>
 
     <div class="blue label">Min color distance</div>
-    <div class="blue"><input class="controlItem" id="minimumColorDistance" type="range" value="1000" min="50" max="5000" step="50" /></div>
+    <div class="blue"><input class="controlItem" id="minimumColorDistance" type="range" value="1000" min="250" max="8000" step="250" /></div>
 
     <div class="yellow label">Use OKLAB for distance</div>
     <div class="yellow">
@@ -56,11 +56,12 @@
     <div class="yellow label">Random seed</div>
     <div class="yellow"><input class="controlItem" id="seed" type="text" value="some-random-string-or-other" /></div>
 
-    <div class="yellow label">Use bluenoise</div>
+    <div class="yellow label">Noise type</div>
     <div class="yellow">
-      <select class="controlItem" id="useBluenoise">
-        <option value="0">false</option>
-        <option value="1">true</option>
+      <select class="controlItem" id="noiseType">
+        <option value="random">Random</option>
+        <option value="ordered">Ordered</option>
+        <option value="bluenoise">Blue noise</option>
       </select>
     </div>
 

@@ -1256,6 +1256,7 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     lineOut?: string;
     lowColor?: string;
     method?: string;
+    noiseType?: 'random' | 'ordered' | 'bluenoise';
     operation?: string;
     palette?: string | number;
     points?: string | number | number[];

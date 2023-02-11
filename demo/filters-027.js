@@ -93,7 +93,7 @@ scrawl.observeAndUpdate({
         paletteNumber: ['palette', 'round'],
         minimumColorDistance: ['minimumColorDistance', 'round'],
         seed: ['seed', 'raw'],
-        useBluenoise: ['useBluenoise', 'boolean'],
+        noiseType: ['noiseType', 'raw'],
         useLabForPaletteDistance: ['useLabForPaletteDistance', 'boolean'],
         opacity: ['opacity', 'float'],
     },
@@ -127,12 +127,11 @@ document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#paletteString').value = 'yellow, green, darkgreen, limegreen, olivedrab, mediumseagreen, seagreen, lightblue, darkslategray, lavender, slateblue, mediumslateblue, black, indigo, brown, antiquewhite';
 // @ts-expect-error
-// document.querySelector('#paletteNumber').options.selectedIndex = 1;
-// document.querySelector('#paletteNumber').value = 10;
+document.querySelector('#paletteNumber').value = 16;
 // @ts-expect-error
 document.querySelector('#seed').value = 'some-random-string-or-other';
 // @ts-expect-error
-document.querySelector('#useBluenoise').options.selectedIndex = 0;
+document.querySelector('#noiseType').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#useLabForPaletteDistance').options.selectedIndex = 0;
 
