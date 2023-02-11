@@ -108,14 +108,14 @@ P.buildStyle = function (cell) {
 
         if (engine) {
 
-            if (!engine.createConicGradient) return 'rgba(0,0,0,0)';
+            if (!engine.createConicGradient) return 'rgb(0 0 0 / 0)';
 
             let gradient = engine.createConicGradient(...this.gradientArgs);
             
             return this.addStopsToGradient(gradient, this.paletteStart, this.paletteEnd, this.cyclePalette);
         }
     }
-    return 'rgba(0,0,0,0)';
+    return 'rgb(0 0 0 / 0)';
 };
 
 // `updateGradientArgs` - internal function

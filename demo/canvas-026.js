@@ -30,7 +30,7 @@ scrawl.makeBlock({
     handleX: 'center',
     handleY: 'center',
 
-    fillStyle: 'rgb(220, 220, 220)',
+    fillStyle: 'rgb(220 220 220)',
     strokeStyle: 'red',
     lineWidth: 5,
 

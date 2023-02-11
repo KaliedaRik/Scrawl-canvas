@@ -270,24 +270,24 @@ let defaultAttributes = {
 
 // __overlinePosition__, __overlineStyle__
     overlinePosition: -0.1,
-    overlineStyle: 'rgb(250,0,0)',
+    overlineStyle: 'rgb(250 0 0)',
     overlineWidth: 1,
     noOverlineGlyphs: '',
 
 // __underlinePosition__, __underlineStyle__
     underlinePosition: 0.6,
-    underlineStyle: 'rgb(250,0,0)',
+    underlineStyle: 'rgb(250 0 0)',
     underlineWidth: 1,
     noUnderlineGlyphs: '',
 
 // __highlightStyle__
-    highlightStyle: 'rgba(250,218,94,0.4)',
+    highlightStyle: 'rgb(250 218 94 / 0.4)',
 
 // ##### Bounding box
 // The bounding box represents the Phrase entity's collision detection ___hit area___. It contains all of the entity's text, including line spacing.
 
 // __boundingBoxColor__
-    boundingBoxColor: 'rgba(0,0,0,0.5)',
+    boundingBoxColor: 'rgb(0 0 0 / 0.5)',
 
 // __showBoundingBox__ - Boolean flag indicating whether the Phrase entity's bounding box should be displayed
     showBoundingBox: false,

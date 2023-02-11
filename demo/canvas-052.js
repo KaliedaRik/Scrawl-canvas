@@ -174,7 +174,7 @@ let impressionistAsset = scrawl.makeRawAsset({
                     b = data[++pos];
                     a = data[++pos];
 
-                    engine.strokeStyle = `rgba(${r},${g},${b},${a/255})`;
+                    engine.strokeStyle = `rgb(${r} ${g} ${b} / ${a/255})`;
 
                     rx = (x + offsetX);
                     if (rx < 0 || rx >= width) {

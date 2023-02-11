@@ -643,7 +643,6 @@ cat.clone({
 let stencil = block;
 
 
-
 // #### Scene animation
 // Function to check whether mouse cursor is over canvas, and lock the reference entity accordingly
 const mouseCheck = function () {

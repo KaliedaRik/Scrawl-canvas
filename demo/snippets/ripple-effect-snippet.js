@@ -65,7 +65,7 @@ export default function (el, args = {}) {
         if (!backgroundColor) backgroundColor = styles.backgroundColor;
 
         // We don't want a transparent background - default to beige!
-        if ('rgba(0, 0, 0, 0)' === backgroundColor || 'transparent' === backgroundColor || '#00000000' === backgroundColor || '#0000' === backgroundColor) backgroundColor = 'beige';
+        if ('rgb(0 0 0 / 0)' === backgroundColor || 'transparent' === backgroundColor || '#00000000' === backgroundColor || '#0000' === backgroundColor) backgroundColor = 'beige';
 
         canvas.set({
             backgroundColor,

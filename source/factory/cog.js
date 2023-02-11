@@ -424,7 +424,7 @@ P.makeCogPath = function () {
 
 // #### Factories
 
-// ##### makeStar
+// ##### makeCog
 // Accepts argument with attributes:
 // + __outerRadius__ (required) - the _outer_ radius representing the distance between the center of the Shape and the tips of its (acute angle) points.
 // + __innerRadius__ (required) - the _inner_ radius representing the distance between the center of the Shape and the obtuse angle at the valley between the tips of its (acute angle) points.

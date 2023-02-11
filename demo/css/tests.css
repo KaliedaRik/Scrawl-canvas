@@ -54,12 +54,12 @@ code {
 
 .scrawl-code {
 	font-family: monospace;
-	color: rgb(120, 0, 0);
+	color: rgb(120 0 0);
 }
 
 #reportmessage {
 	padding: 1em;
-	background-color: rgba(0, 120, 0, .4);
+	background-color: rgb(0 120 0 / 0.4);
 	white-space: pre-wrap;
 }
 
@@ -70,7 +70,7 @@ code {
 
 .testinfo {
 	margin-top: 2em;
-	background-color: rgba(220, 100, 100, .2);
+	background-color: rgb(220 100 100 / .2);
 	padding: 1em;
 }
 

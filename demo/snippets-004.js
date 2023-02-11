@@ -14,8 +14,8 @@ rippleEffect(document.querySelector('#ripple-02'));
 rippleEffect(document.querySelector('#ripple-04'));
 
 rippleEffect(document.querySelector('#ripple-03'), {
-	backgroundColor: 'rgb(255, 170, 170)',
-	rippleColor: 'rgb(255, 220, 220)',
+	backgroundColor: 'rgb(255 170 170)',
+	rippleColor: 'rgb(255 220 220)',
 });
 
 import greenBox from './snippets/green-box-snippet.js';

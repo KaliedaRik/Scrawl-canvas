@@ -124,7 +124,7 @@ let myphrase = scrawl.makePhrase({
     justify: 'center',
     lineHeight: 1,
 
-    fillStyle: 'rgb(50,0,0)',
+    fillStyle: 'rgb(50 0 0)',
     method: 'fill',
     globalAlpha: 0.6,
 });
@@ -161,7 +161,7 @@ let myoval = scrawl.makeOval({
     radiusY: 55,
     intersectY: 0.6,
 
-    fillStyle: 'rgba(20, 50, 180, 0.7)',
+    fillStyle: 'rgb(20 50 180 / 0.7)',
     method: 'fill',
 });
 

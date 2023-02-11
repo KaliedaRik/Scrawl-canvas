@@ -109,7 +109,7 @@ let defaultAttributes = {
 // The __colors__ object is a raw Javascript object which uses stop values `('0 ' - '999 ')` as keys and an Array with four members holding color data as values. 
     colors: null,
 
-// The __stops__ array is a fixed Array of length 1000 containing rgba color strings for each index. 
+// The __stops__ array is a fixed Array of length 1000 containing color strings for each index. 
     stops: null,
 
 // If the __cyclic__ flag is set, then we know to calculate appropriate stop values between the last key color and the first key color, thus allowing for smooth crossing of the 1 -> 0 stops boundary

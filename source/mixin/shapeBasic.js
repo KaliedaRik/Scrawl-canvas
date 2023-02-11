@@ -33,7 +33,7 @@ export default function (P = Ωempty) {
         pathDefinition: '',
 
         showBoundingBox: false,
-        boundingBoxColor: 'rgba(0,0,0,0.5)',
+        boundingBoxColor: 'rgb(0 0 0 / 0.5)',
         minimumBoundingBoxDimensions: 20,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);

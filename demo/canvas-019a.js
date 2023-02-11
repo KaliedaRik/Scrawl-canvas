@@ -41,7 +41,7 @@ const data = [
     {
         canvas: canvases['heathrow'],
         image: 'heathrow-bg',
-        transparency: 'rgba(0,0,0,0)',
+        transparency: 'rgb(0 0 0 / 0)',
     },
     {
         canvas: canvases['kingston'],

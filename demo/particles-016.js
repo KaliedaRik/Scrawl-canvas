@@ -45,7 +45,7 @@ const myNet = scrawl.makeNet({
     columnDistance: 100,
 
     showSprings: true,
-    showSpringsColor: 'rgba(255, 255, 255, 0.3)',
+    showSpringsColor: 'rgb(255 255 255 / 0.3)',
 
     forces: [],
 
@@ -59,7 +59,7 @@ const myNet = scrawl.makeNet({
         handle: ['center', 'center'],
 
         method: 'fillThenDraw',
-        fillStyle: 'rgba(200, 0, 0, 0.7)',
+        fillStyle: 'rgb(200 0 0 / 0.7)',
         strokeStyle: 'white',
         lineWidth: 2,
 
