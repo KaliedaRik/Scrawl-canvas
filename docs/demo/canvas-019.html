@@ -580,6 +580,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-028.html">
+                  ./demo/filters-028.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1131,6 +1136,7 @@
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
+<p>Get handles to the Canvas wrappers</p>
 
             </div>
             
@@ -1150,11 +1156,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Import the images we defined in the DOM (in &lt;img&gt; elements)</p>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.places&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;demo&#x27;</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -1164,6 +1171,21 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Import the images we defined in the DOM (in &lt;img&gt; elements)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.places&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>For this scene, we’ll build a data structure which we can iterate over, to build the entitys, assets and gradients required by the scene</p>
 
@@ -1178,7 +1200,7 @@
     {
         <span class="hljs-attr">canvas</span>: c2,
         <span class="hljs-attr">image</span>: <span class="hljs-string">&#x27;heathrow-bg&#x27;</span>,
-        <span class="hljs-attr">transparency</span>: <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>,
+        <span class="hljs-attr">transparency</span>: <span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span>,
     },
     {
         <span class="hljs-attr">canvas</span>: c3,
@@ -1195,11 +1217,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>This array will hold a set of functions which we will invoke in turn at the start of each Display cycle</p>
 
@@ -1210,11 +1232,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>The blur filter is temporary - we use it once on each image to generate a blurred version of that image</p>
 <ul>
@@ -1224,25 +1246,10 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeFilter</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blur&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;gaussianBlur&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">20</span>,
 });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <p>Iterate through our data array to create Scrawl-canvas objects</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>data.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">scene</span> =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -1253,26 +1260,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>The original picture, with the blur filter applied to it</p>
-<ul>
-<li>We will remove the filter in a later step</li>
-</ul>
+              <p>Iterate through our data array to create Scrawl-canvas objects</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> entity = <span class="hljs-title function_">makePicture</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-original`</span>,
-        <span class="hljs-attr">group</span>: scene.<span class="hljs-property">canvas</span>.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-
-        <span class="hljs-attr">asset</span>: scene.<span class="hljs-property">image</span>,
-
-        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-
-        <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;blur&#x27;</span>],
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>data.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">scene</span> =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -1283,11 +1275,26 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>A one-off instruction to tell Scrawl-canvas to create an image asset from our Picture entity the next time it performs a Display cycle</p>
+              <p>The original picture, with the blur filter applied to it</p>
+<ul>
+<li>We will remove the filter in a later step</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">createImageFromEntity</span>(entity, <span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> entity = <span class="hljs-title function_">makePicture</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-original`</span>),
+        <span class="hljs-attr">group</span>: scene.<span class="hljs-property">canvas</span>.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+
+        <span class="hljs-attr">asset</span>: scene.<span class="hljs-property">image</span>,
+
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+
+        <span class="hljs-attr">filters</span>: [<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blur&#x27;</span>)],
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+    });</pre></div></div>
             
         </li>
         
@@ -1298,13 +1305,28 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
+              <p>A one-off instruction to tell Scrawl-canvas to create an image asset from our Picture entity the next time it performs a Display cycle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">createImageFromEntity</span>(entity, <span class="hljs-literal">true</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
               <p>The purpose of this demo is to test the various ways we can define ‘transparency’ in Scrawl-canvas Color objects and Gradients - tests a set of Color factory bugs uncovered and fixed in v8.3.2</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">makeRadialGradient</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-gradient`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-gradient`</span>),
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
         <span class="hljs-attr">end</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
         <span class="hljs-attr">startRadius</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
@@ -1319,11 +1341,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Apply the gradient to the scene via a Block entity</p>
 
@@ -1331,25 +1353,25 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> filterBlock = <span class="hljs-title function_">makeBlock</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-block`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-block`</span>),
         <span class="hljs-attr">group</span>: scene.<span class="hljs-property">canvas</span>.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
         <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;200%&#x27;</span>, <span class="hljs-string">&#x27;200%&#x27;</span>],
 
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-gradient`</span>,
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-gradient`</span>),
         <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
     });</pre></div></div>
             
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Check whether the mouse cursor is hovering over this canvas, and update the filter Block entity’s positioning accordingly</p>
 
@@ -1373,11 +1395,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>This function will run once, at the end of the first Display cycle</p>
 
@@ -1385,18 +1407,18 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">postInitialization</span> = (<span class="hljs-params">anim</span>) =&gt; {
 
-    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(anim.<span class="hljs-property">target</span>.<span class="hljs-property">name</span>, <span class="hljs-string">&#x27;postInitialization&#x27;</span>)
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(anim.<span class="hljs-property">target</span>.<span class="hljs-property">name</span>, <span class="hljs-string">&#x27;postInitialization&#x27;</span>);
 
-    <span class="hljs-keyword">let</span> original = entitys[<span class="hljs-string">`<span class="hljs-subst">${anim.target.name}</span>-bg-original`</span>];</pre></div></div>
+    <span class="hljs-keyword">let</span> original = entitys[<span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${anim.target.name}</span>-bg-original`</span>)];</pre></div></div>
             
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Update our original Picture entity, in particular to remove the blur filter and set up its composition in the scene</p>
 
@@ -1411,11 +1433,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Create a second Picture entity using the blurred image asset Scrawl-canvas created for us during the first iteration of the Display cycle.</p>
 <ul>
@@ -1425,8 +1447,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    original.<span class="hljs-title function_">clone</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${anim.target.name}</span>-bg-blurred`</span>,
-        <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${anim.target.name}</span>-bg-original-image`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${anim.target.name}</span>-bg-blurred`</span>),
+        <span class="hljs-attr">asset</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${anim.target.name}</span>-bg-original-image`</span>),
         <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
         <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-atop&#x27;</span>,
     });
@@ -1435,11 +1457,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1451,11 +1473,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1463,7 +1485,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: [c1, c2, c3, c4],
     <span class="hljs-attr">observer</span>: <span class="hljs-literal">true</span>,
 
@@ -1473,7 +1495,7 @@
 
 <span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-speed&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;speed&#x27;</span>),
     <span class="hljs-attr">noTarget</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
@@ -1481,11 +1503,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>For this demo we will suppress touchmove functionality over the canvas</p>
 
@@ -1501,11 +1523,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

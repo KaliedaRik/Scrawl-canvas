@@ -585,11 +585,6 @@
                 </a>
               
                 
-                <a class="source" href="filters-029.html">
-                  ./demo/filters-029.js
-                </a>
-              
-                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -602,6 +597,16 @@
                 
                 <a class="source" href="filters-103.html">
                   ./demo/filters-103.js
+                </a>
+              
+                
+                <a class="source" href="filters-104.html">
+                  ./demo/filters-104.js
+                </a>
+              
+                
+                <a class="source" href="filters-105.html">
+                  ./demo/filters-105.js
                 </a>
               
                 
@@ -1035,6 +1040,21 @@
                 </a>
               
                 
+                <a class="source" href="temp-302.html">
+                  ./demo/temp-302.js
+                </a>
+              
+                
+                <a class="source" href="temp-aoc-01-1-data.html">
+                  ./demo/temp-aoc-01-1-data.js
+                </a>
+              
+                
+                <a class="source" href="temp-aoc-01-1.html">
+                  ./demo/temp-aoc-01-1.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -1075,7 +1095,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-filters-028">Demo Filters 028</h1>
-<p>Filter parameters: tiles</p>
+<p>Stencil (background) filter functionality</p>
 
             </div>
             
@@ -1106,12 +1126,11 @@
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
+<p>Get a handle to the Canvas wrapper</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
-
-scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -1122,23 +1141,15 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Create the filter</p>
+              <p>Namespacing boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;demo&#x27;</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
 
-    <span class="hljs-attr">points</span>: <span class="hljs-string">&#x27;rect-grid&#x27;</span>,
-
-    <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
-    <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">20</span>,
-    <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">14</span>,
-    <span class="hljs-attr">offsetX</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">200</span>,
-});</pre></div></div>
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1149,25 +1160,22 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Create the target entity</p>
+              <h4 id="define-filters---need-to-test-them-all-plus-some-user-defined-filters">Define filters - need to test them all, plus some user-defined filters</h4>
+<p>Asset generator</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-noise-generator&#x27;</span>),
+    <span class="hljs-attr">width</span>: <span class="hljs-number">400</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,
+    <span class="hljs-attr">scale</span>: <span class="hljs-number">60</span>,
 
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
+    <span class="hljs-attr">sumFunction</span>: <span class="hljs-string">&#x27;modular&#x27;</span>,
+    <span class="hljs-attr">sumAmplitude</span>: <span class="hljs-number">4</span>,
 
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-
-    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;tiles&#x27;</span>],
+    <span class="hljs-attr">noiseEngine</span>: <span class="hljs-string">&#x27;worley-manhattan&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -1179,12 +1187,25 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <p>Required, otherwise the asset generator doesn’t produce anything for the filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;temp-1&#x27;</span>),
+    <span class="hljs-attr">asset</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-noise-generator&#x27;</span>),
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">100</span>, <span class="hljs-number">100</span>],
+    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
+});
+
+scrawl.<span class="hljs-title function_">makePicture</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;temp-2&#x27;</span>),
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">400</span>, <span class="hljs-number">400</span>],
+    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1195,11 +1216,30 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Displace</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Tile dimensions - width: <span class="hljs-subst">${tile_width.value}</span>px height: <span class="hljs-subst">${tile_height.value}</span>px radius: <span class="hljs-subst">${tile_radius.value}</span>px\n    Origin offset - x: <span class="hljs-subst">${offset_x.value}</span>px y: <span class="hljs-subst">${offset_y.value}</span>px\n    Angle: <span class="hljs-subst">${angle.value}</span>\n    Random points: <span class="hljs-subst">${randomPoints.value}</span>\n    Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;displace&#x27;</span>),
+    <span class="hljs-attr">actions</span>: [
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;process-image&#x27;</span>,
+            <span class="hljs-attr">asset</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-noise-generator&#x27;</span>),
+            <span class="hljs-attr">width</span>: <span class="hljs-number">400</span>,
+            <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,
+            <span class="hljs-attr">copyWidth</span>: <span class="hljs-number">400</span>,
+            <span class="hljs-attr">copyHeight</span>: <span class="hljs-number">400</span>,
+            <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;noise-map&#x27;</span>,
+        },
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;displace&#x27;</span>,
+            <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;noise-map&#x27;</span>,
+            <span class="hljs-attr">scaleX</span>: <span class="hljs-number">3</span>,
+            <span class="hljs-attr">scaleY</span>: <span class="hljs-number">3</span>,
+            <span class="hljs-attr">transparentEdges</span>: <span class="hljs-literal">true</span>,
+        }
+    ],
 });</pre></div></div>
             
         </li>
@@ -1211,15 +1251,28 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Create the Display cycle animation</p>
+              <p><strong>Blend</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blend&#x27;</span>),
+    <span class="hljs-attr">actions</span>: [
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;process-image&#x27;</span>,
+            <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
+            <span class="hljs-attr">width</span>: <span class="hljs-number">400</span>,
+            <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,
+            <span class="hljs-attr">copyWidth</span>: <span class="hljs-number">400</span>,
+            <span class="hljs-attr">copyHeight</span>: <span class="hljs-number">400</span>,
+            <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;flower&#x27;</span>,
+        },
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;blend&#x27;</span>,
+            <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;flower&#x27;</span>,
+            <span class="hljs-attr">blend</span>: <span class="hljs-string">&#x27;color-burn&#x27;</span>,
+        }
+    ],
 });</pre></div></div>
             
         </li>
@@ -1231,37 +1284,29 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <h4 id="user-interaction">User interaction</h4>
-<p>Setup form observer functionality</p>
+              <p><strong>Compose</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
-
-    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
-    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
-
-    <span class="hljs-attr">target</span>: myFilter,
-
-    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
-
-    <span class="hljs-attr">updates</span>: {
-
-        <span class="hljs-attr">tile_width</span>: [<span class="hljs-string">&#x27;tileWidth&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">tile_height</span>: [<span class="hljs-string">&#x27;tileHeight&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">tile_radius</span>: [<span class="hljs-string">&#x27;tileRadius&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">offset_x</span>: [<span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">offset_y</span>: [<span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">angle</span>: [<span class="hljs-string">&#x27;angle&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-
-        <span class="hljs-attr">includeRed</span>: [<span class="hljs-string">&#x27;includeRed&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
-        <span class="hljs-attr">includeGreen</span>: [<span class="hljs-string">&#x27;includeGreen&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
-        <span class="hljs-attr">includeBlue</span>: [<span class="hljs-string">&#x27;includeBlue&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
-        <span class="hljs-attr">includeAlpha</span>: [<span class="hljs-string">&#x27;includeAlpha&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
-
-        <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-    },
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;compose&#x27;</span>),
+    <span class="hljs-attr">actions</span>: [
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;process-image&#x27;</span>,
+            <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
+            <span class="hljs-attr">width</span>: <span class="hljs-number">400</span>,
+            <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,
+            <span class="hljs-attr">copyWidth</span>: <span class="hljs-number">400</span>,
+            <span class="hljs-attr">copyHeight</span>: <span class="hljs-number">400</span>,
+            <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;flower&#x27;</span>,
+        },
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+            <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;flower&#x27;</span>,
+            <span class="hljs-attr">offsetX</span>: <span class="hljs-number">5</span>,
+            <span class="hljs-attr">compose</span>: <span class="hljs-string">&#x27;destination-in&#x27;</span>,
+        }
+    ],
 });</pre></div></div>
             
         </li>
@@ -1273,19 +1318,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Update points value selector</p>
+              <p><strong>Gray</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-
-    <span class="hljs-keyword">const</span> t = e.<span class="hljs-property">target</span>,
-        value = t.<span class="hljs-property">value</span>;
-
-    <span class="hljs-keyword">switch</span> (value) {
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;random&#x27;</span> :
-            myFilter.<span class="hljs-title function_">set</span>({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;gray&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;gray&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1296,13 +1335,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Grayscale</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-attr">points</span>: <span class="hljs-built_in">parseInt</span>(randomPoints.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>),
-                <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">100</span>,
-            });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;grayscale&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1313,19 +1352,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Sepia</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            tile_radius.<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;hex-grid&#x27;</span> :
-            myFilter.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">points</span>: value,
-                <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">20</span>,
-                <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">40</span>,
-            });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;sepia&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;sepia&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1336,11 +1369,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Invert</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            tile_radius.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;invert&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;invert&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1351,19 +1386,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Red</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            tile_height.<span class="hljs-property">value</span> = <span class="hljs-number">40</span>;
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;rect-grid&#x27;</span> :
-            myFilter.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">points</span>: value,
-                <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
-                <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">20</span>,
-            });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;red&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;red&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1374,11 +1403,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Green</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            tile_width.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;green&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;green&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1389,14 +1420,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Blue</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            tile_height.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;
-            <span class="hljs-keyword">break</span>;
-    }
-}, <span class="hljs-string">&#x27;#points&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blue&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1407,14 +1437,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p>Update random-points value range</p>
+              <p><strong>Notred</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-
-    <span class="hljs-keyword">const</span> t = e.<span class="hljs-property">target</span>,
-        value = t.<span class="hljs-property">value</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;notred&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;notred&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1425,17 +1454,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Notgreen</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (points.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;random&#x27;</span>) {
-
-            myFilter.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">points</span>: <span class="hljs-built_in">parseInt</span>(value, <span class="hljs-number">10</span>),
-            });
-        }
-}, <span class="hljs-string">&#x27;#random-points&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;notgreen&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;notgreen&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1446,19 +1471,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p>Setup form</p>
+              <p><strong>Notblue</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> points = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#points&#x27;</span>),
-    tile_width = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#tile_width&#x27;</span>),
-    tile_height = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#tile_height&#x27;</span>),
-    tile_radius = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#tile_radius&#x27;</span>),
-    offset_x = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_x&#x27;</span>),
-    offset_y = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_y&#x27;</span>),
-    angle = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#angle&#x27;</span>),
-    randomPoints = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#random-points&#x27;</span>),
-    opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;notblue&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;notblue&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1469,11 +1488,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Cyan</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>points.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;rect-grid&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cyan&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;cyan&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1484,11 +1505,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Magenta</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>tile_width.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;magenta&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;magenta&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1499,11 +1522,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Yellow</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>tile_height.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;yellow&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1514,11 +1539,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Edge detect</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>tile_radius.<span class="hljs-property">value</span> = <span class="hljs-number">14</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;edgeDetect&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;edgeDetect&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1529,11 +1556,14 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Sharpen</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>offset_x.<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;sharpen&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;sharpen&#x27;</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1544,11 +1574,17 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Emboss</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>offset_y.<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;emboss&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
+    <span class="hljs-attr">angle</span>: <span class="hljs-number">225</span>,
+    <span class="hljs-attr">strength</span>: <span class="hljs-number">10</span>,
+    <span class="hljs-attr">tolerance</span>: <span class="hljs-number">50</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1559,11 +1595,15 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Chroma</strong> (green screen) filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>angle.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;chroma&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;chroma&#x27;</span>,
+    <span class="hljs-attr">ranges</span>: [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>], [<span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>]],
+});</pre></div></div>
             
         </li>
         
@@ -1574,11 +1614,14 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Brightness</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>randomPoints.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brightness&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;brightness&#x27;</span>,
+    <span class="hljs-attr">level</span>: <span class="hljs-number">0.5</span>,</pre></div></div>
             
         </li>
         
@@ -1589,11 +1632,14 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Saturation</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;saturation&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;saturation&#x27;</span>,
+    <span class="hljs-attr">level</span>: <span class="hljs-number">1.4</span>,</pre></div></div>
             
         </li>
         
@@ -1604,11 +1650,21 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Threshhold</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeRed&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;threshold&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
+    <span class="hljs-attr">level</span>: <span class="hljs-number">127</span>,
+    <span class="hljs-attr">lowRed</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">lowGreen</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">lowBlue</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">highRed</span>: <span class="hljs-number">220</span>,
+    <span class="hljs-attr">highGreen</span>: <span class="hljs-number">60</span>,
+    <span class="hljs-attr">highBlue</span>: <span class="hljs-number">60</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1619,11 +1675,20 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Swirl</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeGreen&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;swirl&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;swirl&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">outerRadius</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">angle</span>: <span class="hljs-number">240</span>,
+    <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;easeOutSine&#x27;</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1634,11 +1699,16 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Channels</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeBlue&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;channels&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;channels&#x27;</span>,
+    <span class="hljs-attr">red</span>: <span class="hljs-number">0.4</span>,
+    <span class="hljs-attr">green</span>: <span class="hljs-number">0.8</span>,
+    <span class="hljs-attr">blue</span>: <span class="hljs-number">0.6</span>,</pre></div></div>
             
         </li>
         
@@ -1649,11 +1719,17 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <p><strong>Channelstep</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeAlpha&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;channelstep&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;channelstep&#x27;</span>,
+    <span class="hljs-attr">red</span>: <span class="hljs-number">64</span>,
+    <span class="hljs-attr">green</span>: <span class="hljs-number">64</span>,
+    <span class="hljs-attr">blue</span>: <span class="hljs-number">64</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1664,11 +1740,17 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
-              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+              <p><strong>Tiles</strong> filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tiles&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
+    <span class="hljs-attr">points</span>: <span class="hljs-string">&#x27;hex-grid&#x27;</span>,
+    <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">40</span>,
+    <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">24</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1678,6 +1760,946 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               
               <div class="sswrap ">
                 <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <p><strong>Newsprint</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;newsprint&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;newsprint&#x27;</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">2</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
+              </div>
+              <p><strong>Tint</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tint&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tint&#x27;</span>,
+    <span class="hljs-attr">redInRed</span>: <span class="hljs-number">0.5</span>,
+    <span class="hljs-attr">redInGreen</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">redInBlue</span>: <span class="hljs-number">0.9</span>,
+    <span class="hljs-attr">greenInRed</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">greenInGreen</span>: <span class="hljs-number">0.3</span>,
+    <span class="hljs-attr">greenInBlue</span>: <span class="hljs-number">0.8</span>,
+    <span class="hljs-attr">blueInRed</span>: <span class="hljs-number">0.8</span>,
+    <span class="hljs-attr">blueInGreen</span>: <span class="hljs-number">0.8</span>,
+    <span class="hljs-attr">blueInBlue</span>: <span class="hljs-number">0.4</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <p><strong>Offset</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;offset&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;offset&#x27;</span>,
+    <span class="hljs-attr">offsetX</span>: <span class="hljs-number">12</span>,
+    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">12</span>,
+    <span class="hljs-attr">opacity</span>: <span class="hljs-number">0.5</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
+              </div>
+              <p><strong>Glitch</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;glitch&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;glitch&#x27;</span>,
+    <span class="hljs-attr">level</span>: <span class="hljs-number">0.3</span>,
+    <span class="hljs-attr">offsetRedMin</span>: -<span class="hljs-number">20</span>,
+    <span class="hljs-attr">offsetRedMax</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">offsetBlueMin</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">offsetBlueMax</span>: <span class="hljs-number">15</span>,
+    <span class="hljs-attr">useMixedChannel</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">transparentEdges</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">step</span>: <span class="hljs-number">4</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
+              </div>
+              <p><strong>Offset Channels</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;offsetChannels&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;offsetChannels&#x27;</span>,
+    <span class="hljs-attr">offsetRedX</span>: -<span class="hljs-number">12</span>,
+    <span class="hljs-attr">offsetRedY</span>: -<span class="hljs-number">8</span>,
+    <span class="hljs-attr">offsetGreenX</span>: <span class="hljs-number">12</span>,
+    <span class="hljs-attr">offsetGreenY</span>: <span class="hljs-number">16</span>,
+    <span class="hljs-attr">offsetBlueX</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">offsetBlueY</span>: -<span class="hljs-number">15</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <p><strong>Pixellate</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pixelate&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;pixelate&#x27;</span>,
+    <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">offsetX</span>: <span class="hljs-number">8</span>,
+    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">8</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
+              </div>
+              <p><strong>Blur</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;blur&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">8</span>,
+    <span class="hljs-attr">passes</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">excludeTransparentPixels</span>: <span class="hljs-literal">true</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
+              </div>
+              <p><strong>Gaussian Blur</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;gaussianBlur&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;gaussianBlur&#x27;</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">4</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
+              </div>
+              <p><strong>AreaAlpha</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;areaAlpha&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;areaAlpha&#x27;</span>,
+    <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">gutterWidth</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">gutterHeight</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">offsetX</span>: <span class="hljs-number">8</span>,
+    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">8</span>,
+    <span class="hljs-attr">areaAlphaLevels</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
+              </div>
+              <p><strong>Matrix</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;matrix&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
+    <span class="hljs-attr">weights</span>: [-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>],</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
+              </div>
+              <p><strong>Matrix5</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;matrix5&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;matrix5&#x27;</span>,
+    <span class="hljs-attr">weights</span>: [-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
+              </div>
+              <p><strong>ChannelLevels</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;channelLevels&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;channelLevels&#x27;</span>,
+    <span class="hljs-attr">red</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">200</span>],
+    <span class="hljs-attr">green</span>: [<span class="hljs-number">60</span>, <span class="hljs-number">220</span>, <span class="hljs-number">150</span>],
+    <span class="hljs-attr">blue</span>: [<span class="hljs-number">40</span>, <span class="hljs-number">180</span>],
+    <span class="hljs-attr">alpha</span>: [],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
+              </div>
+              <p><strong>Chrome key</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;chromakey&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;chromakey&#x27;</span>,
+    <span class="hljs-attr">red</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">green</span>: <span class="hljs-number">127</span>,
+    <span class="hljs-attr">blue</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">opaqueAt</span>: <span class="hljs-number">0.7</span>,
+    <span class="hljs-attr">transparentAt</span>: <span class="hljs-number">0.5</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
+              <p><strong>Alpha to channels</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;alphaToChannels&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;alphaToChannels&#x27;</span>,
+    <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">excludeRed</span>: <span class="hljs-literal">false</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
+              </div>
+              <p><strong>Channels to alpha</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;channelsToAlpha&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;channelsToAlpha&#x27;</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
+              </div>
+              <p><strong>Clamp channels</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;clampChannels&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;clampChannels&#x27;</span>,
+    <span class="hljs-attr">lowRed</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">highRed</span>: <span class="hljs-number">64</span>,
+    <span class="hljs-attr">lowGreen</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">highGreen</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">lowBlue</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">highBlue</span>: <span class="hljs-number">255</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-50">&#x00a7;</a>
+              </div>
+              <p><strong>Corrode</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;corrode&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;corrode&#x27;</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">operation</span>: <span class="hljs-string">&#x27;lowest&#x27;</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-51">&#x00a7;</a>
+              </div>
+              <p><strong>Curve weights</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;curveWeights&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;curveWeights&#x27;</span>,
+    <span class="hljs-attr">useMixedChannel</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">weights</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">5</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">253</span>, <span class="hljs-number">8</span>, -<span class="hljs-number">2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">252</span>, <span class="hljs-number">11</span>, -<span class="hljs-number">3</span>, <span class="hljs-number">0</span>, <span class="hljs-number">250</span>, <span class="hljs-number">14</span>, -<span class="hljs-number">4</span>, <span class="hljs-number">0</span>, <span class="hljs-number">249</span>, <span class="hljs-number">16</span>, -<span class="hljs-number">5</span>, <span class="hljs-number">1</span>, <span class="hljs-number">247</span>, <span class="hljs-number">19</span>, -<span class="hljs-number">6</span>, <span class="hljs-number">1</span>, <span class="hljs-number">246</span>, <span class="hljs-number">22</span>, -<span class="hljs-number">7</span>, <span class="hljs-number">1</span>, <span class="hljs-number">244</span>, <span class="hljs-number">24</span>, -<span class="hljs-number">8</span>, <span class="hljs-number">1</span>, <span class="hljs-number">243</span>, <span class="hljs-number">26</span>, -<span class="hljs-number">9</span>, <span class="hljs-number">1</span>, <span class="hljs-number">241</span>, <span class="hljs-number">29</span>, -<span class="hljs-number">10</span>, <span class="hljs-number">0</span>, <span class="hljs-number">239</span>, <span class="hljs-number">31</span>, -<span class="hljs-number">11</span>, <span class="hljs-number">0</span>, <span class="hljs-number">238</span>, <span class="hljs-number">33</span>, -<span class="hljs-number">12</span>, <span class="hljs-number">0</span>, <span class="hljs-number">236</span>, <span class="hljs-number">35</span>, -<span class="hljs-number">13</span>, <span class="hljs-number">0</span>, <span class="hljs-number">235</span>, <span class="hljs-number">37</span>, -<span class="hljs-number">14</span>, <span class="hljs-number">0</span>, <span class="hljs-number">233</span>, <span class="hljs-number">39</span>, -<span class="hljs-number">15</span>, <span class="hljs-number">0</span>, <span class="hljs-number">232</span>, <span class="hljs-number">41</span>, -<span class="hljs-number">16</span>, <span class="hljs-number">1</span>, <span class="hljs-number">230</span>, <span class="hljs-number">43</span>, -<span class="hljs-number">17</span>, <span class="hljs-number">1</span>, <span class="hljs-number">229</span>, <span class="hljs-number">45</span>, -<span class="hljs-number">18</span>, <span class="hljs-number">1</span>, <span class="hljs-number">227</span>, <span class="hljs-number">46</span>, -<span class="hljs-number">19</span>, <span class="hljs-number">1</span>, <span class="hljs-number">225</span>, <span class="hljs-number">48</span>, -<span class="hljs-number">20</span>, <span class="hljs-number">1</span>, <span class="hljs-number">224</span>, <span class="hljs-number">50</span>, -<span class="hljs-number">21</span>, <span class="hljs-number">1</span>, <span class="hljs-number">222</span>, <span class="hljs-number">51</span>, -<span class="hljs-number">22</span>, <span class="hljs-number">0</span>, <span class="hljs-number">221</span>, <span class="hljs-number">53</span>, -<span class="hljs-number">23</span>, <span class="hljs-number">0</span>, <span class="hljs-number">219</span>, <span class="hljs-number">54</span>, -<span class="hljs-number">24</span>, <span class="hljs-number">0</span>, <span class="hljs-number">218</span>, <span class="hljs-number">56</span>, -<span class="hljs-number">25</span>, <span class="hljs-number">0</span>, <span class="hljs-number">216</span>, <span class="hljs-number">57</span>, -<span class="hljs-number">26</span>, <span class="hljs-number">0</span>, <span class="hljs-number">214</span>, <span class="hljs-number">58</span>, -<span class="hljs-number">27</span>, <span class="hljs-number">1</span>, <span class="hljs-number">213</span>, <span class="hljs-number">60</span>, -<span class="hljs-number">28</span>, <span class="hljs-number">1</span>, <span class="hljs-number">211</span>, <span class="hljs-number">61</span>, -<span class="hljs-number">29</span>, <span class="hljs-number">1</span>, <span class="hljs-number">209</span>, <span class="hljs-number">62</span>, -<span class="hljs-number">30</span>, <span class="hljs-number">1</span>, <span class="hljs-number">208</span>, <span class="hljs-number">63</span>, -<span class="hljs-number">31</span>, <span class="hljs-number">0</span>, <span class="hljs-number">206</span>, <span class="hljs-number">64</span>, -<span class="hljs-number">32</span>, <span class="hljs-number">0</span>, <span class="hljs-number">205</span>, <span class="hljs-number">65</span>, -<span class="hljs-number">33</span>, <span class="hljs-number">0</span>, <span class="hljs-number">203</span>, <span class="hljs-number">66</span>, -<span class="hljs-number">34</span>, <span class="hljs-number">0</span>, <span class="hljs-number">201</span>, <span class="hljs-number">68</span>, -<span class="hljs-number">35</span>, <span class="hljs-number">0</span>, <span class="hljs-number">200</span>, <span class="hljs-number">68</span>, -<span class="hljs-number">36</span>, <span class="hljs-number">0</span>, <span class="hljs-number">198</span>, <span class="hljs-number">69</span>, -<span class="hljs-number">37</span>, <span class="hljs-number">1</span>, <span class="hljs-number">196</span>, <span class="hljs-number">70</span>, -<span class="hljs-number">38</span>, <span class="hljs-number">1</span>, <span class="hljs-number">195</span>, <span class="hljs-number">71</span>, -<span class="hljs-number">39</span>, <span class="hljs-number">1</span>, <span class="hljs-number">193</span>, <span class="hljs-number">72</span>, -<span class="hljs-number">40</span>, <span class="hljs-number">1</span>, <span class="hljs-number">191</span>, <span class="hljs-number">73</span>, -<span class="hljs-number">41</span>, <span class="hljs-number">1</span>, <span class="hljs-number">190</span>, <span class="hljs-number">73</span>, -<span class="hljs-number">42</span>, <span class="hljs-number">0</span>, <span class="hljs-number">188</span>, <span class="hljs-number">74</span>, -<span class="hljs-number">43</span>, <span class="hljs-number">0</span>, <span class="hljs-number">186</span>, <span class="hljs-number">75</span>, -<span class="hljs-number">44</span>, <span class="hljs-number">0</span>, <span class="hljs-number">185</span>, <span class="hljs-number">75</span>, -<span class="hljs-number">45</span>, <span class="hljs-number">0</span>, <span class="hljs-number">183</span>, <span class="hljs-number">76</span>, -<span class="hljs-number">46</span>, <span class="hljs-number">0</span>, <span class="hljs-number">181</span>, <span class="hljs-number">77</span>, -<span class="hljs-number">47</span>, <span class="hljs-number">0</span>, <span class="hljs-number">180</span>, <span class="hljs-number">77</span>, -<span class="hljs-number">48</span>, <span class="hljs-number">1</span>, <span class="hljs-number">178</span>, <span class="hljs-number">78</span>, -<span class="hljs-number">49</span>, <span class="hljs-number">1</span>, <span class="hljs-number">176</span>, <span class="hljs-number">78</span>, -<span class="hljs-number">50</span>, <span class="hljs-number">1</span>, <span class="hljs-number">175</span>, <span class="hljs-number">79</span>, -<span class="hljs-number">51</span>, <span class="hljs-number">1</span>, <span class="hljs-number">173</span>, <span class="hljs-number">80</span>, -<span class="hljs-number">52</span>, <span class="hljs-number">1</span>, <span class="hljs-number">171</span>, <span class="hljs-number">80</span>, -<span class="hljs-number">53</span>, <span class="hljs-number">1</span>, <span class="hljs-number">169</span>, <span class="hljs-number">80</span>, -<span class="hljs-number">54</span>, <span class="hljs-number">0</span>, <span class="hljs-number">167</span>, <span class="hljs-number">81</span>, -<span class="hljs-number">55</span>, <span class="hljs-number">0</span>, <span class="hljs-number">166</span>, <span class="hljs-number">81</span>, -<span class="hljs-number">56</span>, <span class="hljs-number">0</span>, <span class="hljs-number">164</span>, <span class="hljs-number">81</span>, -<span class="hljs-number">57</span>, <span class="hljs-number">0</span>, <span class="hljs-number">162</span>, <span class="hljs-number">82</span>, -<span class="hljs-number">58</span>, <span class="hljs-number">0</span>, <span class="hljs-number">160</span>, <span class="hljs-number">82</span>, -<span class="hljs-number">59</span>, <span class="hljs-number">1</span>, <span class="hljs-number">159</span>, <span class="hljs-number">82</span>, -<span class="hljs-number">60</span>, <span class="hljs-number">1</span>, <span class="hljs-number">157</span>, <span class="hljs-number">82</span>, -<span class="hljs-number">61</span>, <span class="hljs-number">1</span>, <span class="hljs-number">155</span>, <span class="hljs-number">83</span>, -<span class="hljs-number">62</span>, <span class="hljs-number">1</span>, <span class="hljs-number">153</span>, <span class="hljs-number">83</span>, -<span class="hljs-number">63</span>, <span class="hljs-number">0</span>, <span class="hljs-number">151</span>, <span class="hljs-number">83</span>, -<span class="hljs-number">64</span>, <span class="hljs-number">0</span>, <span class="hljs-number">149</span>, <span class="hljs-number">83</span>, -<span class="hljs-number">65</span>, <span class="hljs-number">0</span>, <span class="hljs-number">148</span>, <span class="hljs-number">83</span>, -<span class="hljs-number">66</span>, <span class="hljs-number">0</span>, <span class="hljs-number">146</span>, <span class="hljs-number">83</span>, -<span class="hljs-number">67</span>, <span class="hljs-number">0</span>, <span class="hljs-number">144</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">68</span>, <span class="hljs-number">0</span>, <span class="hljs-number">142</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">69</span>, <span class="hljs-number">1</span>, <span class="hljs-number">140</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">70</span>, <span class="hljs-number">1</span>, <span class="hljs-number">138</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">71</span>, <span class="hljs-number">1</span>, <span class="hljs-number">136</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">72</span>, <span class="hljs-number">1</span>, <span class="hljs-number">134</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">73</span>, <span class="hljs-number">1</span>, <span class="hljs-number">132</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">74</span>, <span class="hljs-number">0</span>, <span class="hljs-number">130</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">75</span>, <span class="hljs-number">0</span>, <span class="hljs-number">128</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">76</span>, <span class="hljs-number">0</span>, <span class="hljs-number">126</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">77</span>, <span class="hljs-number">0</span>, <span class="hljs-number">124</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">78</span>, <span class="hljs-number">0</span>, <span class="hljs-number">122</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">79</span>, <span class="hljs-number">0</span>, <span class="hljs-number">120</span>, <span class="hljs-number">84</span>, -<span class="hljs-number">80</span>, <span class="hljs-number">1</span>, <span class="hljs-number">118</span>, <span class="hljs-number">83</span>, -<span class="hljs-number">81</span>, <span class="hljs-number">1</span>, <span class="hljs-number">116</span>, <span class="hljs-number">83</span>, -<span class="hljs-number">82</span>, <span class="hljs-number">1</span>, <span class="hljs-number">114</span>, <span class="hljs-number">83</span>, -<span class="hljs-number">83</span>, <span class="hljs-number">1</span>, <span class="hljs-number">112</span>, <span class="hljs-number">83</span>, -<span class="hljs-number">84</span>, <span class="hljs-number">1</span>, <span class="hljs-number">110</span>, <span class="hljs-number">83</span>, -<span class="hljs-number">85</span>, <span class="hljs-number">1</span>, <span class="hljs-number">108</span>, <span class="hljs-number">83</span>, -<span class="hljs-number">86</span>, <span class="hljs-number">0</span>, <span class="hljs-number">106</span>, <span class="hljs-number">82</span>, -<span class="hljs-number">86</span>, <span class="hljs-number">0</span>, <span class="hljs-number">104</span>, <span class="hljs-number">82</span>, -<span class="hljs-number">87</span>, <span class="hljs-number">0</span>, <span class="hljs-number">101</span>, <span class="hljs-number">82</span>, -<span class="hljs-number">88</span>, <span class="hljs-number">0</span>, <span class="hljs-number">99</span>, <span class="hljs-number">82</span>, -<span class="hljs-number">88</span>, <span class="hljs-number">0</span>, <span class="hljs-number">97</span>, <span class="hljs-number">82</span>, -<span class="hljs-number">89</span>, <span class="hljs-number">1</span>, <span class="hljs-number">95</span>, <span class="hljs-number">81</span>, -<span class="hljs-number">90</span>, <span class="hljs-number">1</span>, <span class="hljs-number">93</span>, <span class="hljs-number">81</span>, -<span class="hljs-number">91</span>, <span class="hljs-number">1</span>, <span class="hljs-number">90</span>, <span class="hljs-number">81</span>, -<span class="hljs-number">91</span>, <span class="hljs-number">1</span>, <span class="hljs-number">88</span>, <span class="hljs-number">80</span>, -<span class="hljs-number">92</span>, <span class="hljs-number">0</span>, <span class="hljs-number">86</span>, <span class="hljs-number">80</span>, -<span class="hljs-number">93</span>, <span class="hljs-number">0</span>, <span class="hljs-number">83</span>, <span class="hljs-number">80</span>, -<span class="hljs-number">93</span>, <span class="hljs-number">0</span>, <span class="hljs-number">81</span>, <span class="hljs-number">79</span>, -<span class="hljs-number">94</span>, <span class="hljs-number">0</span>, <span class="hljs-number">79</span>, <span class="hljs-number">79</span>, -<span class="hljs-number">95</span>, <span class="hljs-number">0</span>, <span class="hljs-number">76</span>, <span class="hljs-number">79</span>, -<span class="hljs-number">96</span>, <span class="hljs-number">0</span>, <span class="hljs-number">74</span>, <span class="hljs-number">78</span>, -<span class="hljs-number">96</span>, <span class="hljs-number">1</span>, <span class="hljs-number">71</span>, <span class="hljs-number">78</span>, -<span class="hljs-number">97</span>, <span class="hljs-number">1</span>, <span class="hljs-number">69</span>, <span class="hljs-number">78</span>, -<span class="hljs-number">98</span>, <span class="hljs-number">1</span>, <span class="hljs-number">66</span>, <span class="hljs-number">77</span>, -<span class="hljs-number">98</span>, <span class="hljs-number">1</span>, <span class="hljs-number">64</span>, <span class="hljs-number">77</span>, -<span class="hljs-number">99</span>, <span class="hljs-number">1</span>, <span class="hljs-number">61</span>, <span class="hljs-number">76</span>, -<span class="hljs-number">100</span>, <span class="hljs-number">0</span>, <span class="hljs-number">59</span>, <span class="hljs-number">76</span>, -<span class="hljs-number">100</span>, <span class="hljs-number">0</span>, <span class="hljs-number">56</span>, <span class="hljs-number">76</span>, -<span class="hljs-number">101</span>, <span class="hljs-number">0</span>, <span class="hljs-number">53</span>, <span class="hljs-number">75</span>, -<span class="hljs-number">102</span>, <span class="hljs-number">0</span>, <span class="hljs-number">51</span>, <span class="hljs-number">75</span>, -<span class="hljs-number">102</span>, <span class="hljs-number">0</span>, <span class="hljs-number">48</span>, <span class="hljs-number">74</span>, -<span class="hljs-number">103</span>, <span class="hljs-number">0</span>, <span class="hljs-number">45</span>, <span class="hljs-number">74</span>, -<span class="hljs-number">104</span>, <span class="hljs-number">1</span>, <span class="hljs-number">42</span>, <span class="hljs-number">73</span>, -<span class="hljs-number">104</span>, <span class="hljs-number">1</span>, <span class="hljs-number">40</span>, <span class="hljs-number">73</span>, -<span class="hljs-number">105</span>, <span class="hljs-number">1</span>, <span class="hljs-number">37</span>, <span class="hljs-number">72</span>, -<span class="hljs-number">105</span>, <span class="hljs-number">1</span>, <span class="hljs-number">34</span>, <span class="hljs-number">72</span>, -<span class="hljs-number">106</span>, <span class="hljs-number">1</span>, <span class="hljs-number">31</span>, <span class="hljs-number">71</span>, -<span class="hljs-number">107</span>, <span class="hljs-number">1</span>, <span class="hljs-number">28</span>, <span class="hljs-number">71</span>, -<span class="hljs-number">107</span>, <span class="hljs-number">0</span>, <span class="hljs-number">25</span>, <span class="hljs-number">70</span>, -<span class="hljs-number">108</span>, <span class="hljs-number">0</span>, <span class="hljs-number">22</span>, <span class="hljs-number">70</span>, -<span class="hljs-number">109</span>, <span class="hljs-number">0</span>, <span class="hljs-number">19</span>, <span class="hljs-number">69</span>, -<span class="hljs-number">109</span>, <span class="hljs-number">0</span>, <span class="hljs-number">16</span>, <span class="hljs-number">69</span>, -<span class="hljs-number">110</span>, <span class="hljs-number">0</span>, <span class="hljs-number">13</span>, <span class="hljs-number">68</span>, -<span class="hljs-number">111</span>, <span class="hljs-number">1</span>, <span class="hljs-number">10</span>, <span class="hljs-number">68</span>, -<span class="hljs-number">111</span>, <span class="hljs-number">1</span>, <span class="hljs-number">7</span>, <span class="hljs-number">67</span>, -<span class="hljs-number">112</span>, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">67</span>, -<span class="hljs-number">112</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">66</span>, -<span class="hljs-number">113</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">2</span>, <span class="hljs-number">65</span>, -<span class="hljs-number">114</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">5</span>, <span class="hljs-number">65</span>, -<span class="hljs-number">114</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">8</span>, <span class="hljs-number">64</span>, -<span class="hljs-number">115</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">11</span>, <span class="hljs-number">64</span>, -<span class="hljs-number">115</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">14</span>, <span class="hljs-number">63</span>, -<span class="hljs-number">116</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">17</span>, <span class="hljs-number">62</span>, -<span class="hljs-number">117</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">20</span>, <span class="hljs-number">62</span>, -<span class="hljs-number">117</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">23</span>, <span class="hljs-number">61</span>, -<span class="hljs-number">118</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">26</span>, <span class="hljs-number">61</span>, -<span class="hljs-number">118</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">29</span>, <span class="hljs-number">60</span>, -<span class="hljs-number">119</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">32</span>, <span class="hljs-number">59</span>, -<span class="hljs-number">119</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">35</span>, <span class="hljs-number">59</span>, -<span class="hljs-number">120</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">38</span>, <span class="hljs-number">58</span>, -<span class="hljs-number">121</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">41</span>, <span class="hljs-number">58</span>, -<span class="hljs-number">121</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">44</span>, <span class="hljs-number">57</span>, -<span class="hljs-number">122</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">46</span>, <span class="hljs-number">56</span>, -<span class="hljs-number">122</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">49</span>, <span class="hljs-number">56</span>, -<span class="hljs-number">123</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">52</span>, <span class="hljs-number">55</span>, -<span class="hljs-number">123</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">55</span>, <span class="hljs-number">54</span>, -<span class="hljs-number">124</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">57</span>, <span class="hljs-number">54</span>, -<span class="hljs-number">124</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">60</span>, <span class="hljs-number">53</span>, -<span class="hljs-number">125</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">62</span>, <span class="hljs-number">52</span>, -<span class="hljs-number">125</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">65</span>, <span class="hljs-number">52</span>, -<span class="hljs-number">126</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">68</span>, <span class="hljs-number">51</span>, -<span class="hljs-number">126</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">70</span>, <span class="hljs-number">51</span>, -<span class="hljs-number">127</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">73</span>, <span class="hljs-number">50</span>, -<span class="hljs-number">127</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">75</span>, <span class="hljs-number">49</span>, -<span class="hljs-number">128</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">77</span>, <span class="hljs-number">49</span>, -<span class="hljs-number">128</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">80</span>, <span class="hljs-number">48</span>, -<span class="hljs-number">129</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">82</span>, <span class="hljs-number">47</span>, -<span class="hljs-number">129</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">85</span>, <span class="hljs-number">47</span>, -<span class="hljs-number">129</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">87</span>, <span class="hljs-number">46</span>, -<span class="hljs-number">130</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">89</span>, <span class="hljs-number">45</span>, -<span class="hljs-number">130</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">92</span>, <span class="hljs-number">45</span>, -<span class="hljs-number">131</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">94</span>, <span class="hljs-number">44</span>, -<span class="hljs-number">131</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">96</span>, <span class="hljs-number">43</span>, -<span class="hljs-number">132</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">98</span>, <span class="hljs-number">43</span>, -<span class="hljs-number">132</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">100</span>, <span class="hljs-number">42</span>, -<span class="hljs-number">132</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">103</span>, <span class="hljs-number">41</span>, -<span class="hljs-number">133</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">105</span>, <span class="hljs-number">41</span>, -<span class="hljs-number">133</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">107</span>, <span class="hljs-number">40</span>, -<span class="hljs-number">134</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">109</span>, <span class="hljs-number">39</span>, -<span class="hljs-number">134</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">111</span>, <span class="hljs-number">39</span>, -<span class="hljs-number">134</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">113</span>, <span class="hljs-number">38</span>, -<span class="hljs-number">134</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">115</span>, <span class="hljs-number">37</span>, -<span class="hljs-number">135</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">118</span>, <span class="hljs-number">37</span>, -<span class="hljs-number">135</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">120</span>, <span class="hljs-number">36</span>, -<span class="hljs-number">135</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">122</span>, <span class="hljs-number">35</span>, -<span class="hljs-number">136</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">124</span>, <span class="hljs-number">35</span>, -<span class="hljs-number">136</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">126</span>, <span class="hljs-number">34</span>, -<span class="hljs-number">136</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">128</span>, <span class="hljs-number">33</span>, -<span class="hljs-number">136</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">130</span>, <span class="hljs-number">33</span>, -<span class="hljs-number">137</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">131</span>, <span class="hljs-number">32</span>, -<span class="hljs-number">137</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">134</span>, <span class="hljs-number">31</span>, -<span class="hljs-number">137</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">136</span>, <span class="hljs-number">31</span>, -<span class="hljs-number">137</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">137</span>, <span class="hljs-number">30</span>, -<span class="hljs-number">137</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">139</span>, <span class="hljs-number">29</span>, -<span class="hljs-number">137</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">141</span>, <span class="hljs-number">29</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">143</span>, <span class="hljs-number">28</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">145</span>, <span class="hljs-number">27</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">147</span>, <span class="hljs-number">27</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">149</span>, <span class="hljs-number">26</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">151</span>, <span class="hljs-number">26</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">152</span>, <span class="hljs-number">25</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">154</span>, <span class="hljs-number">24</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">156</span>, <span class="hljs-number">24</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">158</span>, <span class="hljs-number">23</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">160</span>, <span class="hljs-number">23</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">161</span>, <span class="hljs-number">22</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">163</span>, <span class="hljs-number">21</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">165</span>, <span class="hljs-number">21</span>, -<span class="hljs-number">138</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">167</span>, <span class="hljs-number">20</span>, -<span class="hljs-number">137</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">169</span>, <span class="hljs-number">20</span>, -<span class="hljs-number">137</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">170</span>, <span class="hljs-number">19</span>, -<span class="hljs-number">137</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">172</span>, <span class="hljs-number">18</span>, -<span class="hljs-number">137</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">174</span>, <span class="hljs-number">18</span>, -<span class="hljs-number">136</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">176</span>, <span class="hljs-number">17</span>, -<span class="hljs-number">136</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">177</span>, <span class="hljs-number">17</span>, -<span class="hljs-number">136</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">179</span>, <span class="hljs-number">16</span>, -<span class="hljs-number">135</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">181</span>, <span class="hljs-number">16</span>, -<span class="hljs-number">135</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">183</span>, <span class="hljs-number">15</span>, -<span class="hljs-number">134</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">184</span>, <span class="hljs-number">15</span>, -<span class="hljs-number">134</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">186</span>, <span class="hljs-number">14</span>, -<span class="hljs-number">133</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">188</span>, <span class="hljs-number">14</span>, -<span class="hljs-number">133</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">189</span>, <span class="hljs-number">13</span>, -<span class="hljs-number">132</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">191</span>, <span class="hljs-number">13</span>, -<span class="hljs-number">131</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">193</span>, <span class="hljs-number">12</span>, -<span class="hljs-number">130</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">194</span>, <span class="hljs-number">12</span>, -<span class="hljs-number">130</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">196</span>, <span class="hljs-number">11</span>, -<span class="hljs-number">129</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">198</span>, <span class="hljs-number">11</span>, -<span class="hljs-number">128</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">199</span>, <span class="hljs-number">10</span>, -<span class="hljs-number">127</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">201</span>, <span class="hljs-number">10</span>, -<span class="hljs-number">126</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">203</span>, <span class="hljs-number">9</span>, -<span class="hljs-number">124</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">204</span>, <span class="hljs-number">9</span>, -<span class="hljs-number">123</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">206</span>, <span class="hljs-number">8</span>, -<span class="hljs-number">122</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">208</span>, <span class="hljs-number">8</span>, -<span class="hljs-number">120</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">209</span>, <span class="hljs-number">8</span>, -<span class="hljs-number">119</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">211</span>, <span class="hljs-number">7</span>, -<span class="hljs-number">117</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">212</span>, <span class="hljs-number">7</span>, -<span class="hljs-number">115</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">214</span>, <span class="hljs-number">6</span>, -<span class="hljs-number">114</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">216</span>, <span class="hljs-number">6</span>, -<span class="hljs-number">112</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">217</span>, <span class="hljs-number">6</span>, -<span class="hljs-number">110</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">219</span>, <span class="hljs-number">5</span>, -<span class="hljs-number">107</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">220</span>, <span class="hljs-number">5</span>, -<span class="hljs-number">105</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">222</span>, <span class="hljs-number">5</span>, -<span class="hljs-number">102</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">223</span>, <span class="hljs-number">4</span>, -<span class="hljs-number">100</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">225</span>, <span class="hljs-number">4</span>, -<span class="hljs-number">97</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">227</span>, <span class="hljs-number">4</span>, -<span class="hljs-number">94</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">228</span>, <span class="hljs-number">3</span>, -<span class="hljs-number">91</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">230</span>, <span class="hljs-number">3</span>, -<span class="hljs-number">87</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">231</span>, <span class="hljs-number">3</span>, -<span class="hljs-number">84</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">233</span>, <span class="hljs-number">3</span>, -<span class="hljs-number">80</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">234</span>, <span class="hljs-number">2</span>, -<span class="hljs-number">76</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">236</span>, <span class="hljs-number">2</span>, -<span class="hljs-number">72</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">238</span>, <span class="hljs-number">2</span>, -<span class="hljs-number">68</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">239</span>, <span class="hljs-number">2</span>, -<span class="hljs-number">63</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">241</span>, <span class="hljs-number">2</span>, -<span class="hljs-number">59</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">242</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">54</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">244</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">49</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">245</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">44</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">247</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">39</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">248</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">34</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">250</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">29</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">251</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">24</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">18</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">13</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">8</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">2</span>, <span class="hljs-number">0</span>],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
+              </div>
+              <p><strong>Flood</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;flood&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;flood&#x27;</span>,
+    <span class="hljs-attr">alpha</span>: <span class="hljs-number">100</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-53">&#x00a7;</a>
+              </div>
+              <p><strong>Random noise</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;randomNoise&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;randomNoise&#x27;</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">10</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">10</span>,
+    <span class="hljs-attr">level</span>: <span class="hljs-number">0.7</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-54">&#x00a7;</a>
+              </div>
+              <p><strong>Reduce palette</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;reducePalette&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;reducePalette&#x27;</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeGradient</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;red-to-blue&#x27;</span>),
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;blue&#x27;</span>]
+    ],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-55">&#x00a7;</a>
+              </div>
+              <p><strong>Map to gradient</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mapToGradient&#x27;</span>),
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;mapToGradient&#x27;</span>,
+
+    <span class="hljs-attr">gradient</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;red-to-blue&#x27;</span>),
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-56">&#x00a7;</a>
+              </div>
+              <p><strong>Bespoke (drop shadow)</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;dropShadow&#x27;</span>),
+    <span class="hljs-attr">actions</span>: [
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
+            <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;source-alpha&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;shadow&#x27;</span>,
+            <span class="hljs-attr">radius</span>: <span class="hljs-number">2</span>, 
+        },
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+            <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;source&#x27;</span>,
+            <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;shadow&#x27;</span>,
+            <span class="hljs-attr">offsetX</span>: <span class="hljs-number">6</span>,
+            <span class="hljs-attr">offsetY</span>: <span class="hljs-number">6</span>,
+        }
+    ],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-57">&#x00a7;</a>
+              </div>
+              <p><strong>Bespoke (red border)</strong> filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;redBorder&#x27;</span>),
+    <span class="hljs-attr">actions</span>: [
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
+            <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;source-alpha&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;border&#x27;</span>,
+            <span class="hljs-attr">radius</span>: <span class="hljs-number">2</span>,
+        },
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;flood&#x27;</span>,
+            <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;border&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;border&#x27;</span>,
+            <span class="hljs-attr">red</span>: <span class="hljs-number">255</span>,
+        },
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+            <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;source&#x27;</span>,
+            <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;border&#x27;</span>,
+        }
+    ],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-58">&#x00a7;</a>
+              </div>
+              <h4 id="scene-entitys">Scene entitys</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background&#x27;</span>),
+
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
+
+    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+
+    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+});
+
+<span class="hljs-keyword">const</span> group = scrawl.<span class="hljs-title function_">makeGroup</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mouse-group&#x27;</span>),
+    <span class="hljs-attr">host</span>: canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseName&#x27;</span>),
+});
+
+<span class="hljs-keyword">const</span> outlineGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;outline-group&#x27;</span>),
+    <span class="hljs-attr">host</span>: canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseName&#x27;</span>),
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-59">&#x00a7;</a>
+              </div>
+              <p>Note: stencil filters cannot be memoized, which makes them slow</p>
+<ul>
+<li>We can’t memoize what we don’t know, and we have no way of knowing what the canvas behind the entity will look like, or if it has changed since the last Display cycle</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cog = scrawl.<span class="hljs-title function_">makeCog</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cog&#x27;</span>),
+    group,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">outerRadius</span>: <span class="hljs-number">120</span>,
+    <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">80</span>,
+    <span class="hljs-attr">outerControlsDistance</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">innerControlsDistance</span>: <span class="hljs-number">16</span>,
+    <span class="hljs-attr">points</span>: <span class="hljs-number">12</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+    <span class="hljs-attr">delta</span>: {
+        <span class="hljs-attr">roll</span>: <span class="hljs-number">0.5</span>,
+    },
+    <span class="hljs-attr">isStencil</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+});
+
+cog.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cog-outline&#x27;</span>),
+    <span class="hljs-attr">group</span>: outlineGroup,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cog&#x27;</span>),
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+    <span class="hljs-attr">isStencil</span>: <span class="hljs-literal">false</span>,
+});
+
+<span class="hljs-keyword">const</span> block = scrawl.<span class="hljs-title function_">makeBlock</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;block&#x27;</span>),
+    group,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">120</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+    <span class="hljs-attr">isStencil</span>: <span class="hljs-literal">true</span>,
+});
+
+block.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;block-outline&#x27;</span>),
+    <span class="hljs-attr">group</span>: outlineGroup,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;block&#x27;</span>),
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+    <span class="hljs-attr">isStencil</span>: <span class="hljs-literal">false</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
+              </div>
+              <p>Cat spritesheet image file taken from <a href="https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/">https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importSprite</span>(<span class="hljs-string">&#x27;img/cat-sprite.png&#x27;</span>);
+
+<span class="hljs-keyword">const</span> cat = scrawl.<span class="hljs-title function_">makePicture</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cat&#x27;</span>),
+    group,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">300</span>, <span class="hljs-number">150</span>],
+    <span class="hljs-attr">roll</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;cat-sprite&#x27;</span>,
+    <span class="hljs-attr">spriteTrack</span>: <span class="hljs-string">&#x27;walk&#x27;</span>,
+    <span class="hljs-attr">spriteFrameDuration</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">isStencil</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+});
+
+cat.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cat-outline&#x27;</span>),
+    <span class="hljs-attr">group</span>: outlineGroup,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cat&#x27;</span>),
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+    <span class="hljs-attr">isStencil</span>: <span class="hljs-literal">false</span>,
+});
+
+<span class="hljs-keyword">let</span> stencil = block;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
+              </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to check whether mouse cursor is over canvas, and lock the reference entity accordingly</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> mouseCheck = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">let</span> active = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span> !== active) {
+
+            active = canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>;
+
+            stencil.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">lockTo</span>: (active) ? <span class="hljs-string">&#x27;mouse&#x27;</span> : <span class="hljs-string">&#x27;start&#x27;</span>
+            });
+        }
+    };
+}();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-62">&#x00a7;</a>
+              </div>
+              <p>For this demo we will suppress touchmove functionality over the canvas</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;touchmove&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+
+}, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-63">&#x00a7;</a>
+              </div>
+              <p>Function to display frames-per-second data, and other information relevant to the demo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    globalAlpha - <span class="hljs-subst">${globalAlpha.value}</span>`</span>;
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-65">&#x00a7;</a>
+              </div>
+              <p>Create the Display cycle animation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
+    <span class="hljs-attr">target</span>: canvas,
+    <span class="hljs-attr">commence</span>: mouseCheck,
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-66">&#x00a7;</a>
+              </div>
+              <h4 id="user-interaction">User interaction</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+
+    <span class="hljs-keyword">if</span> (val) {
+
+        group.<span class="hljs-title function_">setArtefacts</span>({
+            <span class="hljs-attr">filters</span>: [<span class="hljs-title function_">name</span>(val)],
+        });
+    }
+    <span class="hljs-keyword">else</span> {
+
+        group.<span class="hljs-title function_">setArtefacts</span>({
+            <span class="hljs-attr">filters</span>: [],
+        });
+    }
+}, <span class="hljs-string">&#x27;#filter&#x27;</span>);
+
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+
+    <span class="hljs-keyword">if</span> (val) {
+
+        group.<span class="hljs-title function_">setArtefacts</span>({
+            <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+        });
+
+        outlineGroup.<span class="hljs-title function_">setArtefacts</span>({
+            <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+        });
+
+        cat.<span class="hljs-title function_">haltSprite</span>();
+
+        stencil = group.<span class="hljs-title function_">getArtefact</span>(<span class="hljs-title function_">name</span>(val));
+
+        stencil.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
+        });
+
+        <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;cat&#x27;</span>) cat.<span class="hljs-title function_">playSprite</span>();
+
+        outlineGroup.<span class="hljs-title function_">getArtefact</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${val}</span>-outline`</span>)).<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
+        });
+    }
+}, <span class="hljs-string">&#x27;#entity&#x27;</span>);
+
+scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
+
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;change&#x27;</span>],
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
+
+    <span class="hljs-attr">target</span>: stencil,
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+
+        <span class="hljs-attr">globalAlpha</span>: [<span class="hljs-string">&#x27;globalAlpha&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+        <span class="hljs-attr">globalCompositeOperation</span>: [<span class="hljs-string">&#x27;globalCompositeOperation&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+    },
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-67">&#x00a7;</a>
+              </div>
+              <p>Setup form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> globalAlpha = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#globalAlpha&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-68">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>globalAlpha.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-69">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#filter&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-70">&#x00a7;</a>
+              </div>
+              <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

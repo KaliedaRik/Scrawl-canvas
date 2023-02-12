@@ -522,7 +522,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> version = <span class="hljs-string">&#x27;8.9.6&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> version = <span class="hljs-string">&#x27;8.9.7&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -766,6 +766,138 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
+              <p>Stack element wrappers created during Scrawl-canvas initialization, and created using the <strong>makeStack</strong> and <strong>addStack</strong> factories</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> stack = {};
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> stacknames = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>Objects created using the <strong>makeTween</strong> and <strong>makeAction</strong> factories</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> tween = {};
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> tweennames = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>Objects created using the <strong>makeGradient</strong>, <strong>makeRadialGradient</strong>, <strong>makePattern</strong> and <strong>makeColor</strong> factories</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> styles = {};
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> stylesnames = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>DOM unstackedElement wrappers created using the <strong>makeUnstackedElement</strong> and <strong>makeSnippet</strong> factories</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> unstackedelement = {};
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> unstackedelementnames = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>Given a <code>namespace</code> string, kill all objects created with that namespace</p>
+<ul>
+<li>Function assumes that the namespace string appears as the first part of the object’s <code>name</code> attribute</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">purge</span> (namespace = <span class="hljs-string">&#x27;&#x27;</span>) {
+
+    <span class="hljs-keyword">const</span> remove = <span class="hljs-keyword">function</span> (<span class="hljs-params">candidates, target, flag = <span class="hljs-literal">false</span></span>) {
+
+        candidates.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> {
+
+            <span class="hljs-keyword">const</span> obj = target[c];
+
+            <span class="hljs-keyword">if</span> (obj &amp;&amp; obj.<span class="hljs-property">kill</span>) obj.<span class="hljs-title function_">kill</span>(flag);
+        });
+    };
+
+    <span class="hljs-keyword">if</span> (namespace) {
+
+        <span class="hljs-keyword">const</span> candidateArtefacts = artefactnames.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-title function_">indexOf</span>(namespace) === <span class="hljs-number">0</span>);
+        <span class="hljs-title function_">remove</span>(candidateArtefacts, artefact);
+
+        <span class="hljs-keyword">const</span> candidateAssets = assetnames.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-title function_">indexOf</span>(namespace) === <span class="hljs-number">0</span>);
+        <span class="hljs-title function_">remove</span>(candidateAssets, asset);
+
+        <span class="hljs-keyword">const</span> candidateGroups = groupnames.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-title function_">indexOf</span>(namespace) === <span class="hljs-number">0</span>);
+        <span class="hljs-title function_">remove</span>(candidateGroups, group, <span class="hljs-literal">true</span>);
+
+        <span class="hljs-keyword">const</span> candidateStyles = stylesnames.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-title function_">indexOf</span>(namespace) === <span class="hljs-number">0</span>);
+        <span class="hljs-title function_">remove</span>(candidateStyles, styles);
+
+        <span class="hljs-keyword">const</span> candidateTweens = tweennames.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-title function_">indexOf</span>(namespace) === <span class="hljs-number">0</span>);
+        <span class="hljs-title function_">remove</span>(candidateTweens, tween);
+
+        <span class="hljs-keyword">const</span> candidateAnimations = animationnames.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-title function_">indexOf</span>(namespace) === <span class="hljs-number">0</span>);
+        <span class="hljs-title function_">remove</span>(candidateAnimations, animation);
+
+        <span class="hljs-keyword">const</span> candidateAnimationTickers = animationtickersnames.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-title function_">indexOf</span>(namespace) === <span class="hljs-number">0</span>);
+        <span class="hljs-title function_">remove</span>(candidateAnimationTickers, animationtickers);
+
+        <span class="hljs-keyword">const</span> candidateFilters = filternames.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-title function_">indexOf</span>(namespace) === <span class="hljs-number">0</span>);
+        <span class="hljs-title function_">remove</span>(candidateFilters, filter);
+
+        <span class="hljs-keyword">const</span> candidateAnchors = anchornames.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-title function_">indexOf</span>(namespace) === <span class="hljs-number">0</span>);
+        <span class="hljs-title function_">remove</span>(candidateAnchors, anchor);
+
+        <span class="hljs-keyword">const</span> candidateForces = forcenames.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-title function_">indexOf</span>(namespace) === <span class="hljs-number">0</span>);
+        <span class="hljs-title function_">remove</span>(candidateForces, force);
+
+        <span class="hljs-keyword">const</span> candidateSprings = springnames.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-title function_">indexOf</span>(namespace) === <span class="hljs-number">0</span>);
+        <span class="hljs-title function_">remove</span>(candidateSprings, spring);
+
+        <span class="hljs-keyword">const</span> candidateWorlds = worldnames.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.<span class="hljs-title function_">indexOf</span>(namespace) === <span class="hljs-number">0</span>);
+        <span class="hljs-title function_">remove</span>(candidateWorlds, world);
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
               <p>Section classes are used with Phrase entitys - we store the class definitions in the library so that they can be easily shared between Phrases</p>
 
             </div>
@@ -805,75 +937,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>Stack element wrappers created during Scrawl-canvas initialization, and created using the <strong>makeStack</strong> and <strong>addStack</strong> factories</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> stack = {};
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> stacknames = [];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>Objects created using the <strong>makeTween</strong> and <strong>makeAction</strong> factories</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> tween = {};
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> tweennames = [];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p>Objects created using the <strong>makeGradient</strong>, <strong>makeRadialGradient</strong>, <strong>makePattern</strong> and <strong>makeColor</strong> factories</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> styles = {};
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> stylesnames = [];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <p>DOM unstackedElement wrappers created using the <strong>makeUnstackedElement</strong> and <strong>makeSnippet</strong> factories</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> unstackedelement = {};
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> unstackedelementnames = [];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>All <strong>makeXXX</strong> factory functions get added as references to the <strong>constructors</strong> section of the library - used mainly as part of Scrawl-canvas cloning functionality.</p>
 
@@ -884,11 +952,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Convenience value, used internally</p>
 
@@ -899,11 +967,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>Convenience set, used internally</p>
 
@@ -914,11 +982,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>Convenience set, used internally</p>
 

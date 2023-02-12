@@ -260,7 +260,7 @@
         - data-fill - pin fill color - default is &quot;red&quot;
         - data-stroke - pin stroke color - default is &quot;yellow&quot;
         - data-labelwidth - percentage label width value - default is &quot;20%&quot;
-        - data-labelbackground - default is &quot;rgba(0,0,0,0.2)&quot;
+        - data-labelbackground - default is &quot;rgb(0 0 0 / 0.2)&quot;
 
         - data-labelposition - default is &quot;below&quot;
           - where we want the text to appear relative to the pin&#x27;s location 
@@ -312,7 +312,7 @@
 
       - data-justify - one of: &quot;left&quot;, &quot;right&quot;, &quot;center&quot; (default)
       - data-width - defaults to &quot;20%&quot;
-      - data-background - defaults to &quot;rgba(0,0,0,0.2)&quot; 
+      - data-background - defaults to &quot;rgb(0 0 0 / 0.2)&quot; 
   --&gt;</span>
 
   <span class="hljs-tag">&lt;<span class="hljs-name">nav</span>&gt;</span>
@@ -406,7 +406,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             <span class="hljs-attr">stroke</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">stroke</span> || <span class="hljs-string">&#x27;yellow&#x27;</span>,
             <span class="hljs-attr">labelposition</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">labelposition</span>,
             <span class="hljs-attr">labelwidth</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">labelwidth</span> || <span class="hljs-string">&#x27;25%&#x27;</span>,
-            <span class="hljs-attr">labelbackground</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">labelbackground</span> || <span class="hljs-string">&#x27;rgba(0,0,0,0.2)&#x27;</span>,
+            <span class="hljs-attr">labelbackground</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">labelbackground</span> || <span class="hljs-string">&#x27;rgb(0 0 0 / 0.2)&#x27;</span>,
             <span class="hljs-attr">labeltext</span>: p.<span class="hljs-property">innerHTML</span>,
             <span class="hljs-attr">shared</span>: (p.<span class="hljs-property">dataset</span>.<span class="hljs-property">shared</span> != <span class="hljs-literal">null</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>,
         });
@@ -445,7 +445,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             <span class="hljs-attr">href</span>: a.<span class="hljs-property">href</span>,
             <span class="hljs-attr">width</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">width</span> || <span class="hljs-string">&#x27;20%&#x27;</span>,
             <span class="hljs-attr">position</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">position</span>,
-            <span class="hljs-attr">background</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">background</span> || <span class="hljs-string">&#x27;rgba(0,0,0,0.2)&#x27;</span>,
+            <span class="hljs-attr">background</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">background</span> || <span class="hljs-string">&#x27;rgb(0 0 0 / 0.2)&#x27;</span>,
             <span class="hljs-attr">justify</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">justify</span> || <span class="hljs-string">&#x27;center&#x27;</span>,
             <span class="hljs-attr">text</span>: a.<span class="hljs-property">innerHTML</span>,
         });

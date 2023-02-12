@@ -368,7 +368,17 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;rgba(0, 0, 0, 0)&#x27;</span> === backgroundColor || <span class="hljs-string">&#x27;transparent&#x27;</span> === backgroundColor || <span class="hljs-string">&#x27;#00000000&#x27;</span> === backgroundColor || <span class="hljs-string">&#x27;#0000&#x27;</span> === backgroundColor) backgroundColor = <span class="hljs-string">&#x27;beige&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (
+            <span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span> === backgroundColor || 
+            <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span> === backgroundColor || 
+            <span class="hljs-string">&#x27;rgba(0, 0, 0, 0)&#x27;</span> === backgroundColor || 
+            <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span> === backgroundColor || 
+            <span class="hljs-string">&#x27;transparent&#x27;</span> === backgroundColor || 
+            <span class="hljs-string">&#x27;#00000000&#x27;</span> === backgroundColor || 
+            <span class="hljs-string">&#x27;#0000&#x27;</span> === backgroundColor
+        ) {
+            backgroundColor = <span class="hljs-string">&#x27;beige&#x27;</span>;
+        }
 
         canvas.<span class="hljs-title function_">set</span>({
             backgroundColor,

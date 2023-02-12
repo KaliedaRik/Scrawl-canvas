@@ -580,6 +580,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-028.html">
+                  ./demo/filters-028.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1121,15 +1126,32 @@
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
+<p>Get a handle to the Canvas wrapper</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;demo&#x27;</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;
 
 
 scrawl.<span class="hljs-title function_">makeBlock</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;peg-1&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;peg-1&#x27;</span>),
 
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;30%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;90%&#x27;</span>,
@@ -1140,7 +1162,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
     <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;rgb(220, 220, 220)&#x27;</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;rgb(220 220 220)&#x27;</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">5</span>,
 
@@ -1148,20 +1170,20 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;peg-2&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;peg-2&#x27;</span>),
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;peg-3&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;peg-3&#x27;</span>),
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;83%&#x27;</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,
 });
 
 scrawl.<span class="hljs-title function_">makeWheel</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;disc-1&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;disc-1&#x27;</span>),
 
     <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
 
@@ -1170,7 +1192,7 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
     <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;peg-1&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;peg-1&#x27;</span>),
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;pink&#x27;</span>,
@@ -1183,7 +1205,7 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;disc-2&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;disc-2&#x27;</span>),
     <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;lightblue&#x27;</span>,
@@ -1191,22 +1213,22 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;disc-3&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;disc-3&#x27;</span>),
     <span class="hljs-attr">order</span>: <span class="hljs-number">3</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-string">&#x27;8%&#x27;</span>,
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> discGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+<span class="hljs-keyword">const</span> discGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;discs&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;discs&#x27;</span>),
 });
 
-<span class="hljs-keyword">let</span> dragActions = scrawl.<span class="hljs-title function_">makeDragZone</span>({
+<span class="hljs-keyword">const</span> dragActions = scrawl.<span class="hljs-title function_">makeDragZone</span>({
 
     <span class="hljs-attr">zone</span>: canvas,
-    <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">&#x27;discs&#x27;</span>,
+    <span class="hljs-attr">collisionGroup</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;discs&#x27;</span>),
     <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
     <span class="hljs-attr">exposeCurrentArtefact</span>: <span class="hljs-literal">true</span>,
 
@@ -1225,35 +1247,19 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
     },
 });
 
-<span class="hljs-keyword">let</span> checkPeg = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span class="hljs-keyword">const</span> checkPeg = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> peg, disc;
 
-    <span class="hljs-keyword">let</span> pegGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+    <span class="hljs-keyword">const</span> pegGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pegs&#x27;</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pegs&#x27;</span>),
 
-    }).<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">&#x27;peg-1&#x27;</span>, <span class="hljs-string">&#x27;peg-2&#x27;</span>, <span class="hljs-string">&#x27;peg-3&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
-              </div>
-              <p>Setup the game’s initial state</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> pegState = {
-
-        <span class="hljs-string">&#x27;peg-1&#x27;</span>: [<span class="hljs-string">&#x27;disc-1&#x27;</span>, <span class="hljs-string">&#x27;disc-2&#x27;</span>, <span class="hljs-string">&#x27;disc-3&#x27;</span>],
-        <span class="hljs-string">&#x27;peg-2&#x27;</span>: [],
-        <span class="hljs-string">&#x27;peg-3&#x27;</span>: [],
-    };</pre></div></div>
+    }).<span class="hljs-title function_">addArtefacts</span>(
+        <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;peg-1&#x27;</span>), 
+        <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;peg-2&#x27;</span>), 
+        <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;peg-3&#x27;</span>),
+    );</pre></div></div>
             
         </li>
         
@@ -1264,22 +1270,20 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Function to update the game’s state</p>
-<ul>
-<li>mydisc will always be the last member of an array, </li>
-<li>so we can pop it when found, then push it onto mypeg</li>
-</ul>
+              <p>Setup the game’s initial state</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> updateState = <span class="hljs-keyword">function</span> (<span class="hljs-params">mypeg, mydisc</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> pegState = {
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [pName, pState] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(pegState)) {
-
-            <span class="hljs-keyword">if</span> (pState.<span class="hljs-title function_">includes</span>(mydisc.<span class="hljs-property">name</span>)) pState.<span class="hljs-title function_">pop</span>();
-        }
-        pegState[mypeg.<span class="hljs-property">name</span>].<span class="hljs-title function_">push</span>(mydisc.<span class="hljs-property">name</span>);
-    }</pre></div></div>
+        [<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;peg-1&#x27;</span>)]: [
+            <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;disc-1&#x27;</span>), 
+            <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;disc-2&#x27;</span>), 
+            <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;disc-3&#x27;</span>),
+        ],
+        [<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;peg-2&#x27;</span>)]: [],
+        [<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;peg-3&#x27;</span>)]: [],
+    };</pre></div></div>
             
         </li>
         
@@ -1290,21 +1294,22 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>Function to update the disc group’s membership</p>
+              <p>Function to update the game’s state</p>
 <ul>
-<li>a disc can only be moved if it is a member of this group</li>
+<li>mydisc will always be the last member of an array, </li>
+<li>so we can pop it when found, then push it onto mypeg</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> updateDiscGroup = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> updateState = <span class="hljs-keyword">function</span> (<span class="hljs-params">mypeg, mydisc</span>) {
 
-        discGroup.<span class="hljs-title function_">clearArtefacts</span>();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [pName, pState] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(pegState)) {
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [pName, pState] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(pegState)) {
-
-            <span class="hljs-keyword">if</span> (pState.<span class="hljs-property">length</span>) discGroup.<span class="hljs-title function_">addArtefacts</span>(pState[pState.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>]);
-        }</pre></div></div>
+            <span class="hljs-keyword">if</span> (pState.<span class="hljs-title function_">includes</span>(mydisc.<span class="hljs-property">name</span>)) pState.<span class="hljs-title function_">pop</span>();
+        }
+        pegState[mypeg.<span class="hljs-property">name</span>].<span class="hljs-title function_">push</span>(mydisc.<span class="hljs-property">name</span>);
+    }</pre></div></div>
             
         </li>
         
@@ -1314,6 +1319,31 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Function to update the disc group’s membership</p>
+<ul>
+<li>a disc can only be moved if it is a member of this group</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> updateDiscGroup = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        discGroup.<span class="hljs-title function_">clearArtefacts</span>();
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [pName, pState] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(pegState)) {
+
+            <span class="hljs-keyword">if</span> (pState.<span class="hljs-property">length</span>) discGroup.<span class="hljs-title function_">addArtefacts</span>(pState[pState.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>]);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Because this Group is outside the Display cycle</p>
 <ul>
@@ -1330,11 +1360,11 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Enforce the game rules</p>
 <ul>
@@ -1343,9 +1373,9 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>;
 
-    <span class="hljs-keyword">let</span> checkForLegalMove = <span class="hljs-keyword">function</span> (<span class="hljs-params">mypeg, mydisc</span>) {
+    <span class="hljs-keyword">const</span> checkForLegalMove = <span class="hljs-keyword">function</span> (<span class="hljs-params">mypeg, mydisc</span>) {
 
         <span class="hljs-keyword">if</span> (!pegState[mypeg.<span class="hljs-property">name</span>].<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
 
@@ -1354,12 +1384,12 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">let</span> hit = pegGroup.<span class="hljs-title function_">getArtefactAt</span>(canvas.<span class="hljs-property">here</span>);
+        <span class="hljs-keyword">const</span> hit = pegGroup.<span class="hljs-title function_">getArtefactAt</span>(canvas.<span class="hljs-property">here</span>);
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> hit !== <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; hit) peg = hit.<span class="hljs-property">artefact</span>;
         <span class="hljs-keyword">else</span> peg = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> checkDrag = <span class="hljs-title function_">dragActions</span>();
+        <span class="hljs-keyword">const</span> checkDrag = <span class="hljs-title function_">dragActions</span>();
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> checkDrag !== <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; checkDrag) disc = checkDrag.<span class="hljs-property">artefact</span>;
 
@@ -1385,11 +1415,11 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1401,18 +1431,18 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Create the Animation loop which will run the Display cycle</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${canvas.name}</span>-render`</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;render&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">commence</span>: checkPeg,
     <span class="hljs-attr">afterShow</span>: report,
@@ -1421,11 +1451,11 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

@@ -1381,9 +1381,14 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <p><code>baseName</code> - get the Canvas wrapper’s base Cell’s name </p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">baseName</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>;
+};</pre></div></div>
             
         </li>
         
@@ -1393,6 +1398,19 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
               
               <div class="sswrap ">
                 <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>setAsCurrentCanvas</code> - invoke function (without arguments) to make this Canvas wrapper the <strong>current canvas</strong> for future entity generation operations. This is additional to the <code>scrawl.setCurrentCanvas</code> function.</p>
 
@@ -1407,11 +1425,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>setBase</code> - pass the argument object through to the base Cell’s <code>set</code> function.</p>
 
@@ -1430,11 +1448,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>deltaSetBase</code> - pass the argument object through to the base Cell’s <code>deltaSet</code> function.</p>
 
@@ -1453,11 +1471,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>Internal function - passes the Canvas wrapper’s current <strong>here</strong> object and <strong>fit</strong> attribute to the base Cell for further processing</p>
 
@@ -1471,11 +1489,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Internal helper function</p>
 
@@ -1502,11 +1520,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>updateCells</code> - internal function. Iterate through all Cells registered in the wrapper’s <strong>cells</strong> Array and set a range of dirty flags on them, for future processing by each Cell.</p>
 
@@ -1535,11 +1553,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>buildCell</code> - create a Cell wrapper (wrapping a &lt;canvas&gt; element not attached to the DOM) and add it to this Canvas wrapper’s complement of Cells</p>
 
@@ -1561,11 +1579,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwrites mixin/position function. Promulgates canvas dimension changes through to all Cells in the wrapper’s cells Array.</p>
 
@@ -1588,11 +1606,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>addCell</code> - add a Cell object to the wrapper’s cells Array; argument can be the Cell’s name-String, or the Cell object itself</p>
 
@@ -1621,11 +1639,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p>this.domShowRequired = true;</p>
 
@@ -1639,11 +1657,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>removeCell</code> - remove a Cell object from the wrapper’s cells Array; argument can be the Cell’s name-String, or the Cell object itself</p>
 
@@ -1661,11 +1679,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>this.domShowRequired = true;</p>
 
@@ -1678,11 +1696,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>killCell</code> - invoke a Cell object’s <strong>kill</strong> function; argument can be the Cell’s name-String, or the Cell object itself</p>
 
@@ -1701,11 +1719,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <h5 id="display-cycle-functions">Display cycle functions</h5>
 
@@ -1714,11 +1732,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>clear</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays:</p>
 <ul>
@@ -1735,11 +1753,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p>Handle base dimensions - other cells may use it for their relative dimensions</p>
 
@@ -1757,11 +1775,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>compile</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays:</p>
 <ul>
@@ -1776,11 +1794,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>Handle constituent cells</p>
 
@@ -1791,11 +1809,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p>Handle base dimensions - other cells may use it for their relative dimensions</p>
 
@@ -1812,11 +1830,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p>Handle display canvas</p>
 
@@ -1829,11 +1847,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>show</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays:</p>
 <ul>
@@ -1853,11 +1871,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>Handle constituent cells</p>
 
@@ -1868,11 +1886,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>Handle base dimensions - other cells may use it for their relative dimensions</p>
 
@@ -1889,11 +1907,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>Get the base cell to stamp itself onto the display canvas</p>
 
@@ -1904,11 +1922,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p>Handle DOM-related positioning and display requirements, including ARIA updates</p>
 
@@ -1921,11 +1939,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>render</code> - orchestrate a single Display cycle - clear, then compile, then show.</p>
 
@@ -1941,11 +1959,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>cleanCells</code> - internal function triggered each time there is an update to the <strong>cells</strong> Array attribute, or a constituent Cell sets the Canvas wrapper’s <code>dirtyCell</code> flag.</p>
 <ul>
@@ -2003,11 +2021,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <h5 id="handling-dom-events">Handling DOM events</h5>
 <p><code>cascadeEventAction</code> - The Canvas wrapper’s &lt;canvas&gt; element is part of the DOM, thus it is able to participate in all normal DOM events. We use the cascadeEventAction function to tell the wrapper which of the events it receives should be cascaded down to its constituent Cell objects and, in turn, their Groups’ artefacts. </p>
@@ -2035,11 +2053,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <ol>
 <li>Find all entitys currently colliding with the mouse/touch coordinate over the canvas</li>
@@ -2060,11 +2078,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <ol start="2">
 <li>Process the returned test results</li>
@@ -2099,11 +2117,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <ol start="3">
 <li>Trigger the required action on each affected entity</li>
@@ -2170,11 +2188,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <ol start="4">
 <li>Cleanup and return</li>
@@ -2190,11 +2208,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><code>getEntityHits</code>, <code>checkHover</code> - returns the names of all entitys associated with this canvas that are currently colliding with the mouse cursor; should also trigger any hover actions active on Group objects associated with the Canvas wrapper </p>
 
@@ -2212,11 +2230,11 @@ P.<span class="hljs-property">checkHover</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>cleanAria</code> - internal function; transfers updated <strong>title</strong>, <strong>label</strong>, <strong>description</strong> and <strong>role</strong> attribute values into the relevant DOM elements</p>
 
@@ -2234,11 +2252,11 @@ P.<span class="hljs-property">checkHover</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2255,11 +2273,11 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

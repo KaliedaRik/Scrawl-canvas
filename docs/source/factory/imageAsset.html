@@ -1054,6 +1054,10 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>We can get cells, groups and entitys to save their output as imagedata, which we can then use to build an asset which in turn can be used by Picture entitys and pattern styles</p>
+<ul>
+<li>If the <code>stashAsAsset</code> argument is <code>true</code>, the asset will be created using the Cell/Group/entity name with <code>-image</code> suffixed to it as its id/name value</li>
+<li>If <code>stashAsAsset</code> argument is a String, the asset will be created using that String as its id/name attribute</li>
+</ul>
 
             </div>
             
@@ -1080,7 +1084,7 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
 
         mycell.<span class="hljs-property">stashOutput</span> = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span> (stashAsAsset) mycell.<span class="hljs-property">stashOutputAsAsset</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (stashAsAsset) mycell.<span class="hljs-property">stashOutputAsAsset</span> = stashAsAsset;
     }
 };</pre></div></div>
             
@@ -1113,7 +1117,7 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
 
         mygroup.<span class="hljs-property">stashOutput</span> = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span> (stashAsAsset) mygroup.<span class="hljs-property">stashOutputAsAsset</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (stashAsAsset) mygroup.<span class="hljs-property">stashOutputAsAsset</span> = stashAsAsset;
     }
 };</pre></div></div>
             
@@ -1138,7 +1142,7 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
 
         myentity.<span class="hljs-property">stashOutput</span> = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span> (stashAsAsset) myentity.<span class="hljs-property">stashOutputAsAsset</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (stashAsAsset) myentity.<span class="hljs-property">stashOutputAsAsset</span> = stashAsAsset;
     }
 };</pre></div></div>
             

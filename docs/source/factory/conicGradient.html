@@ -766,14 +766,14 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
         <span class="hljs-keyword">if</span> (engine) {
 
-            <span class="hljs-keyword">if</span> (!engine.<span class="hljs-property">createConicGradient</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
+            <span class="hljs-keyword">if</span> (!engine.<span class="hljs-property">createConicGradient</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span>;
 
             <span class="hljs-keyword">let</span> gradient = engine.<span class="hljs-title function_">createConicGradient</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-property">gradientArgs</span>);
             
             <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addStopsToGradient</span>(gradient, <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteStart</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteEnd</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">cyclePalette</span>);
         }
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span>;
 };</pre></div></div>
             
         </li>
