@@ -1317,6 +1317,8 @@ P.stashOutputAction = function () {
         // Get the dataUrl String, updating the stashed &lt;img> element with it
         if (this.stashOutputAsAsset) {
 
+            const stashId = this.stashOutputAsAsset.substring ? this.stashOutputAsAsset : `${this.name}-image`;
+
             this.stashOutputAsAsset = false;
 
             let sourcecanvas, mycanvas;
@@ -1333,12 +1335,12 @@ P.stashOutputAction = function () {
 
                 let newimg = this.stashedImage = document.createElement('img');
 
-                newimg.id = `${this.name}-image`;
+                newimg.id = stashId;
 
                 newimg.onload = function () {
 
                     scrawlCanvasHold.appendChild(newimg);
-                    importDomImage(`#${newimg.id}`);
+                    importDomImage(`#${stashId}`);
                 };
 
                 newimg.src = sourcecanvas.toDataURL();

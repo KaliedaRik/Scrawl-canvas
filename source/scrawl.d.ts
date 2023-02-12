@@ -1393,7 +1393,7 @@ interface GroupFactoryInputs extends BaseMixinInputs, FilterMixinInputs, GroupFa
     noFilters?: boolean;
     order?: number;
     stashOutput?: boolean;
-    stashOutputAsAsset?: boolean;
+    stashOutputAsAsset?: boolean | string;
     visibility?: boolean;
     checkForEntityHover?: boolean;
     onEntityHover?: DefaultInputFunction;
@@ -2796,9 +2796,9 @@ export function importMediaStream(items: CommonObjectInput): Promise<VideoAssetI
 export function importSprite(items: AssetImports): void;
 export function importVideo(items: AssetImports): void;
 
-export function createImageFromCell(item: CellInstance | CanvasInstance | string, stashAsAsset: boolean): void;
-export function createImageFromEntity(item: EntityInstance | string, stashAsAsset: boolean): void;
-export function createImageFromGroup(item: GroupInstance | CellInstance | CanvasInstance | string, stashAsAsset: boolean): void;
+export function createImageFromCell(item: CellInstance | CanvasInstance | string, stashAsAsset: boolean | string): void;
+export function createImageFromEntity(item: EntityInstance | string, stashAsAsset: boolean | string): void;
+export function createImageFromGroup(item: GroupInstance | CellInstance | CanvasInstance | string, stashAsAsset: boolean | string): void;
 
 
 

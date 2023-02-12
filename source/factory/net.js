@@ -371,7 +371,7 @@ P.regularStamp = function () {
         engine.shadowOffsetX = 0,
         engine.shadowOffsetY = 0,
         engine.shadowBlur = 0,
-        engine.shadowColor = 'rgba(0 0 0 / 0)',
+        engine.shadowColor = 'rgb(0 0 0 / 0)',
         engine.lineWidth = 1;
         engine.setTransform(1, 0, 0, 1, 0, 0);
         engine.beginPath();

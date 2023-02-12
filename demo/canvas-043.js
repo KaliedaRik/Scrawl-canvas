@@ -16,24 +16,26 @@ scrawl.importDomImage('.canal');
 
 // #### Canvas 1
 // Applying more than one clipped region to a scene, using Groups to separate them
+const ns1 = `canvas1`;
+const name1 = (name) => `${ns1}-${name}`;
 
 // The scene will be made up of two clipped images, both draggable around the canvas
 scrawl.makeGroup({
 
-    name: 'canvas1-cog-clip',
-    host: canvas1.base.name,
+    name: name1('cog-clip'),
+    host: canvas1.get('baseName'),
 
 }).clone({
 
-    name: 'canvas1-star-clip',
-    host: canvas1.base.name,
+    name: name1('star-clip'),
+    host: canvas1.get('baseName'),
 });
 
 // Clipping region entitys
 scrawl.makeCog({
 
-    name: 'canvas1-cog-clipper',
-    group: 'canvas1-cog-clip',
+    name: name1('cog-clipper'),
+    group: name1('cog-clip'),
 
     start: ['25%', 'center'],
     handle: ['center', 'center'],
@@ -56,9 +58,9 @@ scrawl.makeCog({
 // Add outlines to our clipped regions
 }).clone({
 
-    name: 'canvas1-cog-outline',
+    name: name1('cog-outline'),
     order: 2,
-    pivot: 'canvas1-cog-clipper',
+    pivot: name1('cog-clipper'),
     lockTo: 'pivot',
 
     strokeStyle: 'coral',
@@ -68,8 +70,8 @@ scrawl.makeCog({
 
 scrawl.makeStar({
 
-    name: 'canvas1-star-clipper',
-    group: 'canvas1-star-clip',
+    name: name1('star-clipper'),
+    group: name1('star-clip'),
 
     start: ['75%', 'center'],
     handle: ['center', 'center'],
@@ -87,9 +89,9 @@ scrawl.makeStar({
 
 }).clone({
 
-    name: 'canvas1-star-outline',
+    name: name1('star-outline'),
     order: 2,
-    pivot: 'canvas1-star-clipper',
+    pivot: name1('star-clipper'),
     lockTo: 'pivot',
 
     strokeStyle: 'coral',
@@ -100,39 +102,39 @@ scrawl.makeStar({
 // Picture entitys - we pivot these to our clipping region entitys to make the clipped display the same, wherever it is moved to on the canvas
 scrawl.makePicture({
 
-    name: 'canvas1-cog-image',
-    group: 'canvas1-cog-clip',
+    name: name1('cog-image'),
+    group: name1('cog-clip'),
 
     asset: 'factory',
 
     dimensions: [400, 400],
     copyDimensions: [400, 400],
 
-    pivot: 'canvas1-cog-clipper',
+    pivot: name1('cog-clipper'),
     addPivotRotation: true,
     lockTo: 'pivot',
     handle: ['center', 'center'],
 
 }).clone({
 
-    name: 'canvas1-star-image',
-    group: 'canvas1-star-clip',
+    name: name1('star-image'),
+    group: name1('star-clip'),
 
-    pivot: 'canvas1-star-clipper',
+    pivot: name1('star-clipper'),
     copyStartX: 100,
 });
 
 // We're not interested with associating the canvas 1 drag group with the canvas's base cell - the entitys in this group will already be assigned to the clip groups, thus will already be included in the canvas's Display cycle
 scrawl.makeGroup({
 
-    name: 'canvas1-drag-group',
+    name: name1('drag-group'),
 
-}).addArtefacts('canvas1-cog-clipper', 'canvas1-star-clipper');
+}).addArtefacts(name1('cog-clipper'), name1('star-clipper'));
 
 scrawl.makeDragZone({
 
     zone: canvas1,
-    collisionGroup: 'canvas1-drag-group',
+    collisionGroup: name1('drag-group'),
     endOn: ['up', 'leave'],
     preventTouchDefaultWhenDragging: true,
 });
@@ -140,18 +142,24 @@ scrawl.makeDragZone({
 
 // #### Canvas 2: 
 // Generate and use Picture entitys from clipped scenes
+const ns2 = `canvas2`;
+const name2 = (name) => `${ns2}-${name}`;
+
+// We'll be creating some temporary cells etc which we need to clear out after completing work
+const prepNamespace = `prep-for-canvas2`;
+const prepName = (name) => `${prepNamespace}-${name}`;
 
 // We will generate Image assets from cells created specifically for this one task
 canvas2.buildCell({
 
-    name: 'canvas2-cog-clip',
+    name: prepName('cog-clip'),
     dimensions: [280, 280],
     shown: false,
 });
 
 canvas2.buildCell({
 
-    name: 'canvas2-star-clip',
+    name: prepName('star-clip'),
     dimensions: [280, 280],
     shown: false,
 });
@@ -159,8 +167,8 @@ canvas2.buildCell({
 // Clipped entitys - this code is much the same as for canvas1, without dragging and delta animation
 scrawl.makeCog({
 
-    name: 'canvas2-cog-clipper',
-    group: 'canvas2-cog-clip',
+    name: prepName('cog-clipper'),
+    group: prepName('cog-clip'),
 
     outerRadius: 140,
     innerRadius: 120,
@@ -172,9 +180,9 @@ scrawl.makeCog({
 
 }).clone({
 
-    name: 'canvas2-cog-outline',
+    name: prepName('cog-outline'),
     order: 2,
-    pivot: 'canvas2-cog-clipper',
+    pivot: prepName('cog-clipper'),
     lockTo: 'pivot',
 
     strokeStyle: 'coral',
@@ -184,8 +192,8 @@ scrawl.makeCog({
 
 scrawl.makeStar({
 
-    name: 'canvas2-star-clipper',
-    group: 'canvas2-star-clip',
+    name: prepName('star-clipper'),
+    group: prepName('star-clip'),
 
     radius1: 140,
     radius2: 80,
@@ -195,9 +203,9 @@ scrawl.makeStar({
 
 }).clone({
 
-    name: 'canvas2-star-outline',
+    name: prepName('star-outline'),
     order: 2,
-    pivot: 'canvas2-star-clipper',
+    pivot: prepName('star-clipper'),
     lockTo: 'pivot',
 
     strokeStyle: 'coral',
@@ -207,8 +215,8 @@ scrawl.makeStar({
 
 scrawl.makePicture({
 
-    name: 'canvas2-cog-image',
-    group: 'canvas2-cog-clip',
+    name: prepName('cog-image'),
+    group: prepName('cog-clip'),
 
     asset: 'factory',
 
@@ -217,121 +225,104 @@ scrawl.makePicture({
 
     copyStart: [70, 60],
 
-    pivot: 'canvas2-cog-clipper',
+    pivot: prepName('cog-clipper'),
     lockTo: 'pivot',
 
 }).clone({
 
-    name: 'canvas2-star-image',
-    group: 'canvas2-star-clip',
+    name: prepName('star-image'),
+    group: prepName('star-clip'),
 
-    pivot: 'canvas2-star-clipper',
+    pivot: prepName('star-clipper'),
     copyStart: [170, 20],
 });
 
 // We will get Scrawl-canvas to capture the image output of each Cell as part of the first Display cycle. Then we can create regular Picture entitys from those images, and get rid of the original cells and entitys.
-scrawl.createImageFromCell('canvas2-cog-clip', true);
-scrawl.createImageFromCell('canvas2-star-clip', true);
+scrawl.createImageFromCell(prepName('cog-clip'), name2('cog-image'),);
+scrawl.createImageFromCell(prepName('star-clip'), name2('star-image'));
 
 // We create our Picture entitys from Cell output in a post-initialization step. Note that this function may run more than once as page loading is asynchronous and unpredictable
 const canvasTwoPostInitialization = function () {
 
     console.log('running canvasTwoPostInitialization()');
     
-    // check to see if groups have been created - they don't create until late in the page load process
-    const cog = scrawl.library.cell['canvas2-cog-clip'],
-        star = scrawl.library.cell['canvas2-star-clip'];
+    const drag = scrawl.makeGroup({
+        name: name2('drag-group'),
+    });
 
-    let drag = scrawl.library.group['canvas2-drag-group'];
+    scrawl.makeDragZone({
+        zone: canvas2,
+        collisionGroup: name2('drag-group'),
+        endOn: ['up', 'leave'],
+        preventTouchDefaultWhenDragging: true,
+    });
 
-    // create our drag group and dragzone, if they don't already exist
-    if (!drag) {
+    scrawl.makePicture({
 
-        drag = scrawl.makeGroup({
-            name: 'canvas2-drag-group',
-        });
+        name: name2('cog'),
+        group: canvas2.get('baseGroup'),
 
-        scrawl.makeDragZone({
-            zone: canvas2,
-            collisionGroup: 'canvas2-drag-group',
-            endOn: ['up', 'leave'],
-            preventTouchDefaultWhenDragging: true,
-        });
-    }
+        asset: name2('cog-image'),
 
-    if (cog) {
+        start: ['25%', 'center'],
+        handle: ['center', 'center'],
 
-        scrawl.makePicture({
+        dimensions: [280, 280],
+        copyDimensions: ['100%', '100%'],
 
-            name: 'canvas2-cog',
-            group: canvas2.base.name,
+        delta: {
+            roll: 0.4,
+        },
 
-            asset: 'canvas2-cog-clip-image',
+        method: 'fill',
+    });
 
-            start: ['25%', 'center'],
-            handle: ['center', 'center'],
+    drag.addArtefacts(name2('cog'));
 
-            dimensions: [280, 280],
-            copyDimensions: ['100%', '100%'],
+    scrawl.makePicture({
 
-            delta: {
-                roll: 0.4,
-            },
+        name: name2('star'),
+        group: canvas2.get('baseGroup'),
 
-            method: 'fill',
-        });
+        asset: name2('star-image'),
 
-        drag.addArtefacts('canvas2-cog');
+        start: ['75%', 'center'],
+        handle: ['center', 'center'],
 
-        // The cog cell, and its entitys, have served their purpose; time to get rid of them
-        scrawl.library.group[cog.name].kill(true);
-        cog.kill();
-    }
+        dimensions: [280, 280],
+        copyDimensions: ['100%', '100%'],
 
-    if (star) {
+        delta: {
+            roll: -0.7,
+        },
 
-        scrawl.makePicture({
+        method: 'fill',
+    });
 
-            name: 'canvas2-star',
-            group: canvas2.base.name,
+    drag.addArtefacts(name2('star'));
 
-            asset: 'canvas2-star-clip-image',
-
-            start: ['75%', 'center'],
-            handle: ['center', 'center'],
-
-            dimensions: [280, 280],
-            copyDimensions: ['100%', '100%'],
-
-            delta: {
-                roll: -0.7,
-            },
-
-            method: 'fill',
-        });
-
-        drag.addArtefacts('canvas2-star');
-
-        // The star cell, and its entitys, have served their purpose; time to get rid of them
-        scrawl.library.group[star.name].kill(true);
-        star.kill();
-    }
+    // The cog and star Cells - and their Groups, entitys, etc - have served their purpose
+    // + Time to get rid of them
+    setTimeout(() => scrawl.library.purge(prepNamespace), 0);
 };
 
 
 // #### Canvas 3: 
 // Emulate clipping to a Phrase entity using a composite scene rendered in its own cell
+const ns3 = `canvas3`;
+const name3 = (name) => `${ns3}-${name}`;
+
 
 // We will generate Image assets from cells created specifically for this one task
-const serifHelloCell = canvas3.buildCell({
-    name: 'canvas3-serif-cell',
+const c3Cell = canvas3.buildCell({
+    name: name3('serif-cell'),
     dimensions: ['100%', '100%'],
 });
 
-scrawl.makePhrase({
+const c3Phrase = scrawl.makePhrase({
 
-    name: 'canvas3-serif-text-hello',
-    group: 'canvas3-serif-cell',
+    name: name3('serif-text-hello'),
+    group: name3('serif-cell'),
 
     text: 'HELLO!',
     font: 'bold 120px serif',
@@ -342,87 +333,76 @@ const canvasThreePostInitialization = function () {
 
     console.log('running canvasThreePostInitialization()');
     
-    // check to see if groups have been created - they don't create until late in the page load process
-    let drag = scrawl.library.group['canvas3-drag-group'];
+    // create our drag group and dragzone
+    const drag = scrawl.makeGroup({
+        name: name3('drag-group'),
+    });
 
-    // create our drag group and dragzone, if they don't already exist
-    if (!drag) {
+    scrawl.makeDragZone({
+        zone: canvas3,
+        collisionGroup: name3('drag-group'),
+        endOn: ['up', 'leave'],
+        preventTouchDefaultWhenDragging: true,
+    });
 
-        drag = scrawl.makeGroup({
-            name: 'canvas3-drag-group',
-        });
-
-        scrawl.makeDragZone({
-            zone: canvas3,
-            collisionGroup: 'canvas3-drag-group',
-            endOn: ['up', 'leave'],
-            preventTouchDefaultWhenDragging: true,
-        });
-    }
-
-    const phrase = scrawl.library.entity['canvas3-serif-text-hello'];
-
-    if (phrase) {
-
-        // We need to retrieve the Phrase entity's dimensions - which are hard to guess before it's created - and update its surrounding environment to fit.
-        const [width, height] = phrase.get('dimensions');
+    // We need to retrieve the Phrase entity's dimensions - which are hard to guess before it's created - and update its surrounding environment to fit.
+    const [width, height] = c3Phrase.get('dimensions');
 
 
-        // We can use the phrase entity as a stencil by applying a Picture entity over it with a GCO = 'source-atop'
-        scrawl.makePicture({
+    // We can use the phrase entity as a stencil by applying a Picture entity over it with a GCO = 'source-atop'
+    scrawl.makePicture({
 
-            name: 'canvas3-serif-image',
-            group: serifHelloCell.name,
+        name: name3('serif-image'),
+        group: name3('serif-cell'),
 
-            asset: 'factory',
+        asset: 'factory',
 
-            width,
-            height,
-            copyDimensions: [width, height],
-            copyStart: [50, 50],
+        width,
+        height,
+        copyDimensions: [width, height],
+        copyStart: [50, 50],
 
-            method: 'fill',
-            order: 1,
-            globalCompositeOperation: 'source-atop',
-        });
+        method: 'fill',
+        order: 1,
+        globalCompositeOperation: 'source-atop',
+    });
 
-        // We can also add an outline, if we want
-        phrase.clone({
+    // We can also add an outline, if we want
+    c3Phrase.clone({
 
-            name: 'canvas3-serif-outline',
-            order: 2,
-            globalCompositeOperation: 'source-over',
+        name: name3('serif-outline'),
+        order: 2,
+        globalCompositeOperation: 'source-over',
 
-            method: 'draw',
-            lineWidth: 3,
-            strokeStyle: 'coral',
-        });
+        method: 'draw',
+        lineWidth: 3,
+        strokeStyle: 'coral',
+    });
 
-        // We cannot directly drag-and-drop a Cell, but we can create a Block entity and pivot the Cell to it, then drag-and-drop the Block
-        scrawl.makeBlock({
-            name: 'canvas3-serif-block',
-            group: canvas3.base.name,
-            width, 
-            height,
-            start: ['center', 'center'],
-            handle: ['center', 'center'],
-            delta: {
-                roll: 0.5,
-            },
-            method: 'none',
-        })
+    // We cannot directly drag-and-drop a Cell, but we can create a Block entity and pivot the Cell to it, then drag-and-drop the Block
+    scrawl.makeBlock({
+        name: name3('serif-block'),
+        group: canvas3.get('baseGroup'),
+        width, 
+        height,
+        start: ['center', 'center'],
+        handle: ['center', 'center'],
+        delta: {
+            roll: 0.5,
+        },
+        method: 'none',
+    })
 
-        serifHelloCell.set({
-            width,
-            height, 
-            handle: ['center', 'center'],
-            pivot: 'canvas3-serif-block',
-            addPivotRotation: true,
-            lockTo: 'pivot',
-        });
+    c3Cell.set({
+        width,
+        height, 
+        handle: ['center', 'center'],
+        pivot: name3('serif-block'),
+        addPivotRotation: true,
+        lockTo: 'pivot',
+    });
 
-        drag.addArtefacts('canvas3-serif-block');
-    }
+    drag.addArtefacts(name3('serif-block'));
 };
 
 

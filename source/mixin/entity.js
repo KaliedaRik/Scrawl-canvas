@@ -630,6 +630,8 @@ export default function (P = Ωempty) {
 
                 if (this.stashOutputAsAsset) {
 
+                    const stashId = this.stashOutputAsAsset.substring ? this.stashOutputAsAsset : `${this.name}-image`;
+
                     // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo [Canvas-020](../../demo/canvas-020.html) for a workaround.
                     this.stashOutputAsAsset = false;
 
@@ -641,12 +643,12 @@ export default function (P = Ωempty) {
 
                         let newimg = this.stashedImage = document.createElement('img');
 
-                        newimg.id = `${this.name}-image`;
+                        newimg.id = stashId;
 
                         newimg.onload = function () {
 
                             scrawlCanvasHold.appendChild(newimg);
-                            importDomImage(`#${newimg.id}`);
+                            importDomImage(`#${stashId}`);
                         };
 
                         newimg.src = filterCellElement.toDataURL();

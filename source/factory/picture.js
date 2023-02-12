@@ -155,7 +155,6 @@ P.factoryKill = function (killAsset = false) {
 
         // Cascade kill invocation to the asset object, if required
         if (removeAssetOnKill) asset.kill(true);
-        else asset.kill();
     }
 };
 
