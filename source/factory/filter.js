@@ -1316,7 +1316,7 @@ const setActionsArray = {
 
         // `useBluenoise` is deprecated
         // + use `noiseType: 'bluenoise'` instead
-        let noiseType = (f.useBluenoise) ? 'bluenoise' : f.noiseType ?? 'random';
+        let noiseType = (f.useBluenoise) ? 'bluenoise' : f.noiseType || 'random';
         if (!['random', 'ordered', 'bluenoise'].includes(noiseType)) noiseType = 'random';
 
         f.actions.push({

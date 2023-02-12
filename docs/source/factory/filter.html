@@ -2563,7 +2563,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> noiseType = (f.<span class="hljs-property">useBluenoise</span>) ? <span class="hljs-string">&#x27;bluenoise&#x27;</span> : f.<span class="hljs-property">noiseType</span> ?? <span class="hljs-string">&#x27;random&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> noiseType = (f.<span class="hljs-property">useBluenoise</span>) ? <span class="hljs-string">&#x27;bluenoise&#x27;</span> : f.<span class="hljs-property">noiseType</span> || <span class="hljs-string">&#x27;random&#x27;</span>;
         <span class="hljs-keyword">if</span> (![<span class="hljs-string">&#x27;random&#x27;</span>, <span class="hljs-string">&#x27;ordered&#x27;</span>, <span class="hljs-string">&#x27;bluenoise&#x27;</span>].<span class="hljs-title function_">includes</span>(noiseType)) noiseType = <span class="hljs-string">&#x27;random&#x27;</span>;
 
         f.<span class="hljs-property">actions</span>.<span class="hljs-title function_">push</span>({
