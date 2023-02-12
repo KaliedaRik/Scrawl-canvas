@@ -731,6 +731,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
         cat.haltSprite();
 
+        // @ts-expect-error
         stencil = group.getArtefact(name(val));
 
         stencil.set({
