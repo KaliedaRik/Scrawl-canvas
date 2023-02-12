@@ -326,6 +326,8 @@ const importDomImage = function (query) {
 };
 
 // We can get cells, groups and entitys to save their output as imagedata, which we can then use to build an asset which in turn can be used by Picture entitys and pattern styles
+// + If the `stashAsAsset` argument is `true`, the asset will be created using the Cell/Group/entity name with `-image` suffixed to it as its id/name value
+// + If `stashAsAsset` argument is a String, the asset will be created using that String as its id/name attribute
 
 // `createImageFromCell`
 const createImageFromCell = function (item, stashAsAsset = false) {
@@ -338,7 +340,7 @@ const createImageFromCell = function (item, stashAsAsset = false) {
 
         mycell.stashOutput = true;
 
-        if (stashAsAsset) mycell.stashOutputAsAsset = true;
+        if (stashAsAsset) mycell.stashOutputAsAsset = stashAsAsset;
     }
 };
 
@@ -359,7 +361,7 @@ const createImageFromGroup = function (item, stashAsAsset = false) {
 
         mygroup.stashOutput = true;
 
-        if (stashAsAsset) mygroup.stashOutputAsAsset = true;
+        if (stashAsAsset) mygroup.stashOutputAsAsset = stashAsAsset;
     }
 };
 
@@ -372,7 +374,7 @@ const createImageFromEntity = function (item, stashAsAsset = false) {
 
         myentity.stashOutput = true;
 
-        if (stashAsAsset) myentity.stashOutputAsAsset = true;
+        if (stashAsAsset) myentity.stashOutputAsAsset = stashAsAsset;
     }
 };
 

@@ -810,7 +810,7 @@
 <p>We can treat the following attributes as if they are entity object attributes, though in fact they are stored and managed by <strong>State objects</strong></p>
 <p><strong>fillStyle</strong> and <strong>strokeStyle</strong> - color, gradient or pattern used to outline or fill a entity. Can be:</p>
 <ul>
-<li>CSS format color String - <code>#fff</code>, <code>#ffffff</code>, <code>rgb(255,255,255)</code>, <code>rgba(255,255,255,1)</code>, <code>white</code>, etc</li>
+<li>CSS format color String - <code>#fff</code>, <code>#ffffff</code>, <code>rgb(255 255 255)</code>, <code>rgb(255 255 255 / 1)</code>, <code>rgb(255,255,255)</code>, <code>rgba(255,255,255,1)</code>, <code>white</code>, etc</li>
 <li>COLORNAME String</li>
 <li>GRADIENTNAME String</li>
 <li>RADIALGRADIENTNAME String</li>
@@ -853,7 +853,7 @@
 <p><strong>shadowBlur</strong> - the blur width for a entity’s shadow, in Number pixels</p>
 <p><strong>shadowColor</strong> - the color used for an entity’s shadow effect. Can be:</p>
 <ul>
-<li>CSS format color String - <code>#fff</code>, <code>#ffffff</code>, <code>rgb(255,255,255)</code>, <code>rgba(255,255,255,1)</code>, <code>white</code>, etc</li>
+<li>CSS format color String - <code>#fff</code>, <code>#ffffff</code>, <code>rgb(255 255 255)</code>, <code>rgb(255 255 255 / 1)</code>, <code>rgb(255,255,255)</code>, <code>rgba(255,255,255,1)</code>, <code>white</code>, etc</li>
 <li>COLORNAME String</li>
 </ul>
 <p><strong>font</strong>, <strong>textAlign</strong>, <strong>textBaseline</strong> - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.</p>
@@ -1816,7 +1816,9 @@
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImageData</span> = filterCellEngine.<span class="hljs-title function_">getImageData</span>(stashX, stashY, stashWidth, stashHeight);
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span>) {</pre></div></div>
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span>) {
+
+                    <span class="hljs-keyword">const</span> stashId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span>.<span class="hljs-property">substring</span> ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span> : <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-image`</span>;</pre></div></div>
             
         </li>
         
@@ -1841,12 +1843,12 @@
 
                         <span class="hljs-keyword">let</span> newimg = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span> = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;img&#x27;</span>);
 
-                        newimg.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-image`</span>;
+                        newimg.<span class="hljs-property">id</span> = stashId;
 
                         newimg.<span class="hljs-property">onload</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
                             scrawlCanvasHold.<span class="hljs-title function_">appendChild</span>(newimg);
-                            <span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
+                            <span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`#<span class="hljs-subst">${stashId}</span>`</span>);
                         };
 
                         newimg.<span class="hljs-property">src</span> = filterCellElement.<span class="hljs-title function_">toDataURL</span>();

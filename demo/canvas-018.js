@@ -18,13 +18,19 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = L.artefact.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create Shape entitys for paths
 makeOval({
 
-    name: 'oval-path',
+    name: name('oval-path'),
 
     strokeStyle: 'black',
     method: 'draw',
@@ -40,9 +46,9 @@ makeOval({
     useAsPath: true,
 });
 
-let spiral = makeSpiral({
+const spiral = makeSpiral({
 
-    name: 'spiral-path',
+    name: name('spiral-path'),
 
     strokeStyle: 'darkgreen',
     method: 'draw',
@@ -68,7 +74,8 @@ let spiral = makeSpiral({
 
 // Create Phrase entitys
 makePhrase({
-    name: 'label',
+
+    name: name('label'),
 
     text: 'H&epsilon;lj&ouml;!',
     font: 'bold 40px Garamond, serif',
@@ -90,7 +97,7 @@ makePhrase({
     shadowBlur: 2,
     shadowColor: 'black',
 
-    path: 'oval-path',
+    path: name('oval-path'),
     lockTo: 'path',
     addPathRotation: true,
 
@@ -99,11 +106,12 @@ makePhrase({
     }
 });
 
-let lorem = makePhrase({
+const lorem = makePhrase({
 
-    name: 'myPhrase',
+    name: name('myPhrase'),
 
     text: '&shy;§ITALIC§Lorem§/ITALIC§ ipsum §Red-Text§har varit <i>standard</i> &auml;nda sedan §SMALL-CAPS§1500-talet§/SMALL-CAPS§, när-en-ok&aring;nd-§BOLD§bok§DEFAULTS§sättare-tog att antal §BOLD§bok§/BOLD§stäver §OVERLINE§och <HIGHLIGHT>blandade§/OVERLINE§ dem</HIGHLIGHT> för §size-24§Red-Text§att§DEFAULTS§ g&ouml;ra, §Letter-spacing-10§ett prov§u§exemplar</UNDERLINE>§/Letter-spacing-10§ §MONO§av en §BOLD§b&oacute;k.',
+
     font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
 
     justify: 'center',
@@ -112,7 +120,7 @@ let lorem = makePhrase({
 
     method: 'fill',
 
-    textPath: 'spiral-path',
+    textPath: name('spiral-path'),
     textPathPosition: 0.9,
 
     handleY: 12,
@@ -133,7 +141,7 @@ lorem.addSectionClass('Red-Text', { fill: 'red' })
 // Create other entitys
 makePicture({
 
-    name: 'bunny',
+    name: name('bunny'),
     imageSource: 'img/bunny.png',
 
     width: 26,
@@ -145,7 +153,7 @@ makePicture({
     handleX: 'center',
     handleY: 'center',
 
-    path: 'oval-path',
+    path: name('oval-path'),
     pathPosition: .50,
     lockTo: 'path',
     addPathRotation: true,
@@ -164,7 +172,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

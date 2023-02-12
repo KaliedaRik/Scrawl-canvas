@@ -580,6 +580,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-028.html">
+                  ./demo/filters-028.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1466,7 +1471,7 @@
                     b = data[++pos];
                     a = data[++pos];
 
-                    engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">`rgba(<span class="hljs-subst">${r}</span>,<span class="hljs-subst">${g}</span>,<span class="hljs-subst">${b}</span>,<span class="hljs-subst">${a/<span class="hljs-number">255</span>}</span>)`</span>;
+                    engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">`rgb(<span class="hljs-subst">${r}</span> <span class="hljs-subst">${g}</span> <span class="hljs-subst">${b}</span> / <span class="hljs-subst">${a/<span class="hljs-number">255</span>}</span>)`</span>;
 
                     rx = (x + offsetX);
                     <span class="hljs-keyword">if</span> (rx &lt; <span class="hljs-number">0</span> || rx &gt;= width) {

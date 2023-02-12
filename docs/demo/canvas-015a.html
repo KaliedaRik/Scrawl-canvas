@@ -580,6 +580,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-028.html">
+                  ./demo/filters-028.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1128,10 +1133,11 @@
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
+<p>Get a handle to the Canvas wrapper</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>,
     entitys = L.<span class="hljs-property">entity</span>;</pre></div></div>
             
         </li>
@@ -1143,12 +1149,28 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;demo&#x27;</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
               <p>Create and clone Phrase entitys</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makePhrase</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myphrase_fill&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_fill&#x27;</span>),
 
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;H&amp;epsilon;lj&amp;ouml;!&#x27;</span>,
     <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;bold 40px Garamond, serif&#x27;</span>,
@@ -1171,39 +1193,39 @@
     <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1</span>,
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myphrase_draw&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_draw&#x27;</span>),
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;38%&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myphrase_drawAndFill&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_drawAndFill&#x27;</span>),
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;84%&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;drawAndFill&#x27;</span>,
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myphrase_fillAndDraw&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_fillAndDraw&#x27;</span>),
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;62%&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
     <span class="hljs-attr">sharedState</span>: <span class="hljs-literal">true</span>
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myphrase_drawThenFill&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_drawThenFill&#x27;</span>),
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;14%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;67%&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;drawThenFill&#x27;</span>
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myphrase_fillThenDraw&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_fillThenDraw&#x27;</span>),
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;38%&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myphrase_clear&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_clear&#x27;</span>),
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;62%&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;clear&#x27;</span>
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myphrase_multiline&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_multiline&#x27;</span>),
 
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.&#x27;</span>,
 
@@ -1224,47 +1246,20 @@
         </li>
         
         
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
-              <p>Change the fill and stroke styles on one of the phrase entitys, and any entity sharing that phrase’s state</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>L.<span class="hljs-property">artefact</span>.<span class="hljs-property">myphrase_fillAndDraw</span>.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>
-});</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="caching-entity-output">Caching entity output</h4>
-<p>A one-off instruction to tell Scrawl-canvas to create image assets from our Phrase entitys the next time it performs a Display cycle</p>
-<ul>
-<li>By caching entity output in &lt;img&gt; elements, we can then replace the Phrase entitys with Picture entitys that use the cached image as their asset source. As graphic text output is an expensive operation for the canvas element to perform - particularly when we apply a shadow blur to the text - it will often make sense to replace such Phrase entitys with Picture entitys.</li>
-<li>This approach is less useful for text that updates frequently, or uses dynamic fill/stroke styling</li>
-</ul>
+              <p>Change the fill and stroke styles on one of the phrase entitys, and any entity sharing that phrase’s state</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">createImageFromEntity</span>(entitys.<span class="hljs-property">myphrase_fill</span>, <span class="hljs-literal">true</span>);
-<span class="hljs-title function_">createImageFromEntity</span>(entitys.<span class="hljs-property">myphrase_draw</span>, <span class="hljs-literal">true</span>);
-<span class="hljs-title function_">createImageFromEntity</span>(entitys.<span class="hljs-property">myphrase_drawAndFill</span>, <span class="hljs-literal">true</span>);
-<span class="hljs-title function_">createImageFromEntity</span>(entitys.<span class="hljs-property">myphrase_fillAndDraw</span>, <span class="hljs-literal">true</span>);
-<span class="hljs-title function_">createImageFromEntity</span>(entitys.<span class="hljs-property">myphrase_drawThenFill</span>, <span class="hljs-literal">true</span>);
-<span class="hljs-title function_">createImageFromEntity</span>(entitys.<span class="hljs-property">myphrase_fillThenDraw</span>, <span class="hljs-literal">true</span>);
-<span class="hljs-title function_">createImageFromEntity</span>(entitys.<span class="hljs-property">myphrase_clear</span>, <span class="hljs-literal">true</span>);
-<span class="hljs-title function_">createImageFromEntity</span>(entitys.<span class="hljs-property">myphrase_multiline</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>L.<span class="hljs-property">artefact</span>[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_fillAndDraw&#x27;</span>)].<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>
+});</pre></div></div>
             
         </li>
         
@@ -1275,12 +1270,39 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
+              <h4 id="caching-entity-output">Caching entity output</h4>
+<p>A one-off instruction to tell Scrawl-canvas to create image assets from our Phrase entitys the next time it performs a Display cycle</p>
+<ul>
+<li>By caching entity output in &lt;img&gt; elements, we can then replace the Phrase entitys with Picture entitys that use the cached image as their asset source. As graphic text output is an expensive operation for the canvas element to perform - particularly when we apply a shadow blur to the text - it will often make sense to replace such Phrase entitys with Picture entitys.</li>
+<li>This approach is less useful for text that updates frequently, or uses dynamic fill/stroke styling</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">createImageFromEntity</span>(entitys[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_fill&#x27;</span>)], <span class="hljs-literal">true</span>);
+<span class="hljs-title function_">createImageFromEntity</span>(entitys[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_draw&#x27;</span>)], <span class="hljs-literal">true</span>);
+<span class="hljs-title function_">createImageFromEntity</span>(entitys[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_drawAndFill&#x27;</span>)], <span class="hljs-literal">true</span>);
+<span class="hljs-title function_">createImageFromEntity</span>(entitys[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_fillAndDraw&#x27;</span>)], <span class="hljs-literal">true</span>);
+<span class="hljs-title function_">createImageFromEntity</span>(entitys[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_drawThenFill&#x27;</span>)], <span class="hljs-literal">true</span>);
+<span class="hljs-title function_">createImageFromEntity</span>(entitys[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_fillThenDraw&#x27;</span>)], <span class="hljs-literal">true</span>);
+<span class="hljs-title function_">createImageFromEntity</span>(entitys[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_clear&#x27;</span>)], <span class="hljs-literal">true</span>);
+<span class="hljs-title function_">createImageFromEntity</span>(entitys[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;myphrase_multiline&#x27;</span>)], <span class="hljs-literal">true</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Create the drag-and-drop zone</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> current = <span class="hljs-title function_">makeDragZone</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> current = <span class="hljs-title function_">makeDragZone</span>({
 
     <span class="hljs-attr">zone</span>: canvas,
     <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
@@ -1291,11 +1313,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1310,11 +1332,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1322,18 +1344,18 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,</pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="caching-continued">Caching (continued)</h4>
 <p>After the first iteration of the Display cycle, we can create Picture entitys to replace our Phrase entitys</p>
@@ -1345,26 +1367,7 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> g = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p>Switch off the Phrase entitys via a set call to their Group (which, in this instance is the canvas.base Cell’s default Group)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        g.<span class="hljs-title function_">setArtefacts</span>({
-            <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-        });
-
-        <span class="hljs-keyword">let</span> keys = g.<span class="hljs-property">artefacts</span>;</pre></div></div>
+        <span class="hljs-keyword">const</span> g = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1375,13 +1378,32 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
+              <p>Switch off the Phrase entitys via a set call to their Group (which, in this instance is the canvas.base Cell’s default Group)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        g.<span class="hljs-title function_">setArtefacts</span>({
+            <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+        });
+
+        <span class="hljs-keyword">const</span> keys = g.<span class="hljs-property">artefacts</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
               <p>Generate Picture entitys, using the existing Phrase entitys for positional and dimensional data</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>        keys.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> e = entitys[name];
+            <span class="hljs-keyword">const</span> e = entitys[name];
 
             <span class="hljs-keyword">if</span> (e) {
 
@@ -1407,11 +1429,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

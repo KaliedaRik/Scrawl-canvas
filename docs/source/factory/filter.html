@@ -874,6 +874,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">lowGreen</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">lowRed</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">minimumColorDistance</span>: <span class="hljs-number">1000</span>,
+    <span class="hljs-attr">noiseType</span>: <span class="hljs-string">&#x27;random&#x27;</span>,
     <span class="hljs-attr">noWrap</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">offsetAlphaX</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">offsetAlphaY</span>: <span class="hljs-number">0</span>,
@@ -1143,7 +1144,7 @@ P.<span class="hljs-property">setDelta</span> = <span class="hljs-keyword">funct
 
 S.<span class="hljs-property">actions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-	<span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">actions</span> = item;
+    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">actions</span> = item;
 };</pre></div></div>
             
         </li>
@@ -1542,7 +1543,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">chroma</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
 
-    	<span class="hljs-keyword">const</span> processedRanges = [],
+        <span class="hljs-keyword">const</span> processedRanges = [],
             res = [];
 
         <span class="hljs-keyword">if</span> ((f.<span class="hljs-property">ranges</span> != <span class="hljs-literal">null</span>)) {
@@ -2472,6 +2473,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">randomNoise</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+
+        <span class="hljs-keyword">const</span> noiseType = ([<span class="hljs-string">&#x27;random&#x27;</span>, <span class="hljs-string">&#x27;ordered&#x27;</span>, <span class="hljs-string">&#x27;bluenoise&#x27;</span>].<span class="hljs-title function_">includes</span>(f.<span class="hljs-property">noiseType</span>)) ? f.<span class="hljs-property">noiseType</span> : <span class="hljs-string">&#x27;random&#x27;</span>;
+
         f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;random-noise&#x27;</span>,
             <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
@@ -2480,6 +2484,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             <span class="hljs-attr">width</span>: (f.<span class="hljs-property">width</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">width</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">height</span>: (f.<span class="hljs-property">height</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">height</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
+            noiseType,
             <span class="hljs-attr">level</span>: (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">noWrap</span>: (f.<span class="hljs-property">noWrap</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">noWrap</span> : <span class="hljs-literal">false</span>,
             <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
@@ -2528,31 +2533,19 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">reducePalette</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
-    	
-    	<span class="hljs-keyword">let</span> palette = (f.<span class="hljs-property">palette</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">palette</span> : <span class="hljs-string">&#x27;black-white&#x27;</span>;
+        
+        <span class="hljs-keyword">let</span> palette = (f.<span class="hljs-property">palette</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">palette</span> : <span class="hljs-string">&#x27;black-white&#x27;</span>;
 
         f.<span class="hljs-property">actions</span> = [];
 
-    	<span class="hljs-keyword">if</span> (palette.<span class="hljs-property">substring</span>) {
+        <span class="hljs-keyword">if</span> (palette.<span class="hljs-property">substring</span>) {
 
-    		<span class="hljs-keyword">if</span> (palette.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;,&#x27;</span>)) {
+            <span class="hljs-keyword">if</span> (palette.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;,&#x27;</span>)) {
 
-    			palette = palette.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);
-    		    palette.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">trim</span>());
+                palette = palette.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);
+                palette.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">trim</span>());
             }
-    	}
-        f.<span class="hljs-property">actions</span>.<span class="hljs-title function_">push</span>({
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;reduce-palette&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
-            <span class="hljs-attr">minimumColorDistance</span>: (f.<span class="hljs-property">minimumColorDistance</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">minimumColorDistance</span> : <span class="hljs-number">1000</span>,
-            <span class="hljs-attr">useLabForPaletteDistance</span>: (f.<span class="hljs-property">useLabForPaletteDistance</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useLabForPaletteDistance</span> : <span class="hljs-literal">false</span>,
-            palette,
-            <span class="hljs-attr">useBluenoise</span>: (f.<span class="hljs-property">useBluenoise</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useBluenoise</span> : <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
-        });
-    },</pre></div></div>
+        }</pre></div></div>
             
         </li>
         
@@ -2562,6 +2555,38 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
               
               <div class="sswrap ">
                 <a class="ss" href="#section-66">&#x00a7;</a>
+              </div>
+              <p><code>useBluenoise</code> is deprecated</p>
+<ul>
+<li>use <code>noiseType: &#39;bluenoise&#39;</code> instead</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> noiseType = (f.<span class="hljs-property">useBluenoise</span>) ? <span class="hljs-string">&#x27;bluenoise&#x27;</span> : f.<span class="hljs-property">noiseType</span> ?? <span class="hljs-string">&#x27;random&#x27;</span>;
+        <span class="hljs-keyword">if</span> (![<span class="hljs-string">&#x27;random&#x27;</span>, <span class="hljs-string">&#x27;ordered&#x27;</span>, <span class="hljs-string">&#x27;bluenoise&#x27;</span>].<span class="hljs-title function_">includes</span>(noiseType)) noiseType = <span class="hljs-string">&#x27;random&#x27;</span>;
+
+        f.<span class="hljs-property">actions</span>.<span class="hljs-title function_">push</span>({
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;reduce-palette&#x27;</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
+            <span class="hljs-attr">minimumColorDistance</span>: (f.<span class="hljs-property">minimumColorDistance</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">minimumColorDistance</span> : <span class="hljs-number">1000</span>,
+            <span class="hljs-attr">useLabForPaletteDistance</span>: (f.<span class="hljs-property">useLabForPaletteDistance</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useLabForPaletteDistance</span> : <span class="hljs-literal">false</span>,
+            palette,
+            noiseType,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+        });
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><strong>saturation</strong> - alters the saturation level of the image</p>
 
@@ -2585,11 +2610,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><strong>sepia</strong> - recalculates the values of each color channel (a tint action) to create a more ‘antique’ version of the image</p>
 
@@ -2616,11 +2641,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><strong>sharpen</strong> (new in v8.4.0) - applies a preset 3x3 sharpen matrix to the image</p>
 
@@ -2647,11 +2672,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><strong>swirl</strong> - for each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.</p>
 <ul>
@@ -2661,7 +2686,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">swirl</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
-    	<span class="hljs-keyword">let</span> startX = (f.<span class="hljs-property">startX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">startX</span> : <span class="hljs-string">&#x27;50%&#x27;</span>,
+        <span class="hljs-keyword">let</span> startX = (f.<span class="hljs-property">startX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">startX</span> : <span class="hljs-string">&#x27;50%&#x27;</span>,
             startY = (f.<span class="hljs-property">startY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">startY</span> : <span class="hljs-string">&#x27;50%&#x27;</span>,
             innerRadius = (f.<span class="hljs-property">innerRadius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">innerRadius</span> : <span class="hljs-number">0</span>,
             outerRadius = (f.<span class="hljs-property">outerRadius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">outerRadius</span> : <span class="hljs-string">&#x27;30%&#x27;</span>,
@@ -2684,11 +2709,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><strong>threshold</strong> - creates a duotone effect - grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color.</p>
 <ul>
@@ -2765,11 +2790,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><strong>tiles</strong> - averages the colors in a group of pixels to produce a series of obscuring tiles. This is a more complex version of the <code>pixelate</code> filter</p>
 
@@ -2799,11 +2824,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><strong>tint</strong> - has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels.</p>
 
@@ -2886,11 +2911,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><strong>userDefined</strong> - DEPRECATED - this filter method no longer has any effect, returning an unchanged image</p>
 
@@ -2908,11 +2933,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><strong>yellow</strong> - removes blue channel color from the image, and averages the remaining channel colors</p>
 
@@ -2934,11 +2959,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>No additional prototype functions defined</p>
@@ -2948,11 +2973,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2969,11 +2994,11 @@ constructors.<span class="hljs-property">Filter</span> = <span class="hljs-title
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

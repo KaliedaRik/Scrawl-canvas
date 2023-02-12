@@ -15,13 +15,21 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = L.artefact.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create Phrase entity
-let lorem = makePhrase({
+const lorem = makePhrase({
 
-    name: 'myPhrase',
+    name: name('myPhrase'),
+
+    // Set the Phrase's compile ordering
     order: 1,
 
     startX: 300,
@@ -47,8 +55,7 @@ let lorem = makePhrase({
 // Add a background entity which will mimic the Phrase entity
 makeBlock({
 
-    name: 'writing-paper',
-    order: 0,
+    name: name('writing-paper'),
 
     width: 20,
     height: 20,
@@ -58,7 +65,8 @@ makeBlock({
     fillStyle: 'rgb(240, 245, 255)',
     method: 'fillAndDraw',
 
-    mimic: 'myPhrase',
+    // We mimic the Phrase entity's attributes using a set of flags to tell the Block which entitys need to be mimicked
+    mimic: name('myPhrase'),
     lockTo: 'mimic',
 
     useMimicDimensions: true,
@@ -69,20 +77,26 @@ makeBlock({
     useMimicRotation: true,
     useMimicFlip: true,
 
+    // We can also tell the Block to modify the mimicked attributes using its own values
     addOwnDimensionsToMimic: true,
     addOwnScaleToMimic: false,
     addOwnStartToMimic: false,
     addOwnHandleToMimic: true,
     addOwnOffsetToMimic: false,
     addOwnRotationToMimic: false,
+
+    // The Block needs to calculate its values after the Phrase has completed its calculations, but it needs to display before the Phrase (otherwise it would cover it)
+    calculateOrder: 2,
+    stampOrder: 0,
 });
 
 // Add a pivot wheel
 makeWheel({
 
+    name: name('pin'),
     fillStyle: 'red',
     radius: 5,
-    pivot: 'myPhrase',
+    pivot: name('myPhrase'),
     lockTo: 'pivot',
     handleX: 'center',
     handleY: 'center',
@@ -95,13 +109,13 @@ makeWheel({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let [startX, startY] = lorem.start;
-    let [handleX, handleY] = lorem.handle;
-    let [width, height] = lorem.dimensions;
+    const [startX, startY] = lorem.start;
+    const [handleX, handleY] = lorem.handle;
+    const [width, height] = lorem.dimensions;
 
-    let {roll, scale} = lorem;
+    const {roll, scale} = lorem;
 
-    let fontSize = lorem.get('size'),
+    const fontSize = lorem.get('size'),
         fontString = lorem.get('font');
 
     return `    Start - x: ${startX}, y: ${startY}
@@ -115,7 +129,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

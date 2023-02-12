@@ -8,32 +8,38 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas,
+// Get a handle to the Canvas wrappers
+const canvas = scrawl.library.artefact.mycanvas,
     hold = scrawl.library.artefact.holdcanvas;
 
 
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
+
+
 // Create gradients
-let myGrad = scrawl.makeGradient({
-    name: 'linear1',
+const myGrad = scrawl.makeGradient({
+    name: name('linear1'),
     endX: '100%',
     colors: [
         [0, 'pink'],
         [999, 'darkgreen']
     ],
 }).clone({
-    name: 'linear2',
+    name: name('linear2'),
     colors: [
         [0, 'darkblue'],
         [999, 'white']
     ],
 }).clone({
-    name: 'linear3',
+    name: name('linear3'),
     colors: [
         [0, 'yellow'],
         [999, 'purple']
     ],
 }).clone({
-    name: 'linear4',
+    name: name('linear4'),
     colors: [
         [0, 'black'],
         [999, 'coral']
@@ -42,8 +48,8 @@ let myGrad = scrawl.makeGradient({
 
 
 // Create entitys
-let block1 = scrawl.makeBlock({
-    name: 'b1',
+const block1 = scrawl.makeBlock({
+    name: name('b1'),
     group: canvas.base.name,
 
     width: '70%',
@@ -51,21 +57,21 @@ let block1 = scrawl.makeBlock({
     startX: '5%',
     startY: '5%',
 
-    fillStyle: 'linear1',
+    fillStyle: name('linear1'),
     lockFillStyleToEntity: true,
     strokeStyle: 'coral',
     lineWidth: 4,
     method: 'fillThenDraw',
 });
 
-let block2 = block1.clone({
-    name: 'b2',
+const block2 = block1.clone({
+    name: name('b2'),
     startX: '70%',
     startY: '65%',
     handleX: 'center',
     handleY: 'center',
     scale: 0.5,
-    fillStyle: 'linear2',
+    fillStyle: name('linear2'),
     strokeStyle: 'red',
 
     delta: {
@@ -74,8 +80,8 @@ let block2 = block1.clone({
     order: 1,
 });
 
-let wheel1 = scrawl.makeWheel({
-    name: 'w1',
+const wheel1 = scrawl.makeWheel({
+    name: name('w1'),
     group: canvas.base.name,
 
     radius: '15%',
@@ -83,21 +89,21 @@ let wheel1 = scrawl.makeWheel({
     startY: '30%',
     handleX: 'center',
     handleY: 'center',
-    fillStyle: 'linear3',
+    fillStyle: name('linear3'),
     lockFillStyleToEntity: true,
     strokeStyle: 'orange',
     lineWidth: 4,
     method: 'fillThenDraw',
 });
 
-let wheel2 = wheel1.clone({
-    name: 'w2',
+const wheel2 = wheel1.clone({
+    name: name('w2'),
     startX: '30%',
     startY: '60%',
     handleX: '-10%',
     handleY: 'center',
     scale: 0.7,
-    fillStyle: 'linear4',
+    fillStyle: name('linear4'),
     strokeStyle: 'lightblue',
 
     delta: {
@@ -109,20 +115,20 @@ let wheel2 = wheel1.clone({
 
 // Create the filter
 scrawl.makeFilter({
-    name: 'invert',
+    name: name('invert'),
     method: 'invert',
 });
 
 
 // Create a new group with an entity that will only be caught in the Cell's filter
 scrawl.makeGroup({
-    name: 'temp-group',
+    name: name('temp-group'),
     host: canvas.base.name
 });
 
 scrawl.makeBlock({
-    name: 'temp-block',
-    group: 'temp-group',
+    name: name('temp-block'),
+    group: name('temp-group'),
 
     start: [50,50],
     dimensions: [40, 40],
@@ -133,7 +139,7 @@ scrawl.makeBlock({
 // Functionality to capture cell, group and entity images
 let captureImages = false;
 
-let imageCapture = function () {
+const imageCapture = function () {
 
     if (captureImages) {
 
@@ -152,7 +158,7 @@ let imageCapture = function () {
 // Add Picture entitys to the hold canvas, using the assets we will create from the main canvas
 scrawl.makePicture({
 
-    name: 'cell-image',
+    name: name('cell-image'),
     group: hold.base.name,
 
     width: '13%',
@@ -173,32 +179,32 @@ scrawl.makePicture({
 
 }).clone({
 
-    name: 'group-image',
+    name: name('group-image'),
     asset: 'mycanvas_base-groupimage',
     startX: '19%',
 
 }).clone({
 
-    name: 'b1-image',
-    asset: 'b1-image',
+    name: name('b1-image'),
+    asset: name('b1-image'),
     startX: '35%',
 
 }).clone({
 
-    name: 'b2-image',
-    asset: 'b2-image',
+    name: name('b2-image'),
+    asset: name('b2-image'),
     startX: '51%',
 
 }).clone({
 
-    name: 'w1-image',
-    asset: 'w1-image',
+    name: name('w1-image'),
+    asset: name('w1-image'),
     startX: '67%',
 
 }).clone({
 
-    name: 'w2-image',
-    asset: 'w2-image',
+    name: name('w2-image'),
+    asset: name('w2-image'),
     startX: '83%',
 });
 
@@ -206,45 +212,45 @@ scrawl.makePicture({
 // Give the hold Picture entitys some labels
 scrawl.makePhrase({
 
-    name: 'cell-phrase',
+    name: name('cell-phrase'),
     group: hold.base.name,
 
     text: 'Cell',
     font: '15px Arial, sans-serif',
 
     startY: '85%',
-    pivot: 'cell-image',
+    pivot: name('cell-image'),
     lockXTo: 'pivot',
 
 }).clone({
 
-    name: 'group-phrase',
+    name: name('group-phrase'),
     text: 'Group',
-    pivot: 'group-image',
+    pivot: name('group-image'),
 
 }).clone({
 
-    name: 'b1-phrase',
+    name: name('b1-phrase'),
     text: 'Block1',
-    pivot: 'b1-image',
+    pivot: name('b1-image'),
     
 }).clone({
 
-    name: 'b2-phrase',
+    name: name('b2-phrase'),
     text: 'Block2',
-    pivot: 'b2-image',
+    pivot: name('b2-image'),
     
 }).clone({
 
-    name: 'w1-phrase',
+    name: name('w1-phrase'),
     text: 'Wheel1',
-    pivot: 'w1-image',
+    pivot: name('w1-image'),
     
 }).clone({
 
-    name: 'w2-phrase',
+    name: name('w2-phrase'),
     text: 'Wheel2',
-    pivot: 'w2-image',
+    pivot: name('w2-image'),
 });
 
 
@@ -256,7 +262,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation - note that the render is not targeted, thus will run document-wide to act on both &lt;canvas> elements
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
 
     // The Display cycle needs to run once before the entitys, Group and Cell are ready to have their images captured
     afterCreated: () => captureImages = true,
@@ -268,18 +274,19 @@ scrawl.makeRender({
 
 // #### User interaction
 // Event listeners
-let events = function () {
+const events = function () {
 
-    let base = canvas.base,
-        group = base.get('group'),
-        currentTarget;
+    const base = canvas.base,
+        group = base.get('group');
+    
+    let currentTarget;
 
     return function (e) {
 
         e.preventDefault();
         e.returnValue = false;
 
-        let val = e.target.value;
+        const val = e.target.value;
 
         if (val !== currentTarget) {
 
@@ -292,27 +299,27 @@ let events = function () {
             switch (currentTarget) {
 
                 case 'block1' :
-                    block1.addFilters('invert');
+                    block1.addFilters(name('invert'));
                     break;
 
                 case 'block2' :
-                    block2.addFilters('invert');
+                    block2.addFilters(name('invert'));
                     break;
 
                 case 'wheel1' :
-                    wheel1.addFilters('invert');
+                    wheel1.addFilters(name('invert'));
                     break;
 
                 case 'wheel2' :
-                    wheel2.addFilters('invert');
+                    wheel2.addFilters(name('invert'));
                     break;
 
                 case 'group' :
-                    group.addFilters('invert');
+                    group.addFilters(name('invert'));
                     break;
 
                 case 'cell' :
-                    base.addFilters('invert');
+                    base.addFilters(name('invert'));
                     break;
             }
 

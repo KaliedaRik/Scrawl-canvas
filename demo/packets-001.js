@@ -174,7 +174,7 @@ console.log('Save test 4 result: ', boxPacket4);
 //         },
 //         "group":"mycanvas_base",
 //         "fillStyle":"red",
-//         "strokeStyle":"rgba(0,0,0,1)",
+//         "strokeStyle":"rgb(0 0 0 / 1)",
 //         "globalAlpha":1,
 //         "globalCompositeOperation":"source-over",
 //         "lineWidth":1,
@@ -186,7 +186,7 @@ console.log('Save test 4 result: ', boxPacket4);
 //         "shadowOffsetX":0,
 //         "shadowOffsetY":0,
 //         "shadowBlur":0,
-//         "shadowColor":"rgba(0,0,0,0)",
+//         "shadowColor":"rgb(0 0 0 / 0)",
 //         "font":"12px sans-serif",
 //         "textAlign":"start",
 //         "textBaseline":"alphabetic"

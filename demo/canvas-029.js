@@ -8,13 +8,19 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = scrawl.library.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create Gradient
-let mygradient = scrawl.makeGradient({
+const mygradient = scrawl.makeGradient({
 
-    name: 'gradient-1',
+    name: name('gradient-1'),
 
     endX: '100%',
 
@@ -42,7 +48,7 @@ let mygradient = scrawl.makeGradient({
 
 scrawl.makeQuadratic({
 
-    name: 'my-quad',
+    name: name('my-quad'),
 
     startX: '30%',
     startY: '98%',
@@ -62,7 +68,7 @@ scrawl.makeQuadratic({
 // Create Phrase entitys
 scrawl.makePhrase({
 
-    name: 'test-phrase-1',
+    name: name('test-phrase-1'),
     order: 1,
 
     text: 'Test phrase',
@@ -71,11 +77,11 @@ scrawl.makePhrase({
     startX: '5%',
     startY: '5%',
 
-    fillStyle: 'gradient-1',
+    fillStyle: name('gradient-1'),
 
 }).clone({
 
-    name: 'test-phrase-2',
+    name: name('test-phrase-2'),
 
     width: '40%',
 
@@ -85,7 +91,7 @@ scrawl.makePhrase({
 
 }).clone({
 
-    name: 'test-phrase-3',
+    name: name('test-phrase-3'),
 
     startY: '30%',
 
@@ -94,7 +100,7 @@ scrawl.makePhrase({
 
 }).clone({
 
-    name: 'test-phrase-4',
+    name: name('test-phrase-4'),
 
     startX: '5%',
 
@@ -102,7 +108,7 @@ scrawl.makePhrase({
 
 }).clone({
 
-    name: 'test-phrase-5',
+    name: name('test-phrase-5'),
 
     font: '46px cursive',
 
@@ -116,7 +122,7 @@ scrawl.makePhrase({
 
 }).clone({
 
-    name: 'test-phrase-6',
+    name: name('test-phrase-6'),
 
     startX: '43%',
     startY: '75%',
@@ -127,7 +133,7 @@ scrawl.makePhrase({
     
 }).clone({
 
-    name: 'test-phrase-7',
+    name: name('test-phrase-7'),
 
     // Test to see if we can load a webfont from a remote server and see it show up in the canvas element
     // + If the test fails then the phrase will display as 46pt sans-serif
@@ -142,7 +148,7 @@ scrawl.makePhrase({
     roll: 0,
     scale: 1,
 
-    textPath: 'my-quad',
+    textPath: name('my-quad'),
 
     handleY: '50%',
 
@@ -155,7 +161,7 @@ scrawl.makePhrase({
 
 scrawl.makePhrase({
 
-    name: 'test-phrase-8',
+    name: name('test-phrase-8'),
 
     text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
 
@@ -167,11 +173,11 @@ scrawl.makePhrase({
     startX: '5%',
     startY: '35%',
 
-    fillStyle: 'gradient-1',
+    fillStyle: name('gradient-1'),
 
 }).clone({
 
-    name: 'test-phrase-9',
+    name: name('test-phrase-9'),
 
     startX: '58%',
     scale: 0.8,
@@ -182,29 +188,38 @@ scrawl.makePhrase({
 
 scrawl.makeBlock({
 
-    name: 'top-block',
+    name: name('top-block'),
 
     width: '100%',
     height: 10,
     
-    fillStyle: 'gradient-1',
+    fillStyle: name('gradient-1'),
 
     order: 0,
 
 }).clone({
 
-    name: 'left-block',
+    name: name('left-block'),
 
     height: '100%',
     width: 10,
 });
 
-let myGroup = scrawl.makeGroup({
+const myGroup = scrawl.makeGroup({
 
-    name: 'text-group',
+    name: name('text-group'),
 
-}).addArtefacts('test-phrase-1', 'test-phrase-2', 'test-phrase-3', 'test-phrase-4',
-    'test-phrase-5', 'test-phrase-6', 'test-phrase-7', 'test-phrase-8', 'test-phrase-9');
+}).addArtefacts(
+    name('test-phrase-1'), 
+    name('test-phrase-2'), 
+    name('test-phrase-3'), 
+    name('test-phrase-4'),
+    name('test-phrase-5'), 
+    name('test-phrase-6'), 
+    name('test-phrase-7'), 
+    name('test-phrase-8'), 
+    name('test-phrase-9'),
+);
 
 
 // #### Scene animation
@@ -215,7 +230,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -229,7 +244,7 @@ scrawl.addNativeListener('change', (e) => {
         e.preventDefault();
         e.stopPropagation();
 
-        let value = e.target.value;
+        const value = e.target.value;
 
         switch (value) {
 
@@ -296,16 +311,16 @@ if ('fonts' in document) {
     ])
     .then(res => {
 
-        let { engine } = canvas;
+        const { engine } = canvas;
 
         engine.save();
 
         engine.font = '18px Garamond';
-        let garamond = engine.measureText('The quick brown fox jumps over the lazy dog');
+        const garamond = engine.measureText('The quick brown fox jumps over the lazy dog');
         console.log('garamond', garamond);
 
         engine.font = '46px "Mountains of Christmas"';
-        let moc = engine.measureText('The quick brown fox jumps over the lazy dog');
+        const moc = engine.measureText('The quick brown fox jumps over the lazy dog');
         console.log('moc', moc);
 
         engine.restore();

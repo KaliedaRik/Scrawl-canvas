@@ -9,7 +9,7 @@
 
 
 // Current version
-export const version = '8.9.6';
+export const version = '8.9.7';
 
 
 // Objects created using the __makeAnchor__ factory
@@ -90,6 +90,81 @@ export const springnames = [];
 export const world = {};
 export const worldnames = [];
     
+// Stack element wrappers created during Scrawl-canvas initialization, and created using the __makeStack__ and __addStack__ factories
+export const stack = {};
+export const stacknames = [];
+
+
+// Objects created using the __makeTween__ and __makeAction__ factories
+export const tween = {};
+export const tweennames = [];
+    
+
+// Objects created using the __makeGradient__, __makeRadialGradient__, __makePattern__ and __makeColor__ factories
+export const styles = {};
+export const stylesnames = [];
+
+
+// DOM unstackedElement wrappers created using the __makeUnstackedElement__ and __makeSnippet__ factories
+export const unstackedelement = {};
+export const unstackedelementnames = [];
+
+
+// Given a `namespace` string, kill all objects created with that namespace
+// + Function assumes that the namespace string appears as the first part of the object's `name` attribute
+export function purge (namespace = '') {
+
+    const remove = function (candidates, target, flag = false) {
+
+        candidates.forEach(c => {
+
+            const obj = target[c];
+
+            if (obj && obj.kill) obj.kill(flag);
+        });
+    };
+
+    if (namespace) {
+
+        const candidateArtefacts = artefactnames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateArtefacts, artefact);
+
+        const candidateAssets = assetnames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateAssets, asset);
+
+        const candidateGroups = groupnames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateGroups, group, true);
+
+        const candidateStyles = stylesnames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateStyles, styles);
+
+        const candidateTweens = tweennames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateTweens, tween);
+
+        const candidateAnimations = animationnames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateAnimations, animation);
+
+        const candidateAnimationTickers = animationtickersnames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateAnimationTickers, animationtickers);
+
+        const candidateFilters = filternames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateFilters, filter);
+
+        const candidateAnchors = anchornames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateAnchors, anchor);
+
+        const candidateForces = forcenames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateForces, force);
+
+        const candidateSprings = springnames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateSprings, spring);
+
+        const candidateWorlds = worldnames.filter(c => c.indexOf(namespace) === 0);
+        remove(candidateWorlds, world);
+    }
+};
+
+
 // Section classes are used with Phrase entitys - we store the class definitions in the library so that they can be easily shared between Phrases
 export const sectionClasses = {
     'DEFAULTS': { defaults: true },
@@ -122,26 +197,6 @@ export const sectionClasses = {
     'HIGHLIGHT': { highlight: true },
     '/HIGHLIGHT': { highlight: false },
 };
-
-// Stack element wrappers created during Scrawl-canvas initialization, and created using the __makeStack__ and __addStack__ factories
-export const stack = {};
-export const stacknames = [];
-
-
-// Objects created using the __makeTween__ and __makeAction__ factories
-export const tween = {};
-export const tweennames = [];
-    
-
-// Objects created using the __makeGradient__, __makeRadialGradient__, __makePattern__ and __makeColor__ factories
-export const styles = {};
-export const stylesnames = [];
-
-
-// DOM unstackedElement wrappers created using the __makeUnstackedElement__ and __makeSnippet__ factories
-export const unstackedelement = {};
-export const unstackedelementnames = [];
-
 
 // All __makeXXX__ factory functions get added as references to the __constructors__ section of the library - used mainly as part of Scrawl-canvas cloning functionality.
 export const constructors = {};

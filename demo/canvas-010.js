@@ -16,7 +16,13 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = L.artefact.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // ##### Importing video sources
@@ -29,9 +35,9 @@ importDomVideo('.myvideo');
 
 
 // __Create Picture entity__ from video entity included in the DOM
-let viddyOne = makePicture({
+const viddyOne = makePicture({
 
-    name: 'first-video',
+    name: name('first-video'),
     asset: 'waves',
 
     width: 200,
@@ -56,9 +62,9 @@ let viddyOne = makePicture({
 });
 
 // __Import a video from a remote server__
-let viddyTwo = makePicture({
+const viddyTwo = makePicture({
 
-    name: 'second-video',
+    name: name('second-video'),
     videoSource: 'img/Motion - 18249.mp4',
 
     width: '100%',
@@ -84,7 +90,7 @@ importMediaStream({
 
     viddyThree = makePicture({
 
-        name: 'mediastream-video',
+        name: name('mediastream-video'),
         asset: myface.name,
 
         startX: '20%',
@@ -143,13 +149,13 @@ importMediaStream({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let [copyX, copyY] = viddyOne.copyStart;
-    let [copyW, copyH] = viddyOne.copyDimensions;
-    let [pasteX, pasteY] = viddyOne.start;
-    let [pasteW, pasteH] = viddyOne.dimensions;
-    let [handleX, handleY] = viddyOne.handle;
+    const [copyX, copyY] = viddyOne.copyStart;
+    const [copyW, copyH] = viddyOne.copyDimensions;
+    const [pasteX, pasteY] = viddyOne.start;
+    const [pasteW, pasteH] = viddyOne.dimensions;
+    const [handleX, handleY] = viddyOne.handle;
 
-    let {roll, scale} = viddyOne;
+    const {roll, scale} = viddyOne;
 
     return `    Copy - x: ${copyX}, y: ${copyY}, w: ${copyW}, h: ${copyH}
     Paste - x: ${pasteX}, y: ${pasteY}, w: ${pasteW}, h:${pasteH}
@@ -161,7 +167,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

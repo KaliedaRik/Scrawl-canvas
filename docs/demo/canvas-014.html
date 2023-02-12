@@ -580,6 +580,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-028.html">
+                  ./demo/filters-028.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1132,10 +1137,11 @@
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
+<p>Get a handle to the Canvas wrapper</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = L.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = L.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -1146,13 +1152,29 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
+              <p>Namespacing boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;demo&#x27;</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
               <p>Define the entitys that will be used as pivots and paths before the entitys that use them as such</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeWheel</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-1&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-1&#x27;</span>),
     <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-number">100</span>,
@@ -1168,51 +1190,31 @@
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-2&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-2&#x27;</span>),
     <span class="hljs-attr">startY</span>: <span class="hljs-number">300</span>,
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-3&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-3&#x27;</span>),
     <span class="hljs-attr">startY</span>: <span class="hljs-number">500</span>,
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-4&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-4&#x27;</span>),
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">500</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">100</span>,
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-5&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-5&#x27;</span>),
     <span class="hljs-attr">startY</span>: <span class="hljs-number">230</span>,
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-6&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-6&#x27;</span>),
     <span class="hljs-attr">startY</span>: <span class="hljs-number">370</span>,
 
 }).<span class="hljs-title function_">clone</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-7&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-7&#x27;</span>),
     <span class="hljs-attr">startY</span>: <span class="hljs-number">500</span>,
 });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
-              <p>Create a group to hold the draggable artefacts, for easier user action collision detection</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> pins = <span class="hljs-title function_">makeGroup</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-pins&#x27;</span>,
-    <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-
-}).<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">&#x27;pin-1&#x27;</span>, <span class="hljs-string">&#x27;pin-2&#x27;</span>, <span class="hljs-string">&#x27;pin-3&#x27;</span>, <span class="hljs-string">&#x27;pin-4&#x27;</span>, <span class="hljs-string">&#x27;pin-5&#x27;</span>, <span class="hljs-string">&#x27;pin-6&#x27;</span>, <span class="hljs-string">&#x27;pin-7&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1223,16 +1225,24 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>Now start defining the Shape lines. Bezier, Quadratic and Line Shapes can <code>pivot</code> and <code>path</code> their control coordinates to other artefacts, similar to how start coordinates operate.</p>
+              <p>Create a group to hold the draggable artefacts, for easier user action collision detection</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeQuadratic</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pins = <span class="hljs-title function_">makeGroup</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-quad&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-pins&#x27;</span>),
+    <span class="hljs-attr">host</span>: canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseName&#x27;</span>),
 
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;pin-1&#x27;</span>,
-    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,</pre></div></div>
+}).<span class="hljs-title function_">addArtefacts</span>(
+    <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-1&#x27;</span>),
+    <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-2&#x27;</span>),
+    <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-3&#x27;</span>),
+    <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-4&#x27;</span>),
+    <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-5&#x27;</span>),
+    <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-6&#x27;</span>),
+    <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-7&#x27;</span>),
+);</pre></div></div>
             
         </li>
         
@@ -1243,16 +1253,36 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
+              <p>Now start defining the Shape lines. Bezier, Quadratic and Line Shapes can <code>pivot</code> and <code>path</code> their control coordinates to other artefacts, similar to how start coordinates operate.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeQuadratic</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-quad&#x27;</span>),
+
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-1&#x27;</span>),
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
               <p>The normal action when the Start coordinates for Bezier, Quadratic and Line Shapes change is that the entire shape moves to the new coordinates. In this demo, we don’t want that; when a user drags the wheel on which the shape’s start coordinates pivots, we want the shape to ‘change shape’. We can make sure this happens by setting its <code>useStartAsControlPoint</code> attribute to true.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
 
-    <span class="hljs-attr">controlPivot</span>: <span class="hljs-string">&#x27;pin-2&#x27;</span>,
+    <span class="hljs-attr">controlPivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-2&#x27;</span>),
     <span class="hljs-attr">controlLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
 
-    <span class="hljs-attr">endPivot</span>: <span class="hljs-string">&#x27;pin-3&#x27;</span>,
+    <span class="hljs-attr">endPivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-3&#x27;</span>),
     <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
 
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">5</span>,
@@ -1265,19 +1295,19 @@
 
 <span class="hljs-title function_">makeBezier</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-bezier&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-bezier&#x27;</span>),
 
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;pin-4&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-4&#x27;</span>),
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
     <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
 
-    <span class="hljs-attr">startControlPivot</span>: <span class="hljs-string">&#x27;pin-5&#x27;</span>,
+    <span class="hljs-attr">startControlPivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-5&#x27;</span>),
     <span class="hljs-attr">startControlLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
 
-    <span class="hljs-attr">endControlPivot</span>: <span class="hljs-string">&#x27;pin-6&#x27;</span>,
+    <span class="hljs-attr">endControlPivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-6&#x27;</span>),
     <span class="hljs-attr">endControlLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
 
-    <span class="hljs-attr">endPivot</span>: <span class="hljs-string">&#x27;pin-7&#x27;</span>,
+    <span class="hljs-attr">endPivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-7&#x27;</span>),
     <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
 
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">5</span>,
@@ -1291,11 +1321,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>The ‘path-line’ shape uses the quadratic and bezier curves as paths for its start and end coordinates</p>
 
@@ -1303,14 +1333,14 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeLine</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;path-line&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;path-line&#x27;</span>),
 
-    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;my-quad&#x27;</span>,
+    <span class="hljs-attr">path</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-quad&#x27;</span>),
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
     <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
 
-    <span class="hljs-attr">endPath</span>: <span class="hljs-string">&#x27;my-bezier&#x27;</span>,
+    <span class="hljs-attr">endPath</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-bezier&#x27;</span>),
     <span class="hljs-attr">endPathPosition</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
 
@@ -1322,11 +1352,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Delta animate the path-line entity along the lengths of the bezier and quadratic Shape entitys</p>
 
@@ -1343,11 +1373,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>the ‘mouse-line’ shape has its start coordinates permanently fixed to the center of the screen, while its end coordinates alternate between tracking a point along the ‘path-line’ shape, and the mouse cursor when it is moving over the canvas</p>
 
@@ -1355,13 +1385,13 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeLine</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mouse-line&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mouse-line&#x27;</span>),
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
     <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
 
-    <span class="hljs-attr">endPath</span>: <span class="hljs-string">&#x27;path-line&#x27;</span>,
+    <span class="hljs-attr">endPath</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;path-line&#x27;</span>),
     <span class="hljs-attr">endPathPosition</span>: <span class="hljs-number">0.5</span>,
     <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
 
@@ -1376,11 +1406,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Decorate the ‘mouse-line’ shape with other artefacts to turn it into an arrow</p>
 
@@ -1388,7 +1418,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeTetragon</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;arrowhead&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;arrowhead&#x27;</span>),
 
     <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
 
@@ -1402,7 +1432,7 @@
     <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
     <span class="hljs-attr">roll</span>: <span class="hljs-number">90</span>,
 
-    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;mouse-line&#x27;</span>,
+    <span class="hljs-attr">path</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mouse-line&#x27;</span>),
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
     <span class="hljs-attr">addPathRotation</span>: <span class="hljs-literal">true</span>,
@@ -1410,7 +1440,7 @@
 
 <span class="hljs-title function_">makeWheel</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;arrowbase&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;arrowbase&#x27;</span>),
 
     <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
 
@@ -1424,26 +1454,11 @@
     <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
     <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 
-    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;mouse-line&#x27;</span>,
+    <span class="hljs-attr">path</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mouse-line&#x27;</span>),
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
     <span class="hljs-attr">addPathRotation</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p>We can always grab a handle to any canvas entity by reference to its entry in the Scrawl-canvas library. Entitys are stored in both the <code>artefact</code> and the <code>entity</code> sections of the library</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> arrow = L.<span class="hljs-property">entity</span>[<span class="hljs-string">&#x27;mouse-line&#x27;</span>];</pre></div></div>
             
         </li>
         
@@ -1454,13 +1469,28 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
+              <p>We can always grab a handle to any canvas entity by reference to its entry in the Scrawl-canvas library. Entitys are stored in both the <code>artefact</code> and the <code>entity</code> sections of the library</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> arrow = L.<span class="hljs-property">entity</span>[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mouse-line&#x27;</span>)];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
               <p>Testing to make sure artefacts stick to their paths, even when those paths are animated or manipulated in various ways</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makePicture</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bunny1&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bunny1&#x27;</span>),
     <span class="hljs-attr">imageSource</span>: <span class="hljs-string">&#x27;img/bunny.png&#x27;</span>,
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">26</span>,
@@ -1472,25 +1502,25 @@
     <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
     <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 
-    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;path-line&#x27;</span>,
+    <span class="hljs-attr">path</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;path-line&#x27;</span>),
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.1</span>,
     <span class="hljs-attr">addPathRotation</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
 
 }).<span class="hljs-title function_">clone</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bunny2&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bunny2&#x27;</span>),
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.9</span>,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Create the drag-and-drop zone</p>
@@ -1509,17 +1539,17 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Function to check whether mouse cursor is over canvas, and lock the arrow’s end point accordingly</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mouseCheck = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> mouseCheck = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> active = <span class="hljs-literal">false</span>;
 
@@ -1539,11 +1569,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1555,11 +1585,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1567,7 +1597,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">commence</span>: mouseCheck,
     <span class="hljs-attr">afterShow</span>: report,
@@ -1576,11 +1606,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
@@ -1590,40 +1620,40 @@
 
 <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Performing tests ...&#x27;</span>);
 
-<span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-string">&#x27;pin-1&#x27;</span>, <span class="hljs-number">2000</span>, <span class="hljs-function">() =&gt;</span> {
+<span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-1&#x27;</span>), <span class="hljs-number">2000</span>, <span class="hljs-function">() =&gt;</span> {
 
-    pins.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">&#x27;pin-1&#x27;</span>);
+    pins.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-1&#x27;</span>));
 
-    L.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;my-quad&#x27;</span>].<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;pin-1&#x27;</span>,
+    L.<span class="hljs-property">artefact</span>[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-quad&#x27;</span>)].<span class="hljs-title function_">set</span>({
+        <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-1&#x27;</span>),
         <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
     });
 });
 
-<span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-string">&#x27;pin-5&#x27;</span>, <span class="hljs-number">3000</span>, <span class="hljs-function">() =&gt;</span> {
+<span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-5&#x27;</span>), <span class="hljs-number">3000</span>, <span class="hljs-function">() =&gt;</span> {
 
-    pins.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">&#x27;pin-5&#x27;</span>);
+    pins.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-5&#x27;</span>));
 
-    L.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;my-bezier&#x27;</span>].<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">startControlPivot</span>: <span class="hljs-string">&#x27;pin-5&#x27;</span>,
+    L.<span class="hljs-property">artefact</span>[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-bezier&#x27;</span>)].<span class="hljs-title function_">set</span>({
+        <span class="hljs-attr">startControlPivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-5&#x27;</span>),
         <span class="hljs-attr">startControlLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
     });
 });
 
-<span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-string">&#x27;pin-7&#x27;</span>, <span class="hljs-number">4000</span>, <span class="hljs-function">() =&gt;</span> {
+<span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-7&#x27;</span>), <span class="hljs-number">4000</span>, <span class="hljs-function">() =&gt;</span> {
 
-    pins.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">&#x27;pin-7&#x27;</span>);
+    pins.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-7&#x27;</span>));
 
-    L.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;my-bezier&#x27;</span>].<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">endPivot</span>: <span class="hljs-string">&#x27;pin-7&#x27;</span>,
+    L.<span class="hljs-property">artefact</span>[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-bezier&#x27;</span>)].<span class="hljs-title function_">set</span>({
+        <span class="hljs-attr">endPivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-7&#x27;</span>),
         <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
     });
 });
 
-<span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-string">&#x27;my-bezier&#x27;</span>, <span class="hljs-number">5000</span>, <span class="hljs-function">() =&gt;</span> {
+<span class="hljs-title function_">killArtefact</span>(canvas, <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-bezier&#x27;</span>), <span class="hljs-number">5000</span>, <span class="hljs-function">() =&gt;</span> {
 
-    L.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;path-line&#x27;</span>].<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">endPath</span>: <span class="hljs-string">&#x27;my-bezier&#x27;</span>,
+    L.<span class="hljs-property">artefact</span>[<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;path-line&#x27;</span>)].<span class="hljs-title function_">set</span>({
+        <span class="hljs-attr">endPath</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-bezier&#x27;</span>),
         <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
     });
 });</pre></div></div>

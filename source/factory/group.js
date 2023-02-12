@@ -506,18 +506,20 @@ P.stashAction = function (img) {
 
         if (this.stashOutputAsAsset) {
 
+            const stashId = this.stashOutputAsAsset.substring ? this.stashOutputAsAsset : `${this.name}-groupimage`;
+
             this.stashOutputAsAsset = false;
 
             if (!this.stashedImage) {
 
                 let newimg = this.stashedImage = document.createElement('img');
 
-                newimg.id = `${this.name}-groupimage`;
+                newimg.id = stashId;
 
                 newimg.onload = function () {
 
                     scrawlCanvasHold.appendChild(newimg);
-                    importDomImage(`#${newimg.id}`);
+                    importDomImage(`#${stashId}`);
                 };
 
                 newimg.src = myElement.toDataURL();

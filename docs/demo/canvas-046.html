@@ -580,6 +580,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-028.html">
+                  ./demo/filters-028.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1124,10 +1129,9 @@
 <p>We could place this code in its own module then import it into this code</p>
 <ul>
 <li>The generator creates a new Cell, adds a Polyline entity to it, compiles the Cell and captures the output into a DOM image. </li>
-<li>It then destroys the Cell and Polyline and creates a Picture entity from the asset they produced</li>
-<li>Finally it constructs a Tween to animate various aspects of the Picture entity</li>
-<li>When the Tween completes it will destroy the image asset wrapper and the Picture entity, then remove the &lt;img&gt; element from the DOM, after which it will destroy itself</li>
-<li>In other words, by the time the Tween completes, none of the objects generated for the smoke ring effect should remain in the Scrawl-canvas library or the page DOM.</li>
+<li>It then creates a Picture entity from the asset captured from the Cell.</li>
+<li>Finally it constructs a Tween to animate various aspects of the Picture entity.</li>
+<li>When the Tween completes it will destroy all the objects - including the DOM &lt;img&gt; element - associated with the smoke ring, and then destroy itself.</li>
 </ul>
 
             </div>
@@ -1141,15 +1145,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Use a Color object to generate colors on demand, in a restricted color range</p>
+              <p>Smoke ring factory</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> colorMaker = scrawl.<span class="hljs-title function_">makeColor</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;color-maker&#x27;</span>,
-    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
-    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildSmokeRing = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvasWrapper</span>) {</pre></div></div>
             
         </li>
         
@@ -1160,11 +1160,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>To avoid nameclashes, we’re using a counter as part of the smokering’s name</p>
+              <p>A line of boilerplate to help with namespacing various objects</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> counter = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">getName</span> = (<span class="hljs-params">name</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${name}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -1175,11 +1175,19 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>The main function</p>
+              <p>Use a Color object to generate colors on demand, in a restricted color range</p>
+<ul>
+<li>Not efficient - doing it this way to test <code>scrawl.purge()</code> functionality</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildSmokeRing = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvasWrapper, color</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> colorMaker = scrawl.<span class="hljs-title function_">makeColor</span>({
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">getName</span>(<span class="hljs-string">&#x27;color-maker&#x27;</span>),
+        <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+        <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+        <span class="hljs-attr">colorSpace</span>: <span class="hljs-string">&#x27;OKLAB&#x27;</span>,
+    });</pre></div></div>
             
         </li>
         
@@ -1195,7 +1203,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> cell = canvasWrapper.<span class="hljs-title function_">buildCell</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-cell`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">getName</span>(<span class="hljs-string">&#x27;cell&#x27;</span>),
         <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
         <span class="hljs-attr">height</span>: <span class="hljs-number">600</span>,
         <span class="hljs-attr">cleared</span>: <span class="hljs-literal">false</span>,
@@ -1240,8 +1248,8 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snake = scrawl.<span class="hljs-title function_">makePolyline</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-snake`</span>,
-        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-cell`</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">getName</span>(<span class="hljs-string">&#x27;snake&#x27;</span>),
+        <span class="hljs-attr">group</span>: <span class="hljs-title function_">getName</span>(<span class="hljs-string">&#x27;cell&#x27;</span>),
 
         <span class="hljs-attr">pins</span>: pins,
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
@@ -1250,7 +1258,7 @@
         <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
         <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
         <span class="hljs-attr">tension</span>: <span class="hljs-number">1</span>,
-        <span class="hljs-attr">strokeStyle</span>: color,
+        <span class="hljs-attr">strokeStyle</span>: colorMaker.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>()),
 
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
         <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.1</span>,
@@ -1265,15 +1273,14 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>We need to perform a clear-compile on the Cell, outside of the Display cycle</p>
+              <p>Tell SC that we want to capture the results of our Cell’s next compile action in a DOM &lt;img&gt; object</p>
+<ul>
+<li>This is a one-off action that has to be set up again each time we want to capture an image</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    cell.<span class="hljs-title function_">clear</span>();
-    scrawl.<span class="hljs-title function_">createImageFromCell</span>(cell, <span class="hljs-literal">true</span>);
-    cell.<span class="hljs-title function_">compile</span>();
-    snake.<span class="hljs-title function_">kill</span>();
-    cell.<span class="hljs-title function_">kill</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">createImageFromCell</span>(cell, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
         
@@ -1284,18 +1291,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>Create the Picture entity which will destroy the (dearly departed) Polyline on the canvas</p>
+              <p>Now we can perform a clear-compile on the Cell, outside of the Display cycle</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> img = scrawl.<span class="hljs-title function_">makePicture</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-smokering`</span>,
-        <span class="hljs-attr">group</span>: canvasWrapper.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-
-        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-
-        <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-cell-image`</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    cell.<span class="hljs-title function_">clear</span>();
+    cell.<span class="hljs-title function_">compile</span>();</pre></div></div>
             
         </li>
         
@@ -1306,15 +1307,16 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>‘dom’ - is the magic String that tells Scrawl-canvas to remove both the asset wrapper object, and the &lt;img&gt; element itself. Any other non-false value will cause only the asset wrapper object to remove itself.</p>
+              <p>Create the Picture entity, which uses the image asset created in the previous step</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">removeAssetOnKill</span>: <span class="hljs-string">&#x27;dom&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> img = scrawl.<span class="hljs-title function_">makePicture</span>({
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">getName</span>(<span class="hljs-string">&#x27;smoke-ring&#x27;</span>),
+        <span class="hljs-attr">group</span>: canvasWrapper.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
 
-        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
-        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
-    });</pre></div></div>
+        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],</pre></div></div>
             
         </li>
         
@@ -1325,15 +1327,14 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>Create the Tween that will animate the Picture entity</p>
+              <p>When we create an image from a Cell, the resulting asset is automatically named by adding <code>-image</code> to that Cell’s name</p>
+<ul>
+<li>We named our Cell <code>getName(&#39;cell&#39;)</code>, so the image asset generated from it will be called <code>getName(&#39;cell-image&#39;)</code></li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makeTween</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-tween`</span>,
-        <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;16s&#x27;</span>,
-        <span class="hljs-attr">targets</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-smokering`</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">asset</span>: <span class="hljs-title function_">getName</span>(<span class="hljs-string">&#x27;cell-image&#x27;</span>),</pre></div></div>
             
         </li>
         
@@ -1344,18 +1345,85 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>The Tween will run once and then destroy the Picture, the &lt;img&gt; element and its asset wrapper, and then itself</p>
+              <p>The image asset generated from our Cell has been stored in a dynamically created &lt;img&gt; element on the DOM. We need to clear this out too when the smoke ring dies</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">removeAssetOnKill</span>: <span class="hljs-literal">true</span>,
+
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
+        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>Create the Tween that will animate the Picture entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makeTween</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">getName</span>(<span class="hljs-string">&#x27;tween&#x27;</span>),
+        <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;16s&#x27;</span>,
+        <span class="hljs-attr">targets</span>: <span class="hljs-title function_">getName</span>(<span class="hljs-string">&#x27;smoke-ring&#x27;</span>),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>The Tween will run once and then destroy all the scrawl.library objects associated with the namespace supplied to the <code>buildSmokeRing</code> function, including itself and its ticker.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">cycles</span>: <span class="hljs-number">1</span>,
         <span class="hljs-attr">killOnComplete</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">completeAction</span>: <span class="hljs-function">() =&gt;</span> {
 
-            img.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
+        <span class="hljs-attr">completeAction</span>: <span class="hljs-function">() =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>Object cleanup acomplished via SC’s <code>library.purge()</code> function</p>
 
-            counter++;
-            <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`ring<span class="hljs-subst">${counter}</span>`</span>, canvas, colorMaker.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>()));
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-property">library</span>.<span class="hljs-title function_">purge</span>(namespace);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>Recreate the smoke ring</p>
+<ul>
+<li>We do this in a <code>setTimeout</code> to make sure it runs <strong>after</strong> the current <code>requestAnimationFrame</code> tick completes</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(namespace, canvasWrapper), <span class="hljs-number">0</span>);
         },
 
         <span class="hljs-attr">definitions</span>: [
@@ -1383,11 +1451,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
 
@@ -1398,11 +1466,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1417,6 +1485,7 @@
 Groups: <span class="hljs-subst">${lib.groupnames.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
 Assets: <span class="hljs-subst">${lib.assetnames.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
 Entitys: <span class="hljs-subst">${lib.entitynames.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
+Styles: <span class="hljs-subst">${lib.stylesnames.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
 Tickers: <span class="hljs-subst">${lib.animationtickersnames.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
 Tweens: <span class="hljs-subst">${lib.tweennames.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>`</span>;
 });</pre></div></div>
@@ -1424,11 +1493,11 @@ Tweens: <span class="hljs-subst">${lib.tweennames.join(<span class="hljs-string"
         </li>
         
         
-        <li id="section-17">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1444,79 +1513,67 @@ Tweens: <span class="hljs-subst">${lib.tweennames.join(<span class="hljs-string"
         </li>
         
         
-        <li id="section-18">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>The tween runs for 16 seconds, and we want a regular supply of rings … so we release some initially to get the scene running</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`initRingFirst`</span>, canvas, colorMaker.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>())), <span class="hljs-number">0</span>);
-<span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`initRingSecond`</span>, canvas, colorMaker.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>())), <span class="hljs-number">3700</span>);
-<span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`initRingThird`</span>, canvas, colorMaker.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>())), <span class="hljs-number">8100</span>);
-<span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`initRingFourth`</span>, canvas, colorMaker.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>())), <span class="hljs-number">12300</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`first`</span>, canvas), <span class="hljs-number">0</span>);
+<span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`second`</span>, canvas), <span class="hljs-number">3700</span>);
+<span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`third`</span>, canvas), <span class="hljs-number">8100</span>);
+<span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`fourth`</span>, canvas), <span class="hljs-number">12300</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-19">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p>We also want to halt the animation when the browser page loses focus, and resume them when it regains focus</p>
+              <h4 id="additional-testing">Additional testing</h4>
+<p>Test ticker halt/resume: halt when the browser loses focus, and resume them when it regains focus</p>
 <ul>
+<li>Focus can be lost anytime user clicks away from the browser window, or clicks on a different browser window tab, or even clicking in the dev inspector panel</li>
 <li>We could use<code> scrawl.stopCoreAnimationLoop()</code> and <code>scrawl.startCoreAnimationLoop()</code> to achieve this, but that action will stop ALL canvas animations on the page, not just this demo.</li>
-<li>Instead, we can halt/resume/run our render animation, and also any existing smoke ring Tweens.</li>
+<li>Instead, we halt/resume the Tweens themselves, alongside the RenderAnimation object.</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">window</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;blur&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
-    scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">animationtickersnames</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
-        <span class="hljs-keyword">if</span> (t.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;ring&#x27;</span>) === <span class="hljs-number">0</span>) {
-            <span class="hljs-keyword">let</span> ticker = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">animationtickers</span>[t];
-            <span class="hljs-keyword">if</span> (ticker) ticker.<span class="hljs-title function_">halt</span>();
-        }
-    });
-    render.<span class="hljs-title function_">halt</span>();
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>We could add the focus event listener the same as we did the blur listener, or we can add it using Scrawl-canvas functionality:</p>
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">actionBlur</span> = (<span class="hljs-params"></span>) =&gt; scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">tweennames</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;focus&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
-    scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">animationtickersnames</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
-        <span class="hljs-keyword">if</span>(t.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;ring&#x27;</span>) === <span class="hljs-number">0</span>) {
-            <span class="hljs-keyword">let</span> ticker = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">animationtickers</span>[t];
-            <span class="hljs-keyword">if</span> (ticker) ticker.<span class="hljs-title function_">resume</span>();
-        }
-    });
+    <span class="hljs-keyword">const</span> tween = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">tween</span>[t];
+    <span class="hljs-keyword">if</span> (tween &amp;&amp; tween.<span class="hljs-title function_">isRunning</span>()) tween.<span class="hljs-title function_">halt</span>();
+
+    render.<span class="hljs-title function_">halt</span>();
+});
+scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;blur&#x27;</span>, actionBlur, <span class="hljs-variable language_">window</span>);
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">actionFocus</span> = (<span class="hljs-params"></span>) =&gt; scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">tweennames</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
+
+    <span class="hljs-keyword">const</span> tween = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">tween</span>[t];
+    <span class="hljs-keyword">if</span> (tween &amp;&amp; !tween.<span class="hljs-title function_">isRunning</span>()) tween.<span class="hljs-title function_">resume</span>();
+
     render.<span class="hljs-title function_">run</span>();
-}, <span class="hljs-variable language_">window</span>);</pre></div></div>
+});
+scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;focus&#x27;</span>, actionFocus, <span class="hljs-variable language_">window</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-21">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

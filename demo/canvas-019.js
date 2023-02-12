@@ -18,12 +18,19 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
+// Get handles to the Canvas wrappers
 const canvases = L.canvas,
     entitys = L.entity,
     c1 = canvases['hackney'],
     c2 = canvases['heathrow'],
     c3 = canvases['kingston'],
     c4 = canvases['burglary'];
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
+
 
 // Import the images we defined in the DOM (in &lt;img> elements)
 importDomImage('.places');
@@ -38,7 +45,7 @@ const data = [
     {
         canvas: c2,
         image: 'heathrow-bg',
-        transparency: 'rgba(0,0,0,0)',
+        transparency: 'rgb(0 0 0 / 0)',
     },
     {
         canvas: c3,
@@ -52,13 +59,15 @@ const data = [
     },
 ];
 
+
 // This array will hold a set of functions which we will invoke in turn at the start of each Display cycle
 const checkFunctions = [];
+
 
 // The blur filter is temporary - we use it once on each image to generate a blurred version of that image
 // + We do it this way because the blur filter is computationally very expensive - capturing a blurred version of the image is a lot better for end user power consumption
 makeFilter({
-    name: 'blur',
+    name: name('blur'),
     method: 'gaussianBlur',
     radius: 20,
 });
@@ -70,7 +79,7 @@ data.forEach(scene => {
     // - We will remove the filter in a later step
     let entity = makePicture({
 
-        name: `${scene.image}-original`,
+        name: name(`${scene.image}-original`),
         group: scene.canvas.base.name,
 
         asset: scene.image,
@@ -78,7 +87,7 @@ data.forEach(scene => {
         dimensions: ['100%', '100%'],
         copyDimensions: ['100%', '100%'],
 
-        filters: ['blur'],
+        filters: [name('blur')],
         method: 'fill',
     });
 
@@ -88,7 +97,7 @@ data.forEach(scene => {
     // The purpose of this demo is to test the various ways we can define 'transparency' in Scrawl-canvas Color objects and Gradients - tests a set of Color factory bugs uncovered and fixed in v8.3.2
     makeRadialGradient({
 
-        name: `${scene.image}-gradient`,
+        name: name(`${scene.image}-gradient`),
         start: ['50%', '50%'],
         end: ['50%', '50%'],
         startRadius: '5%',
@@ -103,14 +112,14 @@ data.forEach(scene => {
     // Apply the gradient to the scene via a Block entity
     const filterBlock = makeBlock({
 
-        name: `${scene.image}-block`,
+        name: name(`${scene.image}-block`),
         group: scene.canvas.base.name,
 
         start: ['center', 'center'],
         handle: ['center', 'center'],
         dimensions: ['200%', '200%'],
 
-        fillStyle: `${scene.image}-gradient`,
+        fillStyle: name(`${scene.image}-gradient`),
         lockFillStyleToEntity: true,
     });
 
@@ -133,9 +142,9 @@ data.forEach(scene => {
 // This function will run once, at the end of the first Display cycle
 const postInitialization = (anim) => {
 
-    console.log(anim.target.name, 'postInitialization')
+    console.log(anim.target.name, 'postInitialization');
 
-    let original = entitys[`${anim.target.name}-bg-original`];
+    let original = entitys[name(`${anim.target.name}-bg-original`)];
 
     // Update our original Picture entity, in particular to remove the blur filter and set up its composition in the scene
     original.set({
@@ -147,8 +156,8 @@ const postInitialization = (anim) => {
     // Create a second Picture entity using the blurred image asset Scrawl-canvas created for us during the first iteration of the Display cycle.
     // + Note that we've asked Scrawl-canvas to create an &lt;img> element (outside of the DOM) from our original Picture's blurred output. Element creation takes time (it's an asynchronous action), which means that our new Picture entity won't show up for up to a second after the demo starts running.
     original.clone({
-        name: `${anim.target.name}-bg-blurred`,
-        asset: `${anim.target.name}-bg-original-image`,
+        name: name(`${anim.target.name}-bg-blurred`),
+        asset: name(`${anim.target.name}-bg-original-image`),
         order: 1,
         globalCompositeOperation: 'source-atop',
     });
@@ -163,7 +172,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: [c1, c2, c3, c4],
     observer: true,
 
@@ -173,7 +182,7 @@ makeRender({
 
 makeRender({
 
-    name: 'demo-speed',
+    name: name('speed'),
     noTarget: true,
     afterShow: report,
 });

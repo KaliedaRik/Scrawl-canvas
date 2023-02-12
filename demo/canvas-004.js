@@ -15,12 +15,18 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = L.artefact.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create the radial gradient
-let graddy = makeRadialGradient({
-    name: 'mygradient',
+const graddy = makeRadialGradient({
+    name: name('mygradient'),
     startX: '50%',
     startY: '50%',
     endX: '50%',
@@ -47,7 +53,7 @@ const bespokeEasings = {
 
 // Create a block entity which will use the gradient
 makeBlock({
-    name: 'myblock',
+    name: name('myblock'),
     width: '90%',
     height: '90%',
     startX: '5%',
@@ -70,7 +76,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -120,7 +126,7 @@ addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
-    let val = parseInt(e.target.value, 10);
+    const val = parseInt(e.target.value, 10);
 
     switch (e.target.id) {
 
@@ -140,7 +146,7 @@ addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     if (['user-steps', 'user-repeat'].includes(val)) {
         graddy.set({

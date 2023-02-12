@@ -650,7 +650,7 @@ export default function (P = Ωempty) {
 // `buildStyle` - Just in case something went wrong with loading other styles Factory modules, which must overwrite this function, we can return transparent color here
     P.buildStyle = function (cell) {
 
-        return 'rgba(0,0,0,0)';
+        return 'rgb(0 0 0 / 0)';
     };
 
 // `addStopsToGradient` - internal function, called by the `buildStyle` function (which is overwritten by the Gradient and RadialGradient factories)

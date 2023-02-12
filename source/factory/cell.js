@@ -181,7 +181,7 @@ let defaultAttributes = {
     showOrder: 0,
 
 
-// By default, cells have a background color of `rgba(0,0,0,0)` - transparent black, which gets applied as the end step in the clear part of the display cycle. Setting the __backgroundColor__ attribute ensures the Cell will use that color instead. Any CSS color String is a valid argument (but not gradients or patterns, which get applied at a later stage in the Display cycle).
+// By default, cells have a background color of `rgb(0 0 0 / 0)` - transparent black, which gets applied as the end step in the clear part of the display cycle. Setting the __backgroundColor__ attribute ensures the Cell will use that color instead. Any CSS color String is a valid argument (but not gradients or patterns, which get applied at a later stage in the Display cycle).
 // + Base cells can have this attribute set via their controller Canvas.
     backgroundColor: '',
 
@@ -376,7 +376,7 @@ S.element = function (item) {
 S.backgroundColor = function (item) {
 
     // If we try to clear the cell with a transparent color, it will not clear. Setting it to an empty string fixes this issue
-    if ('rgba(0, 0, 0, 0)' === item || 'transparent' === item || '#00000000' === item || '#0000' === item) item = '';
+    if ('rgb(0 0 0 / 0)' === item || 'rgba(0 0 0 / 0)' === item || 'rgba(0,0,0,0)' === item || 'rgba(0, 0, 0, 0)' === item || 'transparent' === item || '#00000000' === item || '#0000' === item) item = '';
     this.backgroundColor = item;
 };
 
@@ -960,12 +960,12 @@ P.restoreShadow = function (entity) {
 // `setToClearShape`
 P.setToClearShape = function () {
 
-    this.engine.fillStyle = 'rgba(0,0,0,0)';
-    this.engine.strokeStyle = 'rgba(0,0,0,0)';
-    this.engine.shadowColor = 'rgba(0,0,0,0)';
-    this.state.fillStyle = 'rgba(0,0,0,0)';
-    this.state.strokeStyle = 'rgba(0,0,0,0)';
-    this.state.shadowColor = 'rgba(0,0,0,0)';
+    this.engine.fillStyle = 'rgb(0 0 0 / 0)';
+    this.engine.strokeStyle = 'rgb(0 0 0 / 0)';
+    this.engine.shadowColor = 'rgb(0 0 0 / 0)';
+    this.state.fillStyle = 'rgb(0 0 0 / 0)';
+    this.state.strokeStyle = 'rgb(0 0 0 / 0)';
+    this.state.shadowColor = 'rgb(0 0 0 / 0)';
 
     return this;
 };
@@ -1317,6 +1317,8 @@ P.stashOutputAction = function () {
         // Get the dataUrl String, updating the stashed &lt;img> element with it
         if (this.stashOutputAsAsset) {
 
+            const stashId = this.stashOutputAsAsset.substring ? this.stashOutputAsAsset : `${this.name}-image`;
+
             this.stashOutputAsAsset = false;
 
             let sourcecanvas, mycanvas;
@@ -1333,12 +1335,12 @@ P.stashOutputAction = function () {
 
                 let newimg = this.stashedImage = document.createElement('img');
 
-                newimg.id = `${this.name}-image`;
+                newimg.id = stashId;
 
                 newimg.onload = function () {
 
                     scrawlCanvasHold.appendChild(newimg);
-                    importDomImage(`#${newimg.id}`);
+                    importDomImage(`#${stashId}`);
                 };
 
                 newimg.src = sourcecanvas.toDataURL();

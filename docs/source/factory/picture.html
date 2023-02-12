@@ -803,7 +803,9 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
 
     <span class="hljs-keyword">let</span> { asset, removeAssetOnKill } = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(asset)) asset.<span class="hljs-title function_">unsubscribe</span>(<span class="hljs-variable language_">this</span>);</pre></div></div>
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(asset)) {
+
+        asset.<span class="hljs-title function_">unsubscribe</span>(<span class="hljs-variable language_">this</span>);</pre></div></div>
             
         </li>
         
@@ -818,10 +820,7 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (removeAssetOnKill) {
-
-        <span class="hljs-keyword">if</span> (removeAssetOnKill.<span class="hljs-property">substring</span>) asset.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
-        <span class="hljs-keyword">else</span> asset.<span class="hljs-title function_">kill</span>();
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (removeAssetOnKill) asset.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
     }
 };</pre></div></div>
             

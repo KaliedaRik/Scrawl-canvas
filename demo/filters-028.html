@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 028</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    #my-image-store {
+      display: none;
+    }
+
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+
+    canvas {
+      margin:  0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 028</h1>
+  <h2>Stencil (background) filter functionality</h2>
+  <h3>To change image, drag-and-drop an image file over the canvas</h3>
+
+  <div class="controls">
+
+    <div class="pink label">Select filter</div>
+    <div class="pink">
+      <select id="filter">
+        <option value="">none</option>
+        <option value="" disabled>--Method filters--</option>
+        <option value="alphaToChannels">alphaToChannels</option>
+        <option value="areaAlpha">areaAlpha</option>
+        <option value="blue">blue</option>
+        <option value="blur">blur (legacy)</option>
+        <option value="brightness">brightness</option>
+        <option value="channels">channels</option>
+        <option value="channelLevels">channelLevels</option>
+        <option value="channelstep">channelstep</option>
+        <option value="channelsToAlpha">channelsToAlpha</option>
+        <option value="chroma">chroma</option>
+        <option value="chromakey">chromakey</option>
+        <option value="clampChannels">clampChannels</option>
+        <option value="corrode">corrode</option>
+        <option value="curveWeights">curveWeights</option>
+        <option value="cyan">cyan</option>
+        <option value="edgeDetect">edge detect</option>
+        <option value="emboss">emboss</option>
+        <option value="flood">flood</option>
+        <option value="gaussianBlur">gaussianBlur</option>
+        <option value="glitch">glitch</option>
+        <option value="gray">gray</option>
+        <option value="grayscale">grayscale</option>
+        <option value="green">green</option>
+        <option value="invert">invert</option>
+        <option value="magenta">magenta</option>
+        <option value="mapToGradient">mapToGradient</option>
+        <option value="matrix">matrix</option>
+        <option value="matrix5">matrix5</option>
+        <option value="newsprint">newsprint</option>
+        <option value="notblue">notblue</option>
+        <option value="notgreen">notgreen</option>
+        <option value="notred">notred</option>
+        <option value="offset">offset</option>
+        <option value="offsetChannels">offsetChannels</option>
+        <option value="pixelate">pixelate</option>
+        <option value="randomNoise">randomNoise</option>
+        <option value="red">red</option>
+        <option value="reducePalette">reducePalette</option>
+        <option value="saturation">saturation</option>
+        <option value="sepia">sepia</option>
+        <option value="sharpen">sharpen</option>
+        <option value="swirl">swirl</option>
+        <option value="threshold">threshold</option>
+        <option value="tiles">tiles</option>
+        <option value="tint">tint</option>
+        <option value="yellow">yellow</option>
+        <option value="" disabled>--Compound filters--</option>
+        <option value="blend">blend (with image)</option>
+        <option value="compose">compose (with image)</option>
+        <option value="displace">displace (with noise asset)</option>
+        <option value="dropShadow">Drop Shadow</option>
+        <option value="redBorder">Red Borders</option>
+      </select>
+    </div>
+
+    <div class="pink label">Entity</div>
+    <div class="pink">
+      <select class="controlItem" id="entity">
+        <option value="block">Block</option>
+        <option value="cog">Cog</option>
+        <option value="cat">Cat</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Composite</div>
+    <div class="lavender">
+      <select class="controlItem" id="globalCompositeOperation">
+        <option value="source-over">source-over</option>
+        <option value="source-in">source-in</option>
+        <option value="source-out">source-out</option>
+        <option value="source-atop">source-atop</option>
+        <option value="destination-over">destination-over</option>
+        <option value="destination-in">destination-in</option>
+        <option value="destination-out">destination-out</option>
+        <option value="destination-atop">destination-atop</option>
+        <option value="copy">copy</option>
+        <option value="xor">xor</option>
+        <option value="difference">difference</option>
+        <option value="exclusion">exclusion</option>
+        <option value="multiply">multiply</option>
+        <option value="screen">screen</option>
+        <option value="overlay">overlay</option>
+        <option value="lighter">lighter</option>
+        <option value="lighten">lighten</option>
+        <option value="darken">darken</option>
+        <option value="hard-light">hard-light</option>
+        <option value="soft-light">soft-light</option>
+        <option value="color-dodge">color-dodge</option>
+        <option value="color-burn">color-burn</option>
+        <option value="hue">hue</option>
+        <option value="saturation">saturation</option>
+        <option value="color">color</option>
+        <option value="luminosity">luminosity</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Alpha</div>
+    <div class="lavender"><input class="controlItem" id="globalAlpha" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+  </div>
+
+  <canvas 
+    id="mycanvas" 
+    width="400" 
+    height="400"
+    data-scrawl-canvas
+  ></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create a Cog entity</li>
+      <li>Create a variety of filters to apply to the Cog entity, using it as a stencil so the area behind the wheel displays with the filter applied to it</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required</p>
+
+    <p><a href="../docs/demo/filters-028.html">Annotated code</a></p>
+  </div>
+
+  <div id="my-image-store">
+    <img id="iris" src="img/iris.png" class="flowers" />
+  </div>
+
+  <script src="filters-028.js" type="module"></script>
+
+</body>
+
+</html>

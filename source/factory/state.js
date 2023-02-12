@@ -43,7 +43,7 @@ P.defs = {
 
 // ##### Fills and Strokes
 // __fillStyle__ and __strokeStyle__ - color, gradient or pattern used to outline or fill a entity. Can be:
-// + CSS format color String - `#fff`, `#ffffff`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
+// + CSS format color String - `#fff`, `#ffffff`, `rgb(255 255 255)`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
 // + COLORNAME String
 // + GRADIENTNAME String
 // + RADIALGRADIENTNAME String
@@ -122,7 +122,7 @@ P.defs = {
 
 
 // __shadowColor__ - the color used for an entity's shadow effect. Can be:
-// + CSS format color String - `#fff`, `#ffffff`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
+// + CSS format color String - `#fff`, `#ffffff`, `rgb(255 255 255)`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
 // + COLORNAME String
     shadowColor: 'rgba(0 0 0 / 0)',
 

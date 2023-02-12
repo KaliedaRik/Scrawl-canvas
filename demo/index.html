@@ -122,7 +122,7 @@
 
 <body>
   <main>
-    <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.9.6)</span></h1>
+    <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.9.7)</span></h1>
 
     <p>The Scrawl-canvas library has been designed to make it easier to create and use &lt;canvas> presentations and scenes in a web page. Canvases discovered on a page, or added to it, will be enhanced by the library to help make them more responsive and accessible, and easy to interact with.</p>
 
@@ -157,12 +157,12 @@
 
     <ul>
       <li>They can be scaled, rotated and flipped as required.</li>
-      <li>They can take <strong>Color</strong>, <strong>Gradient</strong>, <strong>RadialGradient</strong>, and <strong>ConicGradient</strong> (where the browser supports it) styles for both their fill and stroke styling.</li>
+      <li>They can take <strong>Color</strong>, <strong>Gradient</strong>, <strong>RadialGradient</strong>, and <strong>ConicGradient</strong> styles for both their fill and stroke styling.</li>
       <ul>
         <li>All gradient styles can be bound to their containing cell, or to particular entitys.</li>
-        <li>Entitys can accept all legitimate CSS color strings - rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab() - for their fillStyle, strokeStyle and shadowColor input.</li>
-        <li>Color factories (and thus gradient styles) can work with RGB, HSL, HWB, LAB and LCH <strong>color spaces</strong> internally, and export CSS color strings for each of those spaces; Color factories support <strong>color ranges</strong>.</li> 
-        <li>Color factories, and gradient styles, can have easing algorithms applied to them &mdash; <strong>non-linear gradients</strong>.</li>
+        <li>Entitys can accept all legitimate CSS color strings &ndash; rgb-key, rgb-hex, rgb(), rgba(), hsl(), hsla(), hwb(), lch(), lab(), oklch(), oklab() &ndash; for their fillStyle, strokeStyle and shadowColor input.</li>
+        <li>Color factories (and thus gradient styles) can work with RGB, HSL, HWB, LAB, LCH, OKLAB and OKLCH <strong>color spaces</strong> internally, and export CSS color strings for each of those spaces; Color factories support <strong>color ranges</strong>. This extends to gradients, which can spread colors defined in any supported color space.</li> 
+        <li>Color factories, and gradient styles, can have easing algorithms applied to them &ndash; <strong>non-linear gradients</strong>.</li>
       </ul>
       <li>They can also take <strong>Pattern</strong> styles which may contain a variety of image-based assets; patterns can be scaled, skewed and positioned as required.</li>
       <li>Entitys can also act as <strong>clipping zones</strong> for subsequent drawing activities.</li>
@@ -472,6 +472,7 @@
         <a href="canvas-043.html">Canvas 043</a>
         Test various clipping strategies
         <br /><span class="responsive">Drag zones</span>
+        <br /><span class="responsive">Library purge</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-044.webp" /></div>
@@ -491,6 +492,7 @@
       <div>
         <a href="canvas-046.html">Canvas 046</a>
         Kill cycles for Cell, Group, Tween/Ticker, Picture and Asset objects, and Picture source elements in the DOM
+        <br /><span class="responsive">Library purge</span>
       </div>
 
       <div><img src="thumbs/canvas-047.webp" /></div>
@@ -800,6 +802,12 @@
       <div>
         <a href="filters-027.html">Filters 027</a>
         Parameters for: reducePalette filter
+      </div>
+
+      <div class="no-padding"><img src="thumbs/filters-028.png" /></div>
+      <div>
+        <a href="filters-028.html">Filters 028</a>
+        Stencil (background) filter functionality
       </div>
 
     </div>

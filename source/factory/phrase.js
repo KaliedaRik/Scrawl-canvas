@@ -44,6 +44,30 @@
 // + Text metrics will give us much better height measurements, and also glyph width measurements (and thus advance values for eg text along a path)
 // + However progress with the enhanced TextMetrics is slower across browsers, meaning that any code we develop is likely to bloat the code base as we cannot (yet) afford to discard existing code.
 // + More details in Demo [Canvas-029](../../demo/canvas-029.html) - Phrase entitys and gradients
+//
+// interface TextMetrics {
+//   // x-direction
+//   readonly attribute double width; // advance width
+//   readonly attribute double actualBoundingBoxLeft;
+//   readonly attribute double actualBoundingBoxRight;
+
+//   // y-direction
+//   readonly attribute double fontBoundingBoxAscent;
+//   readonly attribute double fontBoundingBoxDescent;
+//   readonly attribute double actualBoundingBoxAscent;
+//   readonly attribute double actualBoundingBoxDescent;
+//   readonly attribute double emHeightAscent;
+//   readonly attribute double emHeightDescent;
+//   readonly attribute double hangingBaseline;
+//   readonly attribute double alphabeticBaseline;
+//   readonly attribute double ideographicBaseline;
+// };
+//
+// Upcoming new font attributes:
+// enum CanvasFontKerning { "auto", "normal", "none" };
+// enum CanvasFontStretch { "ultra-condensed", "extra-condensed", "condensed", "semi-condensed", "normal", "semi-expanded", "expanded", "extra-expanded", "ultra-expanded" };
+// enum CanvasFontVariantCaps { "normal", "small-caps", "all-small-caps", "petite-caps", "all-petite-caps", "unicase", "titling-caps" };
+// enum CanvasTextRendering { "auto", "optimizeSpeed", "optimizeLegibility", "geometricPrecision" };
 
 
 // #### Imports
@@ -246,24 +270,24 @@ let defaultAttributes = {
 
 // __overlinePosition__, __overlineStyle__
     overlinePosition: -0.1,
-    overlineStyle: 'rgb(250,0,0)',
+    overlineStyle: 'rgb(250 0 0)',
     overlineWidth: 1,
     noOverlineGlyphs: '',
 
 // __underlinePosition__, __underlineStyle__
     underlinePosition: 0.6,
-    underlineStyle: 'rgb(250,0,0)',
+    underlineStyle: 'rgb(250 0 0)',
     underlineWidth: 1,
     noUnderlineGlyphs: '',
 
 // __highlightStyle__
-    highlightStyle: 'rgba(250,218,94,0.4)',
+    highlightStyle: 'rgb(250 218 94 / 0.4)',
 
 // ##### Bounding box
 // The bounding box represents the Phrase entity's collision detection ___hit area___. It contains all of the entity's text, including line spacing.
 
 // __boundingBoxColor__
-    boundingBoxColor: 'rgba(0,0,0,0.5)',
+    boundingBoxColor: 'rgb(0 0 0 / 0.5)',
 
 // __showBoundingBox__ - Boolean flag indicating whether the Phrase entity's bounding box should be displayed
     showBoundingBox: false,

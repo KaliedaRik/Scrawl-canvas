@@ -8,7 +8,13 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = scrawl.library.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // ___Import a spritesheet asset___ (image file, and its associated JSON manifest file)
@@ -18,9 +24,9 @@ scrawl.importSprite('img/cat-sprite.png');
 
 
 // Create a Picture entity to make use of the imported spritesheet asset
-let piccy = scrawl.makePicture({
+const piccy = scrawl.makePicture({
 
-    name: 'walking-cat',
+    name: name('walking-cat'),
 
     asset: 'cat-sprite',
 
@@ -47,7 +53,7 @@ piccy.playSprite();
 // + start the animation - playing it at a faster speed (compared to the original)
 piccy.clone({
 
-    name: 'running-cat',
+    name: name('running-cat'),
 
     startX: 300,
     startY: 20,
@@ -65,7 +71,7 @@ piccy.clone({
 // + In this case we don't have a separate manifest `.json` file, instead we define it as part of the import statement
 scrawl.importSprite({
 
-    name: 'dinosaur',
+    name: name('dinosaur'),
 
     manifestSrc: {
         default: [
@@ -104,8 +110,8 @@ scrawl.importSprite({
 // Create a Picture entity which uses the new spritesheet asset
 scrawl.makePicture({
 
-    name: 'walking-dino',
-    asset: 'dinosaur',
+    name: name('walking-dino'),
+    asset: name('dinosaur'),
 
     width: 200,
     height: 210,
@@ -132,7 +138,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });

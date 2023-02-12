@@ -84,6 +84,7 @@ scrawl.observeAndUpdate({
         includeGreen: ['includeGreen', 'boolean'],
         includeBlue: ['includeBlue', 'boolean'],
         includeAlpha: ['includeAlpha', 'boolean'],
+        noiseType: ['noiseType', 'raw'],
     },
 });
 
@@ -112,6 +113,8 @@ document.querySelector('#includeGreen').options.selectedIndex = 1;
 document.querySelector('#includeBlue').options.selectedIndex = 1;
 // @ts-expect-error
 document.querySelector('#includeAlpha').options.selectedIndex = 1;
+// @ts-expect-error
+document.querySelector('#noiseType').options.selectedIndex = 0;
 
 
 // #### Drag-and-Drop image loading functionality

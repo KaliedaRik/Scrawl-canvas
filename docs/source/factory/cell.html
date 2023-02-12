@@ -817,7 +817,7 @@ P = <span class="hljs-title function_">filterMix</span>(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>By default, cells have a background color of <code>rgba(0,0,0,0)</code> - transparent black, which gets applied as the end step in the clear part of the display cycle. Setting the <strong>backgroundColor</strong> attribute ensures the Cell will use that color instead. Any CSS color String is a valid argument (but not gradients or patterns, which get applied at a later stage in the Display cycle).</p>
+              <p>By default, cells have a background color of <code>rgb(0 0 0 / 0)</code> - transparent black, which gets applied as the end step in the clear part of the display cycle. Setting the <strong>backgroundColor</strong> attribute ensures the Cell will use that color instead. Any CSS color String is a valid argument (but not gradients or patterns, which get applied at a later stage in the Display cycle).</p>
 <ul>
 <li>Base cells can have this attribute set via their controller Canvas.</li>
 </ul>
@@ -1289,7 +1289,7 @@ S.<span class="hljs-property">element</span> = <span class="hljs-keyword">functi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;rgba(0, 0, 0, 0)&#x27;</span> === item || <span class="hljs-string">&#x27;transparent&#x27;</span> === item || <span class="hljs-string">&#x27;#00000000&#x27;</span> === item || <span class="hljs-string">&#x27;#0000&#x27;</span> === item) item = <span class="hljs-string">&#x27;&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span> === item || <span class="hljs-string">&#x27;rgba(0 0 0 / 0)&#x27;</span> === item || <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span> === item || <span class="hljs-string">&#x27;rgba(0, 0, 0, 0)&#x27;</span> === item || <span class="hljs-string">&#x27;transparent&#x27;</span> === item || <span class="hljs-string">&#x27;#00000000&#x27;</span> === item || <span class="hljs-string">&#x27;#0000&#x27;</span> === item) item = <span class="hljs-string">&#x27;&#x27;</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">backgroundColor</span> = item;
 };
 
@@ -2161,12 +2161,12 @@ P.<span class="hljs-property">setEngine</span> = <span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setToClearShape</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">shadowColor</span> = <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">shadowColor</span> = <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">shadowColor</span> = <span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">shadowColor</span> = <span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -2762,6 +2762,8 @@ DPR is detected in the <code>core/events.js</code> file, but mainly handled here
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span>) {
 
+            <span class="hljs-keyword">const</span> stashId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span>.<span class="hljs-property">substring</span> ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span> : <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-image`</span>;
+
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span> = <span class="hljs-literal">false</span>;
 
             <span class="hljs-keyword">let</span> sourcecanvas, mycanvas;
@@ -2778,12 +2780,12 @@ DPR is detected in the <code>core/events.js</code> file, but mainly handled here
 
                 <span class="hljs-keyword">let</span> newimg = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span> = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;img&#x27;</span>);
 
-                newimg.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-image`</span>;
+                newimg.<span class="hljs-property">id</span> = stashId;
 
                 newimg.<span class="hljs-property">onload</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
                     scrawlCanvasHold.<span class="hljs-title function_">appendChild</span>(newimg);
-                    <span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
+                    <span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`#<span class="hljs-subst">${stashId}</span>`</span>);
                 };
 
                 newimg.<span class="hljs-property">src</span> = sourcecanvas.<span class="hljs-title function_">toDataURL</span>();

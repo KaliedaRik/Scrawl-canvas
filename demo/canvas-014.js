@@ -19,13 +19,19 @@ import { reportSpeed, killArtefact } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = L.canvas.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = L.canvas.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Define the entitys that will be used as pivots and paths before the entitys that use them as such
 makeWheel({
 
-    name: 'pin-1',
+    name: name('pin-1'),
     order: 2,
 
     startX: 100,
@@ -41,57 +47,65 @@ makeWheel({
     method: 'fillAndDraw',
 
 }).clone({
-    name: 'pin-2',
+    name: name('pin-2'),
     startY: 300,
 
 }).clone({
-    name: 'pin-3',
+    name: name('pin-3'),
     startY: 500,
 
 }).clone({
-    name: 'pin-4',
+    name: name('pin-4'),
     fillStyle: 'green',
     startX: 500,
     startY: 100,
 
 }).clone({
-    name: 'pin-5',
+    name: name('pin-5'),
     startY: 230,
 
 }).clone({
-    name: 'pin-6',
+    name: name('pin-6'),
     startY: 370,
 
 }).clone({
-    name: 'pin-7',
+    name: name('pin-7'),
     startY: 500,
 });
 
 
 // Create a group to hold the draggable artefacts, for easier user action collision detection
-let pins = makeGroup({
+const pins = makeGroup({
 
-    name: 'my-pins',
-    host: canvas.base.name,
+    name: name('my-pins'),
+    host: canvas.get('baseName'),
 
-}).addArtefacts('pin-1', 'pin-2', 'pin-3', 'pin-4', 'pin-5', 'pin-6', 'pin-7');
+}).addArtefacts(
+    name('pin-1'),
+    name('pin-2'),
+    name('pin-3'),
+    name('pin-4'),
+    name('pin-5'),
+    name('pin-6'),
+    name('pin-7'),
+);
 
 
 // Now start defining the Shape lines. Bezier, Quadratic and Line Shapes can `pivot` and `path` their control coordinates to other artefacts, similar to how start coordinates operate.
 makeQuadratic({
 
-    name: 'my-quad',
+    name: name('my-quad'),
 
-    pivot: 'pin-1',
+    pivot: name('pin-1'),
     lockTo: 'pivot',
 
     // The normal action when the Start coordinates for Bezier, Quadratic and Line Shapes change is that the entire shape moves to the new coordinates. In this demo, we don't want that; when a user drags the wheel on which the shape's start coordinates pivots, we want the shape to 'change shape'. We can make sure this happens by setting its `useStartAsControlPoint` attribute to true.
     useStartAsControlPoint: true,
 
-    controlPivot: 'pin-2',
+    controlPivot: name('pin-2'),
     controlLockTo: 'pivot',
 
-    endPivot: 'pin-3',
+    endPivot: name('pin-3'),
     endLockTo: 'pivot',
 
     lineWidth: 5,
@@ -104,19 +118,19 @@ makeQuadratic({
 
 makeBezier({
 
-    name: 'my-bezier',
+    name: name('my-bezier'),
 
-    pivot: 'pin-4',
+    pivot: name('pin-4'),
     lockTo: 'pivot',
     useStartAsControlPoint: true,
 
-    startControlPivot: 'pin-5',
+    startControlPivot: name('pin-5'),
     startControlLockTo: 'pivot',
 
-    endControlPivot: 'pin-6',
+    endControlPivot: name('pin-6'),
     endControlLockTo: 'pivot',
 
-    endPivot: 'pin-7',
+    endPivot: name('pin-7'),
     endLockTo: 'pivot',
 
     lineWidth: 5,
@@ -130,14 +144,14 @@ makeBezier({
 // The 'path-line' shape uses the quadratic and bezier curves as paths for its start and end coordinates
 makeLine({
 
-    name: 'path-line',
+    name: name('path-line'),
 
-    path: 'my-quad',
+    path: name('my-quad'),
     pathPosition: 0,
     lockTo: 'path',
     useStartAsControlPoint: true,
 
-    endPath: 'my-bezier',
+    endPath: name('my-bezier'),
     endPathPosition: 0,
     endLockTo: 'path',
 
@@ -158,13 +172,13 @@ makeLine({
 // the 'mouse-line' shape has its start coordinates permanently fixed to the center of the screen, while its end coordinates alternate between tracking a point along the 'path-line' shape, and the mouse cursor when it is moving over the canvas
 makeLine({
 
-    name: 'mouse-line',
+    name: name('mouse-line'),
 
     startX: 'center',
     startY: 'center',
     useStartAsControlPoint: true,
 
-    endPath: 'path-line',
+    endPath: name('path-line'),
     endPathPosition: 0.5,
     endLockTo: 'path',
 
@@ -180,7 +194,7 @@ makeLine({
 // Decorate the 'mouse-line' shape with other artefacts to turn it into an arrow
 makeTetragon({
 
-    name: 'arrowhead',
+    name: name('arrowhead'),
 
     order: 2,
 
@@ -194,7 +208,7 @@ makeTetragon({
     handleY: '20%',
     roll: 90,
 
-    path: 'mouse-line',
+    path: name('mouse-line'),
     pathPosition: 1,
     lockTo: 'path',
     addPathRotation: true,
@@ -202,7 +216,7 @@ makeTetragon({
 
 makeWheel({
 
-    name: 'arrowbase',
+    name: name('arrowbase'),
 
     order: 2,
 
@@ -216,7 +230,7 @@ makeWheel({
     handleX: 'center',
     handleY: 'center',
 
-    path: 'mouse-line',
+    path: name('mouse-line'),
     pathPosition: 0,
     lockTo: 'path',
     addPathRotation: true,
@@ -224,13 +238,13 @@ makeWheel({
 
 
 // We can always grab a handle to any canvas entity by reference to its entry in the Scrawl-canvas library. Entitys are stored in both the `artefact` and the `entity` sections of the library
-let arrow = L.entity['mouse-line'];
+const arrow = L.entity[name('mouse-line')];
 
 
 // Testing to make sure artefacts stick to their paths, even when those paths are animated or manipulated in various ways
 makePicture({
 
-    name: 'bunny1',
+    name: name('bunny1'),
     imageSource: 'img/bunny.png',
 
     width: 26,
@@ -242,14 +256,14 @@ makePicture({
     handleX: 'center',
     handleY: 'center',
 
-    path: 'path-line',
+    path: name('path-line'),
     pathPosition: 0.1,
     addPathRotation: true,
     lockTo: 'path',
 
 }).clone({
 
-    name: 'bunny2',
+    name: name('bunny2'),
     pathPosition: 0.9,
 });
 
@@ -267,7 +281,7 @@ makeDragZone({
 
 
 // Function to check whether mouse cursor is over canvas, and lock the arrow's end point accordingly
-let mouseCheck = function () {
+const mouseCheck = function () {
 
     let active = false;
 
@@ -293,7 +307,7 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     commence: mouseCheck,
     afterShow: report,
@@ -305,40 +319,40 @@ console.log(L);
 
 console.log('Performing tests ...');
 
-killArtefact(canvas, 'pin-1', 2000, () => {
+killArtefact(canvas, name('pin-1'), 2000, () => {
 
-    pins.addArtefacts('pin-1');
+    pins.addArtefacts(name('pin-1'));
 
-    L.artefact['my-quad'].set({
-        pivot: 'pin-1',
+    L.artefact[name('my-quad')].set({
+        pivot: name('pin-1'),
         lockTo: 'pivot',
     });
 });
 
-killArtefact(canvas, 'pin-5', 3000, () => {
+killArtefact(canvas, name('pin-5'), 3000, () => {
 
-    pins.addArtefacts('pin-5');
+    pins.addArtefacts(name('pin-5'));
 
-    L.artefact['my-bezier'].set({
-        startControlPivot: 'pin-5',
+    L.artefact[name('my-bezier')].set({
+        startControlPivot: name('pin-5'),
         startControlLockTo: 'pivot',
     });
 });
 
-killArtefact(canvas, 'pin-7', 4000, () => {
+killArtefact(canvas, name('pin-7'), 4000, () => {
 
-    pins.addArtefacts('pin-7');
+    pins.addArtefacts(name('pin-7'));
 
-    L.artefact['my-bezier'].set({
-        endPivot: 'pin-7',
+    L.artefact[name('my-bezier')].set({
+        endPivot: name('pin-7'),
         endLockTo: 'pivot',
     });
 });
 
-killArtefact(canvas, 'my-bezier', 5000, () => {
+killArtefact(canvas, name('my-bezier'), 5000, () => {
 
-    L.artefact['path-line'].set({
-        endPath: 'my-bezier',
+    L.artefact[name('path-line')].set({
+        endPath: name('my-bezier'),
         endLockTo: 'path',
     });
 });

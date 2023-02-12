@@ -132,7 +132,7 @@ export default function (P = Ωempty) {
                 return p;
             }
         }
-        return 'rgba(0,0,0,0)';
+        return 'rgb(0 0 0 / 0)';
     };
 
 // Return the prototype

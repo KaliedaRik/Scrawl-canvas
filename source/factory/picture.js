@@ -149,13 +149,12 @@ P.factoryKill = function (killAsset = false) {
 
     let { asset, removeAssetOnKill } = this;
 
-    if (isa_obj(asset)) asset.unsubscribe(this);
+    if (isa_obj(asset)) {
 
-    // Cascade kill invocation to the asset object, if required
-    if (removeAssetOnKill) {
+        asset.unsubscribe(this);   
 
-        if (removeAssetOnKill.substring) asset.kill(true);
-        else asset.kill();
+        // Cascade kill invocation to the asset object, if required
+        if (removeAssetOnKill) asset.kill(true);
     }
 };
 

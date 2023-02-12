@@ -15,13 +15,19 @@ import { reportSpeed, killStyle } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = L.artefact.mycanvas;
+// Get a handle to the Canvas wrapper
+const canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create the linear gradient - we will kill and resurrect it as the demo runs
 // + Needs to be a let, not a const, because we're going to kill/resurrect this gradient
 let graddy = makeGradient({
-    name: 'mygradient',
+    name: name('mygradient'),
     endX: '100%',
 
     easing: 'linear',
@@ -44,7 +50,7 @@ const bespokeEasings = {
 
 // Create a block entity which will use the gradient
 makeBlock({
-    name: 'myblock',
+    name: name('myblock'),
     width: '90%',
     height: '90%',
     startX: '5%',
@@ -69,7 +75,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -77,7 +83,7 @@ makeRender({
 
 // #### User interaction
 // Setup form observer functionality. We're doing it this way (wrapped in a function) so we can test that it can be killed, and then recreated, later
-let makeObserver = () => {
+const makeObserver = () => {
 
     return observeAndUpdate({
 
@@ -124,7 +130,7 @@ addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
-    let val = parseInt(e.target.value, 10);
+    const val = parseInt(e.target.value, 10);
 
     switch (e.target.id) {
 
@@ -144,7 +150,7 @@ addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     if (['user-steps', 'user-repeat'].includes(val)) {
         graddy.set({
@@ -201,14 +207,14 @@ console.log(L);
 
 console.log('Performing tests ...');
 
-killStyle(canvas, 'mygradient', 3000, () => {
+killStyle(canvas, name('mygradient'), 3000, () => {
 
     // Repopulate the graddy variable
-    graddy = L.styles['mygradient'];
+    graddy = L.styles[name('mygradient')];
 
     // Reset the block fillStyle to the gradient
-    L.entity['myblock'].set({
-        fillStyle: 'mygradient',
+    L.entity[name('myblock')].set({
+        fillStyle: name('mygradient'),
     });
 
     // Kill the form observer

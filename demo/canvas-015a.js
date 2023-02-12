@@ -15,13 +15,19 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = L.artefact.mycanvas,
+// Get a handle to the Canvas wrapper
+const canvas = L.artefact.mycanvas,
     entitys = L.entity;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Create and clone Phrase entitys
 makePhrase({
-    name: 'myphrase_fill',
+    name: name('myphrase_fill'),
 
     text: 'H&epsilon;lj&ouml;!',
     font: 'bold 40px Garamond, serif',
@@ -44,39 +50,39 @@ makePhrase({
     lineHeight: 1,
 
 }).clone({
-    name: 'myphrase_draw',
+    name: name('myphrase_draw'),
     startX: '38%',
     method: 'draw',
 
 }).clone({
-    name: 'myphrase_drawAndFill',
+    name: name('myphrase_drawAndFill'),
     startX: '84%',
     method: 'drawAndFill',
 
 }).clone({
-    name: 'myphrase_fillAndDraw',
+    name: name('myphrase_fillAndDraw'),
     startX: '62%',
     method: 'fillAndDraw',
     sharedState: true
 
 }).clone({
-    name: 'myphrase_drawThenFill',
+    name: name('myphrase_drawThenFill'),
     startX: '14%',
     startY: '67%',
     method: 'drawThenFill'
 
 }).clone({
-    name: 'myphrase_fillThenDraw',
+    name: name('myphrase_fillThenDraw'),
     startX: '38%',
     method: 'fillThenDraw',
 
 }).clone({
-    name: 'myphrase_clear',
+    name: name('myphrase_clear'),
     startX: '62%',
     method: 'clear'
 
 }).clone({
-    name: 'myphrase_multiline',
+    name: name('myphrase_multiline'),
 
     text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
 
@@ -96,7 +102,7 @@ makePhrase({
 
 
 // Change the fill and stroke styles on one of the phrase entitys, and any entity sharing that phrase's state
-L.artefact.myphrase_fillAndDraw.set({
+L.artefact[name('myphrase_fillAndDraw')].set({
     fillStyle: 'blue',
     strokeStyle: 'coral'
 });
@@ -106,19 +112,19 @@ L.artefact.myphrase_fillAndDraw.set({
 // A one-off instruction to tell Scrawl-canvas to create image assets from our Phrase entitys the next time it performs a Display cycle
 // + By caching entity output in &lt;img> elements, we can then replace the Phrase entitys with Picture entitys that use the cached image as their asset source. As graphic text output is an expensive operation for the canvas element to perform - particularly when we apply a shadow blur to the text - it will often make sense to replace such Phrase entitys with Picture entitys.
 // + This approach is less useful for text that updates frequently, or uses dynamic fill/stroke styling
-createImageFromEntity(entitys.myphrase_fill, true);
-createImageFromEntity(entitys.myphrase_draw, true);
-createImageFromEntity(entitys.myphrase_drawAndFill, true);
-createImageFromEntity(entitys.myphrase_fillAndDraw, true);
-createImageFromEntity(entitys.myphrase_drawThenFill, true);
-createImageFromEntity(entitys.myphrase_fillThenDraw, true);
-createImageFromEntity(entitys.myphrase_clear, true);
-createImageFromEntity(entitys.myphrase_multiline, true);
+createImageFromEntity(entitys[name('myphrase_fill')], true);
+createImageFromEntity(entitys[name('myphrase_draw')], true);
+createImageFromEntity(entitys[name('myphrase_drawAndFill')], true);
+createImageFromEntity(entitys[name('myphrase_fillAndDraw')], true);
+createImageFromEntity(entitys[name('myphrase_drawThenFill')], true);
+createImageFromEntity(entitys[name('myphrase_fillThenDraw')], true);
+createImageFromEntity(entitys[name('myphrase_clear')], true);
+createImageFromEntity(entitys[name('myphrase_multiline')], true);
 
 
 // #### User interaction
 // Create the drag-and-drop zone
-let current = makeDragZone({
+const current = makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],
@@ -138,7 +144,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 
@@ -147,19 +153,19 @@ makeRender({
     // + As the content and display of the text does not change (only their positions change when users drag-and-drop them), we can treat the creation of the cache images and associated entitys as a one-off job
     afterCreated: () => {
 
-        let g = canvas.get('baseGroup');
+        const g = canvas.get('baseGroup');
 
         // Switch off the Phrase entitys via a set call to their Group (which, in this instance is the canvas.base Cell's default Group)
         g.setArtefacts({
             visibility: false,
         });
 
-        let keys = g.artefacts;
+        const keys = g.artefacts;
 
         // Generate Picture entitys, using the existing Phrase entitys for positional and dimensional data
         keys.forEach(name => {
 
-            let e = entitys[name];
+            const e = entitys[name];
 
             if (e) {
 

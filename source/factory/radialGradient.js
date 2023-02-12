@@ -181,7 +181,7 @@ P.buildStyle = function (cell) {
             return this.addStopsToGradient(gradient, this.paletteStart, this.paletteEnd, this.cyclePalette);
         }
     }
-    return 'rgba(0,0,0,0)';
+    return 'rgb(0 0 0 / 0)';
 };
 
 // `updateGradientArgs` - internal function

@@ -121,7 +121,7 @@ export default function (P = Ωempty) {
 // We can treat the following attributes as if they are entity object attributes, though in fact they are stored and managed by __State objects__
 //
 // __fillStyle__ and __strokeStyle__ - color, gradient or pattern used to outline or fill a entity. Can be:
-// + CSS format color String - `#fff`, `#ffffff`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
+// + CSS format color String - `#fff`, `#ffffff`, `rgb(255 255 255)`, `rgb(255 255 255 / 1)`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
 // + COLORNAME String
 // + GRADIENTNAME String
 // + RADIALGRADIENTNAME String
@@ -167,7 +167,7 @@ export default function (P = Ωempty) {
 // __shadowBlur__ - the blur width for a entity's shadow, in Number pixels
 //
 // __shadowColor__ - the color used for an entity's shadow effect. Can be:
-// + CSS format color String - `#fff`, `#ffffff`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
+// + CSS format color String - `#fff`, `#ffffff`, `rgb(255 255 255)`, `rgb(255 255 255 / 1)`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
 // + COLORNAME String
 //
 // __font__, __textAlign__, __textBaseline__ - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.
@@ -630,6 +630,8 @@ export default function (P = Ωempty) {
 
                 if (this.stashOutputAsAsset) {
 
+                    const stashId = this.stashOutputAsAsset.substring ? this.stashOutputAsAsset : `${this.name}-image`;
+
                     // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo [Canvas-020](../../demo/canvas-020.html) for a workaround.
                     this.stashOutputAsAsset = false;
 
@@ -641,12 +643,12 @@ export default function (P = Ωempty) {
 
                         let newimg = this.stashedImage = document.createElement('img');
 
-                        newimg.id = `${this.name}-image`;
+                        newimg.id = stashId;
 
                         newimg.onload = function () {
 
                             scrawlCanvasHold.appendChild(newimg);
-                            importDomImage(`#${newimg.id}`);
+                            importDomImage(`#${stashId}`);
                         };
 
                         newimg.src = filterCellElement.toDataURL();

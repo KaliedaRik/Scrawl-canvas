@@ -40,7 +40,7 @@
 //         - data-fill - pin fill color - default is "red"
 //         - data-stroke - pin stroke color - default is "yellow"
 //         - data-labelwidth - percentage label width value - default is "20%"
-//         - data-labelbackground - default is "rgba(0,0,0,0.2)"
+//         - data-labelbackground - default is "rgb(0 0 0 / 0.2)"
 //
 //         - data-labelposition - default is "below"
 //           - where we want the text to appear relative to the pin's location 
@@ -92,7 +92,7 @@
 //
 //       - data-justify - one of: "left", "right", "center" (default)
 //       - data-width - defaults to "20%"
-//       - data-background - defaults to "rgba(0,0,0,0.2)" 
+//       - data-background - defaults to "rgb(0 0 0 / 0.2)" 
 //   -->
 //
 //   <nav>
@@ -166,7 +166,7 @@ const getPanelData = function (el, store, canvas) {
             stroke: p.dataset.stroke || 'yellow',
             labelposition: p.dataset.labelposition,
             labelwidth: p.dataset.labelwidth || '25%',
-            labelbackground: p.dataset.labelbackground || 'rgba(0,0,0,0.2)',
+            labelbackground: p.dataset.labelbackground || 'rgb(0 0 0 / 0.2)',
             labeltext: p.innerHTML,
             shared: (p.dataset.shared != null) ? true : false,
         });
@@ -193,7 +193,7 @@ const getNavigationData = function (el, store, canvas) {
             href: a.href,
             width: a.dataset.width || '20%',
             position: a.dataset.position,
-            background: a.dataset.background || 'rgba(0,0,0,0.2)',
+            background: a.dataset.background || 'rgb(0 0 0 / 0.2)',
             justify: a.dataset.justify || 'center',
             text: a.innerHTML,
         });

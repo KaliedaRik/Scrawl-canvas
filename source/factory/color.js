@@ -510,7 +510,7 @@ P.buildColorString = function (a, b, c, d, req) {
 
     switch (req) {
 
-        case 'RGB' : return `rgba(${Math.round(a)} ${Math.round(b)} ${Math.round(c)} / ${d})`;
+        case 'RGB' : return `rgb(${Math.round(a)} ${Math.round(b)} ${Math.round(c)} / ${d})`;
         case 'HSL' : return `hsl(${a} ${b}% ${c}% / ${d})`;
         case 'HWB' : return `hwb(${a} ${b}% ${c}% / ${d})`;
         case 'LAB' : return `lab(${a}% ${b} ${c} / ${d})`;
@@ -518,7 +518,7 @@ P.buildColorString = function (a, b, c, d, req) {
         case 'OKLAB' : return `oklab(${a * 100}% ${b} ${c} / ${d})`;
         case 'OKLCH' : return `oklch(${a * 100}% ${b} ${c} / ${d})`;
         case 'XYZ' : return `xyz(${a} ${b} ${c} / ${d})`;
-        default : return 'rgba(0 0 0 / 0)';
+        default : return 'rgb(0 0 0 / 0)';
     }
 }
 

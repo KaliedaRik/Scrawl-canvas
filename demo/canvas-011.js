@@ -14,12 +14,17 @@ import { reportSpeed, killArtefact } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
+
+
+// Namespacing boilerplate
+const namespace = 'demo';
+const name = (n) => `${namespace}-${n}`;
 
 
 // Japan outline
 makeShape({
-    name: 'japan_fill',
+    name: name('japan_fill'),
 
     startX: 50,
     startY: 50,
@@ -349,48 +354,48 @@ makeShape({
     s-0.15-1.692-0.764-1.932C90.416,589.182,89.577,589.392,88.453,589.706z`,
 
 }).clone({
-    name: 'japan_draw',
+    name: name('japan_draw'),
     startX: 200,
     method: 'draw',
     // showBoundingBox: false,
 
 }).clone({
-    name: 'japan_drawAndFill',
+    name: name('japan_drawAndFill'),
     startX: 500,
     method: 'drawAndFill',
 
 }).clone({
-    name: 'japan_fillAndDraw',
+    name: name('japan_fillAndDraw'),
     startX: 350,
     method: 'fillAndDraw',
     sharedState: true,
 
 }).clone({
-    name: 'japan_drawThenFill',
+    name: name('japan_drawThenFill'),
     startX: 50,
     startY: 200,
     method: 'drawThenFill',
 
 }).clone({
-    name: 'japan_fillThenDraw',
+    name: name('japan_fillThenDraw'),
     startX: 200,
     method: 'fillThenDraw',
 
 }).clone({
-    name: 'japan_clear',
+    name: name('japan_clear'),
     startX: 350,
     method: 'clear',
 });
 
 // Change the fill and stroke styles on one of the blocks, and any block sharing that block's state
-L.artefact.japan_fillAndDraw.set({
+L.artefact[name('japan_fillAndDraw')].set({
     fillStyle: 'blue',
     strokeStyle: 'coral',
 });
 
 makeWheel({
-    name: 'pin',
-    pivot: 'japan_draw',
+    name: name('pin'),
+    pivot: name('japan_draw'),
     lockTo: 'pivot',
     handleX: 'center',
     handleY: 'center',
@@ -400,7 +405,7 @@ makeWheel({
 
 // #### User interaction
 // Create the drag-and-drop zone
-let current = makeDragZone({
+const current = makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],
@@ -420,7 +425,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 makeRender({
 
-    name: 'demo-animation',
+    name: name('animation'),
     target: canvas,
     afterShow: report,
 });
@@ -430,5 +435,5 @@ makeRender({
 console.log(L);
 
 console.log('Performing tests ...');
-killArtefact(canvas, 'japan_fill', 4000);
-killArtefact(canvas, 'japan_fillAndDraw', 6000);
+killArtefact(canvas, name('japan_fill'), 4000);
+killArtefact(canvas, name('japan_fillAndDraw'), 6000);
