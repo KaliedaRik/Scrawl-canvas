@@ -1,7 +1,7 @@
 {
   "name": "scrawl-canvas",
-  "version": "8.9.6",
-  "description": "Version 8.9.6 - 21 Dec 2022",
+  "version": "8.9.7",
+  "description": "Version 8.9.7 - 13 February 2023",
   "module": "./source/scrawl.js",
   "type": "module",
   "types": "./source/scrawl.d.ts",
