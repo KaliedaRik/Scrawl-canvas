@@ -1,5 +1,5 @@
 # Welcome to the Scrawl-canvas Library
-Version: `8.9.8 - 13 February 2023` 
+Version: `8.9.9 - 16 February 2023` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 + learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
@@ -58,7 +58,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the file to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.9.8 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-9-8.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-9-8.zip) - that package only includes the minified file.
+Alternatively, a zip package of the v8.9.9 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-9-9.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-9-9.zip) - that package only includes the minified file.
 
 ```html
 <!-- Hello world -->
