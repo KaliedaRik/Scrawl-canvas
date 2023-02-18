@@ -26,13 +26,18 @@ Data format requirements - a Javascript object with structure:
 }
 */
 
-import * as scrawl from '../../source/scrawl.js';
 
+// #### Imports
 // We need to adapt the graph frame with data specific to this graph
-import * as frame from './simple-chart-frame.js';
+import { 
+    api as frame,
+    dims as frameDims,
+} from './simple-chart-frame.js';
 
+
+// #### Helper functionality
 // Calculate height of the largest year
-// - Rounded up to nearest thousand
+// + Rounded up to nearest thousand
 const extractHighestAnnualMaximum = (yearLabels, yearData) => {
 
     let max = 0;
@@ -47,185 +52,183 @@ const extractHighestAnnualMaximum = (yearLabels, yearData) => {
 
 const colorArray = ['#257394', '#947a25', '#fc0004', '#00fcbd', '#de9bc8', '#9bdeaf', '#970b99', '#0b9910', '#5f11f0', '#66f011', '#a09de0', '#d1e09d'];
 
-// Variables shared across functions
-let group,
-    space,
-    selectedColumn,
-    selectedRow,
-    currentData,
-    currentDatapoint;
 
-// The exported 'build' function
-const build = function (namespace, canvas, data) {
+// #### API - exported functions
+export const api = {};
 
-    space = namespace;
-    selectedColumn = 0;
-    selectedRow = 0;
-    currentData = data;
 
-    // Local variables defined at the top of the build function
-    let area = data.area,
-        yearLabels = data.yearLabels, 
-        categoryLabels = data.categoryLabels, 
-        yearData = data.yearData,
+// The exported `build` function
+api.build = function (items) {
 
-        gap = 1,
+    const { namespace, canvas, data, scrawl } = items;
 
-        // Magic numbers
-        graphWidth = frame.graphWidth,
-        graphHeight = frame.graphHeight,
-        graphBottom = frame.graphBottom,
-        graphLeft = frame.graphLeft + (gap / 2),
+    // Module state
+    let selectedColumn = 0,
+        selectedRow = 0,
+        currentData = data;
 
-        // Graph baseline calculations
-        maximumBarTotal = extractHighestAnnualMaximum(yearLabels, yearData),
-        numberOfYears = yearLabels.length,
-        barDistance = graphWidth / numberOfYears,
-        barWidth = `${barDistance - gap}%`,
-        singleCrimeHeight = graphHeight / maximumBarTotal;
+    if (namespace && canvas && data && scrawl) {
 
-    // Create group
-    group = scrawl.makeGroup({
+        // Namespace boilerplate
+        const name = (item) => `${namespace}-${item}`;
 
-        name: `${namespace}-bargroup`,
-        host: canvas.base.name,
-        order: 2,
-        visibility: false,
-    });
 
-    // Build bars
-    yearLabels.forEach((year, yearIndex) => {
+        // Local variables defined at the top of the build function
+        const area = data.area,
+            yearLabels = data.yearLabels, 
+            categoryLabels = data.categoryLabels, 
+            yearData = data.yearData,
 
-        let xPosition = (barDistance * yearIndex) + graphLeft,
-            localHeight = 0;
+            gap = 1,
 
-        const categoryLen = categoryLabels.length;
+            // Magic numbers
+            graphWidth = frameDims.graphWidth,
+            graphHeight = frameDims.graphHeight,
+            graphBottom = frameDims.graphBottom,
+            graphLeft = frameDims.graphLeft + (gap / 2),
 
-        categoryLabels.forEach((category, categoryIndex) => {
+            // Graph baseline calculations
+            maximumBarTotal = extractHighestAnnualMaximum(yearLabels, yearData),
+            numberOfYears = yearLabels.length,
+            barDistance = graphWidth / numberOfYears,
+            barWidth = `${barDistance - gap}%`,
+            singleCrimeHeight = graphHeight / maximumBarTotal;
 
-            let categoryItem = yearData[year][categoryIndex],
-                crimeHeight = categoryItem * singleCrimeHeight;
 
-            localHeight += crimeHeight;
+        // Create group
+        const group = scrawl.makeGroup({
 
-            scrawl.makeBlock({
+            name: name('bargroup'),
+            host: canvas.get('baseName'),
+            order: 2,
+        });
 
-                name: `${namespace}-${year}-${category}`,
-                group,
 
-                width: barWidth,
-                height: `${crimeHeight}%`,
+        // Build bars
+        yearLabels.forEach((year, yearIndex) => {
 
-                startX: `${xPosition}%`,
-                startY: `${graphBottom - localHeight}%`,
+            let xPosition = (barDistance * yearIndex) + graphLeft,
+                localHeight = 0;
 
-                fillStyle: colorArray[categoryIndex % categoryLen],
+            const categoryLen = categoryLabels.length;
 
-                onEnter: function () {
+            categoryLabels.forEach((category, categoryIndex) => {
 
-                    selectedColumn = yearIndex;
-                    selectedRow = categoryIndex;
+                const categoryItem = yearData[year][categoryIndex],
+                    crimeHeight = categoryItem * singleCrimeHeight;
 
-                    updateSelected();
-                },
+                localHeight += crimeHeight;
+
+                scrawl.makeBlock({
+
+                    name: name(`${year}-${category}`),
+                    group,
+
+                    width: barWidth,
+                    height: `${crimeHeight}%`,
+
+                    startX: `${xPosition}%`,
+                    startY: `${graphBottom - localHeight}%`,
+
+                    fillStyle: colorArray[categoryIndex % categoryLen],
+
+                    onEnter: function () {
+
+                        selectedColumn = yearIndex;
+                        selectedRow = categoryIndex;
+
+                        updateSelected();
+                    },
+                });
             });
         });
-    });
-
-    currentDatapoint = scrawl.makeBlock({
-        name: `${namespace}-dataframe`,
-        group,
-        mimic: `${namespace}-${selectedColumn}-${selectedRow}`,
-        useMimicDimensions: true,
-        useMimicStart: true,
-        useMimicHandle: true,
-        lockTo: 'mimic',
-        lineWidth: 6,
-        strokeStyle: 'yellow',
-        method: 'draw',
-    });
 
 
-    // Personalize the chart frame to meet this graph's requirements
-    frame.updateSubtitle('No data selected');
-    frame.updateXLeft(yearLabels[0]);
-    frame.updateXRight(yearLabels[numberOfYears - 1]);
-    frame.updateYTop(maximumBarTotal.toLocaleString());
+        // Build highlight cursor
+        const currentDatapoint = scrawl.makeBlock({
+            name: name('dataframe'),
+            group,
+            mimic: name(`${selectedColumn}-${selectedRow}`),
+            useMimicDimensions: true,
+            useMimicStart: true,
+            useMimicHandle: true,
+            lockTo: 'mimic',
+            lineWidth: 6,
+            strokeStyle: 'yellow',
+            method: 'draw',
+        });
+
+        const updateSelected = () => {
+
+            const {yearLabels, categoryLabels, yearData} = currentData;
+
+            const category = categoryLabels[selectedRow],
+                year = yearLabels[selectedColumn],
+                data = yearData[year][selectedRow];
+
+            currentDatapoint.set({
+                mimic: name(`${year}-${category}`),
+            });
+
+            frame.updateSubtitle(`${category} in ${year}: §RED§${data.toLocaleString()}`);
+        };
+
+        updateSelected();
 
 
-    // Accessibility
-    frame.setArrowAction('up', () => doNavigation('up'));
-    frame.setArrowAction('down', () => doNavigation('down'));
-    frame.setArrowAction('left', () => doNavigation('left'));
-    frame.setArrowAction('right', () => doNavigation('right'));
+        // Personalize the chart frame to meet this graph's requirements
+        frame.updateSubtitle('No data selected');
+        frame.updateXLeft(yearLabels[0]);
+        frame.updateXRight(yearLabels[numberOfYears - 1]);
+        frame.updateYTop(maximumBarTotal.toLocaleString());
 
 
-    // Display the graph entitys
-    updateSelected();
-    show();
-};
+        // Accessibility
+        const doNavigation = (direction) => {
 
+            const {yearLabels, categoryLabels} = currentData;
 
-// Accessibility
-const doNavigation = (direction) => {
+            const columnLen = yearLabels.length,
+                rowLen = categoryLabels.length;
 
-    const {yearLabels, categoryLabels} = currentData;
+            switch (direction) {
 
-    const columnLen = yearLabels.length,
-        rowLen = categoryLabels.length;
+                case 'up' : 
+                    selectedRow++;
+                    break;
 
-    switch (direction) {
+                case 'down' : 
+                    selectedRow--;
+                    break;
 
-        case 'up' : 
-            selectedRow++;
-            break;
+                case 'left' : 
+                    selectedColumn--;
+                    break;
 
-        case 'down' : 
-            selectedRow--;
-            break;
+                case 'right' : 
+                    selectedColumn++;
+                    break;
+            }
 
-        case 'left' : 
-            selectedColumn--;
-            break;
+            if (selectedColumn < 0) selectedColumn = columnLen - 1;
+            else if (selectedColumn >= columnLen) selectedColumn = 0;
 
-        case 'right' : 
-            selectedColumn++;
-            break;
+            if (selectedRow < 0) selectedRow = rowLen - 1;
+            else if (selectedRow >= rowLen) selectedRow = 0;
+
+            updateSelected();
+        };
+
+        frame.keyboard = scrawl.makeKeyboardZone({
+
+            zone: canvas,
+
+            none: {
+                ArrowLeft: () => doNavigation('left'),
+                ArrowUp: () => doNavigation('up'),
+                ArrowRight: () => doNavigation('right'),
+                ArrowDown: () => doNavigation('down'),
+            },
+        });
     }
-
-    if (selectedColumn < 0) selectedColumn = columnLen - 1;
-    else if (selectedColumn >= columnLen) selectedColumn = 0;
-
-    if (selectedRow < 0) selectedRow = rowLen - 1;
-    else if (selectedRow >= rowLen) selectedRow = 0;
-
-    updateSelected();
 };
-
-const updateSelected = () => {
-
-    const {yearLabels, categoryLabels, yearData} = currentData;
-
-    const category = categoryLabels[selectedRow],
-        year = yearLabels[selectedColumn],
-        data = yearData[year][selectedRow];
-
-    currentDatapoint.set({
-        mimic: `${space}-${year}-${category}`,
-    });
-
-    frame.updateSubtitle(`${category} in ${year}: §RED§${data.toLocaleString()}`);
-};
-
-// Other exported functions
-const kill = () => group.kill(true);
-const hide = () => group.visibility = false;
-const show = () => group.visibility = true;
-
-export {
-    build,
-    kill,
-
-    hide,
-    show,
-}

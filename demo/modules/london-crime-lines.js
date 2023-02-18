@@ -32,13 +32,21 @@ Data supplied to graph module as Javascript object with structure:
 }
 */
 
-import * as scrawl from '../../source/scrawl.js';
 
-// We need to adapt the chart frame with data specific to this graph
-import * as frame from './simple-chart-frame.js';
+// #### Imports and exports
+// We need to adapt the graph frame with data specific to this graph
+import { api as frame } from './simple-chart-frame.js';
 
 // The graph we are adapting our data for
-import * as graph from './simple-graph-lines.js'
+import { api as graph } from './simple-graph-lines.js';
+
+// Export
+export const api = {};
+
+
+// #### Data manipulation
+// Module state
+let currentData, isBuilt;
 
 // The asynchronous data fetch
 const getRawData = (file) => {
@@ -56,9 +64,6 @@ const getRawData = (file) => {
     });
 };
 
-// Add some module state
-let currentData, isBuilt;
-
 // Extract relevant data for the graph being requested
 const getData = (category) => {
 
@@ -68,63 +73,77 @@ const getData = (category) => {
     };
 };
 
-// The exported 'build' function
-const build = function (namespace, canvas, data, category) {
 
-    if (!isBuilt) {
+// #### Build function
+api.build = function (items) {
 
-        getRawData (data)
-        .then (rawData => {
+    const { namespace, canvas, dataSource, category, scrawl } = items;
 
-            currentData = rawData;
+    if (namespace && canvas && dataSource && category && scrawl) {
 
-            graph.build(namespace, canvas, getData(category));
-            isBuilt = true;
+        // #### Update function
+        const update = api.update = (items) => {
 
-            update(namespace, canvas, category);
-        })
-        .catch(e => console.log(e.message));;
-    }
-}
+            const { namespace, canvas, category, scrawl } = items;
 
-// The exported 'update' function
-const update = (namespace, canvas, category) => {
+            // Only update if we already have data available
+            if (currentData && namespace && canvas && category && scrawl) {
 
-    // Only update if we already have data available
-    if (currentData) {
+                let myData = getData(category);
 
-        let myData = getData(category);
+                if (!isBuilt) {
 
+                    graph.build({
+                        namespace,
+                        data: myData,
+                        canvas,
+                        scrawl,
+                    });
+
+                    isBuilt = true;
+                }
+                else graph.update(myData);
+
+                frame.updateTitle(`${currentData.area} Crimes: ${category}`);
+                frame.updateBackground(category);
+            }
+        };
+
+
+        // #### Kill function
+        // + We pass the namespace through to the lines module, so we can handle kill functionality here rather than there
+        api.kill = () => {
+
+            scrawl.library.purge(namespace);
+            currentData = false;
+            isBuilt = false;
+        }
+
+        // #### Build
         if (!isBuilt) {
 
-            graph.build(namespace, canvas, myData);
-            isBuilt = true;
-        }
-        else graph.update();
+            getRawData (dataSource)
+            .then (rawData => {
 
-        frame.updateTitle(`${currentData.area} Crimes: ${category}`);
-        frame.updateBackground(category);
+                currentData = rawData;
+
+                graph.build({
+                    namespace, 
+                    data: getData(category),
+                    canvas, 
+                    scrawl,
+                });
+
+                isBuilt = true;
+
+                update({
+                    namespace,
+                    category,
+                    canvas,
+                    scrawl,
+                });
+            })
+            .catch(e => console.log(e.message));
+        }
     }
 };
-
-// The exported 'kill' function
-const kill = () => {
-
-    graph.kill();
-    currentData = false;
-    isBuilt = false;
-};
-
-// Other exported functions
-const hide = graph.hide;
-const show = graph.show;
-
-export {
-    build,
-    update,
-
-    hide,
-    show,
-
-    kill,
-}

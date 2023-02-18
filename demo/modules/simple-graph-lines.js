@@ -19,177 +19,20 @@ Data supplied to graph module as Javascript object with structure:
 }
 */
 
-import * as scrawl from '../../source/scrawl.js';
 
+// #### Imports and exports
 // We need to adapt the graph frame with data specific to this graph
-import * as frame from './simple-chart-frame.js';
+import { 
+    api as frame,
+    dims as frameDims,
+} from './simple-chart-frame.js';
 
-// Get the Magic Numbers from the chart frame
-let graphWidth = frame.graphWidth,
-    graphHeight = frame.graphHeight,
-    graphBottom = frame.graphBottom,
-    graphLeft = frame.graphLeft;
+export const api = {};
 
-// Define the group variables
-let positionGroup,
-    lineGroup,
-    pinGroup;
 
-// Accessibility
-let selectedColumn = 0,
-    space = '',
-    currentData;
-
-// The exported 'build' function
-const build = function (namespace, canvas, dataSet) {
-
-    space = namespace;
-    currentData = dataSet;
-
-    // Only build the Groups and entitys if they don't already exist
-    if (!positionGroup) {
-
-        let yearLabels = dataSet.yearLabels,
-            xStep = graphWidth / yearLabels.length;
-
-        // The 'positions' Group
-        // - A set of Block entitys used as pivots by the other entitys
-        positionGroup = scrawl.makeGroup({
-
-            name: `${namespace}-position-group`,
-            host: canvas.base.name,
-            order: 1,
-            visibility: false,
-        });
-
-        // The 'lines' Group
-        // - A set of line Shape entitys 
-        // - Use position entitys for their start and end coordinate pivots
-        lineGroup = scrawl.makeGroup({
-
-            name: `${namespace}-line-group`,
-            host: canvas.base.name,
-            order: 2,
-            visibility: false,
-        });
-
-        // The 'pins' Group
-        // - A set of Wheel entitys to mark the position of each data point
-        // - Use position entitys as their pivots
-        // - Interactive 
-        pinGroup = scrawl.makeGroup({
-
-            name: `${namespace}-pin-group`,
-            host: canvas.base.name,
-            order: 3,
-            visibility: false,
-        });
-
-        // Build the entitys
-        yearLabels.forEach((label, index) => {
-
-            // Hidden position Blocks
-            scrawl.makeBlock({
-
-                name: `${namespace}-${index}-position`,
-                group: positionGroup,
-
-                width: 0,
-                height: 0,
-                method: 'none',
-
-                startX: `${graphLeft + (xStep * index) + (xStep / 2)}%`,
-                startY: `${graphBottom}%`,
-            });
-
-            if (index) {
-
-                // Line Shapes
-                scrawl.makeLine({
-
-                    name: `${namespace}-${index}-line`,
-                    group: lineGroup,
-
-                    pivot: `${namespace}-${index - 1}-position`,
-                    lockTo: 'pivot',
-
-                    endPivot: `${namespace}-${index}-position`,
-                    endLockTo: 'pivot',
-
-                    useStartAsControlPoint: true,
-
-                    strokeStyle: 'blue',
-                    lineWidth: 2,
-
-                    method: 'draw',
-                });
-            }
-
-            // Visible pin Wheels
-            scrawl.makeWheel({
-
-                name: `${namespace}-${index}-pin`,
-                group: pinGroup,
-                order: index,
-
-                radius: 8,
-
-                handleX: 'center',
-                handleY: 'center',
-
-                pivot: `${namespace}-${index}-position`,
-                lockTo: 'pivot',
-
-                fillStyle: 'aliceblue',
-                strokeStyle: 'blue',
-                lineWidth: 4,
-
-                method: 'drawThenFill',
-            });
-        });
-
-        // All further calculation happens in the 'update' function
-        update();
-
-        // Accessibility
-        frame.setArrowAction('up', () => {});
-        frame.setArrowAction('down', () => {});
-        frame.setArrowAction('left', () => doNavigation('left'));
-        frame.setArrowAction('right', () => doNavigation('right'));
-
-        // Display the graph entitys
-        show();
-    }
-};
-
-// Accessibility
-const doNavigation = (direction) => {
-
-    const { yearLabels } = currentData;
-
-    const len = yearLabels.length;
-
-    switch (direction) {
-
-        case 'left' : 
-            selectedColumn--;
-            break;
-
-        case 'right' : 
-            selectedColumn++;
-            break;
-    }
-
-    if (selectedColumn < 0) selectedColumn = len - 1;
-    else if (selectedColumn >= len) selectedColumn = 0;
-
-    updateSelected();
-};
-
-// Processing
-//
+// #### Helper functionality
 // Determine the range batch
-// - To make sure the graph covers as much vertical space as possible
+// + To make sure the graph covers as much vertical space as possible
 const calculateBatchValue = (val) => {
 
     if (val > 50000) return 10000;
@@ -207,128 +50,250 @@ const calculateBatchValue = (val) => {
     return 1;
 }
 
-// The exported 'update' function
-const update = () => {
 
-    // Only update if we have entitys to update
-    if (positionGroup) {
+// #### Build function
+api.build = function (items) {
 
-        // Initial positioning calculations
-        let yearLabels = currentData.yearLabels,
-            data = currentData.data,
-            max = Math.max(...data),
-            min = Math.min(...data),
-            batch = calculateBatchValue(max - min);
+    // Module state
+    let currentData,
+        xStep = 0,
+        yearLabels,
+        selectedColumn = 0;
 
-        max = ((Math.floor(max / batch)) * batch) + batch;
-        min = (Math.floor(min / batch)) * batch;
+    const { graphWidth, graphHeight, graphLeft, graphBottom } = frameDims;
+    const { namespace, canvas, data, scrawl } = items;
 
-        let categoryValue = graphHeight / (max - min),
-            yDepth = graphBottom - graphHeight;
 
-        // Grab a handle to the 'entity' section in the Scrawl-canvas library
-        let entity = scrawl.library.entity;
+    if (namespace && canvas && data && scrawl) {
 
-        // Reset any highlighted pin Wheel
-        pinGroup.setArtefacts({
-            scale: 1,
-            fillStyle: 'aliceblue',
+        // Namespace boilerplate
+        const name = (item) => `${namespace}-${item}`;
+
+
+        // Group host name
+        const host = canvas.get('baseName');
+
+
+        // Update module state
+        currentData = data;
+        yearLabels = data.yearLabels,
+        xStep = graphWidth / yearLabels.length;
+
+        // The `positions` Group
+        // + A set of Block entitys used as pivots by the other entitys
+        const positionGroup = scrawl.makeGroup({
+
+            name: name('position-group'),
+            host,
+            order: 1,
         });
 
-        // Final calculations and updates
+        // The `lines` Group
+        // + A set of line Shape entitys 
+        // + Use position entitys for their start and end coordinate pivots
+        const lineGroup = scrawl.makeGroup({
+
+            name: name('line-group'),
+            host,
+            order: 2,
+        });
+
+        // The `pins` Group
+        // + A set of Wheel entitys to mark the position of each data point
+        // + Use position entitys as their pivots
+        // + Interactive 
+        const pinGroup = scrawl.makeGroup({
+
+            name: name('pin-group'),
+            host,
+            order: 3,
+        });
+
+
+        // Build the entitys
         yearLabels.forEach((label, index) => {
 
-            let pointDepth = (data[index] - min) * categoryValue,
-                yVal = yDepth + (graphHeight - pointDepth),
-                tempName = `${space}-${index}`;
+            // Hidden position Blocks
+            scrawl.makeBlock({
 
-            entity[`${tempName}-position`].set({
-                startY: `${yVal}%`,
+                name: name(`${index}-position`),
+                group: positionGroup,
+
+                width: 0,
+                height: 0,
+                method: 'none',
+
+                startX: `${graphLeft + (xStep * index) + (xStep / 2)}%`,
+                startY: `${graphBottom}%`,
             });
 
-            entity[`${tempName}-pin`].set({
+            if (index) {
 
-                onEnter: function () {
+                // Line Shapes
+                scrawl.makeLine({
 
-                    selectedColumn = this.get('order');
-                    updateSelected();
-                },
+                    name: name(`${index}-line`),
+                    group: lineGroup,
+
+                    pivot: name(`${index - 1}-position`),
+                    lockTo: 'pivot',
+
+                    endPivot: name(`${index}-position`),
+                    endLockTo: 'pivot',
+
+                    useStartAsControlPoint: true,
+
+                    strokeStyle: 'blue',
+                    lineWidth: 2,
+
+                    method: 'draw',
+                });
+            }
+
+            // Visible pin Wheels
+            scrawl.makeWheel({
+
+                name: name(`${index}-pin`),
+                group: pinGroup,
+                order: index,
+
+                radius: 8,
+
+                handleX: 'center',
+                handleY: 'center',
+
+                pivot: name(`${index}-position`),
+                lockTo: 'pivot',
+
+                fillStyle: 'aliceblue',
+                strokeStyle: 'blue',
+                lineWidth: 4,
+
+                method: 'drawThenFill',
             });
         });
 
-        // Update the chart frame
-        frame.updateSubtitle('No data selected');
-        frame.updateYTop(max.toLocaleString());
-        frame.updateYBottom(min.toLocaleString());
-        frame.updateXLeft(yearLabels[0]);
-        frame.updateXRight(yearLabels[yearLabels.length - 1]);
 
-        selectedColumn = 0;
-        updateSelected();
-    }
-};
+        // #### User interaction
+        const updateSelected = () => {
 
-// Handles both mouse hover, and (accessibility) keyboard navigation
-const updateSelected = () => {
+            const { yearLabels, data } = currentData;
 
-    const { yearLabels, data } = currentData;
+            const entity = pinGroup.getArtefact(pinGroup.artefacts[selectedColumn]);
 
-        const entity = pinGroup.getArtefact(pinGroup.artefacts[selectedColumn]);
+            pinGroup.setArtefacts({
+                scale: 1,
+                fillStyle: 'aliceblue',
+            });
 
-        pinGroup.setArtefacts({
-            scale: 1,
-            fillStyle: 'aliceblue',
+            frame.updateSubtitle(`${yearLabels[selectedColumn]}: §RED§${data[selectedColumn].toLocaleString()}`);
+
+            entity.set({
+                scale: 1.5,
+                fillStyle: 'red',
+            });
+        };
+
+
+        // #### Update function
+        const update = api.update = (dataSet) => {
+
+            if (dataSet) currentData = dataSet;
+
+            // Only update if we have entitys to update
+            if (positionGroup) {
+
+                // Initial positioning calculations
+                let yearLabels = currentData.yearLabels,
+                    data = currentData.data,
+                    max = Math.max(...data),
+                    min = Math.min(...data),
+                    batch = calculateBatchValue(max - min);
+
+                max = ((Math.floor(max / batch)) * batch) + batch;
+                min = (Math.floor(min / batch)) * batch;
+
+                let categoryValue = graphHeight / (max - min),
+                    yDepth = graphBottom - graphHeight;
+
+                // Grab a handle to the 'entity' section in the Scrawl-canvas library
+                let entity = scrawl.library.entity;
+
+                // Reset any highlighted pin Wheel
+                pinGroup.setArtefacts({
+                    scale: 1,
+                    fillStyle: 'aliceblue',
+                });
+
+                // Final calculations and updates
+                yearLabels.forEach((label, index) => {
+
+                    let pointDepth = (data[index] - min) * categoryValue,
+                        yVal = yDepth + (graphHeight - pointDepth),
+                        tempName = name(`${index}`);
+
+                    entity[`${tempName}-position`].set({
+                        startY: `${yVal}%`,
+                    });
+
+                    entity[`${tempName}-pin`].set({
+
+                        onEnter: function () {
+
+                            selectedColumn = this.get('order');
+                            updateSelected();
+                        },
+                    });
+                });
+
+                // Update the chart frame
+                frame.updateSubtitle('No data selected');
+                frame.updateYTop(max.toLocaleString());
+                frame.updateYBottom(min.toLocaleString());
+                frame.updateXLeft(yearLabels[0]);
+                frame.updateXRight(yearLabels[yearLabels.length - 1]);
+
+                selectedColumn = 0;
+                updateSelected();
+            }
+        };
+
+        update();
+
+
+        // #### Accessibility
+        const doNavigation = (direction) => {
+
+            const {yearLabels} = currentData;
+
+            const columnLen = yearLabels.length;
+
+            switch (direction) {
+
+                case 'left' : 
+                    selectedColumn--;
+                    break;
+
+                case 'right' : 
+                    selectedColumn++;
+                    break;
+            }
+
+            if (selectedColumn < 0) selectedColumn = columnLen - 1;
+            else if (selectedColumn >= columnLen) selectedColumn = 0;
+
+            updateSelected();
+        };
+
+        frame.keyboard = scrawl.makeKeyboardZone({
+
+            zone: canvas,
+            none: {
+                ArrowLeft: () => doNavigation('left'),
+                ArrowUp: () => {},
+                ArrowRight: () => doNavigation('right'),
+                ArrowDown: () => {},
+            },
         });
-
-        frame.updateSubtitle(`${yearLabels[selectedColumn]}: §RED§${data[selectedColumn].toLocaleString()}`);
-
-        entity.set({
-            scale: 1.5,
-            fillStyle: 'red',
-        });
-};
-
-// Exported 'kill' function
-const kill = () => {
-
-    if (positionGroup) {
-
-        positionGroup.kill(true);
-        lineGroup.kill(true);
-        pinGroup.kill(true);
-
-        positionGroup = false;
-        lineGroup = false;
-        pinGroup = false;
     }
 };
-
-// Exported 'hide' function
-const hide = () => {
-
-    if (positionGroup) {
-
-        positionGroup.visibility = false;
-        lineGroup.visibility = false;
-        pinGroup.visibility = false;
-    }
-};
-
-// Exported 'show' function
-const show = () => {
-
-    if (positionGroup) {
-
-        positionGroup.visibility = true;
-        lineGroup.visibility = true;
-        pinGroup.visibility = true;
-    }
-};
-
-export {
-    build,
-    update,
-    kill,
-    hide,
-    show,
-}

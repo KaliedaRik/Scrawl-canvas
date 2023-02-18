@@ -36,14 +36,19 @@ Data supplied to graph module as Javascript object with structure:
 }
 */
 
-import * as scrawl from '../../source/scrawl.js';
 
+// #### Imports and exports
 // We need to adapt the graph frame with data specific to this graph
-import * as frame from './simple-chart-frame.js';
+import { api as frame } from './simple-chart-frame.js';
 
 // The graph we are adapting our data for
-import * as graph from './simple-graph-stacked-bars.js'
+import { api as graph } from './simple-graph-stacked-bars.js';
 
+// Export
+export const api = {};
+
+
+// #### Data manipulation
 // The asynchronous data fetch
 const getRawData = (file) => {
 
@@ -65,7 +70,7 @@ const getRawData = (file) => {
 // - To 'by-year' - required for this graph's display
 const extractDataByYear = (yearLabels, categoryLabels, categoryData) => {
 
-    let d = {};
+    const d = {};
 
     for (let i = 0; i < yearLabels.length; i++) {
 
@@ -84,47 +89,53 @@ const extractDataByYear = (yearLabels, categoryLabels, categoryData) => {
     return d;
 };
 
-// The exported 'build' function
-const build = function (namespace, canvas, dataSource) {
 
-    getRawData (dataSource)
-    .then (rawData => {
+// #### Build function
+api.build = (items) => {
 
-        // Reconstruct data into formats required by this graph type
-        let area = rawData.area,
-            yearLabels = rawData.years,
-            categoryData = rawData.crimesByCategory,
-            categoryLabels = Object.keys(categoryData),
-            yearData = extractDataByYear(yearLabels, categoryLabels, categoryData);
+    const { namespace, canvas, dataSource, scrawl } = items;
 
-        let data = {
-            area,
-            yearLabels,
-            categoryLabels,
-            yearData,
+    if (namespace && canvas && dataSource && scrawl) {
+
+
+        // #### Kill function
+        // + We pass the namespace through to the stacked-bars module, so we can handle kill functionality here rather than there
+        api.kill = () => {
+            console.log('killing namespace', namespace);
+            scrawl.library.purge(namespace);
         };
 
-        // Build the graph
-        graph.build(namespace, canvas, data);
 
-        // Update the frame with additional data
-        frame.updateTitle(`${data.area} Crime Statistics - Overview`);
-        frame.updateBackground(data.area);
-    })
-    .catch (error => console.log(error.message));
+        // Fetch data, manipulate it, and pass it through to the stacked-bars module
+        getRawData (dataSource)
+        .then (rawData => {
+
+            // Reconstruct data into formats required by this graph type
+            const area = rawData.area,
+                yearLabels = rawData.years,
+                categoryData = rawData.crimesByCategory,
+                categoryLabels = Object.keys(categoryData),
+                yearData = extractDataByYear(yearLabels, categoryLabels, categoryData);
+
+            const data = {
+                area,
+                yearLabels,
+                categoryLabels,
+                yearData,
+            };
+
+            // Build the graph
+            graph.build ({
+                namespace, 
+                canvas, 
+                data,
+                scrawl,
+            });
+
+            // Update the frame with additional data
+            frame.updateTitle (`${data.area} Crime Statistics - Overview`);
+            frame.updateBackground (data.area);
+        })
+        .catch (error => console.log(error.message));
+    }
 };
-
-
-// Other exported functions 
-// - Piping these through from graph module exported functions
-const kill = graph.kill;
-const hide = graph.hide;
-const show = graph.show;
-
-export {
-    build,
-    kill,
-
-    hide,
-    show,
-}

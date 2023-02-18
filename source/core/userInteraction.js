@@ -1299,7 +1299,7 @@ const makeKeyboardZone = function (items = Ωempty) {
 
             while (!name) {
 
-                if (dragZones[myTarget.id]) name = myTarget.id;
+                if (keyboardZones[myTarget.id]) name = myTarget.id;
                 if (myTarget.tagName === 'BODY') break;
                 myTarget = myTarget.parentElement;
             }
