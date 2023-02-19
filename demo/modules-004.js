@@ -22,6 +22,7 @@ import lottieLoader from './modules/lottie-loader.js';
 lottieLoader({
     name: 'my-first-lottie-animation',
     src: 'img/33-video-cam.json',
+    scrawl,
 })
 // @ts-expect-error
 .then(lottiePacket => {
@@ -50,26 +51,39 @@ lottieLoader({
     }).clone({
 
         name: 'second-piccy',
+        dimensions: [220, 80],
         start: ['30%', '70%'],
         strokeStyle: 'green',
 
     }).clone({
 
         name: 'third-piccy',
+        dimensions: [150, 150],
+        copyStart: ['40%', '30%'],
+        copyDimensions: ['20%', '40%'],
         start: ['70%', '70%'],
         strokeStyle: 'red',
 
     }).clone({
 
         name: 'fourth-piccy',
+        dimensions: [200, 100],
+        copyStart: ['40%', '33%'],
+        copyDimensions: ['20%', '20%'],
         start: ['70%', '30%'],
         strokeStyle: 'blue',
 
     }).clone({
 
         name: 'fifth-piccy',
+        copyStart: ['30%', '30%'],
+        copyDimensions: ['40%', '40%'],
         start: ['50%', '50%'],
         strokeStyle: 'gray',
+        scale: 0.5,
+        delta: {
+            roll: -0.5,
+        },
     });
 
 

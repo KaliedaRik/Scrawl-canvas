@@ -3,25 +3,22 @@
 //
 // Related files:
 // + [Lottie loader - main module](../modules-004.html)
-//
-// Import the Scrawl-canvas object 
-// + There's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import * as scrawl from '../../source/scrawl.js';
 
 
 // #### The Lottie animation loader function
 // This factory takes a single __items__ Javascript Object argument (to match the functionality of built-in Scrawl-canvas factories). Two of the attributes of this argument object are required, the others will fall back on default values. These attrributes are:
 // + __name__ (required) - String - unique name value
 // + __src__ (required) - String - path to the lottie.json animation file
+// + __scrawl__ (required) - the Scrawl-canvas object
 // + __width__ - Number - width of the animation; default `1000`
 // + __bodymovinLibrary__ - String - CDN path at which the Bodymovin library can be obtained; default: `https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.8.1/lottie.min.js`
 //
 // The factory returns a Promise which resolves to an object which contains handles to the RawAsset Object, the Bodymovin controller Object, and a `kill` function which will remove all objects and DOM infrastructure when invoked.
 export default function (items) {
 
-    let { src, bodymovinLibrary, width, name, loop, autoplay } = items;
+    let { src, bodymovinLibrary, width, name, loop, autoplay, scrawl } = items;
 
-    if (!src || !name) return false;
+    if (!(src && name && scrawl)) return false;
 
     if (loop == null) loop = false;
     if (autoplay == null) autoplay = false;
