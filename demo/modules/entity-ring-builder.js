@@ -4,16 +4,12 @@
 // Related files:
 // + [Compound entitys - main module](../modules-003.html)
 //
-// Import the Scrawl-canvas object 
-// + There's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import * as scrawl from '../../source/scrawl.js';
-
-
 // #### The entity ring factory
 // This factory takes a single __items__ Javascript Object argument (to match the functionality of built-in Scrawl-canvas factories). Three of the attributes of this argument object are required, the others will fall back on default values. These attrributes are:
 // + __canvas__ (required) - Scrawl-canvas Canvas wrapper object - the canvas which will be hosting the compound entity we are about to create
-// + __name__ (required) - String - unique name value
+// + __namespace__ (required) - String - unique name value
 // + __entity__ (required) - Scrawl-canvas entity object - any valid entity that has already been created
+// + __scrawl__ (required) - Scrawl-canvas object
 // + __dimensions__ - Number - the square dimensions of the compound entity; default: 400
 // + __buildStartAngle__ - Number - the angle of the first entity we lay down; default: -45
 // + __buildEndAngle__ - Number - the angle of the last entity we lay down - note that this needs to be sufficient to cover at least half of the ring, which we can then copy and stamp to create the final output; default: 225
@@ -22,40 +18,43 @@ import * as scrawl from '../../source/scrawl.js';
 // + __reflectOnly__ - Boolean - when the ring half is copied and pasted back into the final output, it can be set to reflect only, which will give us a bilateral rather than a radial symmetry; default: false
 export default function (items = {}) {
 
-    if (!items.canvas || !items.entity || !items.name) return {};
+    const { canvas, namespace, entity, scrawl } = items;
 
-    let canvas = items.canvas,
-        name = items.name,
-        entity = items.entity,
-        dimensions = items.dimensions || 400,
-        buildStartAngle = items.buildStartAngle || -45,
-        buildEndAngle = items.buildEndAngle || 225,
-        buildStepAngle = items.buildStepAngle || 15,
-        buildOffset = items.buildOffset || 0,
-        reflectOnly = items.reflectOnly || false;
+    if (!(canvas && entity && namespace && scrawl)) return {};
+
+    const name = item => `${namespace}-${item}`;
+
+    const {
+        dimensions = 400,
+        buildStartAngle = -45,
+        buildEndAngle = 225,
+        buildStepAngle = 15,
+        buildOffset = 0,
+        reflectOnly = false,
+    } = items;
 
     const cell = canvas.buildCell({
-        name: `${name}-cell`,
+        name: name('cell'),
         dimensions: [dimensions, dimensions],
         shown: false,
         compileOrder: 0,
     });
 
     const clip = scrawl.makeGroup({
-        name: `${name}-clip-group`,
-        host: `${name}-cell`,
+        name: name('clip-group'),
+        host: name('cell'),
         order: 0,
     });
 
     const reflect = scrawl.makeGroup({
-        name: `${name}-reflect-group`,
-        host: `${name}-cell`,
+        name: name('reflect-group'),
+        host: name('cell'),
         order: 1,
     });
 
     scrawl.makeBlock({
-        name: `${name}-clipper`,
-        group: `${name}-clip-group`,
+        name: name('clipper'),
+        group: name('clip-group'),
         start: ['left', 'center'],
         dimensions: ['100%', '50%'],
         method: 'clip'
@@ -67,8 +66,8 @@ export default function (items = {}) {
     for (let i = buildStartAngle; i <= buildEndAngle; i += buildStepAngle) {
 
         entity.clone({
-            name: `${name}-ringitem-${i}`,
-            group: `${name}-clip-group`,
+            name: name(`ringitem-${i}`),
+            group: name('clip-group'),
             roll: i,
             offset: [v.x, v.y],
         });
@@ -79,9 +78,9 @@ export default function (items = {}) {
     scrawl.releaseVector(v);
 
     scrawl.makePicture({
-        name: `${name}-reflection`,
-        group: `${name}-reflect-group`,
-        asset: `${name}-cell`,
+        name: name('reflection'),
+        group: name('reflect-group'),
+        asset: name('cell'),
 
         start: ['center', '25%'],
         handle: ['center', 'center'],
@@ -101,11 +100,6 @@ export default function (items = {}) {
 
     return {
         cell,
-        kill: () => {
-
-            clip.kill(true);
-            reflect.kill(true);
-            cell.kill();
-        },
+        kill: () => scrawl.library.purge(namespace),
     }
 };

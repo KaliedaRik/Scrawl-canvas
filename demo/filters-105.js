@@ -8,7 +8,8 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const plainCanvas = scrawl.library.canvas['plain-canvas'],
+    filteredCanvas = scrawl.library.canvas['filtered-canvas'];
 
 scrawl.importDomImage('.flowers');
 
@@ -23,11 +24,11 @@ const myFilter = scrawl.makeFilter({
     offsetY: 200,
 });
 
-
 // Create the target entity
-const piccy = scrawl.makePicture({
+const plainImg = scrawl.makePicture({
 
-    name: 'base-piccy',
+    name: 'plain-img',
+    group: plainCanvas.get('baseName'),
 
     asset: 'iris',
 
@@ -38,7 +39,12 @@ const piccy = scrawl.makePicture({
     copyHeight: '100%',
 
     method: 'fill',
+});
 
+const filteredImg = plainImg.clone({
+
+    name: 'filtered-img',
+    group: filteredCanvas.get('baseName'),
     filters: ['tiles'],
 });
 
@@ -47,6 +53,7 @@ const piccy = scrawl.makePicture({
 const spiral = scrawl.makeLineSpiral({
 
     name: 'points-from-spiral',
+    group: filteredCanvas.get('baseName'),
     start: [200, 200],
     handle: ['center', 'center'],
     radiusIncrement: 0.05,
@@ -123,10 +130,14 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
+    name: "plain-canvas-animation",
+    target: plainCanvas,
+});
 
-    name: "demo-animation",
-    target: canvas,
+scrawl.makeRender({
+    name: "filtered-canvas-animation",
+    target: filteredCanvas,
     afterShow: report,
     afterCreated: updateFilterPoints,
 });
@@ -224,13 +235,13 @@ offset_y.value = 200;
 // @ts-expect-error
 tile_radius.value = 50;
 // @ts-expect-error
-spiralRadius.value = 0.05;
+spiralRadius.value = 0.04;
 // @ts-expect-error
 spiralRadiusAdjust.value = 1;
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', piccy);
+addImageDragAndDrop([plainCanvas, filteredCanvas], '#my-image-store', [plainImg, filteredImg]);
 
 
 // #### Development and testing

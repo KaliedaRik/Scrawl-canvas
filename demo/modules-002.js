@@ -9,19 +9,32 @@ import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
 
+import buildChart from './modules/wikipedia-views-spiral-chart.js';
+
 
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-// // Function to fetch and parse Wikipedia page view timeseries data
-import buildChart from './modules/wikipedia-views-spiral-chart.js';
 
-// Initiate the process on page load
-let currentPage;
+// We need to generate an initial chart to display
+// + We give the asset a name, which we can then use with our Picture entity
+const initialAssetName = 'wiki-Cat-chart';
 
-buildChart('Cat', canvas, {})
-.then(res => currentPage = res)
-.catch(e => {});
+buildChart({
+    page: 'Cat',
+    assetName: initialAssetName,
+    canvas,
+    scrawl,
+});
+
+
+// And we need a picture entity in which to display the chart
+const piccy = scrawl.makePicture({
+    name: 'spiral-chart',
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
+    asset: initialAssetName,
+});
 
 
 // #### Scene animation
@@ -42,26 +55,32 @@ scrawl.makeRender({
     afterShow: report,
 });
 
+
 // #### User interaction
-scrawl.addNativeListener('click', () => {
+scrawl.addNativeListener('change', () => {
 
 // @ts-expect-error
     let page = document.querySelector('#wikipedia-page').value;
 
     if (page) {
 
-        buildChart(page, canvas, {})
-        .then(res => {
+        const assetName = `wiki-${page}-chart`;
 
-            if (currentPage) currentPage.kill();
-            currentPage = res;
-        })
-        .catch(e => {
+        if (!scrawl.library.assetnames.includes(assetName)) {
 
-            console.log('main invoker error', e);
+            buildChart({
+                page,
+                assetName,
+                canvas,
+                scrawl,
+            });
+        }
+
+        piccy.set({
+            asset: assetName,
         });
     };
-}, '#page-request');
+}, '#wikipedia-page');
 
 
 // #### Development and testing
