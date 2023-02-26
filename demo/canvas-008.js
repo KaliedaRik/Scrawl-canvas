@@ -57,7 +57,7 @@ const piccy = makePicture({
 piccy.clone({
 
     name: name('myFactory'),
-    imageSource: 'img/canalFactory-800.png',
+    imageSource: 'img/canalFactory-800.webp',
 
     width: 600,
     height: 400,

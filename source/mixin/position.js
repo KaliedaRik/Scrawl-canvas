@@ -1608,6 +1608,8 @@ export default function (P = Ωempty) {
             this.isBeingDragged = true;
             this.currentDragCache.set(this.currentDragOffset);
 
+            this.relativeCoordinates = [...this.start];
+
             if (this.lockTo[0] === 'start') {
                 this.currentDragOffset[0] = this.currentStart[0] - x;
             }
@@ -1644,6 +1646,18 @@ export default function (P = Ωempty) {
 
         this.start.set(this.currentStartCache).add(this.currentDragOffset);
         this.dirtyStart = true;
+
+        const host = this.currentHost;
+        if (host) {
+
+            const [width, height] = host.get('dimensions');
+            const [x, y] = this.start;
+            const [relX, relY] = this.relativeCoordinates;
+
+            if (relX.substring) this.start[0] = `${(x / width) * 100}%`;
+            if (relY.substring) this.start[1] = `${(y / height) * 100}%`;
+        }
+        delete this.relativeCoordinates;
 
         this.currentDragOffset.set(this.currentDragCache);
 

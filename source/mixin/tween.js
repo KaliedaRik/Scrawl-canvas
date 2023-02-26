@@ -10,7 +10,7 @@ import { mergeOver, isa_fn, isa_obj, xt, xtGet, convertTime, λnull, Ωempty } f
 
 
 // __locateTarget__ - a private function and attribute to help retrieve data from the scrawl-canvas library
-const locateTargetSections = ['artefact', 'group', 'animation', 'tween', 'styles'];
+const locateTargetSections = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'];
 const locateTarget = (item) => {
 
     if(item && item.substring){

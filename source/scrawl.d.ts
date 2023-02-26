@@ -2183,7 +2183,7 @@ interface RenderFactoryInputs extends BaseMixinInputs, RenderFactoryDeltaInputs 
     onRun?: DefaultInputFunction;
     order?: number;
     target?: string | TargetInstance | Array<string | TargetInstance>;
-    observer?: boolean;
+    observer?: boolean | CommonObjectInput;
     noTarget?: boolean;
 }
 

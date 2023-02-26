@@ -458,7 +458,11 @@ P.doSimpleUpdate = function (items = Ωempty) {
 
     for (j = 0, jz = targets.length; j < jz; j++) {
 
-        targets[j].set(setObj);
+        const t = targets[j];
+
+        if ('Group' === t.type) t.setArtefacts(setObj);
+        else t.set(setObj);
+        // targets[j].set(setObj);
     }
 
     this.setObj = setObj;

@@ -5,7 +5,7 @@
 // + [Compound entitys - main module](../modules-003.html)
 //
 // #### The entity ring factory
-// This factory takes a single __items__ Javascript Object argument (to match the functionality of built-in Scrawl-canvas factories). Three of the attributes of this argument object are required, the others will fall back on default values. These attrributes are:
+// This factory takes a single __items__ Javascript Object argument (to match the functionality of built-in Scrawl-canvas factories). Four of the attributes of this argument object are required, the others will fall back on default values. These attrributes are:
 // + __canvas__ (required) - Scrawl-canvas Canvas wrapper object - the canvas which will be hosting the compound entity we are about to create
 // + __namespace__ (required) - String - unique name value
 // + __entity__ (required) - Scrawl-canvas entity object - any valid entity that has already been created

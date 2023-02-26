@@ -93,16 +93,16 @@ scrawl.importSprite({
 
     // Dinosaur images taken from https://www.gameart2d.com/free-dino-sprites.html
     imageSrc: [
-        'img/dinosprite_walk_0.png',
-        'img/dinosprite_walk_1.png',
-        'img/dinosprite_walk_2.png',
-        'img/dinosprite_walk_3.png',
-        'img/dinosprite_walk_4.png',
-        'img/dinosprite_walk_5.png',
-        'img/dinosprite_walk_6.png',
-        'img/dinosprite_walk_7.png',
-        'img/dinosprite_walk_8.png',
-        'img/dinosprite_walk_9.png',
+        'img/dinosprite_walk_0.webp',
+        'img/dinosprite_walk_1.webp',
+        'img/dinosprite_walk_2.webp',
+        'img/dinosprite_walk_3.webp',
+        'img/dinosprite_walk_4.webp',
+        'img/dinosprite_walk_5.webp',
+        'img/dinosprite_walk_6.webp',
+        'img/dinosprite_walk_7.webp',
+        'img/dinosprite_walk_8.webp',
+        'img/dinosprite_walk_9.webp',
     ],
 });
 

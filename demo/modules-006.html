@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Modules 006</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+
+    html {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    body {
+      margin: 0;
+      border: 0;
+      padding: 0;
+      font-size: 1rem;
+    }
+
+    .scrollytelling {
+      border: 1px solid gray;
+    }
+
+    .do-not-display {
+      height: 0;
+    }
+
+    canvas {
+      border: 1px dashed red;
+      display: block;
+      text-align: center;
+      margin: 0 auto;
+    }
+
+    section {
+      margin: 1em;
+    }
+
+    li {
+      margin-bottom: 0.75rem;
+    }
+
+    /* Sticky report element */
+    #reportmessage {
+      font-family: monospace;
+      font-size: 80%;
+      min-height: 2em;
+      width: 80%;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background-color: #8d8;
+      padding: 0.5em 1em;
+      margin: 0 auto 1em;
+    }
+
+    /* First infographics panel styling */
+    #st-1 canvas {
+      border-radius: 0.5em;
+    }
+
+    /* Second infographics panel styling */
+    #st-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    #st2-canvas-container {
+      height: 100vh;
+      max-width: 35rem;
+      margin: 0 auto;
+      position: sticky;
+      top: 0;
+      background-color: rgb(240 240 255);
+    }
+    #st2-text-container {
+      height: 400vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 1;
+    }
+    #st2-text-container div {
+      height: 80vh;
+    }
+    #st2-text-container p {
+      padding: 1em;
+      background-color: white;
+      position: sticky;
+      top: 40vh;
+    }
+
+    /* Third infographics panel styling */
+    #st-3 {
+      width: 100%;
+      height: 400vh;
+    }
+
+    #st3-canvas-container {
+      width: 100%;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    /* Fourth infographics panel styling */
+    #st-4 {
+      width: 100%;
+      height: 600vh;
+    }
+
+    #st4-canvas-container {
+      width: 100%;
+      height: 80vh;
+      max-width: 800px;
+      max-height: 800px;
+      position: sticky;
+      top: 10vh;
+      margin: 0 auto 2em;
+    }
+
+    #st4-canvas-container p {
+      font-size: 85%;
+      font-style: italic;
+      margin: 0.5em;
+      text-align: center;
+    }
+
+
+    .javascript-enabled .scrollytelling {
+      border-width: 0;
+    }
+    .javascript-enabled canvas {
+      border-width: 0;
+    }
+
+    @media (min-width: 420px) {
+      body {
+        font-size: 1.2rem;
+      }
+    }
+    @media (min-width: 560px) {
+      body {
+        font-size: 1.4rem;
+      }
+    }
+    @media (min-width: 700px) {
+
+      body {
+        font-size: 1.6rem;
+      }
+
+      /* Second infographics panel styling - larger screen widths */
+      #st-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      #st2-text-container p {
+        background-color: transparent;
+      }
+
+      #st2-canvas-container {
+        max-width: 600px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <h1 tabindex="0"><a href="index.html">Scrawl-canvas v8</a> - Modules test 006</h1>
+  <h2>Animation observer; Scrollytelling</h2>
+
+  <section>
+    <p>This demo covers/tests <strong>progressive enhancement</strong>, <strong>responsive canvases</strong> and <strong>scrollytelling</strong> - page-based infographics which unfold as the user scrolls down the page</p>
+
+    <ul>
+      <li>Progressive enhancement - the page should display and tell its story when the user has disabled Javascript in their browser. All key data should be accessible to users using, for instance, screen readers. And users should be able to tab through the page contents even when Javascript is enabled - they should not be held hostage to the scroll!</li>
+
+      <li>Responsive - the infographic elements should tell their animated stories on both mobile and desktop devices, including user interaction.</li>
+
+      <li>The scrollytelling (an ugly word) experience should be as smooth as possible. It should also respect user preferences such as <em>prefers-reduced-motion</em> and <em>prefers-color-scheme</em>.</li>
+    </ul>
+
+    <p><b>Touch test:</b> in theory the user should be able to scroll through the page and canvases should run/animate as/when they come into view and move through the viewport. The UX on desktop seems okay; on touch-based devices the results - especially for the full-width infographic canvases - are not satisfactory. We need to think of a different approach if we want SC to be useful for scroll-based, animation-heavy storytelling.</p>
+
+    <p><strong>Canvas 1.</strong> The first canvas - fixed-dimensions, unresponsive - stays positioned in the flow of the page, moving with the copy above and below it. The canvas displays its animationObserver position within the viewport. The graphic text in the canvas will size responsively alongside the surrounding article's text size (as set in CSS)</p>
+  </section>
+
+  <div id="reportmessage">This browser environment has disabled Javascript</div>
+
+  <!--
+    We need a way for canvases to identify their assets (primarily images)
+
+    - We do that by adding assets into the <canvas> element's shadow DOM
+      - Every asset needs a unique id attribute
+        - eg: id="st-1-placeholder", etc
+      - Each asset should also include a class along the lines of {namespace}-asset
+        - eg: class="st-1-asset", etc
+
+    - Every canvas will include a placeholder asset
+      - An <img> element which can be displayed in place of the canvas in no-JS environments
+
+    - The canvas shadow DOM can also include a <div> element with class 'do-not-display'
+      - We can then hide it (in vaious ways) using CSS
+      - Additional assets can be included in this hidden <div>
+
+    - Then we can include a data-manifest attribute on the <canvas> element
+      - This is a JSON object listing the assets
+        - "class" and "placeholder" are mandatory attributes
+        - "target" identifies the element against which the canvas will position itself
+        - Everything else is optional, specific to the canvas scene
+
+    - The data-manifest attribute is NOT part of SC
+      - Just something made up for this scrollytelling
+
+    REASONS why we're doing things this way:
+    - This html file becomes the Single Source Of Truth for our assets
+    - Everything relevant to assets is conveniently located in this file
+    - All worrying about asset paths happens here
+    - We can define our <img> assets to be properly responsive (srcset attribute)!
+      - In the SC approved way 
+  -->
+
+  <div 
+    id="st-1"
+    class="scrollytelling"
+    tabindex="0"
+  >
+    <canvas 
+      data-scrawl-canvas 
+      id="st-1-canvas" 
+      width="300"
+      height="600"
+      data-manifest='{
+        "class": "st-1-asset",
+        "placeholder": "st-1-placeholder"
+      }'
+    >
+      <img 
+        id="st-1-placeholder" 
+        class="st-1-asset"
+        src="img/demo-m006-c1-img.webp" 
+        alt="Placeholder for first canvas infographic, showing position of canvas in viewport"
+      />
+    </canvas>
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create several canvases, both user-controlled responsive and banner.</li>
+      <li>Use each canvas wrapper's `here` object's `inViewportTop`, `inViewportCenter` and `inViewportBase` attributes to control their displays.</li>
+      <li>Check that each canvas element's related animation object only runs when the canvas is visible in the viewport.</li>
+    </ul>
+
+    <p><b>Touch test:</b> see first paragraph above</p>
+
+    <p><a href="../docs/demo/modules-006.html">Annotated code</a></p>
+  </div>
+
+  <section tabindex="0">
+    <p>Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit.</p>
+
+    <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit.</p>
+
+    <p><strong>Canvas 2.</strong> The second canvas will become sticky when it reaches the vertical center of the viewport. Text will continue to scroll to the right of it. It will unsticky when reaching the end of the container. The animation is tied to tweens reflecting the user's scrolling activity; it will reverse when the user scrolls back towards the start of the page. Canvas also respects the user's "refers-reduced-motion" preference, displaying a static image in reduced-motion enviroments.</p>
+  </section>
+
+  <div 
+    id="st-2"
+    class="scrollytelling"
+    tabindex="0"
+  >
+    <div id="st2-canvas-container">
+      <canvas 
+        data-scrawl-canvas 
+        id="st-2-canvas" 
+        data-is-responsive="true" 
+        data-base-width="600" 
+        data-base-height="600" 
+        data-fit="contain"
+        data-manifest='{
+          "class": "st-2-asset",
+          "target": "#st2-text-container",
+          "placeholder": "st-2-placeholder",
+          "angel": "st-2-angel"
+
+        }'
+      >
+        <img 
+          id="st-2-placeholder" 
+          class="st-2-asset"
+          src="img/demo-m006-c2-img.webp" 
+          alt="Placeholder for second canvas infographic, showing an image being revealed" 
+        />
+        <div class="do-not-display">
+          <img 
+            id="st-2-angel"
+            class="st-2-asset"
+            src="img/angels-square-1200.webp" 
+            alt="A group of cemetery statues against trees and a blue sky, Havana, Cuba" 
+          />
+        </div>
+     </canvas>
+    </div>
+
+    <div id="st2-text-container">
+      <div>
+        <p>This is an interesting fact about the data shown in the canvas.</p>
+      </div>
+      <div>
+        <p>This is an another interesting fact about canvases in general.</p>
+      </div>
+      <div>
+        <p>This is an aside on how much politicians enjoy sitting on pineapples rather than dealing with the emergencies the rest of us have to face every day.</p>
+      </div>
+      <div>
+        <p>This last paragraph summarieses what has been said before.</p>
+      </div>
+    </div>
+  </div>
+
+  <section tabindex="0">
+    <p>Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi lacinia molestie dui. Praesent blandit dolor. Sed non quam. In vel mi sit amet augue congue elementum. Morbi in ipsum sit amet pede facilisis laoreet. Donec lacus nunc, viverra nec, blandit vel, egestas et, augue. Vestibulum tincidunt malesuada tellus. Ut ultrices ultrices enim. Curabitur sit amet mauris. Morbi in dui quis est pulvinar ullamcorper.</p>
+
+    <p><strong>Canvas 3.</strong> The third canvas is interactive - the yellow labels can be dragged around the canvas. It is also responsive, rearranging the labels and resizing the arrow as the browser viewport changes shape and size.</p>
+  </section>
+
+  <div 
+    id="st-3"
+    class="scrollytelling"
+    tabindex="0"  
+  >
+    <div id="st3-canvas-container">
+      <canvas 
+        data-scrawl-canvas 
+        id="st-3-canvas" 
+        data-is-responsive="true" 
+        data-base-background-color="darkslategray"
+        data-manifest='{
+          "class": "st-3-asset",
+          "target": "#st-3",
+          "banner": "st-3-static-banner",
+          "landscape": "st-3-static-landscape",
+          "rectangular": "st-3-static-rectangular",
+          "portrait": "st-3-static-portrait",
+          "skyscraper": "st-3-static-skyscraper",
+          "placeholder": "st-3-placeholder"
+        }'
+      >
+        <img 
+          id="st-3-placeholder"
+          class="st-3-asset"
+          src="img/demo-m006-c3-img.webp" 
+          alt="Placeholder for third canvas infographic, showing animated line travelling around an arrow"
+        />
+        <div class="do-not-display">
+          <img 
+            id="st-3-static-skyscraper"
+            class="st-3-asset"
+            src="img/demo-m006-c3-img-skyscraper.webp" 
+            alt="Skyscraper shape form of the placeholder image" 
+          />
+          <img 
+            id="st-3-static-portrait"
+            class="st-3-asset"
+            src="img/demo-m006-c3-img-portrait.webp" 
+            alt="Portrait shape form of the placeholder image" 
+          />
+          <img 
+            id="st-3-static-rectangular"
+            class="st-3-asset"
+            src="img/demo-m006-c3-img-rectangular.webp" 
+            alt="Rectangular shape form of the placeholder image" 
+          />
+          <img 
+            id="st-3-static-landscape"
+            class="st-3-asset"
+            src="img/demo-m006-c3-img-landscape.webp" 
+            alt="Landscape shape form of the placeholder image" 
+          />
+          <img 
+            id="st-3-static-banner"
+            class="st-3-asset"
+            src="img/demo-m006-c3-img-banner.webp" 
+            alt="Banner shape form of the placeholder image" 
+          />
+        </div>
+      </canvas>
+    </div>
+  </div>
+
+  <section tabindex="0">
+    <p>Nulla facilisi. Integer lacinia sollicitudin massa. Cras metus. Sed aliquet risus a tortor. Integer id quam. Morbi mi. Quisque nisl felis, venenatis tristique, dignissim in, ultrices sit amet, augue. Proin sodales libero eget ante. Nulla quam. Aenean laoreet. Vestibulum nisi lectus, commodo ac, facilisis ac, ultricies eu, pede.</p>
+
+    <p>Ut orci risus, accumsan porttitor, cursus quis, aliquet eget, justo. Sed pretium blandit orci. Ut eu diam at pede suscipit sodales. Aenean lectus elit, fermentum non, convallis id, sagittis at, neque. Nullam mauris orci, aliquet et, iaculis et, viverra vitae, ligula. Nulla ut felis in purus aliquam imperdiet. Maecenas aliquet mollis lectus. Vivamus consectetuer risus et tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.</p>
+
+    <p><strong>Canvas 4.</strong> The fourth canvas will ???</p>
+  </section>
+
+  <div 
+    id="st-4"
+    class="scrollytelling"
+    tabindex="0"
+  >
+    <div id="st4-canvas-container">
+      <canvas 
+        data-scrawl-canvas 
+        id="st-4-canvas" 
+        data-is-responsive="true" 
+        data-base-width="800" 
+        data-base-height="800" 
+        data-base-background-color="teal"
+        data-fit="contain"
+        data-manifest='{
+          "class": "st-4-asset",
+          "target": "#st-4",
+          "placeholder": "st-4-placeholder",
+          "angels": "st-4-angels"
+        }'
+      >
+        <img 
+          id="st-4-placeholder"
+          class="st-4-asset"
+          src="img/demo-m006-c4-img.webp" 
+          alt="A statue, inverted colors" 
+        />
+        <div class="do-not-display">
+          <img 
+            id="st-4-angels"
+            class="st-4-asset"
+            src="img/angelsOriginal-2400.webp" 
+            alt="An animated image of cemetery statues, Havana, Cuba" 
+            data-dimensions='{
+              "angelsOriginal-2400.webp": [2400, 1200]
+            }'
+          />
+        </div>
+      </canvas>
+      <p>A look at some statues in the main cemetery, Havana, Cuba.</p>
+    </div>
+  </div>
+
+  <section tabindex="0">
+    <p>Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam.</p>
+
+    <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit.</p>
+
+    <p>In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi.</p>
+
+    <p><strong>Canvas 5.</strong> The last canvas will play a video and ???</p>
+  </section>
+
+  <!--
+    The last canvas will play a video and ???
+  -->
+  <div 
+    id="st-5"
+    class="scrollytelling"
+    tabindex="0"
+  >
+    <canvas 
+      data-scrawl-canvas 
+      id="st-5-canvas" 
+      data-base-background-color="teal"
+      data-manifest='{
+        "class": "st-5-asset",
+        "placeholder": "st-5-placeholder"
+      }'
+    >
+      <img 
+        id="st-5-placeholder"
+        class="st-5-asset"
+        src="img/demo-m006-c5-img.webp"
+        alt="Placeholder for fifth canvas infographic, showing various parts of a video" />
+    </canvas>
+  </div>
+
+  <section tabindex="0">
+    <p>Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi lacinia molestie dui. Praesent blandit dolor.</p>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.</p>
+
+    <p>Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit.</p>
+
+    <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit.</p>
+
+    <p>Nulla facilisi. Integer lacinia sollicitudin massa. Cras metus. Sed aliquet risus a tortor. Integer id quam. Morbi mi. Quisque nisl felis, venenatis tristique, dignissim in, ultrices sit amet, augue. Proin sodales libero eget ante. Nulla quam. Aenean laoreet. Vestibulum nisi lectus, commodo ac, facilisis ac, ultricies eu, pede.</p>
+
+    <p>Ut orci risus, accumsan porttitor, cursus quis, aliquet eget, justo. Sed pretium blandit orci. Ut eu diam at pede suscipit sodales. Aenean lectus elit, fermentum non, convallis id, sagittis at, neque. Nullam mauris orci, aliquet et, iaculis et, viverra vitae, ligula. Nulla ut felis in purus aliquam imperdiet. Maecenas aliquet mollis lectus. Vivamus consectetuer risus et tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.</p>
+
+    <p>Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi lacinia molestie dui. Praesent blandit dolor.</p>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.</p>
+
+    <p>Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit.</p>
+
+    <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit.</p>
+
+    <p>Nulla facilisi. Integer lacinia sollicitudin massa. Cras metus. Sed aliquet risus a tortor. Integer id quam. Morbi mi. Quisque nisl felis, venenatis tristique, dignissim in, ultrices sit amet, augue. Proin sodales libero eget ante. Nulla quam. Aenean laoreet. Vestibulum nisi lectus, commodo ac, facilisis ac, ultricies eu, pede.</p>
+
+    <p>Ut orci risus, accumsan porttitor, cursus quis, aliquet eget, justo. Sed pretium blandit orci. Ut eu diam at pede suscipit sodales. Aenean lectus elit, fermentum non, convallis id, sagittis at, neque. Nullam mauris orci, aliquet et, iaculis et, viverra vitae, ligula. Nulla ut felis in purus aliquam imperdiet. Maecenas aliquet mollis lectus. Vivamus consectetuer risus et tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.</p>
+  </section>
+
+  <script src="modules-006.js" type="module"></script>
+
+</body>
+
+</html>
