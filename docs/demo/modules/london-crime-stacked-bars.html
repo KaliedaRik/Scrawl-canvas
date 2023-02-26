@@ -30,6 +30,36 @@
                 </a>
               
                 
+                <a class="source" href="demo-m006-c1.html">
+                  ./demo/modules/demo-m006-c1.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c2.html">
+                  ./demo/modules/demo-m006-c2.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c3.html">
+                  ./demo/modules/demo-m006-c3.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c4.html">
+                  ./demo/modules/demo-m006-c4.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c5.html">
+                  ./demo/modules/demo-m006-c5.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-utils.html">
+                  ./demo/modules/demo-m006-utils.js
+                </a>
+              
+                
                 <a class="source" href="dom-entity-editor.html">
                   ./demo/modules/dom-entity-editor.js
                 </a>
@@ -72,11 +102,6 @@
                 
                 <a class="source" href="lottie-loader.html">
                   ./demo/modules/lottie-loader.js
-                </a>
-              
-                
-                <a class="source" href="simple-chart-frame-tests.html">
-                  ./demo/modules/simple-chart-frame-tests.js
                 </a>
               
                 
@@ -249,9 +274,7 @@ Data supplied to graph module as Javascript object with structure:
         ...
     }
 }
-*/</span>
-
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
+*/</span></pre></div></div>
             
         </li>
         
@@ -262,11 +285,12 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>We need to adapt the graph frame with data specific to this graph</p>
+              <h4 id="imports-and-exports">Imports and exports</h4>
+<p>We need to adapt the graph frame with data specific to this graph</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> frame <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-chart-frame.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { api <span class="hljs-keyword">as</span> frame } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-chart-frame.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -281,7 +305,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> graph <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-graph-stacked-bars.js&#x27;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { api <span class="hljs-keyword">as</span> graph } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-graph-stacked-bars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -292,7 +316,23 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>The asynchronous data fetch</p>
+              <p>Export</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> api = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <h4 id="data-manipulation">Data manipulation</h4>
+<p>The asynchronous data fetch</p>
 
             </div>
             
@@ -314,11 +354,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Rearrange data</p>
 <ul>
@@ -330,7 +370,7 @@ Data supplied to graph module as Javascript object with structure:
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">extractDataByYear</span> = (<span class="hljs-params">yearLabels, categoryLabels, categoryData</span>) =&gt; {
 
-    <span class="hljs-keyword">let</span> d = {};
+    <span class="hljs-keyword">const</span> d = {};
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; yearLabels.<span class="hljs-property">length</span>; i++) {
 
@@ -352,46 +392,21 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>The exported ‘build’ function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, dataSource</span>) {
-
-    getRawData (dataSource)
-    .<span class="hljs-property">then</span> (<span class="hljs-function"><span class="hljs-params">rawData</span> =&gt;</span> {</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Reconstruct data into formats required by this graph type</p>
+              <h4 id="build-function">Build function</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> area = rawData.<span class="hljs-property">area</span>,
-            yearLabels = rawData.<span class="hljs-property">years</span>,
-            categoryData = rawData.<span class="hljs-property">crimesByCategory</span>,
-            categoryLabels = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(categoryData),
-            yearData = <span class="hljs-title function_">extractDataByYear</span>(yearLabels, categoryLabels, categoryData);
+            <div class="content"><div class='highlight'><pre>api.<span class="hljs-property">build</span> = <span class="hljs-function">(<span class="hljs-params">items</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> data = {
-            area,
-            yearLabels,
-            categoryLabels,
-            yearData,
-        };</pre></div></div>
+    <span class="hljs-keyword">const</span> { namespace, canvas, dataSource, scrawl } = items;
+
+    <span class="hljs-keyword">if</span> (namespace &amp;&amp; canvas &amp;&amp; dataSource &amp;&amp; scrawl) {</pre></div></div>
             
         </li>
         
@@ -402,11 +417,17 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Build the graph</p>
+              <h4 id="kill-function">Kill function</h4>
+<ul>
+<li>We pass the namespace through to the stacked-bars module, so we can handle kill functionality here rather than there</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        graph.<span class="hljs-title function_">build</span>(namespace, canvas, data);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        api.<span class="hljs-property">kill</span> = <span class="hljs-function">() =&gt;</span> {
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;killing namespace&#x27;</span>, namespace);
+            scrawl.<span class="hljs-property">library</span>.<span class="hljs-title function_">purge</span>(namespace);
+        };</pre></div></div>
             
         </li>
         
@@ -417,15 +438,12 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Update the frame with additional data</p>
+              <p>Fetch data, manipulate it, and pass it through to the stacked-bars module</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        frame.<span class="hljs-title function_">updateTitle</span>(<span class="hljs-string">`<span class="hljs-subst">${data.area}</span> Crime Statistics - Overview`</span>);
-        frame.<span class="hljs-title function_">updateBackground</span>(data.<span class="hljs-property">area</span>);
-    })
-    .<span class="hljs-property">catch</span> (<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error.<span class="hljs-property">message</span>));
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        getRawData (dataSource)
+        .<span class="hljs-property">then</span> (<span class="hljs-function"><span class="hljs-params">rawData</span> =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -436,24 +454,62 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Other exported functions </p>
-<ul>
-<li>Piping these through from graph module exported functions</li>
-</ul>
+              <p>Reconstruct data into formats required by this graph type</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> kill = graph.<span class="hljs-property">kill</span>;
-<span class="hljs-keyword">const</span> hide = graph.<span class="hljs-property">hide</span>;
-<span class="hljs-keyword">const</span> show = graph.<span class="hljs-property">show</span>;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> area = rawData.<span class="hljs-property">area</span>,
+                yearLabels = rawData.<span class="hljs-property">years</span>,
+                categoryData = rawData.<span class="hljs-property">crimesByCategory</span>,
+                categoryLabels = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(categoryData),
+                yearData = <span class="hljs-title function_">extractDataByYear</span>(yearLabels, categoryLabels, categoryData);
 
-<span class="hljs-keyword">export</span> {
-    build,
-    kill,
+            <span class="hljs-keyword">const</span> data = {
+                area,
+                yearLabels,
+                categoryLabels,
+                yearData,
+            };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>Build the graph</p>
 
-    hide,
-    show,
-}</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            graph.<span class="hljs-property">build</span> ({
+                namespace, 
+                canvas, 
+                data,
+                scrawl,
+            });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>Update the frame with additional data</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            frame.<span class="hljs-property">updateTitle</span> (<span class="hljs-string">`<span class="hljs-subst">${data.area}</span> Crime Statistics - Overview`</span>);
+            frame.<span class="hljs-property">updateBackground</span> (data.<span class="hljs-property">area</span>);
+        })
+        .<span class="hljs-property">catch</span> (<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error.<span class="hljs-property">message</span>));
+    }
+};</pre></div></div>
             
         </li>
         

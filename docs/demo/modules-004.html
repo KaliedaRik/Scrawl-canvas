@@ -310,11 +310,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-057.html">
-                  ./demo/canvas-057.js
-                </a>
-              
-                
                 <a class="source" href="canvas-058.html">
                   ./demo/canvas-058.js
                 </a>
@@ -672,6 +667,11 @@
                 
                 <a class="source" href="modules-005.html">
                   ./demo/modules-005.js
+                </a>
+              
+                
+                <a class="source" href="modules-006.html">
+                  ./demo/modules-006.js
                 </a>
               
                 
@@ -1155,6 +1155,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">lottieLoader</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-first-lottie-animation&#x27;</span>,
     <span class="hljs-attr">src</span>: <span class="hljs-string">&#x27;img/33-video-cam.json&#x27;</span>,
+    scrawl,
 })</pre></div></div>
             
         </li>
@@ -1196,26 +1197,39 @@
     }).<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;second-piccy&#x27;</span>,
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">220</span>, <span class="hljs-number">80</span>],
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;30%&#x27;</span>, <span class="hljs-string">&#x27;70%&#x27;</span>],
         <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
 
     }).<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;third-piccy&#x27;</span>,
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">150</span>, <span class="hljs-number">150</span>],
+        <span class="hljs-attr">copyStart</span>: [<span class="hljs-string">&#x27;40%&#x27;</span>, <span class="hljs-string">&#x27;30%&#x27;</span>],
+        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;20%&#x27;</span>, <span class="hljs-string">&#x27;40%&#x27;</span>],
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;70%&#x27;</span>, <span class="hljs-string">&#x27;70%&#x27;</span>],
         <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
 
     }).<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;fourth-piccy&#x27;</span>,
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">100</span>],
+        <span class="hljs-attr">copyStart</span>: [<span class="hljs-string">&#x27;40%&#x27;</span>, <span class="hljs-string">&#x27;33%&#x27;</span>],
+        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;20%&#x27;</span>, <span class="hljs-string">&#x27;20%&#x27;</span>],
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;70%&#x27;</span>, <span class="hljs-string">&#x27;30%&#x27;</span>],
         <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
 
     }).<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;fifth-piccy&#x27;</span>,
+        <span class="hljs-attr">copyStart</span>: [<span class="hljs-string">&#x27;30%&#x27;</span>, <span class="hljs-string">&#x27;30%&#x27;</span>],
+        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;40%&#x27;</span>, <span class="hljs-string">&#x27;40%&#x27;</span>],
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
         <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;gray&#x27;</span>,
+        <span class="hljs-attr">scale</span>: <span class="hljs-number">0.5</span>,
+        <span class="hljs-attr">delta</span>: {
+            <span class="hljs-attr">roll</span>: -<span class="hljs-number">0.5</span>,
+        },
     });</pre></div></div>
             
         </li>

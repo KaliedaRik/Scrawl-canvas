@@ -310,11 +310,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-057.html">
-                  ./demo/canvas-057.js
-                </a>
-              
-                
                 <a class="source" href="canvas-058.html">
                   ./demo/canvas-058.js
                 </a>
@@ -672,6 +667,11 @@
                 
                 <a class="source" href="modules-005.html">
                   ./demo/modules-005.js
+                </a>
+              
+                
+                <a class="source" href="modules-006.html">
+                  ./demo/modules-006.js
                 </a>
               
                 
@@ -1129,7 +1129,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> plainCanvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;plain-canvas&#x27;</span>],
+    filteredCanvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;filtered-canvas&#x27;</span>];
 
 scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
@@ -1168,9 +1169,10 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> plainImg = scrawl.<span class="hljs-title function_">makePicture</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plain-img&#x27;</span>,
+    <span class="hljs-attr">group</span>: plainCanvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseName&#x27;</span>),
 
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
 
@@ -1181,7 +1183,12 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
     <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+});
 
+<span class="hljs-keyword">const</span> filteredImg = plainImg.<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;filtered-img&#x27;</span>,
+    <span class="hljs-attr">group</span>: filteredCanvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseName&#x27;</span>),
     <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;tiles&#x27;</span>],
 });</pre></div></div>
             
@@ -1201,6 +1208,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> spiral = scrawl.<span class="hljs-title function_">makeLineSpiral</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;points-from-spiral&#x27;</span>,
+    <span class="hljs-attr">group</span>: filteredCanvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseName&#x27;</span>),
     <span class="hljs-attr">start</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">200</span>],
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">radiusIncrement</span>: <span class="hljs-number">0.05</span>,
@@ -1383,10 +1391,14 @@ TODO: add more path options, for testing/general interest</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;plain-canvas-animation&quot;</span>,
+    <span class="hljs-attr">target</span>: plainCanvas,
+});
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
-    <span class="hljs-attr">target</span>: canvas,
+scrawl.<span class="hljs-title function_">makeRender</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;filtered-canvas-animation&quot;</span>,
+    <span class="hljs-attr">target</span>: filteredCanvas,
     <span class="hljs-attr">afterShow</span>: report,
     <span class="hljs-attr">afterCreated</span>: updateFilterPoints,
 });</pre></div></div>
@@ -1683,7 +1695,7 @@ TODO: add more path options, for testing/general interest</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>spiralRadius.<span class="hljs-property">value</span> = <span class="hljs-number">0.05</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>spiralRadius.<span class="hljs-property">value</span> = <span class="hljs-number">0.04</span>;</pre></div></div>
             
         </li>
         
@@ -1713,7 +1725,7 @@ TODO: add more path options, for testing/general interest</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, piccy);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>([plainCanvas, filteredCanvas], <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, [plainImg, filteredImg]);</pre></div></div>
             
         </li>
         

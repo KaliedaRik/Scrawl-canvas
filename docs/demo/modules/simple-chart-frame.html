@@ -30,6 +30,36 @@
                 </a>
               
                 
+                <a class="source" href="demo-m006-c1.html">
+                  ./demo/modules/demo-m006-c1.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c2.html">
+                  ./demo/modules/demo-m006-c2.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c3.html">
+                  ./demo/modules/demo-m006-c3.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c4.html">
+                  ./demo/modules/demo-m006-c4.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c5.html">
+                  ./demo/modules/demo-m006-c5.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-utils.html">
+                  ./demo/modules/demo-m006-utils.js
+                </a>
+              
+                
                 <a class="source" href="dom-entity-editor.html">
                   ./demo/modules/dom-entity-editor.js
                 </a>
@@ -72,11 +102,6 @@
                 
                 <a class="source" href="lottie-loader.html">
                   ./demo/modules/lottie-loader.js
-                </a>
-              
-                
-                <a class="source" href="simple-chart-frame-tests.html">
-                  ./demo/modules/simple-chart-frame-tests.js
                 </a>
               
                 
@@ -225,18 +250,6 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;
-
-scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.crime&#x27;</span>);
-
-<span class="hljs-keyword">let</span> background, 
-    title, subtitle, 
-    yLabelTop, yLabelBottom, 
-    xLabelLeft, xLabelRight, 
-    group,
-    navigation;</pre></div></div>
-            
         </li>
         
         
@@ -246,16 +259,15 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>Magic numbers to define where the chart will go within the grid</p>
+              <h4 id="state-and-magic-numbers">State and magic numbers</h4>
+<p>API - exported functions</p>
+<ul>
+<li>defined in the build function</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> graphWidth = <span class="hljs-number">90</span>;
-<span class="hljs-keyword">const</span> graphHeight = <span class="hljs-number">80</span>;
-<span class="hljs-keyword">const</span> graphBottom = <span class="hljs-number">95</span>;
-<span class="hljs-keyword">const</span> graphLeft = <span class="hljs-number">10</span>;
-
-<span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, backgroundImage</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> api = {};</pre></div></div>
             
         </li>
         
@@ -266,15 +278,19 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>Accessibility</p>
+              <p>Dims - exported magic numbers</p>
+<ul>
+<li>to define where the chart will go within the grid</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    canvas.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">includeInTabNavigation</span>: <span class="hljs-literal">true</span>,
-    });
-
-    navigation = <span class="hljs-title function_">addArrowNavigation</span>(canvas);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dims = {
+    <span class="hljs-attr">graphWidth</span>: <span class="hljs-number">90</span>,
+    <span class="hljs-attr">graphHeight</span>: <span class="hljs-number">80</span>,
+    <span class="hljs-attr">graphBottom</span>: <span class="hljs-number">95</span>,
+    <span class="hljs-attr">graphLeft</span>: <span class="hljs-number">10</span>,
+};</pre></div></div>
             
         </li>
         
@@ -285,135 +301,15 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Build out the frame</p>
+              <h4 id="build-function">Build function</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    group = scrawl.<span class="hljs-title function_">makeGroup</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-group`</span>,
-        <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-    });
+    <span class="hljs-keyword">const</span> { namespace, canvas, backgroundImage, scrawl } = items;
 
-    background = scrawl.<span class="hljs-title function_">makePicture</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-background`</span>,
-        <span class="hljs-attr">group</span>: group,
-        <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
-
-        <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-        <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-
-        <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-        <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-
-        <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.65</span>,
-
-        <span class="hljs-attr">asset</span>: backgroundImage,
-    });
-
-    title = scrawl.<span class="hljs-title function_">makePhrase</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-title`</span>,
-        <span class="hljs-attr">group</span>: group,
-        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-
-        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;No title&#x27;</span>,
-
-        <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-        <span class="hljs-attr">justify</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
-
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;3%&#x27;</span>,
-
-        <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;1.5rem Roboto, Arial, sans-serif&#x27;</span>,
-
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
-    });
-
-    subtitle = title.<span class="hljs-title function_">clone</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-subtitle`</span>,
-        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;No data selected&#x27;</span>,
-
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;9%&#x27;</span>,
-        <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;1.2rem&#x27;</span>,
-    });
-    subtitle.<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;RED&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;darkred&#x27;</span> });
-
-    yLabelTop = scrawl.<span class="hljs-title function_">makePhrase</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-y-top`</span>,
-        <span class="hljs-attr">group</span>: group,
-        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-
-        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;0&#x27;</span>,
-
-        <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;1%&#x27;</span>,
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;12%&#x27;</span>,
-
-        <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;0.9rem Roboto, Arial, sans-serif&#x27;</span>,
-
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;darkred&#x27;</span>,
-    });
-
-    yLabelBottom = yLabelTop.<span class="hljs-title function_">clone</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-y-bottom`</span>,
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;92%&#x27;</span>,
-    });
-
-    xLabelLeft = yLabelTop.<span class="hljs-title function_">clone</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-x-left`</span>,
-        <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;96%&#x27;</span>,
-    });
-
-    xLabelRight = xLabelLeft.<span class="hljs-title function_">clone</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-x-right`</span>,
-        <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;89%&#x27;</span>,
-    });
-
-    scrawl.<span class="hljs-title function_">makeLine</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-upperline`</span>,
-        <span class="hljs-attr">group</span>: group,
-        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-
-        <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - graphHeight}</span>%`</span>,
-
-        <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-        <span class="hljs-attr">endY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - graphHeight}</span>%`</span>,
-
-        <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-
-        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>,
-
-    }).<span class="hljs-title function_">clone</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-lowerline`</span>,
-
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
-        <span class="hljs-attr">endY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
-
-    }).<span class="hljs-title function_">clone</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-leftline`</span>,
-
-        <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${graphLeft}</span>%`</span>,
-        <span class="hljs-attr">endX</span>: <span class="hljs-string">`<span class="hljs-subst">${graphLeft}</span>%`</span>,
-
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - graphHeight}</span>%`</span>,
-        <span class="hljs-attr">endY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
-    });
-
-    <span class="hljs-title function_">show</span>();
-};</pre></div></div>
+    <span class="hljs-keyword">if</span> (namespace &amp;&amp; canvas &amp;&amp; backgroundImage &amp;&amp; scrawl) {</pre></div></div>
             
         </li>
         
@@ -424,30 +320,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Accessibility</p>
+              <p>Namespace boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> arrowActions = {
-    <span class="hljs-attr">up</span>: <span class="hljs-function">() =&gt;</span> {},
-    <span class="hljs-attr">right</span>: <span class="hljs-function">() =&gt;</span> {},
-    <span class="hljs-attr">down</span>: <span class="hljs-function">() =&gt;</span> {},
-    <span class="hljs-attr">left</span>: <span class="hljs-function">() =&gt;</span> {},
-};
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">setArrowAction</span> = (<span class="hljs-params">key, action</span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> (key != <span class="hljs-literal">null</span> &amp;&amp; action != <span class="hljs-literal">null</span>) {
-
-        arrowActions[key] = action;
-    }
-};
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">addArrowNavigation</span> = (<span class="hljs-params">canvas</span>) =&gt; {
-
-    <span class="hljs-keyword">const</span> <span class="hljs-title function_">entityNavigationKeysDown</span> = (<span class="hljs-params">e</span>) =&gt; {
-
-        <span class="hljs-keyword">const</span> { key } = e;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">item</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${item}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -458,14 +335,134 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>Tab, Enter/Return, Esc</p>
+              <p>Build out the frame</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;Tab&#x27;</span> === key || <span class="hljs-string">&#x27;Escape&#x27;</span> === key) {
-            canvas.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">blur</span>();
-            <span class="hljs-keyword">return</span>;
-        }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> { graphWidth, graphHeight, graphBottom, graphLeft } = dims;
+
+        <span class="hljs-keyword">const</span> group = scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;group&#x27;</span>),
+            <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+            <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+        });
+
+        <span class="hljs-keyword">const</span> background = scrawl.<span class="hljs-title function_">makePicture</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background&#x27;</span>),
+            <span class="hljs-attr">group</span>: group,
+            <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
+
+            <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+            <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+
+            <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+            <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+
+            <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.65</span>,
+
+            <span class="hljs-attr">asset</span>: backgroundImage,
+        });
+
+        <span class="hljs-keyword">const</span> title = scrawl.<span class="hljs-title function_">makePhrase</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;title&#x27;</span>),
+            <span class="hljs-attr">group</span>: group,
+            <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+
+            <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;No title&#x27;</span>,
+
+            <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+            <span class="hljs-attr">justify</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
+
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;3%&#x27;</span>,
+
+            <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;1.5rem Roboto, Arial, sans-serif&#x27;</span>,
+
+            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+        });
+
+        <span class="hljs-keyword">const</span> subtitle = title.<span class="hljs-title function_">clone</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;subtitle&#x27;</span>),
+            <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;No data selected&#x27;</span>,
+
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;9%&#x27;</span>,
+            <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;1.2rem&#x27;</span>,
+        });
+        
+        subtitle.<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;RED&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;darkred&#x27;</span> });
+
+        <span class="hljs-keyword">const</span> yLabelTop = scrawl.<span class="hljs-title function_">makePhrase</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;y-top&#x27;</span>),
+            <span class="hljs-attr">group</span>: group,
+            <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+
+            <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;0&#x27;</span>,
+
+            <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;1%&#x27;</span>,
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;12%&#x27;</span>,
+
+            <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;0.9rem Roboto, Arial, sans-serif&#x27;</span>,
+
+            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;darkred&#x27;</span>,
+        });
+
+        <span class="hljs-keyword">const</span> yLabelBottom = yLabelTop.<span class="hljs-title function_">clone</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;y-bottom&#x27;</span>),
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;92%&#x27;</span>,
+        });
+
+        <span class="hljs-keyword">const</span> xLabelLeft = yLabelTop.<span class="hljs-title function_">clone</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;x-left&#x27;</span>),
+            <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;96%&#x27;</span>,
+        });
+
+        <span class="hljs-keyword">const</span> xLabelRight = xLabelLeft.<span class="hljs-title function_">clone</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;x-right&#x27;</span>),
+            <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;89%&#x27;</span>,
+        });
+
+        scrawl.<span class="hljs-title function_">makeLine</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;upperline&#x27;</span>),
+            <span class="hljs-attr">group</span>: group,
+            <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+
+            <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - graphHeight}</span>%`</span>,
+
+            <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+            <span class="hljs-attr">endY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - graphHeight}</span>%`</span>,
+
+            <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+
+            <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>,
+
+        }).<span class="hljs-title function_">clone</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;lowerline&#x27;</span>),
+
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
+            <span class="hljs-attr">endY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
+
+        }).<span class="hljs-title function_">clone</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;leftline&#x27;</span>),
+
+            <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${graphLeft}</span>%`</span>,
+            <span class="hljs-attr">endX</span>: <span class="hljs-string">`<span class="hljs-subst">${graphLeft}</span>%`</span>,
+
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - graphHeight}</span>%`</span>,
+            <span class="hljs-attr">endY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
+        });</pre></div></div>
             
         </li>
         
@@ -476,22 +473,17 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Prevent various combikey events interfering with navigation functionality</p>
+              <p>Accessibility</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;Shift&#x27;</span> === key || <span class="hljs-string">&#x27;Alt&#x27;</span> === key || <span class="hljs-string">&#x27;Ctrl&#x27;</span> === key|| <span class="hljs-string">&#x27;Meta&#x27;</span> === key) <span class="hljs-keyword">return</span>;
+            <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">includeInTabNavigation</span>: <span class="hljs-literal">true</span>,
+        });
 
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;ArrowLeft&#x27;</span> === key) arrowActions.<span class="hljs-title function_">left</span>();
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;ArrowUp&#x27;</span> === key) arrowActions.<span class="hljs-title function_">up</span>();
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;ArrowRight&#x27;</span> === key) arrowActions.<span class="hljs-title function_">right</span>();
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;ArrowDown&#x27;</span> === key) arrowActions.<span class="hljs-title function_">down</span>();
-
-        e.<span class="hljs-title function_">preventDefault</span>();
-    }
-
-    <span class="hljs-keyword">return</span> scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;keydown&#x27;</span>, entityNavigationKeysDown, canvas.<span class="hljs-property">domElement</span>);
-};</pre></div></div>
+        api.<span class="hljs-property">keyboard</span> = scrawl.<span class="hljs-title function_">makeKeyboardZone</span>({
+            <span class="hljs-attr">zone</span>: canvas,
+        });</pre></div></div>
             
         </li>
         
@@ -502,71 +494,65 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>API</p>
+              <p>Update frame entitys and assets</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">kill</span> = (<span class="hljs-params"></span>) =&gt; {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> updateTextHelper = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, text</span>) {
 
-    <span class="hljs-keyword">if</span> (group != <span class="hljs-literal">null</span> &amp;&amp; navigation != <span class="hljs-literal">null</span>) {
+            <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; text != <span class="hljs-literal">null</span>) item.<span class="hljs-title function_">set</span>({ text });
+        };
 
-        group.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
-        <span class="hljs-title function_">navigation</span>();
+        api.<span class="hljs-property">updateTitle</span> = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> <span class="hljs-title function_">updateTextHelper</span>(title, text);
+        api.<span class="hljs-property">updateSubtitle</span> = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> <span class="hljs-title function_">updateTextHelper</span>(subtitle, text);
+        api.<span class="hljs-property">updateYTop</span> = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> <span class="hljs-title function_">updateTextHelper</span>(yLabelTop, text);
+        api.<span class="hljs-property">updateYBottom</span> = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> <span class="hljs-title function_">updateTextHelper</span>(yLabelBottom, text);
+        api.<span class="hljs-property">updateXLeft</span> = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> <span class="hljs-title function_">updateTextHelper</span>(xLabelLeft, text);
+        api.<span class="hljs-property">updateXRight</span> = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> <span class="hljs-title function_">updateTextHelper</span>(xLabelRight, text);
+
+        api.<span class="hljs-property">updateBackground</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">asset</span>) {
+
+            <span class="hljs-keyword">if</span> (background != <span class="hljs-literal">null</span> &amp;&amp; asset != <span class="hljs-literal">null</span>) background.<span class="hljs-title function_">set</span>({ asset });
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>Kill the frame</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        api.<span class="hljs-property">kill</span> = <span class="hljs-function">() =&gt;</span> {
+
+            scrawl.<span class="hljs-property">library</span>.<span class="hljs-title function_">purge</span>(namespace);
+            api.<span class="hljs-title function_">keyboard</span>();
+        }
     }
-}
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <h4 id="export">Export</h4>
 
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">hide</span> = (<span class="hljs-params"></span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> (group != <span class="hljs-literal">null</span>) group.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-    });
-};
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">show</span> = (<span class="hljs-params"></span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> (group != <span class="hljs-literal">null</span>) group.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
-    });
-};
-
-<span class="hljs-keyword">const</span> updateTextHelper = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, text</span>) {
-
-    <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; text != <span class="hljs-literal">null</span>) item.<span class="hljs-title function_">set</span>({ text });
-};
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateTitle</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(title, text);
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateSubtitle</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(subtitle, text);
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateYTop</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(yLabelTop, text);
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateYBottom</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(yLabelBottom, text);
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateXLeft</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(xLabelLeft, text);
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateXRight</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(xLabelRight, text);
-
-<span class="hljs-keyword">const</span> updateBackground = <span class="hljs-keyword">function</span> (<span class="hljs-params">asset</span>) {
-
-    <span class="hljs-keyword">if</span> (background != <span class="hljs-literal">null</span> &amp;&amp; asset != <span class="hljs-literal">null</span>) background.<span class="hljs-title function_">set</span>({ asset });
-};
-
-<span class="hljs-keyword">export</span> {
-    graphWidth,
-    graphHeight,
-    graphBottom,
-    graphLeft,
-
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     build,
-    kill,
-
-    hide,
-    show,
-
-    updateTitle,
-    updateSubtitle,
-    updateYTop,
-    updateYBottom,
-    updateXLeft,
-    updateXRight,
-
-    updateBackground,
-
-    setArrowAction,
+    dims,
+    api,
 };</pre></div></div>
             
         </li>

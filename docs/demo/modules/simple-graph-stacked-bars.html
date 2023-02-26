@@ -30,6 +30,36 @@
                 </a>
               
                 
+                <a class="source" href="demo-m006-c1.html">
+                  ./demo/modules/demo-m006-c1.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c2.html">
+                  ./demo/modules/demo-m006-c2.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c3.html">
+                  ./demo/modules/demo-m006-c3.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c4.html">
+                  ./demo/modules/demo-m006-c4.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c5.html">
+                  ./demo/modules/demo-m006-c5.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-utils.html">
+                  ./demo/modules/demo-m006-utils.js
+                </a>
+              
+                
                 <a class="source" href="dom-entity-editor.html">
                   ./demo/modules/dom-entity-editor.js
                 </a>
@@ -72,11 +102,6 @@
                 
                 <a class="source" href="lottie-loader.html">
                   ./demo/modules/lottie-loader.js
-                </a>
-              
-                
-                <a class="source" href="simple-chart-frame-tests.html">
-                  ./demo/modules/simple-chart-frame-tests.js
                 </a>
               
                 
@@ -239,9 +264,7 @@ Data format requirements - a Javascript object with structure:
         ...
     }
 }
-*/</span>
-
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
+*/</span></pre></div></div>
             
         </li>
         
@@ -252,11 +275,15 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>We need to adapt the graph frame with data specific to this graph</p>
+              <h4 id="imports">Imports</h4>
+<p>We need to adapt the graph frame with data specific to this graph</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> frame <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-chart-frame.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { 
+    api <span class="hljs-keyword">as</span> frame,
+    dims <span class="hljs-keyword">as</span> frameDims,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-chart-frame.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -267,7 +294,8 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>Calculate height of the largest year</p>
+              <h4 id="helper-functionality">Helper functionality</h4>
+<p>Calculate height of the largest year</p>
 <ul>
 <li>Rounded up to nearest thousand</li>
 </ul>
@@ -297,16 +325,11 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Variables shared across functions</p>
+              <h4 id="api---exported-functions">API - exported functions</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> group,
-    space,
-    selectedColumn,
-    selectedRow,
-    currentData,
-    currentDatapoint;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> api = {};</pre></div></div>
             
         </li>
         
@@ -317,16 +340,13 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>The exported ‘build’ function</p>
+              <p>The exported <code>build</code> function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, data</span>) {
+            <div class="content"><div class='highlight'><pre>api.<span class="hljs-property">build</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    space = namespace;
-    selectedColumn = <span class="hljs-number">0</span>;
-    selectedRow = <span class="hljs-number">0</span>;
-    currentData = data;</pre></div></div>
+    <span class="hljs-keyword">const</span> { namespace, canvas, data, scrawl } = items;</pre></div></div>
             
         </li>
         
@@ -337,16 +357,15 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>Local variables defined at the top of the build function</p>
+              <p>Module state</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> area = data.<span class="hljs-property">area</span>,
-        yearLabels = data.<span class="hljs-property">yearLabels</span>, 
-        categoryLabels = data.<span class="hljs-property">categoryLabels</span>, 
-        yearData = data.<span class="hljs-property">yearData</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> selectedColumn = <span class="hljs-number">0</span>,
+        selectedRow = <span class="hljs-number">0</span>,
+        currentData = data;
 
-        gap = <span class="hljs-number">1</span>,</pre></div></div>
+    <span class="hljs-keyword">if</span> (namespace &amp;&amp; canvas &amp;&amp; data &amp;&amp; scrawl) {</pre></div></div>
             
         </li>
         
@@ -357,14 +376,11 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Magic numbers</p>
+              <p>Namespace boilerplate</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        graphWidth = frame.<span class="hljs-property">graphWidth</span>,
-        graphHeight = frame.<span class="hljs-property">graphHeight</span>,
-        graphBottom = frame.<span class="hljs-property">graphBottom</span>,
-        graphLeft = frame.<span class="hljs-property">graphLeft</span> + (gap / <span class="hljs-number">2</span>),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">item</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${item}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -375,15 +391,16 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Graph baseline calculations</p>
+              <p>Local variables defined at the top of the build function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        maximumBarTotal = <span class="hljs-title function_">extractHighestAnnualMaximum</span>(yearLabels, yearData),
-        numberOfYears = yearLabels.<span class="hljs-property">length</span>,
-        barDistance = graphWidth / numberOfYears,
-        barWidth = <span class="hljs-string">`<span class="hljs-subst">${barDistance - gap}</span>%`</span>,
-        singleCrimeHeight = graphHeight / maximumBarTotal;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> area = data.<span class="hljs-property">area</span>,
+            yearLabels = data.<span class="hljs-property">yearLabels</span>, 
+            categoryLabels = data.<span class="hljs-property">categoryLabels</span>, 
+            yearData = data.<span class="hljs-property">yearData</span>,
+
+            gap = <span class="hljs-number">1</span>,</pre></div></div>
             
         </li>
         
@@ -394,17 +411,14 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Create group</p>
+              <p>Magic numbers</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    group = scrawl.<span class="hljs-title function_">makeGroup</span>({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-bargroup`</span>,
-        <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-        <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
-        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            graphWidth = frameDims.<span class="hljs-property">graphWidth</span>,
+            graphHeight = frameDims.<span class="hljs-property">graphHeight</span>,
+            graphBottom = frameDims.<span class="hljs-property">graphBottom</span>,
+            graphLeft = frameDims.<span class="hljs-property">graphLeft</span> + (gap / <span class="hljs-number">2</span>),</pre></div></div>
             
         </li>
         
@@ -415,60 +429,15 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Build bars</p>
+              <p>Graph baseline calculations</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    yearLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">year, yearIndex</span>) =&gt;</span> {
-
-        <span class="hljs-keyword">let</span> xPosition = (barDistance * yearIndex) + graphLeft,
-            localHeight = <span class="hljs-number">0</span>;
-
-        <span class="hljs-keyword">const</span> categoryLen = categoryLabels.<span class="hljs-property">length</span>;
-
-        categoryLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">category, categoryIndex</span>) =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> categoryItem = yearData[year][categoryIndex],
-                crimeHeight = categoryItem * singleCrimeHeight;
-
-            localHeight += crimeHeight;
-
-            scrawl.<span class="hljs-title function_">makeBlock</span>({
-
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${year}</span>-<span class="hljs-subst">${category}</span>`</span>,
-                group,
-
-                <span class="hljs-attr">width</span>: barWidth,
-                <span class="hljs-attr">height</span>: <span class="hljs-string">`<span class="hljs-subst">${crimeHeight}</span>%`</span>,
-
-                <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${xPosition}</span>%`</span>,
-                <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - localHeight}</span>%`</span>,
-
-                <span class="hljs-attr">fillStyle</span>: colorArray[categoryIndex % categoryLen],
-
-                <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-                    selectedColumn = yearIndex;
-                    selectedRow = categoryIndex;
-
-                    <span class="hljs-title function_">updateSelected</span>();
-                },
-            });
-        });
-    });
-
-    currentDatapoint = scrawl.<span class="hljs-title function_">makeBlock</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-dataframe`</span>,
-        group,
-        <span class="hljs-attr">mimic</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${selectedColumn}</span>-<span class="hljs-subst">${selectedRow}</span>`</span>,
-        <span class="hljs-attr">useMimicDimensions</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">useMimicHandle</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;mimic&#x27;</span>,
-        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
-        <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            maximumBarTotal = <span class="hljs-title function_">extractHighestAnnualMaximum</span>(yearLabels, yearData),
+            numberOfYears = yearLabels.<span class="hljs-property">length</span>,
+            barDistance = graphWidth / numberOfYears,
+            barWidth = <span class="hljs-string">`<span class="hljs-subst">${barDistance - gap}</span>%`</span>,
+            singleCrimeHeight = graphHeight / maximumBarTotal;</pre></div></div>
             
         </li>
         
@@ -479,14 +448,16 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>Personalize the chart frame to meet this graph’s requirements</p>
+              <p>Create group</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">&#x27;No data selected&#x27;</span>);
-    frame.<span class="hljs-title function_">updateXLeft</span>(yearLabels[<span class="hljs-number">0</span>]);
-    frame.<span class="hljs-title function_">updateXRight</span>(yearLabels[numberOfYears - <span class="hljs-number">1</span>]);
-    frame.<span class="hljs-title function_">updateYTop</span>(maximumBarTotal.<span class="hljs-title function_">toLocaleString</span>());</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> group = scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bargroup&#x27;</span>),
+            <span class="hljs-attr">host</span>: canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseName&#x27;</span>),
+            <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
+        });</pre></div></div>
             
         </li>
         
@@ -497,14 +468,47 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>Accessibility</p>
+              <p>Build bars</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    frame.<span class="hljs-title function_">setArrowAction</span>(<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;up&#x27;</span>));
-    frame.<span class="hljs-title function_">setArrowAction</span>(<span class="hljs-string">&#x27;down&#x27;</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;down&#x27;</span>));
-    frame.<span class="hljs-title function_">setArrowAction</span>(<span class="hljs-string">&#x27;left&#x27;</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;left&#x27;</span>));
-    frame.<span class="hljs-title function_">setArrowAction</span>(<span class="hljs-string">&#x27;right&#x27;</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;right&#x27;</span>));</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        yearLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">year, yearIndex</span>) =&gt;</span> {
+
+            <span class="hljs-keyword">let</span> xPosition = (barDistance * yearIndex) + graphLeft,
+                localHeight = <span class="hljs-number">0</span>;
+
+            <span class="hljs-keyword">const</span> categoryLen = categoryLabels.<span class="hljs-property">length</span>;
+
+            categoryLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">category, categoryIndex</span>) =&gt;</span> {
+
+                <span class="hljs-keyword">const</span> categoryItem = yearData[year][categoryIndex],
+                    crimeHeight = categoryItem * singleCrimeHeight;
+
+                localHeight += crimeHeight;
+
+                scrawl.<span class="hljs-title function_">makeBlock</span>({
+
+                    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${year}</span>-<span class="hljs-subst">${category}</span>`</span>),
+                    group,
+
+                    <span class="hljs-attr">width</span>: barWidth,
+                    <span class="hljs-attr">height</span>: <span class="hljs-string">`<span class="hljs-subst">${crimeHeight}</span>%`</span>,
+
+                    <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${xPosition}</span>%`</span>,
+                    <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - localHeight}</span>%`</span>,
+
+                    <span class="hljs-attr">fillStyle</span>: colorArray[categoryIndex % categoryLen],
+
+                    <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+                        selectedColumn = yearIndex;
+                        selectedRow = categoryIndex;
+
+                        <span class="hljs-title function_">updateSelected</span>();
+                    },
+                });
+            });
+        });</pre></div></div>
             
         </li>
         
@@ -515,13 +519,39 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>Display the graph entitys</p>
+              <p>Build highlight cursor</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">updateSelected</span>();
-    <span class="hljs-title function_">show</span>();
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> currentDatapoint = scrawl.<span class="hljs-title function_">makeBlock</span>({
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;dataframe&#x27;</span>),
+            group,
+            <span class="hljs-attr">mimic</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${selectedColumn}</span>-<span class="hljs-subst">${selectedRow}</span>`</span>),
+            <span class="hljs-attr">useMimicDimensions</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">useMimicHandle</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;mimic&#x27;</span>,
+            <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
+            <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
+            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+        });
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateSelected</span> = (<span class="hljs-params"></span>) =&gt; {
+
+            <span class="hljs-keyword">const</span> {yearLabels, categoryLabels, yearData} = currentData;
+
+            <span class="hljs-keyword">const</span> category = categoryLabels[selectedRow],
+                year = yearLabels[selectedColumn],
+                data = yearData[year][selectedRow];
+
+            currentDatapoint.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">mimic</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${year}</span>-<span class="hljs-subst">${category}</span>`</span>),
+            });
+
+            frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">`<span class="hljs-subst">${category}</span> in <span class="hljs-subst">${year}</span>: §RED§<span class="hljs-subst">${data.toLocaleString()}</span>`</span>);
+        };
+
+        <span class="hljs-title function_">updateSelected</span>();</pre></div></div>
             
         </li>
         
@@ -532,59 +562,14 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>Accessibility</p>
+              <p>Personalize the chart frame to meet this graph’s requirements</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">doNavigation</span> = (<span class="hljs-params">direction</span>) =&gt; {
-
-    <span class="hljs-keyword">const</span> {yearLabels, categoryLabels} = currentData;
-
-    <span class="hljs-keyword">const</span> columnLen = yearLabels.<span class="hljs-property">length</span>,
-        rowLen = categoryLabels.<span class="hljs-property">length</span>;
-
-    <span class="hljs-keyword">switch</span> (direction) {
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span> : 
-            selectedRow++;
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span> : 
-            selectedRow--;
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;left&#x27;</span> : 
-            selectedColumn--;
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;right&#x27;</span> : 
-            selectedColumn++;
-            <span class="hljs-keyword">break</span>;
-    }
-
-    <span class="hljs-keyword">if</span> (selectedColumn &lt; <span class="hljs-number">0</span>) selectedColumn = columnLen - <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (selectedColumn &gt;= columnLen) selectedColumn = <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">if</span> (selectedRow &lt; <span class="hljs-number">0</span>) selectedRow = rowLen - <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (selectedRow &gt;= rowLen) selectedRow = <span class="hljs-number">0</span>;
-
-    <span class="hljs-title function_">updateSelected</span>();
-};
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateSelected</span> = (<span class="hljs-params"></span>) =&gt; {
-
-    <span class="hljs-keyword">const</span> {yearLabels, categoryLabels, yearData} = currentData;
-
-    <span class="hljs-keyword">const</span> category = categoryLabels[selectedRow],
-        year = yearLabels[selectedColumn],
-        data = yearData[year][selectedRow];
-
-    currentDatapoint.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">mimic</span>: <span class="hljs-string">`<span class="hljs-subst">${space}</span>-<span class="hljs-subst">${year}</span>-<span class="hljs-subst">${category}</span>`</span>,
-    });
-
-    frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">`<span class="hljs-subst">${category}</span> in <span class="hljs-subst">${year}</span>: §RED§<span class="hljs-subst">${data.toLocaleString()}</span>`</span>);
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">&#x27;No data selected&#x27;</span>);
+        frame.<span class="hljs-title function_">updateXLeft</span>(yearLabels[<span class="hljs-number">0</span>]);
+        frame.<span class="hljs-title function_">updateXRight</span>(yearLabels[numberOfYears - <span class="hljs-number">1</span>]);
+        frame.<span class="hljs-title function_">updateYTop</span>(maximumBarTotal.<span class="hljs-title function_">toLocaleString</span>());</pre></div></div>
             
         </li>
         
@@ -595,21 +580,58 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p>Other exported functions</p>
+              <p>Accessibility</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">kill</span> = (<span class="hljs-params"></span>) =&gt; group.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">hide</span> = (<span class="hljs-params"></span>) =&gt; group.<span class="hljs-property">visibility</span> = <span class="hljs-literal">false</span>;
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">show</span> = (<span class="hljs-params"></span>) =&gt; group.<span class="hljs-property">visibility</span> = <span class="hljs-literal">true</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> <span class="hljs-title function_">doNavigation</span> = (<span class="hljs-params">direction</span>) =&gt; {
 
-<span class="hljs-keyword">export</span> {
-    build,
-    kill,
+            <span class="hljs-keyword">const</span> {yearLabels, categoryLabels} = currentData;
 
-    hide,
-    show,
-}</pre></div></div>
+            <span class="hljs-keyword">const</span> columnLen = yearLabels.<span class="hljs-property">length</span>,
+                rowLen = categoryLabels.<span class="hljs-property">length</span>;
+
+            <span class="hljs-keyword">switch</span> (direction) {
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span> : 
+                    selectedRow++;
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span> : 
+                    selectedRow--;
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;left&#x27;</span> : 
+                    selectedColumn--;
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;right&#x27;</span> : 
+                    selectedColumn++;
+                    <span class="hljs-keyword">break</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (selectedColumn &lt; <span class="hljs-number">0</span>) selectedColumn = columnLen - <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (selectedColumn &gt;= columnLen) selectedColumn = <span class="hljs-number">0</span>;
+
+            <span class="hljs-keyword">if</span> (selectedRow &lt; <span class="hljs-number">0</span>) selectedRow = rowLen - <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (selectedRow &gt;= rowLen) selectedRow = <span class="hljs-number">0</span>;
+
+            <span class="hljs-title function_">updateSelected</span>();
+        };
+
+        frame.<span class="hljs-property">keyboard</span> = scrawl.<span class="hljs-title function_">makeKeyboardZone</span>({
+
+            <span class="hljs-attr">zone</span>: canvas,
+
+            <span class="hljs-attr">none</span>: {
+                <span class="hljs-title class_">ArrowLeft</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;left&#x27;</span>),
+                <span class="hljs-title class_">ArrowUp</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;up&#x27;</span>),
+                <span class="hljs-title class_">ArrowRight</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;right&#x27;</span>),
+                <span class="hljs-title class_">ArrowDown</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;down&#x27;</span>),
+            },
+        });
+    }
+};</pre></div></div>
             
         </li>
         

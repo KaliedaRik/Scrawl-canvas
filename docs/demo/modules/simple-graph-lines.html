@@ -30,6 +30,36 @@
                 </a>
               
                 
+                <a class="source" href="demo-m006-c1.html">
+                  ./demo/modules/demo-m006-c1.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c2.html">
+                  ./demo/modules/demo-m006-c2.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c3.html">
+                  ./demo/modules/demo-m006-c3.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c4.html">
+                  ./demo/modules/demo-m006-c4.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c5.html">
+                  ./demo/modules/demo-m006-c5.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-utils.html">
+                  ./demo/modules/demo-m006-utils.js
+                </a>
+              
+                
                 <a class="source" href="dom-entity-editor.html">
                   ./demo/modules/dom-entity-editor.js
                 </a>
@@ -72,11 +102,6 @@
                 
                 <a class="source" href="lottie-loader.html">
                   ./demo/modules/lottie-loader.js
-                </a>
-              
-                
-                <a class="source" href="simple-chart-frame-tests.html">
-                  ./demo/modules/simple-chart-frame-tests.js
                 </a>
               
                 
@@ -232,9 +257,7 @@ Data supplied to graph module as Javascript object with structure:
     yearLabels: [&#x27;year-1-label&#x27;, &#x27;year-2-label&#x27;, ...],
     data:       [year-1-data, year-2-data, ...],
 }
-*/</span>
-
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
+*/</span></pre></div></div>
             
         </li>
         
@@ -245,11 +268,17 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>We need to adapt the graph frame with data specific to this graph</p>
+              <h4 id="imports-and-exports">Imports and exports</h4>
+<p>We need to adapt the graph frame with data specific to this graph</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> frame <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-chart-frame.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { 
+    api <span class="hljs-keyword">as</span> frame,
+    dims <span class="hljs-keyword">as</span> frameDims,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-chart-frame.js&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> api = {};</pre></div></div>
             
         </li>
         
@@ -260,367 +289,7 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>Get the Magic Numbers from the chart frame</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> graphWidth = frame.<span class="hljs-property">graphWidth</span>,
-    graphHeight = frame.<span class="hljs-property">graphHeight</span>,
-    graphBottom = frame.<span class="hljs-property">graphBottom</span>,
-    graphLeft = frame.<span class="hljs-property">graphLeft</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
-              </div>
-              <p>Define the group variables</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> positionGroup,
-    lineGroup,
-    pinGroup;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
-              <p>Accessibility</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> selectedColumn = <span class="hljs-number">0</span>,
-    space = <span class="hljs-string">&#x27;&#x27;</span>,
-    currentData;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>The exported ‘build’ function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, dataSet</span>) {
-
-    space = namespace;
-    currentData = dataSet;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>Only build the Groups and entitys if they don’t already exist</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!positionGroup) {
-
-        <span class="hljs-keyword">let</span> yearLabels = dataSet.<span class="hljs-property">yearLabels</span>,
-            xStep = graphWidth / yearLabels.<span class="hljs-property">length</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <p>The ‘positions’ Group</p>
-<ul>
-<li>A set of Block entitys used as pivots by the other entitys</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        positionGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-position-group`</span>,
-            <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-            <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-            <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>The ‘lines’ Group</p>
-<ul>
-<li>A set of line Shape entitys </li>
-<li>Use position entitys for their start and end coordinate pivots</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        lineGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-line-group`</span>,
-            <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-            <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
-            <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>The ‘pins’ Group</p>
-<ul>
-<li>A set of Wheel entitys to mark the position of each data point</li>
-<li>Use position entitys as their pivots</li>
-<li>Interactive</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        pinGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-pin-group`</span>,
-            <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-            <span class="hljs-attr">order</span>: <span class="hljs-number">3</span>,
-            <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p>Build the entitys</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        yearLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">label, index</span>) =&gt;</span> {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p>Hidden position Blocks</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-title function_">makeBlock</span>({
-
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>-position`</span>,
-                <span class="hljs-attr">group</span>: positionGroup,
-
-                <span class="hljs-attr">width</span>: <span class="hljs-number">0</span>,
-                <span class="hljs-attr">height</span>: <span class="hljs-number">0</span>,
-                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
-
-                <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${graphLeft + (xStep * index) + (xStep / <span class="hljs-number">2</span>)}</span>%`</span>,
-                <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
-            });
-
-            <span class="hljs-keyword">if</span> (index) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <p>Line Shapes</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                scrawl.<span class="hljs-title function_">makeLine</span>({
-
-                    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>-line`</span>,
-                    <span class="hljs-attr">group</span>: lineGroup,
-
-                    <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index - <span class="hljs-number">1</span>}</span>-position`</span>,
-                    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-
-                    <span class="hljs-attr">endPivot</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>-position`</span>,
-                    <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-
-                    <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
-
-                    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
-                    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-
-                    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-                });
-            }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>Visible pin Wheels</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-title function_">makeWheel</span>({
-
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>-pin`</span>,
-                <span class="hljs-attr">group</span>: pinGroup,
-                <span class="hljs-attr">order</span>: index,
-
-                <span class="hljs-attr">radius</span>: <span class="hljs-number">8</span>,
-
-                <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
-                <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
-
-                <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>-position`</span>,
-                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
-
-                <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
-                <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
-                <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
-
-                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;drawThenFill&#x27;</span>,
-            });
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p>All further calculation happens in the ‘update’ function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">update</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p>Accessibility</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        frame.<span class="hljs-title function_">setArrowAction</span>(<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-function">() =&gt;</span> {});
-        frame.<span class="hljs-title function_">setArrowAction</span>(<span class="hljs-string">&#x27;down&#x27;</span>, <span class="hljs-function">() =&gt;</span> {});
-        frame.<span class="hljs-title function_">setArrowAction</span>(<span class="hljs-string">&#x27;left&#x27;</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;left&#x27;</span>));
-        frame.<span class="hljs-title function_">setArrowAction</span>(<span class="hljs-string">&#x27;right&#x27;</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;right&#x27;</span>));</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p>Display the graph entitys</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">show</span>();
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>Accessibility</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">doNavigation</span> = (<span class="hljs-params">direction</span>) =&gt; {
-
-    <span class="hljs-keyword">const</span> { yearLabels } = currentData;
-
-    <span class="hljs-keyword">const</span> len = yearLabels.<span class="hljs-property">length</span>;
-
-    <span class="hljs-keyword">switch</span> (direction) {
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;left&#x27;</span> : 
-            selectedColumn--;
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;right&#x27;</span> : 
-            selectedColumn++;
-            <span class="hljs-keyword">break</span>;
-    }
-
-    <span class="hljs-keyword">if</span> (selectedColumn &lt; <span class="hljs-number">0</span>) selectedColumn = len - <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (selectedColumn &gt;= len) selectedColumn = <span class="hljs-number">0</span>;
-
-    <span class="hljs-title function_">updateSelected</span>();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>Processing</p>
+              <h4 id="helper-functionality">Helper functionality</h4>
 <p>Determine the range batch</p>
 <ul>
 <li>To make sure the graph covers as much vertical space as possible</li>
@@ -648,17 +317,375 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <h4 id="build-function">Build function</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>api.<span class="hljs-property">build</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Module state</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> currentData,
+        xStep = <span class="hljs-number">0</span>,
+        yearLabels,
+        selectedColumn = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">const</span> { graphWidth, graphHeight, graphLeft, graphBottom } = frameDims;
+    <span class="hljs-keyword">const</span> { namespace, canvas, data, scrawl } = items;
+
+
+    <span class="hljs-keyword">if</span> (namespace &amp;&amp; canvas &amp;&amp; data &amp;&amp; scrawl) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>Namespace boilerplate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">item</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${item}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Group host name</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> host = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseName&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Update module state</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        currentData = data;
+        yearLabels = data.<span class="hljs-property">yearLabels</span>,
+        xStep = graphWidth / yearLabels.<span class="hljs-property">length</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>The <code>positions</code> Group</p>
+<ul>
+<li>A set of Block entitys used as pivots by the other entitys</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> positionGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;position-group&#x27;</span>),
+            host,
+            <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>The <code>lines</code> Group</p>
+<ul>
+<li>A set of line Shape entitys </li>
+<li>Use position entitys for their start and end coordinate pivots</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> lineGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;line-group&#x27;</span>),
+            host,
+            <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>The <code>pins</code> Group</p>
+<ul>
+<li>A set of Wheel entitys to mark the position of each data point</li>
+<li>Use position entitys as their pivots</li>
+<li>Interactive</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> pinGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;pin-group&#x27;</span>),
+            host,
+            <span class="hljs-attr">order</span>: <span class="hljs-number">3</span>,
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>Build the entitys</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        yearLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">label, index</span>) =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>Hidden position Blocks</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-title function_">makeBlock</span>({
+
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${index}</span>-position`</span>),
+                <span class="hljs-attr">group</span>: positionGroup,
+
+                <span class="hljs-attr">width</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">height</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
+
+                <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${graphLeft + (xStep * index) + (xStep / <span class="hljs-number">2</span>)}</span>%`</span>,
+                <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
+            });
+
+            <span class="hljs-keyword">if</span> (index) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>Line Shapes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                scrawl.<span class="hljs-title function_">makeLine</span>({
+
+                    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${index}</span>-line`</span>),
+                    <span class="hljs-attr">group</span>: lineGroup,
+
+                    <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${index - <span class="hljs-number">1</span>}</span>-position`</span>),
+                    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+
+                    <span class="hljs-attr">endPivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${index}</span>-position`</span>),
+                    <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+
+                    <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
+
+                    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+                    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+
+                    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+                });
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>Visible pin Wheels</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-title function_">makeWheel</span>({
+
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${index}</span>-pin`</span>),
+                <span class="hljs-attr">group</span>: pinGroup,
+                <span class="hljs-attr">order</span>: index,
+
+                <span class="hljs-attr">radius</span>: <span class="hljs-number">8</span>,
+
+                <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
+                <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
+
+                <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${index}</span>-position`</span>),
+                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+
+                <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
+                <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+                <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
+
+                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;drawThenFill&#x27;</span>,
+            });
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <h4 id="user-interaction">User interaction</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateSelected</span> = (<span class="hljs-params"></span>) =&gt; {
+
+            <span class="hljs-keyword">const</span> { yearLabels, data } = currentData;
+
+            <span class="hljs-keyword">const</span> entity = pinGroup.<span class="hljs-title function_">getArtefact</span>(pinGroup.<span class="hljs-property">artefacts</span>[selectedColumn]);
+
+            pinGroup.<span class="hljs-title function_">setArtefacts</span>({
+                <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
+            });
+
+            frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">`<span class="hljs-subst">${yearLabels[selectedColumn]}</span>: §RED§<span class="hljs-subst">${data[selectedColumn].toLocaleString()}</span>`</span>);
+
+            entity.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">scale</span>: <span class="hljs-number">1.5</span>,
+                <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+            });
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <h4 id="update-function">Update function</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> update = api.<span class="hljs-property">update</span> = <span class="hljs-function">(<span class="hljs-params">dataSet</span>) =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> (dataSet) currentData = dataSet;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>Only update if we have entitys to update</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (positionGroup) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>Initial positioning calculations</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">let</span> yearLabels = currentData.<span class="hljs-property">yearLabels</span>,
+                    data = currentData.<span class="hljs-property">data</span>,
+                    max = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(...data),
+                    min = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(...data),
+                    batch = <span class="hljs-title function_">calculateBatchValue</span>(max - min);
+
+                max = ((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(max / batch)) * batch) + batch;
+                min = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(min / batch)) * batch;
+
+                <span class="hljs-keyword">let</span> categoryValue = graphHeight / (max - min),
+                    yDepth = graphBottom - graphHeight;</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p>The exported ‘update’ function</p>
+              <p>Grab a handle to the ‘entity’ section in the Scrawl-canvas library</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">update</span> = (<span class="hljs-params"></span>) =&gt; {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">let</span> entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>;</pre></div></div>
             
         </li>
         
@@ -669,11 +696,14 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p>Only update if we have entitys to update</p>
+              <p>Reset any highlighted pin Wheel</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (positionGroup) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                pinGroup.<span class="hljs-title function_">setArtefacts</span>({
+                    <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
+                    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
+                });</pre></div></div>
             
         </li>
         
@@ -684,21 +714,29 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <p>Initial positioning calculations</p>
+              <p>Final calculations and updates</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> yearLabels = currentData.<span class="hljs-property">yearLabels</span>,
-            data = currentData.<span class="hljs-property">data</span>,
-            max = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(...data),
-            min = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(...data),
-            batch = <span class="hljs-title function_">calculateBatchValue</span>(max - min);
+            <div class="content"><div class='highlight'><pre>                yearLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">label, index</span>) =&gt;</span> {
 
-        max = ((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(max / batch)) * batch) + batch;
-        min = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(min / batch)) * batch;
+                    <span class="hljs-keyword">let</span> pointDepth = (data[index] - min) * categoryValue,
+                        yVal = yDepth + (graphHeight - pointDepth),
+                        tempName = <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${index}</span>`</span>);
 
-        <span class="hljs-keyword">let</span> categoryValue = graphHeight / (max - min),
-            yDepth = graphBottom - graphHeight;</pre></div></div>
+                    entity[<span class="hljs-string">`<span class="hljs-subst">${tempName}</span>-position`</span>].<span class="hljs-title function_">set</span>({
+                        <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${yVal}</span>%`</span>,
+                    });
+
+                    entity[<span class="hljs-string">`<span class="hljs-subst">${tempName}</span>-pin`</span>].<span class="hljs-title function_">set</span>({
+
+                        <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+                            selectedColumn = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;order&#x27;</span>);
+                            <span class="hljs-title function_">updateSelected</span>();
+                        },
+                    });
+                });</pre></div></div>
             
         </li>
         
@@ -709,11 +747,22 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p>Grab a handle to the ‘entity’ section in the Scrawl-canvas library</p>
+              <p>Update the chart frame</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">&#x27;No data selected&#x27;</span>);
+                frame.<span class="hljs-title function_">updateYTop</span>(max.<span class="hljs-title function_">toLocaleString</span>());
+                frame.<span class="hljs-title function_">updateYBottom</span>(min.<span class="hljs-title function_">toLocaleString</span>());
+                frame.<span class="hljs-title function_">updateXLeft</span>(yearLabels[<span class="hljs-number">0</span>]);
+                frame.<span class="hljs-title function_">updateXRight</span>(yearLabels[yearLabels.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>]);
+
+                selectedColumn = <span class="hljs-number">0</span>;
+                <span class="hljs-title function_">updateSelected</span>();
+            }
+        };
+
+        <span class="hljs-title function_">update</span>();</pre></div></div>
             
         </li>
         
@@ -724,184 +773,45 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <p>Reset any highlighted pin Wheel</p>
+              <h4 id="accessibility">Accessibility</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        pinGroup.<span class="hljs-title function_">setArtefacts</span>({
-            <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
-            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
-              <p>Final calculations and updates</p>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> <span class="hljs-title function_">doNavigation</span> = (<span class="hljs-params">direction</span>) =&gt; {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        yearLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">label, index</span>) =&gt;</span> {
+            <span class="hljs-keyword">const</span> {yearLabels} = currentData;
 
-            <span class="hljs-keyword">let</span> pointDepth = (data[index] - min) * categoryValue,
-                yVal = yDepth + (graphHeight - pointDepth),
-                tempName = <span class="hljs-string">`<span class="hljs-subst">${space}</span>-<span class="hljs-subst">${index}</span>`</span>;
+            <span class="hljs-keyword">const</span> columnLen = yearLabels.<span class="hljs-property">length</span>;
 
-            entity[<span class="hljs-string">`<span class="hljs-subst">${tempName}</span>-position`</span>].<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${yVal}</span>%`</span>,
-            });
+            <span class="hljs-keyword">switch</span> (direction) {
 
-            entity[<span class="hljs-string">`<span class="hljs-subst">${tempName}</span>-pin`</span>].<span class="hljs-title function_">set</span>({
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;left&#x27;</span> : 
+                    selectedColumn--;
+                    <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;right&#x27;</span> : 
+                    selectedColumn++;
+                    <span class="hljs-keyword">break</span>;
+            }
 
-                    selectedColumn = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;order&#x27;</span>);
-                    <span class="hljs-title function_">updateSelected</span>();
-                },
-            });
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
-              </div>
-              <p>Update the chart frame</p>
+            <span class="hljs-keyword">if</span> (selectedColumn &lt; <span class="hljs-number">0</span>) selectedColumn = columnLen - <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (selectedColumn &gt;= columnLen) selectedColumn = <span class="hljs-number">0</span>;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">&#x27;No data selected&#x27;</span>);
-        frame.<span class="hljs-title function_">updateYTop</span>(max.<span class="hljs-title function_">toLocaleString</span>());
-        frame.<span class="hljs-title function_">updateYBottom</span>(min.<span class="hljs-title function_">toLocaleString</span>());
-        frame.<span class="hljs-title function_">updateXLeft</span>(yearLabels[<span class="hljs-number">0</span>]);
-        frame.<span class="hljs-title function_">updateXRight</span>(yearLabels[yearLabels.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>]);
+            <span class="hljs-title function_">updateSelected</span>();
+        };
 
-        selectedColumn = <span class="hljs-number">0</span>;
-        <span class="hljs-title function_">updateSelected</span>();
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
-              </div>
-              <p>Handles both mouse hover, and (accessibility) keyboard navigation</p>
+        frame.<span class="hljs-property">keyboard</span> = scrawl.<span class="hljs-title function_">makeKeyboardZone</span>({
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">updateSelected</span> = (<span class="hljs-params"></span>) =&gt; {
-
-    <span class="hljs-keyword">const</span> { yearLabels, data } = currentData;
-
-        <span class="hljs-keyword">const</span> entity = pinGroup.<span class="hljs-title function_">getArtefact</span>(pinGroup.<span class="hljs-property">artefacts</span>[selectedColumn]);
-
-        pinGroup.<span class="hljs-title function_">setArtefacts</span>({
-            <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
-            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
+            <span class="hljs-attr">zone</span>: canvas,
+            <span class="hljs-attr">none</span>: {
+                <span class="hljs-title class_">ArrowLeft</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;left&#x27;</span>),
+                <span class="hljs-title class_">ArrowUp</span>: <span class="hljs-function">() =&gt;</span> {},
+                <span class="hljs-title class_">ArrowRight</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">doNavigation</span>(<span class="hljs-string">&#x27;right&#x27;</span>),
+                <span class="hljs-title class_">ArrowDown</span>: <span class="hljs-function">() =&gt;</span> {},
+            },
         });
-
-        frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">`<span class="hljs-subst">${yearLabels[selectedColumn]}</span>: §RED§<span class="hljs-subst">${data[selectedColumn].toLocaleString()}</span>`</span>);
-
-        entity.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">scale</span>: <span class="hljs-number">1.5</span>,
-            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-        });
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <p>Exported ‘kill’ function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">kill</span> = (<span class="hljs-params"></span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> (positionGroup) {
-
-        positionGroup.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
-        lineGroup.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
-        pinGroup.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
-
-        positionGroup = <span class="hljs-literal">false</span>;
-        lineGroup = <span class="hljs-literal">false</span>;
-        pinGroup = <span class="hljs-literal">false</span>;
     }
 };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p>Exported ‘hide’ function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">hide</span> = (<span class="hljs-params"></span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> (positionGroup) {
-
-        positionGroup.<span class="hljs-property">visibility</span> = <span class="hljs-literal">false</span>;
-        lineGroup.<span class="hljs-property">visibility</span> = <span class="hljs-literal">false</span>;
-        pinGroup.<span class="hljs-property">visibility</span> = <span class="hljs-literal">false</span>;
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
-              </div>
-              <p>Exported ‘show’ function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">show</span> = (<span class="hljs-params"></span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> (positionGroup) {
-
-        positionGroup.<span class="hljs-property">visibility</span> = <span class="hljs-literal">true</span>;
-        lineGroup.<span class="hljs-property">visibility</span> = <span class="hljs-literal">true</span>;
-        pinGroup.<span class="hljs-property">visibility</span> = <span class="hljs-literal">true</span>;
-    }
-};
-
-<span class="hljs-keyword">export</span> {
-    build,
-    update,
-    kill,
-    hide,
-    show,
-}</pre></div></div>
             
         </li>
         

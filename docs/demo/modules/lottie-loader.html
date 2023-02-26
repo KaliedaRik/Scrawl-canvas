@@ -30,6 +30,36 @@
                 </a>
               
                 
+                <a class="source" href="demo-m006-c1.html">
+                  ./demo/modules/demo-m006-c1.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c2.html">
+                  ./demo/modules/demo-m006-c2.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c3.html">
+                  ./demo/modules/demo-m006-c3.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c4.html">
+                  ./demo/modules/demo-m006-c4.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c5.html">
+                  ./demo/modules/demo-m006-c5.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-utils.html">
+                  ./demo/modules/demo-m006-utils.js
+                </a>
+              
+                
                 <a class="source" href="dom-entity-editor.html">
                   ./demo/modules/dom-entity-editor.js
                 </a>
@@ -72,11 +102,6 @@
                 
                 <a class="source" href="lottie-loader.html">
                   ./demo/modules/lottie-loader.js
-                </a>
-              
-                
-                <a class="source" href="simple-chart-frame-tests.html">
-                  ./demo/modules/simple-chart-frame-tests.js
                 </a>
               
                 
@@ -215,14 +240,8 @@
 <ul>
 <li><a href="../modules-004.html">Lottie loader - main module</a></li>
 </ul>
-<p>Import the Scrawl-canvas object </p>
-<ul>
-<li>There’s various ways to do this. See <a href="../dom-001.html">Demo DOM-001</a> for more details</li>
-</ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -238,6 +257,7 @@
 <ul>
 <li><strong>name</strong> (required) - String - unique name value</li>
 <li><strong>src</strong> (required) - String - path to the lottie.json animation file</li>
+<li><strong>scrawl</strong> (required) - the Scrawl-canvas object</li>
 <li><strong>width</strong> - Number - width of the animation; default <code>1000</code></li>
 <li><strong>bodymovinLibrary</strong> - String - CDN path at which the Bodymovin library can be obtained; default: <code>https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.8.1/lottie.min.js</code></li>
 </ul>
@@ -247,9 +267,9 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-keyword">let</span> { src, bodymovinLibrary, width, name, loop, autoplay } = items;
+    <span class="hljs-keyword">let</span> { src, bodymovinLibrary, width, name, loop, autoplay, scrawl } = items;
 
-    <span class="hljs-keyword">if</span> (!src || !name) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (!(src &amp;&amp; name &amp;&amp; scrawl)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">if</span> (loop == <span class="hljs-literal">null</span>) loop = <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">if</span> (autoplay == <span class="hljs-literal">null</span>) autoplay = <span class="hljs-literal">false</span>;

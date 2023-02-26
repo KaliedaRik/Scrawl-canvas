@@ -1383,10 +1383,10 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = targets.<span class="hljs-property">length</span>; j &lt; jz; j++) {
 
-        targets[j].<span class="hljs-title function_">set</span>(setObj);
-    }
+        <span class="hljs-keyword">const</span> t = targets[j];
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">setObj</span> = setObj;</pre></div></div>
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;Group&#x27;</span> === t.<span class="hljs-property">type</span>) t.<span class="hljs-title function_">setArtefacts</span>(setObj);
+        <span class="hljs-keyword">else</span> t.<span class="hljs-title function_">set</span>(setObj);</pre></div></div>
             
         </li>
         
@@ -1396,6 +1396,23 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
               
               <div class="sswrap ">
                 <a class="ss" href="#section-37">&#x00a7;</a>
+              </div>
+              <p>targets[j].set(setObj);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    }
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">setObj</span> = setObj;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>We call the <code>action</code> attribute function (if it is defined) at the completion of every update.</p>
 
@@ -1407,11 +1424,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>engineActions</code> - internal function to run built-in easing engines</p>
 <ul>
@@ -1438,11 +1455,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>setDefinitionsValues</code> - convert <code>start</code> and <code>end</code> values into float Numbers.</p>
 <ul>
@@ -1472,11 +1489,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>The default easing function is <code>linear</code></p>
 
@@ -1493,11 +1510,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>parseDefinitionsValue</code> - internal function invoked by <code>setDefinitionsValues</code> function.</p>
 
@@ -1525,11 +1542,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <h4 id="animation-control">Animation control</h4>
 
@@ -1538,11 +1555,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>run</code></p>
 <ul>
@@ -1569,11 +1586,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>isRunning</code> - check to see if Tween is in a running state.</p>
 
@@ -1590,11 +1607,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>halt</code></p>
 <ul>
@@ -1620,11 +1637,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>reverse</code></p>
 <ul>
@@ -1650,11 +1667,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>resume</code></p>
 <ul>
@@ -1680,11 +1697,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>seekTo</code></p>
 <ul>
@@ -1710,11 +1727,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>seekFor</code></p>
 <ul>
@@ -1740,11 +1757,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeTween</span>({
@@ -1791,11 +1808,11 @@ constructors.<span class="hljs-property">Tween</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

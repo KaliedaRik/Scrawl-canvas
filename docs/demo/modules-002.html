@@ -310,11 +310,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-057.html">
-                  ./demo/canvas-057.js
-                </a>
-              
-                
                 <a class="source" href="canvas-058.html">
                   ./demo/canvas-058.js
                 </a>
@@ -672,6 +667,11 @@
                 
                 <a class="source" href="modules-005.html">
                   ./demo/modules-005.js
+                </a>
+              
+                
+                <a class="source" href="modules-006.html">
+                  ./demo/modules-006.js
                 </a>
               
                 
@@ -1106,7 +1106,9 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> buildChart <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./modules/wikipedia-views-spiral-chart.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1132,11 +1134,21 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>// Function to fetch and parse Wikipedia page view timeseries data</p>
+              <p>We need to generate an initial chart to display</p>
+<ul>
+<li>We give the asset a name, which we can then use with our Picture entity</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> buildChart <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./modules/wikipedia-views-spiral-chart.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> initialAssetName = <span class="hljs-string">&#x27;wiki-Cat-chart&#x27;</span>;
+
+<span class="hljs-title function_">buildChart</span>({
+    <span class="hljs-attr">page</span>: <span class="hljs-string">&#x27;Cat&#x27;</span>,
+    <span class="hljs-attr">assetName</span>: initialAssetName,
+    canvas,
+    scrawl,
+});</pre></div></div>
             
         </li>
         
@@ -1147,15 +1159,16 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Initiate the process on page load</p>
+              <p>And we need a picture entity in which to display the chart</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> currentPage;
-
-<span class="hljs-title function_">buildChart</span>(<span class="hljs-string">&#x27;Cat&#x27;</span>, canvas, {})
-.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> currentPage = res)
-.<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;spiral-chart&#x27;</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">asset</span>: initialAssetName,
+});</pre></div></div>
             
         </li>
         
@@ -1211,7 +1224,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">() =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -1230,18 +1243,23 @@
 
     <span class="hljs-keyword">if</span> (page) {
 
-        <span class="hljs-title function_">buildChart</span>(page, canvas, {})
-        .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        <span class="hljs-keyword">const</span> assetName = <span class="hljs-string">`wiki-<span class="hljs-subst">${page}</span>-chart`</span>;
 
-            <span class="hljs-keyword">if</span> (currentPage) currentPage.<span class="hljs-title function_">kill</span>();
-            currentPage = res;
-        })
-        .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
+        <span class="hljs-keyword">if</span> (!scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">assetnames</span>.<span class="hljs-title function_">includes</span>(assetName)) {
 
-            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;main invoker error&#x27;</span>, e);
+            <span class="hljs-title function_">buildChart</span>({
+                page,
+                assetName,
+                canvas,
+                scrawl,
+            });
+        }
+
+        piccy.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">asset</span>: assetName,
         });
     };
-}, <span class="hljs-string">&#x27;#page-request&#x27;</span>);</pre></div></div>
+}, <span class="hljs-string">&#x27;#wikipedia-page&#x27;</span>);</pre></div></div>
             
         </li>
         

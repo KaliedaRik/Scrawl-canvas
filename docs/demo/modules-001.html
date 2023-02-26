@@ -310,11 +310,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-057.html">
-                  ./demo/canvas-057.js
-                </a>
-              
-                
                 <a class="source" href="canvas-058.html">
                   ./demo/canvas-058.js
                 </a>
@@ -672,6 +667,11 @@
                 
                 <a class="source" href="modules-005.html">
                   ./demo/modules-005.js
+                </a>
+              
+                
+                <a class="source" href="modules-006.html">
+                  ./demo/modules-006.js
                 </a>
               
                 
@@ -1110,51 +1110,116 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
+              </div>
+              <h4 id="imports">Imports</h4>
 
-<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;
-
-
-<span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>,
-    namespace = <span class="hljs-string">&#x27;London-crimes&#x27;</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> frame <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./modules/simple-chart-frame.js&#x27;</span>;
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> barGraph <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./modules/london-crime-stacked-bars.js&#x27;</span>;
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> lineGraph <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./modules/london-crime-lines.js&#x27;</span>;
+<span class="hljs-keyword">import</span> {api <span class="hljs-keyword">as</span> barGraph} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./modules/london-crime-stacked-bars.js&#x27;</span>;
+<span class="hljs-keyword">import</span> {api <span class="hljs-keyword">as</span> lineGraph} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./modules/london-crime-lines.js&#x27;</span>;
 
-canvas.<span class="hljs-title function_">set</span>({
+<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <h4 id="initial-setup">Initial setup</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.crime&#x27;</span>);
+
+<span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
+<span class="hljs-keyword">const</span> namespace = <span class="hljs-string">&#x27;Crimes&#x27;</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">item</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${item}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Accessibility</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;Crime statistics for London areas - from 1999 to 2017&#x27;</span>,
     <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;Interactive graphic showing crimes recorded in various London areas, broken down into crime types. Data taken from https://data.london.gov.uk/dataset/recorded_crime_rates&#x27;</span>,
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <h4 id="animation-and-reporting">Animation and reporting</h4>
 
-<span class="hljs-keyword">const</span> assets = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">assetnames</span>,
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> assets = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">assetnames</span>,
     groups = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">groupnames</span>,
     entitys = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entitynames</span>;
 
 <span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#library-reporter&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`
-Assets:
+Assets: (<span class="hljs-subst">${assets.length}</span>)
 <span class="hljs-subst">${assets.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
 
-Groups:
+Groups: (<span class="hljs-subst">${groups.length}</span>)
 <span class="hljs-subst">${groups.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
 
-Entitys:
+Entitys: (<span class="hljs-subst">${entitys.length}</span>)
 <span class="hljs-subst">${entitys.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>`</span>;
 });
 
 
 scrawl.<span class="hljs-title function_">makeRender</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-animation`</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
-
     <span class="hljs-attr">afterShow</span>: report,
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <h4 id="user-interaction">User interaction</h4>
 
-scrawl.<span class="hljs-title function_">addListener</span>(
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addListener</span>(
     <span class="hljs-string">&#x27;move&#x27;</span>, 
     <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>), 
     canvas.<span class="hljs-property">domElement</span> 
@@ -1169,11 +1234,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(
         </li>
         
         
-        <li id="section-2">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-2">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>For this demo we will suppress touchmove functionality over the canvas</p>
 
@@ -1184,13 +1249,42 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-}, canvas.<span class="hljs-property">domElement</span>);
+}, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Infographic state</p>
 
-<span class="hljs-keyword">let</span> currentGraphType = <span class="hljs-string">&#x27;bars&#x27;</span>,
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> currentGraphType = <span class="hljs-string">&#x27;bars&#x27;</span>,
     currentArea = <span class="hljs-string">&#x27;Hackney&#x27;</span>,
     currentCategory = <span class="hljs-string">&#x27;Burglary&#x27;</span>;
 
-<span class="hljs-keyword">let</span> crimeCategoryInput = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#crime-categories&#x27;</span>);
+<span class="hljs-keyword">const</span> crimeCategoryInput = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#crime-categories&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>@ts-expect-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>crimeCategoryInput.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;Burglary&#x27;</span>;
+crimeCategoryInput.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
 
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
@@ -1199,7 +1293,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         e.<span class="hljs-title function_">preventDefault</span>();
         e.<span class="hljs-title function_">stopPropagation</span>();
 
-        <span class="hljs-keyword">let</span> target = e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>,
+        <span class="hljs-keyword">const</span> target = e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>,
             value = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
         <span class="hljs-keyword">switch</span> (target) {
@@ -1212,24 +1306,56 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
                     <span class="hljs-keyword">if</span> (currentGraphType === <span class="hljs-string">&#x27;bars&#x27;</span>) {
 
-                        barGraph.<span class="hljs-title function_">kill</span>();
+                        barGraph.<span class="hljs-title function_">kill</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>We need to delay the rebuild to the next Display cycle</p>
+<ul>
+<li>SC library purges are batched to run once per RAF</li>
+<li>We can’t rebuild until after the library is purged</li>
+</ul>
 
-                        barGraph.<span class="hljs-title function_">build</span>(
-                            <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-bars`</span>, 
-                            canvas, 
-                            <span class="hljs-string">`data/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>
-                        );
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> barGraph.<span class="hljs-title function_">build</span>({
+                            <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bars&#x27;</span>), 
+                            <span class="hljs-attr">dataSource</span>: <span class="hljs-string">`data/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>,
+                            canvas,
+                            scrawl,
+                        }), <span class="hljs-number">0</span>);
                     }
                     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentGraphType === <span class="hljs-string">&#x27;lines&#x27;</span>) {
 
-                        lineGraph.<span class="hljs-title function_">kill</span>();
+                        lineGraph.<span class="hljs-title function_">kill</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>Again, we delay the rebuild to the next Display cycle</p>
 
-                        lineGraph.<span class="hljs-title function_">build</span>(
-                            <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-lines`</span>, 
-                            canvas, 
-                            <span class="hljs-string">`data/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>, 
-                            currentCategory
-                        );
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> lineGraph.<span class="hljs-title function_">build</span>({
+                            <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;lines&#x27;</span>), 
+                            <span class="hljs-attr">dataSource</span>: <span class="hljs-string">`data/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>,
+                            <span class="hljs-attr">category</span>: currentCategory,
+                            canvas,
+                            scrawl,
+                        }), <span class="hljs-number">0</span>);
                     }
                 }
                 <span class="hljs-keyword">break</span>;
@@ -1244,11 +1370,12 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
                         lineGraph.<span class="hljs-title function_">kill</span>();
 
-                        barGraph.<span class="hljs-title function_">build</span>(
-                            <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-bars`</span>, 
-                            canvas, 
-                            <span class="hljs-string">`data/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>
-                        );
+                        barGraph.<span class="hljs-title function_">build</span>({
+                            <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bars&#x27;</span>), 
+                            <span class="hljs-attr">dataSource</span>: <span class="hljs-string">`data/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>,
+                            canvas,
+                            scrawl,
+                        });
 
                         crimeCategoryInput.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
                     }
@@ -1256,12 +1383,13 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
                         barGraph.<span class="hljs-title function_">kill</span>();
 
-                        lineGraph.<span class="hljs-title function_">build</span>(
-                            <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-lines`</span>, 
-                            canvas, 
-                            <span class="hljs-string">`data/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>, 
-                            currentCategory
-                        );
+                        lineGraph.<span class="hljs-title function_">build</span>({
+                            <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;lines&#x27;</span>), 
+                            <span class="hljs-attr">dataSource</span>: <span class="hljs-string">`data/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>,
+                            <span class="hljs-attr">category</span>: currentCategory,
+                            canvas,
+                            scrawl,
+                        });
 
                         crimeCategoryInput.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
                     }
@@ -1274,11 +1402,12 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
                     currentCategory = value;
 
-                    lineGraph.<span class="hljs-title function_">update</span>(
-                        <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-lines`</span>, 
+                    lineGraph.<span class="hljs-title function_">update</span>({
+                        <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;lines&#x27;</span>),
+                        <span class="hljs-attr">category</span>: currentCategory,
                         canvas, 
-                        currentCategory
-                    );
+                        scrawl,
+                    });
                 }
                 <span class="hljs-keyword">break</span>;
         }
@@ -1288,36 +1417,44 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-3">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>Initial display</p>
+              <h4 id="build-out-initial-graphic">Build out initial graphic</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>frame.<span class="hljs-title function_">build</span>(<span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-frame`</span>, canvas, <span class="hljs-string">&#x27;Hackney&#x27;</span>);
-barGraph.<span class="hljs-title function_">build</span>(<span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-bars`</span>, canvas, <span class="hljs-string">&#x27;data/crimes-in-hackney.json&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>frame.<span class="hljs-title function_">build</span>({
+    <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;frame&#x27;</span>),
+    <span class="hljs-attr">backgroundImage</span>: <span class="hljs-string">&#x27;Hackney&#x27;</span>,
+    canvas,
+    scrawl,
+});
+
+barGraph.<span class="hljs-title function_">build</span>({
+    <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bars&#x27;</span>), 
+    <span class="hljs-attr">dataSource</span>: <span class="hljs-string">&#x27;data/crimes-in-hackney.json&#x27;</span>,
+    canvas,
+    scrawl,
+});</pre></div></div>
             
         </li>
         
         
-        <li id="section-4">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>@ts-expect-error</p>
+              <h4 id="development">Development</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>crimeCategoryInput.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;Burglary&#x27;</span>;
-crimeCategoryInput.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-
-<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

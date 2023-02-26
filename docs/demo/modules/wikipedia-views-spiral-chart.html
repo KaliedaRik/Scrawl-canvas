@@ -30,6 +30,36 @@
                 </a>
               
                 
+                <a class="source" href="demo-m006-c1.html">
+                  ./demo/modules/demo-m006-c1.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c2.html">
+                  ./demo/modules/demo-m006-c2.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c3.html">
+                  ./demo/modules/demo-m006-c3.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c4.html">
+                  ./demo/modules/demo-m006-c4.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-c5.html">
+                  ./demo/modules/demo-m006-c5.js
+                </a>
+              
+                
+                <a class="source" href="demo-m006-utils.html">
+                  ./demo/modules/demo-m006-utils.js
+                </a>
+              
+                
                 <a class="source" href="dom-entity-editor.html">
                   ./demo/modules/dom-entity-editor.js
                 </a>
@@ -72,11 +102,6 @@
                 
                 <a class="source" href="lottie-loader.html">
                   ./demo/modules/lottie-loader.js
-                </a>
-              
-                
-                <a class="source" href="simple-chart-frame-tests.html">
-                  ./demo/modules/simple-chart-frame-tests.js
                 </a>
               
                 
@@ -215,14 +240,20 @@
 <ul>
 <li><a href="../modules-002.html">Spiral charts - main module</a></li>
 </ul>
-<p>Import the Scrawl-canvas object </p>
+<p>We export a function which issues the fetch call and then builds a chart in a Cell. The function requires an object with the following arguments:</p>
 <ul>
-<li>There’s various ways to do this. See <a href="../dom-001.html">Demo DOM-001</a> for more details</li>
+<li><strong>page</strong> (required) - String value of the Wikipedia page, whose views statistics are to be charted: <a href="https://en.wikipedia.org/wiki/__Cat">https://en.wikipedia.org/wiki/__Cat</a>__</li>
+<li><strong>canvas</strong> (required) - a Scrawl-canvas Canvas wrapper object</li>
+<li><strong>assetName</strong> (required) - a namespace String</li>
+<li><strong>scrawl</strong> (required) - the SC object</li>
+<li><em><strong>size</strong></em> (optional) - Number - the size of the (square) generated chart. Default: 400</li>
+<li><em><strong>backgroundColor</strong></em> (optional) - CSS Color String - the background color of the generated chart. Default: ‘transparent’</li>
+<li><em><strong>minimumColor</strong></em> (optional) - CSS Color String - color used to display low daily views datapoints. Default: ‘azure’</li>
+<li><em><strong>medialColor</strong></em> (optional) - CSS Color String - color used to display average daily views datapoints. Default: ‘blue’</li>
+<li><em><strong>maximumColor</strong></em> (optional) - CSS Color String - color used to display high daily views datapoints. Default: ‘red’</li>
 </ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -233,7 +264,330 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>Function to fetch and parse Wikipedia page view timeseries data</p>
+              <h4 id="exported-function">Exported function</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+
+    <span class="hljs-keyword">const</span> { assetName, page, canvas, scrawl } = items;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Check we can proceed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (assetName &amp;&amp; page &amp;&amp; canvas &amp;&amp; scrawl) {
+
+        <span class="hljs-keyword">const</span> { 
+            size = <span class="hljs-number">400</span>, 
+            backgroundColor = <span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span>,
+            minimumColor = <span class="hljs-string">&#x27;azure&#x27;</span>,
+            medialColor = <span class="hljs-string">&#x27;blue&#x27;</span>,
+            maximumColor = <span class="hljs-string">&#x27;red&#x27;</span>,
+        } = items;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = item =&gt; <span class="hljs-string">`temp-<span class="hljs-subst">${assetName}</span>-<span class="hljs-subst">${item}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>We will create a new Cell for the chart, fabricate the required entitys, render the Cell, then capture the output into an asset</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> cell = canvas.<span class="hljs-title function_">buildCell</span>({
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;cell&#x27;</span>),
+            <span class="hljs-attr">width</span>: size,
+            <span class="hljs-attr">height</span>: size,
+            <span class="hljs-attr">cleared</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">compiled</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
+            backgroundColor,
+        });
+
+        <span class="hljs-keyword">const</span> chartGroup = cell.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;group&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Use Color objects to determine the appropriate color for each charted view value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> lowViewsFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;low-views&#x27;</span>),
+            minimumColor,
+            <span class="hljs-attr">maximumColor</span>: medialColor,
+            <span class="hljs-attr">colorSpace</span>: <span class="hljs-string">&#x27;OKLAB&#x27;</span>,
+        });
+
+        <span class="hljs-keyword">const</span> highViewsFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;high-views&#x27;</span>),
+            <span class="hljs-attr">minimumColor</span>: medialColor,
+            maximumColor,
+            <span class="hljs-attr">colorSpace</span>: <span class="hljs-string">&#x27;OKLAB&#x27;</span>,
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>We start by retrieving the data from Wikipedia</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">getData</span>(page)
+        .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Some initial calculations</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> maxViews = data.<span class="hljs-property">max</span>,
+                minViews = data.<span class="hljs-property">min</span>,
+                medianViews = (maxViews - minViews) / <span class="hljs-number">2</span>;
+
+            <span class="hljs-keyword">const</span> maxDataLen = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(data.<span class="hljs-property">mon</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">tue</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">wed</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">thu</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">fri</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">sat</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">sun</span>.<span class="hljs-property">length</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Each day series is a spiral of Line entitys. We’ll cut down on the code by creating a factory to generate each day’s spiral</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> buildDayChart = <span class="hljs-keyword">function</span> (<span class="hljs-params">dayData, offsetVal, dayName, missFirst</span>) {
+
+                <span class="hljs-keyword">let</span> currentWeek, currentYear, nextWeek, nextYear;
+
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dayData.<span class="hljs-property">length</span> - <span class="hljs-number">2</span>; i &lt; iz; i++) {
+
+                    <span class="hljs-keyword">if</span> (missFirst) {
+
+                        currentWeek = (i + <span class="hljs-number">1</span>) % <span class="hljs-number">52</span>;
+                        currentYear = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((i + <span class="hljs-number">1</span>) / <span class="hljs-number">52</span>);
+
+                        nextWeek = (i + <span class="hljs-number">2</span>) % <span class="hljs-number">52</span>;
+                        nextYear = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((i + <span class="hljs-number">2</span>) / <span class="hljs-number">52</span>);
+
+                        nextWeek = nextWeek % <span class="hljs-number">52</span>;
+                    }
+                    <span class="hljs-keyword">else</span> {
+
+                        currentWeek = i % <span class="hljs-number">52</span>;
+                        currentYear = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(i / <span class="hljs-number">52</span>);
+
+                        nextWeek = (i + <span class="hljs-number">1</span>) % <span class="hljs-number">52</span>;
+                        nextYear = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((i + <span class="hljs-number">1</span>) / <span class="hljs-number">52</span>);
+
+                        nextWeek = nextWeek % <span class="hljs-number">52</span>;
+                    }
+
+                    <span class="hljs-keyword">let</span> views = dayData[i] - minViews,
+                        dataColor;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>Get the appropriate color for this data point’s value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (views &lt; medianViews) dataColor = lowViewsFactory.<span class="hljs-title function_">getRangeColor</span>(views / medianViews);
+                    <span class="hljs-keyword">else</span> dataColor = highViewsFactory.<span class="hljs-title function_">getRangeColor</span>((views - medianViews) / medianViews);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>Each line represents a single data point, positioned in its appropriate place on the spiral by reference to the chart’s spoke lines</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    scrawl.<span class="hljs-title function_">makeLine</span>({
+
+                        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${dayName}</span>-line-<span class="hljs-subst">${i}</span>`</span>),
+                        <span class="hljs-attr">group</span>: chartGroup,
+
+                        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">5</span>,
+                        <span class="hljs-attr">strokeStyle</span>: dataColor,
+
+                        <span class="hljs-attr">path</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`week-line-<span class="hljs-subst">${currentWeek}</span>`</span>),
+                        <span class="hljs-attr">pathPosition</span>: (currentYear * <span class="hljs-number">0.33</span>) + offsetVal,
+                        <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
+
+                        <span class="hljs-attr">endPath</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`week-line-<span class="hljs-subst">${nextWeek}</span>`</span>),
+                        <span class="hljs-attr">endPathPosition</span>: (nextYear * <span class="hljs-number">0.33</span>) + offsetVal,
+                        <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
+
+                        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+                    });
+                }
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>A year is made up of 52 weeks. We create 52 Line entity spokes around a central point to act as the frame for our chart. By setting an appropriate value for each Line’s handleY and roll attributes means that when it comes to building the day spirals we just need to pivot those Lines to our spokes - positioning made easy!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">52</span>; i++) {
+
+                scrawl.<span class="hljs-title function_">makeLine</span>({
+
+                    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`week-line-<span class="hljs-subst">${i}</span>`</span>),
+                    <span class="hljs-attr">group</span>: chartGroup,
+
+                    <span class="hljs-attr">start</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">220</span>],
+                    <span class="hljs-attr">end</span>: [<span class="hljs-number">200</span>, (<span class="hljs-number">220</span> - <span class="hljs-number">120</span>)],
+                    <span class="hljs-attr">handle</span>: [<span class="hljs-number">0</span>, ((i / <span class="hljs-number">52</span>) * (<span class="hljs-number">120</span> / <span class="hljs-number">3</span>)) + <span class="hljs-number">30</span>],
+                    <span class="hljs-attr">roll</span>: (i / <span class="hljs-number">52</span>) * <span class="hljs-number">360</span>,
+                    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>We don’t need to see the spokes in the finished chart</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
+                });
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>Build each day’s spiral</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">mon</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;mon&#x27;</span>, (data.<span class="hljs-property">mon</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">tue</span>, <span class="hljs-number">0.042</span>, <span class="hljs-string">&#x27;tue&#x27;</span>, (data.<span class="hljs-property">tue</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">wed</span>, <span class="hljs-number">0.084</span>, <span class="hljs-string">&#x27;wed&#x27;</span>, (data.<span class="hljs-property">wed</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">thu</span>, <span class="hljs-number">0.126</span>, <span class="hljs-string">&#x27;thu&#x27;</span>, (data.<span class="hljs-property">thu</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">fri</span>, <span class="hljs-number">0.168</span>, <span class="hljs-string">&#x27;fri&#x27;</span>, (data.<span class="hljs-property">fri</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">sat</span>, <span class="hljs-number">0.21</span>, <span class="hljs-string">&#x27;sat&#x27;</span>, (data.<span class="hljs-property">sat</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">sun</span>, <span class="hljs-number">0.252</span>, <span class="hljs-string">&#x27;sun&#x27;</span>, (data.<span class="hljs-property">sun</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>We will render this Cell manually, outside of the Display cycle animation loop</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            cell.<span class="hljs-title function_">clear</span>();
+            scrawl.<span class="hljs-title function_">createImageFromCell</span>(cell, assetName);
+            cell.<span class="hljs-title function_">compile</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>Clean up our mess</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-property">library</span>.<span class="hljs-title function_">purge</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;&#x27;</span>));
+        })
+        .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;buildChart error&#x27;</span>, e));
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <h4 id="helper-function">Helper function</h4>
+<p>Function to fetch and parse Wikipedia page view timeseries data</p>
 <ul>
 <li>Wikipedia implements the <a href="https://www.mediawiki.org/wiki/API:Main_page">Mediawiki Action API</a>, meaning we can retrieve page views statistics by calling the appropriate endpoint URL</li>
 <li>The fetch call is asynchronous, thus all calls get wrapped in Javascript Promises</li>
@@ -316,401 +670,6 @@
 
             <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e);
             <span class="hljs-title function_">reject</span>(data);
-        });
-    });
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
-              <p>We export a function which issues the fetch call and then builds a chart in a Cell. The function requires the following arguments:</p>
-<ul>
-<li><strong>page</strong> - String value of the Wikipedia page, whose views statistics are to be charted: <a href="https://en.wikipedia.org/wiki/__Cat">https://en.wikipedia.org/wiki/__Cat</a>__</li>
-<li><strong>canvasWrapper</strong> - a Scrawl-canvas Canvas wrapper object</li>
-<li><em><strong>reqs</strong></em> - (not required) a Javascript Object containing key:value attributes that help define the appearance of the chart.</li>
-</ul>
-<p>We include functionality to action the following attributes in the reqs object argument: </p>
-<ul>
-<li><em><strong>size</strong></em> - Number - the size of the (square) generated chart. Default: 400</li>
-<li><em><strong>backgroundColor</strong></em> - CSS Color String - the background color of the generated chart. Default: ‘transparent’</li>
-<li><em><strong>minimumColor</strong></em> - CSS Color String - color used to display low daily views datapoints. Default: ‘azure’</li>
-<li><em><strong>medialColor</strong></em> - CSS Color String - color used to display average daily views datapoints. Default: ‘blue’</li>
-<li><em><strong>maximumColor</strong></em> - CSS Color String - color used to display high daily views datapoints. Default: ‘red’</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">page, canvasWrapper, reqs = {}</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
-              </div>
-              <p>We will eventually return a Picture entity to the calling invocation - but generating it takes time, hence we return a promise and resolve the Picture entity in due course</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
-              <p>We will create a new Cell for the chart, fabricate the required entitys, render the Cell, then capture the output into a single Picture entity which we assign to the canvasWrapper’s Group. After this all completes we can kill the Cell, its Group, and all of the Group’s entitys</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> cell = canvasWrapper.<span class="hljs-title function_">buildCell</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-cell`</span>,
-            <span class="hljs-attr">width</span>: reqs.<span class="hljs-property">size</span> || <span class="hljs-number">400</span>,
-            <span class="hljs-attr">height</span>: reqs.<span class="hljs-property">size</span> || <span class="hljs-number">400</span>,
-            <span class="hljs-attr">cleared</span>: <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">compiled</span>: <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">backgroundColor</span>: reqs.<span class="hljs-property">backgroundColor</span> || <span class="hljs-string">&#x27;transparent&#x27;</span>,
-        });
-
-        <span class="hljs-keyword">const</span> chartGroup = cell.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;group&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>Use Color objects to determine the appropriate color for each charted view value. Again, we’ll kill these objects once we’ve finished with them</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> lowViewsFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-low-views`</span>,
-            <span class="hljs-attr">minimumColor</span>: reqs.<span class="hljs-property">minimumColor</span> || <span class="hljs-string">&#x27;azure&#x27;</span>,
-            <span class="hljs-attr">maximumColor</span>: reqs.<span class="hljs-property">medialColor</span> || <span class="hljs-string">&#x27;blue&#x27;</span>,
-        });
-
-        <span class="hljs-keyword">const</span> highViewsFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-high-views`</span>,
-            <span class="hljs-attr">minimumColor</span>: reqs.<span class="hljs-property">medialColor</span> || <span class="hljs-string">&#x27;blue&#x27;</span>,
-            <span class="hljs-attr">maximumColor</span>: reqs.<span class="hljs-property">maximumColor</span> || <span class="hljs-string">&#x27;red&#x27;</span>,
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>We start by retrieving the data from Wikipedia</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">getData</span>(page)
-        .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <p>Some initial calculations</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> maxViews = data.<span class="hljs-property">max</span>,
-                minViews = data.<span class="hljs-property">min</span>,
-                medianViews = (maxViews - minViews) / <span class="hljs-number">2</span>;
-
-            <span class="hljs-keyword">const</span> maxDataLen = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(data.<span class="hljs-property">mon</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">tue</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">wed</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">thu</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">fri</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">sat</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">sun</span>.<span class="hljs-property">length</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>Each day series is a spiral of Line entitys. We’ll cut down on the code by creating a factory to generate each day’s spiral</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> buildDayChart = <span class="hljs-keyword">function</span> (<span class="hljs-params">dayData, offsetVal, dayName, missFirst</span>) {
-
-                <span class="hljs-keyword">let</span> currentWeek, currentYear, nextWeek, nextYear;
-
-                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dayData.<span class="hljs-property">length</span> - <span class="hljs-number">2</span>; i &lt; iz; i++) {
-
-                    <span class="hljs-keyword">if</span> (missFirst) {
-
-                        currentWeek = (i + <span class="hljs-number">1</span>) % <span class="hljs-number">52</span>;
-                        currentYear = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((i + <span class="hljs-number">1</span>) / <span class="hljs-number">52</span>);
-
-                        nextWeek = (i + <span class="hljs-number">2</span>) % <span class="hljs-number">52</span>;
-                        nextYear = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((i + <span class="hljs-number">2</span>) / <span class="hljs-number">52</span>);
-
-                        nextWeek = nextWeek % <span class="hljs-number">52</span>;
-                    }
-                    <span class="hljs-keyword">else</span> {
-
-                        currentWeek = i % <span class="hljs-number">52</span>;
-                        currentYear = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(i / <span class="hljs-number">52</span>);
-
-                        nextWeek = (i + <span class="hljs-number">1</span>) % <span class="hljs-number">52</span>;
-                        nextYear = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((i + <span class="hljs-number">1</span>) / <span class="hljs-number">52</span>);
-
-                        nextWeek = nextWeek % <span class="hljs-number">52</span>;
-                    }
-
-                    <span class="hljs-keyword">let</span> views = dayData[i] - minViews,
-                        dataColor;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>Get the appropriate color for this data point’s value</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (views &lt; medianViews) dataColor = lowViewsFactory.<span class="hljs-title function_">getRangeColor</span>(views / medianViews);
-                    <span class="hljs-keyword">else</span> dataColor = highViewsFactory.<span class="hljs-title function_">getRangeColor</span>((views - medianViews) / medianViews);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p>Each line represents a siongle data point, positioned in its appropriate place on the spiral by reference to the chart’s spoke lines</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    scrawl.<span class="hljs-title function_">makeLine</span>({
-
-                        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-<span class="hljs-subst">${dayName}</span>-line-<span class="hljs-subst">${i}</span>`</span>,
-                        <span class="hljs-attr">group</span>: chartGroup,
-
-                        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">5</span>,
-                        <span class="hljs-attr">strokeStyle</span>: dataColor,
-
-                        <span class="hljs-attr">path</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-week-line-<span class="hljs-subst">${currentWeek}</span>`</span>,
-                        <span class="hljs-attr">pathPosition</span>: (currentYear * <span class="hljs-number">0.33</span>) + offsetVal,
-                        <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
-
-                        <span class="hljs-attr">endPath</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-week-line-<span class="hljs-subst">${nextWeek}</span>`</span>,
-                        <span class="hljs-attr">endPathPosition</span>: (nextYear * <span class="hljs-number">0.33</span>) + offsetVal,
-                        <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
-
-                        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-                    });
-                }
-            }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p>A year is made up of 52 weeks. We create 52 Line entity spokes around a central point to act as the frame for our chart. By setting an appropriate value for each Line’s handleY and roll attributes means that when it comes to building the day spirals we just need to pivot those Lines to our spokes - positioning made easy!</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">52</span>; i++) {
-
-                scrawl.<span class="hljs-title function_">makeLine</span>({
-
-                    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-week-line-<span class="hljs-subst">${i}</span>`</span>,
-                    <span class="hljs-attr">group</span>: chartGroup,
-
-                    <span class="hljs-attr">start</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">220</span>],
-                    <span class="hljs-attr">end</span>: [<span class="hljs-number">200</span>, (<span class="hljs-number">220</span> - <span class="hljs-number">120</span>)],
-                    <span class="hljs-attr">handle</span>: [<span class="hljs-number">0</span>, ((i / <span class="hljs-number">52</span>) * (<span class="hljs-number">120</span> / <span class="hljs-number">3</span>)) + <span class="hljs-number">30</span>],
-                    <span class="hljs-attr">roll</span>: (i / <span class="hljs-number">52</span>) * <span class="hljs-number">360</span>,
-                    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <p>We don’t need to see the spokes in the finished chart; we just need them positioned correctly</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
-                });
-            }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>Build each day’s spiral</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">mon</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;mon&#x27;</span>, (data.<span class="hljs-property">mon</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
-            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">tue</span>, <span class="hljs-number">0.042</span>, <span class="hljs-string">&#x27;tue&#x27;</span>, (data.<span class="hljs-property">tue</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
-            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">wed</span>, <span class="hljs-number">0.084</span>, <span class="hljs-string">&#x27;wed&#x27;</span>, (data.<span class="hljs-property">wed</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
-            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">thu</span>, <span class="hljs-number">0.126</span>, <span class="hljs-string">&#x27;thu&#x27;</span>, (data.<span class="hljs-property">thu</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
-            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">fri</span>, <span class="hljs-number">0.168</span>, <span class="hljs-string">&#x27;fri&#x27;</span>, (data.<span class="hljs-property">fri</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
-            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">sat</span>, <span class="hljs-number">0.21</span>, <span class="hljs-string">&#x27;sat&#x27;</span>, (data.<span class="hljs-property">sat</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
-            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">sun</span>, <span class="hljs-number">0.252</span>, <span class="hljs-string">&#x27;sun&#x27;</span>, (data.<span class="hljs-property">sun</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p>Now all the chart entitys have been created, we no longer need the Color objects</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            lowViewsFactory.<span class="hljs-title function_">kill</span>();
-            highViewsFactory.<span class="hljs-title function_">kill</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p>We will render this Cell manually, outside of the Display cycle animation loop</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            cell.<span class="hljs-title function_">clear</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p>Setup the cell to capture its image as it compiles …</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-title function_">createImageFromCell</span>(cell, <span class="hljs-literal">true</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>… and invoke the compile step</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            cell.<span class="hljs-title function_">compile</span>()</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>The compile step will (eventually) add a hidden &lt;img&gt; element to the DOM. This means we no longer require the Cell or its entitys. We need to kill the Cell’s Group before we kill the Cell itself</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            chartGroup.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
-            cell.<span class="hljs-title function_">kill</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>Now we can create a single Picture entity for display in the canvasWrapper’s &lt;canvas&gt; element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> img = scrawl.<span class="hljs-title function_">makePicture</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-chart-image`</span>,
-                <span class="hljs-attr">group</span>: canvasWrapper.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-
-                <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-cell-image`</span>,
-
-                <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-                <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-            });
-
-            <span class="hljs-title function_">resolve</span>(img);
-        })
-        .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
-
-            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;buildChart error&#x27;</span>, e);
-            <span class="hljs-title function_">resolve</span>(<span class="hljs-literal">false</span>);
         });
     });
 };</pre></div></div>
