@@ -39,11 +39,48 @@ scrawl.makeFilter({
 });
 
 
+// Make an object to hold functions we'll use for UI
+const setCursorTo = {
+
+    auto: () => {
+        canvas.set({
+            css: {
+                cursor: 'auto',
+            },
+        });
+    },
+    grab: () => {
+        canvas.set({
+            css: {
+                cursor: 'grab',
+            },
+        });
+    },
+    grabbing: () => {
+        canvas.set({
+            css: {
+                cursor: 'grabbing',
+            },
+        });
+    },
+};
+
+// Create a Group to hold the draggable artefacts, for easier user action collision detection
+const pins = scrawl.makeGroup({
+
+    name: name('my-pins'),
+    host: canvas.get('baseName'),
+    checkForEntityHover: true,
+    onEntityHover: setCursorTo.grab,
+    onEntityNoHover: setCursorTo.auto,
+});
+
+
 // Define the artefacts that will be used as `pivots` and `paths` before the artefacts that use them as such
 scrawl.makeWheel({
 
     name: name('pin-1'),
-    order: 2,
+    group: pins,
 
     startX: 100,
     startY: 100,
@@ -83,52 +120,6 @@ scrawl.makeWheel({
     name: name('pin-7'),
     startY: 500,
 });
-
-// Make an object to hold functions we'll use for UI
-const setCursorTo = {
-
-    auto: () => {
-        canvas.set({
-            css: {
-                cursor: 'auto',
-            },
-        });
-    },
-    pointer: () => {
-        canvas.set({
-            css: {
-                cursor: 'pointer',
-            },
-        });
-    },
-    grabbing: () => {
-        canvas.set({
-            css: {
-                cursor: 'grabbing',
-            },
-        });
-    },
-};
-
-// Create a Group to hold the draggable artefacts, for easier user action collision detection
-const pins = scrawl.makeGroup({
-
-    name: name('my-pins'),
-    host: canvas.get('baseName'),
-    checkForEntityHover: true,
-    onEntityHover: setCursorTo.pointer,
-    onEntityNoHover: setCursorTo.auto,
-
-}).addArtefacts(
-    name('pin-1'), 
-    name('pin-2'), 
-    name('pin-3'), 
-    name('pin-4'), 
-    name('pin-5'), 
-    name('pin-6'), 
-    name('pin-7'),
-);
-
 
 // Create the Shape entitys the Loom will use as its tracks - `fromPath`, `toPath`
 scrawl.makeQuadratic({
@@ -237,7 +228,7 @@ scrawl.makeDragZone({
     exposeCurrentArtefact: true,
     preventTouchDefaultWhenDragging: true,
     updateOnStart: setCursorTo.grabbing,
-    updateOnEnd: setCursorTo.pointer,
+    updateOnEnd: setCursorTo.grab,
 });
 
 

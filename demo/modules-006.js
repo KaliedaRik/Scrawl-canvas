@@ -23,7 +23,6 @@ const {
     'st-2-canvas': canvas2,
     'st-3-canvas': canvas3,
     'st-4-canvas': canvas4,
-    'st-5-canvas': canvas5,
 } = scrawl.library.canvas;
 
 
@@ -67,16 +66,6 @@ const canvas4api = initCanvas4({
 });
 
 
-// #### Infographic canvas 5
-import initCanvas5 from './modules/demo-m006-c5.js';
-
-const canvas5api = initCanvas5({
-    canvas: canvas5,
-    namespace: name('st-5'),
-    scrawl,
-});
-
-
 // #### Report animation
 import { reportSpeed } from './utilities.js';
 
@@ -88,7 +77,6 @@ const report = reportSpeed('#reportmessage', function () {
     if (canvas2api.animation.isRunning()) running.push('st-2-canvas');
     if (canvas3api.animation.isRunning()) running.push('st-3-canvas');
     if (canvas4api.animation.isRunning()) running.push('st-4-canvas');
-    if (canvas5api.animation.isRunning()) running.push('st-5-canvas');
 
     if (running.length) return `Running animations: ${running.join('; ')}`;
     return 'Running animations: none';

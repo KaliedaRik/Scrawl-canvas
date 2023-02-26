@@ -155,7 +155,7 @@
         font-size: 1.6rem;
       }
 
-      /* Second infographics panel styling - larger screen widths */
+      /* Second infographics panel styling &ndash; larger screen widths */
       #st-2 {
         grid-template-columns: 1fr 1fr;
       }
@@ -174,23 +174,41 @@
 
 <body>
 
-  <h1 tabindex="0"><a href="index.html">Scrawl-canvas v8</a> - Modules test 006</h1>
+  <h1 tabindex="0"><a href="index.html">Scrawl-canvas v8</a> &ndash; Modules test 006</h1>
   <h2>Animation observer; Scrollytelling</h2>
 
   <section>
-    <p>This demo covers/tests <strong>progressive enhancement</strong>, <strong>responsive canvases</strong> and <strong>scrollytelling</strong> - page-based infographics which unfold as the user scrolls down the page</p>
+    <p>This demo covers/tests <em>progressive enhancement</em>, <em>responsive canvases</em> and <em>scrollytelling</em> &ndash; page-based infographics which unfold as the user scrolls down the page</p>
 
     <ul>
-      <li>Progressive enhancement - the page should display and tell its story when the user has disabled Javascript in their browser. All key data should be accessible to users using, for instance, screen readers. And users should be able to tab through the page contents even when Javascript is enabled - they should not be held hostage to the scroll!</li>
+      <li><strong>Progressive enhancement</strong> &ndash; the page should display and tell its story when the user has disabled Javascript in their browser. All key data should be accessible to users using, for instance, screen readers./li>
 
-      <li>Responsive - the infographic elements should tell their animated stories on both mobile and desktop devices, including user interaction.</li>
+      <li><strong>Responsive</strong> &ndash; the infographic elements should tell their animated stories on both mobile and desktop devices, including user interaction.</li>
 
-      <li>The scrollytelling (an ugly word) experience should be as smooth as possible. It should also respect user preferences such as <em>prefers-reduced-motion</em> and <em>prefers-color-scheme</em>.</li>
+      <li>The scrollytelling (an ugly word) experience should offer an entirely <strong>smooth scrolling experience</strong>. It should also respect user preferences such as <strong>prefers-reduced-motion</strong>.</li>
+
+      <li>The user should also be able to use <strong>tab navigation</strong> to move quickly between different sections of the scrollytelling experience.</li>
     </ul>
 
-    <p><b>Touch test:</b> in theory the user should be able to scroll through the page and canvases should run/animate as/when they come into view and move through the viewport. The UX on desktop seems okay; on touch-based devices the results - especially for the full-width infographic canvases - are not satisfactory. We need to think of a different approach if we want SC to be useful for scroll-based, animation-heavy storytelling.</p>
+    <div class="testinfo">
+      <h4>Test purpose</h4>
+      <ul>
+        <li>Create several canvases, both user-controlled responsive and banner.</li>
+        <li>Check that each canvas element's related animation object only runs when the canvas is visible in the viewport.</li>
+        <li>Check that the animations in each canvas perform as expected when the user scrolls the page both down, and up.</li>
+        <li>Check that animations do not run when the user changes their <em>prefers-reduced-motion</em> preference to <em>reduced motion</em>.</li>
+        <li>Chech that the page still loads and displays an image-based infographic when the user disables Javascript for their browser.</li>
+      </ul>
 
-    <p><strong>Canvas 1.</strong> The first canvas - fixed-dimensions, unresponsive - stays positioned in the flow of the page, moving with the copy above and below it. The canvas displays its animationObserver position within the viewport. The graphic text in the canvas will size responsively alongside the surrounding article's text size (as set in CSS)</p>
+      <p><b>Touch test:</b> touch moves up/down the screen should scroll the page as expected, except when the user press-moves an information label in the third canvas which should instead drag the label around the canvas, not scroll the screen.</p>
+
+      <p><a href="../docs/demo/modules-006.html">Annotated code</a></p>
+    </div>
+
+    <p>&nbsp;</p>
+
+    <p><strong>Canvas 1.</strong> The first canvas &ndash; fixed-dimensions, unresponsive &ndash; stays positioned in the flow of the page, moving with the copy above and below it. The canvas displays its animationObserver position within the viewport. The graphic text in the canvas will size responsively alongside the surrounding article's text size (as set in CSS). Canvas also respects the user's "refers-reduced-motion" preference, displaying a static image in reduced-motion enviroments.</p>
+
   </section>
 
   <div id="reportmessage">This browser environment has disabled Javascript</div>
@@ -250,19 +268,6 @@
         alt="Placeholder for first canvas infographic, showing position of canvas in viewport"
       />
     </canvas>
-  </div>
-
-  <div class="testinfo">
-    <h4>Test purpose</h4>
-    <ul>
-      <li>Create several canvases, both user-controlled responsive and banner.</li>
-      <li>Use each canvas wrapper's `here` object's `inViewportTop`, `inViewportCenter` and `inViewportBase` attributes to control their displays.</li>
-      <li>Check that each canvas element's related animation object only runs when the canvas is visible in the viewport.</li>
-    </ul>
-
-    <p><b>Touch test:</b> see first paragraph above</p>
-
-    <p><a href="../docs/demo/modules-006.html">Annotated code</a></p>
   </div>
 
   <section tabindex="0">
@@ -330,7 +335,7 @@
   <section tabindex="0">
     <p>Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi lacinia molestie dui. Praesent blandit dolor. Sed non quam. In vel mi sit amet augue congue elementum. Morbi in ipsum sit amet pede facilisis laoreet. Donec lacus nunc, viverra nec, blandit vel, egestas et, augue. Vestibulum tincidunt malesuada tellus. Ut ultrices ultrices enim. Curabitur sit amet mauris. Morbi in dui quis est pulvinar ullamcorper.</p>
 
-    <p><strong>Canvas 3.</strong> The third canvas is interactive - the yellow labels can be dragged around the canvas. It is also responsive, rearranging the labels and resizing the arrow as the browser viewport changes shape and size.</p>
+    <p><strong>Canvas 3.</strong> The third canvas is <strong>interactive</strong> &ndash; the yellow labels can be dragged around the canvas. It is also <strong>responsive</strong> &ndash; updating and rearranging the labels, and resizing/reorienting the arrow, as the browser viewport changes shape and size. During scrolling, the arrow's outline will progress around the arrow. Canvas also respects the user's "refers-reduced-motion" preference, displaying an image appropriate for the canvas's shape in reduced-motion enviroments; the image will update as the browser's viewport shape changes.</p>
   </section>
 
   <div 
@@ -400,9 +405,13 @@
   <section tabindex="0">
     <p>Nulla facilisi. Integer lacinia sollicitudin massa. Cras metus. Sed aliquet risus a tortor. Integer id quam. Morbi mi. Quisque nisl felis, venenatis tristique, dignissim in, ultrices sit amet, augue. Proin sodales libero eget ante. Nulla quam. Aenean laoreet. Vestibulum nisi lectus, commodo ac, facilisis ac, ultricies eu, pede.</p>
 
+    <p>Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit.</p>
+
+    <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit.</p>
+
     <p>Ut orci risus, accumsan porttitor, cursus quis, aliquet eget, justo. Sed pretium blandit orci. Ut eu diam at pede suscipit sodales. Aenean lectus elit, fermentum non, convallis id, sagittis at, neque. Nullam mauris orci, aliquet et, iaculis et, viverra vitae, ligula. Nulla ut felis in purus aliquam imperdiet. Maecenas aliquet mollis lectus. Vivamus consectetuer risus et tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.</p>
 
-    <p><strong>Canvas 4.</strong> The fourth canvas will ???</p>
+    <p><strong>Canvas 4.</strong> The fourth canvas displays an animated image which moves as the user scrolls through the page.</p>
   </section>
 
   <div 
@@ -455,54 +464,11 @@
 
     <p>In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi.</p>
 
-    <p><strong>Canvas 5.</strong> The last canvas will play a video and ???</p>
-  </section>
-
-  <!--
-    The last canvas will play a video and ???
-  -->
-  <div 
-    id="st-5"
-    class="scrollytelling"
-    tabindex="0"
-  >
-    <canvas 
-      data-scrawl-canvas 
-      id="st-5-canvas" 
-      data-base-background-color="teal"
-      data-manifest='{
-        "class": "st-5-asset",
-        "placeholder": "st-5-placeholder"
-      }'
-    >
-      <img 
-        id="st-5-placeholder"
-        class="st-5-asset"
-        src="img/demo-m006-c5-img.webp"
-        alt="Placeholder for fifth canvas infographic, showing various parts of a video" />
-    </canvas>
-  </div>
-
-  <section tabindex="0">
-    <p>Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi lacinia molestie dui. Praesent blandit dolor.</p>
-
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.</p>
-
-    <p>Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit.</p>
-
-    <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit.</p>
-
-    <p>Nulla facilisi. Integer lacinia sollicitudin massa. Cras metus. Sed aliquet risus a tortor. Integer id quam. Morbi mi. Quisque nisl felis, venenatis tristique, dignissim in, ultrices sit amet, augue. Proin sodales libero eget ante. Nulla quam. Aenean laoreet. Vestibulum nisi lectus, commodo ac, facilisis ac, ultricies eu, pede.</p>
-
     <p>Ut orci risus, accumsan porttitor, cursus quis, aliquet eget, justo. Sed pretium blandit orci. Ut eu diam at pede suscipit sodales. Aenean lectus elit, fermentum non, convallis id, sagittis at, neque. Nullam mauris orci, aliquet et, iaculis et, viverra vitae, ligula. Nulla ut felis in purus aliquam imperdiet. Maecenas aliquet mollis lectus. Vivamus consectetuer risus et tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.</p>
 
     <p>Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi lacinia molestie dui. Praesent blandit dolor.</p>
 
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.</p>
-
-    <p>Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit.</p>
-
-    <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit.</p>
 
     <p>Nulla facilisi. Integer lacinia sollicitudin massa. Cras metus. Sed aliquet risus a tortor. Integer id quam. Morbi mi. Quisque nisl felis, venenatis tristique, dignissim in, ultrices sit amet, augue. Proin sodales libero eget ante. Nulla quam. Aenean laoreet. Vestibulum nisi lectus, commodo ac, facilisis ac, ultricies eu, pede.</p>
 

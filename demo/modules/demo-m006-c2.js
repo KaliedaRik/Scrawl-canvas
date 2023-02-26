@@ -124,7 +124,7 @@ export default function (items) {
             attribute: 'globalAlpha',
             start: 0,
             end: 1,
-            engine: 'easeIn',
+            engine: 'easeIn3',
         },{
             attribute: 'radius',
             start: 0,
