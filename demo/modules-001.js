@@ -2,11 +2,9 @@
 // Scrawl-canvas modularized code - London crime charts
 //
 // Related files:
-// + [London crime graphic module](./modules/london-crime-graphic.html)
 // + [London crime lines module](./modules/london-crime-lines.html)
 // + [London crime stacked bar module](./modules/london-crime-stacked-bars.html)
 // + [Simple chart frame module](./modules/simple-chart-frame.html)
-// + [Simple chart frame tests module](./modules/simple-chart-frame-tests.html)
 // + [Simple graph lines module](./modules/simple-graph-lines.html)
 // + [Simple graph stacked bars module](./modules/simple-graph-stacked-bars.html)
 //
