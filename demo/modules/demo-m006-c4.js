@@ -1,7 +1,8 @@
-// TODO: write up purpose of module
-
-
-
+// # Demo Modules 006
+// Animation observer; Scrollytelling: Fourth canvas
+//
+// Related files:
+// + [Scrollytelling - main demo](../modules-006.html)
 import {
     loader,
     calculateTargetPosition,

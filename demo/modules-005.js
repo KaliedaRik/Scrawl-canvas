@@ -1,6 +1,14 @@
 // # Demo Modules 005
 // Accessible GUI-based simple canvas editor
 
+// Related files:
+// + [Canvas minimap module](./modules/canvas-minimap.html)
+// + [Canvas scene editor module](./modules/canvas-scene-editor.html)
+// + [DOM entity editor module](./modules/dome-entity-editor.html) - which has a related CSS file
+// + [Entity copy-paste module](./modules/entity-copy-paste.html)
+// + [Entity manipulation GUI module](./modules/entity-manipulation-gui.html)
+// + [Entity navigation module](./modules/entity-navigation.html)
+//
 // [Run code](../../demo/modules-005.html)
 import * as scrawl from '../source/scrawl.js';
 

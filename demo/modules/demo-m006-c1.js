@@ -1,6 +1,8 @@
-// TODO: write up purpose of module
-
-
+// # Demo Modules 006
+// Animation observer; Scrollytelling: First canvas
+//
+// Related files:
+// + [Scrollytelling - main demo](../modules-006.html)
 import { loader, reducedMotionFunctions } from './demo-m006-utils.js';
 
 export default function (items) {

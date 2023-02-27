@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>demo-m006-utils.js</title>
+  <title>Demo Modules 006</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -47,11 +47,6 @@
                 
                 <a class="source" href="demo-m006-c4.html">
                   ./demo/modules/demo-m006-c4.js
-                </a>
-              
-                
-                <a class="source" href="demo-m006-c5.html">
-                  ./demo/modules/demo-m006-c5.js
                 </a>
               
                 
@@ -226,12 +221,6 @@
     
     <ul class="sections">
         
-          <li id="title">
-              <div class="annotation">
-                  <h1>demo-m006-utils.js</h1>
-              </div>
-          </li>
-        
         
         
         <li id="section-1">
@@ -239,6 +228,24 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
+              </div>
+              <h1 id="demo-modules-006">Demo Modules 006</h1>
+<p>Animation observer; Scrollytelling: utility functions</p>
+<p>Related files:</p>
+<ul>
+<li><a href="../modules-006.html">Scrollytelling - main demo</a></li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h4 id="asset-loader">Asset loader</h4>
 <p>Assets are defined in the canvas element/shadow DOM in the HTML file</p>
@@ -273,11 +280,11 @@
         </li>
         
         
-        <li id="section-2">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-2">&#x00a7;</a>
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="scrollytelling-target-range">Scrollytelling target range</h4>
 <p>Scrollytelling often relies on an HTML element remaining sticky withing a parent or neighbour element. We can use the scroll progress of this target element to supply a timeline position which can advance/reverse a set of tweens/actions associated with that timeline in line with the user’s scroll actions</p>
@@ -310,11 +317,11 @@
         </li>
         
         
-        <li id="section-3">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>We start the animation after the target top moves above the viewport top</p>
 <ul>
@@ -328,11 +335,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>We clamp the result to the range 0 - 1000</p>
 <ul>
@@ -351,11 +358,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="reduce-motion-functionality">Reduce motion functionality</h4>
 <p>A convenience function to add the <code>reduceMotionAction</code> and <code>noPreferenceMotionAction</code> attributes to a canvas. Takes an Object argument containing the following attributes:</p>
@@ -394,10 +401,23 @@
             animation.<span class="hljs-title function_">set</span>({ commence });
         },
     }
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <h4 id="reduce-motion-functionality">Reduce motion functionality</h4>
+<p>Used to reconcile static image dimensions with canvas dimensions, so the images don’t stretch or distort when shown in the canvas</p>
 
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">staticPlaceholderCorrection</span> = (<span class="hljs-params">img</span>) =&gt; {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">staticPlaceholderCorrection</span> = (<span class="hljs-params">img</span>) =&gt; {
 
     <span class="hljs-keyword">let</span> placeholderRatio = <span class="hljs-number">0</span>,
         width = <span class="hljs-number">0</span>,

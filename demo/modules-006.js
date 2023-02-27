@@ -1,15 +1,19 @@
 // # Demo Modules 006
 // Animation observer; Scrollytelling
 
+// Related files:
+// + [First canvas module](./modules/demo-m006-c1.html)
+// + [Second canvas module](./modules/demo-m006-c2.html)
+// + [Third canvas module](./modules/demo-m006-c3.html)
+// + [Fourth canvas module](./modules/demo-m006-c4.html)
+// + [Demo utilities helper module](./modules/demo-m006-utils.html)
+//
 // [Run code](../../demo/modules-006.html)
+import * as scrawl from '../source/scrawl.js';
 
 
 // Fix CSS styling - defaults to no JS display which needs to be updated
 document.querySelector('body').classList.add('javascript-enabled');
-
-
-// Import Scrawl-canvas from wherever
-import * as scrawl from '../source/scrawl.js';
 
 
 // Namespace boilerplate

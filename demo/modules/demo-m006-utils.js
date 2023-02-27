@@ -1,3 +1,10 @@
+// # Demo Modules 006
+// Animation observer; Scrollytelling: utility functions
+//
+// Related files:
+// + [Scrollytelling - main demo](../modules-006.html)
+
+
 // #### Asset loader
 // Assets are defined in the canvas element/shadow DOM in the HTML file
 export const loader = (canvas, scrawl) => {
@@ -97,6 +104,8 @@ export const reducedMotionFunctions = (items) => {
 };
 
 
+// #### Reduce motion functionality
+// Used to reconcile static image dimensions with canvas dimensions, so the images don't stretch or distort when shown in the canvas
 export const staticPlaceholderCorrection = (img) => {
 
     let placeholderRatio = 0,
@@ -130,9 +139,3 @@ export const staticPlaceholderCorrection = (img) => {
         }
     };
 };
-
-
-
-
-
-
