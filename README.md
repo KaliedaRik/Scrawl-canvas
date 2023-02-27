@@ -130,15 +130,12 @@ import * as scrawl from 'scrawl-canvas';
 ```
 
 ## Local development and testing
-After forking this repo down to your local machine, `cd` into the scrawl-canvas folder, run `yarn install` or `npm install` (for the local build toolchain - the library itself has no external dependencies) and start a local server. For instance if you have [light-server](https://github.com/txchen/light-server) installed:
+After forking this repo down to your local machine, `cd` into the scrawl-canvas folder, run `yarn install` or `npm install` (for the local build toolchain - the library itself has no external dependencies) and start a local server.
 
 ```sh
 $> cd ./path/to/Scrawl-canvas
 $> yarn install
-$> light-server --serve . --open
-
-light-server is listening at http://0.0.0.0:4000
-  serving static dir: .
+$> yarn dev
 ```
 
 ### Code visualisation
