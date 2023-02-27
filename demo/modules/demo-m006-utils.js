@@ -104,7 +104,7 @@ export const reducedMotionFunctions = (items) => {
 };
 
 
-// #### Reduce motion functionality
+// #### Static placeholder correction
 // Used to reconcile static image dimensions with canvas dimensions, so the images don't stretch or distort when shown in the canvas
 export const staticPlaceholderCorrection = (img) => {
 
