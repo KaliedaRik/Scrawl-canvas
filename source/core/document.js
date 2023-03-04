@@ -286,23 +286,37 @@ const addInitialCanvasElement = function (el) {
 // `Exported function` (to modules and scrawl object). Parse the DOM, looking for a specific &lt;canvas> element; then create a __Canvas__ artefact and __Cell__ asset wrapper for it.
 const getCanvas = function (search) {
 
-    let el = document.querySelector(search),
-        canvas = false;
+    const c = canvas[search];
 
-    if (el) canvas = addInitialCanvasElement(el);
+    if (c) {
+        setCurrentCanvas(c);
+        return c;
+    }
 
-    setCurrentCanvas(canvas);
-    return canvas;
+    let el = document.querySelector(`#${search}`);
+
+    if (el) {
+        const newCanvas = addInitialCanvasElement(el);
+        setCurrentCanvas(newCanvas);
+        return newCanvas;
+    }
+    return false;
 };
 
 // `Exported function` (to modules and scrawl object). Parse the DOM, looking for a specific element; then create a __Stack__ artefact wrapper for it.
 const getStack = function (search) {
 
-    let el = document.querySelector(search),
-        stack;
+    const s = stack[search];
 
-    if (el) stack = addInitialStackElement(el);
-    return stack;
+    if (s) return s;
+
+    let el = document.querySelector(`#${search}`);
+
+    if (el) {
+        const newStack = addInitialStackElement(el);
+        return newStack;
+    }
+    return false;
 };
 
 // Scrawl-canvas expects one canvas element (if any canvases are present) to act as the 'current' canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using __scrawl.setCurrentCanvas__

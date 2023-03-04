@@ -2956,7 +2956,7 @@ interface AddStackInputs extends StackFactoryInputs {
     name?: string;
 }
 export function addStack(items?: AddStackInputs): StackInstance;
-export function getStack(item: string): StackInstance;
+export function getStack(item: string): StackInstance | boolean;
 
 interface AddCanvasInputs extends CanvasFactoryInputs {
     element?: any;
@@ -2964,7 +2964,7 @@ interface AddCanvasInputs extends CanvasFactoryInputs {
     name?: string;
 }
 export function addCanvas(items?: AddCanvasInputs): CanvasInstance;
-export function getCanvas(item: string): CanvasInstance;
+export function getCanvas(item: string): CanvasInstance | boolean;
 export function setCurrentCanvas(item: CanvasInstance | string): void;
 
 

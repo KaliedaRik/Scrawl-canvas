@@ -39,7 +39,7 @@ let piccie = scrawl.makePicture({
 
     name: 'river-pic',
 
-    imageSource: './img/river.jpg',
+    imageSource: './img/river.webp',
 
     width: '100%',
     height: '100%',
