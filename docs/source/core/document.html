@@ -510,7 +510,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_canvas, generateUniqueString, isa_dom, pushUnique, removeItem, xt, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;
-<span class="hljs-keyword">import</span> { artefact, canvas, group, stack, css, xcss } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
+<span class="hljs-keyword">import</span> { artefact, canvas, cell, group, stack, css, xcss, purge } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
 
 <span class="hljs-keyword">import</span> { getPixelRatio, getIgnorePixelRatio } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./events.js&quot;</span>;
 
@@ -1090,19 +1090,32 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
-              <p><code>Exported function</code> (to modules and scrawl object). Parse the DOM, looking for a specific &lt;canvas&gt; element; then create a <strong>Canvas</strong> artefact and <strong>Cell</strong> asset wrapper for it.</p>
+              <p><code>Exported function</code> (to modules and scrawl object). Parse the DOM, looking for a specific &lt;canvas&gt; element id; then create a <strong>Canvas</strong> artefact and <strong>Cell</strong> asset wrapper for it.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getCanvas = <span class="hljs-keyword">function</span> (<span class="hljs-params">search</span>) {
 
-    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(search),
-        canvas = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${search}</span>`</span>);
 
-    <span class="hljs-keyword">if</span> (el) canvas = <span class="hljs-title function_">addInitialCanvasElement</span>(el);
+    <span class="hljs-keyword">const</span> c = canvas[search];
 
-    <span class="hljs-title function_">setCurrentCanvas</span>(canvas);
-    <span class="hljs-keyword">return</span> canvas;
+    <span class="hljs-keyword">if</span> (c) {
+
+        <span class="hljs-keyword">if</span> (el.<span class="hljs-property">dataset</span>.<span class="hljs-property">scrawlGroup</span> != <span class="hljs-literal">null</span>) {
+
+            <span class="hljs-title function_">setCurrentCanvas</span>(c);
+            <span class="hljs-keyword">return</span> c;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-title function_">purge</span>(search);
+    }
+
+    <span class="hljs-keyword">if</span> (el) {
+        <span class="hljs-keyword">const</span> newCanvas = <span class="hljs-title function_">addInitialCanvasElement</span>(el);
+        <span class="hljs-title function_">setCurrentCanvas</span>(newCanvas);
+        <span class="hljs-keyword">return</span> newCanvas;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
 };</pre></div></div>
             
         </li>
@@ -1120,11 +1133,21 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getStack = <span class="hljs-keyword">function</span> (<span class="hljs-params">search</span>) {
 
-    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(search),
-        stack;
+    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${search}</span>`</span>);
 
-    <span class="hljs-keyword">if</span> (el) stack = <span class="hljs-title function_">addInitialStackElement</span>(el);
-    <span class="hljs-keyword">return</span> stack;
+    <span class="hljs-keyword">const</span> s = stack[search];
+
+    <span class="hljs-keyword">if</span> (s) {
+
+        <span class="hljs-keyword">if</span> (el.<span class="hljs-property">dataset</span>.<span class="hljs-property">scrawlGroup</span> != <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> s;
+        <span class="hljs-keyword">else</span> <span class="hljs-title function_">purge</span>(search);
+    }
+
+    <span class="hljs-keyword">if</span> (el) {
+        <span class="hljs-keyword">const</span> newStack = <span class="hljs-title function_">addInitialStackElement</span>(el);
+        <span class="hljs-keyword">return</span> newStack;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
 };</pre></div></div>
             
         </li>

@@ -435,6 +435,11 @@
                 </a>
               
                 
+                <a class="source" href="dom-017.html">
+                  ./demo/dom-017.js
+                </a>
+              
+                
                 <a class="source" href="filters-001.html">
                   ./demo/filters-001.js
                 </a>
@@ -1172,6 +1177,87 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
+              <p>Get a full, dynamic report on the Scrawl-canvas library’s current contents</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">reportFullLibrary</span> = (<span class="hljs-params">scrawl</span>) =&gt; {
+
+    <span class="hljs-keyword">const</span> { 
+        anchor, anchornames,
+        animation, animationnames,
+        animationtickers, animationtickersnames,
+        artefact, artefactnames,
+        asset, assetnames,
+        canvas, canvasnames,
+        cell, cellnames,
+        element, elementnames,
+        entity, entitynames,
+        filter, filternames,
+        force, forcenames,
+        group, groupnames,
+        particle, particlenames,
+        spring, springnames,
+        stack, stacknames,
+        styles, stylesnames,
+        tween, tweennames,
+        unstackedelement, unstackedelementnames,
+        world, worldnames,
+    } = scrawl.<span class="hljs-property">library</span>;
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">compareObjectToArray</span> = (<span class="hljs-params">obj, arr</span>) =&gt; {
+
+        <span class="hljs-keyword">const</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(obj);
+
+        <span class="hljs-keyword">if</span> (keys.<span class="hljs-property">length</span> !== arr.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+        <span class="hljs-keyword">return</span> keys.<span class="hljs-title function_">every</span>(<span class="hljs-function"><span class="hljs-params">k</span> =&gt;</span> arr.<span class="hljs-title function_">includes</span>(k));
+    };
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">getSectionOutput</span> = (<span class="hljs-params">label, obj, arr</span>) =&gt; {
+
+        <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;animation&#x27;</span>, <span class="hljs-string">&#x27;animationtickers&#x27;</span>].<span class="hljs-title function_">includes</span>(label)) {
+            <span class="hljs-keyword">let</span> t = <span class="hljs-string">`<span class="hljs-subst">${label}</span>: <span class="hljs-subst">${arr.length}</span> (<span class="hljs-subst">${compareObjectToArray(obj, arr)}</span>)`</span>;
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(obj)) {
+                t += <span class="hljs-string">`\n    <span class="hljs-subst">${key}</span> - <span class="hljs-subst">${value.isRunning() ? <span class="hljs-string">&#x27;running&#x27;</span> : <span class="hljs-string">&#x27;halted&#x27;</span>}</span>`</span>;
+            }
+            <span class="hljs-keyword">return</span> t;
+        }
+
+        <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${label}</span>: <span class="hljs-subst">${arr.length}</span> (<span class="hljs-subst">${compareObjectToArray(obj, arr)}</span>) - <span class="hljs-subst">${arr.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>`</span>;
+    };
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;anchor&#x27;</span>, anchor, anchornames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;animation&#x27;</span>, animation, animationnames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;animationtickers&#x27;</span>, animationtickers, animationtickersnames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;artefact&#x27;</span>, artefact, artefactnames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;asset&#x27;</span>, asset, assetnames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;canvas&#x27;</span>, canvas, canvasnames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;cell&#x27;</span>, cell, cellnames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;element&#x27;</span>, element, elementnames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;entity&#x27;</span>, entity, entitynames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;filter&#x27;</span>, filter, filternames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;force&#x27;</span>, force, forcenames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;group&#x27;</span>, group, groupnames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;particle&#x27;</span>, particle, particlenames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;spring&#x27;</span>, spring, springnames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;stack&#x27;</span>, stack, stacknames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;styles&#x27;</span>, styles, stylesnames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;tween&#x27;</span>, tween, tweennames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;unstackedelement&#x27;</span>, unstackedelement, unstackedelementnames)}</span>
+<span class="hljs-subst">${getSectionOutput(<span class="hljs-string">&#x27;world&#x27;</span>, world, worldnames)}</span>
+    `</span>;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
               <p>Test to check that artefacts are properly killed and resurrected</p>
 
             </div>
@@ -1237,11 +1323,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>To test styles (Gradient) kill functionality</p>
 
@@ -1289,11 +1375,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>To test artefact + anchor kill functionality</p>
 
@@ -1359,11 +1445,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>To test Polyline artefact kill functionality</p>
 
@@ -1470,11 +1556,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
 
@@ -1522,11 +1608,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Create a name for our new asset</p>
 
@@ -1538,11 +1624,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Add the image to the DOM and create our asset from it</p>
 
@@ -1553,11 +1639,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -1572,11 +1658,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Update our Picture entity’s asset attribute so it displays the new image</p>
 
@@ -1601,11 +1687,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>HOW TO: set the Picture entity’s copy dimensions to take into account any difference between the old and new image’s dimensions</p>
 <ul>
@@ -1668,6 +1754,7 @@
 
 <span class="hljs-keyword">export</span> {
     reportSpeed,
+    reportFullLibrary,
 
     killArtefact,
     killArtefactAndAnchor,

@@ -962,7 +962,10 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
         dragZones[zone.name] = dragZones[zone.name].filter(z => z.name !== name);
 
-        if (!dragZones[zone.name].length) doRemoveListeners(startOn, endOn, target);
+        if (!dragZones[zone.name].length) {
+            doRemoveListeners(startOn, endOn, target);
+            delete dragZones[zone.name];
+        }
     };
 
     const getCurrent = function (actionKill) {

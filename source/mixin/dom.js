@@ -179,7 +179,7 @@ export default function (P = Ωempty) {
     let S = P.setters,
         D = P.deltaSetters;
 
-S.trackHere = function(val) {
+    S.trackHere = function(val) {
 
     if (xt(val)) {
 

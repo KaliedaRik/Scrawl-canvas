@@ -8,7 +8,7 @@
 
 // #### Imports
 import { isa_canvas, generateUniqueString, isa_dom, pushUnique, removeItem, xt, Ωempty } from "./utilities.js";
-import { artefact, canvas, group, stack, css, xcss } from "./library.js";
+import { artefact, canvas, cell, group, stack, css, xcss, purge } from "./library.js";
 
 import { getPixelRatio, getIgnorePixelRatio } from "./events.js";
 
@@ -283,40 +283,49 @@ const addInitialCanvasElement = function (el) {
     });
 };
 
-// `Exported function` (to modules and scrawl object). Parse the DOM, looking for a specific &lt;canvas> element; then create a __Canvas__ artefact and __Cell__ asset wrapper for it.
+// `Exported function` (to modules and scrawl object). Parse the DOM, looking for a specific &lt;canvas> element id; then create a __Canvas__ artefact and __Cell__ asset wrapper for it.
 const getCanvas = function (search) {
+
+    const el = document.querySelector(`#${search}`);
 
     const c = canvas[search];
 
     if (c) {
-        setCurrentCanvas(c);
-        return c;
-    }
 
-    let el = document.querySelector(`#${search}`);
+        if (el.dataset.scrawlGroup != null) {
+
+            setCurrentCanvas(c);
+            return c;
+        }
+        else purge(search);
+    }
 
     if (el) {
         const newCanvas = addInitialCanvasElement(el);
         setCurrentCanvas(newCanvas);
         return newCanvas;
     }
-    return false;
+    return undefined;
 };
 
 // `Exported function` (to modules and scrawl object). Parse the DOM, looking for a specific element; then create a __Stack__ artefact wrapper for it.
 const getStack = function (search) {
 
+    let el = document.querySelector(`#${search}`);
+
     const s = stack[search];
 
-    if (s) return s;
+    if (s) {
 
-    let el = document.querySelector(`#${search}`);
+        if (el.dataset.scrawlGroup != null) return s;
+        else purge(search);
+    }
 
     if (el) {
         const newStack = addInitialStackElement(el);
         return newStack;
     }
-    return false;
+    return undefined;
 };
 
 // Scrawl-canvas expects one canvas element (if any canvases are present) to act as the 'current' canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using __scrawl.setCurrentCanvas__

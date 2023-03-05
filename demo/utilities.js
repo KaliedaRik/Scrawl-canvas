@@ -48,6 +48,76 @@ ${xtra()}`;
 };
 
 
+// Get a full, dynamic report on the Scrawl-canvas library's current contents
+const reportFullLibrary = (scrawl) => {
+
+    const { 
+        anchor, anchornames,
+        animation, animationnames,
+        animationtickers, animationtickersnames,
+        artefact, artefactnames,
+        asset, assetnames,
+        canvas, canvasnames,
+        cell, cellnames,
+        element, elementnames,
+        entity, entitynames,
+        filter, filternames,
+        force, forcenames,
+        group, groupnames,
+        particle, particlenames,
+        spring, springnames,
+        stack, stacknames,
+        styles, stylesnames,
+        tween, tweennames,
+        unstackedelement, unstackedelementnames,
+        world, worldnames,
+    } = scrawl.library;
+
+    const compareObjectToArray = (obj, arr) => {
+
+        const keys = Object.keys(obj);
+
+        if (keys.length !== arr.length) return false;
+
+        return keys.every(k => arr.includes(k));
+    };
+
+    const getSectionOutput = (label, obj, arr) => {
+
+        if (['animation', 'animationtickers'].includes(label)) {
+            let t = `${label}: ${arr.length} (${compareObjectToArray(obj, arr)})`;
+            for (const [key, value] of Object.entries(obj)) {
+                t += `\n    ${key} - ${value.isRunning() ? 'running' : 'halted'}`;
+            }
+            return t;
+        }
+
+        return `${label}: ${arr.length} (${compareObjectToArray(obj, arr)}) - ${arr.join(', ')}`;
+    };
+    return `
+${getSectionOutput('anchor', anchor, anchornames)}
+${getSectionOutput('animation', animation, animationnames)}
+${getSectionOutput('animationtickers', animationtickers, animationtickersnames)}
+${getSectionOutput('artefact', artefact, artefactnames)}
+${getSectionOutput('asset', asset, assetnames)}
+${getSectionOutput('canvas', canvas, canvasnames)}
+${getSectionOutput('cell', cell, cellnames)}
+${getSectionOutput('element', element, elementnames)}
+${getSectionOutput('entity', entity, entitynames)}
+${getSectionOutput('filter', filter, filternames)}
+${getSectionOutput('force', force, forcenames)}
+${getSectionOutput('group', group, groupnames)}
+${getSectionOutput('particle', particle, particlenames)}
+${getSectionOutput('spring', spring, springnames)}
+${getSectionOutput('stack', stack, stacknames)}
+${getSectionOutput('styles', styles, stylesnames)}
+${getSectionOutput('tween', tween, tweennames)}
+${getSectionOutput('unstackedelement', unstackedelement, unstackedelementnames)}
+${getSectionOutput('world', world, worldnames)}
+    `;
+}
+
+
 // Test to check that artefacts are properly killed and resurrected
 const killArtefact = (canvas, name, time, finishResurrection = () => {}) => {
 
@@ -432,6 +502,7 @@ const addImageDragAndDrop = (canvas, selector, targets, callback = () => {}) => 
 
 export {
     reportSpeed,
+    reportFullLibrary,
 
     killArtefact,
     killArtefactAndAnchor,

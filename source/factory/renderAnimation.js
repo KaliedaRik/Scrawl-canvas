@@ -132,8 +132,12 @@ const RenderAnimation = function (items = Ωempty) {
 
     if (obs) {
 
-        if (isa_boolean(obs)) this.observer = makeAnimationObserver(this, this.target);
-        else this.observer = makeAnimationObserver(this, this.target, obs);
+        // Edge case: canvas/stack removed or replaced, affecting DOM. Best to queue the creation of the observer until after the DOM has settled down
+        // + Fix resulted from errors noticed in demo DOM-017
+        setTimeout(() => {
+            if (isa_boolean(obs)) this.observer = makeAnimationObserver(this, this.target);
+            else this.observer = makeAnimationObserver(this, this.target, obs);
+        }, 0);
     }
 
     // Start the animation immediately, unless flagged otherwise
@@ -253,7 +257,7 @@ P.run = function () {
 P.start = function () {
 
     this.readyToInitialize = true;
-    this.run();
+    return this.run();
 };
 
 

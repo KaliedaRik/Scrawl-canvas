@@ -44,19 +44,19 @@ artefact - ${a.length}, ${artefactnames.length}: [${(artefactnames).join(', ')}]
 stack - ${s.length}, ${stacknames.length}: [${(stacknames).join(', ')}] 
 canvas - ${el.length}, ${canvasnames.length}: [${(canvasnames).join(', ')}]
 cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
+
+        // Our animation loop object has no targets, thus we need to trigger the Display cycle for our generated canvas elements holistically - which we do here.
+        scrawl.render();
     };
 }();
 
 
 // Animation loop 
-//
-// We can't use `.makeRender()` in this case because there's no initial stack/canvas arterfact to render. Using `.makeAnimation()` and `.render()` - which use promises - instead
-scrawl.makeAnimation({
-
+scrawl.makeRender({
     name: 'demo-animation',
-    fn: function () { scrawl.render() },
+    noTarget: true,
+    commence: report,
 });
-
 
 // #### User interaction
 let controls = function () {

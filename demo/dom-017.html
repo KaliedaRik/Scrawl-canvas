@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 017</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    #my-stack {
+      border: 1px solid black;
+    }
+
+    #my-element {
+      border: 1px solid blue;
+    }
+
+    #my-canvas {
+      border: 1px solid red;
+    }
+
+    .parent {
+      border: 1px solid red;
+      margin: 2em;
+    }
+    button {
+      margin: 1em;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 017</h1>
+  <h2>Testing getCanvas(), getStack() functionality</h2>
+
+  <div>
+    <button id="canvas-switch">Switch canvas</button>
+    <button id="canvas-replace">Replace canvas</button>
+    <button id="canvas-remove">Remove canvas</button>
+  </div>
+  <div id="canvas-parent" class="parent"></div>
+
+  <p id="reportmessage"></p>
+
+  <div>
+    <button id="stack-switch">Switch stack</button>
+    <button id="stack-replace">Replace stack</button>
+    <button id="stack-remove">Remove stack</button>
+  </div>
+  <p>To note: SC stacks can be tempremental at the best of times...</p>
+  <div id="stack-parent" class="parent"></div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <p>In a React-like framework environment, it is possible for a Scrawl-canvas stack or canvas artefact to be refreshed, replaced or deleted from the DOM because of activity happening in other parts of the page.</p>
+
+    <p>Scrawl-canvas offers two functions - <b>getStack</b> and <b>getCanvas</b> - to find and register stack and canvas elements created dynamically after page load completes. They must do this work mindful of the need to not pollute the SC library with orphaned or duplicate objects - failure to manage this leads to memory leaks.</p>
+
+    <ul>
+      <li>Create a basic page with parent elements which can accept a dynamically created Scrawl-canvas stack or element.</li>
+      <li>Generate a &lt;canvas> element, alongside SC objects to populate it. Add it to the page, and use <b>getCanvas</b> to capture its data in the SC library.</li>
+      <li>Add a button to allow tester to re-run the function (like a React useEffect hook) that captures the canvas data.</li>
+      <li>Add a button to allow tester to regenerate the &lt;canvas> element (like a React re-render), which in turn runs the getCanvas function.</li>
+      <li>Generate a &lt;div> Scrawl-canvas stack element, with children, alongside SC objects (Element, Canvas) to populate it. Add it to the page, and use <b>getStack</b> (and getCanvas) to capture its data in the SC library.</li>
+      <li>Add a button to allow tester to re-run the function (like a React useEffect hook) that captures the stack (and canvas) data.</li>
+      <li>Add a button to allow tester to regenerate the &lt;div> element and its child elements (like a React re-render), which in turn runs the getStack function.</li>
+      <li>Check that at all times the library holds correct details to the current stack and canvases</li>
+      <li>Check that objects are correctly removed from the library when their associated elements are removed from the DOM</li>
+      <li>Check that at no time does Scrawl-canvas generate additional objects in the library (memory leak)</li>
+    </ul>
+
+    <p><b>Touch test:</b> not required for this test</p>
+
+    <p><a href="../docs/demo/dom-017.html">Annotated code</a></p>
+  </div>
+
+  <script src="dom-017.js" type="module"></script>
+
+</body>
+
+</html>
