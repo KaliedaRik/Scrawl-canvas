@@ -51,7 +51,7 @@
 
 
 // #### Imports
-import { constructors, animationtickers, tween } from '../core/library.js';
+import { constructors, animationtickers, tween, animation } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt, xtGet, isa_obj, convertTime, Ωempty } from '../core/utilities.js';
 
 import { makeAnimation } from './animation.js';
@@ -126,6 +126,9 @@ let defaultAttributes = {
 
 // __eventChoke__ - positive Number representing the time to elapse before the Ticker creates and emits another event. A value of `0` stops the Ticker emitting events as it runs.
     eventChoke: 0,
+
+// __observer__ - String name of a RenderAnimation object, or the object itself - halt/resume the ticker based on the running state of the animation object
+    observer: null,
 
 // The Ticker object supports some __hook functions__:
 // + __onRun__ - triggers each time the Ticker's `run` function is invoked
@@ -456,6 +459,31 @@ P.setEffectiveDuration = function() {
         else this.effectiveDuration = temp[1];
     }
     return this;
+};
+
+// `checkObserverRunningState` - internal helper function
+P.checkObserverRunningState = function () {
+
+    let observer = this.observer;
+
+    if (observer) {
+
+        if (observer.substring) {
+
+            const anim = animation[observer];
+
+            if (anim && anim.type === 'RenderAnimation') {
+
+                observer = this.observer = anim;
+            }
+            else return true;
+        }
+        if (observer.type === 'RenderAnimation') {
+
+            return observer.isRunning();
+        }
+    }
+    return true;
 };
 
 // `fn` - internal - the __animation function__ will trigger once per RequestAnimationFrame (RAF) tick - approximately 60 times a second, depending on other calculation work.
@@ -844,7 +872,7 @@ const coreTickersAnimation = makeAnimation({
             n = tickerAnimations[i];
             t = animationtickers[n];
 
-            if (t && t.fn) t.fn();
+            if (t && t.fn && t.checkObserverRunningState()) t.fn();
         }
     }
 });

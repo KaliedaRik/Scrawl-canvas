@@ -78,7 +78,8 @@ const Tween = function (items = Ωempty) {
             duration: this.effectiveDuration,
             eventChoke: xtGet(items.eventChoke, 0),
             cycles: xtGet(items.cycles, 1),
-            killOnComplete: xtGet(items.killOnComplete, false)
+            killOnComplete: xtGet(items.killOnComplete, false),
+            observer: items.observer,
         });
 
         this.ticker = tn;
@@ -154,7 +155,7 @@ let defaultAttributes = {
 // The following [Ticker](./ticker.html)-related attributes are not stored in the Tween object:
 // + __cycles__ - positive integer Number representing the number of cycles the Ticker will undertake before it completes.
 // + __eventChoke__ Number representing minimum number of milliseconds between Ticker event emissions
-
+// + __observer__ - String name of a RenderAnimation object, or the object itself - halt/resume the ticker based on the running state of the animation object
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 

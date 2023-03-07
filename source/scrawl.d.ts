@@ -2433,6 +2433,7 @@ interface TickerFactoryInputs extends BaseMixinInputs, TickerFactoryDeltaInputs 
     delta?: TickerFactoryDeltaInputs;
     eventChoke?: number;
     killOnComplete?: boolean;
+    observer?: string | RenderInstance;
     onComplete?: DefaultInputFunction;
     onHalt?: DefaultInputFunction;
     onReset?: DefaultInputFunction;
@@ -2521,6 +2522,7 @@ interface TweenFactoryInputs extends BaseMixinInputs, TweenMixinInputs, TweenFac
     definitions?: TweenDefinitionsObject[];
     eventChoke?: number;
     killOnComplete?: boolean;
+    observer?: string | RenderInstance;
     onHalt?: DefaultInputFunction;
     onResume?: DefaultInputFunction;
     onReverse?: DefaultInputFunction;

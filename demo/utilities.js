@@ -84,10 +84,18 @@ const reportFullLibrary = (scrawl) => {
 
     const getSectionOutput = (label, obj, arr) => {
 
-        if (['animation', 'animationtickers'].includes(label)) {
+        if ('animation' === label) {
             let t = `${label}: ${arr.length} (${compareObjectToArray(obj, arr)})`;
             for (const [key, value] of Object.entries(obj)) {
                 t += `\n    ${key} - ${value.isRunning() ? 'running' : 'halted'}`;
+            }
+            return t;
+        }
+
+        if ('animationtickers' === label) {
+            let t = `${label}: ${arr.length} (${compareObjectToArray(obj, arr)})`;
+            for (const [key, value] of Object.entries(obj)) {
+                t += `\n    ${key} - ${value.isRunning() && value.checkObserverRunningState() ? 'running' : 'halted'}`;
             }
             return t;
         }

@@ -139,6 +139,7 @@ const buildSquareCanvas = (namespace) => {
                 engine: 'easeOutIn',
             }],
             reverseOnCycleEnd: true,
+            observer: name('animation'),
         }).run();
     }
 };
@@ -235,6 +236,7 @@ const buildCircleCanvas = (namespace) => {
                 engine: 'easeOutIn',
             }],
             reverseOnCycleEnd: true,
+            observer: name('animation'),
         }).run();
     }
 };
@@ -379,8 +381,13 @@ const buildStack1 = (namespace) => {
         if (svg) {
             svg.set({
                 start: ['10%', '10%'],
+                width: 200,
                 roll: -10,
                 yaw: 40,
+                css: {
+                    border: '1px dashed black',
+                    boxSizing: 'border-box',
+                },
             });
         }
 
