@@ -13,13 +13,21 @@
 
 
 // #### Imports
-import { constructors, entity, radian } from '../core/library.js';
-import { mergeOver, xt, xtGet, isa_obj, isa_fn, easeEngines, Ωempty, λfirstArg, pushUnique, interpolate, correctAngle } from '../core/utilities.js';
+import { constructors, entity } from '../core/library.js';
+import { mergeOver, xt, xtGet, isa_obj, isa_fn, easeEngines, Ωempty, λfirstArg, pushUnique, interpolate, correctAngle, radian } from '../core/utilities.js';
 
-import { requestCell, releaseCell } from './cell.js';
+// import { requestCell, releaseCell } from './cell.js';
 
 import baseMix from '../mixin/base.js';
 
+
+const element = document.createElement('canvas');
+element.width = 1;
+element.height = 1;
+
+const engine = element.getContext('2d');
+engine.globalAlpha = 1;
+engine.globalCompositeOperation = 'source-over';
 
 // #### Color constructor
 const Color = function (items = Ωempty) {
@@ -608,11 +616,11 @@ P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
     const [bMin, cMin, dMin, aMin] = this[`${col}_min`];
     const [bMax, cMax, dMax, aMax] = this[`${col}_max`];
 
-    let engine = easingFunction;
+    let e = easingFunction;
 
-    if (!internalGradientBuild && easing !== 'function' && easeEngines[easing]) engine = easeEngines[easing];
+    if (!internalGradientBuild && easing !== 'function' && easeEngines[easing]) e = easeEngines[easing];
 
-    const val = (internalGradientBuild) ? item : engine(item);
+    const val = (internalGradientBuild) ? item : e(item);
 
     switch (col) {
 
@@ -1084,18 +1092,8 @@ P.getColorFromCanvas = function (color) {
         b = 0,
         a = 0;
 
-    const cell = requestCell();
-
-    const { element, engine } = cell;
-
-    element.width = 1;
-    element.height = 1;
-
-    engine.save();
-    engine.globalAlpha = 1;
-    engine.globalCompositeOperation = 'source-over';
+    engine.clearRect(0, 0, 1, 1);
     engine.fillStyle = color;
-
     engine.fillRect(0, 0, 1, 1);
 
     const image = engine.getImageData(0, 0, 1, 1);
@@ -1106,9 +1104,6 @@ P.getColorFromCanvas = function (color) {
 
         a /= 255;
     }
-    engine.restore();
-    releaseCell(cell);
-
     return [r, g, b, a];
 };
 
@@ -1521,17 +1516,6 @@ const browserChecker = function () {
         image,
         col = '#ffffff00';
 
-    const cell = requestCell();
-
-    const { element, engine } = cell;
-
-    element.width = 1;
-    element.height = 1;
-
-    engine.save();
-    engine.globalAlpha = 1;
-    engine.globalCompositeOperation = 'source-over';
-
     // Test for HWB support
     engine.fillStyle = 'hwb(90 10% 10%)';
     engine.fillRect(0, 0, 1, 1);
@@ -1620,9 +1604,6 @@ const browserChecker = function () {
     // Firefox safety net
     if (supportsOKLCH && col === engine.fillStyle) supportsOKLCH = false;
     else col = engine.fillStyle;
-
-    engine.restore();
-    releaseCell(cell);
 };
 browserChecker();
 
@@ -1651,16 +1632,10 @@ browserChecker();
 //     method: 'fill',
 // });
 // ```
-const makeColor = function (items) {
+export const makeColor = function (items) {
 
     if (!items) return false;
     return new Color(items);
 };
 
 constructors.Color = Color;
-
-
-// #### Exports
-export {
-    makeColor,
-};

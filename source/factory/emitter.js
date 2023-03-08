@@ -27,7 +27,7 @@
 // #### Imports
 import { constructors, tween, artefact, group, world } from '../core/library.js';
 import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta, Ωempty } from '../core/utilities.js';
-import { currentGroup } from '../core/document.js';
+import { currentGroup } from './canvas.js';
 
 import { requestParticle, releaseParticle } from './particle.js';
 import { requestCell, releaseCell } from './cell.js';

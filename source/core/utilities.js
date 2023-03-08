@@ -1,8 +1,6 @@
 // # Core utility functions
 // A ragtag collection of helper functions which other modules can import and use
 
-// #### Imports
-import * as library from "./library.js";
 
 // #### Functions
 
@@ -26,7 +24,7 @@ import * as library from "./library.js";
 // -> '53%'
 // ```
 
-const addStrings = (current, delta) => {
+export const addStrings = (current, delta) => {
 
     if (!xt(delta)) throw new Error(`core/utilities addStrings() error - no delta argument supplied ${current}, ${delta}`);
 
@@ -64,7 +62,7 @@ const addStrings = (current, delta) => {
 // convertTime('5s');
 // -> ['ms', 5000]
 // ```
-const convertTime = (item) => {
+export const convertTime = (item) => {
 
     let a, timeUnit, timeValue;
 
@@ -99,7 +97,7 @@ const convertTime = (item) => {
 
 
 // __correctAngle__ makes sure any degree-based angle is in the range `0-360`
-const correctAngle = (item) => {
+export const correctAngle = (item) => {
 
     if (!item.toFixed || isNaN(item)) {
 
@@ -117,7 +115,7 @@ const correctAngle = (item) => {
 
 
 // __correctForZero__ checks and corrects for minor deviations from zero (eNumbers)
-const correctForZero = (item) => {
+export const correctForZero = (item) => {
 
     if (!item.toFixed) return item;
     if (item == 0) return item;
@@ -129,17 +127,17 @@ const correctForZero = (item) => {
 
 
 // __λ functions__ helps us avoid errors when invoking a function attribute settable by the coder
-const λnull = () => {};
-const λfirstArg = function (a) { return a; };
-const λthis = function () { return this; };
-const λpromise = () => Promise.resolve(true);
-const Ωempty = {};
+export const λnull = () => {};
+export const λfirstArg = function (a) { return a; };
+export const λthis = function () { return this; };
+export const λpromise = () => Promise.resolve(true);
+export const Ωempty = {};
 
 
 // __generateUuid__ is a simple (crude) uuid generator 
 // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
 // (imported 2017-07-08)
-const generateUuid = () => {
+export const generateUuid = () => {
 
     function s4() {
 
@@ -153,43 +151,43 @@ const generateUuid = () => {
 // __generateUniqueString__ is a simple random String generator
 // https://gist.github.com/SimonHoiberg/ad2710c8626c5a74cddd8f6385795cc0
 // (imported 2020-11-22)
-const generateUniqueString = () => {
+export const generateUniqueString = () => {
 
     return performance.now().toString(36) + Math.random().toString(36).substr(2);
 };
 
 // __interpolate__ clamp a value between a maximum and minimum value
-const interpolate = function (val, min, max) {
+export const interpolate = function (val, min, max) {
     
     return min + val * (max - min);
 };
 
 // __isa_boolean__ checks to make sure the argument is a boolean
-const isa_boolean = item => (typeof item === 'boolean') ? true : false;
+export const isa_boolean = item => (typeof item === 'boolean') ? true : false;
 
 
 // __isa_canvas__ checks to make sure the argument is a DOM &lt;canvas> element
-const isa_canvas = item => (Object.prototype.toString.call(item) === '[object HTMLCanvasElement]') ? true : false;
+export const isa_canvas = item => (Object.prototype.toString.call(item) === '[object HTMLCanvasElement]') ? true : false;
 
 
 // __isa_dom__ checks to make sure the argument is a DOM element of some sort
-const isa_dom = item => (item && item.querySelector && item.dispatchEvent) ? true : false;
+export const isa_dom = item => (item && item.querySelector && item.dispatchEvent) ? true : false;
 
 
 // __isa_fn__ checks to make sure the argument is a JavaScript function object
-const isa_fn = item => (typeof item === 'function') ? true : false;
+export const isa_fn = item => (typeof item === 'function') ? true : false;
 
 
 // __isa_number__ checks to make sure the argument is true number (excluding NaN)
-const isa_number = item => (item != null && item.toFixed && !Number.isNaN(item)) ? true : false;
+export const isa_number = item => (item != null && item.toFixed && !Number.isNaN(item)) ? true : false;
 
 
 // __isa_obj__ checks to make sure the argument is a JavaScript Object
-const isa_obj = item => (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
+export const isa_obj = item => (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
 
 
 // __isa_quaternion__ checks to make sure the argument is a Scrawl-canvas Quaternion object
-const isa_quaternion = item => (item && item.type && item.type === 'Quaternion') ? true : false;
+export const isa_quaternion = item => (item && item.type && item.type === 'Quaternion') ? true : false;
 
 
 // __mergeInto__ takes two objects and merges the attributes of one into the other. This function mutates the 'original' object rather than generating a third, new onject
@@ -202,7 +200,7 @@ const isa_quaternion = item => (item && item.type && item.type === 'Quaternion')
 //
 // -> { name: 'Peter', age: 42, job: 'lawyer', pet: 'cat' }
 // ```
-const mergeInto = (original, additional) => {
+export const mergeInto = (original, additional) => {
 
     if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeInto() error - insufficient arguments supplied ${original}, ${additional}`);
 
@@ -224,7 +222,7 @@ const mergeInto = (original, additional) => {
 //
 // -> { name: 'Peter', age: 32, job: 'coder', pet: 'cat' }
 // ```
-const mergeOver = (original, additional) => {
+export const mergeOver = (original, additional) => {
 
     if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeOver() error - insufficient arguments supplied ${original}, ${additional}`);
 
@@ -246,7 +244,7 @@ const mergeOver = (original, additional) => {
 //    
 // -> { name: 'Peter', age: 32, pet: 'cat' }
 // ```
-const mergeDiscard = (original, additional) => {
+export const mergeDiscard = (original, additional) => {
 
     if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeDiscard() error - insufficient arguments supplied ${original}, ${additional}`);
 
@@ -270,7 +268,7 @@ const mergeDiscard = (original, additional) => {
 // scrawl.utils.pushUnique(myarray, 'banana');
 // -> ['apple', 'orange', 'banana']
 // ```
-const pushUnique = (myArray, potentialMember) => {
+export const pushUnique = (myArray, potentialMember) => {
 
     if (!xta(myArray, potentialMember)) throw new Error(`core/utilities pushUnique() error - insufficient arguments supplied ${myArray}, ${potentialMember}`);
 
@@ -300,7 +298,7 @@ const pushUnique = (myArray, potentialMember) => {
 // scrawl.utils.removeItem(myarray, 'apple');    
 // -> ['orange']
 // ```
-const removeItem = (myArray, unwantedMember) => {
+export const removeItem = (myArray, unwantedMember) => {
 
     if (!xta(myArray, unwantedMember)) throw new Error(`core/utilities removeItem() error - insufficient arguments supplied ${myArray}, ${unwantedMember}`);
 
@@ -315,24 +313,24 @@ const removeItem = (myArray, unwantedMember) => {
 
 
 // __xt__ checks to see if argument exists (is not 'undefined')
-const xt = item => (typeof item == 'undefined') ? false : true;
+export const xt = item => (typeof item == 'undefined') ? false : true;
 
 
 // __xta__ checks to make sure that all the arguments supplied to the function exist (none are 'undefined')
-const xta = (...args) => args.every(item => typeof item != 'undefined');
+export const xta = (...args) => args.every(item => typeof item != 'undefined');
 
 
 // __xtGet__ returns the first existing (not 'undefined') argument supplied to the function
-const xtGet = (...args) => args.find(item => typeof item != 'undefined');
+export const xtGet = (...args) => args.find(item => typeof item != 'undefined');
 
 
 // __xto__ checks to make sure that at least one of the arguments supplied to the function exists (is not 'undefined')
-const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true : false;
+export const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true : false;
 
 
 // ##### Easing engines
 // `easeEngines` - an object in which keys define various easing functions
-const easeEngines = {
+export const easeEngines = {
 
 // Legacy easings
     out: (t) => 1 - Math.cos((t * Math.PI) / 2),
@@ -524,12 +522,12 @@ const easeEngines = {
 };
 
 
-const getArrayType = someObject => someObject && someObject.constructor && someObject.constructor.name && someObject.constructor.name || null;
+export const getArrayType = someObject => someObject && someObject.constructor && someObject.constructor.name && someObject.constructor.name || null;
 
 
 // Code to detect browser from Code Box: https://code-boxx.com/detect-browser-with-javascript/
 // + Because there's times when it's easier to just shut down features in webkit-based browsers than deal with their nonsense (looking at you: Safari!)
-const detectBrowser = function () {
+export const detectBrowser = function () {
 
     let result = [];
 
@@ -551,41 +549,13 @@ const detectBrowser = function () {
 };
 
 
-// #### Exports
-export {
-    addStrings,
-    convertTime,
-    correctAngle,
-    correctForZero,
-    λnull,
-    λfirstArg,
-    λthis,
-    λpromise,
-    Ωempty,
-    generateUuid,
-    generateUniqueString,
-    interpolate,
-    isa_boolean,
-    isa_canvas,
-    isa_dom,
-    isa_fn,
-    isa_number,
-    isa_obj,
-    isa_quaternion,
-    mergeDiscard,
-    mergeInto,
-    mergeOver,
-    pushUnique,
-    removeItem,
-    xt,
-    xta,
-    xtGet,
-    xto, 
+// Convenience value, used internally
+export const radian = Math.PI / 180;
 
-    easeEngines,
 
-    getArrayType,
+// Convenience set, used internally
+export const css = new Set(['all', 'background', 'backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'border', 'borderBottom', 'borderBottomColor', 'borderBottomStyle', 'borderBottomWidth', 'borderCollapse', 'borderColor', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderSpacing', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopStyle', 'borderTopWidth', 'borderWidth', 'clear', 'color', 'columns', 'content', 'counterIncrement', 'counterReset', 'cursor', 'direction', 'display', 'emptyCells', 'float', 'font', 'fontFamily', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontSynthesis', 'fontVariant', 'fontVariantAlternates', 'fontVariantCaps', 'fontVariantEastAsian', 'fontVariantLigatures', 'fontVariantNumeric', 'fontVariantPosition', 'fontWeight', 'grid', 'gridArea', 'gridAutoColumns', 'gridAutoFlow', 'gridAutoPosition', 'gridAutoRows', 'gridColumn', 'gridColumnStart', 'gridColumnEnd', 'gridRow', 'gridRowStart', 'gridRowEnd', 'gridTemplate', 'gridTemplateAreas', 'gridTemplateRows', 'gridTemplateColumns', 'imageResolution', 'imeMode', 'inherit', 'inlineSize', 'isolation', 'letterSpacing', 'lineBreak', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginBlockStart', 'marginBlockEnd', 'marginInlineStart', 'marginInlineEnd', 'marginBottom', 'marginLeft', 'marginRight', 'marginTop', 'marks', 'mask', 'maskType', 'maxWidth', 'maxHeight', 'maxBlockSize', 'maxInlineSize', 'maxZoom', 'minWidth', 'minHeight', 'minBlockSize', 'minInlineSize', 'minZoom', 'mixBlendMode', 'objectFit', 'objectPosition', 'offsetBlockStart', 'offsetBlockEnd', 'offsetInlineStart', 'offsetInlineEnd', 'orphans', 'overflow', 'overflowWrap', 'overflowX', 'overflowY', 'pad', 'padding', 'paddingBlockStart', 'paddingBlockEnd', 'paddingInlineStart', 'paddingInlineEnd', 'paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pointerEvents', 'position', 'prefix', 'quotes', 'rubyAlign', 'rubyMerge', 'rubyPosition', 'scrollBehavior', 'scrollSnapCoordinate', 'scrollSnapDestination', 'scrollSnapPointsX', 'scrollSnapPointsY', 'scrollSnapType', 'scrollSnapTypeX', 'scrollSnapTypeY', 'shapeImageThreshold', 'shapeMargin', 'shapeOutside', 'tableLayout', 'textAlign', 'textDecoration', 'textIndent', 'textOrientation', 'textOverflow', 'textRendering', 'textShadow', 'textTransform', 'textUnderlinePosition', 'unicodeRange', 'unset', 'verticalAlign', 'widows', 'willChange', 'wordBreak', 'wordSpacing', 'wordWrap', 'zIndex']);
+        
 
-    detectBrowser,
-};
-
+// Convenience set, used internally
+export const xcss = new Set(['alignContent', 'alignItems', 'alignSelf', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'backfaceVisibility', 'backgroundImage', 'backgroundSize', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderRadius', 'borderTopLeftRadius', 'borderTopRightRadius', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'filter', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap', 'fontFeatureSettings', 'fontKerning', 'fontLanguageOverride', 'hyphens', 'imageRendering', 'imageOrientation', 'initial', 'justifyContent', 'linearGradient', 'opacity', 'order', 'orientation', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'resize', 'tabSize', 'textAlignLast', 'textCombineUpright', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'touchAction', 'transformStyle', 'transition', 'transitionDelay', 'transitionDuration', 'transitionProperty', 'transitionTimingFunction', 'unicodeBidi', 'whiteSpace', 'writingMode']);

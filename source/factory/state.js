@@ -18,6 +18,11 @@ import { isa_obj, xt, xtGet, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
+import { makeColor } from './color.js';
+
+const colorChecker = makeColor({
+    name: 'state-color-checker',
+});
 
 // #### State constructor
 const State = function (items = Ωempty) {
@@ -244,7 +249,7 @@ S.fillStyle = function (item) {
 
         if (temp) this.fillStyle = temp;
         else if (item.includes('rgb') || item.includes('hsl') || item.includes('#')) this.fillStyle = item;
-        else this.fillStyle = window.scrawlEnvironmentColorChecker.checkColor(item);
+        else this.fillStyle = colorChecker.checkColor(item);
     }
 };
 
@@ -259,14 +264,14 @@ S.strokeStyle = function (item) {
 
         if (temp) this.strokeStyle = temp;
         else if (item.includes('rgb') || item.includes('hsl') || item.includes('#')) this.strokeStyle = item;
-        else this.strokeStyle = window.scrawlEnvironmentColorChecker.checkColor(item);
+        else this.strokeStyle = colorChecker.checkColor(item);
     }
 };
 
 S.shadowColor = function (item) {
 
     if (item.includes('rgb') || item.includes('hsl') || item.includes('#')) this.shadowColor = item;
-    else this.shadowColor = window.scrawlEnvironmentColorChecker.checkColor(item);
+    else this.shadowColor = colorChecker.checkColor(item);
 };
 
 
@@ -415,20 +420,14 @@ P.setStateFromEngine = function (engine) {
 
 // #### Factory
 // Only used internally by Cell and entity factory functions
-const makeState = function (items) {
+export const makeState = function (items) {
 
     if (!items) return false;
     return new State(items);
 };
 
 // Note: does NOT include 'font', textAlign or textBaseline because we set them in the fontAttributes object and Phrase entity, not the state object
-const stateKeys = ['fillStyle', 'filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle'];
+export const stateKeys = ['fillStyle', 'filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle'];
 
 
 constructors.State = State;
-
-// #### Exports
-export {
-    makeState,
-    stateKeys,
-};

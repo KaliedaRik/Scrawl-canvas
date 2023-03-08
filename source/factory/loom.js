@@ -22,11 +22,11 @@
 
 // #### Imports
 import { constructors, artefact, group } from '../core/library.js';
-import { currentGroup } from '../core/document.js';
 import { mergeOver, mergeDiscard, pushUnique, λnull, λthis, xta, Ωempty } from '../core/utilities.js';
 
-import { makeState, stateKeys } from '../factory/state.js';
-import { requestCell, releaseCell } from '../factory/cell.js';
+import { makeState, stateKeys } from './state.js';
+import { requestCell, releaseCell } from './cell.js';
+import { currentGroup } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';

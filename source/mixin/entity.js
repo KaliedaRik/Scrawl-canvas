@@ -12,13 +12,14 @@
 
 // #### Imports
 import { λnull, mergeOver, pushUnique, xt, addStrings, isa_obj, Ωempty } from '../core/utilities.js';
-import { currentGroup, scrawlCanvasHold } from '../core/document.js';
+import { scrawlCanvasHold } from '../core/document.js';
 import { asset } from '../core/library.js';
 
 import { makeState, stateKeys } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 import { filterEngine } from '../factory/filterEngine.js';
 import { importDomImage } from '../factory/imageAsset.js';
+import { currentGroup } from '../factory/canvas.js';
 
 import positionMix from '../mixin/position.js';
 import deltaMix from '../mixin/delta.js';

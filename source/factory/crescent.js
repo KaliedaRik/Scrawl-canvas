@@ -14,8 +14,8 @@
 
 
 // #### Imports
-import { constructors, radian } from '../core/library.js';
-import { mergeOver, xt, xto, xta, isa_number, Ωempty } from '../core/utilities.js';
+import { constructors } from '../core/library.js';
+import { mergeOver, radian, xt, xto, xta, isa_number, Ωempty } from '../core/utilities.js';
 import { requestCoordinate, releaseCoordinate } from './coordinate.js';
 import { requestCell, releaseCell } from './cell.js';
 
@@ -474,16 +474,10 @@ P.clear = function (engine) {
 // #### Factory
 // ```
 // ```
-const makeCrescent = function (items) {
+export const makeCrescent = function (items) {
 
     if (!items) return false;
     return new Crescent(items);
 };
 
 constructors.Crescent = Crescent;
-
-
-// #### Exports
-export {
-    makeCrescent,
-};

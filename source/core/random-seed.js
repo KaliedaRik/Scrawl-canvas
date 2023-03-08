@@ -289,13 +289,7 @@ function serializer(replacer, cycleReplacer) {
     }
 }
 
-const seededRandomNumberGenerator = function (seed) {
+export const seededRandomNumberGenerator = function (seed) {
 
     return new uheprng(seed);
 };
-
-// #### Exports
-export {
-    seededRandomNumberGenerator,
-};
-

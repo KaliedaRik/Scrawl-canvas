@@ -19,8 +19,8 @@
 
 
 // #### Imports
-import { constructors, radian } from '../core/library.js';
-import { mergeOver, addStrings, isa_number, pushUnique, Ωempty } from '../core/utilities.js';
+import { constructors } from '../core/library.js';
+import { mergeOver, radian, addStrings, isa_number, pushUnique, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
@@ -160,16 +160,10 @@ P.updateGradientArgs = function (x, y) {
 //     method: 'fillAndDraw',
 // });
 // ```
-const makeConicGradient = function (items) {
+export const makeConicGradient = function (items) {
 
     if (!items) return false;
     return new ConicGradient(items);
 };
 
 constructors.ConicGradient = ConicGradient;
-
-
-// #### Exports
-export {
-    makeConicGradient,
-};

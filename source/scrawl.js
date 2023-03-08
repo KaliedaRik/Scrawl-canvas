@@ -37,16 +37,11 @@ export {
     stopCoreAnimationLoop,
 } from './core/animationloop.js';
 export { 
-    addStack,
-    getStack,
-    addCanvas,
-    getCanvas,
-    setCurrentCanvas,
     clear,
     compile,
     show,
     render,
-} from './core/document.js';
+} from './core/display-cycle.js';
 export { 
     addListener,
     removeListener,
@@ -65,10 +60,7 @@ export {
     currentCorePosition, 
     startCoreListeners, 
     stopCoreListeners, 
-    observeAndUpdate,
     forceUpdate,
-    makeDragZone,
-    makeKeyboardZone,
     getTouchActionChoke,
     setTouchActionChoke,
 } from './core/userInteraction.js';
@@ -76,6 +68,11 @@ export { makeAction } from './factory/action.js';
 export { makeAnimation } from './factory/animation.js';
 export { makeBlock } from './factory/block.js';
 export { makeBezier } from './factory/bezier.js';
+export {
+    addCanvas,
+    getCanvas,
+    setCurrentCanvas,
+} from './factory/canvas.js';
 export { makeCog } from './factory/cog.js';
 export { makeColor } from './factory/color.js';
 export { makeConicGradient } from './factory/conicGradient.js';
@@ -84,6 +81,7 @@ export {
     releaseCoordinate,
 } from './factory/coordinate.js';
 export { makeCrescent } from './factory/crescent.js';
+export { makeDragZone } from './factory/dragZone.js';
 export { makeElement } from './factory/element.js';
 export { makeEmitter } from './factory/emitter.js';
 export { makeFilter } from './factory/filter.js';
@@ -99,6 +97,7 @@ export {
     createImageFromGroup,
     createImageFromEntity,
 } from './factory/imageAsset.js';
+export { makeKeyboardZone } from './factory/keyboardZone.js';
 export { makeLine } from './factory/line.js';
 export { makeLineSpiral } from './factory/lineSpiral.js';
 export { makeLoom } from './factory/loom.js';
@@ -108,6 +107,10 @@ export {
     makeNoise,
     makeNoiseAsset,
 } from './factory/noiseAsset.js';
+export { 
+    observeAndUpdate,
+    makeUpdater
+} from './factory/observeUpdate.js';
 export { makeOval } from './factory/oval.js';
 export { makePattern } from './factory/pattern.js';
 export { makePhrase } from './factory/phrase.js';
@@ -128,6 +131,10 @@ export { makeShape } from './factory/shape.js';
 export { makeSpiral } from './factory/spiral.js';
 export { importSprite } from './factory/spriteAsset.js';
 export { makeSpring } from './factory/particleSpring.js';
+export { 
+    addStack,
+    getStack,
+} from './factory/stack.js';
 export { makeStar } from './factory/star.js';
 export { makeTetragon } from './factory/tetragon.js';
 export { makeTicker } from './factory/ticker.js';

@@ -28,8 +28,9 @@
 
 
 // #### Imports
-import { cell, constructors, artefact, group } from '../core/library.js';
-import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';
+import { canvas as libCanvas, cell, constructors, artefact, group, purge } from '../core/library.js';
+import { domShow, scrawlCanvasHold } from '../core/document.js';
+import { rootElements, setRootElementsSort } from "../core/document-rootElements.js";
 import { mergeOver, pushUnique, removeItem, xt, λthis, λnull, Ωempty } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
@@ -892,7 +893,7 @@ P.cleanAria = function () {
 
 
 // #### Factory
-const makeCanvas = function (items) {
+export const makeCanvas = function (items) {
 
     if (!items) return false;
     return new Canvas(items);
@@ -901,7 +902,182 @@ const makeCanvas = function (items) {
 constructors.Canvas = Canvas;
 
 
-// #### Exports
-export {
-    makeCanvas,
+// #### Canvas discovery
+// `Exported function` (to modules). Parse the DOM, looking for &lt;canvas> elements; then create __Canvas__ artefact and __Cell__ asset wrappers for each canvas found. Canvas elements do not need to be part of a stack and can appear anywhere in the HTML body.
+export const getCanvases = function (query = '[data-scrawl-canvas]') {
+
+    let item;
+
+    document.querySelectorAll(query).forEach((el, index) => {
+
+        item = addInitialCanvasElement(el);
+
+        if (!index) setCurrentCanvas(item);
+    });
+};
+
+// Create a __canvas__ artefact wrapper for a given canvas element.
+const addInitialCanvasElement = function (el) {
+
+    let mygroup = el.getAttribute('data-scrawl-group'),
+        myname = el.id || el.getAttribute('name'),
+        position = 'absolute';
+
+    if (!mygroup) {
+
+        el.setAttribute('data-scrawl-group', 'root');
+        mygroup = 'root';
+        position = el.style.position;
+    }
+
+    if (!myname) {
+
+        myname = generateUniqueString();
+        el.id = myname;
+    }
+
+    return makeCanvas({
+        name: myname,
+        domElement: el,
+        group: mygroup,
+        host: mygroup,
+        position: position,
+        setInitialDimensions: true
+    });
+};
+
+// `Exported function` (to modules and scrawl object). Parse the DOM, looking for a specific &lt;canvas> element id; then create a __Canvas__ artefact and __Cell__ asset wrapper for it.
+export const getCanvas = function (search) {
+
+    const el = document.querySelector(`#${search}`);
+
+    const c = libCanvas[search];
+
+    if (c) {
+
+        if (el.dataset.scrawlGroup != null) {
+
+            setCurrentCanvas(c);
+            return c;
+        }
+        else purge(search);
+    }
+
+    if (el) {
+        const newCanvas = addInitialCanvasElement(el);
+        setCurrentCanvas(newCanvas);
+        return newCanvas;
+    }
+    return undefined;
+};
+
+// Scrawl-canvas expects one canvas element (if any canvases are present) to act as the 'current' canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using __scrawl.setCurrentCanvas__
+
+// `Exported variables` (to modules). 
+export let currentCanvas = null;
+export let currentGroup = null;
+
+// `Exported function` (to modules and scrawl object). 
+export const setCurrentCanvas = function (item) {
+
+    let changeFlag = false;
+
+    if (item) {
+
+        if (item.substring) {
+
+            let mycanvas = libCanvas[item];
+
+            if (mycanvas) {
+                currentCanvas = mycanvas;
+                changeFlag = true;    
+            }
+        }
+        else if (item.type === 'Canvas') {
+
+            currentCanvas = item;    
+            changeFlag = true;    
+        } 
+    }
+
+    if (changeFlag && currentCanvas.base) {
+
+        let mygroup = group[currentCanvas.base.name];
+
+        if (mygroup) currentGroup = mygroup;
+    }
+};
+
+// `Exported function` (to modules and scrawl object). Use __addCanvas__ to add a Scrawl-canvas canvas element to a web page. The items argument should include 
+// + __host__ - the host element, either as the DOM element itself, or some sort of CSS search string, or a Scrawl-canvas Stack entity. If no host is supplied, Scrawl-canvas will add the new canvas element to the DOM document body; in all cases, the new canvas element is appended at the end of the host element (or DOM document)
+// + __name__ - String identifier for the element; will generate a random name for the canvas if no name is supplied.
+// + any other regular Scrawl-canvas Canvas artefact attribute
+//
+// By default, Scrawl-canvas will setup the new Canvas as the 'current canvas', and will add mouse/pointer tracking functionality to it. If no dimensions are supplied then the Canvas will default to 300px wide and 150px high.
+export const addCanvas = function (items = Ωempty) {
+
+    let el = document.createElement('canvas'),
+        myname = (items.name) ? items.name : generateUniqueString(),
+        host = items.host,
+        mygroup = 'root',
+        width = items.width || 300,
+        height = items.height || 150,
+        position = 'relative';
+
+    if (host.substring) {
+
+        let temphost = artefact[host];
+
+        if (!temphost && host) {
+
+            host = document.querySelector(host);
+
+            if (host) mygroup = host.id;
+        }
+        else host = temphost;
+    }
+
+    if (host) {
+
+        if (host.type === 'Stack') {
+
+            mygroup = host.name;
+            position = 'absolute';
+            host = host.domElement;
+        }
+        else if (!isa_dom(host)) host = document.body;
+    }
+    else host = document.body;
+
+    el.id = myname;
+    el.setAttribute('data-scrawl-group', mygroup);
+    el.width = width;
+    el.height = height;
+    el.style.position = position;
+
+    host.appendChild(el);
+
+    let mycanvas = makeCanvas({
+        name: myname,
+        domElement: el,
+        group: mygroup,
+        host: mygroup,
+        position: position,
+        setInitialDimensions: false,
+        setAsCurrentCanvas: (xt(items.setAsCurrentCanvas)) ? items.setAsCurrentCanvas : true,
+        trackHere: (xt(items.trackHere)) ? items.trackHere : 'subscribe',
+    });
+
+    delete items.group;
+    delete items.host;
+    delete items.name;
+    delete items.element;
+    delete items.position;
+    delete items.setInitialDimensions;
+    delete items.setAsCurrentCanvas;
+    delete items.trackHere;
+
+    mycanvas.set(items);
+
+    return mycanvas;
 };

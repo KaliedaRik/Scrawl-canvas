@@ -41,10 +41,10 @@ let doAnimation = false,
     animate_sorted = [];
 
 // `Exported array` (to modules). The __animate__ array, which holds handles to all animation objects due to be run at the next RAF invocation, is exported to other modules so code can add/remove animation objects as required.
-let animate = [];
+export let animate = [];
 
 // `Exported function` (to modules). Force the animation objects to be sorted at the start of the next RAF invocation
-const resortAnimations = function () {
+export const resortAnimations = function () {
     resortBatchAnimations = true;
 };
 
@@ -93,22 +93,14 @@ const animationLoop = function () {
 };
 
 // `Exported function` (modules and scrawl object). Start the RAF function running
-const startCoreAnimationLoop = function () {
+export const startCoreAnimationLoop = function () {
 
     doAnimation = true;
     animationLoop();
 };
 
 // `Exported function` (modules and scrawl object). Halt the RAF function
-const stopCoreAnimationLoop = function () {
+export const stopCoreAnimationLoop = function () {
     
     doAnimation = false;
-};
-
-// #### Exports
-export {
-    animate,
-    resortAnimations,
-    startCoreAnimationLoop,
-    stopCoreAnimationLoop,
 };

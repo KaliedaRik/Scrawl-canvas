@@ -41,9 +41,9 @@
 
 
 // #### Imports
-import { artefact, asset, tween, radian, constructors, styles, stylesnames, cell, cellnames, group, canvas } from '../core/library.js';
+import { artefact, asset, tween, constructors, styles, stylesnames, cell, cellnames, group, canvas } from '../core/library.js';
 
-import { generateUniqueString, isa_canvas, mergeOver, λthis, λnull, Ωempty } from '../core/utilities.js';
+import { generateUniqueString, isa_canvas, mergeOver, λthis, λnull, Ωempty, radian } from '../core/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
@@ -1699,7 +1699,7 @@ P.poolDefs = {
 }
 
 // `Exported function` - __requestCell__
-const requestCell = function () {
+export const requestCell = function () {
 
     if (!cellPool.length) {
 
@@ -1716,7 +1716,7 @@ const requestCell = function () {
 };
 
 // `Exported function` - __releaseCell__
-const releaseCell = function (c) {
+export const releaseCell = function (c) {
 
     if (c && c.type === 'Cell') {
 
@@ -1727,18 +1727,10 @@ const releaseCell = function (c) {
 
 
 // #### Factory
-const makeCell = function (items) {
+export const makeCell = function (items) {
 
     if (!items) return false;
     return new Cell(items);
 };
 
 constructors.Cell = Cell;
-
-
-// #### Exports
-export {
-    makeCell,
-    requestCell,
-    releaseCell,
-};

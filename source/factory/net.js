@@ -22,8 +22,8 @@
 // #### Imports
 import { constructors, artefact, artefactnames, entity, world, particle } from '../core/library.js';
 import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta, Ωempty } from '../core/utilities.js';
-import { currentGroup } from '../core/document.js';
 
+import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
 import { requestVector, releaseVector } from './vector.js';
 import { makeSpring } from './particleSpring.js';

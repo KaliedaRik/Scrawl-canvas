@@ -17,8 +17,8 @@
 
 
 // #### Imports
-import { constructors, radian } from '../core/library.js';
-import { mergeOver, xt, xto, isa_number, Ωempty } from '../core/utilities.js';
+import { constructors } from '../core/library.js';
+import { mergeOver, radian, xt, xto, isa_number, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
@@ -332,16 +332,10 @@ P.cleanPathObject = function () {
 //     sharedState: true,
 // });
 // ```
-const makeWheel = function (items) {
+export const makeWheel = function (items) {
 
     if (!items) return false;
     return new Wheel(items);
 };
 
 constructors.Wheel = Wheel;
-
-
-// #### Exports
-export {
-    makeWheel,
-};

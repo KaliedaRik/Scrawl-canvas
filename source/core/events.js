@@ -25,7 +25,7 @@ import { canvas, cell, entity } from "./library.js";
 // + A Javascript object (optional) containing options to be applied to the observer - `root`, `rootMargin`, `threshold`
 //
 // The function returns a function which, when invoked, will disconnect the observer from the DOM.
-const makeAnimationObserver = function (anim, wrapper, specs = Ωempty) {
+export const makeAnimationObserver = function (anim, wrapper, specs = Ωempty) {
 
     if (typeof window.IntersectionObserver === 'function' && anim && anim.run) {
 
@@ -55,7 +55,7 @@ const makeAnimationObserver = function (anim, wrapper, specs = Ωempty) {
 }
 
 // `Exported function` (to modules and scrawl object) - __scrawl.addListener__. Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.
-const addListener = function (evt, fn, targ) {
+export const addListener = function (evt, fn, targ) {
 
     if (!isa_fn(fn)) throw new Error(`core/document addListener() error - no function supplied: ${evt}, ${targ}`);
 
@@ -69,7 +69,7 @@ const addListener = function (evt, fn, targ) {
 };
 
 // `Exported function` (to modules and scrawl object) - __scrawl.removeListener__. The counterpart to 'addListener' is __removeListener__ which removes Scrawl-canvas event listeners from DOM elements in a similar way
-const removeListener = function (evt, fn, targ) {
+export const removeListener = function (evt, fn, targ) {
 
     if (!isa_fn(fn)) throw new Error(`core/document removeListener() error - no function supplied: ${evt}, ${targ}`);
 
@@ -191,7 +191,7 @@ const actionPointerListener = function (events, fn, targets, action) {
 // + __targ__ - either the DOM element object, or an array of DOM element objects, or a query selector String. Note that `window` and ``
 
 // `Exported function` (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.
-const addNativeListener = function (evt, fn, targ) {
+export const addNativeListener = function (evt, fn, targ) {
 
     if (!isa_fn(fn)) throw new Error(`core/document addNativeListener() error - no function supplied: ${evt}, ${targ}`);
 
@@ -205,7 +205,7 @@ const addNativeListener = function (evt, fn, targ) {
 };
 
 // `Exported function` (to modules and scrawl object). The counterpart to 'addNativeListener' is __scrawl.removeNativeListener__ which removes event listeners from DOM elements in a similar way
-const removeNativeListener = function (evt, fn, targ) {
+export const removeNativeListener = function (evt, fn, targ) {
 
     if (!isa_fn(fn)) throw new Error(`core/document removeNativeListener() error - no function supplied: ${evt}, ${targ}`);
 
@@ -240,17 +240,16 @@ const actionNativeListener = function (evt, fn, targ, action) {
 // + We scale the cell by DPR - this should be the only time we touch native scale functionality!
 // + All the other scaling functionality in SC is handled by computiation - applying the scaling factor to dimensions, start, handle, offset etc values which then get saved in the `current` equivalent attributes
 let dpr_changeAction = λnull;
-const setPixelRatioChangeAction = (func) => dpr_changeAction = func;
+export const setPixelRatioChangeAction = (func) => dpr_changeAction = func;
 
 const browserIs = detectBrowser();
-window.scrawlEnvironmentBrowserDetection = browserIs;
 
 let dpr = 0;
-const getPixelRatio = () => dpr;
+export const getPixelRatio = () => dpr;
 
 let ignorePixelRatio = false;
-const getIgnorePixelRatio = () => ignorePixelRatio;
-const setIgnorePixelRatio = (val) => ignorePixelRatio = val;
+export const getIgnorePixelRatio = () => ignorePixelRatio;
+export const setIgnorePixelRatio = (val) => ignorePixelRatio = val;
 
 const updatePixelRatio = () => {
 
@@ -283,20 +282,3 @@ const updatePixelRatio = () => {
 };
 
 updatePixelRatio();
-
-
-
-// #### Exports
-export {
-    addListener,
-    removeListener,
-    addNativeListener,
-    removeNativeListener,
-
-    makeAnimationObserver,
-
-    getPixelRatio,
-    setPixelRatioChangeAction,
-    getIgnorePixelRatio,
-    setIgnorePixelRatio,
-};

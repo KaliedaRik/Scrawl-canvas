@@ -35,9 +35,10 @@
 
 
 // #### Imports
-import { constructors, group, stack, element, artefact, canvas } from '../core/library.js';
-import { mergeOver, pushUnique, isa_dom, removeItem, xt, addStrings, λthis, λnull, Ωempty } from '../core/utilities.js';
-import { rootElements, setRootElementsSort, domShow } from '../core/document.js';
+import { constructors, group, stack, element, artefact, canvas, purge } from '../core/library.js';
+import { mergeOver, pushUnique, isa_dom, isa_canvas, removeItem, xt, addStrings, λthis, λnull, Ωempty } from '../core/utilities.js';
+import { domShow } from '../core/document.js';
+import { rootElements, setRootElementsSort } from "../core/document-rootElements.js";
 import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
 
 import { makeGroup } from './group.js';
@@ -470,7 +471,199 @@ const makeStack = function (items) {
 constructors.Stack = Stack;
 
 
-// #### Exports
-export {
-    makeStack,
+// #### Stack discovery
+// `Exported function` (to modules). Parse the DOM, looking for all elements that have been given a __data-stack__ attribute; then create __Stack__ artefact wrappers for each of them. 
+//
+// This function will also create wrappers for all __direct child elements__ (one level down) within the stack, and create appropriate wrappers (Stack, Canvas, Element) for them.
+export const getStacks = function (query = '[data-scrawl-stack]') {
+
+    document.querySelectorAll(query).forEach(el => addInitialStackElement(el));
 };
+
+// Create a __stack__ artefact wrapper for a given stack element.
+const addInitialStackElement = function (el) {
+
+    let mygroup = el.getAttribute('data-scrawl-group'),
+        myname = el.id || el.getAttribute('name'),
+        position = 'absolute';
+
+    if (!mygroup) {
+
+        el.setAttribute('data-scrawl-group', 'root');
+        mygroup = 'root';
+        position = 'relative';
+    }
+
+    if (!myname) {
+
+        myname = generateUniqueString();
+        el.id = myname;
+    }
+
+    let mystack = makeStack({
+        name: myname,
+        domElement: el,
+        group: mygroup,
+        host: mygroup,
+        position: position,
+        setInitialDimensions: true
+    });
+
+    processNewStackChildren(el, myname);
+
+    return mystack;
+};
+
+// Helper function for addInitialStackElement()
+const processNewStackChildren = function (el, name) {
+
+    let hostDims = el.getBoundingClientRect(),
+        y = 0;
+
+    // Only go down one level of hierarchy here; stacks don't do hierarchies, only interested in knowing about immediate child elements
+    Array.from(el.children).forEach(child => {
+    
+        if (child.getAttribute('data-scrawl-stack') == null && !isa_canvas(child) && child.tagName !== 'SCRIPT') {
+
+            let dims = child.getBoundingClientRect(),
+                computed = window.getComputedStyle(child);
+
+            let yHeight = parseFloat(computed.marginTop) + parseFloat(computed.borderTopWidth) + parseFloat(computed.paddingTop) + parseFloat(computed.paddingBottom) + parseFloat(computed.borderBottomWidth) + parseFloat(computed.marginBottom);
+
+            y = (!y) ? dims.top - hostDims.top : y;
+
+            let args = {
+                name: child.id || child.getAttribute('name'),
+                domElement: child,
+                group: name,
+                host: name,
+                position: 'absolute',
+                width: dims.width,
+                height: dims.height,
+                startX: dims.left - hostDims.left,
+                startY: y,
+                classes: (child.className) ? child.className : '',
+            };
+
+            y += yHeight + dims.height;
+
+            makeElement(args);
+        }
+
+        // No need to worry about processing child stacks - they'll already be in the list of stacks to be processed
+        else child.setAttribute('data-scrawl-group', name);
+    });
+};
+
+// `Exported function` (to modules and scrawl object). Use __addStack__ to add a Scrawl-canvas stack element to a web page, or transform an existing element into a stack element. The items argument can include 
+// + __element__ - the DOM element to be the stack - if not present, will autogenerate a div element
+// + __host__ - the host element, either as the DOM element itself, or some sort of CSS search string; if not present, will create the stack at the stack element's current place or, failing all else, add the stack to the end of the document body
+// + __name__ - String identifier for the stack; if not included the function will attempt to use the element's existing id or name attribute or, failing that, generate a random name for the stack.
+// + any other regular stack attribute
+export const addStack = function (items = Ωempty) {
+
+    // define variables
+    let el, host, hostinscrawl, mystack, mygroup, name,
+        position = 'absolute',
+        newElement = false;
+
+    // get, or generate a new, stack-to-be element
+    if (items.element && items.element.substring) el = document.querySelector(items.element);
+    else if (isa_dom(items.element)) el = items.element;
+    else {
+
+        newElement = true;
+        el = document.createElement('div');
+    }
+
+    // get element's host (parent-to-be) element
+    if (items.host && items.host.substring) {
+
+        host = document.querySelector(items.host);
+        if (!host) host = document.body;
+    }
+    else if (isa_dom(items.host)) host = items.host;
+    else if (xt(el.parentElement)) host = el.parentElement;
+    else host = document.body;
+
+    // if dimensions have been set in the argument, apply them to the stack-to-be element
+    if (xt(items.width)) el.style.width = (items.width.toFixed) ? `${items.width}px` : items.width;
+    if (xt(items.height)) el.style.height = (items.height.toFixed) ? `${items.height}px` : items.height;
+
+    // make sure the stack-to-be element has an id attribute
+    name = items.name || el.id || el.getAttribute('name') || '';
+    if (!name) name = generateUniqueString();
+    el.id = name;
+
+    // set the 'data-scrawl-stack' attribute on the stack-to-be element
+    el.setAttribute('data-scrawl-stack', 'data-scrawl-stack');
+
+    // determine whether the parent element is already known to Scrawl-canvas - affects the stack-to-be element's group 
+    if (host && host.getAttribute('data-scrawl-stack') != null) {
+
+        hostinscrawl = artefact[host.id];
+
+        mygroup = (hostinscrawl) ? hostinscrawl.name : 'root';
+    }
+    else mygroup = 'root';
+
+    // set the 'data-scrawl-group' attribute on the stack-to-be element
+    el.setAttribute('data-scrawl-group', mygroup);
+
+    // determine what the stack-to-be element's position style attribute will be
+    if (mygroup === 'root') position = 'relative';
+
+    // add (or move) the stack-to-be element to/in the DOM
+    if (!el.parentElement || host.id !== el.parentElement.id) host.appendChild(el);
+
+    // create the Scrawl-canvas Stack artefact
+    mystack = makeStack({
+        name: name,
+        domElement: el,
+        group: mygroup,
+        host: mygroup,
+        position: position,
+        setInitialDimensions: true
+    });
+
+    processNewStackChildren(el, name);
+
+    // in case any of the child elements were already a Scrawl-canvas stack, un-root them (if required)
+    Array.from(el.childNodes).forEach(child => {
+
+        if (child.id && rootElements.indexOf(child.id) >= 0) removeItem(rootElements, child.id);
+    });
+
+    // set the new Stack's remaining attributes, clearing out any attributes already handled
+    delete items.name;
+    delete items.element;
+    delete items.host;
+    delete items.width;
+    delete items.height;
+    mystack.set(items);
+
+    // tidy up and complete
+    rootElementsSort = true;
+    return mystack;
+};
+
+// `Exported function` (to modules and scrawl object). Parse the DOM, looking for a specific element; then create a __Stack__ artefact wrapper for it.
+export const getStack = function (search) {
+
+    let el = document.querySelector(`#${search}`);
+
+    const s = stack[search];
+
+    if (s) {
+
+        if (el.dataset.scrawlGroup != null) return s;
+        else purge(search);
+    }
+
+    if (el) {
+        const newStack = addInitialStackElement(el);
+        return newStack;
+    }
+    return undefined;
+};
+

@@ -37,8 +37,8 @@
 
 
 // #### Imports
-import { constructors, animationtickers, radian } from '../core/library.js';
-import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, λnull, easeEngines, Ωempty } from '../core/utilities.js';
+import { constructors, animationtickers } from '../core/library.js';
+import { mergeOver, pushUnique, radian, xt, xtGet, xto, convertTime, λnull, easeEngines, Ωempty } from '../core/utilities.js';
 
 import { makeTicker } from './ticker.js';
 
@@ -679,16 +679,10 @@ P.seekFor = function(milliseconds) {
 //     ]
 // });
 // ```
-const makeTween = function (items) {
+export const makeTween = function (items) {
 
     if (!items) return false;
     return new Tween(items);
 };
 
 constructors.Tween = Tween;
-
-
-// #### Exports
-export {
-    makeTween,
-};

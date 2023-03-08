@@ -9,8 +9,8 @@
 
 
 // #### Imports
-import { radian, constructors } from '../core/library.js';
-import { isa_quaternion, isa_number, xt, xto, Ωempty } from '../core/utilities.js';
+import { constructors } from '../core/library.js';
+import { radian, isa_quaternion, isa_number, xt, xto, Ωempty } from '../core/utilities.js';
 
 import { requestVector, releaseVector, makeVector } from './vector.js';
 
@@ -235,7 +235,7 @@ P.quaternionRotate = function (item) {
 const quaternionPool = [];
 
 // `exported function` - retrieve a Quaternion from the quaternion pool
-const requestQuaternion = function (items) {
+export const requestQuaternion = function (items) {
 
     if (!quaternionPool.length) {
 
@@ -252,7 +252,7 @@ const requestQuaternion = function (items) {
 };
 
 // `exported function` - return a Quaternion to the quaternion pool. Failing to return Quaternion to the pool may lead to more inefficient code and possible memory leaks.
-const releaseQuaternion = function (q) {
+export const releaseQuaternion = function (q) {
 
     if (q && q.type === 'Quaternion') {
 
@@ -262,17 +262,9 @@ const releaseQuaternion = function (q) {
 
 
 // #### Factory
-const makeQuaternion = function (items) {
+export const makeQuaternion = function (items) {
 
     return new Quaternion(items);
 };
 
 constructors.Quaternion = Quaternion;
-
-
-// #### Exports
-export {
-    makeQuaternion,
-    requestQuaternion,
-    releaseQuaternion,
-};

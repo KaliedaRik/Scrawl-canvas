@@ -20,8 +20,8 @@
 // #### Imports
 import { constructors, tween, artefact, group } from '../core/library.js';
 import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xta, Ωempty } from '../core/utilities.js';
-import { currentGroup } from '../core/document.js';
 
+import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
 import { requestVector, releaseVector } from './vector.js';
 
