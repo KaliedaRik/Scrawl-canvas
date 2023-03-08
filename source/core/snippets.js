@@ -5,7 +5,6 @@
 // TODO - documentation
 
 
-
 // ## Imports
 import { isa_dom, isa_boolean, isa_obj } from "./utilities.js";
 import { artefact, unstackedelement } from "./library.js";

@@ -3,6 +3,7 @@
 //
 // Each artifact can have a maximum of one anchor object associated with it.
 
+
 // #### Imports
 import { canvas } from '../core/library.js';
 import { mergeOver, isa_obj, Ωempty } from '../core/utilities.js';

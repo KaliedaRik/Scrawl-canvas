@@ -1,6 +1,7 @@
 // # Shape-basic mixin
 // This mixin defines the key attributes and functionality for all Scrawl-canvas __path-defined entitys__. 
 
+
 // #### Imports
 import { artefact } from '../core/library.js';
 import { radian, mergeOver, xt, λnull, pushUnique, Ωempty } from '../core/utilities.js';

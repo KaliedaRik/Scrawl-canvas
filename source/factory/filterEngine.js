@@ -1059,7 +1059,7 @@ P.processResults = function (store, incoming, ratio) {
 
 // The filter Color object - used by various filters
 P.colorEngine = makeColor({
-    name: `filterEngine-colorEngine-do-not-overwrite`,
+    name: `SC-system-filter-do-not-remove`,
 });
 
 // `getGradientData` - create an imageData object containing the 256 values from a gradient that we require for doing filters work

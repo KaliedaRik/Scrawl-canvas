@@ -8,7 +8,7 @@ import {
     makeBlock,
     makeGradient,
     makeRender,
-    observeAndUpdate,
+    makeUpdater,
 } from '../source/scrawl.js'
 
 import { reportSpeed, killStyle } from './utilities.js';
@@ -85,7 +85,7 @@ makeRender({
 // Setup form observer functionality. We're doing it this way (wrapped in a function) so we can test that it can be killed, and then recreated, later
 const makeObserver = () => {
 
-    return observeAndUpdate({
+    return makeUpdater({
 
         event: ['input', 'change'],
         origin: '.controlItem',

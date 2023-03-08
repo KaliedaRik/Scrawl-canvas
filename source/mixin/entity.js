@@ -9,7 +9,6 @@
 // Entitys are, nevertheless, full artefact objects which can interact with other artefacts and the mouse/touch cursor in all the normal ways: positioning (`pivot` and `path`) and dimensioning (`mimic`) functionality; collision detection (including __drag-and-drop__); etc
 
 
-
 // #### Imports
 import { λnull, mergeOver, pushUnique, xt, addStrings, isa_obj, Ωempty } from '../core/utilities.js';
 import { scrawlCanvasHold } from '../core/document.js';

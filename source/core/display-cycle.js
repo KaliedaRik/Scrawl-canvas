@@ -8,7 +8,6 @@
 // Note that Scrawl-canvas supplies a convenience function - __makeRender()__ - for automating the process of creating an animation object to handle the Display cycle
 
 
-
 // #### Imports
 import { artefact } from "./library.js";
 import { rootElements_sorted, getRootElementsSort, sortRootElements } from "./document-rootElements.js";

@@ -70,7 +70,7 @@ const setCursorTo = {
 scrawl.makeGroup({
 
     name: 'drag-group',
-    host: 'test-cell',
+    host: mycell,
     checkForEntityHover: true,
     onEntityHover: setCursorTo.pointer,
     onEntityNoHover: setCursorTo.auto,

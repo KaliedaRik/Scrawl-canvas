@@ -2715,6 +2715,7 @@ interface ObserveAndUpdateInputs {
 }
 
 export function observeAndUpdate(items: ObserveAndUpdateInputs): DefaultOutputFunction;
+export function makeUpdater(items: ObserveAndUpdateInputs): DefaultOutputFunction;
 
 
 

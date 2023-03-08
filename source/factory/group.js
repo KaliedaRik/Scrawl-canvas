@@ -229,10 +229,17 @@ S.noFilters = function (item) {
 // `getHost` - internal helper function
 P.getHost = function (item) {
 
-    let host = this.currentHost;
+    if (item) {
 
-    if (!host || host.substring) return artefact[item] || cell[item] || artefact[host] || cell[host] || null;
-    else return host;
+        if (item.type && ['Cell', 'Stack'].includes(item.type)) return item;
+        if (item.substring) return artefact[item] || cell[item];
+    }
+
+    const host = this.currentHost;
+
+    if (host && host.substring) return artefact[host] || cell[host];
+
+    return host;
 };
 
 // `forceStamp` - invoke the Group to instruct its artefact members to perform a `stamp` action, ignoring whether the Group `visibility` flag setting

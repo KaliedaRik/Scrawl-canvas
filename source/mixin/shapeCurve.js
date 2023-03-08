@@ -3,6 +3,7 @@
 //
 // These entitys have additional positioning coordinates (`startControl` and `endControl` for Bezier entitys; `control` for Quadratic entitys; all three entity types use the `end` coordinate) which we use to construct and position them. Other artefacts can pivot themselves to these coordinates, and path-defined entitys can pivot the coordinates to other artefacts.
 
+
 // #### Imports
 import { artefact, particle } from '../core/library.js';
 import { mergeOver, isa_boolean, xt, xta, addStrings, removeItem, pushUnique, Ωempty } from '../core/utilities.js';

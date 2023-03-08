@@ -21,7 +21,7 @@ import baseMix from '../mixin/base.js';
 import { makeColor } from './color.js';
 
 const colorChecker = makeColor({
-    name: 'state-color-checker',
+    name: 'SC-system-state-do-not-remove',
 });
 
 // #### State constructor
