@@ -25,6 +25,16 @@
                 </a>
               
                 
+                <a class="source" href="display-cycle.html">
+                  ./source/core/display-cycle.js
+                </a>
+              
+                
+                <a class="source" href="document-rootElements.html">
+                  ./source/core/document-rootElements.js
+                </a>
+              
+                
                 <a class="source" href="document.html">
                   ./source/core/document.js
                 </a>
@@ -125,6 +135,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/dragZone.html">
+                  ./source/factory/dragZone.js
+                </a>
+              
+                
                 <a class="source" href="../factory/element.html">
                   ./source/factory/element.js
                 </a>
@@ -175,6 +190,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/keyboardZone.html">
+                  ./source/factory/keyboardZone.js
+                </a>
+              
+                
                 <a class="source" href="../factory/line.html">
                   ./source/factory/line.js
                 </a>
@@ -202,6 +222,11 @@
                 
                 <a class="source" href="../factory/noiseAsset.html">
                   ./source/factory/noiseAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/observeUpdate.html">
+                  ./source/factory/observeUpdate.js
                 </a>
               
                 
@@ -490,8 +515,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="dom-management">DOM management</h1>
-<p>Core DOM element discovery and management functionality, and the Scrawl-canvas <strong>Display cycle</strong>.</p>
-<p>Scrawl-canvas breaks down the display cycle into three parts: <strong>clear</strong>; <strong>compile</strong>; and <strong>show</strong>. These can be triggered either as a single, combined <strong>render</strong> operation, or separately as-and-when needed.</p>
+<p>Core DOM element discovery and management functionality</p>
 <p>The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element’s controller’s <strong>order</strong> attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value</p>
 
             </div>
@@ -509,14 +533,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_canvas, generateUniqueString, isa_dom, pushUnique, removeItem, xt, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;
-<span class="hljs-keyword">import</span> { artefact, canvas, cell, group, stack, css, xcss, purge } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { pushUnique, css, xcss } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;
+<span class="hljs-keyword">import</span> { artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { getPixelRatio, getIgnorePixelRatio } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./events.js&quot;</span>;
-
-<span class="hljs-keyword">import</span> { makeStack } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/stack.js&quot;</span>;
-<span class="hljs-keyword">import</span> { makeElement } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/element.js&quot;</span>;
-<span class="hljs-keyword">import</span> { makeCanvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/canvas.js&quot;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { rootElements } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./document-rootElements.js&quot;</span>;
+<span class="hljs-keyword">import</span> { getPixelRatio, getIgnorePixelRatio } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./events.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -526,989 +547,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
-              <h4 id="root-elements">Root elements</h4>
-<p><code>Exported array and function</code> (to modules). Root elements are the boxes whose dimensions define the dimensions and positioning of all that they contain. All &lt;canvas&gt; elements are root elements. Scrawl-canvas also allows other DOM elements (typically &lt;div&gt; elements) to be defined as root elements called <strong>stacks</strong>, whose child elements can then be positioned and dimensioned just like entity objects in a canvas.</p>
-<p>Stacks can be nested within each other, and canvases can also be nested inside a stack. (Nothing can nest inside a canvas element). Only the top level stack will be included in the rootElements array.</p>
-<p>The Scrawl-canvas <strong>Display cycle</strong> can start at the rootElements array, with each member of the array processed in turn.</p>
-<p>The <strong>rootElements</strong> array keeps track of all ‘root’ stack artefacts, and also includes all canvas artefacts, whether they’re part of a stack or not. <strong>setRootElementSort</strong> forces the root</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> rootElements = [],
-    setRootElementsSort = <span class="hljs-function">() =&gt;</span> {rootElementsSort = <span class="hljs-literal">true</span>};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
-              </div>
-              <p>Local variables</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> rootElements_sorted = [],
-    rootElementsSort = <span class="hljs-literal">true</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
-              <p>Scrawl-canvas rootElements sorter uses a ‘bucket sort’ algorithm</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> sortRootElements = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">let</span> floor = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>;
-
-    <span class="hljs-keyword">if</span> (rootElementsSort) {
-
-        rootElementsSort = <span class="hljs-literal">false</span>;
-
-        <span class="hljs-keyword">let</span> buckets = [],
-            art, order, i, iz, item;
-
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = rootElements.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-            item = rootElements[i];
-            art = artefact[item];
-
-            <span class="hljs-keyword">if</span> (art) {
-
-                order = <span class="hljs-title function_">floor</span>(art.<span class="hljs-property">order</span>) || <span class="hljs-number">0</span>;
-
-                <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
-                
-                buckets[order].<span class="hljs-title function_">push</span>(art.<span class="hljs-property">name</span>);
-            }
-        }
-        rootElements_sorted = buckets.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.<span class="hljs-title function_">concat</span>(v), []);
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <h4 id="stack-discovery">Stack discovery</h4>
-<p><code>Exported function</code> (to modules). Parse the DOM, looking for all elements that have been given a <strong>data-stack</strong> attribute; then create <strong>Stack</strong> artefact wrappers for each of them. </p>
-<p>This function will also create wrappers for all <strong>direct child elements</strong> (one level down) within the stack, and create appropriate wrappers (Stack, Canvas, Element) for them.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getStacks = <span class="hljs-keyword">function</span> (<span class="hljs-params">query = <span class="hljs-string">&#x27;[data-scrawl-stack]&#x27;</span></span>) {
-
-    <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(query).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">addInitialStackElement</span>(el));
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>Create a <strong>stack</strong> artefact wrapper for a given stack element.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addInitialStackElement = <span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) {
-
-    <span class="hljs-keyword">let</span> mygroup = el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>),
-        myname = el.<span class="hljs-property">id</span> || el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;name&#x27;</span>),
-        position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
-
-    <span class="hljs-keyword">if</span> (!mygroup) {
-
-        el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, <span class="hljs-string">&#x27;root&#x27;</span>);
-        mygroup = <span class="hljs-string">&#x27;root&#x27;</span>;
-        position = <span class="hljs-string">&#x27;relative&#x27;</span>;
-    }
-
-    <span class="hljs-keyword">if</span> (!myname) {
-
-        myname = <span class="hljs-title function_">generateUniqueString</span>();
-        el.<span class="hljs-property">id</span> = myname;
-    }
-
-    <span class="hljs-keyword">let</span> mystack = <span class="hljs-title function_">makeStack</span>({
-        <span class="hljs-attr">name</span>: myname,
-        <span class="hljs-attr">domElement</span>: el,
-        <span class="hljs-attr">group</span>: mygroup,
-        <span class="hljs-attr">host</span>: mygroup,
-        <span class="hljs-attr">position</span>: position,
-        <span class="hljs-attr">setInitialDimensions</span>: <span class="hljs-literal">true</span>
-    });
-
-    <span class="hljs-title function_">processNewStackChildren</span>(el, myname);
-
-    <span class="hljs-keyword">return</span> mystack;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <p>Helper function for addInitialStackElement()</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> processNewStackChildren = <span class="hljs-keyword">function</span> (<span class="hljs-params">el, name</span>) {
-
-    <span class="hljs-keyword">let</span> hostDims = el.<span class="hljs-title function_">getBoundingClientRect</span>(),
-        y = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>Only go down one level of hierarchy here; stacks don’t do hierarchies, only interested in knowing about immediate child elements</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(el.<span class="hljs-property">children</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">child</span> =&gt;</span> {
-    
-        <span class="hljs-keyword">if</span> (child.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-stack&#x27;</span>) == <span class="hljs-literal">null</span> &amp;&amp; !<span class="hljs-title function_">isa_canvas</span>(child) &amp;&amp; child.<span class="hljs-property">tagName</span> !== <span class="hljs-string">&#x27;SCRIPT&#x27;</span>) {
-
-            <span class="hljs-keyword">let</span> dims = child.<span class="hljs-title function_">getBoundingClientRect</span>(),
-                computed = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(child);
-
-            <span class="hljs-keyword">let</span> yHeight = <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">marginTop</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">borderTopWidth</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">paddingTop</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">paddingBottom</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">borderBottomWidth</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">marginBottom</span>);
-
-            y = (!y) ? dims.<span class="hljs-property">top</span> - hostDims.<span class="hljs-property">top</span> : y;
-
-            <span class="hljs-keyword">let</span> args = {
-                <span class="hljs-attr">name</span>: child.<span class="hljs-property">id</span> || child.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;name&#x27;</span>),
-                <span class="hljs-attr">domElement</span>: child,
-                <span class="hljs-attr">group</span>: name,
-                <span class="hljs-attr">host</span>: name,
-                <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;absolute&#x27;</span>,
-                <span class="hljs-attr">width</span>: dims.<span class="hljs-property">width</span>,
-                <span class="hljs-attr">height</span>: dims.<span class="hljs-property">height</span>,
-                <span class="hljs-attr">startX</span>: dims.<span class="hljs-property">left</span> - hostDims.<span class="hljs-property">left</span>,
-                <span class="hljs-attr">startY</span>: y,
-                <span class="hljs-attr">classes</span>: (child.<span class="hljs-property">className</span>) ? child.<span class="hljs-property">className</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            };
-
-            y += yHeight + dims.<span class="hljs-property">height</span>;
-
-            <span class="hljs-title function_">makeElement</span>(args);
-        }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>No need to worry about processing child stacks - they’ll already be in the list of stacks to be processed</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> child.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, name);
-    });
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). Use <strong>addStack</strong> to add a Scrawl-canvas stack element to a web page, or transform an existing element into a stack element. The items argument can include </p>
-<ul>
-<li><strong>element</strong> - the DOM element to be the stack - if not present, will autogenerate a div element</li>
-<li><strong>host</strong> - the host element, either as the DOM element itself, or some sort of CSS search string; if not present, will create the stack at the stack element’s current place or, failing all else, add the stack to the end of the document body</li>
-<li><strong>name</strong> - String identifier for the stack; if not included the function will attempt to use the element’s existing id or name attribute or, failing that, generate a random name for the stack.</li>
-<li>any other regular stack attribute</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addStack = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p>define variables</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> el, host, hostinscrawl, mystack, mygroup, name,
-        position = <span class="hljs-string">&#x27;absolute&#x27;</span>,
-        newElement = <span class="hljs-literal">false</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <p>get, or generate a new, stack-to-be element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">element</span> &amp;&amp; items.<span class="hljs-property">element</span>.<span class="hljs-property">substring</span>) el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(items.<span class="hljs-property">element</span>);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_dom</span>(items.<span class="hljs-property">element</span>)) el = items.<span class="hljs-property">element</span>;
-    <span class="hljs-keyword">else</span> {
-
-        newElement = <span class="hljs-literal">true</span>;
-        el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>get element’s host (parent-to-be) element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">host</span> &amp;&amp; items.<span class="hljs-property">host</span>.<span class="hljs-property">substring</span>) {
-
-        host = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(items.<span class="hljs-property">host</span>);
-        <span class="hljs-keyword">if</span> (!host) host = <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>;
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_dom</span>(items.<span class="hljs-property">host</span>)) host = items.<span class="hljs-property">host</span>;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(el.<span class="hljs-property">parentElement</span>)) host = el.<span class="hljs-property">parentElement</span>;
-    <span class="hljs-keyword">else</span> host = <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p>if dimensions have been set in the argument, apply them to the stack-to-be element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">width</span>)) el.<span class="hljs-property">style</span>.<span class="hljs-property">width</span> = (items.<span class="hljs-property">width</span>.<span class="hljs-property">toFixed</span>) ? <span class="hljs-string">`<span class="hljs-subst">${items.width}</span>px`</span> : items.<span class="hljs-property">width</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">height</span>)) el.<span class="hljs-property">style</span>.<span class="hljs-property">height</span> = (items.<span class="hljs-property">height</span>.<span class="hljs-property">toFixed</span>) ? <span class="hljs-string">`<span class="hljs-subst">${items.height}</span>px`</span> : items.<span class="hljs-property">height</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p>make sure the stack-to-be element has an id attribute</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    name = items.<span class="hljs-property">name</span> || el.<span class="hljs-property">id</span> || el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;name&#x27;</span>) || <span class="hljs-string">&#x27;&#x27;</span>;
-    <span class="hljs-keyword">if</span> (!name) name = <span class="hljs-title function_">generateUniqueString</span>();
-    el.<span class="hljs-property">id</span> = name;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p>set the ‘data-scrawl-stack’ attribute on the stack-to-be element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-stack&#x27;</span>, <span class="hljs-string">&#x27;data-scrawl-stack&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>determine whether the parent element is already known to Scrawl-canvas - affects the stack-to-be element’s group </p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-stack&#x27;</span>) != <span class="hljs-literal">null</span>) {
-
-        hostinscrawl = artefact[host.<span class="hljs-property">id</span>];
-
-        mygroup = (hostinscrawl) ? hostinscrawl.<span class="hljs-property">name</span> : <span class="hljs-string">&#x27;root&#x27;</span>;
-    }
-    <span class="hljs-keyword">else</span> mygroup = <span class="hljs-string">&#x27;root&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>set the ‘data-scrawl-group’ attribute on the stack-to-be element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, mygroup);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>determine what the stack-to-be element’s position style attribute will be</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (mygroup === <span class="hljs-string">&#x27;root&#x27;</span>) position = <span class="hljs-string">&#x27;relative&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p>add (or move) the stack-to-be element to/in the DOM</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!el.<span class="hljs-property">parentElement</span> || host.<span class="hljs-property">id</span> !== el.<span class="hljs-property">parentElement</span>.<span class="hljs-property">id</span>) host.<span class="hljs-title function_">appendChild</span>(el);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <p>create the Scrawl-canvas Stack artefact</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    mystack = <span class="hljs-title function_">makeStack</span>({
-        <span class="hljs-attr">name</span>: name,
-        <span class="hljs-attr">domElement</span>: el,
-        <span class="hljs-attr">group</span>: mygroup,
-        <span class="hljs-attr">host</span>: mygroup,
-        <span class="hljs-attr">position</span>: position,
-        <span class="hljs-attr">setInitialDimensions</span>: <span class="hljs-literal">true</span>
-    });
-
-    <span class="hljs-title function_">processNewStackChildren</span>(el, name);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <p>in case any of the child elements were already a Scrawl-canvas stack, un-root them (if required)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(el.<span class="hljs-property">childNodes</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">child</span> =&gt;</span> {
-
-        <span class="hljs-keyword">if</span> (child.<span class="hljs-property">id</span> &amp;&amp; rootElements.<span class="hljs-title function_">indexOf</span>(child.<span class="hljs-property">id</span>) &gt;= <span class="hljs-number">0</span>) <span class="hljs-title function_">removeItem</span>(rootElements, child.<span class="hljs-property">id</span>);
-    });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <p>set the new Stack’s remaining attributes, clearing out any attributes already handled</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">name</span>;
-    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">element</span>;
-    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">host</span>;
-    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">width</span>;
-    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">height</span>;
-    mystack.<span class="hljs-title function_">set</span>(items);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
-              <p>tidy up and complete</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    rootElementsSort = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> mystack;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
-              </div>
-              <h4 id="canvas-discovery">Canvas discovery</h4>
-<p><code>Exported function</code> (to modules). Parse the DOM, looking for &lt;canvas&gt; elements; then create <strong>Canvas</strong> artefact and <strong>Cell</strong> asset wrappers for each canvas found. Canvas elements do not need to be part of a stack and can appear anywhere in the HTML body.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getCanvases = <span class="hljs-keyword">function</span> (<span class="hljs-params">query = <span class="hljs-string">&#x27;[data-scrawl-canvas]&#x27;</span></span>) {
-
-    <span class="hljs-keyword">let</span> item;
-
-    <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(query).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">el, index</span>) =&gt;</span> {
-
-        item = <span class="hljs-title function_">addInitialCanvasElement</span>(el);
-
-        <span class="hljs-keyword">if</span> (!index) <span class="hljs-title function_">setCurrentCanvas</span>(item);
-    });
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
-              </div>
-              <p>Create a <strong>canvas</strong> artefact wrapper for a given canvas element.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addInitialCanvasElement = <span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) {
-
-    <span class="hljs-keyword">let</span> mygroup = el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>),
-        myname = el.<span class="hljs-property">id</span> || el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;name&#x27;</span>),
-        position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
-
-    <span class="hljs-keyword">if</span> (!mygroup) {
-
-        el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, <span class="hljs-string">&#x27;root&#x27;</span>);
-        mygroup = <span class="hljs-string">&#x27;root&#x27;</span>;
-        position = el.<span class="hljs-property">style</span>.<span class="hljs-property">position</span>;
-    }
-
-    <span class="hljs-keyword">if</span> (!myname) {
-
-        myname = <span class="hljs-title function_">generateUniqueString</span>();
-        el.<span class="hljs-property">id</span> = myname;
-    }
-
-    <span class="hljs-keyword">return</span> <span class="hljs-title function_">makeCanvas</span>({
-        <span class="hljs-attr">name</span>: myname,
-        <span class="hljs-attr">domElement</span>: el,
-        <span class="hljs-attr">group</span>: mygroup,
-        <span class="hljs-attr">host</span>: mygroup,
-        <span class="hljs-attr">position</span>: position,
-        <span class="hljs-attr">setInitialDimensions</span>: <span class="hljs-literal">true</span>
-    });
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). Parse the DOM, looking for a specific &lt;canvas&gt; element id; then create a <strong>Canvas</strong> artefact and <strong>Cell</strong> asset wrapper for it.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getCanvas = <span class="hljs-keyword">function</span> (<span class="hljs-params">search</span>) {
-
-    <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${search}</span>`</span>);
-
-    <span class="hljs-keyword">const</span> c = canvas[search];
-
-    <span class="hljs-keyword">if</span> (c) {
-
-        <span class="hljs-keyword">if</span> (el.<span class="hljs-property">dataset</span>.<span class="hljs-property">scrawlGroup</span> != <span class="hljs-literal">null</span>) {
-
-            <span class="hljs-title function_">setCurrentCanvas</span>(c);
-            <span class="hljs-keyword">return</span> c;
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-title function_">purge</span>(search);
-    }
-
-    <span class="hljs-keyword">if</span> (el) {
-        <span class="hljs-keyword">const</span> newCanvas = <span class="hljs-title function_">addInitialCanvasElement</span>(el);
-        <span class="hljs-title function_">setCurrentCanvas</span>(newCanvas);
-        <span class="hljs-keyword">return</span> newCanvas;
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). Parse the DOM, looking for a specific element; then create a <strong>Stack</strong> artefact wrapper for it.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getStack = <span class="hljs-keyword">function</span> (<span class="hljs-params">search</span>) {
-
-    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${search}</span>`</span>);
-
-    <span class="hljs-keyword">const</span> s = stack[search];
-
-    <span class="hljs-keyword">if</span> (s) {
-
-        <span class="hljs-keyword">if</span> (el.<span class="hljs-property">dataset</span>.<span class="hljs-property">scrawlGroup</span> != <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> s;
-        <span class="hljs-keyword">else</span> <span class="hljs-title function_">purge</span>(search);
-    }
-
-    <span class="hljs-keyword">if</span> (el) {
-        <span class="hljs-keyword">const</span> newStack = <span class="hljs-title function_">addInitialStackElement</span>(el);
-        <span class="hljs-keyword">return</span> newStack;
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
-              </div>
-              <p>Scrawl-canvas expects one canvas element (if any canvases are present) to act as the ‘current’ canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using <strong>scrawl.setCurrentCanvas</strong></p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
-              </div>
-              <p><code>Exported variables</code> (to modules). </p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> currentCanvas = <span class="hljs-literal">null</span>,
-    currentGroup = <span class="hljs-literal">null</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). </p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setCurrentCanvas = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">let</span> changeFlag = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">if</span> (item) {
-
-        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
-
-            <span class="hljs-keyword">let</span> mycanvas = canvas[item];
-
-            <span class="hljs-keyword">if</span> (mycanvas) {
-                currentCanvas = mycanvas;
-                changeFlag = <span class="hljs-literal">true</span>;    
-            }
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Canvas&#x27;</span>) {
-
-            currentCanvas = item;    
-            changeFlag = <span class="hljs-literal">true</span>;    
-        } 
-    }
-
-    <span class="hljs-keyword">if</span> (changeFlag &amp;&amp; currentCanvas.<span class="hljs-property">base</span>) {
-
-        <span class="hljs-keyword">let</span> mygroup = group[currentCanvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>];
-
-        <span class="hljs-keyword">if</span> (mygroup) currentGroup = mygroup;
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). Use <strong>addCanvas</strong> to add a Scrawl-canvas canvas element to a web page. The items argument should include </p>
-<ul>
-<li><strong>host</strong> - the host element, either as the DOM element itself, or some sort of CSS search string, or a Scrawl-canvas Stack entity. If no host is supplied, Scrawl-canvas will add the new canvas element to the DOM document body; in all cases, the new canvas element is appended at the end of the host element (or DOM document)</li>
-<li><strong>name</strong> - String identifier for the element; will generate a random name for the canvas if no name is supplied.</li>
-<li>any other regular Scrawl-canvas Canvas artefact attribute</li>
-</ul>
-<p>By default, Scrawl-canvas will setup the new Canvas as the ‘current canvas’, and will add mouse/pointer tracking functionality to it. If no dimensions are supplied then the Canvas will default to 300px wide and 150px high.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addCanvas = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
-
-    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>),
-        myname = (items.<span class="hljs-property">name</span>) ? items.<span class="hljs-property">name</span> : <span class="hljs-title function_">generateUniqueString</span>(),
-        host = items.<span class="hljs-property">host</span>,
-        mygroup = <span class="hljs-string">&#x27;root&#x27;</span>,
-        width = items.<span class="hljs-property">width</span> || <span class="hljs-number">300</span>,
-        height = items.<span class="hljs-property">height</span> || <span class="hljs-number">150</span>,
-        position = <span class="hljs-string">&#x27;relative&#x27;</span>;
-
-    <span class="hljs-keyword">if</span> (host.<span class="hljs-property">substring</span>) {
-
-        <span class="hljs-keyword">let</span> temphost = artefact[host];
-
-        <span class="hljs-keyword">if</span> (!temphost &amp;&amp; host) {
-
-            host = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(host);
-
-            <span class="hljs-keyword">if</span> (host) mygroup = host.<span class="hljs-property">id</span>;
-        }
-        <span class="hljs-keyword">else</span> host = temphost;
-    }
-
-    <span class="hljs-keyword">if</span> (host) {
-
-        <span class="hljs-keyword">if</span> (host.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Stack&#x27;</span>) {
-
-            mygroup = host.<span class="hljs-property">name</span>;
-            position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
-            host = host.<span class="hljs-property">domElement</span>;
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_dom</span>(host)) host = <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>;
-    }
-    <span class="hljs-keyword">else</span> host = <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>;
-
-    el.<span class="hljs-property">id</span> = myname;
-    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, mygroup);
-    el.<span class="hljs-property">width</span> = width;
-    el.<span class="hljs-property">height</span> = height;
-    el.<span class="hljs-property">style</span>.<span class="hljs-property">position</span> = position;
-
-    host.<span class="hljs-title function_">appendChild</span>(el);
-
-    <span class="hljs-keyword">let</span> mycanvas = <span class="hljs-title function_">makeCanvas</span>({
-        <span class="hljs-attr">name</span>: myname,
-        <span class="hljs-attr">domElement</span>: el,
-        <span class="hljs-attr">group</span>: mygroup,
-        <span class="hljs-attr">host</span>: mygroup,
-        <span class="hljs-attr">position</span>: position,
-        <span class="hljs-attr">setInitialDimensions</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">setAsCurrentCanvas</span>: (<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">setAsCurrentCanvas</span>)) ? items.<span class="hljs-property">setAsCurrentCanvas</span> : <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">trackHere</span>: (<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">trackHere</span>)) ? items.<span class="hljs-property">trackHere</span> : <span class="hljs-string">&#x27;subscribe&#x27;</span>,
-    });
-
-    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">group</span>;
-    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">host</span>;
-    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">name</span>;
-    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">element</span>;
-    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">position</span>;
-    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">setInitialDimensions</span>;
-    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">setAsCurrentCanvas</span>;
-    <span class="hljs-keyword">delete</span> items.<span class="hljs-property">trackHere</span>;
-
-    mycanvas.<span class="hljs-title function_">set</span>(items);
-
-    <span class="hljs-keyword">return</span> mycanvas;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
-              </div>
-              <h4 id="the-display-cycle">The Display cycle</h4>
-<p>Scrawl-canvas breaks down the Display cycle into three parts: <strong>clear</strong>; <strong>compile</strong>; and <strong>show</strong>. These can be triggered either as a single, combined <strong>render</strong> operation, or separately as-and-when needed.</p>
-<p>The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element’s controller’s <strong>order</strong> attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value</p>
-<p>Each display cycle function is a normal Javascript function, invoked with no arguments and returning no status</p>
-<p>Note that Scrawl-canvas supplies a convenience function - <strong>makeRender()</strong> - for automating the process of creating an animation object to handle the Display cycle</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
-              </div>
-              <h5 id="clear">Clear</h5>
-<ul>
-<li>For canvas artefacts, clear its Cell assets’ display (reset all pixels to 0, or the designated background color) ready for them to be redrawn</li>
-<li>For stack artefacts - no action required</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). </p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> clear = <span class="hljs-keyword">function</span> (<span class="hljs-params">...items</span>) {
-
-    <span class="hljs-title function_">displayCycleHelper</span>(items);
-    <span class="hljs-title function_">displayCycleBatchProcess</span>(<span class="hljs-string">&#x27;clear&#x27;</span>);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
-              </div>
-              <h5 id="compile">Compile</h5>
-<ul>
-<li>For both canvas and stack artefacts, perform necessary entity/element positional calculations</li>
-<li>Additionally for canvas artefacts, stamp associated entitys onto the canvas’s constituent cell assets</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). </p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> compile = <span class="hljs-keyword">function</span> (<span class="hljs-params">...items</span>) {
-
-    <span class="hljs-title function_">displayCycleHelper</span>(items);
-    <span class="hljs-title function_">displayCycleBatchProcess</span>(<span class="hljs-string">&#x27;compile&#x27;</span>);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
-              </div>
-              <h5 id="show">Show</h5>
-<ul>
-<li>For canvas artefacts, stamp additional ‘layer’ canvases onto the base canvas, then copy the base canvas onto the display canvas</li>
-<li>For stack artefacts - invoke the <strong>domShow</strong> function, if any of its constituent elements require DOM-related updating</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). </p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> show = <span class="hljs-keyword">function</span> (<span class="hljs-params">...items</span>) {
-
-    <span class="hljs-title function_">displayCycleHelper</span>(items);
-    <span class="hljs-title function_">displayCycleBatchProcess</span>(<span class="hljs-string">&#x27;show&#x27;</span>);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
-              </div>
-              <h5 id="render">Render</h5>
-<ul>
-<li>Orchestrate the clear, compile and show actions on each stack and canvas DOM element</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). </p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> render = <span class="hljs-keyword">function</span> (<span class="hljs-params">...items</span>) {
-
-    <span class="hljs-title function_">displayCycleHelper</span>(items);
-    <span class="hljs-title function_">displayCycleBatchProcess</span>(<span class="hljs-string">&#x27;render&#x27;</span>);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
-              </div>
-              <p>Helper functions coordinate the actions required to complete a display cycle</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> displayCycleHelper = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
-
-    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">length</span>) rootElements_sorted = items;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (rootElementsSort) <span class="hljs-title function_">sortRootElements</span>();
-};
-
-<span class="hljs-keyword">const</span> displayCycleBatchProcess = <span class="hljs-keyword">function</span> (<span class="hljs-params">method</span>) {
-
-    <span class="hljs-keyword">let</span> i, iz, name, item;
-
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = rootElements_sorted.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-        name = rootElements_sorted[i];
-        item = artefact[name];
-
-        <span class="hljs-keyword">if</span> (item &amp;&amp; item[method]) item[method]();
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <h4 id="dom-element-updates">DOM element updates</h4>
 <p>Scrawl-canvas will batch process all DOM element updates, to minimize disruptive impacts on web page performance. We don’t maintain a full/comprehensive ‘shadow’ or ‘virtual’ DOM, but Scrawl-canvas does maintain a record of element (absolute) position and dimension data, alongside details of scaling, perspective and any other CSS related data (including CSS classes) which we tell it about, on a per-element basis.</p>
@@ -1521,11 +559,11 @@
         </li>
         
         
-        <li id="section-45">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Local variable</p>
 
@@ -1536,17 +574,17 @@
         </li>
         
         
-        <li id="section-46">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (to modules). </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addDomShowElement = <span class="hljs-keyword">function</span> (<span class="hljs-params">item = <span class="hljs-string">&#x27;&#x27;</span></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> addDomShowElement = <span class="hljs-keyword">function</span> (<span class="hljs-params">item = <span class="hljs-string">&#x27;&#x27;</span></span>) {
 
     <span class="hljs-keyword">if</span> (!item) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/document addDomShowElement() error - false argument supplied: <span class="hljs-subst">${item}</span>`</span>);
     <span class="hljs-keyword">if</span> (!item.<span class="hljs-property">substring</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/document addDomShowElement() error - argument not a string: <span class="hljs-subst">${item}</span>`</span>);
@@ -1554,22 +592,22 @@
     <span class="hljs-title function_">pushUnique</span>(domShowElements, item);
 };
 
-<span class="hljs-keyword">let</span> domShowRequired = <span class="hljs-literal">false</span>;</pre></div></div>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> domShowRequired = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-47">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (to modules). </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setDomShowRequired = <span class="hljs-keyword">function</span> (<span class="hljs-params">val = <span class="hljs-literal">true</span></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> setDomShowRequired = <span class="hljs-keyword">function</span> (<span class="hljs-params">val = <span class="hljs-literal">true</span></span>) {
 
     domShowRequired = val;
 };</pre></div></div>
@@ -1577,17 +615,17 @@
         </li>
         
         
-        <li id="section-48">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (to modules). This is the <strong>main DOM manipulation function</strong> which will be triggered once during each Display cycle.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> domShow = <span class="hljs-keyword">function</span> (<span class="hljs-params">singleArtefact = <span class="hljs-string">&#x27;&#x27;</span></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> domShow = <span class="hljs-keyword">function</span> (<span class="hljs-params">singleArtefact = <span class="hljs-string">&#x27;&#x27;</span></span>) {
 
     <span class="hljs-keyword">if</span> (domShowRequired || singleArtefact) {
 
@@ -1623,11 +661,11 @@
         </li>
         
         
-        <li id="section-49">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>update perspective</p>
 
@@ -1646,11 +684,11 @@
         </li>
         
         
-        <li id="section-50">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>update position</p>
 
@@ -1665,11 +703,11 @@
         </li>
         
         
-        <li id="section-51">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>update dimensions</p>
 
@@ -1713,11 +751,11 @@
         </li>
         
         
-        <li id="section-52">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>update handle/transformOrigin</p>
 
@@ -1732,11 +770,11 @@
         </li>
         
         
-        <li id="section-53">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>update transform</p>
 
@@ -1751,11 +789,11 @@
         </li>
         
         
-        <li id="section-54">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>update visibility</p>
 
@@ -1770,11 +808,11 @@
         </li>
         
         
-        <li id="section-55">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>update visibility</p>
 
@@ -1799,11 +837,11 @@
         </li>
         
         
-        <li id="section-56">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>update other CSS changes</p>
 
@@ -1838,11 +876,11 @@
         </li>
         
         
-        <li id="section-57">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>update element classes</p>
 
@@ -1860,11 +898,11 @@
         </li>
         
         
-        <li id="section-58">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="dom-holding-areas">DOM Holding areas</h4>
 <p><code>Exported handles</code> (to modules). During its initialization phase, Scrawl-canvas will add two hidden ‘hold’ elements at the top and bottom of the document body where it can add additional elements as-and-when required. </p>
@@ -1874,17 +912,17 @@
         </li>
         
         
-        <li id="section-59">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Mainly for ARIA content. ARIA labels and descriptions are used by Scrawl-canvas &lt;canvas&gt; elements to inform non-visual website visitors about content in the canvas.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> scrawlCanvasHold = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> scrawlCanvasHold = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);
 scrawlCanvasHold.<span class="hljs-property">style</span>.<span class="hljs-property">padding</span> = <span class="hljs-number">0</span>;
 scrawlCanvasHold.<span class="hljs-property">style</span>.<span class="hljs-property">border</span> = <span class="hljs-number">0</span>;
 scrawlCanvasHold.<span class="hljs-property">style</span>.<span class="hljs-property">margin</span> = <span class="hljs-number">0</span>;
@@ -1899,64 +937,22 @@ scrawlCanvasHold.<span class="hljs-property">id</span> = <span class="hljs-strin
         </li>
         
         
-        <li id="section-60">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Navigation area - canvas anchor links. Canvases create their own (hidden) &lt;nav&gt; elements that directly follow them in the DOM. These are used to store &lt;a&gt; links for clickable entitys in the canvas display, making them accessible to non-visual users (for example: screen readers)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> scrawlNavigationHold = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;nav&#x27;</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> scrawlNavigationHold = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;nav&#x27;</span>);
 scrawlNavigationHold.<span class="hljs-property">style</span>.<span class="hljs-property">position</span> = <span class="hljs-string">&#x27;absolute&#x27;</span>;
 scrawlNavigationHold.<span class="hljs-property">style</span>.<span class="hljs-property">top</span> = <span class="hljs-string">&#x27;-5000px&#x27;</span>;
 scrawlNavigationHold.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = <span class="hljs-string">&#x27;-5000px&#x27;</span>;
 scrawlNavigationHold.<span class="hljs-property">id</span> = <span class="hljs-string">&#x27;Scrawl-navigation-default-hold&#x27;</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">prepend</span>(scrawlNavigationHold);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-61">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    getCanvases,
-    getCanvas,
-    getStacks,
-    getStack,
-
-    addCanvas,
-    addStack,
-    setCurrentCanvas,
-
-    currentCanvas,
-    currentGroup,
-
-    rootElements,
-    setRootElementsSort,
-
-    clear,
-    compile,
-    show,
-    render,
-
-    addDomShowElement,
-    setDomShowRequired,
-    domShow,
-
-    scrawlCanvasHold,
-    scrawlNavigationHold,
-};</pre></div></div>
             
         </li>
         

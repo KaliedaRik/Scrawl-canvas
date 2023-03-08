@@ -25,6 +25,16 @@
                 </a>
               
                 
+                <a class="source" href="../core/display-cycle.html">
+                  ./source/core/display-cycle.js
+                </a>
+              
+                
+                <a class="source" href="../core/document-rootElements.html">
+                  ./source/core/document-rootElements.js
+                </a>
+              
+                
                 <a class="source" href="../core/document.html">
                   ./source/core/document.js
                 </a>
@@ -125,6 +135,11 @@
                 </a>
               
                 
+                <a class="source" href="dragZone.html">
+                  ./source/factory/dragZone.js
+                </a>
+              
+                
                 <a class="source" href="element.html">
                   ./source/factory/element.js
                 </a>
@@ -175,6 +190,11 @@
                 </a>
               
                 
+                <a class="source" href="keyboardZone.html">
+                  ./source/factory/keyboardZone.js
+                </a>
+              
+                
                 <a class="source" href="line.html">
                   ./source/factory/line.js
                 </a>
@@ -202,6 +222,11 @@
                 
                 <a class="source" href="noiseAsset.html">
                   ./source/factory/noiseAsset.js
+                </a>
+              
+                
+                <a class="source" href="observeUpdate.html">
+                  ./source/factory/observeUpdate.js
                 </a>
               
                 
@@ -560,9 +585,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset, tween, radian, constructors, styles, stylesnames, cell, cellnames, group, canvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset, tween, constructors, styles, stylesnames, cell, cellnames, group, canvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { generateUniqueString, isa_canvas, mergeOver, λ<span class="hljs-variable language_">this</span>, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { generateUniqueString, isa_canvas, mergeOver, λ<span class="hljs-variable language_">this</span>, λ<span class="hljs-literal">null</span>, Ωempty, radian } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 
@@ -3249,7 +3274,7 @@ P.<span class="hljs-property">poolDefs</span> = {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> requestCell = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestCell = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">if</span> (!cellPool.<span class="hljs-property">length</span>) {
 
@@ -3278,7 +3303,7 @@ P.<span class="hljs-property">poolDefs</span> = {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> releaseCell = <span class="hljs-keyword">function</span> (<span class="hljs-params">c</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> releaseCell = <span class="hljs-keyword">function</span> (<span class="hljs-params">c</span>) {
 
     <span class="hljs-keyword">if</span> (c &amp;&amp; c.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
 
@@ -3300,32 +3325,13 @@ P.<span class="hljs-property">poolDefs</span> = {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeCell = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeCell = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cell</span>(items);
 };
 
 constructors.<span class="hljs-property">Cell</span> = <span class="hljs-title class_">Cell</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-92">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-92">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeCell,
-    requestCell,
-    releaseCell,
-};</pre></div></div>
             
         </li>
         

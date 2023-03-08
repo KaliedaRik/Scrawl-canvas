@@ -25,6 +25,16 @@
                 </a>
               
                 
+                <a class="source" href="../core/display-cycle.html">
+                  ./source/core/display-cycle.js
+                </a>
+              
+                
+                <a class="source" href="../core/document-rootElements.html">
+                  ./source/core/document-rootElements.js
+                </a>
+              
+                
                 <a class="source" href="../core/document.html">
                   ./source/core/document.js
                 </a>
@@ -125,6 +135,11 @@
                 </a>
               
                 
+                <a class="source" href="dragZone.html">
+                  ./source/factory/dragZone.js
+                </a>
+              
+                
                 <a class="source" href="element.html">
                   ./source/factory/element.js
                 </a>
@@ -175,6 +190,11 @@
                 </a>
               
                 
+                <a class="source" href="keyboardZone.html">
+                  ./source/factory/keyboardZone.js
+                </a>
+              
+                
                 <a class="source" href="line.html">
                   ./source/factory/line.js
                 </a>
@@ -202,6 +222,11 @@
                 
                 <a class="source" href="noiseAsset.html">
                   ./source/factory/noiseAsset.js
+                </a>
+              
+                
+                <a class="source" href="observeUpdate.html">
+                  ./source/factory/observeUpdate.js
                 </a>
               
                 
@@ -578,8 +603,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, animationtickers, radian } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, xtGet, xto, convertTime, λ<span class="hljs-literal">null</span>, easeEngines, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, animationtickers } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, radian, xt, xtGet, xto, convertTime, λ<span class="hljs-literal">null</span>, easeEngines, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeTicker } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./ticker.js&#x27;</span>;
 
@@ -656,7 +681,8 @@
             <span class="hljs-attr">duration</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveDuration</span>,
             <span class="hljs-attr">eventChoke</span>: <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">eventChoke</span>, <span class="hljs-number">0</span>),
             <span class="hljs-attr">cycles</span>: <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">cycles</span>, <span class="hljs-number">1</span>),
-            <span class="hljs-attr">killOnComplete</span>: <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">killOnComplete</span>, <span class="hljs-literal">false</span>)
+            <span class="hljs-attr">killOnComplete</span>: <span class="hljs-title function_">xtGet</span>(items.<span class="hljs-property">killOnComplete</span>, <span class="hljs-literal">false</span>),
+            <span class="hljs-attr">observer</span>: items.<span class="hljs-property">observer</span>,
         });
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">ticker</span> = tn;
@@ -845,12 +871,12 @@ P = <span class="hljs-title function_">tweenMix</span>(P);</pre></div></div>
 <ul>
 <li><strong>cycles</strong> - positive integer Number representing the number of cycles the Ticker will undertake before it completes.</li>
 <li><strong>eventChoke</strong> Number representing minimum number of milliseconds between Ticker event emissions</li>
+<li><strong>observer</strong> - String name of a RenderAnimation object, or the object itself - halt/resume the ticker based on the running state of the animation object</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-};
+            <div class="content"><div class='highlight'><pre>};
 P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
@@ -1797,30 +1823,13 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeTween = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeTween = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Tween</span>(items);
 };
 
 constructors.<span class="hljs-property">Tween</span> = <span class="hljs-title class_">Tween</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-52">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeTween,
-};</pre></div></div>
             
         </li>
         

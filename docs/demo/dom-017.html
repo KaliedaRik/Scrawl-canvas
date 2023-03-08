@@ -1382,6 +1382,7 @@
                 <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeOutIn&#x27;</span>,
             }],
             <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">observer</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
         }).<span class="hljs-title function_">run</span>();
     }
 };
@@ -1514,6 +1515,7 @@
                 <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeOutIn&#x27;</span>,
             }],
             <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">observer</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
         }).<span class="hljs-title function_">run</span>();
     }
 };
@@ -1787,8 +1789,13 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
         <span class="hljs-keyword">if</span> (svg) {
             svg.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;10%&#x27;</span>],
+                <span class="hljs-attr">width</span>: <span class="hljs-number">200</span>,
                 <span class="hljs-attr">roll</span>: -<span class="hljs-number">10</span>,
                 <span class="hljs-attr">yaw</span>: <span class="hljs-number">40</span>,
+                <span class="hljs-attr">css</span>: {
+                    <span class="hljs-attr">border</span>: <span class="hljs-string">&#x27;1px dashed black&#x27;</span>,
+                    <span class="hljs-attr">boxSizing</span>: <span class="hljs-string">&#x27;border-box&#x27;</span>,
+                },
             });
         }
 

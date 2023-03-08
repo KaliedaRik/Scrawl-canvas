@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Animation factory</title>
+  <title>Observe and update</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -514,22 +514,14 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="animation-factory">Animation factory</h1>
-<p>Animations lie at the heart of Scrawl-canvas functionality. While static <a href="./canvas.html">Canvas</a> and <a href="./stack.html">Stack</a> displays can be rendered once and then forgotten, any Canvas or Stack that implements any form of user interaction, or movement in the display, needs to implement an Animation object to make that functionality happen.</p>
-<p>There are a number of ways to create an Animation object:</p>
-<ul>
-<li><code>scrawl.makeAnimation</code> - as coded by this factory - will supply a very basic Animation object. The factory requires that we supply it with a Promise-based <code>fn</code> function which will be added to the core Scrawl-canvas animation loop.</li>
-</ul>
-<p>Because creating an Animation object from this factory can be quite fiddly, Scrawl-canvas supplies some additional convenience factories to make the process easier: </p>
-<ul>
-<li><code>scrawl.makeRender</code> - use this function to create an animation object which will <strong>control the Display cycle for a canvas or stack</strong>. The function allows users to add a number of hook functions that will trigger at various points in the Display cycle, alongside functions that will trigger whenever the animation object starts running, stops running, or errors.</li>
-<li><code>scrawl.makeTween</code> and <code>scrawl.makeTicker</code> - both of these factory functions use animation objects under the hood</li>
-<li><code>scrawl.makeSnippet</code> - used in snippet files, the factory function will automatically add an animation object to the snippet, alongside much of the functionality supplied by <code>makeRender</code>. It will also create an <code>IntersectionObserver</code> on the window object that will automatically run/stop the animation object dependant on its canvas element’s position in the browser/device viewport.</li>
-</ul>
-<p>Animation objects can be controlled through some simple functions: <code>run</code> to start the animation running; <code>halt</code> to stop it; and <code>kill</code> to remove it from the system.</p>
-<p>NOTE that Animation objects do not take part in Scrawl-canvas’s <code>packet</code> save-and-load functionality, as a result of which they cannot be cloned.</p>
+              <h1 id="observe-and-update">Observe and update</h1>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/library.js&quot;</span>;
+<span class="hljs-keyword">import</span> { xt, xta, isa_fn, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/utilities.js&quot;</span>;
+<span class="hljs-keyword">import</span> { addListener, addNativeListener, removeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -540,12 +532,19 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <h4 id="demos">Demos:</h4>
+              <p>Okay, so I got very bored of writing boilerplate to react to various form elements user interactions across the demos. So I wrote some functions to setup (and take down) batches of DOM event listeners to make my life easier. These are:</p>
 <ul>
-<li>All the demos run some form of animation - mostly created via <code>scrawl.makeRender</code> - see the <a href="./renderAnimation.html">RenderAnimation factory</a> for details</li>
-<li><a href="../../demo/dom-001.html">DOM-001</a> - Loading the scrawl-canvas library using a script tag in the HTML code</li>
-<li><a href="../../demo/dom-010.html">DOM-010</a> - Add and remove (kill) Scrawl-canvas stack elements programmatically</li>
+<li>scrawl.addNativeListener()</li>
+<li>scrawl.removeNativeListener()</li>
 </ul>
+<p>Then there was the use case for reacting to various mouse (and touch) events, so I bundled all those up into a set of complementary functions:</p>
+<ul>
+<li>scrawl.addListener()</li>
+<li>scrawl.removeListener()</li>
+</ul>
+<p>Even so, there was still a lot of boilerplate code to write, in particular to listening for user interaction with form elements (which can be anywhere on the web page). So I further factorised that code into an <strong>observeAndUpdate</strong> function which uses the listener functions internally.</p>
+<p>I have no idea how useful the observeAndUpdate function will be to anyone else. All I know is that it works for me and my demos, and that makes me happy.</p>
+<p>Note: observeAndUpdate() returns a function that will (in theory) remove all the bundled event listeners from their DOM elements when it is invoked. Not yet tested.</p>
 
             </div>
             
@@ -558,16 +557,50 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="imports">Imports</h4>
+              <p><code>Exported function</code> (to modules and the scrawl object). Capture changes in a form and apply them to a target Scrawl-canvas artefact, asset, style, group, etc object</p>
+<p><strong>observeAndUpdate - example</strong></p>
+<pre><code>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
+
+    <span class="hljs-comment">// The input event which will trigger the O&amp;U </span>
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
+
+    <span class="hljs-comment">// CSS selector used to gather the DOM elements this O&amp;U will be attached to</span>
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
+
+    <span class="hljs-comment">// The SC artefact, or Group object, to be updated by user interaction changes</span>
+    <span class="hljs-attr">target</span>: piccy,
+
+    <span class="hljs-comment">// Performs an `addNativeListener` when true; `addListener` when false</span>
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-comment">// Invokes the event listener&#x27;s `preventDefault` function</span>
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-comment">// The SC artefact attributes to be updated by various DOM inputs. See below</span>
+    <span class="hljs-attr">updates</span>: {
+
+        <span class="hljs-attr">copy_start_xPercent</span>: [<span class="hljs-string">&#x27;copyStartX&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+        <span class="hljs-attr">copy_start_xAbsolute</span>: [<span class="hljs-string">&#x27;copyStartX&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+
+        <span class="hljs-attr">copy_start_yPercent</span>: [<span class="hljs-string">&#x27;copyStartY&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+        <span class="hljs-attr">copy_start_yAbsolute</span>: [<span class="hljs-string">&#x27;copyStartY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+
+        <span class="hljs-attr">copy_dims_widthPercent</span>: [<span class="hljs-string">&#x27;copyWidth&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+        <span class="hljs-attr">copy_dims_widthAbsolute</span>: [<span class="hljs-string">&#x27;copyWidth&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+
+        <span class="hljs-attr">copy_dims_heightPercent</span>: [<span class="hljs-string">&#x27;copyHeight&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+        <span class="hljs-attr">copy_dims_heightAbsolute</span>: [<span class="hljs-string">&#x27;copyHeight&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+    },
+
+    <span class="hljs-comment">// A callback function to be performed after any attributes updates</span>
+    <span class="hljs-attr">callback</span>: <span class="hljs-function">() =&gt;</span> myLoom.<span class="hljs-title function_">update</span>(),
+
+    <span class="hljs-comment">// Similarly, we can invoke a function to run before performing the updates</span>
+    <span class="hljs-attr">setup</span>: <span class="hljs-function">() =&gt;</span> myLoom.<span class="hljs-title function_">update</span>(),
+});
+</code></pre>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animation, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, xt, λ<span class="hljs-literal">null</span>, λpromise, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { forceUpdate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { animate, resortAnimations } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/animationloop.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -578,25 +611,63 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <h4 id="animation-constructor">Animation constructor</h4>
+              <p><strong>observeAndUpdate</strong> - exported function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Animation</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> observeAndUpdate = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">order</span> = (<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">order</span>)) ? items.<span class="hljs-property">order</span> : <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>.<span class="hljs-property">order</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">fn</span> = items.<span class="hljs-property">fn</span> || λpromise;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">onRun</span> = items.<span class="hljs-property">onRun</span> || λ<span class="hljs-literal">null</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">onHalt</span> = items.<span class="hljs-property">onHalt</span> || λ<span class="hljs-literal">null</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">onKill</span> = items.<span class="hljs-property">onKill</span> || λ<span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(items.<span class="hljs-property">event</span>, items.<span class="hljs-property">origin</span>, items.<span class="hljs-property">updates</span>)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
+    <span class="hljs-keyword">let</span> target = (items.<span class="hljs-property">target</span>.<span class="hljs-property">substring</span> &amp;&amp; items.<span class="hljs-property">targetLibrarySection</span>) ?
+        library[items.<span class="hljs-property">targetLibrarySection</span>][items.<span class="hljs-property">target</span>] :
+        items.<span class="hljs-property">target</span>;
 
-    <span class="hljs-keyword">if</span>(!items.<span class="hljs-property">delay</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">run</span>();
+    <span class="hljs-keyword">if</span> (!target) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
+    <span class="hljs-keyword">let</span> event = items.<span class="hljs-property">event</span>,
+        origin = items.<span class="hljs-property">origin</span>;
+
+    <span class="hljs-keyword">let</span> listener = (items.<span class="hljs-property">useNativeListener</span>) ? addNativeListener : addListener,
+        killListener = (items.<span class="hljs-property">useNativeListener</span>) ? removeNativeListener : removeListener;
+
+    <span class="hljs-keyword">let</span> stop = λ<span class="hljs-literal">null</span>;
+
+    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">preventDefault</span>) {
+
+        stop = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+            e.<span class="hljs-title function_">preventDefault</span>();
+            e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+        };
+    }
+
+    <span class="hljs-keyword">let</span> setup = (<span class="hljs-title function_">isa_fn</span>(items.<span class="hljs-property">setup</span>)) ? items.<span class="hljs-property">setup</span> : λ<span class="hljs-literal">null</span>;
+
+    <span class="hljs-keyword">let</span> callback = (<span class="hljs-title function_">isa_fn</span>(items.<span class="hljs-property">callback</span>)) ? items.<span class="hljs-property">callback</span> : λ<span class="hljs-literal">null</span>;
+
+    <span class="hljs-keyword">let</span> func = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+
+        <span class="hljs-title function_">stop</span>(e);
+
+        <span class="hljs-keyword">let</span> id = (e &amp;&amp; e.<span class="hljs-property">target</span>) ? e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span> : <span class="hljs-literal">false</span>;
+
+        <span class="hljs-keyword">if</span> (id) {
+
+            <span class="hljs-keyword">let</span> updates = items.<span class="hljs-property">updates</span>,
+                actionArray = updates[id];
+
+            <span class="hljs-keyword">if</span> (actionArray) {
+
+                <span class="hljs-title function_">setup</span>();
+
+                <span class="hljs-keyword">let</span> actionAttribute = actionArray[<span class="hljs-number">0</span>],
+                    action = actionArray[<span class="hljs-number">1</span>],
+                    targetVal = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>,
+                    actionFlag = <span class="hljs-literal">true</span>,
+                    val;
+
+                <span class="hljs-keyword">switch</span> (action) {</pre></div></div>
             
         </li>
         
@@ -607,16 +678,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <h4 id="animation-prototype">Animation prototype</h4>
+              <p>Supplied value converted to float Number</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Animation</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Animation&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;animation&#x27;</span>;
-P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
-P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;float&#x27;</span> :
+                        val = <span class="hljs-built_in">parseFloat</span>(targetVal);
+                        <span class="hljs-keyword">break</span>;</pre></div></div>
             
         </li>
         
@@ -627,11 +695,13 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="mixins">Mixins</h4>
+              <p>Supplied value converted to integer Number</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;int&#x27;</span> :
+                        val = <span class="hljs-built_in">parseInt</span>(targetVal, <span class="hljs-number">10</span>);
+                        <span class="hljs-keyword">break</span>;</pre></div></div>
             
         </li>
         
@@ -642,14 +712,13 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="animation-attributes">Animation attributes</h4>
-<ul>
-<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-</ul>
+              <p>Supplied value rounded up or down to nearest integer Number</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;round&#x27;</span> :
+                        val = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(targetVal);
+                        <span class="hljs-keyword">break</span>;</pre></div></div>
             
         </li>
         
@@ -660,15 +729,13 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p><strong>order</strong> - positive integer Number - determines the order in which each Animation object will be actioned before the Display cycle starts. </p>
-<ul>
-<li>Higher order Animations will be processed after lower order Animations. </li>
-<li>Animations with the same <code>order</code> value will be processed in the order in which they were defined in code.</li>
-</ul>
+              <p>Supplied value rounded down to nearest integer Number</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;roundDown&#x27;</span> :
+                        val = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(targetVal);
+                        <span class="hljs-keyword">break</span>;</pre></div></div>
             
         </li>
         
@@ -679,11 +746,13 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p><strong>fn</strong> - the main function that the Animation object will run on each RequestAnimationFrame tick. This function <strong>must return a Promise</strong>.</p>
+              <p>Supplied value rounded up to nearest integer Number</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fn</span>: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;roundUp&#x27;</span> :
+                        val = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(targetVal);
+                        <span class="hljs-keyword">break</span>;</pre></div></div>
             
         </li>
         
@@ -694,18 +763,13 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>The Animation object supports some <strong>animation hook functions</strong>:</p>
-<ul>
-<li><strong>onRun</strong> - triggers each time the Animation object’s <code>run</code> function is invoked</li>
-<li><strong>onHalt</strong> - triggers each time the Animation object’s <code>halt</code> function is invoked</li>
-<li><strong>onKill</strong> - triggers each time the Animation object’s <code>kill</code> function is invoked</li>
-</ul>
+              <p>Supplied value not modified in any way</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">onRun</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">onHalt</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">onKill</span>: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;raw&#x27;</span> :
+                        val = targetVal;
+                        <span class="hljs-keyword">break</span>;</pre></div></div>
             
         </li>
         
@@ -716,12 +780,13 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p><strong>delay</strong> - by default, Animation objects will start running as soon as they are created. To prevent this happening the constructor argument can take a non-retained <code>delay</code> Boolean flag which, when set to true, will prevent the Animation object from adding itself to the Scrawl-canvas animation loop. The animation can be started at any subsequent time by invoking its <code>run</code> function.</p>
+              <p>Supplied value converted to String</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>};
-P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;string&#x27;</span> :
+                        val = <span class="hljs-string">`<span class="hljs-subst">${targetVal}</span>`</span>;
+                        <span class="hljs-keyword">break</span>;</pre></div></div>
             
         </li>
         
@@ -732,18 +797,23 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>This functionality is disabled for Animation objects</p>
+              <p>Supplied value converted to Boolean</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">stringifyFunction</span> = λ<span class="hljs-literal">null</span>;
-P.<span class="hljs-property">processPacketOut</span> = λ<span class="hljs-literal">null</span>;
-P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-literal">null</span>;
-P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;boolean&#x27;</span> :
+                        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(targetVal)) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.lib}</span>, {}]`</span>
-};</pre></div></div>
+                            <span class="hljs-keyword">if</span> (targetVal.<span class="hljs-property">substring</span>) {
+
+                                <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;true&#x27;</span> === targetVal.<span class="hljs-title function_">toLowerCase</span>()) val = <span class="hljs-literal">true</span>;
+                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;false&#x27;</span> === targetVal.<span class="hljs-title function_">toLowerCase</span>()) val = <span class="hljs-literal">false</span>;
+                                <span class="hljs-keyword">else</span> val = (<span class="hljs-built_in">parseFloat</span>(targetVal)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+                            }
+                            <span class="hljs-keyword">else</span> val = (targetVal) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+                        }
+                        <span class="hljs-keyword">else</span> val = <span class="hljs-literal">false</span>;
+                        <span class="hljs-keyword">break</span>;</pre></div></div>
             
         </li>
         
@@ -754,12 +824,14 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>This functionality is disabled for Animation objects</p>
+              <p>Supplied value converted to float number, then action value (eg: ‘%’) added to result to output a String</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable language_">this</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">default</span> :
+                        <span class="hljs-keyword">if</span> (action.<span class="hljs-property">substring</span>) val = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">parseFloat</span>(targetVal)}</span><span class="hljs-subst">${action}</span>`</span>;
+                        <span class="hljs-keyword">else</span> actionFlag = <span class="hljs-literal">false</span>;
+                }</pre></div></div>
             
         </li>
         
@@ -770,10 +842,24 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>Kill functionality is managed as one of the Animation object’s hook functions - see below</p>
+              <p>Update - we can apply updates to a Group of artefacts, or to a single artefact</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (actionFlag) {
+
+                    <span class="hljs-keyword">if</span> (target.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Group&#x27;</span>) {
+
+                        target.<span class="hljs-title function_">setArtefacts</span>({
+                            [actionAttribute]: val
+                        });
+                    }
+                    <span class="hljs-keyword">else</span> {
+
+                        target.<span class="hljs-title function_">set</span>({
+                            [actionAttribute]: val
+                        });
+                    }</pre></div></div>
             
         </li>
         
@@ -784,165 +870,27 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
-<p>No additional getter or setter functionality required</p>
+              <p>Invoke any supplied callback function</p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-title function_">callback</span>();
+                }
+            }
+        }
+    };
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p><code>run</code> - start the animation, if it is not already running</p>
+    <span class="hljs-keyword">let</span> kill = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">run</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-title function_">killListener</span>(event, func, origin);
+    };
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">onRun</span>();
-    <span class="hljs-title function_">pushUnique</span>(animate, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
-    <span class="hljs-title function_">resortAnimations</span>();
+    <span class="hljs-title function_">listener</span>(event, func, origin);
 
-    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">forceUpdate</span>(), <span class="hljs-number">20</span>);
-    
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p><code>isRunning</code> - returns true if animation is running; false otherwise</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">isRunning</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">return</span> (animate.<span class="hljs-title function_">indexOf</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p><code>halt</code> - stop the animation, if it is already running</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">halt</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">onHalt</span>();
-    <span class="hljs-title function_">removeItem</span>(animate, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
-    <span class="hljs-title function_">resortAnimations</span>();
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p><code>kill</code> - stop the animation if it is already running, and remove it from the Scrawl-canvas library</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">onKill</span>();
-    <span class="hljs-title function_">removeItem</span>(animate, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
-    <span class="hljs-title function_">resortAnimations</span>();
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
-    
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <h4 id="factory">Factory</h4>
-<pre><code>scrawl.<span class="hljs-title function_">makeAnimation</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-
-    <span class="hljs-comment">// Function MUST return a Promise object, and that promise must ALWAYS resolve (not reject)</span>
-    <span class="hljs-attr">fn</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
-
-            <span class="hljs-comment">// Renders all stack and canvas elements in the document</span>
-            scrawl.<span class="hljs-title function_">render</span>()
-            .<span class="hljs-title function_">then</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">resolve</span>(<span class="hljs-literal">true</span>))
-            .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-title function_">resolve</span>(<span class="hljs-literal">false</span>));
-        });
-    }
-});
-</code></pre>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimation = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
-    
-    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Animation</span>(items);
+    <span class="hljs-keyword">return</span> kill;
 };
 
-constructors.<span class="hljs-property">Animation</span> = <span class="hljs-title class_">Animation</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeAnimation,
-};</pre></div></div>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">makeUpdater</span> = (<span class="hljs-params">items = Ωempty</span>) =&gt; <span class="hljs-title function_">observeAndUpdate</span>(items);</pre></div></div>
             
         </li>
         

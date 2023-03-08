@@ -1216,10 +1216,18 @@
 
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">getSectionOutput</span> = (<span class="hljs-params">label, obj, arr</span>) =&gt; {
 
-        <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;animation&#x27;</span>, <span class="hljs-string">&#x27;animationtickers&#x27;</span>].<span class="hljs-title function_">includes</span>(label)) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;animation&#x27;</span> === label) {
             <span class="hljs-keyword">let</span> t = <span class="hljs-string">`<span class="hljs-subst">${label}</span>: <span class="hljs-subst">${arr.length}</span> (<span class="hljs-subst">${compareObjectToArray(obj, arr)}</span>)`</span>;
             <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(obj)) {
                 t += <span class="hljs-string">`\n    <span class="hljs-subst">${key}</span> - <span class="hljs-subst">${value.isRunning() ? <span class="hljs-string">&#x27;running&#x27;</span> : <span class="hljs-string">&#x27;halted&#x27;</span>}</span>`</span>;
+            }
+            <span class="hljs-keyword">return</span> t;
+        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;animationtickers&#x27;</span> === label) {
+            <span class="hljs-keyword">let</span> t = <span class="hljs-string">`<span class="hljs-subst">${label}</span>: <span class="hljs-subst">${arr.length}</span> (<span class="hljs-subst">${compareObjectToArray(obj, arr)}</span>)`</span>;
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(obj)) {
+                t += <span class="hljs-string">`\n    <span class="hljs-subst">${key}</span> - <span class="hljs-subst">${value.isRunning() &amp;&amp; value.checkObserverRunningState() ? <span class="hljs-string">&#x27;running&#x27;</span> : <span class="hljs-string">&#x27;halted&#x27;</span>}</span>`</span>;
             }
             <span class="hljs-keyword">return</span> t;
         }

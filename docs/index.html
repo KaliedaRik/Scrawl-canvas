@@ -32,11 +32,7 @@
     </ul>
     <li><a href="source/core/library.html">core/library.js</a></li>
     <ul>
-      <li>library.radian</li>
       <li>library.version</li>
-    </ul>
-    <ul>
-      <li>library.sectionClasses</li>
     </ul>
     <ul>
       <li>library.anchor</li>
@@ -60,26 +56,24 @@
       <li>library.world</li>
     </ul>
     <ul>
+      <li>library.sectionClasses</li>
+    </ul>
+    <ul>
       <li>library.purge()</li>
     </ul>
   </ul>
 
   <h4>Core</h4>
   <ul>
+    <li><a href="source/core/display-cycle.html">core/display-cycle.js</a></li>
+    <ul>
+      <li>clear</li>
+      <li>compile</li>
+      <li>show</li>
+      <li>render</li>
+    </ul>
     <li><a href="source/core/document.html">core/document.js</a></li>
-      <ul>
-        <li>addCanvas</li>
-        <li>addStack</li>
-        <li>getCanvas</li>
-        <li>getStack</li>
-        <li>setCurrentCanvas</li>
-      </ul>
-      <ul>
-        <li>clear</li>
-        <li>compile</li>
-        <li>show</li>
-        <li>render</li>
-      </ul>
+    <li><a href="source/core/document-rootElements.html">core/document-rootElements.js</a></li>
     <li><a href="source/core/events.html">core/events.js</a></li>
     <ul>
       <li>addListener</li>
@@ -95,11 +89,6 @@
       <li>setPixelRatioChangeAction</li>
     </ul>
     <li><a href="source/core/userInteraction.html">core/userInteraction.js</a></li>
-    <ul>
-      <li>makeDragZone</li>
-      <li>makeKeyboardZone</li>
-      <li>observeAndUpdate</li>
-    </ul>
     <ul>
       <li>currentCorePosition</li>
       <li>forceUpdate</li>
@@ -241,12 +230,21 @@
     <li><a href="source/mixin/displayShape.html">mixin/displayShape.js</a></li>
     <li><a href="source/mixin/dom.html">mixin/dom.js</a></li>
     <li><a href="source/factory/canvas.html">factory/canvas.js</a></li>
+    <ul>
+      <li>addCanvas</li>
+      <li>getCanvas</li>
+      <li>setCurrentCanvas</li>
+    </ul>
     <li><a href="source/factory/cell.html">factory/cell.js</a></li>
     <li><a href="source/factory/element.html">factory/element.js</a></li>
     <ul>
       <li>makeElement</li>
     </ul>
     <li><a href="source/factory/stack.html">factory/stack.js</a></li>
+    <ul>
+      <li>addStack</li>
+      <li>getStack</li>
+    </ul>
   </ul>
 
   <h4>Assets</h4>
@@ -393,6 +391,23 @@
     <li><a href="source/factory/anchor.html">factory/anchor.js</a></li>
   </ul>
 
+  <h4>User interaction</h4>
+  <ul>
+    <li><a href="source/factory/dragZone.html">factory/dragZone.js</a></li>
+    <ul>
+      <li>makeDragZone</li>
+    </ul>
+    <li><a href="source/factory/keyboardZone.html">factory/keyboardZone.js</a></li>
+    <ul>
+      <li>makeKeyboardZone</li>
+    </ul>
+    <li><a href="source/factory/observeUpdate.html">factory/observeUpdate.js</a></li>
+    <ul>
+      <li>makeUpdater</li>
+      <li>observeAndUpdate</li>
+    </ul>
+  </ul>
+
   <h4>Snippets (experimental)</h4>
   <ul>
     <li><a href="source/core/snippets.html">core/snippets.js</a></li>
@@ -401,6 +416,7 @@
     </ul>
     <li><a href="source/factory/unstackedElement.html">factory/unstackedElement.js</a></li>
   </ul>
+
 
   <h4>Other modules</h4>
   <ul>

@@ -104,16 +104,11 @@ THE SOFTWARE.</p>
     stopCoreAnimationLoop,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/animationloop.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { 
-    addStack,
-    getStack,
-    addCanvas,
-    getCanvas,
-    setCurrentCanvas,
     clear,
     compile,
     show,
     render,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/document.js&#x27;</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/display-cycle.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { 
     addListener,
     removeListener,
@@ -132,10 +127,7 @@ THE SOFTWARE.</p>
     currentCorePosition, 
     startCoreListeners, 
     stopCoreListeners, 
-    observeAndUpdate,
     forceUpdate,
-    makeDragZone,
-    makeKeyboardZone,
     getTouchActionChoke,
     setTouchActionChoke,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/userInteraction.js&#x27;</span>;
@@ -143,6 +135,11 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/animation.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeBlock } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/block.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeBezier } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/bezier.js&#x27;</span>;
+<span class="hljs-keyword">export</span> {
+    addCanvas,
+    getCanvas,
+    setCurrentCanvas,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/canvas.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeCog } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/cog.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/color.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeConicGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/conicGradient.js&#x27;</span>;
@@ -151,6 +148,7 @@ THE SOFTWARE.</p>
     releaseCoordinate,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/coordinate.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeCrescent } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/crescent.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeDragZone } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/dragZone.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeElement } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/element.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeEmitter } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/emitter.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeFilter } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/filter.js&#x27;</span>;
@@ -166,6 +164,7 @@ THE SOFTWARE.</p>
     createImageFromGroup,
     createImageFromEntity,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/imageAsset.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { makeKeyboardZone } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/keyboardZone.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeLine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/line.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeLineSpiral } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/lineSpiral.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeLoom } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/loom.js&#x27;</span>;
@@ -175,6 +174,10 @@ THE SOFTWARE.</p>
     makeNoise,
     makeNoiseAsset,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/noiseAsset.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { 
+    observeAndUpdate,
+    makeUpdater
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/observeUpdate.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeOval } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/oval.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makePattern } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/pattern.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makePhrase } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/phrase.js&#x27;</span>;
@@ -195,6 +198,10 @@ THE SOFTWARE.</p>
 <span class="hljs-keyword">export</span> { makeSpiral } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/spiral.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { importSprite } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/spriteAsset.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeSpring } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particleSpring.js&#x27;</span>;
+<span class="hljs-keyword">export</span> { 
+    addStack,
+    getStack,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/stack.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeStar } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/star.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeTetragon } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tetragon.js&#x27;</span>;
 <span class="hljs-keyword">export</span> { makeTicker } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/ticker.js&#x27;</span>;

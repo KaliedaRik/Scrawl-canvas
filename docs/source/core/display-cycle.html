@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>The Animation Loop</title>
+  <title>The Display cycle</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -514,30 +514,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="the-animation-loop">The Animation Loop</h1>
-<p>Scrawl-canvas runs a single, centralized requestAnimationFrame (RAF) function - <strong>animationLoop</strong> - for all animation objects. </p>
-<p><a href="../factory/animation.html">Animation objects</a> are Scrawl-canvas objects with a <strong>fn</strong> attribute; the function will be invoked once per RAF cycle. </p>
-<p>The RAF function is first invoked as part of Scrawl-canvas initialization when it loads into a web page, and continues to run while the <strong>doAnimation</strong> flag remains true.</p>
-<p>To stop the RAF:</p>
-<p><code>scrawl.stopCoreAnimationLoop()</code></p>
-<p>To restart the RAF after it has been stopped:</p>
-<p><code>scrawl.startCoreAnimationLoop()</code></p>
-<p>… Functionality tested in <a href="../../demo/dom-009.html">Demo DOM-009</a></p>
-<p>As part of initialization, two animation objects are created and added to the <strong>animate</strong> array:</p>
-<ul>
-<li><strong>coreTickersAnimation</strong> (order: 0) - which will invoke all ticker animations currently subscribed to it - <a href="../factory/ticker.html">factory/ticker.js</a></li>
-<li><strong>coreListenersTracker</strong> (order: 0) - which channels window-based events (mouse/touch movement, viewport resize, scrolling) to Scrawl-canvas objects that need to take action in response (thus choking such actions to a maximum 60-per-second) - <a href="./userInteraction.html">core/userInteraction.js</a></li>
-</ul>
-<p>Additional animations can be created via a number of ‘make’ functions:</p>
-<ul>
-<li>makeAnimation (runs by default) - <a href="../factory/animation.html">factory/animation.js</a></li>
-<li>makeRender (runs by default) - <a href="../factory/renderAnimation.html">factory/renderAnimation.js</a></li>
-<li>makeTicker (halted by default) - <a href="../factory/ticker.html">factory/ticker.js</a></li>
-<li>makeTween (halted by default) - <a href="../factory/tween.html">factory/tween.js</a></li>
-</ul>
-<p>These objects can be added to the <em>animate</em> Array by invoking their <strong>run</strong> function, and removed by invoking their <strong>halt</strong> function.</p>
-<p>The order in which animations objects run during each RAF cycle (= <strong>Display cycle</strong>) can be (partly) determined by the objects’ <strong>order</strong> attribute: those with a lower order value will be invoked before those with a higher value.</p>
-<p>Note that ticker/tween animations will all run before other animations (order differences between tickers/tween objects will be respected).</p>
+              <h1 id="the-display-cycle">The Display cycle</h1>
+<p>Scrawl-canvas breaks down the Display cycle into three parts: <strong>clear</strong>; <strong>compile</strong>; and <strong>show</strong>. These can be triggered either as a single, combined <strong>render</strong> operation, or separately as-and-when needed.</p>
+<p>The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element’s controller’s <strong>order</strong> attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value</p>
+<p>Each display cycle function is a normal Javascript function, invoked with no arguments and returning no status</p>
+<p>Note that Scrawl-canvas supplies a convenience function - <strong>makeRender()</strong> - for automating the process of creating an animation object to handle the Display cycle</p>
 
             </div>
             
@@ -554,7 +535,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animation } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
+<span class="hljs-keyword">import</span> { rootElements_sorted, getRootElementsSort, sortRootElements } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./document-rootElements.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -565,13 +547,31 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>Local variables </p>
+              <p>Helper functions coordinate the actions required to complete a display cycle</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> doAnimation = <span class="hljs-literal">false</span>,
-    resortBatchAnimations = <span class="hljs-literal">true</span>,
-    animate_sorted = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> displayCycleHelper = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+
+    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> items;
+    
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">getRootElementsSort</span>()) <span class="hljs-title function_">sortRootElements</span>();
+
+    <span class="hljs-keyword">return</span> rootElements_sorted;
+};
+
+<span class="hljs-keyword">const</span> displayCycleBatchProcess = <span class="hljs-keyword">function</span> (<span class="hljs-params">rootWrappers, method</span>) {
+
+    <span class="hljs-keyword">let</span> i, iz, name, item;
+
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = rootWrappers.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+        name = rootWrappers[i];
+        item = artefact[name];
+
+        <span class="hljs-keyword">if</span> (item &amp;&amp; item[method]) item[method]();
+    }
+};</pre></div></div>
             
         </li>
         
@@ -582,11 +582,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p><code>Exported array</code> (to modules). The <strong>animate</strong> array, which holds handles to all animation objects due to be run at the next RAF invocation, is exported to other modules so code can add/remove animation objects as required.</p>
+              <h5 id="clear">Clear</h5>
+<ul>
+<li>For canvas artefacts, clear its Cell assets’ display (reset all pixels to 0, or the designated background color) ready for them to be redrawn</li>
+<li>For stack artefacts - no action required</li>
+</ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> animate = [];</pre></div></div>
             
         </li>
         
@@ -597,12 +599,14 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p><code>Exported function</code> (to modules). Force the animation objects to be sorted at the start of the next RAF invocation</p>
+              <p><code>Exported function</code> (to modules and scrawl object). </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> resortAnimations = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-    resortBatchAnimations = <span class="hljs-literal">true</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> clear = <span class="hljs-keyword">function</span> (<span class="hljs-params">...items</span>) {
+
+    <span class="hljs-keyword">const</span> wrappers = <span class="hljs-title function_">displayCycleHelper</span>(items);
+    <span class="hljs-title function_">displayCycleBatchProcess</span>(wrappers, <span class="hljs-string">&#x27;clear&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -614,37 +618,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>Scrawl-canvas animation sorter uses a ‘bucket sort’ algorithm</p>
+              <h5 id="compile">Compile</h5>
+<ul>
+<li>For both canvas and stack artefacts, perform necessary entity/element positional calculations</li>
+<li>Additionally for canvas artefacts, stamp associated entitys onto the canvas’s constituent cell assets</li>
+</ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> sortAnimations = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">if</span> (resortBatchAnimations) {
-
-        resortBatchAnimations = <span class="hljs-literal">false</span>;
-
-        <span class="hljs-keyword">let</span> floor = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>,
-            buckets = [],
-            obj, order, i, iz, name;
-
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = animate.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-            name = animate[i];
-            obj = animation[name];
-
-            <span class="hljs-keyword">if</span> (obj) {
-
-                order = <span class="hljs-title function_">floor</span>(obj.<span class="hljs-property">order</span>) || <span class="hljs-number">0</span>;
-
-                <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
-
-                buckets[order].<span class="hljs-title function_">push</span>(obj);
-            }
-        }
-        animate_sorted = buckets.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.<span class="hljs-title function_">concat</span>(v), []);
-    }
-};</pre></div></div>
             
         </li>
         
@@ -655,22 +635,14 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>The <strong>requestAnimationFrame</strong> function</p>
+              <p><code>Exported function</code> (to modules and scrawl object). </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> animationLoop = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> compile = <span class="hljs-keyword">function</span> (<span class="hljs-params">...items</span>) {
 
-    <span class="hljs-keyword">if</span> (resortBatchAnimations) <span class="hljs-title function_">sortAnimations</span>();
-
-    <span class="hljs-keyword">let</span> i, iz;
-
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = animate_sorted.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-        animate_sorted[i].<span class="hljs-title function_">fn</span>();
-    }
-    
-    <span class="hljs-keyword">if</span> (doAnimation) <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">requestAnimationFrame</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">animationLoop</span>());
+    <span class="hljs-keyword">const</span> wrappers = <span class="hljs-title function_">displayCycleHelper</span>(items);
+    <span class="hljs-title function_">displayCycleBatchProcess</span>(wrappers, <span class="hljs-string">&#x27;compile&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -682,15 +654,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p><code>Exported function</code> (modules and scrawl object). Start the RAF function running</p>
+              <h5 id="show">Show</h5>
+<ul>
+<li>For canvas artefacts, stamp additional ‘layer’ canvases onto the base canvas, then copy the base canvas onto the display canvas</li>
+<li>For stack artefacts - invoke the <strong>domShow</strong> function, if any of its constituent elements require DOM-related updating</li>
+</ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> startCoreAnimationLoop = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    doAnimation = <span class="hljs-literal">true</span>;
-    <span class="hljs-title function_">animationLoop</span>();
-};</pre></div></div>
             
         </li>
         
@@ -701,13 +671,49 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p><code>Exported function</code> (modules and scrawl object). Halt the RAF function</p>
+              <p><code>Exported function</code> (to modules and scrawl object). </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> stopCoreAnimationLoop = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-    
-    doAnimation = <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> show = <span class="hljs-keyword">function</span> (<span class="hljs-params">...items</span>) {
+
+    <span class="hljs-keyword">const</span> wrappers = <span class="hljs-title function_">displayCycleHelper</span>(items);
+    <span class="hljs-title function_">displayCycleBatchProcess</span>(wrappers, <span class="hljs-string">&#x27;show&#x27;</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <h5 id="render">Render</h5>
+<ul>
+<li>Orchestrate the clear, compile and show actions on each stack and canvas DOM element</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p><code>Exported function</code> (to modules and scrawl object). </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> render = <span class="hljs-keyword">function</span> (<span class="hljs-params">...items</span>) {
+
+    <span class="hljs-keyword">const</span> wrappers = <span class="hljs-title function_">displayCycleHelper</span>(items);
+    <span class="hljs-title function_">displayCycleBatchProcess</span>(wrappers, <span class="hljs-string">&#x27;render&#x27;</span>);
 };</pre></div></div>
             
         </li>

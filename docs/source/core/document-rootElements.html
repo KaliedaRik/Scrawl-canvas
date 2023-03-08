@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>The Animation Loop</title>
+  <title>Root elements</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -514,30 +514,10 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="the-animation-loop">The Animation Loop</h1>
-<p>Scrawl-canvas runs a single, centralized requestAnimationFrame (RAF) function - <strong>animationLoop</strong> - for all animation objects. </p>
-<p><a href="../factory/animation.html">Animation objects</a> are Scrawl-canvas objects with a <strong>fn</strong> attribute; the function will be invoked once per RAF cycle. </p>
-<p>The RAF function is first invoked as part of Scrawl-canvas initialization when it loads into a web page, and continues to run while the <strong>doAnimation</strong> flag remains true.</p>
-<p>To stop the RAF:</p>
-<p><code>scrawl.stopCoreAnimationLoop()</code></p>
-<p>To restart the RAF after it has been stopped:</p>
-<p><code>scrawl.startCoreAnimationLoop()</code></p>
-<p>… Functionality tested in <a href="../../demo/dom-009.html">Demo DOM-009</a></p>
-<p>As part of initialization, two animation objects are created and added to the <strong>animate</strong> array:</p>
-<ul>
-<li><strong>coreTickersAnimation</strong> (order: 0) - which will invoke all ticker animations currently subscribed to it - <a href="../factory/ticker.html">factory/ticker.js</a></li>
-<li><strong>coreListenersTracker</strong> (order: 0) - which channels window-based events (mouse/touch movement, viewport resize, scrolling) to Scrawl-canvas objects that need to take action in response (thus choking such actions to a maximum 60-per-second) - <a href="./userInteraction.html">core/userInteraction.js</a></li>
-</ul>
-<p>Additional animations can be created via a number of ‘make’ functions:</p>
-<ul>
-<li>makeAnimation (runs by default) - <a href="../factory/animation.html">factory/animation.js</a></li>
-<li>makeRender (runs by default) - <a href="../factory/renderAnimation.html">factory/renderAnimation.js</a></li>
-<li>makeTicker (halted by default) - <a href="../factory/ticker.html">factory/ticker.js</a></li>
-<li>makeTween (halted by default) - <a href="../factory/tween.html">factory/tween.js</a></li>
-</ul>
-<p>These objects can be added to the <em>animate</em> Array by invoking their <strong>run</strong> function, and removed by invoking their <strong>halt</strong> function.</p>
-<p>The order in which animations objects run during each RAF cycle (= <strong>Display cycle</strong>) can be (partly) determined by the objects’ <strong>order</strong> attribute: those with a lower order value will be invoked before those with a higher value.</p>
-<p>Note that ticker/tween animations will all run before other animations (order differences between tickers/tween objects will be respected).</p>
+              <h1 id="root-elements">Root elements</h1>
+<p><code>Exported array and function</code> (to modules). Root elements are the boxes whose dimensions define the dimensions and positioning of all that they contain. All &lt;canvas&gt; elements are root elements. Scrawl-canvas also allows other DOM elements (typically &lt;div&gt; elements) to be defined as root elements called <strong>stacks</strong>, whose child elements can then be positioned and dimensioned just like entity objects in a canvas.</p>
+<p>Stacks can be nested within each other, and canvases can also be nested inside a stack. (Nothing can nest inside a canvas element). Only the top level stack will be included in the rootElements array.</p>
+<p>The Scrawl-canvas <strong>Display cycle</strong> can start at the rootElements array, with each member of the array processed in turn.</p>
 
             </div>
             
@@ -554,7 +534,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animation } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -565,13 +545,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>Local variables </p>
+              <p>Local variables</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> doAnimation = <span class="hljs-literal">false</span>,
-    resortBatchAnimations = <span class="hljs-literal">true</span>,
-    animate_sorted = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> rootElements_sorted = [];
+<span class="hljs-keyword">let</span> rootElementsSort = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -582,11 +561,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p><code>Exported array</code> (to modules). The <strong>animate</strong> array, which holds handles to all animation objects due to be run at the next RAF invocation, is exported to other modules so code can add/remove animation objects as required.</p>
+              <p>The <strong>rootElements</strong> array keeps track of all ‘root’ stack artefacts, and also includes all canvas artefacts, whether they’re part of a stack or not. <strong>setRootElementSort</strong> forces the root</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> animate = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> rootElements = [];
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setRootElementsSort</span> = (<span class="hljs-params"></span>) =&gt; {rootElementsSort = <span class="hljs-literal">true</span>};
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getRootElementsSort</span> = (<span class="hljs-params"></span>) =&gt; rootElementsSort;</pre></div></div>
             
         </li>
         
@@ -597,117 +578,38 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p><code>Exported function</code> (to modules). Force the animation objects to be sorted at the start of the next RAF invocation</p>
+              <p>Scrawl-canvas rootElements sorter uses a ‘bucket sort’ algorithm</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> resortAnimations = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-    resortBatchAnimations = <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>Scrawl-canvas animation sorter uses a ‘bucket sort’ algorithm</p>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> sortRootElements = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> sortAnimations = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">const</span> floor = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>;
 
-    <span class="hljs-keyword">if</span> (resortBatchAnimations) {
+    <span class="hljs-keyword">if</span> (rootElementsSort) {
 
-        resortBatchAnimations = <span class="hljs-literal">false</span>;
+        rootElementsSort = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> floor = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>,
-            buckets = [],
-            obj, order, i, iz, name;
+        <span class="hljs-keyword">const</span> buckets = [];
+        <span class="hljs-keyword">let</span> art, order, i, iz, item;
 
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = animate.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = rootElements.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-            name = animate[i];
-            obj = animation[name];
+            item = rootElements[i];
+            art = artefact[item];
 
-            <span class="hljs-keyword">if</span> (obj) {
+            <span class="hljs-keyword">if</span> (art) {
 
-                order = <span class="hljs-title function_">floor</span>(obj.<span class="hljs-property">order</span>) || <span class="hljs-number">0</span>;
+                order = <span class="hljs-title function_">floor</span>(art.<span class="hljs-property">order</span>) || <span class="hljs-number">0</span>;
 
                 <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
-
-                buckets[order].<span class="hljs-title function_">push</span>(obj);
+                
+                buckets[order].<span class="hljs-title function_">push</span>(art.<span class="hljs-property">name</span>);
             }
         }
-        animate_sorted = buckets.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.<span class="hljs-title function_">concat</span>(v), []);
+        rootElements_sorted.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        rootElements_sorted.<span class="hljs-title function_">push</span>(...buckets.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.<span class="hljs-title function_">concat</span>(v), []));
     }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>The <strong>requestAnimationFrame</strong> function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> animationLoop = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">if</span> (resortBatchAnimations) <span class="hljs-title function_">sortAnimations</span>();
-
-    <span class="hljs-keyword">let</span> i, iz;
-
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = animate_sorted.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-        animate_sorted[i].<span class="hljs-title function_">fn</span>();
-    }
-    
-    <span class="hljs-keyword">if</span> (doAnimation) <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">requestAnimationFrame</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">animationLoop</span>());
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> (modules and scrawl object). Start the RAF function running</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> startCoreAnimationLoop = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    doAnimation = <span class="hljs-literal">true</span>;
-    <span class="hljs-title function_">animationLoop</span>();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> (modules and scrawl object). Halt the RAF function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> stopCoreAnimationLoop = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-    
-    doAnimation = <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>

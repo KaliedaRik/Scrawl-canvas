@@ -25,6 +25,16 @@
                 </a>
               
                 
+                <a class="source" href="display-cycle.html">
+                  ./source/core/display-cycle.js
+                </a>
+              
+                
+                <a class="source" href="document-rootElements.html">
+                  ./source/core/document-rootElements.js
+                </a>
+              
+                
                 <a class="source" href="document.html">
                   ./source/core/document.js
                 </a>
@@ -125,6 +135,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/dragZone.html">
+                  ./source/factory/dragZone.js
+                </a>
+              
+                
                 <a class="source" href="../factory/element.html">
                   ./source/factory/element.js
                 </a>
@@ -175,6 +190,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/keyboardZone.html">
+                  ./source/factory/keyboardZone.js
+                </a>
+              
+                
                 <a class="source" href="../factory/line.html">
                   ./source/factory/line.js
                 </a>
@@ -202,6 +222,11 @@
                 
                 <a class="source" href="../factory/noiseAsset.html">
                   ./source/factory/noiseAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/observeUpdate.html">
+                  ./source/factory/observeUpdate.js
                 </a>
               
                 
@@ -503,11 +528,9 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <h4 id="imports">Imports</h4>
+              <h4 id="functions">Functions</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -517,19 +540,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
-              <h4 id="functions">Functions</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p><strong>addStrings</strong> adds the two arguments together and returns a percentage string value if either of the values was a string; or a sum of the two numbers.</p>
 <p>Examples:</p>
@@ -552,7 +562,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">addStrings</span> = (<span class="hljs-params">current, delta</span>) =&gt; {
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">addStrings</span> = (<span class="hljs-params">current, delta</span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(delta)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities addStrings() error - no delta argument supplied <span class="hljs-subst">${current}</span>, <span class="hljs-subst">${delta}</span>`</span>);
 
@@ -561,11 +571,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Correct for labels</p>
 
@@ -588,11 +598,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p><strong>convertTime</strong> converts a time value into its component string suffix and (millisecond) number value properties; returns an array</p>
 <p>Examples:</p>
@@ -611,7 +621,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">convertTime</span> = (<span class="hljs-params">item</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">convertTime</span> = (<span class="hljs-params">item</span>) =&gt; {
 
     <span class="hljs-keyword">let</span> a, timeUnit, timeValue;
 
@@ -647,17 +657,17 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p><strong>correctAngle</strong> makes sure any degree-based angle is in the range <code>0-360</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">correctAngle</span> = (<span class="hljs-params">item</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">correctAngle</span> = (<span class="hljs-params">item</span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (!item.<span class="hljs-property">toFixed</span> || <span class="hljs-built_in">isNaN</span>(item)) {
 
@@ -676,17 +686,17 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p><strong>correctForZero</strong> checks and corrects for minor deviations from zero (eNumbers)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">correctForZero</span> = (<span class="hljs-params">item</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">correctForZero</span> = (<span class="hljs-params">item</span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (!item.<span class="hljs-property">toFixed</span>) <span class="hljs-keyword">return</span> item;
     <span class="hljs-keyword">if</span> (item == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> item;
@@ -699,30 +709,30 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>λ functions</strong> helps us avoid errors when invoking a function attribute settable by the coder</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> λ<span class="hljs-literal">null</span> = <span class="hljs-function">() =&gt;</span> {};
-<span class="hljs-keyword">const</span> λfirstArg = <span class="hljs-keyword">function</span> (<span class="hljs-params">a</span>) { <span class="hljs-keyword">return</span> a; };
-<span class="hljs-keyword">const</span> λ<span class="hljs-variable language_">this</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>; };
-<span class="hljs-keyword">const</span> λpromise = <span class="hljs-function">() =&gt;</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-literal">true</span>);
-<span class="hljs-keyword">const</span> Ωempty = {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> λ<span class="hljs-literal">null</span> = <span class="hljs-function">() =&gt;</span> {};
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> λfirstArg = <span class="hljs-keyword">function</span> (<span class="hljs-params">a</span>) { <span class="hljs-keyword">return</span> a; };
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> λ<span class="hljs-variable language_">this</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>; };
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> λpromise = <span class="hljs-function">() =&gt;</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-literal">true</span>);
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> Ωempty = {};</pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>generateUuid</strong> is a simple (crude) uuid generator 
 <a href="http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript">http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript</a>
@@ -730,7 +740,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">generateUuid</span> = (<span class="hljs-params"></span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">generateUuid</span> = (<span class="hljs-params"></span>) =&gt; {
 
     <span class="hljs-keyword">function</span> <span class="hljs-title function_">s4</span>(<span class="hljs-params"></span>) {
 
@@ -743,11 +753,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>generateUniqueString</strong> is a simple random String generator
 <a href="https://gist.github.com/SimonHoiberg/ad2710c8626c5a74cddd8f6385795cc0">https://gist.github.com/SimonHoiberg/ad2710c8626c5a74cddd8f6385795cc0</a>
@@ -755,9 +765,27 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">generateUniqueString</span> = (<span class="hljs-params"></span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">generateUniqueString</span> = (<span class="hljs-params"></span>) =&gt; {
 
     <span class="hljs-keyword">return</span> performance.<span class="hljs-title function_">now</span>().<span class="hljs-title function_">toString</span>(<span class="hljs-number">36</span>) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>().<span class="hljs-title function_">toString</span>(<span class="hljs-number">36</span>).<span class="hljs-title function_">substr</span>(<span class="hljs-number">2</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p><strong>interpolate</strong> clamp a value between a maximum and minimum value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> interpolate = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, min, max</span>) {
+    
+    <span class="hljs-keyword">return</span> min + val * (max - min);
 };</pre></div></div>
             
         </li>
@@ -769,14 +797,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p><strong>interpolate</strong> clamp a value between a maximum and minimum value</p>
+              <p><strong>isa_boolean</strong> checks to make sure the argument is a boolean</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> interpolate = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, min, max</span>) {
-    
-    <span class="hljs-keyword">return</span> min + val * (max - min);
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_boolean</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;boolean&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -787,11 +812,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p><strong>isa_boolean</strong> checks to make sure the argument is a boolean</p>
+              <p><strong>isa_canvas</strong> checks to make sure the argument is a DOM &lt;canvas&gt; element</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_boolean</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;boolean&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_canvas</span> = item =&gt; (<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(item) === <span class="hljs-string">&#x27;[object HTMLCanvasElement]&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -802,11 +827,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p><strong>isa_canvas</strong> checks to make sure the argument is a DOM &lt;canvas&gt; element</p>
+              <p><strong>isa_dom</strong> checks to make sure the argument is a DOM element of some sort</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_canvas</span> = item =&gt; (<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(item) === <span class="hljs-string">&#x27;[object HTMLCanvasElement]&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_dom</span> = item =&gt; (item &amp;&amp; item.<span class="hljs-property">querySelector</span> &amp;&amp; item.<span class="hljs-property">dispatchEvent</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -817,11 +842,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p><strong>isa_dom</strong> checks to make sure the argument is a DOM element of some sort</p>
+              <p><strong>isa_fn</strong> checks to make sure the argument is a JavaScript function object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_dom</span> = item =&gt; (item &amp;&amp; item.<span class="hljs-property">querySelector</span> &amp;&amp; item.<span class="hljs-property">dispatchEvent</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_fn</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;function&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -832,11 +857,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p><strong>isa_fn</strong> checks to make sure the argument is a JavaScript function object</p>
+              <p><strong>isa_number</strong> checks to make sure the argument is true number (excluding NaN)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_fn</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;function&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_number</span> = item =&gt; (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">toFixed</span> &amp;&amp; !<span class="hljs-title class_">Number</span>.<span class="hljs-built_in">isNaN</span>(item)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -847,11 +872,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p><strong>isa_number</strong> checks to make sure the argument is true number (excluding NaN)</p>
+              <p><strong>isa_obj</strong> checks to make sure the argument is a JavaScript Object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_number</span> = item =&gt; (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">toFixed</span> &amp;&amp; !<span class="hljs-title class_">Number</span>.<span class="hljs-built_in">isNaN</span>(item)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_obj</span> = item =&gt; (<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(item) === <span class="hljs-string">&#x27;[object Object]&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -862,11 +887,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p><strong>isa_obj</strong> checks to make sure the argument is a JavaScript Object</p>
+              <p><strong>isa_quaternion</strong> checks to make sure the argument is a Scrawl-canvas Quaternion object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_obj</span> = item =&gt; (<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(item) === <span class="hljs-string">&#x27;[object Object]&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_quaternion</span> = item =&gt; (item &amp;&amp; item.<span class="hljs-property">type</span> &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Quaternion&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -876,21 +901,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p><strong>isa_quaternion</strong> checks to make sure the argument is a Scrawl-canvas Quaternion object</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_quaternion</span> = item =&gt; (item &amp;&amp; item.<span class="hljs-property">type</span> &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Quaternion&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>mergeInto</strong> takes two objects and merges the attributes of one into the other. This function mutates the ‘original’ object rather than generating a third, new onject</p>
 <p>Example:</p>
@@ -903,7 +913,7 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeInto</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeInto</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(original) || !<span class="hljs-title function_">isa_obj</span>(additional)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities mergeInto() error - insufficient arguments supplied <span class="hljs-subst">${original}</span>, <span class="hljs-subst">${additional}</span>`</span>);
 
@@ -917,11 +927,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>mergeOver</strong> takes two objects and writes the attributes of one over the other. This function mutates the ‘original’ object rather than generating a third, new onject</p>
 <p>Example:</p>
@@ -934,7 +944,7 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeOver</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeOver</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(original) || !<span class="hljs-title function_">isa_obj</span>(additional)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities mergeOver() error - insufficient arguments supplied <span class="hljs-subst">${original}</span>, <span class="hljs-subst">${additional}</span>`</span>);
 
@@ -948,11 +958,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><strong>mergeDiscard</strong> iterates over the additional object to perform a mergeOver operation, and also removing attributes from the original object where they have been set to null in the additional object</p>
 <p>Example:</p>
@@ -965,7 +975,7 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeDiscard</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeDiscard</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(original) || !<span class="hljs-title function_">isa_obj</span>(additional)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities mergeDiscard() error - insufficient arguments supplied <span class="hljs-subst">${original}</span>, <span class="hljs-subst">${additional}</span>`</span>);
 
@@ -980,11 +990,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>pushUnique</strong> adds a value to the end of an array, if that value is not already present in the array. This function mutates the array</p>
 <p>Example:</p>
@@ -998,7 +1008,7 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">pushUnique</span> = (<span class="hljs-params">myArray, potentialMember</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">pushUnique</span> = (<span class="hljs-params">myArray, potentialMember</span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(myArray, potentialMember)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities pushUnique() error - insufficient arguments supplied <span class="hljs-subst">${myArray}</span>, <span class="hljs-subst">${potentialMember}</span>`</span>);
 
@@ -1019,11 +1029,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>removeItem</strong> removes a value from an array. This function mutates the array</p>
 <p>Example:</p>
@@ -1037,7 +1047,7 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">removeItem</span> = (<span class="hljs-params">myArray, unwantedMember</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">removeItem</span> = (<span class="hljs-params">myArray, unwantedMember</span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(myArray, unwantedMember)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities removeItem() error - insufficient arguments supplied <span class="hljs-subst">${myArray}</span>, <span class="hljs-subst">${unwantedMember}</span>`</span>);
 
@@ -1053,17 +1063,32 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p><strong>xt</strong> checks to see if argument exists (is not ‘undefined’)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">xt</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item == <span class="hljs-string">&#x27;undefined&#x27;</span>) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p><strong>xt</strong> checks to see if argument exists (is not ‘undefined’)</p>
+              <p><strong>xta</strong> checks to make sure that all the arguments supplied to the function exist (none are ‘undefined’)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">xt</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item == <span class="hljs-string">&#x27;undefined&#x27;</span>) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">xta</span> = (<span class="hljs-params">...args</span>) =&gt; args.<span class="hljs-title function_">every</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1074,11 +1099,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p><strong>xta</strong> checks to make sure that all the arguments supplied to the function exist (none are ‘undefined’)</p>
+              <p><strong>xtGet</strong> returns the first existing (not ‘undefined’) argument supplied to the function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">xta</span> = (<span class="hljs-params">...args</span>) =&gt; args.<span class="hljs-title function_">every</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">xtGet</span> = (<span class="hljs-params">...args</span>) =&gt; args.<span class="hljs-title function_">find</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1089,11 +1114,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <p><strong>xtGet</strong> returns the first existing (not ‘undefined’) argument supplied to the function</p>
+              <p><strong>xto</strong> checks to make sure that at least one of the arguments supplied to the function exists (is not ‘undefined’)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">xtGet</span> = (<span class="hljs-params">...args</span>) =&gt; args.<span class="hljs-title function_">find</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">xto</span> = (<span class="hljs-params">...args</span>) =&gt; (args.<span class="hljs-title function_">find</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span>)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -1104,11 +1129,12 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
-              <p><strong>xto</strong> checks to make sure that at least one of the arguments supplied to the function exists (is not ‘undefined’)</p>
+              <h5 id="easing-engines">Easing engines</h5>
+<p><code>easeEngines</code> - an object in which keys define various easing functions</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">xto</span> = (<span class="hljs-params">...args</span>) =&gt; (args.<span class="hljs-title function_">find</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span>)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> easeEngines = {</pre></div></div>
             
         </li>
         
@@ -1118,22 +1144,6 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
               
               <div class="sswrap ">
                 <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <h5 id="easing-engines">Easing engines</h5>
-<p><code>easeEngines</code> - an object in which keys define various easing functions</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> easeEngines = {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Legacy easings</p>
 
@@ -1210,11 +1220,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Noise functionality easing engines</p>
 
@@ -1227,11 +1237,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>The following easing variations come from the <a href="https://easings.net/">easings.net</a> web page</p>
 <ul>
@@ -1331,11 +1341,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>This is wrong</p>
 
@@ -1366,16 +1376,16 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
 };
 
 
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">getArrayType</span> = someObject =&gt; someObject &amp;&amp; someObject.<span class="hljs-property">constructor</span> &amp;&amp; someObject.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span> &amp;&amp; someObject.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span> || <span class="hljs-literal">null</span>;</pre></div></div>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getArrayType</span> = someObject =&gt; someObject &amp;&amp; someObject.<span class="hljs-property">constructor</span> &amp;&amp; someObject.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span> &amp;&amp; someObject.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span> || <span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Code to detect browser from Code Box: <a href="https://code-boxx.com/detect-browser-with-javascript/">https://code-boxx.com/detect-browser-with-javascript/</a></p>
 <ul>
@@ -1384,7 +1394,7 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> detectBrowser = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> detectBrowser = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> result = [];
 
@@ -1408,52 +1418,47 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <p>Convenience value, used internally</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> radian = <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> / <span class="hljs-number">180</span>;</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
-              <h4 id="exports">Exports</h4>
+              <p>Convenience set, used internally</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    addStrings,
-    convertTime,
-    correctAngle,
-    correctForZero,
-    λ<span class="hljs-literal">null</span>,
-    λfirstArg,
-    λ<span class="hljs-variable language_">this</span>,
-    λpromise,
-    Ωempty,
-    generateUuid,
-    generateUniqueString,
-    interpolate,
-    isa_boolean,
-    isa_canvas,
-    isa_dom,
-    isa_fn,
-    isa_number,
-    isa_obj,
-    isa_quaternion,
-    mergeDiscard,
-    mergeInto,
-    mergeOver,
-    pushUnique,
-    removeItem,
-    xt,
-    xta,
-    xtGet,
-    xto, 
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> css = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>([<span class="hljs-string">&#x27;all&#x27;</span>, <span class="hljs-string">&#x27;background&#x27;</span>, <span class="hljs-string">&#x27;backgroundAttachment&#x27;</span>, <span class="hljs-string">&#x27;backgroundBlendMode&#x27;</span>, <span class="hljs-string">&#x27;backgroundClip&#x27;</span>, <span class="hljs-string">&#x27;backgroundColor&#x27;</span>, <span class="hljs-string">&#x27;backgroundOrigin&#x27;</span>, <span class="hljs-string">&#x27;backgroundPosition&#x27;</span>, <span class="hljs-string">&#x27;backgroundRepeat&#x27;</span>, <span class="hljs-string">&#x27;border&#x27;</span>, <span class="hljs-string">&#x27;borderBottom&#x27;</span>, <span class="hljs-string">&#x27;borderBottomColor&#x27;</span>, <span class="hljs-string">&#x27;borderBottomStyle&#x27;</span>, <span class="hljs-string">&#x27;borderBottomWidth&#x27;</span>, <span class="hljs-string">&#x27;borderCollapse&#x27;</span>, <span class="hljs-string">&#x27;borderColor&#x27;</span>, <span class="hljs-string">&#x27;borderLeft&#x27;</span>, <span class="hljs-string">&#x27;borderLeftColor&#x27;</span>, <span class="hljs-string">&#x27;borderLeftStyle&#x27;</span>, <span class="hljs-string">&#x27;borderLeftWidth&#x27;</span>, <span class="hljs-string">&#x27;borderRight&#x27;</span>, <span class="hljs-string">&#x27;borderRightColor&#x27;</span>, <span class="hljs-string">&#x27;borderRightStyle&#x27;</span>, <span class="hljs-string">&#x27;borderRightWidth&#x27;</span>, <span class="hljs-string">&#x27;borderSpacing&#x27;</span>, <span class="hljs-string">&#x27;borderStyle&#x27;</span>, <span class="hljs-string">&#x27;borderTop&#x27;</span>, <span class="hljs-string">&#x27;borderTopColor&#x27;</span>, <span class="hljs-string">&#x27;borderTopStyle&#x27;</span>, <span class="hljs-string">&#x27;borderTopWidth&#x27;</span>, <span class="hljs-string">&#x27;borderWidth&#x27;</span>, <span class="hljs-string">&#x27;clear&#x27;</span>, <span class="hljs-string">&#x27;color&#x27;</span>, <span class="hljs-string">&#x27;columns&#x27;</span>, <span class="hljs-string">&#x27;content&#x27;</span>, <span class="hljs-string">&#x27;counterIncrement&#x27;</span>, <span class="hljs-string">&#x27;counterReset&#x27;</span>, <span class="hljs-string">&#x27;cursor&#x27;</span>, <span class="hljs-string">&#x27;direction&#x27;</span>, <span class="hljs-string">&#x27;display&#x27;</span>, <span class="hljs-string">&#x27;emptyCells&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>, <span class="hljs-string">&#x27;font&#x27;</span>, <span class="hljs-string">&#x27;fontFamily&#x27;</span>, <span class="hljs-string">&#x27;fontSize&#x27;</span>, <span class="hljs-string">&#x27;fontSizeAdjust&#x27;</span>, <span class="hljs-string">&#x27;fontStretch&#x27;</span>, <span class="hljs-string">&#x27;fontStyle&#x27;</span>, <span class="hljs-string">&#x27;fontSynthesis&#x27;</span>, <span class="hljs-string">&#x27;fontVariant&#x27;</span>, <span class="hljs-string">&#x27;fontVariantAlternates&#x27;</span>, <span class="hljs-string">&#x27;fontVariantCaps&#x27;</span>, <span class="hljs-string">&#x27;fontVariantEastAsian&#x27;</span>, <span class="hljs-string">&#x27;fontVariantLigatures&#x27;</span>, <span class="hljs-string">&#x27;fontVariantNumeric&#x27;</span>, <span class="hljs-string">&#x27;fontVariantPosition&#x27;</span>, <span class="hljs-string">&#x27;fontWeight&#x27;</span>, <span class="hljs-string">&#x27;grid&#x27;</span>, <span class="hljs-string">&#x27;gridArea&#x27;</span>, <span class="hljs-string">&#x27;gridAutoColumns&#x27;</span>, <span class="hljs-string">&#x27;gridAutoFlow&#x27;</span>, <span class="hljs-string">&#x27;gridAutoPosition&#x27;</span>, <span class="hljs-string">&#x27;gridAutoRows&#x27;</span>, <span class="hljs-string">&#x27;gridColumn&#x27;</span>, <span class="hljs-string">&#x27;gridColumnStart&#x27;</span>, <span class="hljs-string">&#x27;gridColumnEnd&#x27;</span>, <span class="hljs-string">&#x27;gridRow&#x27;</span>, <span class="hljs-string">&#x27;gridRowStart&#x27;</span>, <span class="hljs-string">&#x27;gridRowEnd&#x27;</span>, <span class="hljs-string">&#x27;gridTemplate&#x27;</span>, <span class="hljs-string">&#x27;gridTemplateAreas&#x27;</span>, <span class="hljs-string">&#x27;gridTemplateRows&#x27;</span>, <span class="hljs-string">&#x27;gridTemplateColumns&#x27;</span>, <span class="hljs-string">&#x27;imageResolution&#x27;</span>, <span class="hljs-string">&#x27;imeMode&#x27;</span>, <span class="hljs-string">&#x27;inherit&#x27;</span>, <span class="hljs-string">&#x27;inlineSize&#x27;</span>, <span class="hljs-string">&#x27;isolation&#x27;</span>, <span class="hljs-string">&#x27;letterSpacing&#x27;</span>, <span class="hljs-string">&#x27;lineBreak&#x27;</span>, <span class="hljs-string">&#x27;lineHeight&#x27;</span>, <span class="hljs-string">&#x27;listStyle&#x27;</span>, <span class="hljs-string">&#x27;listStyleImage&#x27;</span>, <span class="hljs-string">&#x27;listStylePosition&#x27;</span>, <span class="hljs-string">&#x27;listStyleType&#x27;</span>, <span class="hljs-string">&#x27;margin&#x27;</span>, <span class="hljs-string">&#x27;marginBlockStart&#x27;</span>, <span class="hljs-string">&#x27;marginBlockEnd&#x27;</span>, <span class="hljs-string">&#x27;marginInlineStart&#x27;</span>, <span class="hljs-string">&#x27;marginInlineEnd&#x27;</span>, <span class="hljs-string">&#x27;marginBottom&#x27;</span>, <span class="hljs-string">&#x27;marginLeft&#x27;</span>, <span class="hljs-string">&#x27;marginRight&#x27;</span>, <span class="hljs-string">&#x27;marginTop&#x27;</span>, <span class="hljs-string">&#x27;marks&#x27;</span>, <span class="hljs-string">&#x27;mask&#x27;</span>, <span class="hljs-string">&#x27;maskType&#x27;</span>, <span class="hljs-string">&#x27;maxWidth&#x27;</span>, <span class="hljs-string">&#x27;maxHeight&#x27;</span>, <span class="hljs-string">&#x27;maxBlockSize&#x27;</span>, <span class="hljs-string">&#x27;maxInlineSize&#x27;</span>, <span class="hljs-string">&#x27;maxZoom&#x27;</span>, <span class="hljs-string">&#x27;minWidth&#x27;</span>, <span class="hljs-string">&#x27;minHeight&#x27;</span>, <span class="hljs-string">&#x27;minBlockSize&#x27;</span>, <span class="hljs-string">&#x27;minInlineSize&#x27;</span>, <span class="hljs-string">&#x27;minZoom&#x27;</span>, <span class="hljs-string">&#x27;mixBlendMode&#x27;</span>, <span class="hljs-string">&#x27;objectFit&#x27;</span>, <span class="hljs-string">&#x27;objectPosition&#x27;</span>, <span class="hljs-string">&#x27;offsetBlockStart&#x27;</span>, <span class="hljs-string">&#x27;offsetBlockEnd&#x27;</span>, <span class="hljs-string">&#x27;offsetInlineStart&#x27;</span>, <span class="hljs-string">&#x27;offsetInlineEnd&#x27;</span>, <span class="hljs-string">&#x27;orphans&#x27;</span>, <span class="hljs-string">&#x27;overflow&#x27;</span>, <span class="hljs-string">&#x27;overflowWrap&#x27;</span>, <span class="hljs-string">&#x27;overflowX&#x27;</span>, <span class="hljs-string">&#x27;overflowY&#x27;</span>, <span class="hljs-string">&#x27;pad&#x27;</span>, <span class="hljs-string">&#x27;padding&#x27;</span>, <span class="hljs-string">&#x27;paddingBlockStart&#x27;</span>, <span class="hljs-string">&#x27;paddingBlockEnd&#x27;</span>, <span class="hljs-string">&#x27;paddingInlineStart&#x27;</span>, <span class="hljs-string">&#x27;paddingInlineEnd&#x27;</span>, <span class="hljs-string">&#x27;paddingBottom&#x27;</span>, <span class="hljs-string">&#x27;paddingLeft&#x27;</span>, <span class="hljs-string">&#x27;paddingRight&#x27;</span>, <span class="hljs-string">&#x27;paddingTop&#x27;</span>, <span class="hljs-string">&#x27;pageBreakAfter&#x27;</span>, <span class="hljs-string">&#x27;pageBreakBefore&#x27;</span>, <span class="hljs-string">&#x27;pageBreakInside&#x27;</span>, <span class="hljs-string">&#x27;pointerEvents&#x27;</span>, <span class="hljs-string">&#x27;position&#x27;</span>, <span class="hljs-string">&#x27;prefix&#x27;</span>, <span class="hljs-string">&#x27;quotes&#x27;</span>, <span class="hljs-string">&#x27;rubyAlign&#x27;</span>, <span class="hljs-string">&#x27;rubyMerge&#x27;</span>, <span class="hljs-string">&#x27;rubyPosition&#x27;</span>, <span class="hljs-string">&#x27;scrollBehavior&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapCoordinate&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapDestination&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapPointsX&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapPointsY&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapType&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapTypeX&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapTypeY&#x27;</span>, <span class="hljs-string">&#x27;shapeImageThreshold&#x27;</span>, <span class="hljs-string">&#x27;shapeMargin&#x27;</span>, <span class="hljs-string">&#x27;shapeOutside&#x27;</span>, <span class="hljs-string">&#x27;tableLayout&#x27;</span>, <span class="hljs-string">&#x27;textAlign&#x27;</span>, <span class="hljs-string">&#x27;textDecoration&#x27;</span>, <span class="hljs-string">&#x27;textIndent&#x27;</span>, <span class="hljs-string">&#x27;textOrientation&#x27;</span>, <span class="hljs-string">&#x27;textOverflow&#x27;</span>, <span class="hljs-string">&#x27;textRendering&#x27;</span>, <span class="hljs-string">&#x27;textShadow&#x27;</span>, <span class="hljs-string">&#x27;textTransform&#x27;</span>, <span class="hljs-string">&#x27;textUnderlinePosition&#x27;</span>, <span class="hljs-string">&#x27;unicodeRange&#x27;</span>, <span class="hljs-string">&#x27;unset&#x27;</span>, <span class="hljs-string">&#x27;verticalAlign&#x27;</span>, <span class="hljs-string">&#x27;widows&#x27;</span>, <span class="hljs-string">&#x27;willChange&#x27;</span>, <span class="hljs-string">&#x27;wordBreak&#x27;</span>, <span class="hljs-string">&#x27;wordSpacing&#x27;</span>, <span class="hljs-string">&#x27;wordWrap&#x27;</span>, <span class="hljs-string">&#x27;zIndex&#x27;</span>]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <p>Convenience set, used internally</p>
 
-    easeEngines,
-
-    getArrayType,
-
-    detectBrowser,
-};</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> xcss = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>([<span class="hljs-string">&#x27;alignContent&#x27;</span>, <span class="hljs-string">&#x27;alignItems&#x27;</span>, <span class="hljs-string">&#x27;alignSelf&#x27;</span>, <span class="hljs-string">&#x27;animation&#x27;</span>, <span class="hljs-string">&#x27;animationDelay&#x27;</span>, <span class="hljs-string">&#x27;animationDirection&#x27;</span>, <span class="hljs-string">&#x27;animationDuration&#x27;</span>, <span class="hljs-string">&#x27;animationFillMode&#x27;</span>, <span class="hljs-string">&#x27;animationIterationCount&#x27;</span>, <span class="hljs-string">&#x27;animationName&#x27;</span>, <span class="hljs-string">&#x27;animationPlayState&#x27;</span>, <span class="hljs-string">&#x27;animationTimingFunction&#x27;</span>, <span class="hljs-string">&#x27;backfaceVisibility&#x27;</span>, <span class="hljs-string">&#x27;backgroundImage&#x27;</span>, <span class="hljs-string">&#x27;backgroundSize&#x27;</span>, <span class="hljs-string">&#x27;borderBottomLeftRadius&#x27;</span>, <span class="hljs-string">&#x27;borderBottomRightRadius&#x27;</span>, <span class="hljs-string">&#x27;borderImage&#x27;</span>, <span class="hljs-string">&#x27;borderImageOutset&#x27;</span>, <span class="hljs-string">&#x27;borderImageRepeat&#x27;</span>, <span class="hljs-string">&#x27;borderImageSlice&#x27;</span>, <span class="hljs-string">&#x27;borderImageSource&#x27;</span>, <span class="hljs-string">&#x27;borderImageWidth&#x27;</span>, <span class="hljs-string">&#x27;borderRadius&#x27;</span>, <span class="hljs-string">&#x27;borderTopLeftRadius&#x27;</span>, <span class="hljs-string">&#x27;borderTopRightRadius&#x27;</span>, <span class="hljs-string">&#x27;boxDecorationBreak&#x27;</span>, <span class="hljs-string">&#x27;boxShadow&#x27;</span>, <span class="hljs-string">&#x27;boxSizing&#x27;</span>, <span class="hljs-string">&#x27;columnCount&#x27;</span>, <span class="hljs-string">&#x27;columnFill&#x27;</span>, <span class="hljs-string">&#x27;columnGap&#x27;</span>, <span class="hljs-string">&#x27;columnRule&#x27;</span>, <span class="hljs-string">&#x27;columnRuleColor&#x27;</span>, <span class="hljs-string">&#x27;columnRuleStyle&#x27;</span>, <span class="hljs-string">&#x27;columnRuleWidth&#x27;</span>, <span class="hljs-string">&#x27;columnSpan&#x27;</span>, <span class="hljs-string">&#x27;columnWidth&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>, <span class="hljs-string">&#x27;flex&#x27;</span>, <span class="hljs-string">&#x27;flexBasis&#x27;</span>, <span class="hljs-string">&#x27;flexDirection&#x27;</span>, <span class="hljs-string">&#x27;flexFlow&#x27;</span>, <span class="hljs-string">&#x27;flexGrow&#x27;</span>, <span class="hljs-string">&#x27;flexShrink&#x27;</span>, <span class="hljs-string">&#x27;flexWrap&#x27;</span>, <span class="hljs-string">&#x27;fontFeatureSettings&#x27;</span>, <span class="hljs-string">&#x27;fontKerning&#x27;</span>, <span class="hljs-string">&#x27;fontLanguageOverride&#x27;</span>, <span class="hljs-string">&#x27;hyphens&#x27;</span>, <span class="hljs-string">&#x27;imageRendering&#x27;</span>, <span class="hljs-string">&#x27;imageOrientation&#x27;</span>, <span class="hljs-string">&#x27;initial&#x27;</span>, <span class="hljs-string">&#x27;justifyContent&#x27;</span>, <span class="hljs-string">&#x27;linearGradient&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;order&#x27;</span>, <span class="hljs-string">&#x27;orientation&#x27;</span>, <span class="hljs-string">&#x27;outline&#x27;</span>, <span class="hljs-string">&#x27;outlineColor&#x27;</span>, <span class="hljs-string">&#x27;outlineOffset&#x27;</span>, <span class="hljs-string">&#x27;outlineStyle&#x27;</span>, <span class="hljs-string">&#x27;outlineWidth&#x27;</span>, <span class="hljs-string">&#x27;resize&#x27;</span>, <span class="hljs-string">&#x27;tabSize&#x27;</span>, <span class="hljs-string">&#x27;textAlignLast&#x27;</span>, <span class="hljs-string">&#x27;textCombineUpright&#x27;</span>, <span class="hljs-string">&#x27;textDecorationColor&#x27;</span>, <span class="hljs-string">&#x27;textDecorationLine&#x27;</span>, <span class="hljs-string">&#x27;textDecorationStyle&#x27;</span>, <span class="hljs-string">&#x27;touchAction&#x27;</span>, <span class="hljs-string">&#x27;transformStyle&#x27;</span>, <span class="hljs-string">&#x27;transition&#x27;</span>, <span class="hljs-string">&#x27;transitionDelay&#x27;</span>, <span class="hljs-string">&#x27;transitionDuration&#x27;</span>, <span class="hljs-string">&#x27;transitionProperty&#x27;</span>, <span class="hljs-string">&#x27;transitionTimingFunction&#x27;</span>, <span class="hljs-string">&#x27;unicodeBidi&#x27;</span>, <span class="hljs-string">&#x27;whiteSpace&#x27;</span>, <span class="hljs-string">&#x27;writingMode&#x27;</span>]);</pre></div></div>
             
         </li>
         
