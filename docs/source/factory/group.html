@@ -1060,10 +1060,17 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getHost</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
+    <span class="hljs-keyword">if</span> (item) {
 
-    <span class="hljs-keyword">if</span> (!host || host.<span class="hljs-property">substring</span>) <span class="hljs-keyword">return</span> artefact[item] || cell[item] || artefact[host] || cell[host] || <span class="hljs-literal">null</span>;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> host;
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">type</span> &amp;&amp; [<span class="hljs-string">&#x27;Cell&#x27;</span>, <span class="hljs-string">&#x27;Stack&#x27;</span>].<span class="hljs-title function_">includes</span>(item.<span class="hljs-property">type</span>)) <span class="hljs-keyword">return</span> item;
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) <span class="hljs-keyword">return</span> artefact[item] || cell[item];
+    }
+
+    <span class="hljs-keyword">const</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
+
+    <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">substring</span>) <span class="hljs-keyword">return</span> artefact[host] || cell[host];
+
+    <span class="hljs-keyword">return</span> host;
 };</pre></div></div>
             
         </li>
