@@ -22,7 +22,7 @@
 import { constructors, entity } from '../core/library.js';
 import { mergeOver, pushUnique, isa_number, isa_obj, λnull, xt, xta, Ωempty } from '../core/utilities.js';
 
-import { requestCell, releaseCell } from './cell.js';
+import { requestCell, releaseCell } from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';

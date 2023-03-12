@@ -15,7 +15,7 @@ import { scrawlCanvasHold } from '../core/document.js';
 import { asset } from '../core/library.js';
 
 import { makeState, stateKeys } from '../factory/state.js';
-import { requestCell, releaseCell } from '../factory/cell.js';
+import { requestCell, releaseCell } from '../factory/cell-fragment.js';
 import { filterEngine } from '../factory/filterEngine.js';
 import { importDomImage } from '../factory/imageAsset.js';
 import { currentGroup } from '../factory/canvas.js';
@@ -491,13 +491,14 @@ export default function (P = Ωempty) {
 
 // ##### Step 2: invoke the entity's stamp action
 // `stamp` - this is the function invoked by Group objects as they cascade the Display cycle __compile__ step through to their member artefacts.
+    P.acceptableHosts = ['Cell', 'CellFragment'];
     P.stamp = function (force = false, host, changes) {
 
         let filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
 
         if (force) {
 
-            if (host && host.type === 'Cell') this.currentHost = host;
+            if (host && this.acceptableHosts.includes(host.type)) this.currentHost = host;
 
             if (changes) this.set(changes);
 
@@ -562,9 +563,9 @@ export default function (P = Ωempty) {
             filterCellEngine = filterHost.engine;
 
         this.currentHost = filterHost;
-        
-        let w = filterCellElement.width = currentDimensions[0] || currentElement.width,
-            h = filterCellElement.height = currentDimensions[1] || currentElement.height;
+
+        let w = filterCellElement.width = currentDimensions ? currentDimensions[0] : currentElement.width,
+            h = filterCellElement.height = currentDimensions ? currentDimensions[1] : currentElement.height;
 
         if (w && h) {
 
@@ -701,7 +702,7 @@ export default function (P = Ωempty) {
 // + Will ignore any filters assigned to the entity (because they require asynchronous Promises for the filter engine)
     P.simpleStamp = function (host, changes = Ωempty) {
 
-        if (host && host.type === 'Cell') {
+        if (host && this.acceptableHosts.includes(host.type)) {
 
             this.currentHost = host;
             

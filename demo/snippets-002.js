@@ -7,13 +7,14 @@
 // [Run code](../../demo/snippets-002.html)
 
 
-// Import Scrawl-canvas
+// Import the Scrawl-canvas object 
+// + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
 import * as scrawl from '../source/scrawl.js'
 
 // Import and apply snippet code to DOM elements
 import greenBox from './snippets/green-box-snippet.js';
 let boxElements = document.querySelectorAll('.green-box');
-boxElements.forEach(el => greenBox(el));
+boxElements.forEach(el => greenBox(scrawl, el));
 
 
 // #### Scene setup

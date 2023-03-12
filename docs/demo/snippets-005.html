@@ -1124,13 +1124,46 @@
 <li><a href="./snippets/before-after-slider-infographic.html">Slider infographic snippet</a></li>
 </ul>
 <p><a href="../../demo/snippets-005.html">Run code</a></p>
-<p>Import snippet</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Import the Scrawl-canvas object </p>
+<ul>
+<li>there’s various ways to do this. See <a href="../dom-001.html">Demo DOM-001</a> for more details</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Import snippet</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> slider <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/before-after-slider-infographic.js&#x27;</span>;
 
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.slider-infographic&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">slider</span>(el));</pre></div></div>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.slider-infographic&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">slider</span>(scrawl, el));
+
+
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

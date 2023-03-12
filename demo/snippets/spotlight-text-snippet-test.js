@@ -1,7 +1,4 @@
-import * as scrawl from '../../source/scrawl.js';
-
-
-export default function (el) {
+export default function (scrawl, el) {
 
     let snippet = scrawl.makeSnippet({
         domElement: el,

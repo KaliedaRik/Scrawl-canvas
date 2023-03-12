@@ -17,7 +17,7 @@
 import { constructors } from '../core/library.js';
 import { mergeOver, radian, xt, xto, xta, isa_number, Ωempty } from '../core/utilities.js';
 import { requestCoordinate, releaseCoordinate } from './coordinate.js';
-import { requestCell, releaseCell } from './cell.js';
+import { requestCell, releaseCell } from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';

@@ -14,7 +14,7 @@ import { seededRandomNumberGenerator } from '../core/random-seed.js';
 import { mergeOver, λnull, λthis, λfirstArg, removeItem, Ωempty } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
-import { requestCell, releaseCell } from './cell.js';
+import { requestCell, releaseCell } from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';

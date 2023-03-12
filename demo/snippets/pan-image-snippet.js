@@ -37,19 +37,14 @@
 //
 // let myElements = document.querySelectorAll('.some-class');
 //
-// myElements.forEach(el => panImage(el));
+// myElements.forEach(el => panImage(scrawl, el));
 // ```
-
-
-// Import the Scrawl-canvas object 
-// + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import * as scrawl from '../../source/scrawl.js';
 
 
 // __Effects on the element:__ 
 // + Sets the element background to `transparent`
 // + Imports any &lt;img> elements it finds in the element, switching their display styling to 'none'
-export default function (el) {
+export default function (scrawl, el) {
 
     // Apply the snippet to the DOM element
     let snippet = scrawl.makeSnippet({

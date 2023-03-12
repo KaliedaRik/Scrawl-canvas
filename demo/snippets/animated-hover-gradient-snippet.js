@@ -37,19 +37,14 @@
 //
 // let myElements = document.querySelectorAll('.some-class');
 //
-// myElements.forEach(el => hoverGradient(el));
+// myElements.forEach(el => hoverGradient(scrawl, el));
 // ```
-
-
-// Import the Scrawl-canvas object 
-// + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import * as scrawl from '../../source/scrawl.js';
 
 
 // __Effects on the element:__ 
 // + no additional effects on the DOM element
 // + setting any background fill on the DOM element will hide the snippet canvas, unless it is deliberately brought forward
-export default function (el, args = {}) {
+export default function (scrawl, el, args = {}) {
 
     // Apply the snippet to the DOM element
     let snippet = scrawl.makeSnippet({

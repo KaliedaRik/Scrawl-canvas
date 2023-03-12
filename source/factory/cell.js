@@ -55,6 +55,8 @@ import { makeCoordinate, requestCoordinate, releaseCoordinate } from './coordina
 import { filterEngine } from './filterEngine.js';
 import { importDomImage } from './imageAsset.js';
 
+import { requestCell, releaseCell } from '../factory/cell-fragment.js';
+
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
 import deltaMix from '../mixin/delta.js';
@@ -73,7 +75,7 @@ const Cell = function (items = Ωempty) {
 
     this.makeName(items.name);
 
-    if (!items.isPool) this.register();
+    this.register();
 
     this.initializePositions();
     this.initializeCascade();
@@ -90,20 +92,16 @@ const Cell = function (items = Ωempty) {
 
     this.installElement(items.element);
 
-    if (items.isPool) this.set(this.poolDefs) 
-    else this.set(this.defs);
+    this.set(this.defs);
 
     this.set(items);
 
     this.state.setStateFromEngine(this.engine);
 
-    if (!items.isPool) {
-
-        makeGroup({
-            name: this.name,
-            host: this.name
-        });
-    }
+    makeGroup({
+        name: this.name,
+        host: this.name
+    });
 
     this.subscribers = [];
     this.sourceNaturalDimensions = makeCoordinate();
@@ -1677,52 +1675,6 @@ P.rotateDestination = function (engine, x, y, entity) {
     else engine.setTransform(reverse, 0, 0, upend, x, y);
 
     return this;
-};
-
-
-// #### Cell pool
-// A number of processes - for instance collision functionality, and applying filters to entitys and groups - require the use of a &lt;canvas> element and its CanvasRenderingContext2D engine. Rather than generate these canvas elements on the fly, we store them in a pool, to help make the code more efficiant.
-//
-// To use a pool cell, request it using the exposed __requestCell__ function.
-//
-// IT IS IMPERATIVE that requested cells are released once work with them completes, using the __releaseCell__ function. Failure to do this leads to impaired performance as Javascript creates new canvas elements (often in multiples of 60 per second) which need to be garbage collected by the Javascript engine, thus leading to increasingly shoddy performance the longer the animation runs.
-const cellPool = [];
-
-P.poolDefs = {
-    element: null,
-    engine: null,
-    state: null,
-    width: 300,
-    height: 100,
-    alpha: 1,
-    composite: 'source-over',
-}
-
-// `Exported function` - __requestCell__
-export const requestCell = function () {
-
-    if (!cellPool.length) {
-
-        cellPool.push(makeCell({
-            name: `pool_${generateUniqueString()}`,
-            isPool: true
-        }));
-    }
-
-    let c = cellPool.shift();
-    c.engine.save();
-
-    return c;
-};
-
-// `Exported function` - __releaseCell__
-export const releaseCell = function (c) {
-
-    if (c && c.type === 'Cell') {
-
-        c.engine.restore();
-        cellPool.push(c);
-    }
 };
 
 

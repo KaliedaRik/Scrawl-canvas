@@ -25,20 +25,15 @@
 //
 // let myElements = document.querySelectorAll('.some-class');
 //
-// myElements.forEach(el => ripples(el, {
+// myElements.forEach(el => ripples(scrawl, el, {
 //   backgroundColor: 'red',
 //   rippleColor: 'pink',
 // }));
 // ```
 
-// Import the Scrawl-canvas object 
-// + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import * as scrawl from '../../source/scrawl.js';
-
-
 // __Effects on the element:__ 
 // + The DOM element's background color will be brought into the canvas, with the element's backgroundColor set to `transparent` - any background image, gradient, etc will be hidden by the snippet effect
-export default function (el, args = {}) {
+export default function (scrawl, el, args = {}) {
 
     // The snippet will accept an optional key:value Object as the second argument
     // + __rippleColor__ - default: `white`
@@ -123,5 +118,3 @@ export default function (el, args = {}) {
     }
     return snippet;
 };
-
-console.log(scrawl.library);

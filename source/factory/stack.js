@@ -643,7 +643,7 @@ export const addStack = function (items = Ωempty) {
     mystack.set(items);
 
     // tidy up and complete
-    rootElementsSort = true;
+    setRootElementsSort(true);
     return mystack;
 };
 

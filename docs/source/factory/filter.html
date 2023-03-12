@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="cell-fragment.html">
+                  ./source/factory/cell-fragment.js
+                </a>
+              
+                
                 <a class="source" href="cell.html">
                   ./source/factory/cell.js
                 </a>
@@ -637,6 +642,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
 <span class="hljs-keyword">import</span> { mergeOver, removeItem, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./gradient.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { colorEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filterEngine.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
@@ -1584,7 +1590,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
 
                         range.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">col</span> =&gt;</span> {
 
-                            <span class="hljs-keyword">let</span> [r, g, b] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(col);
+                            <span class="hljs-keyword">let</span> [r, g, b] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(col);
                             res.<span class="hljs-title function_">push</span>(r, g, b);
                         });
                     }
@@ -1626,7 +1632,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
 
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">reference</span> != <span class="hljs-literal">null</span>) {
 
-            [red, green, blue] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">reference</span>);
+            [red, green, blue] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">reference</span>);
 
             f.<span class="hljs-property">red</span> = red;
             f.<span class="hljs-property">green</span> = green;
@@ -1675,7 +1681,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
 
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">lowColor</span> != <span class="hljs-literal">null</span>) {
 
-            [lowRed, lowGreen, lowBlue] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">lowColor</span>);
+            [lowRed, lowGreen, lowBlue] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">lowColor</span>);
 
             f.<span class="hljs-property">lowRed</span> = lowRed;
             f.<span class="hljs-property">lowGreen</span> = lowGreen;
@@ -1686,7 +1692,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
 
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">highColor</span> != <span class="hljs-literal">null</span>) {
             
-            [highRed, highGreen, highBlue] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">highColor</span>);
+            [highRed, highGreen, highBlue] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">highColor</span>);
 
             f.<span class="hljs-property">highRed</span> = highRed;
             f.<span class="hljs-property">highGreen</span> = highGreen;
@@ -1976,7 +1982,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
 
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">reference</span> != <span class="hljs-literal">null</span>) {
 
-            [red, green, blue, alpha] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">reference</span>);
+            [red, green, blue, alpha] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">reference</span>);
 
             alpha = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(alpha * <span class="hljs-number">255</span>);
 
@@ -2759,7 +2765,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">lowColor</span> != <span class="hljs-literal">null</span>) {
 
-            [lowRed, lowGreen, lowBlue, lowAlpha] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">lowColor</span>);
+            [lowRed, lowGreen, lowBlue, lowAlpha] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">lowColor</span>);
 
             lowAlpha = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(lowAlpha * <span class="hljs-number">255</span>);
 
@@ -2775,7 +2781,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
 
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">highColor</span> != <span class="hljs-literal">null</span>) {
             
-            [highRed, highGreen, highBlue, highAlpha] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">highColor</span>);
+            [highRed, highGreen, highBlue, highAlpha] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">highColor</span>);
 
             highAlpha = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(highAlpha * <span class="hljs-number">255</span>);
 
@@ -2873,7 +2879,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">redColor</span> != <span class="hljs-literal">null</span>) {
 
-            [redInRed, greenInRed, blueInRed] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">redColor</span>);
+            [redInRed, greenInRed, blueInRed] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">redColor</span>);
 
             redInRed /= <span class="hljs-number">255</span>;
             greenInRed /= <span class="hljs-number">255</span>;
@@ -2888,7 +2894,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
 
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">greenColor</span> != <span class="hljs-literal">null</span>) {
             
-            [redInGreen, greenInGreen, blueInGreen] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">greenColor</span>);
+            [redInGreen, greenInGreen, blueInGreen] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">greenColor</span>);
 
             redInGreen /= <span class="hljs-number">255</span>;
             greenInGreen /= <span class="hljs-number">255</span>;
@@ -2903,7 +2909,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
 
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">blueColor</span> != <span class="hljs-literal">null</span>) {
             
-            [redInBlue, greenInBlue, blueInBlue] = <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentColorChecker</span>.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">blueColor</span>);
+            [redInBlue, greenInBlue, blueInBlue] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">blueColor</span>);
 
             redInBlue /= <span class="hljs-number">255</span>;
             greenInBlue /= <span class="hljs-number">255</span>;

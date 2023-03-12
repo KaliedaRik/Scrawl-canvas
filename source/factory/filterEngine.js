@@ -8,11 +8,17 @@ import { seededRandomNumberGenerator } from '../core/random-seed.js';
 import { easeEngines, isa_fn } from '../core/utilities.js';
 
 import { makeAnimation } from './animation.js';
-import { requestCell, releaseCell } from './cell.js';
+import { requestCell, releaseCell } from './cell-fragment.js';
 import { requestCoordinate, releaseCoordinate } from './coordinate.js';
 import { makeColor } from './color.js';
 
 import { bluenoise } from './filterEngine-bluenoiseData.js';
+
+
+// The filter Color object - used by various filters
+export const colorEngine = makeColor({
+    name: `SC-system-filter-do-not-remove`,
+});
 
 
 // #### FilterEngine constructor
@@ -35,7 +41,7 @@ let P = FilterEngine.prototype = Object.create(Object.prototype);
 P.type = 'FilterEngine';
 
 let choke = 1000;
-const setFilterMemoizationChoke = function (val) {
+export const setFilterMemoizationChoke = function (val) {
 
     if (val.toFixed && !isNaN(val) && val >= 200 && val <= 10000) choke = val;
 };
@@ -1057,11 +1063,6 @@ P.processResults = function (store, incoming, ratio) {
     }
 };
 
-// The filter Color object - used by various filters
-P.colorEngine = makeColor({
-    name: `SC-system-filter-do-not-remove`,
-});
-
 // `getGradientData` - create an imageData object containing the 256 values from a gradient that we require for doing filters work
 P.getGradientData = function (gradient) {
 
@@ -1351,7 +1352,7 @@ P.theBigActionsObject = {
 
         const alphaCalc = (dA, mA) => (dA + (mA * (1 - dA))) * 255;
 
-        const colorEngine = this.colorEngine;
+        // const colorEngine = this.colorEngine;
 
         let [input, output, mix] = this.getInputAndOutputLines(requirements);
 
@@ -4107,7 +4108,8 @@ P.theBigActionsObject = {
         this.colorSpaceIndices();
 
         // Localize some handles to required functions/objects
-        const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, colorEngine, predefinedPalette, getGrayscaleValue, tfx, tfx2, tfx3, indicesLen, labIndicesMultiplier } = this;
+        // const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, colorEngine, predefinedPalette, getGrayscaleValue, tfx, tfx2, tfx3, indicesLen, labIndicesMultiplier } = this;
+        const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, predefinedPalette, getGrayscaleValue, tfx, tfx2, tfx3, indicesLen, labIndicesMultiplier } = this;
 
         let xyz, lab;
 
@@ -5152,22 +5154,7 @@ makeAnimation({
 
 
 // #### Factory
-const makeFilterEngine = function () {
-
-    return new FilterEngine();
-};
-
 constructors.FilterEngine = FilterEngine;
 
-
 // Create a singleton filter engine, for export and use within this code base
-const filterEngine = new FilterEngine();
-
-
-// #### Exports
-export {
-    makeFilterEngine,
-    filterEngine,
-
-    setFilterMemoizationChoke,
-};
+export const filterEngine = new FilterEngine();

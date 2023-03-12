@@ -121,7 +121,7 @@
 //
 // let myElements = document.querySelectorAll('.some-class-name');
 //
-// myElements.forEach(el => slider(el));
+// myElements.forEach(el => slider(scrawl, el));
 // ```
 //
 // Note that this snippet has a profound effect on the element it processes, moving images inside a canvas element and deleting most of the child elements (to prevent copy repetition for screen readers)
@@ -137,10 +137,6 @@
 // ```
 //
 // ### Snippet code
-// Import the Scrawl-canvas object 
-import * as scrawl from '../../source/scrawl.js'
-
-
 // Internal function to scrape data from the supplied element 
 const getPanelData = function (el, store, canvas) {
 
@@ -203,7 +199,7 @@ const getNavigationData = function (el, store, canvas) {
 };
 
 // The pin factory takes all the data about pins that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each pin
-const pinFactory = function (items, canvas, pinTextGroup, pinTextBackgroundGroup, colors) {
+const pinFactory = function (scrawl, items, canvas, pinTextGroup, pinTextBackgroundGroup, colors) {
 
     let { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, labelbackground, shared, suppressAccessibleText } = items;
 
@@ -345,7 +341,7 @@ const pinFactory = function (items, canvas, pinTextGroup, pinTextBackgroundGroup
 };
 
 // The link factory takes all the data about links that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each link
-const linkFactory = function (items, canvas, linkTextGroup, colors) {
+const linkFactory = function (scrawl, items, canvas, linkTextGroup, colors) {
 
     const {name, position, href, justify, text, width, background} = items;
 
@@ -444,7 +440,7 @@ const linkFactory = function (items, canvas, linkTextGroup, colors) {
 
 
 // ##### The exported function
-export default function (el) {
+export default function (scrawl, el) {
 
     // Apply the snippet to the DOM element
     let snippet = scrawl.makeSnippet({
@@ -779,13 +775,13 @@ export default function (el) {
                     p.name = `${n}-left`
                     p.groupname = leftPanelName;
                     
-                    pinFactory(p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
+                    pinFactory(scrawl, p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
 
                     p.name = `${n}-right`
                     p.groupname = rightPanelName;
                     p.suppressAccessibleText = true;
                 }
-                pinFactory(p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
+                pinFactory(scrawl, p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
             });
 
             rightPanel.pins.forEach(p => {
@@ -797,13 +793,13 @@ export default function (el) {
                     p.name = `${n}-left`
                     p.groupname = leftPanelName;
                     
-                    pinFactory(p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
+                    pinFactory(scrawl, p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
 
                     p.name = `${n}-right`
                     p.groupname = rightPanelName;
                     p.suppressAccessibleText = true;
                 }
-                pinFactory(p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
+                pinFactory(scrawl, p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
             });
 
 
@@ -932,7 +928,7 @@ export default function (el) {
             });
 
             // __13. Build the interactive links__
-            if (navItems && navItems.links) navItems.links.forEach(n => linkFactory(n, canvas, linkTextGroup, colors));
+            if (navItems && navItems.links) navItems.links.forEach(n => linkFactory(scrawl, n, canvas, linkTextGroup, colors));
 
             // __14. Hook into event listeners__
             scrawl.addListener('move', () => canvas.cascadeEventAction('move'), el);
@@ -950,5 +946,3 @@ export default function (el) {
     // #### Return the snippet output
     return snippet;
 };
-
-console.log(scrawl.library);

@@ -37,20 +37,15 @@
 //
 // let myElements = document.querySelectorAll('.some-class');
 //
-// myElements.forEach(el => wordGradient(el));
+// myElements.forEach(el => wordGradient(scrawl, el));
 // ```
-
-
-// Import the Scrawl-canvas object 
-// + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import * as scrawl from '../../source/scrawl.js';
 
 
 // __Effects on the element:__ 
 // + Imports the element's background color, and sets the element background to `transparent`
 // + Imports the element's text node text, and sets the text color to `transparent`
 // + ___Note that canvas text will NEVER be as good as DOM text!___
-export default function (el, args = {}) {
+export default function (scrawl, el, args = {}) {
 
     // Apply the snippet to the DOM element
     let snippet = scrawl.makeSnippet({

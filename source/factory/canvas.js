@@ -31,7 +31,7 @@
 import { canvas as libCanvas, cell, constructors, artefact, group, purge } from '../core/library.js';
 import { domShow, scrawlCanvasHold } from '../core/document.js';
 import { rootElements, setRootElementsSort } from "../core/document-rootElements.js";
-import { mergeOver, pushUnique, removeItem, xt, λthis, λnull, Ωempty } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, isa_dom, λthis, λnull, Ωempty } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeState } from './state.js';

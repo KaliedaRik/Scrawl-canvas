@@ -27,7 +27,8 @@ import { mergeOver, pushUnique, removeItem, Ωempty, λnull } from '../core/util
 import { scrawlCanvasHold } from '../core/document.js';
 
 import { filterEngine } from './filterEngine.js';
-import { requestCell, releaseCell } from './cell.js';
+// import { requestCell, releaseCell } from './cell.js';
+import { requestCell, releaseCell } from './cell-fragment.js';
 import { importDomImage } from './imageAsset.js';
 
 import baseMix from '../mixin/base.js';
@@ -283,14 +284,22 @@ P.stamp = function () {
             // Setup the pool Cell, if required
             if (filterCell && filterCell.element) {
 
+                // let dims = currentHost.currentDimensions,
+                //     fCellDims = filterCell.currentDimensions,
+                //     fEl = filterCell.element;
+
+                // if (dims && fCellDims && fEl) {
+
+                //     fCellDims[0] = dims[0];
+                //     fCellDims[1] = dims[1];
+
+                //     fEl.width = dims[0];
+                //     fEl.height = dims[1];
+                // }
                 let dims = currentHost.currentDimensions,
-                    fCellDims = filterCell.currentDimensions,
                     fEl = filterCell.element;
 
-                if (dims && fCellDims && fEl) {
-
-                    fCellDims[0] = dims[0];
-                    fCellDims[1] = dims[1];
+                if (dims && fEl) {
 
                     fEl.width = dims[0];
                     fEl.height = dims[1];

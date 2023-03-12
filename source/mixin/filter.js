@@ -10,7 +10,7 @@
 // #### Imports
 import { filter, asset, styles } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, Ωempty, generateUuid } from '../core/utilities.js';
-import { requestCell, releaseCell } from '../factory/cell.js';
+import { requestCell, releaseCell } from '../factory/cell-fragment.js';
 
 
 // #### Export function

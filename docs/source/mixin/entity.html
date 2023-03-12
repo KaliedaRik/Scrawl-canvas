@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/cell-fragment.html">
+                  ./source/factory/cell-fragment.js
+                </a>
+              
+                
                 <a class="source" href="../factory/cell.html">
                   ./source/factory/cell.js
                 </a>
@@ -544,7 +549,7 @@
 <span class="hljs-keyword">import</span> { asset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeState, stateKeys } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/state.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/cell.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/cell-fragment.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { filterEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/filterEngine.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { importDomImage } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/imageAsset.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { currentGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/canvas.js&#x27;</span>;
@@ -1560,13 +1565,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">stamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">force = <span class="hljs-literal">false</span>, host, changes</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">acceptableHosts</span> = [<span class="hljs-string">&#x27;Cell&#x27;</span>, <span class="hljs-string">&#x27;CellFragment&#x27;</span>];
+    P.<span class="hljs-property">stamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">force = <span class="hljs-literal">false</span>, host, changes</span>) {
 
         <span class="hljs-keyword">let</span> filterTest = (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noFilters</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span>.<span class="hljs-property">length</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">if</span> (force) {
 
-            <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = host;
+            <span class="hljs-keyword">if</span> (host &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">acceptableHosts</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = host;
 
             <span class="hljs-keyword">if</span> (changes) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(changes);
 
@@ -1728,9 +1734,9 @@
             filterCellEngine = filterHost.<span class="hljs-property">engine</span>;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = filterHost;
-        
-        <span class="hljs-keyword">let</span> w = filterCellElement.<span class="hljs-property">width</span> = currentDimensions[<span class="hljs-number">0</span>] || currentElement.<span class="hljs-property">width</span>,
-            h = filterCellElement.<span class="hljs-property">height</span> = currentDimensions[<span class="hljs-number">1</span>] || currentElement.<span class="hljs-property">height</span>;
+
+        <span class="hljs-keyword">let</span> w = filterCellElement.<span class="hljs-property">width</span> = currentDimensions ? currentDimensions[<span class="hljs-number">0</span>] : currentElement.<span class="hljs-property">width</span>,
+            h = filterCellElement.<span class="hljs-property">height</span> = currentDimensions ? currentDimensions[<span class="hljs-number">1</span>] : currentElement.<span class="hljs-property">height</span>;
 
         <span class="hljs-keyword">if</span> (w &amp;&amp; h) {</pre></div></div>
             
@@ -1953,7 +1959,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">simpleStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host, changes = Ωempty</span>) {
 
-        <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (host &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">acceptableHosts</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = host;
             

@@ -271,7 +271,7 @@
 
 <span class="hljs-keyword">let</span> myElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
 
-myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">hoverGradient</span>(el));
+myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">hoverGradient</span>(scrawl, el));
 </code></pre>
 
             </div>
@@ -285,14 +285,15 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>Import the Scrawl-canvas object </p>
+              <p><strong>Effects on the element:</strong> </p>
 <ul>
-<li>there’s various ways to do this. See <a href="../dom-001.html">Demo DOM-001</a> for more details</li>
+<li>no additional effects on the DOM element</li>
+<li>setting any background fill on the DOM element will hide the snippet canvas, unless it is deliberately brought forward</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">scrawl, el, args = {}</span>) {</pre></div></div>
             
         </li>
         
@@ -302,25 +303,6 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
-              </div>
-              <p><strong>Effects on the element:</strong> </p>
-<ul>
-<li>no additional effects on the DOM element</li>
-<li>setting any background fill on the DOM element will hide the snippet canvas, unless it is deliberately brought forward</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">el, args = {}</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Apply the snippet to the DOM element</p>
 
@@ -335,11 +317,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Set some convenience variables</p>
 
@@ -395,11 +377,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Return the snippet, so coders can access the snippet’s parts - in case they need to tweak the output to meet the web page’s specific requirements</p>
 

@@ -25,7 +25,7 @@ import { constructors, artefact, group } from '../core/library.js';
 import { mergeOver, mergeDiscard, pushUnique, λnull, λthis, xta, Ωempty } from '../core/utilities.js';
 
 import { makeState, stateKeys } from './state.js';
-import { requestCell, releaseCell } from './cell.js';
+import { requestCell, releaseCell } from './cell-fragment.js';
 import { currentGroup } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
@@ -801,9 +801,10 @@ P.setSourceDimension = function (val) {
 
 // `simpleStamp` - Simple stamping is entirely synchronous
 // + TODO: we may have to disable this functionality for the Loom entity, if we use a Web Assembly module for either the prepareStamp calculations, or to build the output image itself
+P.acceptableHosts = ['Cell', 'CellFragment'];
 P.simpleStamp = function (host, changes) {
 
-    if (host && host.type === 'Cell') {
+    if (host && this.acceptableHosts.includes(host.type)) {
 
         this.currentHost = host;
         
@@ -826,7 +827,7 @@ P.stamp = function (force = false, host, changes) {
 
     if (force) {
 
-        if (host && host.type === 'Cell') this.currentHost = host;
+        if (host && this.acceptableHosts.includes(host.type)) this.currentHost = host;
 
         if (changes) {
 
@@ -838,7 +839,8 @@ P.stamp = function (force = false, host, changes) {
 
     if (this.visibility) {
 
-        if (this.sourceIsVideoOrSprite || this.dirtyInput) this.sourceImageData = this.cleanInput();
+        // if (this.sourceIsVideoOrSprite || this.dirtyInput) this.sourceImageData = this.cleanInput();
+        if (this.sourceIsVideoOrSprite || this.dirtyInput) this.cleanInput();
 
         if (this.dirtyOutput) this.output = this.cleanOutput();
 
@@ -884,7 +886,11 @@ P.cleanInput = function () {
 
         method: 'fill',
     });
-    return engine.getImageData(0, 0, sourceDimension, sourceDimension);
+
+    this.sourceImageData = engine.getImageData(0, 0, sourceDimension, sourceDimension);
+
+    releaseCell(cell);
+    // return engine.getImageData(0, 0, sourceDimension, sourceDimension);
 };
 
 // `cleanOutput` - internal function called by `stamp`

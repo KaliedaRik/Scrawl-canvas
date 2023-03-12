@@ -129,7 +129,7 @@ import { λnull, mergeOver, isa_obj, xt, xta, xto, xtGet, addStrings, pushUnique
 import { currentCorePosition } from '../core/userInteraction.js';
 
 import { makeCoordinate, requestCoordinate, releaseCoordinate } from '../factory/coordinate.js';
-import { requestCell, releaseCell } from '../factory/cell.js';
+import { requestCell, releaseCell } from '../factory/cell-fragment.js';
 
 
 // #### Export function

@@ -9,6 +9,11 @@
 // [Run code](../../demo/snippets-001.html)
 
 
+// Import the Scrawl-canvas object 
+// + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
+import * as scrawl from '../source/scrawl.js';
+
+
 // Import snippets
 import spotlightText from './snippets/spotlight-text-snippet-test.js';
 import jazzyButton from './snippets/jazzy-button-snippet.js';
@@ -22,14 +27,14 @@ let pageReport = document.querySelectorAll('#reportmessage');
 
 
 // ... And then skin them using the snippet code we imported
-spotlightElements.forEach(el => spotlightText(el));
+spotlightElements.forEach(el => spotlightText(scrawl, el));
 
 let myJazzy = [];
-jazzyElements.forEach(el => myJazzy.push(jazzyButton(el)));
+jazzyElements.forEach(el => myJazzy.push(jazzyButton(scrawl, el)));
 
 // make the third jazzy button (in the middle of the grid element) display its canvas over the button
 myJazzy[2].element.set({
     canvasOnTop: true,
 });
 
-pageReport.forEach(el => pagePerformance(el));
+pageReport.forEach(el => pagePerformance(scrawl, el));

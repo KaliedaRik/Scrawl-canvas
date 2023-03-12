@@ -26,7 +26,7 @@ import { constructors, artefact } from '../core/library.js';
 import { mergeOver, mergeDiscard, pushUnique, λnull, λthis, xta, Ωempty } from '../core/utilities.js';
 
 import { makeState, stateKeys } from './state.js';
-import { requestCell, releaseCell } from './cell.js';
+import { requestCell, releaseCell } from './cell-fragment.js';
 import { currentGroup } from './canvas.js';
 
 import baseMix from '../mixin/base.js';

@@ -30,7 +30,7 @@ import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta, Ωempty } from
 import { currentGroup } from './canvas.js';
 
 import { requestParticle, releaseParticle } from './particle.js';
-import { requestCell, releaseCell } from './cell.js';
+import { requestCell, releaseCell } from './cell-fragment.js';
 import { makeVector, requestVector, releaseVector } from './vector.js';
 import { requestCoordinate, releaseCoordinate } from './coordinate.js';
 import { makeColor } from './color.js';

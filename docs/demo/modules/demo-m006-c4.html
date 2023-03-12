@@ -304,6 +304,8 @@
         <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
     });
 
+    <span class="hljs-keyword">const</span> base = canvas.<span class="hljs-property">base</span>;
+
     <span class="hljs-keyword">const</span> angelAsset = assets.<span class="hljs-property">angels</span>;
     <span class="hljs-keyword">const</span> angelDimensions = angelAsset.<span class="hljs-property">intrinsicDimensions</span>[angelAsset.<span class="hljs-property">currentFile</span>];
 
@@ -447,16 +449,18 @@
         <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;filter-action-main&#x27;</span>),
         <span class="hljs-attr">ticker</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;ticker&#x27;</span>),
         <span class="hljs-attr">time</span>: <span class="hljs-number">850</span>,
-        <span class="hljs-attr">action</span>: <span class="hljs-function">() =&gt;</span> angels.<span class="hljs-title function_">addFilters</span>(filter),
-        <span class="hljs-attr">revert</span>: <span class="hljs-function">() =&gt;</span> angels.<span class="hljs-title function_">removeFilters</span>(filter),
+        <span class="hljs-attr">action</span>: <span class="hljs-function">() =&gt;</span> base.<span class="hljs-title function_">addFilters</span>(filter),
+        <span class="hljs-attr">revert</span>: <span class="hljs-function">() =&gt;</span> base.<span class="hljs-title function_">removeFilters</span>(filter),
     });
 
     scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;focus&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
         angels.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">filters</span>: [],
             <span class="hljs-attr">scale</span>: (<span class="hljs-number">2</span> / <span class="hljs-number">3</span>),
             <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,
             <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;55%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+        });
+        base.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">filters</span>: [],
         });
         filter.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">opacity</span>: <span class="hljs-number">0</span>,

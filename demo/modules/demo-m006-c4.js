@@ -40,6 +40,8 @@ export default function (items) {
         backgroundColor: 'yellow',
     });
 
+    const base = canvas.base;
+
     const angelAsset = assets.angels;
     const angelDimensions = angelAsset.intrinsicDimensions[angelAsset.currentFile];
 
@@ -172,16 +174,18 @@ export default function (items) {
         name: name('filter-action-main'),
         ticker: name('ticker'),
         time: 850,
-        action: () => angels.addFilters(filter),
-        revert: () => angels.removeFilters(filter),
+        action: () => base.addFilters(filter),
+        revert: () => base.removeFilters(filter),
     });
 
     scrawl.addNativeListener('focus', () => {
         angels.set({
-            filters: [],
             scale: (2 / 3),
             roll: 0,
             handle: ['55%', '50%'],
+        });
+        base.set({
+            filters: [],
         });
         filter.set({
             opacity: 0,

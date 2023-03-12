@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="cell-fragment.html">
+                  ./source/factory/cell-fragment.js
+                </a>
+              
+                
                 <a class="source" href="cell.html">
                   ./source/factory/cell.js
                 </a>
@@ -568,7 +573,7 @@
 <span class="hljs-keyword">import</span> { mergeOver, mergeDiscard, pushUnique, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, xta, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeState, stateKeys } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./state.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell-fragment.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { currentGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./canvas.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
@@ -2008,9 +2013,10 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">simpleStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host, changes</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">acceptableHosts</span> = [<span class="hljs-string">&#x27;Cell&#x27;</span>, <span class="hljs-string">&#x27;CellFragment&#x27;</span>];
+P.<span class="hljs-property">simpleStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host, changes</span>) {
 
-    <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
+    <span class="hljs-keyword">if</span> (host &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">acceptableHosts</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = host;
         
@@ -2048,7 +2054,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 
     <span class="hljs-keyword">if</span> (force) {
 
-        <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = host;
+        <span class="hljs-keyword">if</span> (host &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">acceptableHosts</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = host;
 
         <span class="hljs-keyword">if</span> (changes) {
 
@@ -2058,15 +2064,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();
     }
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">visibility</span>) {
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceIsVideoOrSprite</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyInput</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceImageData</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanInput</span>();
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOutput</span>();
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();
-    }
-};</pre></div></div>
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">visibility</span>) {</pre></div></div>
             
         </li>
         
@@ -2077,9 +2075,17 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
-              <h4 id="clean-functions">Clean functions</h4>
+              <p>if (this.sourceIsVideoOrSprite || this.dirtyInput) this.sourceImageData = this.cleanInput();</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceIsVideoOrSprite</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyInput</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanInput</span>();
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOutput</span>();
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();
+    }
+};</pre></div></div>
             
         </li>
         
@@ -2089,6 +2095,19 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
               
               <div class="sswrap ">
                 <a class="ss" href="#section-60">&#x00a7;</a>
+              </div>
+              <h4 id="clean-functions">Clean functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>cleanInput</code> - internal function called by <code>stamp</code></p>
 
@@ -2129,17 +2148,34 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
     });
-    <span class="hljs-keyword">return</span> engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, sourceDimension, sourceDimension);
-};</pre></div></div>
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceImageData</span> = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, sourceDimension, sourceDimension);
+
+    <span class="hljs-title function_">releaseCell</span>(cell);</pre></div></div>
             
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
+              </div>
+              <p>return engine.getImageData(0, 0, sourceDimension, sourceDimension);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>cleanOutput</code> - internal function called by <code>stamp</code></p>
 <ul>
@@ -2335,11 +2371,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-62">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p>else return new Error(<code>${this.name} - cleanOutput Error: source has a zero dimension, or no data</code>);</p>
 
@@ -2350,11 +2386,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-63">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - internal function called by <code>stamp</code></p>
 
@@ -2377,11 +2413,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-64">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>getBoundingBox</code> - internal function called by <code>prepareStamp</code> and <code>cleanOutput</code> functions, as well as the various <em><strong>method</strong></em> functions.</p>
 <ul>
@@ -2437,11 +2473,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-65">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>These ‘method’ functions stamp the Loom entity onto the canvas context supplied to them in the <code>engine</code> argument.</p>
@@ -2451,11 +2487,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-66">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -2473,11 +2509,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-67">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -2493,11 +2529,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-68">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -2515,11 +2551,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-69">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -2537,11 +2573,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-70">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -2558,11 +2594,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-71">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -2579,11 +2615,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-72">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2620,11 +2656,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-73">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><code>none</code>, <code>clip</code></p>
 
@@ -2636,11 +2672,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-74">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p>These <strong>stroke</strong> and <strong>fill</strong> functions handle most of the stuff that the method functions require to stamp the Loom entity onto a canvas cell.</p>
 
@@ -2649,11 +2685,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-75">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><code>doStroke</code></p>
 
@@ -2696,11 +2732,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-76">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><code>doFill</code></p>
 <ul>
@@ -2737,11 +2773,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-77">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><code>drawBoundingBox</code></p>
 <ul>
@@ -2776,11 +2812,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-78">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 
@@ -2789,11 +2825,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-79">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p>The <code>checkHit</code> functionality can be used in the same way it is for other entitys (and groups)</p>
 <ul>
@@ -2856,11 +2892,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-80">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeQuadratic</span>({
@@ -2925,11 +2961,11 @@ constructors.<span class="hljs-property">Loom</span> = <span class="hljs-title c
         </li>
         
         
-        <li id="section-81">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

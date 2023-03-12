@@ -41,10 +41,6 @@
 // + what - if anything - the definition function will return
 //
 // Each of the following snippet definition functions could live in its own file; we can also bundle snippets together so that related snippets can be imported into another Javascript module using a single __import__ statement in that file
-//
-// Import the Scrawl-canvas object 
-// + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import * as scrawl from '../../source/scrawl.js';
 
 
 // ### 'Spotlight text' snippet
@@ -70,12 +66,12 @@ import * as scrawl from '../../source/scrawl.js';
 //
 // let myElements = document.querySelectorAll('.some-class');
 //
-// myElements.forEach(el => spotlightText(el));
+// myElements.forEach(el => spotlightText(scrawl, el));
 // ```
 // __Effects on the element:__ 
 // + no additional effects on the DOM element
 // + setting any background fill on the DOM element will hide the snippet canvas, unless it is deliberately brought forward
-export default function (el, args = {}) {
+export default function (scrawl, el, args = {}) {
 
     // The snippet will accept an optional key:value Object as the second argument
     // + __spotlightColor__ - default: `white`

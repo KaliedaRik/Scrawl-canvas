@@ -242,7 +242,7 @@
 
 <span class="hljs-keyword">let</span> myElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
 
-myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">pagePerformance</span>(el));
+myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">pagePerformance</span>(scrawl, el));
 </code></pre>
 
             </div>
@@ -256,14 +256,14 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>Import the Scrawl-canvas object </p>
+              <p><strong>Effects on the element:</strong> </p>
 <ul>
-<li>There’s various ways to do this. See <a href="../dom-001.html">Demo DOM-001</a> for more details</li>
+<li>updates the &lt;div&gt; element’s <code>innerHTML</code> data, which will replace any child elements or text placed between the element’s opening and closing tags.</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">scrawl, el</span>) {</pre></div></div>
             
         </li>
         
@@ -273,24 +273,6 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
-              <p><strong>Effects on the element:</strong> </p>
-<ul>
-<li>updates the &lt;div&gt; element’s <code>innerHTML</code> data, which will replace any child elements or text placed between the element’s opening and closing tags.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Define the report function that will record the time taken for each Display cycle animation</p>
 
@@ -328,11 +310,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Apply the snippet to the DOM element</p>
 
@@ -349,11 +331,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>The return value for this snippet is a boolean, not a JS Object containing links to major actors/actions in the snippet</p>
 

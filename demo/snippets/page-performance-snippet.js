@@ -20,18 +20,13 @@
 //
 // let myElements = document.querySelectorAll('.some-class');
 //
-// myElements.forEach(el => pagePerformance(el));
+// myElements.forEach(el => pagePerformance(scrawl, el));
 // ```
-
-
-// Import the Scrawl-canvas object 
-// + There's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
-import * as scrawl from '../../source/scrawl.js';
 
 
 // __Effects on the element:__ 
 // + updates the &lt;div> element's `innerHTML` data, which will replace any child elements or text placed between the element's opening and closing tags.
-export default function (el) {
+export default function (scrawl, el) {
 
     // Define the report function that will record the time taken for each Display cycle animation
     let report = function () {

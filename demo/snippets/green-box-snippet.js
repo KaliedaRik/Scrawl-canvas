@@ -26,18 +26,14 @@
 //
 // let myElements = document.querySelectorAll('.some-class');
 //
-// myElements.forEach(el => greenBox(el));
+// myElements.forEach(el => greenBox(scrawl, el));
 // ```
 //
 
 
-// #### Imports
-import * as scrawl from '../../source/scrawl.js'
-
-
 // __Effects on the element:__ 
 // + Adds a green box to the background display
-export default function (el) {
+export default function (scrawl, el) {
 
     let snippet = scrawl.makeSnippet({
         domElement: el,

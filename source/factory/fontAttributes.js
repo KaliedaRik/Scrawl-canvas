@@ -18,7 +18,7 @@
 import { constructors } from '../core/library.js';
 import { mergeOver, pushUnique, xt, Ωempty } from '../core/utilities.js';
 
-import { requestCell, releaseCell } from './cell.js';
+import { requestCell, releaseCell } from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 

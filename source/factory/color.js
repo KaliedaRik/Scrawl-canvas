@@ -16,10 +16,7 @@
 import { constructors, entity } from '../core/library.js';
 import { mergeOver, xt, xtGet, isa_obj, isa_fn, easeEngines, Ωempty, λfirstArg, pushUnique, interpolate, correctAngle, radian } from '../core/utilities.js';
 
-// import { requestCell, releaseCell } from './cell.js';
-
 import baseMix from '../mixin/base.js';
-
 
 const element = document.createElement('canvas');
 element.width = 1;

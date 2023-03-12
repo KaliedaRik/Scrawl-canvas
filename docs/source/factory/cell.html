@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="cell-fragment.html">
+                  ./source/factory/cell-fragment.js
+                </a>
+              
+                
                 <a class="source" href="cell.html">
                   ./source/factory/cell.js
                 </a>
@@ -599,6 +604,8 @@
 <span class="hljs-keyword">import</span> { filterEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filterEngine.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { importDomImage } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./imageAsset.js&#x27;</span>;
 
+<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/cell-fragment.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> positionMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/position.js&#x27;</span>;
 <span class="hljs-keyword">import</span> deltaMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/delta.js&#x27;</span>;
@@ -628,7 +635,7 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
 
-    <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">isPool</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializeCascade</span>();
@@ -645,20 +652,16 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">installElement</span>(items.<span class="hljs-property">element</span>);
 
-    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">isPool</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">poolDefs</span>) 
-    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">setStateFromEngine</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>);
 
-    <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">isPool</span>) {
-
-        <span class="hljs-title function_">makeGroup</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
-            <span class="hljs-attr">host</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>
-        });
-    }
+    <span class="hljs-title function_">makeGroup</span>({
+        <span class="hljs-attr">name</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
+        <span class="hljs-attr">host</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>
+    });
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalDimensions</span> = <span class="hljs-title function_">makeCoordinate</span>();
@@ -3241,85 +3244,6 @@ DPR is detected in the <code>core/events.js</code> file, but mainly handled here
               
               <div class="sswrap ">
                 <a class="ss" href="#section-88">&#x00a7;</a>
-              </div>
-              <h4 id="cell-pool">Cell pool</h4>
-<p>A number of processes - for instance collision functionality, and applying filters to entitys and groups - require the use of a &lt;canvas&gt; element and its CanvasRenderingContext2D engine. Rather than generate these canvas elements on the fly, we store them in a pool, to help make the code more efficiant.</p>
-<p>To use a pool cell, request it using the exposed <strong>requestCell</strong> function.</p>
-<p>IT IS IMPERATIVE that requested cells are released once work with them completes, using the <strong>releaseCell</strong> function. Failure to do this leads to impaired performance as Javascript creates new canvas elements (often in multiples of 60 per second) which need to be garbage collected by the Javascript engine, thus leading to increasingly shoddy performance the longer the animation runs.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cellPool = [];
-
-P.<span class="hljs-property">poolDefs</span> = {
-    <span class="hljs-attr">element</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">engine</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">state</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">100</span>,
-    <span class="hljs-attr">alpha</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">composite</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
-}</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-89">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-89">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> - <strong>requestCell</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestCell = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">if</span> (!cellPool.<span class="hljs-property">length</span>) {
-
-        cellPool.<span class="hljs-title function_">push</span>(<span class="hljs-title function_">makeCell</span>({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`pool_<span class="hljs-subst">${generateUniqueString()}</span>`</span>,
-            <span class="hljs-attr">isPool</span>: <span class="hljs-literal">true</span>
-        }));
-    }
-
-    <span class="hljs-keyword">let</span> c = cellPool.<span class="hljs-title function_">shift</span>();
-    c.<span class="hljs-property">engine</span>.<span class="hljs-title function_">save</span>();
-
-    <span class="hljs-keyword">return</span> c;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-90">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-90">&#x00a7;</a>
-              </div>
-              <p><code>Exported function</code> - <strong>releaseCell</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> releaseCell = <span class="hljs-keyword">function</span> (<span class="hljs-params">c</span>) {
-
-    <span class="hljs-keyword">if</span> (c &amp;&amp; c.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
-
-        c.<span class="hljs-property">engine</span>.<span class="hljs-title function_">restore</span>();
-        cellPool.<span class="hljs-title function_">push</span>(c);
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-91">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-91">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 

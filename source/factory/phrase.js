@@ -75,7 +75,7 @@ import { constructors, cell, cellnames, styles, stylesnames, artefact, sectionCl
 import { scrawlCanvasHold } from '../core/document.js';
 import { mergeOver, pushUnique, xt, xta, isa_obj, isa_number, Ωempty } from '../core/utilities.js';
 
-import { requestCell, releaseCell } from './cell.js';
+import { requestCell, releaseCell } from './cell-fragment.js';
 
 import { makeFontAttributes } from './fontAttributes.js';
 
