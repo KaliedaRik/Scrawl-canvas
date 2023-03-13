@@ -29,7 +29,6 @@ canvas.set({
 
     width: engine.width,
     height: engine.height,
-    isComponent: true,
 
 }).render();
 
@@ -42,6 +41,7 @@ canvas.buildCell({
     cleared: false,
     compiled: false,
     shown: false,
+    willReadFrequently: false,
 });
 
 const source = scrawl.library.cell.cache.element;

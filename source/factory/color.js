@@ -22,7 +22,9 @@ const element = document.createElement('canvas');
 element.width = 1;
 element.height = 1;
 
-const engine = element.getContext('2d');
+const engine = element.getContext('2d', {
+    willReadFrequently: true,
+});
 engine.globalAlpha = 1;
 engine.globalCompositeOperation = 'source-over';
 

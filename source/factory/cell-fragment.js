@@ -21,7 +21,9 @@ import baseMix from '../mixin/base.js';
 const CellFragment = function (items = Ωempty) {
 
     const element = this.element = document.createElement('canvas');
-    const engine = this.engine = element.getContext('2d');
+    const engine = this.engine = element.getContext('2d', {
+        willReadFrequently: true,
+    });
 
     element.width = 1;
     element.height = 1;
@@ -76,8 +78,8 @@ P.clone = λthis;
 
 
 // #### Kill functionality
-P.factoryKill = function () {
-};
+// P.factoryKill = function () {
+// };
 
 // #### Get, Set, deltaSet
 let G = P.getters, 
@@ -115,94 +117,94 @@ P.get = function (item) {
     }
 };
 
-// `width`
-G.width = function () {};
-S.width = function (val) {};
+// // `width`
+// G.width = function () {};
+// S.width = function (val) {};
 
-// `height`
-G.height = function () {};
-S.height = function (val) {};
+// // `height`
+// G.height = function () {};
+// S.height = function (val) {};
 
-G.dimensions = function () {};
-S.dimensions = function (w, h) {};
+// G.dimensions = function () {};
+// S.dimensions = function (w, h) {};
 
-// Internal setters
-S.source = function () {};
-S.engine = function (item) {};
-S.state = function (item) {};
+// // Internal setters
+// S.source = function () {};
+// S.engine = function (item) {};
+// S.state = function (item) {};
 
-S.element = function (item) {};
+// S.element = function (item) {};
 
-S.backgroundColor = function (item) {};
+// S.backgroundColor = function (item) {};
 
 
-// __Stash coordinates and dimensions__ - which are stored in Coordinate arrays - allow us to store, and export to an image asset, a portion of the Cell's current display which can then be used (for instance) by Pattern styles. 
-// + Scrawl-canvas supplies the following _pseudo-attributes_ for dealing with the stash start coordinate (`stashX`, `stashY`) and dimensions (`stashWidth`, `stashHeight`)
-// + Each of these values can be either absolute px Numbers, or relative (to the Cell's own dimensions) '%' Strings
-S.stashX = function (val) {
+// // __Stash coordinates and dimensions__ - which are stored in Coordinate arrays - allow us to store, and export to an image asset, a portion of the Cell's current display which can then be used (for instance) by Pattern styles. 
+// // + Scrawl-canvas supplies the following _pseudo-attributes_ for dealing with the stash start coordinate (`stashX`, `stashY`) and dimensions (`stashWidth`, `stashHeight`)
+// // + Each of these values can be either absolute px Numbers, or relative (to the Cell's own dimensions) '%' Strings
+// S.stashX = function (val) {
 
-    if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
-    this.stashCoordinates[0] = val;
-};
-S.stashY = function (val) {
+//     if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
+//     this.stashCoordinates[0] = val;
+// };
+// S.stashY = function (val) {
 
-    if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
-    this.stashCoordinates[1] = val;
-};
-S.stashWidth = function (val) {
+//     if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
+//     this.stashCoordinates[1] = val;
+// };
+// S.stashWidth = function (val) {
 
-    if (!this.stashDimensions) {
+//     if (!this.stashDimensions) {
 
-        let dims = this.currentDimensions;
-        this.stashDimensions = [dims[0], dims[1]];
-    }
-    this.stashDimensions[0] = val;
-};
-S.stashHeight = function (val) {
+//         let dims = this.currentDimensions;
+//         this.stashDimensions = [dims[0], dims[1]];
+//     }
+//     this.stashDimensions[0] = val;
+// };
+// S.stashHeight = function (val) {
 
-    if (!this.stashDimensions) {
+//     if (!this.stashDimensions) {
 
-        let dims = this.currentDimensions;
-        this.stashDimensions = [dims[0], dims[1]];
-    }
-    this.stashDimensions[1] = val;
-};
-D.stashX = function (val) {
+//         let dims = this.currentDimensions;
+//         this.stashDimensions = [dims[0], dims[1]];
+//     }
+//     this.stashDimensions[1] = val;
+// };
+// D.stashX = function (val) {
 
-    if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
+//     if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
 
-    let c = this.stashCoordinates;
-    c[0] = addStrings(c[0], val);
-};
-D.stashY = function (val) {
+//     let c = this.stashCoordinates;
+//     c[0] = addStrings(c[0], val);
+// };
+// D.stashY = function (val) {
 
-    if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
+//     if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
 
-    let c = this.stashCoordinates;
-    c[1] = addStrings(c[1], val);
-};
-D.stashWidth = function (val) {
+//     let c = this.stashCoordinates;
+//     c[1] = addStrings(c[1], val);
+// };
+// D.stashWidth = function (val) {
 
-    if (!this.stashDimensions) {
+//     if (!this.stashDimensions) {
 
-        let dims = this.currentDimensions;
-        this.stashDimensions = [dims[0], dims[1]];
-    }
+//         let dims = this.currentDimensions;
+//         this.stashDimensions = [dims[0], dims[1]];
+//     }
 
-    let c = this.stashDimensions;
-    c[0] = addStrings(c[0], val);
-};
-D.stashHeight = function (val) {
+//     let c = this.stashDimensions;
+//     c[0] = addStrings(c[0], val);
+// };
+// D.stashHeight = function (val) {
 
-    if (!this.stashDimensions) {
+//     if (!this.stashDimensions) {
 
-        let dims = this.currentDimensions;
-        this.stashDimensions = [dims[0], dims[1]];
-    }
+//         let dims = this.currentDimensions;
+//         this.stashDimensions = [dims[0], dims[1]];
+//     }
 
-    let c = this.stashDimensions;
-    c[1] = addStrings(c[1], val);
-};
+//     let c = this.stashDimensions;
+//     c[1] = addStrings(c[1], val);
+// };
 
 S.clearAlpha = function (val) {
 
@@ -228,60 +230,60 @@ D.clearAlpha = function (val) {
 };
 
 
-// `smoothFont` - handle this directly; don't save the attribute state
-S.smoothFont = function (item) {
+// // `smoothFont` - handle this directly; don't save the attribute state
+// S.smoothFont = function (item) {
 
-    const { element } = this;
+//     const { element } = this;
 
-    if (element) {
+//     if (element) {
 
-        const { style } = element;
+//         const { style } = element;
 
-        if (style) {
+//         if (style) {
 
-            if (item) {
-                style['webkitFontSmoothing'] = 'auto';
-                style['mozOsxFontSmoothing'] = 'auto';
-                style['smoothFont'] = 'auto';
-            }
-            else {
-                style['webkitFontSmoothing'] = 'none';
-                style['mozOsxFontSmoothing'] = 'grayscale';
-                style['smoothFont'] = 'never';
-            }
-        }
-    }
-};
+//             if (item) {
+//                 style['webkitFontSmoothing'] = 'auto';
+//                 style['mozOsxFontSmoothing'] = 'auto';
+//                 style['smoothFont'] = 'auto';
+//             }
+//             else {
+//                 style['webkitFontSmoothing'] = 'none';
+//                 style['mozOsxFontSmoothing'] = 'grayscale';
+//                 style['smoothFont'] = 'never';
+//             }
+//         }
+//     }
+// };
 
 
 // #### Prototype functions
 
-// `checkSource` - internal function
-P.checkSource = function (width, height) {};
+// // `checkSource` - internal function
+// P.checkSource = function (width, height) {};
 
-// `getData` - internal function, invoked when a Cell wrapper is used as an entity's pattern style
-P.getData = function (entity, cell) {};
+// // `getData` - internal function, invoked when a Cell wrapper is used as an entity's pattern style
+// P.getData = function (entity, cell) {};
 
-// `updateArtefacts` - passes the __items__ argument object through to each of the Cell's Groups for forwarding to their artefacts' `setDelta` function
-P.updateArtefacts = function (items = Ωempty) {};
+// // `updateArtefacts` - passes the __items__ argument object through to each of the Cell's Groups for forwarding to their artefacts' `setDelta` function
+// P.updateArtefacts = function (items = Ωempty) {};
 
-// `cleanDimensionsAdditionalActions` - overwrites mixin/position function:
-// + Updates the Cell's &lt;canvas> element's dimensions
-// + Restores the render engine's attributes to current cell values (because the resize wipes them to default values)
-// + Asks the Canvas controller to trigger an update to the Cell's `here` object
-// + Tells all associated artefacts that the Cell's dimensions have changed
-P.cleanDimensionsAdditionalActions = function() {};
-
-
-// `notifySubscriber` - Overrides mixin/asset.js function
-P.notifySubscriber = function (sub) {};
+// // `cleanDimensionsAdditionalActions` - overwrites mixin/position function:
+// // + Updates the Cell's &lt;canvas> element's dimensions
+// // + Restores the render engine's attributes to current cell values (because the resize wipes them to default values)
+// // + Asks the Canvas controller to trigger an update to the Cell's `here` object
+// // + Tells all associated artefacts that the Cell's dimensions have changed
+// P.cleanDimensionsAdditionalActions = function() {};
 
 
-// `subscribeAction` - Overrides mixin/asset.js function
-P.subscribeAction = function (sub = {}) {};
+// // `notifySubscriber` - Overrides mixin/asset.js function
+// P.notifySubscriber = function (sub) {};
 
-// `updateControllerCells` - internal function: ask the Cell's Canvas controller to review/update its cells data
-P.updateControllerCells = function () {};
+
+// // `subscribeAction` - Overrides mixin/asset.js function
+// P.subscribeAction = function (sub = {}) {};
+
+// // `updateControllerCells` - internal function: ask the Cell's Canvas controller to review/update its cells data
+// P.updateControllerCells = function () {};
 
 // The following functions set the Cell wrapper's &lt;canvas> element's CanvasRenderingContext2D engine's attributes to match a given set of values
 
@@ -578,122 +580,122 @@ const checkEngineScale = function (engine) {
     return 1;
 };
 
-// `clear`
-P.clear = function () {};
+// // `clear`
+// P.clear = function () {};
 
-// `compile`
-P.compile = function(){};
+// // `compile`
+// P.compile = function(){};
 
-// `show` - Note that functionality here differs for __base cells__ and other Cell wrappers
-P.show = function () {};
-
-
-// `applyFilters` - Internal function - add filters to the Cell's current output.
-P.applyFilters = function () {};
+// // `show` - Note that functionality here differs for __base cells__ and other Cell wrappers
+// P.show = function () {};
 
 
-// `stashOutputAction` - Internal function - stash the Cell's current output. While this function can be called at any time, the simplest way to invoke it is to set the Cell's __stashOutput__ flag to true, which will then invoke this function at the end of the compile step of the Display cycle (after any filters have been applied to the cell display).
-// + The simplest way to set the stashOutput flag is to call `scrawl.createImageFromCell(cellName_or_cellObject, stashOutputAsAsset_flag)` from the user code.
-// + We can limit the area of the cell display to be stashed by setting the Cell's __stashX__, __stashY__, __stashWidth__ and __stashHeight__ values appropriately. These can all be either absolute (positive) number values, or %String number values relative to the Cell element's dimensions.
-// + We store the generated imageData object into the Cell object's __stashedImageData__ attribute.
-// + If we are also stashing an image, an &lt;img> element will be generated and stored in the Cell object's __stashedImage__ attribute. We also generate an imageAsset wrapper for the object that will have the name `cellname+'-image'`, which gets added to the assets section of the Scrawl-canvas library.
-P.stashOutputAction = function () {
+// // `applyFilters` - Internal function - add filters to the Cell's current output.
+// P.applyFilters = function () {};
 
-    if (this.stashOutput) {
 
-        this.stashOutput = false;
+// // `stashOutputAction` - Internal function - stash the Cell's current output. While this function can be called at any time, the simplest way to invoke it is to set the Cell's __stashOutput__ flag to true, which will then invoke this function at the end of the compile step of the Display cycle (after any filters have been applied to the cell display).
+// // + The simplest way to set the stashOutput flag is to call `scrawl.createImageFromCell(cellName_or_cellObject, stashOutputAsAsset_flag)` from the user code.
+// // + We can limit the area of the cell display to be stashed by setting the Cell's __stashX__, __stashY__, __stashWidth__ and __stashHeight__ values appropriately. These can all be either absolute (positive) number values, or %String number values relative to the Cell element's dimensions.
+// // + We store the generated imageData object into the Cell object's __stashedImageData__ attribute.
+// // + If we are also stashing an image, an &lt;img> element will be generated and stored in the Cell object's __stashedImage__ attribute. We also generate an imageAsset wrapper for the object that will have the name `cellname+'-image'`, which gets added to the assets section of the Scrawl-canvas library.
+// P.stashOutputAction = function () {
 
-        let { currentDimensions, stashCoordinates, stashDimensions, engine } = this;
+//     if (this.stashOutput) {
 
-        let [cellWidth, cellHeight] = currentDimensions;
+//         this.stashOutput = false;
 
-        let stashX = (stashCoordinates) ? stashCoordinates[0] : 0, 
-            stashY = (stashCoordinates) ? stashCoordinates[1] : 0, 
-            stashWidth = (stashDimensions) ? stashDimensions[0] : cellWidth, 
-            stashHeight = (stashDimensions) ? stashDimensions[1] : cellHeight;
+//         let { currentDimensions, stashCoordinates, stashDimensions, engine } = this;
 
-        // Keep the stashed image within bounds of the Cell's dimensions.
-        if (stashWidth.substring || stashHeight.substring || stashX.substring || stashY.substring || stashX || stashY || stashWidth !== cellWidth || stashHeight !== cellHeight) {
+//         let [cellWidth, cellHeight] = currentDimensions;
 
-            if (stashWidth.substring) stashWidth = (parseFloat(stashWidth) / 100) * cellWidth;
-            if (isNaN(stashWidth) || stashWidth <= 0) stashWidth = 1;
-            if (stashWidth > cellWidth) stashWidth = cellWidth;
+//         let stashX = (stashCoordinates) ? stashCoordinates[0] : 0, 
+//             stashY = (stashCoordinates) ? stashCoordinates[1] : 0, 
+//             stashWidth = (stashDimensions) ? stashDimensions[0] : cellWidth, 
+//             stashHeight = (stashDimensions) ? stashDimensions[1] : cellHeight;
 
-            if (stashHeight.substring) stashHeight = (parseFloat(stashHeight) / 100) * cellHeight;
-            if (isNaN(stashHeight) || stashHeight <= 0) stashHeight = 1;
-            if (stashHeight > cellHeight) stashHeight = cellHeight;
+//         // Keep the stashed image within bounds of the Cell's dimensions.
+//         if (stashWidth.substring || stashHeight.substring || stashX.substring || stashY.substring || stashX || stashY || stashWidth !== cellWidth || stashHeight !== cellHeight) {
 
-            if (stashX.substring) stashX = (parseFloat(stashX) / 100) * cellWidth;
-            if (isNaN(stashX) || stashX < 0) stashX = 0;
-            if (stashX + stashWidth > cellWidth) stashX = cellWidth - stashWidth;
+//             if (stashWidth.substring) stashWidth = (parseFloat(stashWidth) / 100) * cellWidth;
+//             if (isNaN(stashWidth) || stashWidth <= 0) stashWidth = 1;
+//             if (stashWidth > cellWidth) stashWidth = cellWidth;
 
-            if (stashY.substring) stashY = (parseFloat(stashY) / 100) * cellHeight;
-            if (isNaN(stashY) || stashY < 0) stashY = 0;
-            if (stashY + stashHeight > cellHeight) stashY = cellHeight - stashHeight;
-        }
+//             if (stashHeight.substring) stashHeight = (parseFloat(stashHeight) / 100) * cellHeight;
+//             if (isNaN(stashHeight) || stashHeight <= 0) stashHeight = 1;
+//             if (stashHeight > cellHeight) stashHeight = cellHeight;
 
-        // Get the imageData object, and stash it
-        engine.save();
-        engine.setTransform(1, 0, 0, 1, 0, 0);
-        this.stashedImageData = engine.getImageData(stashX, stashY, stashWidth, stashHeight);
-        engine.restore();
+//             if (stashX.substring) stashX = (parseFloat(stashX) / 100) * cellWidth;
+//             if (isNaN(stashX) || stashX < 0) stashX = 0;
+//             if (stashX + stashWidth > cellWidth) stashX = cellWidth - stashWidth;
 
-        // Get the dataUrl String, updating the stashed &lt;img> element with it
-        if (this.stashOutputAsAsset) {
+//             if (stashY.substring) stashY = (parseFloat(stashY) / 100) * cellHeight;
+//             if (isNaN(stashY) || stashY < 0) stashY = 0;
+//             if (stashY + stashHeight > cellHeight) stashY = cellHeight - stashHeight;
+//         }
 
-            const stashId = this.stashOutputAsAsset.substring ? this.stashOutputAsAsset : `${this.name}-image`;
+//         // Get the imageData object, and stash it
+//         engine.save();
+//         engine.setTransform(1, 0, 0, 1, 0, 0);
+//         this.stashedImageData = engine.getImageData(stashX, stashY, stashWidth, stashHeight);
+//         engine.restore();
 
-            this.stashOutputAsAsset = false;
+//         // Get the dataUrl String, updating the stashed &lt;img> element with it
+//         if (this.stashOutputAsAsset) {
 
-            let sourcecanvas, mycanvas;
+//             const stashId = this.stashOutputAsAsset.substring ? this.stashOutputAsAsset : `${this.name}-image`;
+
+//             this.stashOutputAsAsset = false;
+
+//             let sourcecanvas, mycanvas;
                 
-            mycanvas = requestCell();
-            sourcecanvas = mycanvas.element;
+//             mycanvas = requestCell();
+//             sourcecanvas = mycanvas.element;
 
-            sourcecanvas.width = stashWidth;
-            sourcecanvas.height = stashHeight;
+//             sourcecanvas.width = stashWidth;
+//             sourcecanvas.height = stashHeight;
 
-            mycanvas.engine.putImageData(this.stashedImageData, 0, 0);
+//             mycanvas.engine.putImageData(this.stashedImageData, 0, 0);
 
-            if (!this.stashedImage) {
+//             if (!this.stashedImage) {
 
-                let newimg = this.stashedImage = document.createElement('img');
+//                 let newimg = this.stashedImage = document.createElement('img');
 
-                newimg.id = stashId;
+//                 newimg.id = stashId;
 
-                newimg.onload = function () {
+//                 newimg.onload = function () {
 
-                    scrawlCanvasHold.appendChild(newimg);
-                    importDomImage(`#${stashId}`);
-                };
+//                     scrawlCanvasHold.appendChild(newimg);
+//                     importDomImage(`#${stashId}`);
+//                 };
 
-                newimg.src = sourcecanvas.toDataURL();
-            }
-            else this.stashedImage.src = sourcecanvas.toDataURL();
+//                 newimg.src = sourcecanvas.toDataURL();
+//             }
+//             else this.stashedImage.src = sourcecanvas.toDataURL();
 
-            releaseCell(mycanvas);
-        }
-    }
-};
-
-
-// `getHost` - Internal function - get a reference to the Cell's current host (where it will be stamping itself as part of the Display cycle).
-// + Note that Cells can (in theory: not tested yet) belong to more than one Canvas object Group - they can be used in multiple &lt;canvas> elements, thus the need to check which canvas is the current host at this point in the Display cycle.
-P.getHost = function () {
-
-    return false;
-};
+//             releaseCell(mycanvas);
+//         }
+//     }
+// };
 
 
-// `updateBaseHere` - Internal function - keeping the Canvas object's 'base' Cell's `.here` attribute up-to-date with accurate mouse/pointer/touch cursor data
-P.updateBaseHere = function (controllerHere, fit) {};
+// // `getHost` - Internal function - get a reference to the Cell's current host (where it will be stamping itself as part of the Display cycle).
+// // + Note that Cells can (in theory: not tested yet) belong to more than one Canvas object Group - they can be used in multiple &lt;canvas> elements, thus the need to check which canvas is the current host at this point in the Display cycle.
+// P.getHost = function () {
+
+//     return false;
+// };
 
 
-// `prepareStamp` - Internal function - steps to be performed before the Cell stamps its visual contents onto a Canvas object's base cell's canvas. Will be invoked as part of the Display cycle 'show' functionality.
-// + Cells can emulate (much of) the functionality of entity artefacts, in that they can be positioned (start, handle, offset), rotated, scaled and flipped when they stamp themselves on the base cell. They can also be positioned using mimic, pivot, path and mouse functionality.
-// + Cells cannot be included in Group objects (which only accept artefacts as members); however drag-and-drop functionality can be emulated by creating a Block and pivot/mimic the Cell to that. Similarly, Block substitutes can be used for hover detection, with their hook functions tailored to pass on the required response to the Cell - see Demo [Canvas-036](../../demo/canvas-036.html).
-// + Note that Cells acting as a Canvas object's 'base' cell will position themselves on the displayed Canvas in line with their Canvas controller's 'fit' attribute, disregarding any positional information it may have been given.
-P.prepareStamp = function () {};
+// // `updateBaseHere` - Internal function - keeping the Canvas object's 'base' Cell's `.here` attribute up-to-date with accurate mouse/pointer/touch cursor data
+// P.updateBaseHere = function (controllerHere, fit) {};
+
+
+// // `prepareStamp` - Internal function - steps to be performed before the Cell stamps its visual contents onto a Canvas object's base cell's canvas. Will be invoked as part of the Display cycle 'show' functionality.
+// // + Cells can emulate (much of) the functionality of entity artefacts, in that they can be positioned (start, handle, offset), rotated, scaled and flipped when they stamp themselves on the base cell. They can also be positioned using mimic, pivot, path and mouse functionality.
+// // + Cells cannot be included in Group objects (which only accept artefacts as members); however drag-and-drop functionality can be emulated by creating a Block and pivot/mimic the Cell to that. Similarly, Block substitutes can be used for hover detection, with their hook functions tailored to pass on the required response to the Cell - see Demo [Canvas-036](../../demo/canvas-036.html).
+// // + Note that Cells acting as a Canvas object's 'base' cell will position themselves on the displayed Canvas in line with their Canvas controller's 'fit' attribute, disregarding any positional information it may have been given.
+// P.prepareStamp = function () {};
 
 
 // `getEntityHits` - Returns an array of entity Objects responding 'true' to a checkHit call on them, for the Cell's current `.here` attribute coordinates. Used in particular with `Canvas.cascadeEventAction()` function

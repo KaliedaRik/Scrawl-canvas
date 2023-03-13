@@ -859,6 +859,7 @@ interface CellFactoryInputs extends BaseMixinInputs, PositionMixinInputs, DeltaM
     filter?: string;
     flipReverse?: boolean;
     flipUpend?: boolean;
+    willReadFrequently?: boolean;
     includeInCascadeEventActions?: boolean;
     shown?: boolean;
     showOrder?: number;

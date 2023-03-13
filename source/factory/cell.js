@@ -90,7 +90,7 @@ const Cell = function (items = Ωempty) {
         items.element = mycanvas;
     }
 
-    this.installElement(items.element);
+    this.installElement(items.element, items.willReadFrequently);
 
     this.set(this.defs);
 
@@ -700,10 +700,12 @@ P.subscribeAction = function (sub = {}) {
 };
 
 // `installElement` - internal function, used by the constructor
-P.installElement = function (element) {
+P.installElement = function (element, willReadFrequently = true) {
 
     this.element = element;
-    this.engine = this.element.getContext('2d');
+    this.engine = this.element.getContext('2d', {
+        willReadFrequently,
+    });
 
     this.state = makeState({
         engine: this.engine,
