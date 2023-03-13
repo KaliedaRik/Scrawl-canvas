@@ -28,7 +28,7 @@ import { clear, compile, show } from '../core/display-cycle.js';
 import { makeAnimationObserver } from '../core/events.js';
 import { mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty, isa_boolean } from '../core/utilities.js';
 import { animate, resortAnimations } from '../core/animationloop.js';
-import { forceUpdate } from '../core/userInteraction.js';
+import { forceUpdate } from '../core/system-flags.js';
 
 import baseMix from '../mixin/base.js';
 

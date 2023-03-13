@@ -23,7 +23,7 @@
 // #### Imports
 import { animation, constructors } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt, λnull, λpromise, λthis, Ωempty } from '../core/utilities.js';
-import { forceUpdate } from '../core/userInteraction.js';
+import { forceUpdate } from '../core/system-flags.js';
 import { animate, resortAnimations } from '../core/animationloop.js';
 
 import baseMix from '../mixin/base.js';

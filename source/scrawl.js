@@ -60,10 +60,10 @@ export {
     currentCorePosition, 
     startCoreListeners, 
     stopCoreListeners, 
-    forceUpdate,
     getTouchActionChoke,
     setTouchActionChoke,
 } from './core/userInteraction.js';
+export { forceUpdate } from './core/system-flags.js';
 export { makeAction } from './factory/action.js';
 export { makeAnimation } from './factory/animation.js';
 export { makeBlock } from './factory/block.js';

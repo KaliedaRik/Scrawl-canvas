@@ -13,19 +13,28 @@ import { addListener } from "./events.js";
 
 import { makeAnimation } from "../factory/animation.js";
 
+import {
+    getTrackMouse,
+    setTrackMouse,
+    getMouseChanged,
+    setMouseChanged,
+    getViewportChanged,
+    setViewportChanged,
+    getPrefersContrastChanged,
+    setPrefersContrastChanged,
+    getPrefersReducedMotionChanged,
+    setPrefersReducedMotionChanged,
+    getPrefersDarkColorSchemeChanged,
+    setPrefersDarkColorSchemeChanged,
+    getPrefersReduceTransparencyChanged,
+    setPrefersReduceTransparencyChanged,
+    getPrefersReduceDataChanged,
+    setPrefersReduceDataChanged,
+    forceUpdate,
+} from './system-flags.js';
+
 // `Exported array` (to modules). DOM element wrappers subscribe for updates by adding themselves to the __uiSubscribedElements__ array. When an event fires, the updated data will be pushed to them automatically
 export const uiSubscribedElements = [];
-
-
-// Local boolean flags. 
-let trackMouse = false,
-    mouseChanged = false,
-    viewportChanged = false,
-    prefersContrastChanged = false,
-    prefersReducedMotionChanged = false,
-    prefersDarkColorSchemeChanged = false,
-    prefersReduceTransparencyChanged = false,
-    prefersReduceDataChanged = false;
 
 
 // `Exported object` (to modules and the scrawl object). The __currentCorePosition__ object holds the __global__ mouse cursor position, alongside browser view dimensions and scroll position
@@ -58,7 +67,7 @@ contrastMediaQuery.addEventListener('change', () => {
     if (currentCorePosition.prefersContrast !== res) {
 
         currentCorePosition.prefersContrast = res;
-        prefersContrastChanged = true;
+        setPrefersContrastChanged(true);
     }
 });
 currentCorePosition.prefersContrast = contrastMediaQuery.matches;
@@ -73,7 +82,7 @@ reducedMotionMediaQuery.addEventListener('change', () => {
     if (currentCorePosition.prefersReducedMotion !== res) {
 
         currentCorePosition.prefersReducedMotion = res;
-        prefersReducedMotionChanged = true;
+        setPrefersReducedMotionChanged(true);
     }
 });
 currentCorePosition.prefersReducedMotion = reducedMotionMediaQuery.matches;
@@ -88,7 +97,7 @@ colorSchemeMediaQuery.addEventListener('change', () => {
     if (currentCorePosition.prefersDarkColorScheme !== res) {
 
         currentCorePosition.prefersDarkColorScheme = res;
-        prefersDarkColorSchemeChanged = true;
+        setPrefersDarkColorSchemeChanged(true);
     }
 });
 currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;
@@ -103,7 +112,7 @@ reducedTransparencyMediaQuery.addEventListener('change', () => {
     if (currentCorePosition.prefersReduceTransparency !== res) {
 
         currentCorePosition.prefersReduceTransparency = res;
-        prefersReduceTransparencyChanged = true;
+        setPrefersReduceTransparencyChanged(true);
     }
 });
 currentCorePosition.prefersReduceTransparency = reducedTransparencyMediaQuery.matches;
@@ -118,7 +127,7 @@ reducedDataMediaQuery.addEventListener('change', () => {
     if (currentCorePosition.prefersReduceData !== res) {
 
         currentCorePosition.prefersReduceData = res;
-        prefersReduceDataChanged = true;
+        setPrefersReduceDataChanged(true);
     }
 });
 currentCorePosition.prefersReduceData = reducedDataMediaQuery.matches;
@@ -136,8 +145,8 @@ const resizeAction = function (e) {
 
         currentCorePosition.w = w;
         currentCorePosition.h = h;
-        mouseChanged = true;
-        viewportChanged = true;
+        setMouseChanged(true);
+        setViewportChanged(true);
     }
 };
 
@@ -155,7 +164,7 @@ const scrollAction = function (e) {
         currentCorePosition.y += (y - currentCorePosition.scrollY);
         currentCorePosition.scrollX = x;
         currentCorePosition.scrollY = y;
-        mouseChanged = true;
+        setMouseChanged(true);
     }
 };
 
@@ -173,7 +182,7 @@ const moveAction = function (e) {
         currentCorePosition.type = (navigator.pointerEnabled) ? 'pointer' : 'mouse';
         currentCorePosition.x = x;
         currentCorePosition.y = y;
-        mouseChanged = true;
+        setMouseChanged(true);
     }
 };
 
@@ -265,11 +274,11 @@ const updateUiSubscribedElement = function (art) {
         here.prefersReduceTransparency = currentCorePosition.prefersReduceTransparency;
         here.prefersReduceData = currentCorePosition.prefersReduceData;
 
-        if (prefersContrastChanged) dom.contrastActions();
-        if (prefersReducedMotionChanged) dom.reducedMotionActions();
-        if (prefersDarkColorSchemeChanged) dom.colorSchemeActions();
-        if (prefersReduceTransparencyChanged) dom.reducedTransparencyActions();
-        if (prefersReduceDataChanged) dom.reducedDataActions();
+        if (getPrefersContrastChanged()) dom.contrastActions();
+        if (getPrefersReducedMotionChanged()) dom.reducedMotionActions();
+        if (getPrefersDarkColorSchemeChanged()) dom.colorSchemeActions();
+        if (getPrefersReduceTransparencyChanged()) dom.reducedTransparencyActions();
+        if (getPrefersReduceDataChanged()) dom.reducedDataActions();
 
         // DOM-element-dependant values
         if (el) {
@@ -443,6 +452,14 @@ const coreListenersTracker = makeAnimation({
     delay: true,
     fn: function () {
 
+        const trackMouse = getTrackMouse();
+        const mouseChanged = getMouseChanged();
+        const viewportChanged = getViewportChanged();
+        const prefersReducedMotionChanged = getPrefersReducedMotionChanged();
+        const prefersDarkColorSchemeChanged = getPrefersDarkColorSchemeChanged();
+        const prefersReduceTransparencyChanged = getPrefersReduceTransparencyChanged();
+        const prefersReduceDataChanged = getPrefersReduceDataChanged();
+
         if (!uiSubscribedElements.length) return false;
 
         if ((trackMouse && mouseChanged) || prefersReducedMotionChanged || prefersDarkColorSchemeChanged || prefersReduceTransparencyChanged || prefersReduceDataChanged) {
@@ -451,21 +468,21 @@ const coreListenersTracker = makeAnimation({
 
             if (trackMouse && mouseChanged) {
 
-                mouseChanged = false;
+                setMouseChanged(false);
             }
 
             if (prefersReducedMotionChanged || prefersDarkColorSchemeChanged || prefersReduceTransparencyChanged || prefersReduceDataChanged) {
 
-                prefersReducedMotionChanged = false,
-                prefersDarkColorSchemeChanged = false,
-                prefersReduceTransparencyChanged = false,
-                prefersReduceDataChanged = false;
+                setPrefersReducedMotionChanged(false),
+                setPrefersDarkColorSchemeChanged(false),
+                setPrefersReduceTransparencyChanged(false),
+                setPrefersReduceDataChanged(false);
             }
         }
 
         if (viewportChanged) {
 
-            viewportChanged = false;
+            setViewportChanged(false);
             updatePhraseEntitys();
         }
     },
@@ -477,15 +494,15 @@ export const startCoreListeners = function () {
     actionCoreListeners('removeEventListener');
     actionCoreListeners('addEventListener');
 
-    trackMouse = true;
-    mouseChanged = true;
+    setTrackMouse(true);
+    setMouseChanged(true);
     coreListenersTracker.run();
 };
 
 export const stopCoreListeners = function () {
 
-    trackMouse = false;
-    mouseChanged = false;
+    setTrackMouse(false);
+    setMouseChanged(false);
     coreListenersTracker.halt();
 
     actionCoreListeners('removeEventListener');
@@ -524,18 +541,12 @@ const actionCoreListeners = function (action) {
 export const applyCoreResizeListener = function () {
 
     resizeAction();
-    mouseChanged = true;
-    viewportChanged = true;
+    setMouseChanged(true);
+    setViewportChanged(true);
 };
 
 export const applyCoreScrollListener = function () {
 
     scrollAction();
-    mouseChanged = true;
-};
-
-export const forceUpdate = function () {
-
-    mouseChanged = true;
-    viewportChanged = true;
+    setMouseChanged(true);
 };
