@@ -855,7 +855,7 @@ P.cleanInput = function () {
 
     this.dirtyInput = false;
 
-    let sourceDimension = this.sourceDimension;
+    const sourceDimension = this.sourceDimension;
 
     if (!sourceDimension) {
 
@@ -863,7 +863,7 @@ P.cleanInput = function () {
         return false;
     }
 
-    let cell = requestCell(),
+    const cell = requestCell(),
         engine = cell.engine,
         canvas = cell.element;
 
@@ -938,9 +938,9 @@ P.cleanOutput = function () {
             engineDeltaLengths = this.engineDeltaLengths,
             instruction;
 
-        let [startX, startY, outputWidth, outputHeight] = this.getBoundingBox();
+        const [startX, startY, outputWidth, outputHeight] = this.getBoundingBox();
 
-        let inputCell = requestCell(),
+        const inputCell = requestCell(),
             inputEngine = inputCell.engine,
             inputCanvas = inputCell.element;
 
@@ -949,7 +949,7 @@ P.cleanOutput = function () {
         inputEngine.setTransform(1, 0, 0, 1, 0, 0);
         inputEngine.putImageData(sourceData, 0, 0);
 
-        let outputCell = requestCell(),
+        const outputCell = requestCell(),
             outputEngine = outputCell.engine,
             outputCanvas = outputCell.element;
 
@@ -1205,17 +1205,17 @@ P.fillThenDraw = function (engine) {
 // `clear`
 P.clear = function (engine) {
 
-    let output = this.output,
+    const output = this.output,
         canvas = (this.currentHost) ? this.currentHost.element : false,
         gco = engine.globalCompositeOperation;
 
     if (output && canvas) {
 
-        let tempCell = requestCell(),
+        const tempCell = requestCell(),
             tempEngine = tempCell.engine,
             tempCanvas = tempCell.element;
 
-        let [x, y, w, h] = this.getBoundingBox();
+        const [x, y, w, h] = this.getBoundingBox();
 
         tempCanvas.width = w;
         tempCanvas.height = h;
@@ -1277,16 +1277,16 @@ P.doStroke = function (engine) {
 // + Problem solved by putting output into a pool cell, then drawing it from there to the host cell
 P.doFill = function (engine) {
 
-    let output = this.output,
+    const output = this.output,
         canvas = (this.currentHost) ? this.currentHost.element : false;
 
     if (output && canvas) {
 
-        let tempCell = requestCell(),
+        const tempCell = requestCell(),
             tempEngine = tempCell.engine,
             tempCanvas = tempCell.element;
 
-        let [x, y, w, h] = this.getBoundingBox();
+        const [x, y, w, h] = this.getBoundingBox();
 
         tempCanvas.width = w;
         tempCanvas.height = h;

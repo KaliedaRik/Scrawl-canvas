@@ -120,7 +120,9 @@ export default function (P = Ωempty) {
         let element = document.createElement('canvas');
         element.id = name;
         this.element = element;
-        this.engine = this.element.getContext('2d');
+        this.engine = this.element.getContext('2d', {
+            willReadFrequently: true,
+        });
 
         // The color canvas allows us to map contour-like lines across a noise or rd asset's output.
         let color = document.createElement('canvas');
@@ -128,7 +130,9 @@ export default function (P = Ωempty) {
         color.width = 256;
         color.height = 1;
         this.colorElement = color;
-        this.colorEngine = this.colorElement.getContext('2d');
+        this.colorEngine = this.colorElement.getContext('2d', {
+            willReadFrequently: true,
+        });
 
         this.gradient = makeGradient({
             name: `${name}-gradient`,

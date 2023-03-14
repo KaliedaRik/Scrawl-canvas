@@ -65,6 +65,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/system-flags.html">
+                  ./source/core/system-flags.js
+                </a>
+              
+                
                 <a class="source" href="../core/userInteraction.html">
                   ./source/core/userInteraction.js
                 </a>
@@ -1711,7 +1716,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> currentHost = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> currentHost = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>,
             currentElement = currentHost.<span class="hljs-property">element</span>,
             currentEngine = currentHost.<span class="hljs-property">engine</span>,
             currentDimensions = currentHost.<span class="hljs-property">currentDimensions</span>;</pre></div></div>
@@ -1729,13 +1734,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> filterHost = <span class="hljs-title function_">requestCell</span>(),
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> filterHost = <span class="hljs-title function_">requestCell</span>(),
             filterCellElement = filterHost.<span class="hljs-property">element</span>,
             filterCellEngine = filterHost.<span class="hljs-property">engine</span>;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = filterHost;
 
-        <span class="hljs-keyword">let</span> w = filterCellElement.<span class="hljs-property">width</span> = currentDimensions ? currentDimensions[<span class="hljs-number">0</span>] : currentElement.<span class="hljs-property">width</span>,
+        <span class="hljs-keyword">const</span> w = filterCellElement.<span class="hljs-property">width</span> = currentDimensions ? currentDimensions[<span class="hljs-number">0</span>] : currentElement.<span class="hljs-property">width</span>,
             h = filterCellElement.<span class="hljs-property">height</span> = currentDimensions ? currentDimensions[<span class="hljs-number">1</span>] : currentElement.<span class="hljs-property">height</span>;
 
         <span class="hljs-keyword">if</span> (w &amp;&amp; h) {</pre></div></div>
@@ -1753,7 +1758,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> oldNoCanvasEngineUpdates = <span class="hljs-variable language_">this</span>.<span class="hljs-property">noCanvasEngineUpdates</span>;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> oldNoCanvasEngineUpdates = <span class="hljs-variable language_">this</span>.<span class="hljs-property">noCanvasEngineUpdates</span>;
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">noCanvasEngineUpdates</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
@@ -1800,11 +1805,11 @@
 
                 filterCellEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-                <span class="hljs-keyword">let</span> myimage = filterCellEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, w, h);
+                <span class="hljs-keyword">const</span> myimage = filterCellEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, w, h);
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessFilters</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>);
 
-                <span class="hljs-keyword">let</span> img = filterEngine.<span class="hljs-title function_">action</span>({
+                <span class="hljs-keyword">const</span> img = filterEngine.<span class="hljs-title function_">action</span>({
                     <span class="hljs-attr">identifier</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">filterIdentifier</span>,
                     <span class="hljs-attr">image</span>: myimage,
                     <span class="hljs-attr">filters</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>
@@ -1844,7 +1849,7 @@
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutput</span> = <span class="hljs-literal">false</span>;
 
-                <span class="hljs-keyword">let</span> [stashX, stashY, stashWidth, stashHeight] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCellCoverage</span>(filterCellEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterCellElement.<span class="hljs-property">width</span>, filterCellElement.<span class="hljs-property">height</span>));
+                <span class="hljs-keyword">const</span> [stashX, stashY, stashWidth, stashHeight] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCellCoverage</span>(filterCellEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterCellElement.<span class="hljs-property">width</span>, filterCellElement.<span class="hljs-property">height</span>));
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImageData</span> = filterCellEngine.<span class="hljs-title function_">getImageData</span>(stashX, stashY, stashWidth, stashHeight);
 
@@ -1873,7 +1878,7 @@
 
                     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span>) {
 
-                        <span class="hljs-keyword">let</span> newimg = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span> = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;img&#x27;</span>);
+                        <span class="hljs-keyword">const</span> newimg = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span> = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;img&#x27;</span>);
 
                         newimg.<span class="hljs-property">id</span> = stashId;
 

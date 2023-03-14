@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Root elements</title>
+  <title>System flags</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -524,102 +524,49 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="root-elements">Root elements</h1>
-<p><code>Exported array and function</code> (to modules). Root elements are the boxes whose dimensions define the dimensions and positioning of all that they contain. All &lt;canvas&gt; elements are root elements. Scrawl-canvas also allows other DOM elements (typically &lt;div&gt; elements) to be defined as root elements called <strong>stacks</strong>, whose child elements can then be positioned and dimensioned just like entity objects in a canvas.</p>
-<p>Stacks can be nested within each other, and canvases can also be nested inside a stack. (Nothing can nest inside a canvas element). Only the top level stack will be included in the rootElements array.</p>
-<p>The Scrawl-canvas <strong>Display cycle</strong> can start at the rootElements array, with each member of the array processed in turn.</p>
+              <h1 id="system-flags">System flags</h1>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-2">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-2">&#x00a7;</a>
-              </div>
-              <h4 id="imports">Imports</h4>
+            <div class="content"><div class='highlight'><pre>
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
-              <p>Local variables</p>
+<span class="hljs-keyword">let</span> trackMouse = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getTrackMouse</span> = (<span class="hljs-params"></span>) =&gt; trackMouse;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setTrackMouse</span> = (<span class="hljs-params">val</span>) =&gt; trackMouse = val;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> rootElements_sorted = [];
-<span class="hljs-keyword">let</span> rootElementsSort = <span class="hljs-literal">true</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
-              </div>
-              <p>The <strong>rootElements</strong> array keeps track of all ‘root’ stack artefacts, and also includes all canvas artefacts, whether they’re part of a stack or not. <strong>setRootElementSort</strong> forces the root</p>
+<span class="hljs-keyword">let</span> mouseChanged = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getMouseChanged</span> = (<span class="hljs-params"></span>) =&gt; mouseChanged;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setMouseChanged</span> = (<span class="hljs-params">val</span>) =&gt; mouseChanged = val;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> rootElements = [];
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setRootElementsSort</span> = (<span class="hljs-params"></span>) =&gt; {rootElementsSort = <span class="hljs-literal">true</span>};
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getRootElementsSort</span> = (<span class="hljs-params"></span>) =&gt; rootElementsSort;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
-              <p>Scrawl-canvas rootElements sorter uses a ‘bucket sort’ algorithm</p>
+<span class="hljs-keyword">let</span> viewportChanged = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getViewportChanged</span> = (<span class="hljs-params"></span>) =&gt; viewportChanged;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setViewportChanged</span> = (<span class="hljs-params">val</span>) =&gt; viewportChanged = val;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> sortRootElements = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span class="hljs-keyword">let</span> prefersContrastChanged = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getPrefersContrastChanged</span> = (<span class="hljs-params"></span>) =&gt; prefersContrastChanged;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setPrefersContrastChanged</span> = (<span class="hljs-params">val</span>) =&gt; prefersContrastChanged = val;
 
-    <span class="hljs-keyword">const</span> floor = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>;
+<span class="hljs-keyword">let</span> prefersReducedMotionChanged = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getPrefersReducedMotionChanged</span> = (<span class="hljs-params"></span>) =&gt; prefersReducedMotionChanged;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setPrefersReducedMotionChanged</span> = (<span class="hljs-params">val</span>) =&gt; prefersReducedMotionChanged = val;
 
-    <span class="hljs-keyword">if</span> (rootElementsSort) {
+<span class="hljs-keyword">let</span> prefersDarkColorSchemeChanged = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getPrefersDarkColorSchemeChanged</span> = (<span class="hljs-params"></span>) =&gt; prefersDarkColorSchemeChanged;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setPrefersDarkColorSchemeChanged</span> = (<span class="hljs-params">val</span>) =&gt; prefersDarkColorSchemeChanged = val;
 
-        rootElementsSort = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">let</span> prefersReduceTransparencyChanged = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getPrefersReduceTransparencyChanged</span> = (<span class="hljs-params"></span>) =&gt; prefersReduceTransparencyChanged;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setPrefersReduceTransparencyChanged</span> = (<span class="hljs-params">val</span>) =&gt; prefersReduceTransparencyChanged = val;
 
-        <span class="hljs-keyword">const</span> buckets = [];
-        <span class="hljs-keyword">let</span> art, order, i, iz, item;
+<span class="hljs-keyword">let</span> prefersReduceDataChanged = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getPrefersReduceDataChanged</span> = (<span class="hljs-params"></span>) =&gt; prefersReduceDataChanged;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setPrefersReduceDataChanged</span> = (<span class="hljs-params">val</span>) =&gt; prefersReduceDataChanged = val;
 
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = rootElements.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-            item = rootElements[i];
-            art = artefact[item];
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> forceUpdate = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-            <span class="hljs-keyword">if</span> (art) {
-
-                order = <span class="hljs-title function_">floor</span>(art.<span class="hljs-property">order</span>) || <span class="hljs-number">0</span>;
-
-                <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
-                
-                buckets[order].<span class="hljs-title function_">push</span>(art.<span class="hljs-property">name</span>);
-            }
-        }
-        rootElements_sorted.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
-        rootElements_sorted.<span class="hljs-title function_">push</span>(...buckets.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.<span class="hljs-title function_">concat</span>(v), []));
-    }
+    mouseChanged = <span class="hljs-literal">true</span>;
+    viewportChanged = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>

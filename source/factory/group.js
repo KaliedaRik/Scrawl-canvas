@@ -27,7 +27,6 @@ import { mergeOver, pushUnique, removeItem, Ωempty, λnull } from '../core/util
 import { scrawlCanvasHold } from '../core/document.js';
 
 import { filterEngine } from './filterEngine.js';
-// import { requestCell, releaseCell } from './cell.js';
 import { requestCell, releaseCell } from './cell-fragment.js';
 import { importDomImage } from './imageAsset.js';
 
@@ -269,7 +268,7 @@ P.stamp = function () {
 
     if (this.visibility) {
 
-        let { currentHost, stashOutput, noFilters, filters } = this;
+        const { currentHost, stashOutput, noFilters, filters } = this;
 
         if (currentHost) {
 
@@ -277,26 +276,14 @@ P.stamp = function () {
             this.sortArtefacts();
 
             // Check to see if there is a Group filter in place or if the Group needs to stash its output and, if yes, pull a Cell asset from the pool
-            let filterCell = (stashOutput || (!noFilters && filters && filters.length)) ?
+            const filterCell = (stashOutput || (!noFilters && filters && filters.length)) ?
                 requestCell() :
                 false;
 
             // Setup the pool Cell, if required
             if (filterCell && filterCell.element) {
 
-                // let dims = currentHost.currentDimensions,
-                //     fCellDims = filterCell.currentDimensions,
-                //     fEl = filterCell.element;
-
-                // if (dims && fCellDims && fEl) {
-
-                //     fCellDims[0] = dims[0];
-                //     fCellDims[1] = dims[1];
-
-                //     fEl.width = dims[0];
-                //     fEl.height = dims[1];
-                // }
-                let dims = currentHost.currentDimensions,
+                const dims = currentHost.currentDimensions,
                     fEl = filterCell.element;
 
                 if (dims && fEl) {
@@ -507,9 +494,9 @@ P.stashAction = function (img) {
 
         this.stashOutput = false;
 
-        let [x, y, width, height] = this.getCellCoverage(img);
+        const [x, y, width, height] = this.getCellCoverage(img);
 
-        let myCell = requestCell(),
+        const myCell = requestCell(),
             myEngine = myCell.engine,
             myElement = myCell.element;
 
@@ -528,7 +515,7 @@ P.stashAction = function (img) {
 
             if (!this.stashedImage) {
 
-                let newimg = this.stashedImage = document.createElement('img');
+                const newimg = this.stashedImage = document.createElement('img');
 
                 newimg.id = stashId;
 
@@ -821,22 +808,22 @@ P.getAllArtefactsAt = function (items) {
 
     this.sortArtefacts();
     
-    let myCell = requestCell(),
+    const myCell = requestCell(),
         artBuckets = this.artefactStampBuckets,
         resultNames = [],
         results = [];
 
     for (let i = artBuckets.length - 1; i >= 0; i--) {
 
-        let art = artBuckets[i];
+        const art = artBuckets[i];
         
         if (art) {
 
-            let result = art.checkHit(items, myCell);
+            const result = art.checkHit(items, myCell);
             
             if (result && result.artefact) {
 
-                let hit = result.artefact;
+                const hit = result.artefact;
 
                 if (resultNames.indexOf(hit.name) < 0) {
 
@@ -876,15 +863,10 @@ P.getAllArtefactsAt = function (items) {
 //     host: 'mystack',
 // });
 // ```
-const makeGroup = function (items) {
+export const makeGroup = function (items) {
 
     if (!items) return false;
     return new Group(items);
 };
 
 constructors.Group = Group;
-
-// #### Exports
-export {
-    makeGroup,
-};

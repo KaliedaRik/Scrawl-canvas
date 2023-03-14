@@ -133,7 +133,7 @@ const stopAnimation = (e) => {
     }
 };
 
-canvas.setReduceMotionAction(() => setTimeout(() => stopAnimation("reduced-motion"), 5000));
+canvas.setReduceMotionAction(() => setTimeout(() => stopAnimation("reduced-motion"), 1000));
 
 canvas.setNoPreferenceMotionAction(() => startAnimation("reduced-motion"));
 

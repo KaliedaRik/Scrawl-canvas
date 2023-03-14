@@ -65,6 +65,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/system-flags.html">
+                  ./source/core/system-flags.js
+                </a>
+              
+                
                 <a class="source" href="../core/userInteraction.html">
                   ./source/core/userInteraction.js
                 </a>
@@ -2117,7 +2122,7 @@ P.<span class="hljs-property">simpleStamp</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyInput</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> sourceDimension = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceDimension</span>;
+    <span class="hljs-keyword">const</span> sourceDimension = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceDimension</span>;
 
     <span class="hljs-keyword">if</span> (!sourceDimension) {
 
@@ -2125,7 +2130,7 @@ P.<span class="hljs-property">simpleStamp</span> = <span class="hljs-keyword">fu
         <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     }
 
-    <span class="hljs-keyword">let</span> cell = <span class="hljs-title function_">requestCell</span>(),
+    <span class="hljs-keyword">const</span> cell = <span class="hljs-title function_">requestCell</span>(),
         engine = cell.<span class="hljs-property">engine</span>,
         canvas = cell.<span class="hljs-property">element</span>;
 
@@ -2227,9 +2232,9 @@ P.<span class="hljs-property">simpleStamp</span> = <span class="hljs-keyword">fu
             engineDeltaLengths = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engineDeltaLengths</span>,
             instruction;
 
-        <span class="hljs-keyword">let</span> [startX, startY, outputWidth, outputHeight] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
+        <span class="hljs-keyword">const</span> [startX, startY, outputWidth, outputHeight] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
 
-        <span class="hljs-keyword">let</span> inputCell = <span class="hljs-title function_">requestCell</span>(),
+        <span class="hljs-keyword">const</span> inputCell = <span class="hljs-title function_">requestCell</span>(),
             inputEngine = inputCell.<span class="hljs-property">engine</span>,
             inputCanvas = inputCell.<span class="hljs-property">element</span>;
 
@@ -2238,7 +2243,7 @@ P.<span class="hljs-property">simpleStamp</span> = <span class="hljs-keyword">fu
         inputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
         inputEngine.<span class="hljs-title function_">putImageData</span>(sourceData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-        <span class="hljs-keyword">let</span> outputCell = <span class="hljs-title function_">requestCell</span>(),
+        <span class="hljs-keyword">const</span> outputCell = <span class="hljs-title function_">requestCell</span>(),
             outputEngine = outputCell.<span class="hljs-property">engine</span>,
             outputCanvas = outputCell.<span class="hljs-property">element</span>;
 
@@ -2627,17 +2632,17 @@ P.<span class="hljs-property">simpleStamp</span> = <span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clear</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    <span class="hljs-keyword">let</span> output = <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span>,
+    <span class="hljs-keyword">const</span> output = <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span>,
         canvas = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-property">element</span> : <span class="hljs-literal">false</span>,
         gco = engine.<span class="hljs-property">globalCompositeOperation</span>;
 
     <span class="hljs-keyword">if</span> (output &amp;&amp; canvas) {
 
-        <span class="hljs-keyword">let</span> tempCell = <span class="hljs-title function_">requestCell</span>(),
+        <span class="hljs-keyword">const</span> tempCell = <span class="hljs-title function_">requestCell</span>(),
             tempEngine = tempCell.<span class="hljs-property">engine</span>,
             tempCanvas = tempCell.<span class="hljs-property">element</span>;
 
-        <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
+        <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
 
         tempCanvas.<span class="hljs-property">width</span> = w;
         tempCanvas.<span class="hljs-property">height</span> = h;
@@ -2748,16 +2753,16 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">doFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    <span class="hljs-keyword">let</span> output = <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span>,
+    <span class="hljs-keyword">const</span> output = <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span>,
         canvas = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-property">element</span> : <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">if</span> (output &amp;&amp; canvas) {
 
-        <span class="hljs-keyword">let</span> tempCell = <span class="hljs-title function_">requestCell</span>(),
+        <span class="hljs-keyword">const</span> tempCell = <span class="hljs-title function_">requestCell</span>(),
             tempEngine = tempCell.<span class="hljs-property">engine</span>,
             tempCanvas = tempCell.<span class="hljs-property">element</span>;
 
-        <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
+        <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
 
         tempCanvas.<span class="hljs-property">width</span> = w;
         tempCanvas.<span class="hljs-property">height</span> = h;

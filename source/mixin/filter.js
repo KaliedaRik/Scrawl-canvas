@@ -294,7 +294,7 @@ export default function (P = Ωempty) {
                                 copyY = height - copyHeight - 1;
                             }
 
-                            let cell = requestCell(),
+                            const cell = requestCell(),
                                 engine = cell.engine,
                                 canvas = cell.element;
 
@@ -305,7 +305,7 @@ export default function (P = Ωempty) {
                             engine.globalCompositeOperation = 'source-over';
                             engine.globalAlpha = 1;
 
-                            let src = img.source || img.element;
+                            const src = img.source || img.element;
 
                             engine.drawImage(src, copyX, copyY, copyWidth, copyHeight, 0, 0, destWidth, destHeight);
 

@@ -46,7 +46,7 @@ swirlStripesHeaders.forEach(el => swirlStripesEffect(el, scrawl));
 // Page performance snippet
 import pagePerformance from './snippets/page-performance-snippet.js';
 const pageReport = document.querySelectorAll('#reportmessage');
-pageReport.forEach(el => pagePerformance(el));
+pageReport.forEach(el => pagePerformance(scrawl, el));
 
 
 // #### Development and testing

@@ -552,25 +552,25 @@ export default function (P = Ωempty) {
         if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 
         // Save current host data into a set of vars, ready for restoration after web engine completes or fails
-        let currentHost = this.currentHost,
+        const currentHost = this.currentHost,
             currentElement = currentHost.element,
             currentEngine = currentHost.engine,
             currentDimensions = currentHost.currentDimensions;
 
         // Get and prepare a pool Cell for the filter operations
-        let filterHost = requestCell(),
+        const filterHost = requestCell(),
             filterCellElement = filterHost.element,
             filterCellEngine = filterHost.engine;
 
         this.currentHost = filterHost;
 
-        let w = filterCellElement.width = currentDimensions ? currentDimensions[0] : currentElement.width,
+        const w = filterCellElement.width = currentDimensions ? currentDimensions[0] : currentElement.width,
             h = filterCellElement.height = currentDimensions ? currentDimensions[1] : currentElement.height;
 
         if (w && h) {
 
             // Switch off fast stamp
-            let oldNoCanvasEngineUpdates = this.noCanvasEngineUpdates;
+            const oldNoCanvasEngineUpdates = this.noCanvasEngineUpdates;
             this.noCanvasEngineUpdates = false;
 
             // Stamp the entity onto the pool Cell
@@ -593,11 +593,11 @@ export default function (P = Ωempty) {
 
                 filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-                let myimage = filterCellEngine.getImageData(0, 0, w, h);
+                const myimage = filterCellEngine.getImageData(0, 0, w, h);
 
                 this.preprocessFilters(this.currentFilters);
 
-                let img = filterEngine.action({
+                const img = filterEngine.action({
                     identifier: this.filterIdentifier,
                     image: myimage,
                     filters: this.currentFilters
@@ -625,7 +625,7 @@ export default function (P = Ωempty) {
 
                 this.stashOutput = false;
 
-                let [stashX, stashY, stashWidth, stashHeight] = this.getCellCoverage(filterCellEngine.getImageData(0, 0, filterCellElement.width, filterCellElement.height));
+                const [stashX, stashY, stashWidth, stashHeight] = this.getCellCoverage(filterCellEngine.getImageData(0, 0, filterCellElement.width, filterCellElement.height));
 
                 this.stashedImageData = filterCellEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
 
@@ -642,7 +642,7 @@ export default function (P = Ωempty) {
 
                     if (!this.stashedImage) {
 
-                        let newimg = this.stashedImage = document.createElement('img');
+                        const newimg = this.stashedImage = document.createElement('img');
 
                         newimg.id = stashId;
 
