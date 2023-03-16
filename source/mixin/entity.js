@@ -529,10 +529,8 @@ export default function (P = Ωempty) {
 
         if (dest) {
 
-            let engine = dest.engine,
-                stamp = this.currentStampPosition,
-                x = stamp[0],
-                y = stamp[1];
+            const engine = dest.engine;
+            const [x, y] = this.currentStampPosition;
 
             // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
             dest.rotateDestination(engine, x, y, this);
@@ -548,26 +546,35 @@ export default function (P = Ωempty) {
 // `filteredStamp` - handles stamping functionality for all __entitys that have filter functions__ associated with them.
     P.filteredStamp = function() {
 
+        const { dirtyFilters, currentHost, state } = this;
+
         // Clean and sort the Entity-level filters before sending them to the filter engine for application
-        if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+        if (dirtyFilters || !this.currentFilters) this.cleanFilters();
 
         // Save current host data into a set of vars, ready for restoration after web engine completes or fails
-        const currentHost = this.currentHost,
-            currentElement = currentHost.element,
-            currentEngine = currentHost.engine,
-            currentDimensions = currentHost.currentDimensions;
+        const { 
+            element: currEl,
+            engine: currEng,
+            currentDimensions: currDims,
+        } = currentHost;
 
         // Get and prepare a pool Cell for the filter operations
-        const filterHost = requestCell(),
-            filterCellElement = filterHost.element,
-            filterCellEngine = filterHost.engine;
+        const filterHost = requestCell();
+
+        const {
+            element: filterEl,
+            engine: filterEng,
+        } = filterHost;
 
         this.currentHost = filterHost;
 
-        const w = filterCellElement.width = currentDimensions ? currentDimensions[0] : currentElement.width,
-            h = filterCellElement.height = currentDimensions ? currentDimensions[1] : currentElement.height;
+        const w = currDims ? currDims[0] : currEl.width,
+            h = currDims ? currDims[1] : currEl.height;
 
         if (w && h) {
+
+            filterHost.w = filterEl.width = w;
+            filterHost.h = filterEl.height = h;
 
             // Switch off fast stamp
             const oldNoCanvasEngineUpdates = this.noCanvasEngineUpdates;
@@ -578,56 +585,58 @@ export default function (P = Ωempty) {
 
             if (!this.noFilters && this.filters && this.filters.length) {
 
+                const filters = this.currentFilters;
+
                 // If we're using the entity as a stencil, copy the entity cell's current display over the entity in the pool Cell
                 if (this.isStencil) {
 
-                    filterCellEngine.save();
-                    filterCellEngine.globalCompositeOperation = 'source-in';
-                    filterCellEngine.globalAlpha = 1;
-                    filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
-                    filterCellEngine.drawImage(currentElement, 0, 0);
-                    filterCellEngine.restore();
+                    filterEng.save();
+                    filterEng.globalCompositeOperation = 'source-in';
+                    filterEng.globalAlpha = 1;
+                    filterEng.setTransform(1, 0, 0, 1, 0, 0);
+                    filterEng.drawImage(currEl, 0, 0);
+                    filterEng.restore();
 
                     this.dirtyFilterIdentifier = true;
                 } 
 
-                filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+                filterEng.setTransform(1, 0, 0, 1, 0, 0);
 
-                const myimage = filterCellEngine.getImageData(0, 0, w, h);
+                const myimage = filterEng.getImageData(0, 0, w, h);
 
-                this.preprocessFilters(this.currentFilters);
+                this.preprocessFilters(filters);
 
                 const img = filterEngine.action({
                     identifier: this.filterIdentifier,
                     image: myimage,
-                    filters: this.currentFilters
+                    filters,
                 });
 
                 if (img) {
 
-                    filterCellEngine.globalCompositeOperation = 'source-over';
-                    filterCellEngine.globalAlpha = 1;
-                    filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
-                    filterCellEngine.putImageData(img, 0, 0);
+                    filterEng.globalCompositeOperation = 'source-over';
+                    filterEng.globalAlpha = 1;
+                    filterEng.setTransform(1, 0, 0, 1, 0, 0);
+                    filterEng.putImageData(img, 0, 0);
                 }
             }
-            currentEngine.save();
+            currEng.save();
 
-            currentEngine.globalAlpha = (this.state && this.state.globalAlpha) ? this.state.globalAlpha : 1;
-            currentEngine.globalCompositeOperation = (this.state && this.state.globalCompositeOperation) ? this.state.globalCompositeOperation : 'source-over';
+            currEng.globalAlpha = (state && state.globalAlpha) ? state.globalAlpha : 1;
+            currEng.globalCompositeOperation = (state && state.globalCompositeOperation) ? state.globalCompositeOperation : 'source-over';
             
-            currentEngine.setTransform(1, 0, 0, 1, 0, 0);
+            currEng.setTransform(1, 0, 0, 1, 0, 0);
 
-            currentEngine.drawImage(filterCellElement, 0, 0);
+            currEng.drawImage(filterEl, 0, 0);
 
             // This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img> elements for use elsewhere in the Scrawl-canvas ecosystem.
             if (this.stashOutput) {
 
                 this.stashOutput = false;
 
-                const [stashX, stashY, stashWidth, stashHeight] = this.getCellCoverage(filterCellEngine.getImageData(0, 0, filterCellElement.width, filterCellElement.height));
+                const [stashX, stashY, stashWidth, stashHeight] = this.getCellCoverage(filterEng.getImageData(0, 0, filterEl.width, filterEl.height));
 
-                this.stashedImageData = filterCellEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
+                this.stashedImageData = filterEng.getImageData(stashX, stashY, stashWidth, stashHeight);
 
                 if (this.stashOutputAsAsset) {
 
@@ -636,9 +645,9 @@ export default function (P = Ωempty) {
                     // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo [Canvas-020](../../demo/canvas-020.html) for a workaround.
                     this.stashOutputAsAsset = false;
 
-                    filterCellElement.width = stashWidth;
-                    filterCellElement.height = stashHeight;
-                    filterCellEngine.putImageData(this.stashedImageData, 0, 0);
+                    filterEl.width = stashWidth;
+                    filterEl.height = stashHeight;
+                    filterEng.putImageData(this.stashedImageData, 0, 0);
 
                     if (!this.stashedImage) {
 
@@ -652,12 +661,12 @@ export default function (P = Ωempty) {
                             importDomImage(`#${stashId}`);
                         };
 
-                        newimg.src = filterCellElement.toDataURL();
+                        newimg.src = filterEl.toDataURL();
                     }
-                    else this.stashedImage.src = filterCellElement.toDataURL();
+                    else this.stashedImage.src = filterEl.toDataURL();
                 }
             }
-            currentEngine.restore();
+            currEng.restore();
 
             this.currentHost = currentHost;
             this.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
@@ -678,20 +687,19 @@ export default function (P = Ωempty) {
             counter = 3,
             x, y;
 
-        for (y = 0; y < height; y++) {
+        for (let i = 0, iz = width * height; i < iz; i++) {
 
-            for (x = 0; x < width; x++) {
+            if (data[counter]) {
 
-                if (data[counter]) {
+                y = Math.floor(i / width); 
+                x = i - (y * width);
 
-                    if (minX > x) minX = x;
-                    if (maxX < x) maxX = x;
-                    if (minY > y) minY = y;
-                    if (maxY < y) maxY = y;
-                }
-
-                counter += 4;
+                if (minX > x) minX = x;
+                if (maxX < x) maxX = x;
+                if (minY > y) minY = y;
+                if (maxY < y) maxY = y;
             }
+            counter += 4;
         }
         if (minX < maxX && minY < maxY) return [minX, minY, maxX - minX, maxY - minY];
         else return [0, 0, width, height];
@@ -699,7 +707,7 @@ export default function (P = Ωempty) {
 
 // `simpleStamp` - an alternative to the `stamp` function, to get an entity to stamp its output onto a Cell.
 // + Note that this is a synchronous action, thus cannot be included in a Display cycle cascade.
-// + Will ignore any filters assigned to the entity (because they require asynchronous Promises for the filter engine)
+// + Will ignore any filters assigned to the entity
     P.simpleStamp = function (host, changes = Ωempty) {
 
         if (host && this.acceptableHosts.includes(host.type)) {

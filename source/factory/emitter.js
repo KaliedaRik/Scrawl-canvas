@@ -34,6 +34,7 @@ import { requestCell, releaseCell } from './cell-fragment.js';
 import { makeVector, requestVector, releaseVector } from './vector.js';
 import { requestCoordinate, releaseCoordinate } from './coordinate.js';
 import { makeColor } from './color.js';
+import { filterEngine } from './filterEngine.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
@@ -843,9 +844,9 @@ P.addParticles = function (req) {
 // `regularStamp` - overwriters the functionality defined in the entity.js mixin
 P.regularStamp = function () {
 
-    let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
+    const {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
 
-    let host = this.currentHost;
+    const host = this.currentHost;
 
     let deltaTime = 16 / 1000,
         now = Date.now();
@@ -878,7 +879,7 @@ P.regularStamp = function () {
 
     if (showHitRadius) {
 
-        let engine = host.engine;
+        const engine = host.engine;
 
         engine.save();
         engine.lineWidth = 1;

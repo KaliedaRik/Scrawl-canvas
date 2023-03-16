@@ -16,6 +16,11 @@
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
+    .canvas-grid {
+      display: grid;
+      width: 100%;
+      grid-template-columns: 1fr 1fr;
+    }
   </style>
 </head>
 
@@ -78,13 +83,22 @@
 
   </div>
 
-  <canvas 
-    id="mycanvas" 
-    width="800" 
-    height="400"
-    data-scrawl-canvas
-    data-base-background-color="red"
-  ></canvas>
+  <div class="canvas-grid">
+    <canvas 
+      id="canvas-1" 
+      width="400" 
+      height="400"
+      data-scrawl-canvas
+      data-base-background-color="red"
+    ></canvas>
+    <canvas 
+      id="canvas-2" 
+      width="400" 
+      height="400"
+      data-scrawl-canvas
+      data-base-background-color="red"
+    ></canvas>
+  </div>
 
   <p id="reportmessage"></p>
 

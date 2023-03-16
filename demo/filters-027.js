@@ -8,7 +8,8 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas1 = scrawl.library.canvas['canvas-1'];
+const canvas2 = scrawl.library.canvas['canvas-2'];
 
 scrawl.importDomImage('.flowers');
 
@@ -30,10 +31,10 @@ const myFilter = scrawl.makeFilter({
 const dithered = scrawl.makePicture({
 
     name: 'dithered-image',
-
+    group: canvas1.base.name,
     asset: 'iris',
 
-    width: '50%',
+    width: '100%',
     height: '100%',
 
     copyWidth: '100%',
@@ -47,7 +48,7 @@ const dithered = scrawl.makePicture({
 const original = dithered.clone({
 
     name: 'original-image',
-    startX: '50%',
+    group: canvas2.base.name,
     filters: [],
 });
 
@@ -62,10 +63,16 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
-    target: canvas,
+    target: [canvas1, canvas2],
+});
+
+scrawl.makeRender({
+
+    name: "demo-reporter",
+    noTarget: true,
     afterShow: report,
 });
 
@@ -137,7 +144,7 @@ document.querySelector('#useLabForPaletteDistance').options.selectedIndex = 0;
 
 
 // #### Drag-and-Drop image loading functionality
-addImageDragAndDrop(canvas, '#my-image-store', [dithered, original]);
+addImageDragAndDrop([canvas1, canvas2], '#my-image-store', [dithered, original]);
 
 
 // #### Development and testing
