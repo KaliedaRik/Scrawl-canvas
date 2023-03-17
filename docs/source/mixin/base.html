@@ -435,6 +435,11 @@
                 </a>
               
                 
+                <a class="source" href="cell-key-functions.html">
+                  ./source/mixin/cell-key-functions.js
+                </a>
+              
+                
                 <a class="source" href="delta.html">
                   ./source/mixin/delta.js
                 </a>
@@ -655,17 +660,17 @@
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item)) {
 
-            <span class="hljs-keyword">let</span> getter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getters</span>[item];
+            <span class="hljs-keyword">const</span> getter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getters</span>[item];
 
             <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);
 
             <span class="hljs-keyword">else</span> {
 
-                <span class="hljs-keyword">let</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item];
+                <span class="hljs-keyword">const</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item];
 
                 <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-string">&#x27;undefined&#x27;</span>) {
 
-                    <span class="hljs-keyword">let</span> val = <span class="hljs-variable language_">this</span>[item];
+                    <span class="hljs-keyword">const</span> val = <span class="hljs-variable language_">this</span>[item];
                     <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-string">&#x27;undefined&#x27;</span>) ? val : def;
                 }
             }
@@ -938,15 +943,17 @@ box.<span class="hljs-title function_">kill</span>()
             <span class="hljs-attr">includeDefaults</span>: <span class="hljs-literal">true</span>,
         }
 
-        <span class="hljs-keyword">let</span> defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>,
+        <span class="hljs-keyword">const</span> defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>,
             defKeys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(defs),
             packetExclusions = <span class="hljs-variable language_">this</span>.<span class="hljs-property">packetExclusions</span>,
             packetExclusionsByRegex = <span class="hljs-variable language_">this</span>.<span class="hljs-property">packetExclusionsByRegex</span>,
             packetCoordinates = <span class="hljs-variable language_">this</span>.<span class="hljs-property">packetCoordinates</span>,
             packetObjects = <span class="hljs-variable language_">this</span>.<span class="hljs-property">packetObjects</span>,
-            packetFunctions = <span class="hljs-variable language_">this</span>.<span class="hljs-property">packetFunctions</span>,
-            packetDefaultInclusions = items.<span class="hljs-property">includeDefaults</span> || <span class="hljs-literal">false</span>,
-            copy = {};
+            packetFunctions = <span class="hljs-variable language_">this</span>.<span class="hljs-property">packetFunctions</span>;
+
+        <span class="hljs-keyword">let</span> packetDefaultInclusions = items.<span class="hljs-property">includeDefaults</span> || <span class="hljs-literal">false</span>;
+
+        <span class="hljs-keyword">let</span> copy = {};
 
         <span class="hljs-keyword">if</span> (packetDefaultInclusions &amp;&amp; !<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(packetDefaultInclusions)) {
 
@@ -1083,9 +1090,9 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> matches = val.<span class="hljs-title function_">toString</span>().<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/</span>);
-        <span class="hljs-keyword">let</span> vars = matches[<span class="hljs-number">1</span>];
-        <span class="hljs-keyword">let</span> func = matches[<span class="hljs-number">2</span>];
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> matches = val.<span class="hljs-title function_">toString</span>().<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/</span>),
+            vars = matches[<span class="hljs-number">1</span>],
+            func = matches[<span class="hljs-number">2</span>];
 
         <span class="hljs-keyword">return</span> (<span class="hljs-title function_">xta</span>(vars, func)) ? <span class="hljs-string">`<span class="hljs-subst">${vars}</span>~~~<span class="hljs-subst">${func}</span>`</span> : <span class="hljs-literal">false</span>;
     };</pre></div></div>
@@ -1149,7 +1156,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">importPacket</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-        <span class="hljs-keyword">let</span> self = <span class="hljs-variable language_">this</span>;
+        <span class="hljs-keyword">const</span> self = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">const</span> getPacket = <span class="hljs-keyword">function</span>(<span class="hljs-params">url</span>) {
 
@@ -1243,7 +1250,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(items)) {
 
-            <span class="hljs-keyword">let</span> promises = [];
+            <span class="hljs-keyword">const</span> promises = [];
 
             items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> promises.<span class="hljs-title function_">push</span>(<span class="hljs-title function_">getPacket</span>(item)));
 
@@ -1326,15 +1333,15 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
             
             <div class="content"><div class='highlight'><pre>                            <span class="hljs-keyword">if</span> (update.<span class="hljs-property">outerHTML</span> &amp;&amp; update.<span class="hljs-property">host</span>) {
 
-                                <span class="hljs-keyword">let</span> myParent = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${update.host}</span>`</span>);
+                                <span class="hljs-keyword">const</span> myParent = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${update.host}</span>`</span>);
 
                                 <span class="hljs-keyword">if</span> (myParent) {
 
-                                    <span class="hljs-keyword">let</span> tempEl = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);
+                                    <span class="hljs-keyword">const</span> tempEl = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);
 
                                     tempEl.<span class="hljs-property">innerHTML</span> = update.<span class="hljs-property">outerHTML</span>;
 
-                                    <span class="hljs-keyword">let</span> myEl = tempEl.<span class="hljs-property">firstElementChild</span>;
+                                    <span class="hljs-keyword">const</span> myEl = tempEl.<span class="hljs-property">firstElementChild</span>;
 
                                     <span class="hljs-keyword">if</span> (myEl) {
 
@@ -1465,7 +1472,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">actionPacketFunctions</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">obj, item</span>) {
 
-        <span class="hljs-keyword">let</span> fItem = obj[item];
+        <span class="hljs-keyword">const</span> fItem = obj[item];
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(fItem) &amp;&amp; fItem !== <span class="hljs-literal">null</span> &amp;&amp; fItem.<span class="hljs-property">substring</span>) {
 
@@ -1537,8 +1544,9 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">clone</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-        <span class="hljs-keyword">let</span> myName = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
-            myPacket, myTicker, myAnchor;
+        <span class="hljs-keyword">const</span> myName = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
+
+        <span class="hljs-keyword">let</span> myPacket, myTicker, myAnchor;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = items.<span class="hljs-property">name</span> || <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
             
@@ -1685,7 +1693,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/base error - register() name not set: <span class="hljs-subst">${<span class="hljs-variable language_">this</span>}</span>`</span>);
 
-        <span class="hljs-keyword">let</span> arr = library[<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.lib}</span>names`</span>],
+        <span class="hljs-keyword">const</span> arr = library[<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.lib}</span>names`</span>],
             mylib = library[<span class="hljs-variable language_">this</span>.<span class="hljs-property">lib</span>];
 
         <span class="hljs-keyword">if</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">isArtefact</span>){
@@ -1723,7 +1731,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/base error - deregister() name not set: <span class="hljs-subst">${<span class="hljs-variable language_">this</span>}</span>`</span>);
 
-        <span class="hljs-keyword">let</span> arr = library[<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.lib}</span>names`</span>],
+        <span class="hljs-keyword">const</span> arr = library[<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.lib}</span>names`</span>],
             mylib = library[<span class="hljs-variable language_">this</span>.<span class="hljs-property">lib</span>];
 
         <span class="hljs-keyword">if</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">isArtefact</span>){

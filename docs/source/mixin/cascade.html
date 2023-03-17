@@ -435,6 +435,11 @@
                 </a>
               
                 
+                <a class="source" href="cell-key-functions.html">
+                  ./source/mixin/cell-key-functions.js
+                </a>
+              
+                
                 <a class="source" href="delta.html">
                   ./source/mixin/delta.js
                 </a>
@@ -578,7 +583,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -682,7 +687,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
         S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
@@ -741,10 +746,11 @@
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">let</span> floor = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>,
+            <span class="hljs-keyword">const</span> floor = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>,
                 groupnames = <span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>,
-                buckets = [],
-                mygroup, order;
+                buckets = [];
+            
+            <span class="hljs-keyword">let</span> mygroup, order;
 
             groupnames.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
@@ -1051,11 +1057,12 @@
 
         items = <span class="hljs-title function_">xtGet</span>(items, <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>, <span class="hljs-literal">false</span>);
 
+        <span class="hljs-keyword">const</span> results = [];
+
         <span class="hljs-keyword">if</span> (items) {
 
-            <span class="hljs-keyword">let</span> grp, result,
-                results = [];
-
+            <span class="hljs-keyword">let</span> grp, result;
+            
             <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
 
                 grp = group[<span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>[i]];
@@ -1064,12 +1071,11 @@
 
                     result = grp.<span class="hljs-title function_">getAllArtefactsAt</span>(items);
 
-                    <span class="hljs-keyword">if</span>(result) results = results.<span class="hljs-title function_">concat</span>(result);
+                    <span class="hljs-keyword">if</span> (result) results.<span class="hljs-title function_">push</span>(...result);
                 }
             }
-            <span class="hljs-keyword">return</span> results;
         }
-        <span class="hljs-keyword">return</span> [];
+        <span class="hljs-keyword">return</span> results;
     };</pre></div></div>
             
         </li>

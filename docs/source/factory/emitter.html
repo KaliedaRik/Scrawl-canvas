@@ -435,6 +435,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/cell-key-functions.html">
+                  ./source/mixin/cell-key-functions.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/delta.html">
                   ./source/mixin/delta.js
                 </a>
@@ -588,6 +593,7 @@
 <span class="hljs-keyword">import</span> { makeVector, requestVector, releaseVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { requestCoordinate, releaseCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./color.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { filterEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filterEngine.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;</pre></div></div>
@@ -2025,9 +2031,9 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">regularStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">const</span> {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
+    <span class="hljs-keyword">const</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
 
     <span class="hljs-keyword">let</span> deltaTime = <span class="hljs-number">16</span> / <span class="hljs-number">1000</span>,
         now = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
@@ -2095,7 +2101,7 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
 
     <span class="hljs-keyword">if</span> (showHitRadius) {
 
-        <span class="hljs-keyword">let</span> engine = host.<span class="hljs-property">engine</span>;
+        <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
 
         engine.<span class="hljs-title function_">save</span>();
         engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-number">1</span>;

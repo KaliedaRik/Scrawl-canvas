@@ -435,6 +435,11 @@
                 </a>
               
                 
+                <a class="source" href="cell-key-functions.html">
+                  ./source/mixin/cell-key-functions.js
+                </a>
+              
+                
                 <a class="source" href="delta.html">
                   ./source/mixin/delta.js
                 </a>
@@ -578,7 +583,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -693,7 +698,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
         S = P.<span class="hljs-property">setters</span>;
 
     G.<span class="hljs-property">sourceDimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
@@ -716,7 +721,7 @@
             
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">asset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>,
+        <span class="hljs-keyword">const</span> oldAsset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>,
             newAsset = (item &amp;&amp; item.<span class="hljs-property">name</span>) ? item.<span class="hljs-property">name</span> : item;
 
         <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; !oldAsset.<span class="hljs-property">substring</span>) oldAsset.<span class="hljs-title function_">unsubscribe</span>(<span class="hljs-variable language_">this</span>);
@@ -754,15 +759,15 @@
             
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">imageSource</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">let</span> results = <span class="hljs-title function_">importImage</span>(item);
+        <span class="hljs-keyword">const</span> results = <span class="hljs-title function_">importImage</span>(item);
 
         <span class="hljs-keyword">if</span> (results) {
 
-            <span class="hljs-keyword">let</span> myAsset = asset[results[<span class="hljs-number">0</span>]];
+            <span class="hljs-keyword">const</span> myAsset = asset[results[<span class="hljs-number">0</span>]];
 
             <span class="hljs-keyword">if</span> (myAsset) {
 
-                <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
+                <span class="hljs-keyword">const</span> oldAsset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
 
                 <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; oldAsset.<span class="hljs-property">unsubscribe</span>) oldAsset.<span class="hljs-title function_">unsubscribe</span>(<span class="hljs-variable language_">this</span>);
             
@@ -786,15 +791,15 @@
             
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">videoSource</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">let</span> result = <span class="hljs-title function_">importVideo</span>(item);
+        <span class="hljs-keyword">const</span> result = <span class="hljs-title function_">importVideo</span>(item);
 
         <span class="hljs-keyword">if</span> (result) {
 
-            <span class="hljs-keyword">let</span> myAsset = asset[result];
+            <span class="hljs-keyword">const</span> myAsset = asset[result];
 
             <span class="hljs-keyword">if</span> (myAsset) {
 
-                <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
+                <span class="hljs-keyword">const</span> oldAsset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
 
                 <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; oldAsset.<span class="hljs-property">unsubscribe</span>) oldAsset.<span class="hljs-title function_">unsubscribe</span>(<span class="hljs-variable language_">this</span>);
             
@@ -818,15 +823,15 @@
             
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">spriteSource</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">let</span> result = <span class="hljs-title function_">importSprite</span>(item);
+        <span class="hljs-keyword">const</span> result = <span class="hljs-title function_">importSprite</span>(item);
 
         <span class="hljs-keyword">if</span> (result) {
 
-            <span class="hljs-keyword">let</span> myAsset = asset[result];
+            <span class="hljs-keyword">const</span> myAsset = asset[result];
 
             <span class="hljs-keyword">if</span> (myAsset) {
 
-                <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
+                <span class="hljs-keyword">const</span> oldAsset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
 
                 <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; oldAsset.<span class="hljs-property">unsubscribe</span>) oldAsset.<span class="hljs-title function_">unsubscribe</span>(<span class="hljs-variable language_">this</span>);
             
@@ -863,11 +868,11 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">cleanAsset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">let</span> ast = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
+        <span class="hljs-keyword">const</span> ast = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
 
         <span class="hljs-keyword">if</span> (ast &amp;&amp; ast.<span class="hljs-property">substring</span>) {
 
-            <span class="hljs-keyword">let</span> myAsset = asset[ast];
+            <span class="hljs-keyword">const</span> myAsset = asset[ast];
 
             <span class="hljs-keyword">if</span> (myAsset) {
 
@@ -906,7 +911,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">videoAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">action, ...args</span>) {
 
-        <span class="hljs-keyword">let</span> myAsset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
+        <span class="hljs-keyword">const</span> myAsset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
 
         <span class="hljs-keyword">if</span> (myAsset &amp;&amp; myAsset.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Video&#x27;</span>) <span class="hljs-keyword">return</span> myAsset[action](...args);
     };</pre></div></div>
@@ -926,7 +931,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">videoPromiseAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">action, ...args</span>) {
 
-        <span class="hljs-keyword">let</span> myAsset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
+        <span class="hljs-keyword">const</span> myAsset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
 
         <span class="hljs-keyword">if</span> (myAsset &amp;&amp; myAsset.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Video&#x27;</span>) <span class="hljs-keyword">return</span> myAsset[action](...args);
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;Asset not a video&#x27;</span>);
@@ -1114,35 +1119,36 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">checkSpriteFrame</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">let</span> asset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
+        <span class="hljs-keyword">const</span> asset = <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>;
 
         <span class="hljs-keyword">if</span> (asset &amp;&amp; asset.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Sprite&#x27;</span> &amp;&amp; asset.<span class="hljs-property">manifest</span>) {
 
-            <span class="hljs-keyword">let</span> copyArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
+            <span class="hljs-keyword">const</span> copyArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteIsRunning</span>) {
 
-                <span class="hljs-keyword">let</span> last = <span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteLastFrameChange</span>,
+                <span class="hljs-keyword">const</span> last = <span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteLastFrameChange</span>,
                     choke = <span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteFrameDuration</span>,
                     now = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
 
                 <span class="hljs-keyword">if</span> (now &gt; last + choke) {
 
-                    <span class="hljs-keyword">let</span> manifest = asset.<span class="hljs-property">manifest</span>;
+                    <span class="hljs-keyword">const</span> manifest = asset.<span class="hljs-property">manifest</span>;
 
                     <span class="hljs-keyword">if</span> (manifest) {
 
-                        <span class="hljs-keyword">let</span> track = manifest[<span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteTrack</span>],
+                        <span class="hljs-keyword">const</span> track = manifest[<span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteTrack</span>],
                             len = track.<span class="hljs-property">length</span>,
-                            frame = <span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteCurrentFrame</span>,
                             loop = <span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteWillLoop</span>;
+
+                        <span class="hljs-keyword">let</span> frame = <span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteCurrentFrame</span>;
 
                         frame = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteForward</span>) ? frame + <span class="hljs-number">1</span> : frame - <span class="hljs-number">1</span>;
 
                         <span class="hljs-keyword">if</span> (frame &lt; <span class="hljs-number">0</span>) frame = (loop) ? len - <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
                         <span class="hljs-keyword">if</span> (frame &gt;= len) frame = (loop) ? <span class="hljs-number">0</span> : len - <span class="hljs-number">1</span>;
 
-                        <span class="hljs-keyword">let</span> [source, x, y, w, h] = track[frame];
+                        <span class="hljs-keyword">const</span> [source, x, y, w, h] = track[frame];
 
                         copyArray.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
                         copyArray.<span class="hljs-title function_">push</span>(x, y, w, h);
@@ -1150,11 +1156,11 @@
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">false</span>;
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">false</span>;
 
-                        <span class="hljs-keyword">let</span> sourceName = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-property">id</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-property">name</span>;
+                        <span class="hljs-keyword">const</span> sourceName = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-property">id</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-property">name</span>;
 
                         <span class="hljs-keyword">if</span> (source !== sourceName) {
 
-                            <span class="hljs-keyword">let</span> newSource = asset.<span class="hljs-property">sourceHold</span>[source];
+                            <span class="hljs-keyword">const</span> newSource = asset.<span class="hljs-property">sourceHold</span>[source];
 
                             <span class="hljs-keyword">if</span> (newSource) <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> = newSource;
                         }
@@ -1166,7 +1172,7 @@
             }
             <span class="hljs-keyword">else</span> {
 
-                <span class="hljs-keyword">let</span> [source, x, y, w, h] = asset.<span class="hljs-property">manifest</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteTrack</span>][<span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteCurrentFrame</span>],
+                <span class="hljs-keyword">const</span> [source, x, y, w, h] = asset.<span class="hljs-property">manifest</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteTrack</span>][<span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteCurrentFrame</span>],
                     [cx, cy, cw, ch] = copyArray;
 
                 <span class="hljs-keyword">if</span> (cx !== x || cy !== y || cw !== w || ch !== h) {

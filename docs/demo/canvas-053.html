@@ -1126,7 +1126,7 @@
     makeRender,
     makeSpiral,
     makeWheel,
-    observeAndUpdate,
+    makeUpdater,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
 
 <span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
@@ -1510,7 +1510,7 @@ canvas.set({
 
 }, <span class="hljs-string">&#x27;#easing&#x27;</span>);
 
-<span class="hljs-title function_">observeAndUpdate</span>({
+<span class="hljs-title function_">makeUpdater</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -1530,7 +1530,7 @@ canvas.set({
     },
 });
 
-<span class="hljs-title function_">observeAndUpdate</span>({
+<span class="hljs-title function_">makeUpdater</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,

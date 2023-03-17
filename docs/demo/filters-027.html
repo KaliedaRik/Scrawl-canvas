@@ -1134,7 +1134,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas1 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;canvas-1&#x27;</span>];
+<span class="hljs-keyword">const</span> canvas2 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;canvas-2&#x27;</span>];
 
 scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
 
@@ -1178,10 +1179,10 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dithered = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;dithered-image&#x27;</span>,
-
+    <span class="hljs-attr">group</span>: canvas1.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
 
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
     <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
@@ -1195,7 +1196,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 <span class="hljs-keyword">const</span> original = dithered.<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;original-image&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">group</span>: canvas2.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
     <span class="hljs-attr">filters</span>: [],
 });</pre></div></div>
             
@@ -1244,10 +1245,16 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
-    <span class="hljs-attr">target</span>: canvas,
+    <span class="hljs-attr">target</span>: [canvas1, canvas2],
+});
+
+scrawl.<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-reporter&quot;</span>,
+    <span class="hljs-attr">noTarget</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             
@@ -1269,7 +1276,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;converter&#x27;</span>,
 });
 
-scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
+scrawl.<span class="hljs-title function_">makeUpdater</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -1480,7 +1487,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(canvas, <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, [dithered, original]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>([canvas1, canvas2], <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, [dithered, original]);</pre></div></div>
             
         </li>
         
