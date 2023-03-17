@@ -48,17 +48,17 @@ export default function (P = Ωempty) {
 
         if (xt(item)) {
 
-            let getter = this.getters[item];
+            const getter = this.getters[item];
 
             if (getter) return getter.call(this);
 
             else {
 
-                let def = this.defs[item];
+                const def = this.defs[item];
 
                 if (typeof def != 'undefined') {
 
-                    let val = this[item];
+                    const val = this[item];
                     return (typeof val != 'undefined') ? val : def;
                 }
             }
@@ -254,15 +254,17 @@ export default function (P = Ωempty) {
             includeDefaults: true,
         }
 
-        let defs = this.defs,
+        const defs = this.defs,
             defKeys = Object.keys(defs),
             packetExclusions = this.packetExclusions,
             packetExclusionsByRegex = this.packetExclusionsByRegex,
             packetCoordinates = this.packetCoordinates,
             packetObjects = this.packetObjects,
-            packetFunctions = this.packetFunctions,
-            packetDefaultInclusions = items.includeDefaults || false,
-            copy = {};
+            packetFunctions = this.packetFunctions;
+
+        let packetDefaultInclusions = items.includeDefaults || false;
+
+        let copy = {};
 
         if (packetDefaultInclusions && !Array.isArray(packetDefaultInclusions)) {
 
@@ -329,9 +331,9 @@ export default function (P = Ωempty) {
 
         // The dotAll /s regex flag currently not supported by Firefox
         // let matches = val.toString().match(/\((.*?)\).*?\{(.*)\}/s);
-        let matches = val.toString().match(/\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/);
-        let vars = matches[1];
-        let func = matches[2];
+        const matches = val.toString().match(/\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/),
+            vars = matches[1],
+            func = matches[2];
 
         return (xta(vars, func)) ? `${vars}~~~${func}` : false;
     };
@@ -357,7 +359,7 @@ export default function (P = Ωempty) {
 // + Once we have the packet, we can further action it using actionPacket() 
     P.importPacket = function (items) {
 
-        let self = this;
+        const self = this;
 
         const getPacket = function(url) {
 
@@ -402,7 +404,7 @@ export default function (P = Ωempty) {
 
         if (Array.isArray(items)) {
 
-            let promises = [];
+            const promises = [];
 
             items.forEach(item => promises.push(getPacket(item)));
 
@@ -461,15 +463,15 @@ export default function (P = Ωempty) {
                             // Stack-based artefacts need a DOM element that they can pass into the factory
                             if (update.outerHTML && update.host) {
 
-                                let myParent = document.querySelector(`#${update.host}`);
+                                const myParent = document.querySelector(`#${update.host}`);
 
                                 if (myParent) {
 
-                                    let tempEl = document.createElement('div');
+                                    const tempEl = document.createElement('div');
 
                                     tempEl.innerHTML = update.outerHTML;
 
-                                    let myEl = tempEl.firstElementChild;
+                                    const myEl = tempEl.firstElementChild;
 
                                     if (myEl) {
 
@@ -528,7 +530,7 @@ export default function (P = Ωempty) {
 // `actionPacketFunctions` - internal helper function - creates functions from Strings
     P.actionPacketFunctions = function(obj, item) {
 
-        let fItem = obj[item];
+        const fItem = obj[item];
 
         if (xt(fItem) && fItem !== null && fItem.substring) {
 
@@ -566,8 +568,9 @@ export default function (P = Ωempty) {
 // `clone`
     P.clone = function (items = Ωempty) {
 
-        let myName = this.name,
-            myPacket, myTicker, myAnchor;
+        const myName = this.name;
+
+        let myPacket, myTicker, myAnchor;
 
         this.name = items.name || '';
 
@@ -632,7 +635,7 @@ export default function (P = Ωempty) {
 
         if (!xt(this.name)) throw new Error(`core/base error - register() name not set: ${this}`);
 
-        let arr = library[`${this.lib}names`],
+        const arr = library[`${this.lib}names`],
             mylib = library[this.lib];
 
         if(this.isArtefact){
@@ -659,7 +662,7 @@ export default function (P = Ωempty) {
 
         if (!xt(this.name)) throw new Error(`core/base error - deregister() name not set: ${this}`);
 
-        let arr = library[`${this.lib}names`],
+        const arr = library[`${this.lib}names`],
             mylib = library[this.lib];
 
         if(this.isArtefact){

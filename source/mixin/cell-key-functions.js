@@ -46,7 +46,7 @@ export default function (P = Ωempty) {
     // `setToDefaults` - internal function: set engine to match the State Factory's default attribute values
     P.setToDefaults = function () {
 
-        let items = this.state.defs,
+        const items = this.state.defs,
             state = this.state,
             engine = this.engine,
             isArray = Array.isArray;
@@ -83,16 +83,15 @@ export default function (P = Ωempty) {
 
         if (entityState) {
 
-            let engine, item,
-                changes = entityState.getChanges(entity, state),
+            const changes = entityState.getChanges(entity, state),
                 action = this.setEngineActions,
                 stylesArray = this.stylesArray;
 
             if (Object.keys(changes).length) {
 
-                engine = this.engine;
+                const engine = this.engine;
 
-                for (item in changes) {
+                for (const item in changes) {
 
                     action[item](changes[item], engine, stylesArray, entity, this);
                     state[item] = changes[item];
@@ -271,11 +270,11 @@ export default function (P = Ωempty) {
     // `getComputedFontSizes` - internal function - the Cell wrapper gets passed by Phrase entitys to its fontAttributes object, which then invokes it when calculating font sizes
     P.getComputedFontSizes = function () {
 
-        let host = this.getHost();
+        const host = this.getHost();
 
         if (host && host.domElement) {
 
-            let em = window.getComputedStyle(host.domElement),
+            const em = window.getComputedStyle(host.domElement),
                 rem = window.getComputedStyle(document.documentElement);
 
             return [parseFloat(em.fontSize), parseFloat(rem.fontSize), window.innerWidth, window.innerHeight];
@@ -287,7 +286,7 @@ export default function (P = Ωempty) {
     // `getEntityHits` - Returns an array of entity Objects responding 'true' to a checkHit call on them, for the Cell's current `.here` attribute coordinates. Used in particular with `Canvas.cascadeEventAction()` function
     P.getEntityHits = function () {
 
-        let response = [],
+        const response = [],
             results = [],
             resultNames = [];
 
@@ -304,7 +303,7 @@ export default function (P = Ωempty) {
 
             results.forEach(item => {
 
-                let art = item.artefact;
+                const art = item.artefact;
 
                 if (art.visibility && resultNames.indexOf(art.name) < 0) {
 
@@ -322,10 +321,11 @@ export default function (P = Ωempty) {
     // + doing it this way saves a massive amount of calculation that is otherwise required to correctly position the entity in the display
     P.rotateDestination = function (engine, x, y, entity) {
 
-        let self = (entity) ? entity : this,
+        const self = (entity) ? entity : this,
             mimic = self.mimic,
-            pivot = self.pivot,
-            reverse, upend,
+            pivot = self.pivot;
+
+        let reverse, upend,
             rotation = self.currentRotation;
 
         if (mimic && mimic.name && self.useMimicFlip) {
@@ -352,7 +352,7 @@ export default function (P = Ωempty) {
 
             rotation *= radian;
 
-            let cos = Math.cos(rotation),
+            const cos = Math.cos(rotation),
                 sin = Math.sin(rotation);
 
             engine.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), x, y);

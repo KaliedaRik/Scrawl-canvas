@@ -12,7 +12,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
         choke: 15,
 
@@ -54,7 +54,7 @@ export default function (P = Ωempty) {
 
 // #### Get, Set, deltaSet
 // These all route get/set/setDelta attribute changes through to the Gradient object
-    let S = P.setters, 
+    const S = P.setters, 
         D = P.deltaSetters;
 
     S.paletteStart = function (item) {
@@ -117,7 +117,7 @@ export default function (P = Ωempty) {
     // `installElement` - internal function, used by the constructor
     P.installElement = function (name) {
 
-        let element = document.createElement('canvas');
+        const element = document.createElement('canvas');
         element.id = name;
         this.element = element;
         this.engine = this.element.getContext('2d', {
@@ -125,7 +125,7 @@ export default function (P = Ωempty) {
         });
 
         // The color canvas allows us to map contour-like lines across a noise or rd asset's output.
-        let color = document.createElement('canvas');
+        const color = document.createElement('canvas');
         color.id = `${name}-color`;
         color.width = 256;
         color.height = 1;
@@ -209,10 +209,11 @@ export default function (P = Ωempty) {
                 element.width = width;
                 element.height = height;
 
-                let img = engine.getImageData(0, 0, width, height),
+                const img = engine.getImageData(0, 0, width, height),
                     iData = img.data,
-                    len = width * height,
-                    i, v, c;
+                    len = width * height;
+                
+                let i, v, c;
 
                 const now = Date.now();
 
@@ -224,14 +225,14 @@ export default function (P = Ωempty) {
 
                 if (palette.dirtyPalette) palette.recalculate();
 
-                let G = colorEngine.createLinearGradient(0, 0, 255, 0);
+                const G = colorEngine.createLinearGradient(0, 0, 255, 0);
 
                 gradient.addStopsToGradient(G, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
 
                 colorEngine.fillStyle = G;
                 colorEngine.fillRect(0, 0, 256, 1);
 
-                let gData = colorEngine.getImageData(0, 0, 256, 1).data;
+                const gData = colorEngine.getImageData(0, 0, 256, 1).data;
 
                 for (i = 0; i < len; i++) {
 

@@ -15,7 +15,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // Scrawl-canvas recognises five shapes, separated by four breakpoints: 
 // + `banner`
@@ -64,9 +64,9 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
-    P.packetFunctions = pushUnique(P.packetFunctions, ['actionBannerShape', 'actionLandscapeShape', 'actionRectangleShape', 'actionPortraitShape', 'actionSkyscraperShape']);
+    P.packetFunctions = pushUnique(P.packetFunctions, ['actionBannerShape', 'actionLandscapeShape', 'actionRectangleShape', 'actionPortraitShape', 'actionSkyscraperShape', 'actionSmallestArea', 'actionSmallerArea', 'actionRegularArea', 'actionLargerArea', 'actionLargestArea']);
 
-
+    
 // #### Clone management
 // No additional clone functionality defined here
 
@@ -76,7 +76,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let G = P.getters,
+    const G = P.getters,
         S = P.setters;
 
 // Get __displayShape__ - returns the current display shape for the Canvas or Stack artefact. Returns a string whose value can be one of `banner`, `landscape`, `rectangle`, `portrait`, or `skyscraper`.
@@ -103,7 +103,7 @@ export default function (P = Ωempty) {
 // Set __displayShapeBreakpoints__ - breakpoints can be set individually, or alternatively they can be supplied in an object keyed to this attribute
     S.displayShapeBreakpoints = function (items = Ωempty) {
 
-        for (let [key, val] of Object.entries(items)) {
+        for (const [key, val] of Object.entries(items)) {
 
             if (isa_number(val)) {
 
@@ -329,11 +329,11 @@ export default function (P = Ωempty) {
 
         this.dirtyDisplayShape = false;
 
-        let [width, height] = this.currentDimensions;
+        const [width, height] = this.currentDimensions;
 
         if (width > 0 && height > 0) {
 
-            let ratio = width / height,
+            const ratio = width / height,
                 current = this.currentDisplayShape,
                 banner = this.breakToBanner,
                 landscape = this.breakToLandscape,
@@ -404,11 +404,11 @@ export default function (P = Ωempty) {
 
         this.dirtyDisplayArea = false;
 
-        let [width, height] = this.currentDimensions;
+        const [width, height] = this.currentDimensions;
 
         if (width > 0 && height > 0) {
 
-            let area = width * height,
+            const area = width * height,
                 current = this.currentDisplayArea,
                 largest = this.breakToLargest,
                 larger = this.breakToLarger,

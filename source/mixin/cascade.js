@@ -16,7 +16,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // The __groups__ attribute holds the String names of all the Group objects associated with the controller object.
         groups: null,
@@ -43,7 +43,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let G = P.getters,
+    const G = P.getters,
         S = P.setters;
 
 // __groups__
@@ -68,10 +68,11 @@ export default function (P = Ωempty) {
 
             this.batchResort = false;
 
-            let floor = Math.floor,
+            const floor = Math.floor,
                 groupnames = this.groups,
-                buckets = [],
-                mygroup, order;
+                buckets = [];
+            
+            let mygroup, order;
 
             groupnames.forEach(name => {
 
@@ -226,11 +227,12 @@ export default function (P = Ωempty) {
 
         items = xtGet(items, this.here, false);
 
+        const results = [];
+
         if (items) {
 
-            let grp, result,
-                results = [];
-
+            let grp, result;
+            
             for (let i = this.groups.length - 1; i >= 0; i--) {
 
                 grp = group[this.groups[i]];
@@ -239,12 +241,11 @@ export default function (P = Ωempty) {
 
                     result = grp.getAllArtefactsAt(items);
 
-                    if(result) results = results.concat(result);
+                    if (result) results.push(...result);
                 }
             }
-            return results;
         }
-        return [];
+        return results;
     };
 
 // Return the prototype

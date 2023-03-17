@@ -11,7 +11,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // __delta__ - a Javascript object containing `{key:value, key:value, etc}` attributes. 
 // + As part of the Display cycle, delta values get added to artefact attribute values - this is a very simple form of animation.
@@ -62,7 +62,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let S = P.setters,
+    const S = P.setters,
         D = P.deltaSetters;
 
 // __delta__
@@ -94,7 +94,7 @@ export default function (P = Ωempty) {
 // `reverseByDelta` - The opposite action to 'updateByDelta'; values in the __delta__ attribute object will be subtracted from the current value for that Scrawl-canvas object.
     P.reverseByDelta = function () {
 
-        let temp = {};
+        const temp = {};
         
         const delta = this.delta,
             deltaKeys = Object.keys(delta),
@@ -117,6 +117,8 @@ export default function (P = Ωempty) {
         return this;
     };
 
+    const deltaConstraintsLongCheck = ['startX', 'startY', 'handleX', 'handleY', 'offsetX', 'offsetY', 'width', 'height'];
+    const deltaConstraintsShortCheck = ['startY', 'handleY', 'offsetY', 'height'];
     P.performDeltaConstraintsChecks = function () {
 
         const {delta, deltaConstraints} = this;
@@ -140,7 +142,7 @@ export default function (P = Ωempty) {
 
                     if (isString) {
 
-                        keyIndex = ['startX', 'startY', 'handleX', 'handleY', 'offsetX', 'offsetY', 'width', 'height'].indexOf(key);
+                        keyIndex = deltaConstraintsLongCheck.indexOf(key);
                         valArray = false;
                         valIndex = 0;
 
@@ -151,7 +153,7 @@ export default function (P = Ωempty) {
                             else if (keyIndex < 6) valArray = this.offset;
                             else if (keyIndex < 8) valArray = this.dimensions;
 
-                            if (['startY', 'handleY', 'offsetY', 'height'].indexOf(key) >= 0) valIndex = 1;
+                            if (deltaConstraintsShortCheck.indexOf(key) >= 0) valIndex = 1;
 
                             val = valArray[valIndex];
                         }

@@ -32,7 +32,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // __sourceLoaded__ - A flag to indicate that the source image or video has completed sufficient loading (or streaming) to be usefully consumed by Picture entitys and Pattern styles.
 // + __Note that this flag cannot be directly or indirectly set.__ The asset wrapper's functionality will handle the checking of load progress, and notify its subscribers that the load has completed as-and-when required.
@@ -84,7 +84,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let G = P.getters, 
+    const G = P.getters, 
         S = P.setters, 
         D = P.deltaSetters;
 
@@ -126,7 +126,7 @@ export default function (P = Ωempty) {
 
         if (sub && sub.name) {
 
-            let name = sub.name;
+            const name = sub.name;
 
             if (this.subscribers.every(item => item.name !== name)) this.subscribeAction(sub);
         }
@@ -150,7 +150,7 @@ export default function (P = Ωempty) {
 
         if (sub && sub.name) {
 
-            let name = sub.name,
+            const name = sub.name,
                 index = this.subscribers.findIndex(item => item.name === name);
 
             if (index >= 0) {
