@@ -9,7 +9,7 @@ import {
     makePicture,
     makeRender,
     makeSpiral,
-    observeAndUpdate,
+    makeUpdater,
 
     makeFilter,
 } from '../source/scrawl.js';
@@ -180,7 +180,7 @@ makeRender({
 
 // #### User interaction
 // Observer functionality for the ___spiral___ Shape entity
-observeAndUpdate({
+makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -205,7 +205,7 @@ observeAndUpdate({
 });
 
 // Observer functionality for the ___lorem___ Phrase entity
-observeAndUpdate({
+makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

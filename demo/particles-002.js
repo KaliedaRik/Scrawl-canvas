@@ -303,7 +303,7 @@ const useArtefact = function () {
 scrawl.addNativeListener(['input', 'change'], useArtefact, '#artefact');
 
 // Setup other form observer functionality
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -321,7 +321,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -340,7 +340,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

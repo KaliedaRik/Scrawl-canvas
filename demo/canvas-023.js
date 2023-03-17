@@ -180,7 +180,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Observer functionality for manipulating the Grid entity's attributes
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

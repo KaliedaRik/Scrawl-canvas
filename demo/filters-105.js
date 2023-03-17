@@ -145,7 +145,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Filter updates
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.filter-control',

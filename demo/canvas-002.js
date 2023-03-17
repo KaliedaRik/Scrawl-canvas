@@ -8,7 +8,7 @@ import {
     makeBlock,
     makeRender,
     makeWheel,
-    observeAndUpdate,
+    makeUpdater,
 } from '../source/scrawl.js'
 
 import { reportSpeed, killArtefact } from './utilities.js';
@@ -208,7 +208,7 @@ addNativeListener('touchmove', (e) => {
 }, canvas.domElement);
 
 // Setup form observer functionality.
-observeAndUpdate({
+makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

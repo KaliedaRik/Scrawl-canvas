@@ -177,7 +177,7 @@ scrawl.makeDragZone({
 });
 
 // Setup form observer functionality for display block
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

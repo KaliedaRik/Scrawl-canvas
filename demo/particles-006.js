@@ -234,7 +234,7 @@ scrawl.addNativeListener('touchmove', (e) => {
 }, canvas.domElement);
 
 // Setup form observer functionality
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -250,7 +250,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

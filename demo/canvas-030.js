@@ -219,7 +219,7 @@ scrawl.makeRender({
 
 
 // #### More user interaction
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

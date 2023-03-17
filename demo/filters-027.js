@@ -83,7 +83,7 @@ const converter = scrawl.makeColor({
     name: 'converter',
 });
 
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['change'],
     origin: '.controlItem',

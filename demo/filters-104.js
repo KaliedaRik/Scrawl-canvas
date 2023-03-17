@@ -276,7 +276,7 @@ const demoAnimation = scrawl.makeRender({
 
 // #### User interaction
 // Update pattern values
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['change', 'input'],
     origin: '.patternCell',
@@ -299,7 +299,7 @@ scrawl.observeAndUpdate({
 });
 
 // Update filter dimensions
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['change', 'input'],
     origin: '.filterCell',
@@ -316,7 +316,7 @@ scrawl.observeAndUpdate({
 });
 
 // Update gradient choice
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['change', 'input'],
     origin: '.filterBlock',

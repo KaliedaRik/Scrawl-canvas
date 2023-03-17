@@ -86,7 +86,7 @@ scrawl.addNativeListener(['touchmove'], (e) => {
 }, stack.domElement);
 
 // Event listeners
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

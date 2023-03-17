@@ -133,7 +133,7 @@ scrawl.addNativeListener(['touchmove'], (e) => {
 }, stack.domElement);
 
 // Setup form observer functionality
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -175,7 +175,7 @@ scrawl.observeAndUpdate({
 });
 
 // `target` doesn't have to be a Scrawl-canvas object. We can use the object's name, though we also have to tell the function where the object lives in the Scrawl-canvas library (usually this will be 'artefact')
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -193,7 +193,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-// Using the Scrawl-canvas listener functions directly, in this case because we want to update more than one attribute in a single set action, which the observeAndUpdate function cannot do (because: too much of an edge case to handle)
+// Using the Scrawl-canvas listener functions directly, in this case because we want to update more than one attribute in a single set action, which the makeUpdater function cannot do (because: too much of an edge case to handle)
 let events = (e) => {
 
     e.preventDefault();

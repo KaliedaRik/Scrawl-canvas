@@ -746,7 +746,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
     }
 }, '#entity');
 
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['change'],
     origin: '.controlItem',

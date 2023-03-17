@@ -491,7 +491,7 @@ const updateProgress = function (e) {
 };
 scrawl.addNativeListener(['input', 'change'], updateProgress, '#progress');
 
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '#roll',

@@ -127,7 +127,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
 }, '#memoizeFilterOutput');
 
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -148,7 +148,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

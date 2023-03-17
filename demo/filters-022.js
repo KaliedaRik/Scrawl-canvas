@@ -161,7 +161,7 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

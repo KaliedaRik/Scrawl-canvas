@@ -252,7 +252,7 @@ addImageDragAndDrop(canvas, '#my-image-store', piccy);
 
 // #### More user interaction
 // Loom functionality
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -333,7 +333,7 @@ const updateFilter = (e) => {
 scrawl.addNativeListener(['input', 'change'], updateFilter, '#filter');
 
 // Picture entity copy start and copy dimensions
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

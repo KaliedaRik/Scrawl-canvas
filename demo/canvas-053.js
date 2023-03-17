@@ -11,7 +11,7 @@ import {
     makeRender,
     makeSpiral,
     makeWheel,
-    observeAndUpdate,
+    makeUpdater,
 } from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
@@ -243,7 +243,7 @@ addNativeListener(['input', 'change'], (e) => {
 
 }, '#easing');
 
-observeAndUpdate({
+makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -263,7 +263,7 @@ observeAndUpdate({
     },
 });
 
-observeAndUpdate({
+makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

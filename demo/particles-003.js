@@ -288,7 +288,7 @@ scrawl.makeDragZone({
 
 
 // Setup form observer functionality
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

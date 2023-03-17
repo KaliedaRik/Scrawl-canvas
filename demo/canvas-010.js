@@ -9,7 +9,7 @@ import {
     library as L,
     makePicture,
     makeRender,
-    observeAndUpdate,
+    makeUpdater,
 } from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
@@ -113,7 +113,7 @@ importMediaStream({
 
     // Adding some controls to manipulate the media stream's display
     // + For this demo, we'll use the existing controls setup for manipulating the DOM video
-    observeAndUpdate({
+    makeUpdater({
 
         event: ['input', 'change'],
         origin: '.controlItem',
@@ -175,7 +175,7 @@ makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-observeAndUpdate({
+makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

@@ -8,7 +8,7 @@ import {
     makePhrase,
     makeRender,
     makeWheel,
-    observeAndUpdate,
+    makeUpdater,
 } from '../source/scrawl.js'
 
 import { reportSpeed } from './utilities.js';
@@ -139,7 +139,7 @@ makeRender({
 // Setup form observer functionality
 //
 // KNOWN ISSUE: in the mix between updating scale, font size and font family, the height calculation occasionally glitches, giving an incorrect height value for the Phrase entity
-observeAndUpdate({
+makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

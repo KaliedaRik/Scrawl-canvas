@@ -354,7 +354,7 @@ updateOutput();
 
 // #### User interaction
 // Top form (for opacity, use mixed channel controls)
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

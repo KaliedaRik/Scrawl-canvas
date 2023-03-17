@@ -592,7 +592,7 @@ const initializeDomEntityEditor = (items = {}, scrawl) => {
             updates[k] = v.glue;
         }
 
-        observer = scrawl.observeAndUpdate({
+        observer = scrawl.makeUpdater({
 
             event: ['input', 'change'],
             origin: '.sc-dee-field-controller',

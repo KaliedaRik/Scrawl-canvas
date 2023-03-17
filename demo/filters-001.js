@@ -9,7 +9,7 @@ import {
     makeFilter,
     makePicture,
     makeRender,
-    observeAndUpdate,
+    makeUpdater,
 } from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop } from './utilities.js';
@@ -84,7 +84,7 @@ const demoAnimation = makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-observeAndUpdate({
+makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
@@ -123,7 +123,7 @@ addNativeListener(['update', 'change'], (e) => {
 
 }, '#blurFilter');
 
-observeAndUpdate({
+makeUpdater({
 
     event: ['input', 'change'],
     origin: '#memoizeFilterOutput',

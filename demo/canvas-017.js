@@ -7,7 +7,7 @@ import {
     makePhrase,
     makeRender,
     makeWheel,
-    observeAndUpdate,
+    makeUpdater,
 } from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
@@ -101,7 +101,7 @@ makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-observeAndUpdate({
+makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',

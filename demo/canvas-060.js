@@ -104,7 +104,7 @@ const demoAnimation = scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-scrawl.observeAndUpdate({
+scrawl.makeUpdater({
 
     event: ['input', 'change'],
     origin: '.controlItem',
