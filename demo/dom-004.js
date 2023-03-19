@@ -4,7 +4,7 @@
 // [Run code](../../demo/dom-004.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, killTicker } from './utilities.js';
+import { reportSpeed, killTicker, reportFullLibrary } from './utilities.js';
 
 
 // #### Scene setup
@@ -69,27 +69,7 @@ let tween = scrawl.makeTween({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-const report = reportSpeed('#reportmessage', function () {
-
-    const lib = scrawl.library;
-
-    let t = Object.keys(lib.tween),
-        a = Object.keys(lib.artefact),
-        n = Object.keys(lib.animation),
-        k = Object.keys(lib.animationtickers),
-        e = Object.keys(lib.element),
-        tn = lib.tweennames.length,
-        an = lib.artefactnames.length,
-        nn = lib.animationnames.length,
-        kn = lib.animationtickersnames.length,
-        en = lib.elementnames.length;
-
-    return `Tween - ${t.length}, ${tn}: ${t.join(', ')}
-Artefact - ${a.length}, ${an}: ${a.join(', ')}
-Element - ${e.length}, ${en}: ${e.join(', ')}
-Tickers - ${k.length}, ${kn}: ${k.join(', ')}
-Animation - ${n.length}, ${nn}: ${n.join(', ')}`;
-});
+const report = reportSpeed('#reportmessage', () => reportFullLibrary(scrawl));
 
 
 // Create the Display cycle animation

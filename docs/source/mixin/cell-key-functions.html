@@ -997,8 +997,9 @@
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getEntityHits</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         <span class="hljs-keyword">const</span> response = [],
-            results = [],
             resultNames = [];
+
+        <span class="hljs-keyword">let</span> results = [];
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">groupBuckets</span>) {
 

@@ -287,8 +287,9 @@ export default function (P = Ωempty) {
     P.getEntityHits = function () {
 
         const response = [],
-            results = [],
             resultNames = [];
+
+        let results = [];
 
         if (this.groupBuckets) {
 
