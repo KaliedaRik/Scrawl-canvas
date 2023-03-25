@@ -33,13 +33,13 @@ const CellFragment = function (name) {
 
 
 // #### CellFragment prototype
-let P = CellFragment.prototype = Object.create(Object.prototype);
+const P = CellFragment.prototype = Object.create(Object.prototype);
 P.type = 'CellFragment';
 
 
 // #### Mixins
-P = baseMix(P);
-P = cellMix(P);
+baseMix(P);
+cellMix(P);
 
 
 // #### Packet/Clone management

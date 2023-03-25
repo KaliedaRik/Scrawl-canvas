@@ -35,18 +35,18 @@ const FontAttributes = function (items = Ωempty) {
 
 
 // #### FontAttributes prototype
-let P = FontAttributes.prototype = Object.create(Object.prototype);
+const P = FontAttributes.prototype = Object.create(Object.prototype);
 P.type = 'FontAttributes';
 P.lib = 'fontattribute';
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### FontAttributes attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __font__ - pseudo-attribute String which gets broken down into its component parts.
 // + Once the breakdown completes the font string gets reassembled and then passed through a &lt;canvas> element's context engine to determine the actual font String that will be used by the engine. This value gets stored in the __temperedFontString__ attribute.
@@ -140,7 +140,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -611,16 +611,10 @@ P.update = function (items) {
 
 
 // #### Factory
-const makeFontAttributes = function (items) {
+export const makeFontAttributes = function (items) {
 
     if (!items) return false;
     return new FontAttributes(items);
 };
 
 constructors.FontAttributes = FontAttributes;
-
-
-// #### Exports
-export {
-    makeFontAttributes,
-};

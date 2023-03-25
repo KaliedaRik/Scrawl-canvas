@@ -51,7 +51,7 @@ const ParticleHistory = function (items) {
 
 
 // #### ParticleHistory prototype
-let P = ParticleHistory.prototype = Object.create(Array.prototype);
+const P = ParticleHistory.prototype = Object.create(Array.prototype);
 P.constructor = ParticleHistory;
 P.type = 'ParticleHistory';
 
@@ -77,7 +77,7 @@ P.type = 'ParticleHistory';
 const particleHistoryPool = [];
 
 // `exported function` - retrieve a ParticleHistory from the history pool
-const requestParticleHistoryObject = function (items, y) {
+export const requestParticleHistoryObject = function (items, y) {
 
     if (!particleHistoryPool.length) particleHistoryPool.push(new ParticleHistory());
 
@@ -87,7 +87,7 @@ const requestParticleHistoryObject = function (items, y) {
 };
 
 // `exported function` - return a ParticleHistory array to the history pool. Failing to return arrays to the pool may lead to more inefficient code and possible memory leaks.
-const releaseParticleHistoryObject = function (h) {
+export const releaseParticleHistoryObject = function (h) {
 
     if (h && h.type === 'ParticleHistory') {
 
@@ -101,18 +101,10 @@ const releaseParticleHistoryObject = function (h) {
 
 
 // #### Factory
-const makeParticleHistory = function (items) {
+export const makeParticleHistory = function (items) {
 
     if (!items) return false;
     return new ParticleHistory(items);
 };
 
 constructors.ParticleHistory = ParticleHistory;
-
-
-// #### Exports
-export {
-    makeParticleHistory,
-    requestParticleHistoryObject,
-    releaseParticleHistoryObject,
-};

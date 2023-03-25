@@ -31,7 +31,7 @@ const ImageAsset = function (items = Ωempty) {
 
 
 // #### ImageAsset prototype
-let P = ImageAsset.prototype = Object.create(Object.prototype);
+const P = ImageAsset.prototype = Object.create(Object.prototype);
 P.type = 'Image';
 P.lib = 'asset';
 P.isArtefact = false;
@@ -39,14 +39,14 @@ P.isAsset = true;
 
 
 // #### Mixins
-P = baseMix(P);
-P = assetMix(P);
+baseMix(P);
+assetMix(P);
 
 
 // #### ImageAsset attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __intrinsicDimensions__ - Javascript object which defines the intrinsic dimensions of each image contributing to an &lt;img> element's `srcset` attribute. Can also be set in Javascript code:
 // ```
@@ -82,7 +82,7 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -184,8 +184,8 @@ P.checkSource = function (width, height) {
 };
 
 // `gettableImageAssetAtributes`, `settableImageAssetAtributes` - exported Arrays.
-const gettableImageAssetAtributes = [];
-const settableImageAssetAtributes = [];
+export const gettableImageAssetAtributes = [];
+export const settableImageAssetAtributes = [];
 
 
 // #### Importing images into Scrawl-canvas
@@ -204,7 +204,7 @@ const settableImageAssetAtributes = [];
 // + __className__ string - list of classes to be added to the new img element.
 //
 // Note: strings and object arguments can be mixed - Scrawl-canvas will interrrogate each argument in turn and take appropriate action to load the assets.
-const importImage = function (...args) {
+export const importImage = function (...args) {
 
     let reg = /.*\/(.*?)\./,
         results = [];
@@ -286,7 +286,7 @@ const importImage = function (...args) {
 // + Required argument is a query string used to search the dom for matching elements
 // + Scrawl-canvas does not remove &lt;img> elements from the DOM (this is a breaking change from Scrawl-canvas v7.0). 
 // + If &lt;img> elements should not appear, developers need to hide them in some way - for instance by positioning them (or their parent element) absolutely to the top or left of the display; or by giving their parent element zero width/height; or by setting their CSS: `display: none;`, `opacity: 0;`, etc.
-const importDomImage = function (query) {
+export const importDomImage = function (query) {
 
     let reg = /.*\/(.*?)\./;
 
@@ -330,7 +330,7 @@ const importDomImage = function (query) {
 // + If `stashAsAsset` argument is a String, the asset will be created using that String as its id/name attribute
 
 // `createImageFromCell`
-const createImageFromCell = function (item, stashAsAsset = false) {
+export const createImageFromCell = function (item, stashAsAsset = false) {
 
     let mycell = (item.substring) ? cell[item] || canvas[item] : item;
 
@@ -345,7 +345,7 @@ const createImageFromCell = function (item, stashAsAsset = false) {
 };
 
 // `createImageFromGroup`
-const createImageFromGroup = function (item, stashAsAsset = false) {
+export const createImageFromGroup = function (item, stashAsAsset = false) {
 
     let mygroup;
 
@@ -366,7 +366,7 @@ const createImageFromGroup = function (item, stashAsAsset = false) {
 };
 
 // `createImageFromEntity`
-const createImageFromEntity = function (item, stashAsAsset = false) {
+export const createImageFromEntity = function (item, stashAsAsset = false) {
 
     let myentity = (item.substring) ? artefact[item] : item;
 
@@ -380,26 +380,10 @@ const createImageFromEntity = function (item, stashAsAsset = false) {
 
 
 // #### Factory
-const makeImageAsset = function (items) {
+export const makeImageAsset = function (items) {
 
     if (!items) return false;
     return new ImageAsset(items);
 };
 
 constructors.ImageAsset = ImageAsset;
-
-
-// #### Exports
-export {
-    makeImageAsset,
-
-    gettableImageAssetAtributes,
-    settableImageAssetAtributes,
-
-    importImage,
-    importDomImage,
-
-    createImageFromCell,
-    createImageFromGroup,
-    createImageFromEntity,
-};

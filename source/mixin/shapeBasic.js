@@ -19,11 +19,11 @@ export default function (P = Ωempty) {
 
 // #### Mixins
 // + [entity](../mixin/entity.html)
-    P = entityMix(P);
+    entityMix(P);
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
         species: '',
         useAsPath: false,
@@ -67,7 +67,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let G = P.getters,
+    const G = P.getters,
         S = P.setters,
         D = P.deltaSetters;
 
@@ -649,7 +649,4 @@ export default function (P = Ωempty) {
 
         return [floor(x - hX), floor(y - hY), ceil(w), ceil(h), sX, sY];
     };
-
-// Return the prototype
-    return P;
 };

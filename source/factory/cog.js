@@ -57,7 +57,7 @@ const Cog = function (items = Ωempty) {
 
 
 // #### Cog prototype
-let P = Cog.prototype = Object.create(Object.prototype);
+const P = Cog.prototype = Object.create(Object.prototype);
 P.type = 'Cog';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -67,8 +67,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [shapeBasic](../mixin/shapeBasic.html)
-P = baseMix(P);
-P = shapeMix(P);
+baseMix(P);
+shapeMix(P);
 
 
 // #### Cog attributes
@@ -82,7 +82,7 @@ P = shapeMix(P);
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 // + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     outerRadius: 0,
     innerRadius: 0,
@@ -110,7 +110,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-let S = P.setters,
+const S = P.setters,
     D = P.deltaSetters;
 
 // __outerRadius__, __innerRadius__
@@ -452,7 +452,7 @@ P.makeCogPath = function () {
 //   method: 'fillAndDraw',
 // });
 // ```
-const makeCog = function (items) {
+export const makeCog = function (items) {
 
     if (!items) return false;
     items.species = 'cog';
@@ -460,9 +460,3 @@ const makeCog = function (items) {
 };
 
 constructors.Cog = Cog;
-
-
-// #### Exports
-export {
-    makeCog,
-};

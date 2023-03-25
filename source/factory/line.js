@@ -58,7 +58,7 @@ const Line = function (items = Ωempty) {
 
 
 // #### Line prototype
-let P = Line.prototype = Object.create(Object.prototype);
+const P = Line.prototype = Object.create(Object.prototype);
 P.type = 'Line';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -69,9 +69,9 @@ P.isAsset = false;
 // + [base](../mixin/base.html)
 // + [shapeBasic](../mixin/shapeBasic.html)
 // + [shapeCurve](../mixin/shapeCurve.html)
-P = baseMix(P);
-P = shapeMix(P);
-P = curveMix(P);
+baseMix(P);
+shapeMix(P);
+curveMix(P);
 
 
 // #### Line attributes
@@ -191,7 +191,7 @@ P.preparePinsForStamp = function () {
 //     method: 'draw',
 // });
 // ```
-const makeLine = function (items) {
+export const makeLine = function (items) {
 
     if (!items) return false;
     items.species = 'line';
@@ -199,9 +199,3 @@ const makeLine = function (items) {
 };
 
 constructors.Line = Line;
-
-
-// #### Exports
-export {
-    makeLine,
-};

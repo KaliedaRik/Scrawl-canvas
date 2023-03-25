@@ -12,7 +12,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // __path__ - reference Shape entity object. Can also be set using the Shape's name-String.
         path: '',
@@ -45,7 +45,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let S = P.setters,
+    const S = P.setters,
         D = P.deltaSetters;
 
 
@@ -152,8 +152,4 @@ export default function (P = Ωempty) {
         }
         return false;
     };
-
-
-// Return the prototype
-    return P;
 };

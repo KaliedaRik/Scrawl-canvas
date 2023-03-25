@@ -34,12 +34,12 @@ const State = function (items = Ωempty) {
 
 
 // #### State prototype
-let P = State.prototype = Object.create(Object.prototype);
+const P = State.prototype = Object.create(Object.prototype);
 P.type = 'State';
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### State attributes
@@ -233,7 +233,7 @@ P.get = function (item) {
     else return undef;
 };
 
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 

@@ -68,7 +68,7 @@ const Mesh = function (items = Ωempty) {
 
 
 // #### Mesh prototype
-let P = Mesh.prototype = Object.create(Object.prototype);
+const P = Mesh.prototype = Object.create(Object.prototype);
 P.type = 'Mesh';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -76,15 +76,15 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
-P = deltaMix(P);
-P = anchorMix(P);
+baseMix(P);
+deltaMix(P);
+anchorMix(P);
 
 
 // #### Mesh attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __net__ - A Mesh entity requires a Net entity, set to generate a weak or strong net, to supply Particle objects to act as its mapping coordinates.
     net: null,
@@ -247,7 +247,7 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -1116,16 +1116,10 @@ P.checkHit = function (items = [], mycell) {
 //     onLeave: function () { this.set({ lineWidth: 2 }) },
 // });
 // ```
-const makeMesh = function (items) {
+export const makeMesh = function (items) {
 
     if (!items) return false;
     return new Mesh(items);
 };
 
 constructors.Mesh = Mesh;
-
-
-// #### Exports
-export {
-    makeMesh,
-};

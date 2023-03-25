@@ -64,7 +64,7 @@ const Particle = function (items = Ωempty) {
 
 
 // #### Particle prototype
-let P = Particle.prototype = Object.create(Object.prototype);
+const P = Particle.prototype = Object.create(Object.prototype);
 
 // Particles have their own section in the Scrawl-canvas library. They are not artefacts or assets.
 P.type = 'Particle';
@@ -74,12 +74,12 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### Particle attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // The __position__ attribute represents a particle's world coordinate, and is held in an `{x:value, y:value, z:value}` Vector object. The default values are `{x:0, y:0, z:0}`, placing the artifact at the Cell canvas's top-left corner. We can set the position using the __positionX__, __positionY__ and __positionZ__ pseudo-attributes.
     position: null,
@@ -146,7 +146,7 @@ P.factoryKill = function () {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -379,7 +379,7 @@ P.run = function (timeKill, radiusKill, killBeyondCanvas) {
 
 // #### Factory
 // Scrawl-canvas does not expose the particle factory functions in the scrawl object. Instead, particles are consumed by the physics-based entitys: [Tracer](./tracer.html); [Emitter](./emitter.html); [Net](./net.html).
-const makeParticle = function (items) {
+export const makeParticle = function (items) {
 
     if (!items) return false;
     return new Particle(items);
@@ -393,7 +393,7 @@ constructors.Particle = Particle;
 const particlePool = [];
 
 // `exported function` - retrieve a Particle from the particle pool
-const requestParticle = function (items) {
+export const requestParticle = function (items) {
 
     if (!particlePool.length) particlePool.push(new Particle());
 
@@ -405,7 +405,7 @@ const requestParticle = function (items) {
 };
 
 // `exported function` - return a Particle to the particle pool. Failing to return Particles to the pool may lead to more inefficient code and possible memory leaks.
-const releaseParticle = function (item) {
+export const releaseParticle = function (item) {
 
     if (item && item.type === 'Particle') {
 
@@ -502,13 +502,4 @@ const particleEngines = {
 
         releaseVector(acc1, acc2, acc3, acc4, acc5, vel);
     },
-};
-
-
-// #### Exports
-export {
-    makeParticle,
-
-    requestParticle,
-    releaseParticle,
 };

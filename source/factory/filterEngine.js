@@ -37,7 +37,7 @@ const FilterEngine = function () {
 
 
 // #### FilterEngine prototype
-let P = FilterEngine.prototype = Object.create(Object.prototype);
+const P = FilterEngine.prototype = Object.create(Object.prototype);
 P.type = 'FilterEngine';
 
 let choke = 1000;

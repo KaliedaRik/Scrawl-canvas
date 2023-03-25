@@ -57,7 +57,7 @@ const Star = function (items = Ωempty) {
 
 
 // #### Star prototype
-let P = Star.prototype = Object.create(Object.prototype);
+const P = Star.prototype = Object.create(Object.prototype);
 P.type = 'Star';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -67,8 +67,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [shapeBasic](../mixin/shapeBasic.html)
-P = baseMix(P);
-P = shapeMix(P);
+baseMix(P);
+shapeMix(P);
 
 
 // #### Star attributes
@@ -82,7 +82,7 @@ P = shapeMix(P);
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 // + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     radius1: 0,
     radius2: 0,
@@ -105,7 +105,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-let S = P.setters,
+const S = P.setters,
     D = P.deltaSetters;
 
 // __radius1__, __radius2__
@@ -277,7 +277,7 @@ P.makeStarPath = function () {
 //     method: 'fillAndDraw',
 // });
 // ```
-const makeStar = function (items) {
+export const makeStar = function (items) {
 
     if (!items) return false;
     items.species = 'star';
@@ -285,9 +285,3 @@ const makeStar = function (items) {
 };
 
 constructors.Star = Star;
-
-
-// #### Exports
-export {
-    makeStar,
-};

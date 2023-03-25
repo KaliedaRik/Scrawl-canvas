@@ -48,7 +48,7 @@ const RdAsset = function (items = Ωempty) {
 
 
 // #### RdAsset prototype
-let P = RdAsset.prototype = Object.create(Object.prototype);
+const P = RdAsset.prototype = Object.create(Object.prototype);
 P.type = 'RdAsset';
 P.lib = 'asset';
 P.isArtefact = false;
@@ -60,10 +60,10 @@ P.isAsset = true;
 // + [asset](../mixin/asset.html)
 // + [assetAdvancedFunctionality](../mixin/assetAdvancedFunctionality.html)
 // + [pattern](../mixin/pattern.html)
-P = baseMix(P);
-P = assetMix(P);
-P = assetAdvancedMix(P);
-P = patternMix(P);
+baseMix(P);
+assetMix(P);
+assetAdvancedMix(P);
+patternMix(P);
 
 
 // #### RdAsset attributes
@@ -71,7 +71,7 @@ P = patternMix(P);
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
 // + Attributes defined in the [assetAdvancedFunctionality mixin](../mixin/assetAdvancedFunctionality.html): __color, monochromeStart, monochromeRange, gradientStart, gradientEnd, hueStart, hueRange, saturation, luminosity__.
 // + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     // The offscreen canvas dimensions, within which the reaction-diffusion scene will be generated, is set using the __width__ and __height__ attributes. These take Number values.
     width: 300,
@@ -133,7 +133,7 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -734,16 +734,10 @@ P.getOutputValue = function (index, width) {
 //     height: 50,
 // });
 // ```
-const makeReactionDiffusionAsset = function (items) {
+export const makeReactionDiffusionAsset = function (items) {
 
     if (!items) return false;
     return new RdAsset(items);
 };
 
 constructors.RdAsset = RdAsset;
-
-
-// #### Exports
-export {
-    makeReactionDiffusionAsset,
-};

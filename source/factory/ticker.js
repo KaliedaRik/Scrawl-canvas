@@ -87,7 +87,7 @@ const Ticker = function (items = Ωempty) {
 
 
 // #### Ticker prototype
-let P = Ticker.prototype = Object.create(Object.prototype);
+const P = Ticker.prototype = Object.create(Object.prototype);
 P.type = 'Ticker';
 P.lib = 'animationtickers';
 P.isArtefact = false;
@@ -95,12 +95,12 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### Ticker attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __order__ - positive integer Number - determines the order in which each Ticker animation object will be actioned before the Display cycle starts. 
 // + Higher order Tickers will be processed after lower order Tickers. 
@@ -198,7 +198,7 @@ P.killTweens = function(autokill = false) {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters;
 
 // __subscribers__ - see also the `subscribe` and `unsubscribe` functions below
@@ -915,16 +915,10 @@ const releaseResultObject = function (r) {
 
 
 // #### Factory
-const makeTicker = function (items) {
+export const makeTicker = function (items) {
 
     if (!items) return false;
     return new Ticker(items);
 };
 
 constructors.Ticker = Ticker;
-
-
-// #### Exports
-export {
-    makeTicker,
-};

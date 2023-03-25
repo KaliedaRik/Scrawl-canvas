@@ -67,7 +67,7 @@ const Loom = function (items = Ωempty) {
 
 
 // #### Loom prototype
-let P = Loom.prototype = Object.create(Object.prototype);
+const P = Loom.prototype = Object.create(Object.prototype);
 P.type = 'Loom';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -75,15 +75,15 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
-P = deltaMix(P);
-P = anchorMix(P);
+baseMix(P);
+deltaMix(P);
+anchorMix(P);
 
 
 // #### Loom attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __fromPath__, __toPath__ - A Loom entity uses 2 Shape paths to construct a frame between which the image will be redrawn. These attributes can be set using the Shapes' name-String, or the Shape objects themselves
 // + The positioning, scaling etc of each strut is set in the constituent Shape entitys, not the Loom entity.
@@ -271,7 +271,7 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -1431,16 +1431,10 @@ P.checkHit = function (items = []) {
 //     method: 'fillThenDraw',
 // });
 // ```
-const makeLoom = function (items) {
+export const makeLoom = function (items) {
 
     if (!items) return false;
     return new Loom(items);
 };
 
 constructors.Loom = Loom;
-
-
-// #### Exports
-export {
-    makeLoom,
-};

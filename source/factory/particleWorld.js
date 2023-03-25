@@ -69,7 +69,7 @@ const World = function (items = Ωempty) {
 
 
 // #### World prototype
-let P = World.prototype = Object.create(Object.prototype);
+const P = World.prototype = Object.create(Object.prototype);
 P.type = 'World';
 P.lib = 'world';
 P.isArtefact = false;
@@ -77,12 +77,12 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### World attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     // x, y and z components of __gravity__, measured in meters/secondSquared (used in `gravity` force calculations)
     gravity: null,
@@ -116,7 +116,7 @@ P.kill = function () {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -208,17 +208,10 @@ P.initializeAttributes = function (types) {
 //     testCoordinate: [100, 100],
 // });
 // ```
-const makeWorld = function (items) {
+export const makeWorld = function (items) {
 
     if (!items) return false;
     return new World(items);
 };
 
 constructors.World = World;
-
-
-// #### Exports
-export {
-    makeWorld,
-};
-

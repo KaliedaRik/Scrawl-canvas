@@ -70,7 +70,7 @@ const Net = function (items = Ωempty) {
 
 
 // #### Net prototype
-let P = Net.prototype = Object.create(Object.prototype);
+const P = Net.prototype = Object.create(Object.prototype);
 
 P.type = 'Net';
 P.lib = 'entity';
@@ -79,8 +79,8 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
-P = entityMix(P);
+baseMix(P);
+entityMix(P);
 
 // #### Net attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
@@ -92,7 +92,7 @@ P = entityMix(P);
 // + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter___.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     // __world__ - World object; can be set using the String name of a World object, or the World object itself.
     world: null,
@@ -260,7 +260,7 @@ P.purgeParticlesFromLibrary = function () {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -1160,16 +1160,10 @@ const generators = {
 
 
 // #### Factory
-const makeNet = function (items) {
+export const makeNet = function (items) {
 
     if (!items) return false;
     return new Net(items);
 };
 
 constructors.Net = Net;
-
-
-// #### Exports
-export {
-    makeNet,
-};

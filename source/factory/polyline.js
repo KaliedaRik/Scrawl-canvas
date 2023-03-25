@@ -56,7 +56,7 @@ const Polyline = function (items = Ωempty) {
 
 
 // #### Polyline prototype
-let P = Polyline.prototype = Object.create(Object.prototype);
+const P = Polyline.prototype = Object.create(Object.prototype);
 P.type = 'Polyline';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -66,8 +66,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [shapeBasic](../mixin/shapeBasic.html)
-P = baseMix(P);
-P = shapeMix(P);
+baseMix(P);
+shapeMix(P);
 
 
 // #### Polyline attributes
@@ -81,7 +81,7 @@ P = shapeMix(P);
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 // + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     // The __pins__ attribute takes an array with elements which are:
     // + [x, y] coordinate arrays, where values can be absolute (Numbers) and/or relative (String%) values
@@ -149,7 +149,7 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -703,7 +703,7 @@ P.updatePathSubscribers = function () {
 //     method: 'draw',
 // });
 // ```
-const makePolyline = function (items) {
+export const makePolyline = function (items) {
 
     if (!items) return false;
     items.species = 'polyline';
@@ -711,9 +711,3 @@ const makePolyline = function (items) {
 };
 
 constructors.Polyline = Polyline;
-
-
-// #### Exports
-export {
-    makePolyline,
-};

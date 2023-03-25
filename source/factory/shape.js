@@ -55,7 +55,7 @@ const Shape = function (items = Ωempty) {
 
 
 // #### Shape prototype
-let P = Shape.prototype = Object.create(Object.prototype);
+const P = Shape.prototype = Object.create(Object.prototype);
 P.type = 'Shape';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -65,8 +65,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [shapeBasic](../mixin/shapeBasic.html)
-P = baseMix(P);
-P = shapeMix(P);
+baseMix(P);
+shapeMix(P);
 
 
 // #### Shape attributes
@@ -82,7 +82,7 @@ P = shapeMix(P);
 // + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
 //
 // No additional attributes defined here.
-let defaultAttributes = {};
+const defaultAttributes = {};
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
@@ -145,16 +145,10 @@ P.cleanStampHandlePositionsAdditionalActions = function () {
 //     method: 'fill',
 // });
 // ```
-const makeShape = function (items) {
+export const makeShape = function (items) {
 
     if (!items) return false;
     return new Shape(items);
 };
 
 constructors.Shape = Shape;
-
-
-// #### Exports
-export {
-    makeShape,
-};

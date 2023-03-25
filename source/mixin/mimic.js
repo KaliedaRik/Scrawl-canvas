@@ -12,7 +12,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // __mimic__ - reference artefact object. Can also be set using the artefact's name-String.
         mimic: '',
@@ -51,7 +51,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let G = P.getters,
+    const G = P.getters,
         S = P.setters,
         D = P.deltaSetters;
 
@@ -208,8 +208,4 @@ export default function (P = Ωempty) {
         this.dirtyMimicScale = false;
         this.dirtyMimicDimensions = false;
     };
-
-
-// Return the prototype
-    return P;
 };

@@ -324,7 +324,4 @@ export default function (P = Ωempty) {
 
         this.spriteIsRunning = false;
     }
-
-// Return the prototype
-    return P;
 };

@@ -344,8 +344,4 @@ export default function (P = Ωempty) {
         }
         return this;
     };
-
-
-// Return the prototype
-    return P;
 };

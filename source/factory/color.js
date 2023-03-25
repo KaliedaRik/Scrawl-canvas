@@ -80,7 +80,7 @@ const Color = function (items = Ωempty) {
 
 
 // #### Color prototype
-let P = Color.prototype = Object.create(Object.prototype);
+const P = Color.prototype = Object.create(Object.prototype);
 P.type = 'Color';
 P.lib = 'styles';
 P.isArtefact = false;
@@ -88,12 +88,12 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### Color attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 
 // A Color object can hold details of three colors
@@ -278,7 +278,7 @@ P.set = function (items = Ωempty) {
 };
 
 // #### Get, Set, deltaSet
-let S = P.setters;
+const S = P.setters;
 
 // The `color`, `minimumColor` and `maximumColor` functions take in a CSS color String and converts it into a set of arrays containing data relevant to various color spaces. __Note that browsers vary in the range of color spaces they support.__
 // + Widely supported: various RGB space color Strings - keywords, hex values, `rgb()`, `rgba()`

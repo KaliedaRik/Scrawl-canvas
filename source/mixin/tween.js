@@ -33,7 +33,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // __order__ - integer Number (defaults to `1`) - the order in which Tween/Actions run is determined by their order value: Tween/Actions with a lower order value run before those with a higher value
 // + Run order for Tween/Actions with the same order value is determined by the order in which they are defined in code 
@@ -93,7 +93,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let G = P.getters,
+    const G = P.getters,
         S = P.setters;
 
 // __targets__
@@ -303,7 +303,4 @@ export default function (P = Ωempty) {
     P.resume = λnull;
     P.seekTo = λnull;
     P.seekFor = λnull;
-
-// Return the prototype
-    return P;
 };

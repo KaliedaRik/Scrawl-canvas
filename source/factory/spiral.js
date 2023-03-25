@@ -55,7 +55,7 @@ const Spiral = function (items = Ωempty) {
 
 
 // #### Spiral prototype
-let P = Spiral.prototype = Object.create(Object.prototype);
+const P = Spiral.prototype = Object.create(Object.prototype);
 P.type = 'Spiral';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -65,8 +65,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [shapeBasic](../mixin/shapeBasic.html)
-P = baseMix(P);
-P = shapeMix(P);
+baseMix(P);
+shapeMix(P);
 
 
 // #### Spiral attributes
@@ -80,7 +80,7 @@ P = shapeMix(P);
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 // + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     loops: 1,
     loopIncrement: 1,
@@ -102,7 +102,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-let S = P.setters,
+const S = P.setters,
     D = P.deltaSetters;
 
 // __loops__
@@ -255,7 +255,7 @@ P.calculateLocalPathAdditionalActions = function () {
 //     drawFromLoop: 1,
 // });
 // ```
-const makeSpiral = function (items) {
+export const makeSpiral = function (items) {
 
     if (!items) return false;
     items.species = 'spiral';
@@ -263,9 +263,3 @@ const makeSpiral = function (items) {
 };
 
 constructors.Spiral = Spiral;
-
-
-// #### Exports
-export {
-    makeSpiral,
-};

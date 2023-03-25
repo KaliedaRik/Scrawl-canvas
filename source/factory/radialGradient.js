@@ -31,7 +31,7 @@ const RadialGradient = function (items = Ωempty) {
 
 
 // #### RadialGradient prototype
-let P = RadialGradient.prototype = Object.create(Object.prototype);
+const P = RadialGradient.prototype = Object.create(Object.prototype);
 
 P.type = 'RadialGradient';
 P.lib = 'styles';
@@ -40,15 +40,15 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
-P = stylesMix(P);
+baseMix(P);
+stylesMix(P);
 
 
 // #### RadialGradient attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [styles mixin](../mixin/styles.html): __start, end, palette, paletteStart, paletteEnd, cyclePalette__.
 // + Attributes defined in the [Palette factory](./palette.html): __colors, cyclic__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // RadialGradients calculate their gradients spanning between two circles, whose sizes are determined by the `startRadius` and `endRadius` attributes. Values can be:
 // + __Absolute__ - Numbers, measured in pixels.
@@ -92,7 +92,7 @@ P.packetObjects = pushUnique(P.packetObjects, ['palette']);
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -236,16 +236,10 @@ P.updateGradientArgs = function (x, y) {
 //     method: 'fillAndDraw',
 // });
 // ```
-const makeRadialGradient = function (items) {
+export const makeRadialGradient = function (items) {
 
     if (!items) return false;
     return new RadialGradient(items);
 };
 
 constructors.RadialGradient = RadialGradient;
-
-
-// #### Exports
-export {
-    makeRadialGradient,
-};

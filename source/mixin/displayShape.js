@@ -493,8 +493,4 @@ export default function (P = Ωempty) {
         this.updateDisplayShape();
         this.updateDisplayArea();
     };
-
-
-// Return the prototype
-    return P;
 };

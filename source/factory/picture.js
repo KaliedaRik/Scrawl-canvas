@@ -90,7 +90,7 @@ const Picture = function (items = Ωempty) {
 
 
 // #### Picture prototype
-let P = Picture.prototype = Object.create(Object.prototype);
+const P = Picture.prototype = Object.create(Object.prototype);
 P.type = 'Picture';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -101,9 +101,9 @@ P.isAsset = false;
 // + [base](../mixin/base.html)
 // + [entity](../mixin/entity.html)
 // + [assetConsumer](../mixin/assetConsumer.html)
-P = baseMix(P);
-P = entityMix(P);
-P = assetConsumerMix(P);
+baseMix(P);
+entityMix(P);
+assetConsumerMix(P);
 
 
 // #### Picture attributes
@@ -117,7 +117,7 @@ P = assetConsumerMix(P);
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 // + Attributes defined in the [assetConsumer mixin](../mixin/assetConsumer.html): __asset, spriteTrack, imageSource, spriteSource, videoSource, source__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __copyStart__ - Coordinate array
 // + We can use the pseudo-attributes __copyStartX__ and __copyStartY__ to make working with the Coordinate easier.
@@ -159,7 +159,7 @@ P.factoryKill = function (killAsset = false) {
 };
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -780,16 +780,10 @@ P.checkHitReturn = function (x, y, cell) {
 //     method: 'fill',
 // });
 // ```
-const makePicture = function (items) {
+export const makePicture = function (items) {
 
     if (!items) return false;
     return new Picture(items);
 };
 
 constructors.Picture = Picture;
-
-
-// #### Exports
-export {
-    makePicture,
-};

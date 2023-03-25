@@ -30,7 +30,7 @@ const SpriteAsset = function (items = Ωempty) {
 
 
 // #### SpriteAsset prototype
-let P = SpriteAsset.prototype = Object.create(Object.prototype);
+const P = SpriteAsset.prototype = Object.create(Object.prototype);
 P.type = 'Sprite';
 P.lib = 'asset';
 P.isArtefact = false;
@@ -40,14 +40,14 @@ P.isAsset = true;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [asset](../mixin/asset.html)
-P = baseMix(P);
-P = assetMix(P);
+baseMix(P);
+assetMix(P);
 
 
 // #### SpriteAsset attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __manifest__ - TODO - documentation
     manifest: null,
@@ -75,7 +75,7 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -110,8 +110,8 @@ S.source = function (items = []) {
 P.checkSource = λnull;
 
 // `gettableSpriteAssetAtributes`, `settableSpriteAssetAtributes` - exported Arrays.
-const gettableSpriteAssetAtributes = [];
-const settableSpriteAssetAtributes = [];
+export const gettableSpriteAssetAtributes = [];
+export const settableSpriteAssetAtributes = [];
 
 
 // #### Importing spritesheets into Scrawl-canvas
@@ -152,7 +152,7 @@ const settableSpriteAssetAtributes = [];
 // ```
 // + Note that the frames for any track can be spread across more than one spritesheet image file.
 // Note also that the __default__ track is mandatory, and should consist of at least one frame.
-const importSprite = function (...args) {
+export const importSprite = function (...args) {
 
     let reg = /.*\/(.*?)\./,
         fileTlas = /\.(jpeg|jpg|png|gif|webp|svg|JPEG|JPG|PNG|GIF|WEBP|SVG)/,
@@ -256,24 +256,13 @@ const importSprite = function (...args) {
 
 
 // #### Factory
-const makeSpriteAsset = function (items) {
+export const makeSpriteAsset = function (items) {
 
     if (!items) return false;
     return new SpriteAsset(items);
 };
 
 constructors.SpriteAsset = SpriteAsset;
-
-
-// #### Exports
-export {
-    makeSpriteAsset,
-
-    gettableSpriteAssetAtributes,
-    settableSpriteAssetAtributes,
-
-    importSprite,
-};
 
 
 // Examples used in Demos

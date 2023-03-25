@@ -40,7 +40,7 @@ const Action = function (items = Ωempty) {
 
 
 // #### Action prototype
-let P = Action.prototype = Object.create(Object.prototype);
+const P = Action.prototype = Object.create(Object.prototype);
 P.type = 'Action';
 P.lib = 'tween';
 P.isArtefact = false;
@@ -48,14 +48,14 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
-P = tweenMix(P);
+baseMix(P);
+tweenMix(P);
 
 
 // #### Action attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [tween mixin](../mixin/tween.html): __order__, __ticker__, __targets__, __time__, __action__, __reverseOnCycleEnd__, __reversed__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __revert__ - a function that is triggered when a tween is running in reverse direction. Should be a counterpart to the __action__ function (defined in mixin/tween.js) to reverse the actions performed by that function.
     revert: null
@@ -84,7 +84,7 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // #### Get, Set, deltaSet
-let S = P.setters;
+const S = P.setters;
 
 // Argument must be a function, or a variable holding a reference to a function
 S.revert = function (item) {
@@ -249,15 +249,10 @@ P.update = function (items) {
 //     },
 // });
 // ```
-const makeAction = function (items) {
+export const makeAction = function (items) {
 
     if (!items) return false;
     return new Action(items);
 };
 
 constructors.Action = Action;
-
-// #### Exports
-export {
-    makeAction,
-};

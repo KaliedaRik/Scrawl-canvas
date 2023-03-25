@@ -72,7 +72,7 @@ const Bezier = function (items = Ωempty) {
 
 
 // #### Bezier prototype
-let P = Bezier.prototype = Object.create(Object.prototype);
+const P = Bezier.prototype = Object.create(Object.prototype);
 P.type = 'Bezier';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -83,9 +83,9 @@ P.isAsset = false;
 // + [base](../mixin/base.html)
 // + [shapeBasic](../mixin/shapeBasic.html)
 // + [shapeCurve](../mixin/shapeCurve.html)
-P = baseMix(P);
-P = shapeMix(P);
-P = curveMix(P);
+baseMix(P);
+shapeMix(P);
+curveMix(P);
 
 
 // #### Bezier attributes
@@ -100,7 +100,7 @@ P = curveMix(P);
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 // + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
 // + Attributes defined in the [shapeCurve mixin](../mixin/shapeCurve.html): __end, endPivot, endPivotCorner, addEndPivotHandle, addEndPivotOffset, endPath, endPathPosition, addEndPathHandle, addEndPathOffset, endLockTo, useStartAsControlPoint__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // The __startControl__ coordinate ('pin') defines the bezier curve's first control point.
 // + Similar to the `start` coordinate, the `startControl` coordinate can be updated using the pseudo-attributes __startControlX__ and __startControlY__.
@@ -171,7 +171,7 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -529,7 +529,7 @@ P.preparePinsForStamp = function () {
 //     method: 'draw',
 // });
 // ```
-const makeBezier = function (items = Ωempty) {
+export const makeBezier = function (items = Ωempty) {
 
     if (!items) return false;
     items.species = 'bezier';
@@ -537,9 +537,3 @@ const makeBezier = function (items = Ωempty) {
 };
 
 constructors.Bezier = Bezier;
-
-
-// #### Exports
-export {
-    makeBezier,
-};

@@ -12,19 +12,69 @@
 
 
 // #### Imports
-import { constructors, artefact } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta, λnull, Ωempty, isa_fn } from '../core/utilities.js';
-import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener, addLocalMouseMoveListener, removeLocalMouseMoveListener } from '../core/userInteraction.js';
-import { addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
+import { 
+    artefact, 
+    constructors, 
+} from '../core/library.js';
 
-import { makeQuaternion, requestQuaternion, releaseQuaternion } from '../factory/quaternion.js';
+import { setMouseChanged } from '../core/system-flags.js';
 
-import positionMix from '../mixin/position.js';
+import { 
+    correctAngle,
+    isa_dom, 
+    isa_fn, 
+    isa_obj, 
+    isa_quaternion, 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    xt, 
+    xta, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    addLocalMouseMoveListener, 
+    applyCoreResizeListener, 
+    currentCorePosition, 
+    removeLocalMouseMoveListener, 
+    uiSubscribedElements, 
+} from '../core/userInteraction.js';
+
+import { 
+    addDomShowElement, 
+    domShow, 
+    setDomShowRequired, 
+} from '../core/document.js';
+
+import { 
+    makeQuaternion, 
+    releaseQuaternion, 
+    requestQuaternion, 
+} from '../factory/quaternion.js';
+
+import positionMix from './position.js';
 import deltaMix from './delta.js';
 import pivotMix from './pivot.js';
 import mimicMix from './mimic.js';
 import pathMix from './path.js';
-import anchorMix from '../mixin/anchor.js';
+import anchorMix from './anchor.js';
+
+
+// Local variables
+const TOPLEFT = 'topLeft',
+    TOPRIGHT = 'topRight',
+    BOTTOMRIGHT = 'bottomRight',
+    BOTTOMLEFT = 'bottomLeft',
+    _cornerCoordinateLabels = [TOPLEFT, TOPRIGHT, BOTTOMRIGHT, BOTTOMLEFT],
+    SPACE = ' ',
+    CLASS_REGEX = /[\s\uFEFF\xA0]+/g,
+    _round = Math.round,
+    _isArray = Array.isArray,
+    _emptyElementTagNames = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS'];
+
+let _el, _node, _style, _host, _dims, _flag, _here, i, x, y;
 
 
 // #### Export function
@@ -38,17 +88,17 @@ export default function (P = Ωempty) {
 // + [mimic](../mixin/mimic.html)
 // + [path](../mixin/path.html)
 // + [anchor](../mixin/anchor.html)
-    P = positionMix(P);
-    P = deltaMix(P);
-    P = pivotMix(P);
-    P = mimicMix(P);
-    P = pathMix(P);
-    P = anchorMix(P);
+    positionMix(P);
+    deltaMix(P);
+    pivotMix(P);
+    mimicMix(P);
+    pathMix(P);
+    anchorMix(P);
 
 
 // #### Shared attributes
 // TODO: we need to test how various Javascript frameworks interact with Scrawl-canvas functionality in this area. In particular: [vue.js](https://vuejs.org/); [React](https://reactjs.org/); [Svelte](https://svelte.dev/)
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 
 // __domElement__ - Wrapper objects reference handle to its DOM element
@@ -141,15 +191,15 @@ export default function (P = Ωempty) {
 
         if (isa_dom(this.domElement)) {
 
-            let el = this.domElement;
+            _el = this.domElement;
 
-            let mynode = el.cloneNode(true);
+            _node = _el.cloneNode(true);
 
-            let kids = mynode.querySelectorAll('[data-scrawl-corner-div="sc"]');
-            kids.forEach(kid => mynode.removeChild(kid));
+            const kids = _node.querySelectorAll('[data-scrawl-corner-div="sc"]');
+            kids.forEach(kid => _node.removeChild(kid));
 
-            copy.outerHTML = mynode.outerHTML;
-            copy.host = el.parentElement.id;
+            copy.outerHTML = _node.outerHTML;
+            copy.host = _el.parentElement.id;
         }
 
         copy = this.handlePacketAnchor(copy, items);
@@ -176,27 +226,27 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let S = P.setters,
+    const S = P.setters,
         D = P.deltaSetters;
 
     S.trackHere = function(val) {
 
-    if (xt(val)) {
+        if (xt(val)) {
 
-        if (val) {
+            if (val) {
 
-            pushUnique(uiSubscribedElements, this.name);
+                pushUnique(uiSubscribedElements, this.name);
 
-            if (val === 'local') addLocalMouseMoveListener(this);
+                if (val == 'local') addLocalMouseMoveListener(this);
+            }
+            else {
+
+                removeItem(uiSubscribedElements, this.name);
+                removeLocalMouseMoveListener(this);
+            }
+            this.trackHere = val;
         }
-        else {
-
-            removeItem(uiSubscribedElements, this.name);
-            removeLocalMouseMoveListener(this);
-        }
-        this.trackHere = val;
-    }
-};
+    };
 
 // `position`
     S.position = function (item) {
@@ -235,36 +285,36 @@ export default function (P = Ωempty) {
 // `roll`
     S.roll = function (item) {
 
-        this.roll = this.checkRotationAngle(item);
+        this.roll = correctAngle(item);
         this.dirtyRotation = true;
     };
     D.roll = function (item) {
 
-        this.roll = this.checkRotationAngle(this.roll + item);
+        this.roll = correctAngle(this.roll + item);
         this.dirtyRotation = true;
     };
 
 // `pitch`
     S.pitch = function (item) {
 
-        this.pitch = this.checkRotationAngle(item);
+        this.pitch = correctAngle(item);
         this.dirtyRotation = true;
     };
     D.pitch = function (item) {
 
-        this.pitch = this.checkRotationAngle(this.pitch + item);
+        this.pitch = correctAngle(this.pitch + item);
         this.dirtyRotation = true;
     };
 
 // `yaw`
     S.yaw = function (item) {
 
-        this.yaw = this.checkRotationAngle(item);
+        this.yaw = correctAngle(item);
         this.dirtyRotation = true;
     };
     D.yaw = function (item) {
 
-        this.yaw = this.checkRotationAngle(this.yaw + item);
+        this.yaw = correctAngle(this.yaw + item);
         this.dirtyRotation = true;
     };
 
@@ -272,7 +322,6 @@ export default function (P = Ωempty) {
     S.css = function (item) {
 
         this.css = (this.css) ? mergeOver(this.css, item) : item;
-
         this.dirtyCss = true;
     };
 
@@ -280,7 +329,6 @@ export default function (P = Ωempty) {
     S.classes = function (item) {
 
         this.classes = item;
-
         this.dirtyClasses = true;
     };
 
@@ -292,50 +340,40 @@ export default function (P = Ωempty) {
 
     S.includeInTabNavigation = function (item) {
 
-        const el = this.domElement;
+        _el = this.domElement;
 
-        if (el) {
+        if (_el) {
 
             this.includeInTabNavigation = item;
 
-            if (item) el.setAttribute('tabindex', 0);
-            else el.setAttribute('tabindex', -1);
+            if (item) _el.setAttribute('tabindex', 0);
+            else _el.setAttribute('tabindex', -1);
         }
     };
 
 
 // #### Prototype functions
 
-// `checkRotationAngle` - internal function - a quick check for rotational (`roll`, `pitch`, `yaw`) setter/deltaSetter functionality. Attempts to keep values of these attributes between -360 and + 360
-    P.checkRotationAngle = function (angle) {
-
-        if (angle < -180 || angle > 180) {
-            angle += (angle > 0) ? -360 : 360;
-        }
-
-        return angle;
-    };
-
 // `updateDomAttributes` - DOM wrapper objects do not keep track of their DOM element attribute values; this function is a convenience function to make updating those attributes a bit easier. Function arguments can be one of:
 // + `(attribute-String, value)`
 // + `({attribute-String: value, attribute-String: value, etc})`
     P.updateDomAttributes = function (items, value) {
 
-        if (this.domElement) {
+        _el = this.domElement;
 
-            let el = this.domElement;
+        if (_el) {
 
             if (items.substring && xt(value)) {
 
-                if (value) el.setAttribute(items, value);
-                else el.removeAttribute(items);
+                if (value) _el.setAttribute(items, value);
+                else _el.removeAttribute(items);
             }
             else if (isa_obj(items)) {
 
                 Object.entries(items).forEach(([item, val]) => {
 
-                    if (val) el.setAttribute(item, val);
-                    else el.removeAttribute(item);
+                    if (val) _el.setAttribute(item, val);
+                    else _el.removeAttribute(item);
                 });
             }
         }
@@ -347,48 +385,48 @@ export default function (P = Ωempty) {
 // + TODO - there's a lot of improvements we can do here - the aim should be to create the wrapper object and update the objects DOM element's style and dimensions attributes - specifically shifting `position` from "static" to "absolute" - in a way that does not disturb the page view in any way whatsoever (pixel-perfect!) so website visitors are completely unaware that the work has taken place
     P.initializeDomLayout = function (items) {
 
-        let el = items.domElement,
-            elStyle = el.style;
+        _el = items.domElement,
+        _style = _el.style;
 
-        elStyle.boxSizing = 'border-box';
+        _style.boxSizing = 'border-box';
 
-        if (el && items.setInitialDimensions) {
+        if (_el && items.setInitialDimensions) {
 
-            let dims = el.getBoundingClientRect(),
-                trans = el.style.transform,
-                transOrigin = el.style.transformOrigin,
-                host = false,
-                hostDims;
+            _dims = _el.getBoundingClientRect();
+            _host = false;
 
+            const trans = _style.transform,
+                transOrigin = _style.transformOrigin;
+                
             if (items && items.host) {
 
-                host = items.host;
+                _host = items.host;
 
-                if (host.substring && artefact[host]) host = artefact[host];
+                if (_host.substring && artefact[_host]) _host = artefact[_host];
             }
 
             // TODO - discover scale
 
             // discover dimensions (width, height)
-            this.currentDimensions[0] = dims.width;
-            this.currentDimensions[1] = dims.height;
-            items.width = dims.width;
-            items.height = dims.height;
+            this.currentDimensions[0] = _dims.width;
+            this.currentDimensions[1] = _dims.height;
+            items.width = _dims.width;
+            items.height = _dims.height;
 
             // recover classes already assigned to the element
-            if (el.className) items.classes = el.className;
+            if (_el.className) items.classes = _el.className;
 
             // go with lock defaults - no work required
 
             // discover start (boundingClientRect - will be the difference between this object and its host (parent) object 'top' and 'left' values)
-            if (host && host.domElement) {
+            if (_host && _host.domElement) {
 
-                hostDims = host.domElement.getBoundingClientRect();
+                const hostDims = _host.domElement.getBoundingClientRect();
 
                 if (hostDims) {
 
-                    items.startX = dims.left - hostDims.left;
-                    items.startY = dims.top - hostDims.top;
+                    items.startX = _dims.left - hostDims.left;
+                    items.startY = _dims.top - hostDims.top;
                 }
             }
 
@@ -400,21 +438,21 @@ export default function (P = Ωempty) {
             // TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
 
             // for Stack artefacts only, discover perspective and perspective-origin values
-            if (this.type === 'Stack') {
+            if (this.type == 'Stack') {
 
                 // TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values
                 if (!xt(items.perspective) && !xt(items.perspectiveZ)) {
 
                     // TODO - this isn't working! see Demo DOM 003 where attempting to set the perspective in CSS causes the demo to fail
                     // + Workaround is to explicitly set the stack's perspectiveZ value in Javascript
-                    items.perspectiveZ = (xt(elStyle.perspective) && elStyle.perspective) ? parseFloat(elStyle.perspective) : 0;
+                    items.perspectiveZ = (xt(_style.perspective) && _style.perspective) ? parseFloat(_style.perspective) : 0;
                 }
 
-                let perspectiveOrigin = elStyle.perspectiveOrigin;
+                let perspectiveOrigin = _style.perspectiveOrigin;
 
                 if (perspectiveOrigin.length) {
 
-                    perspectiveOrigin = perspectiveOrigin.split(' ');
+                    perspectiveOrigin = perspectiveOrigin.split(SPACE);
 
                     if (perspectiveOrigin.length > 0 && !xt(items.perspective) && !xt(items.perspectiveX)) items.perspectiveX = perspectiveOrigin[0];
 
@@ -440,7 +478,7 @@ export default function (P = Ωempty) {
 
             classes += ` ${item}`;
             classes = classes.trim();
-            classes = classes.replace(/[\s\uFEFF\xA0]+/g, ' ');
+            classes = classes.replace(CLASS_REGEX, SPACE);
 
             if (classes !== this.classes) {
 
@@ -456,16 +494,17 @@ export default function (P = Ωempty) {
 
         if (item.substring) {
 
+            const targets = item.split();
+
             let classes = this.classes,
-                targets = item.split(),
                 search;
 
             targets.forEach(cls => {
 
                 search = new RegExp(' ?' + cls + ' ?');
-                classes = classes.replace(search, ' ');
+                classes = classes.replace(search, SPACE);
                 classes = classes.trim();
-                classes = classes.replace(/[\s\uFEFF\xA0]+/g, ' ');
+                classes = classes.replace(CLASS_REGEX, SPACE);
             });
 
             if (classes !== this.classes) {
@@ -481,59 +520,58 @@ export default function (P = Ωempty) {
 // Scrawl-canvas keeps track of its DOM wrapper element's positions by creating four zero-dimension &lt;div> elements and adding them as absolutely positioned children to the element. We can then get these children to report on their real coordinates (even when the parent is 3D rotated) by calling `getClientRects` on them.
 
 // `addPathCorners`
-    P.emptyElementTagNames = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS'];
     P.addPathCorners = function () {
 
-        if (this.domElement && 
-            !this.noUserInteraction && 
-            this.emptyElementTagNames.indexOf(this.domElement.tagName) < 0) {
+        const el = this.domElement;
 
-            let pointMaker = function () {
+        if (el && !this.noUserInteraction && !_emptyElementTagNames.includes(el.tagName)) {
 
-                let p = document.createElement('div');
+            const pointMaker = function () {
 
-                p.style.width = 0;
-                p.style.height = 0;
-                p.style.position = 'absolute';
-                p.style.margin = 0;
-                p.style.border = 0;
-                p.style.padding = 0;
+                const p = document.createElement('div');
+                const s = p.style;
+
+                s.width = 0;
+                s.height = 0;
+                s.position = 'absolute';
+                s.margin = 0;
+                s.border = 0;
+                s.padding = 0;
+
+                p.setAttribute('data-scrawl-corner-div', 'sc');
+                p.setAttribute('aria-hidden', 'true');
 
                 return p;
             };
 
-            let tl = pointMaker(),
+            const corners = this.pathCorners;
+
+            const tl = pointMaker(),
                 tr = pointMaker(),
                 br = pointMaker(),
                 bl = pointMaker();
 
             tl.style.top = '0%';
             tl.style.left = '0%';
-            tl.setAttribute('data-scrawl-corner-div', 'sc');
 
             tr.style.top = '0%';
             tr.style.left = '100%';
-            tr.setAttribute('data-scrawl-corner-div', 'sc');
 
             br.style.top = '100%';
             br.style.left = '100%';
-            br.setAttribute('data-scrawl-corner-div', 'sc');
 
             bl.style.top = '100%';
             bl.style.left = '0%';
-            bl.setAttribute('data-scrawl-corner-div', 'sc');
-
-            let el = this.domElement;
 
             el.appendChild(tl);
             el.appendChild(tr);
             el.appendChild(br);
             el.appendChild(bl);
 
-            this.pathCorners.push(tl);
-            this.pathCorners.push(tr);
-            this.pathCorners.push(br);
-            this.pathCorners.push(bl);
+            corners.push(tl);
+            corners.push(tr);
+            corners.push(br);
+            corners.push(bl);
 
             if (!this.currentCornersData) this.currentCornersData = [];
         }
@@ -543,50 +581,50 @@ export default function (P = Ωempty) {
 // `checkCornerPositions`
     P.checkCornerPositions = function (corner) {
 
-        let pathCorners = this.pathCorners;
+        const pathCorners = this.pathCorners;
 
         if (pathCorners.length === 4) {
 
-            let here = this.getHere(),
+            const here = this.getHere(),
                 x = currentCorePosition.scrollX - (here.offsetX || 0),
                 y = currentCorePosition.scrollY - (here.offsetY || 0),
-                round = Math.round,
-                results = [],
-                client;
+                results = [];
+            
+            let client, coord;
 
             const cornerPush = function (c) {
 
-                let coord = c[0];
+                coord = c[0];
 
                 if (coord) {
 
-                    results.push(round(coord.left + x));
-                    results.push(round(coord.top + y));
+                    results.push(_round(coord.left + x));
+                    results.push(_round(coord.top + y));
                 }
                 else results.push(0, 0);
             };
 
             switch (corner) {
 
-                case 'topLeft' :
+                case TOPLEFT :
 
                     client = pathCorners[0].getClientRects();
                     cornerPush(client);
                     return results;
 
-                case 'topRight' :
+                case TOPRIGHT :
 
                     client = pathCorners[1].getClientRects();
                     cornerPush(client);
                     return results;
 
-                case 'bottomRight' :
+                case BOTTOMRIGHT :
 
                     client = pathCorners[2].getClientRects();
                     cornerPush(client);
                     return results;
 
-                case 'bottomLeft' :
+                case BOTTOMLEFT :
 
                     client = pathCorners[3].getClientRects();
                     cornerPush(client);
@@ -608,10 +646,9 @@ export default function (P = Ωempty) {
     }
 
 // `getCornerCoordinate`
-    const cornerCoordinateLabels = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'];
     P.getCornerCoordinate = function (corner) {
 
-        if (cornerCoordinateLabels.indexOf(corner) >= 0) return this.checkCornerPositions(corner);
+        if (_cornerCoordinateLabels.includes(corner)) return this.checkCornerPositions(corner);
         else return [].concat(this.currentStampPosition);
     };
 
@@ -633,11 +670,11 @@ export default function (P = Ωempty) {
 
                 if (!this.currentCornersData) this.currentCornersData = [];
 
-                let cornerData = this.currentCornersData;
+                const cornerData = this.currentCornersData;
                 cornerData.length = 0;
                 cornerData.push(...this.checkCornerPositions());
 
-                let p = this.pathObject = new Path2D();
+                const p = this.pathObject = new Path2D();
                 p.moveTo(cornerData[0], cornerData[1]);
                 p.lineTo(cornerData[2], cornerData[3]);
                 p.lineTo(cornerData[4], cornerData[5]);
@@ -645,7 +682,7 @@ export default function (P = Ωempty) {
                 p.closePath();
             }
             else {
-                let p = this.pathObject = new Path2D();
+                const p = this.pathObject = new Path2D();
                 p.moveTo(0, 0);
                 p.lineTo(10, 0);
                 p.lineTo(0, 10);
@@ -656,30 +693,30 @@ export default function (P = Ωempty) {
     };
 
 // `checkHit`
-    P.checkHit = function (items = [], mycell) {
+    P.checkHit = function (items = [], cell) {
 
         if (this.noUserInteraction) return false;
 
         if (!this.pathObject || this.dirtyPathObject) this.cleanPathObject();
 
-        let tests = (!Array.isArray(items)) ?  [items] : items,
-            poolCellFlag = false;
+        const tests = (!_isArray(items)) ?  [items] : items;
+        _flag = false;
 
-        if (!mycell) {
+        if (!cell) {
 
-            mycell = requestCell();
-            poolCellFlag = true;
+            cell = requestCell();
+            _flag = true;
         }
 
-        let engine = mycell.engine,
-            stamp = this.currentStampPosition,
-            x = stamp[0],
-            y = stamp[1],
-            tx, ty;
+        const engine = cell.engine;
+
+        [x, y] = this.currentStampPosition;
+
+        let tx, ty;
 
         if (tests.some(test => {
 
-            if (Array.isArray(test)) {
+            if (_isArray(test)) {
 
                 tx = test[0];
                 ty = test[1];
@@ -697,7 +734,7 @@ export default function (P = Ωempty) {
 
         }, this)) {
 
-            if (poolCellFlag) releaseCell(mycell);
+            if (_flag) releaseCell(cell);
 
             return {
                 x: tx,
@@ -706,7 +743,7 @@ export default function (P = Ωempty) {
             };
         }
         
-        if (poolCellFlag) releaseCell(mycell);
+        if (_flag) releaseCell(cell);
         
         return false;
     };
@@ -723,7 +760,7 @@ export default function (P = Ωempty) {
 
         if (!this.currentRotation || !isa_quaternion(this.rotation)) this.currentRotation = makeQuaternion();
 
-        let calculatedRotation = this.rotation;
+        const calculatedRotation = this.rotation;
 
         calculatedRotation.setFromEuler({
             pitch: this.pitch || 0,
@@ -733,7 +770,7 @@ export default function (P = Ωempty) {
 
         if (calculatedRotation.getMagnitude() !== 1) calculatedRotation.normalize();
 
-        let processedRotation = requestQuaternion(),
+        const processedRotation = requestQuaternion(),
             path = this.path,
             mimic = this.mimic,
             pivot = this.pivot,
@@ -786,9 +823,7 @@ export default function (P = Ωempty) {
 
         this.dirtyContent = false;
 
-        let el = this.domElement;
-
-        if (el) this.dirtyDimensions = true;
+        if (this.domElement) this.dirtyDimensions = true;
     };
 
 // `cleanDisplayShape` - overwritten in Stack and Canvas artefacts via the displayShape mixin
@@ -814,7 +849,7 @@ export default function (P = Ωempty) {
         if (this.dirtyHandle) this.cleanHandle();
         if (this.dirtyRotation) this.cleanRotation();
 
-        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0 || this.lockTo.indexOf('particle') >= 0) {
+        if (this.isBeingDragged || this.lockTo.includes('mouse') || this.lockTo.includes('particle')) {
 
             this.dirtyStampPositions = true;
             this.dirtyStampHandlePositions = true;
@@ -845,23 +880,21 @@ export default function (P = Ωempty) {
         if (!this.domElement) return false;
 
         // calculate transform strings on each iteration
-        let [stampX, stampY] = this.currentStampPosition,
+        const [stampX, stampY] = this.currentStampPosition,
             [handleX, handleY] = this.currentStampHandlePosition,
-            scale = this.currentScale;
-
-        let rotation = this.currentRotation,
-            v, vx, vy, vz, angle;
+            scale = this.currentScale,
+            rotation = this.currentRotation;
 
         let nTransformOrigin = `${handleX}px ${handleY}px 0`,
             nTransform = `translate(${stampX - handleX}px,${stampY - handleY}px)`;
 
         if (this.yaw || this.pitch || this.roll || (this.pivot && this.addPivotRotation) || (this.mimic && this.useMimicRotation) || (this.path && this.addPathRotation)) {
 
-            v = rotation.v;
-            vx = v.x;
-            vy = v.y;
-            vz = v.z;
-            angle = rotation.getAngle(false);
+            let v = rotation.v,
+                vx = v.x,
+                vy = v.y,
+                vz = v.z,
+                angle = rotation.getAngle(false);
 
             nTransform += ` rotate3d(${vx},${vy},${vz},${angle}rad)`;
         }
@@ -888,6 +921,7 @@ export default function (P = Ωempty) {
             this.domShowRequired = false;
             addDomShowElement(this.name);
             setDomShowRequired(true);
+            setMouseChanged(true);
         }
 
         // update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
@@ -968,11 +1002,11 @@ export default function (P = Ωempty) {
     };
     P.reducedMotionActions = function () {
 
-        const here = this.here;
+        _here = this.here;
 
-        if (xt(here)) {
+        if (xt(_here)) {
 
-            const accessibilityFlag = here.prefersReducedMotion;
+            const accessibilityFlag = _here.prefersReducedMotion;
 
             if (xt(accessibilityFlag)) {
 
@@ -997,15 +1031,15 @@ export default function (P = Ωempty) {
     };
     P.colorSchemeActions = function () {
 
-        const here = this.here;
+        _here = this.here;
 
-        if (xt(here)) {
+        if (xt(_here)) {
 
-            const accessibilityFlag = here.prefersDarkColorScheme;
+            _flag = _here.prefersDarkColorScheme;
 
-            if (xt(accessibilityFlag)) {
+            if (xt(_flag)) {
 
-                if (accessibilityFlag) this.colorSchemeDarkAction();
+                if (_flag) this.colorSchemeDarkAction();
                 else this.colorSchemeLightAction();
             }
         }
@@ -1027,15 +1061,15 @@ export default function (P = Ωempty) {
     };
     P.reducedTransparencyActions = function () {
 
-        const here = this.here;
+        _here = this.here;
 
-        if (xt(here)) {
+        if (xt(_here)) {
 
-            const accessibilityFlag = here.prefersReduceTransparency;
+            _flag = _here.prefersReduceTransparency;
 
-            if (xt(accessibilityFlag)) {
+            if (xt(_flag)) {
 
-                if (accessibilityFlag) this.reduceTransparencyAction();
+                if (_flag) this.reduceTransparencyAction();
                 else this.noPreferenceTransparencyAction();
             }
         }
@@ -1057,15 +1091,15 @@ export default function (P = Ωempty) {
     };
     P.reducedDataActions = function () {
 
-        const here = this.here;
+        _here = this.here;
 
-        if (xt(here)) {
+        if (xt(_here)) {
 
-            const accessibilityFlag = here.prefersReduceData;
+            _flag = _here.prefersReduceData;
 
-            if (xt(accessibilityFlag)) {
+            if (xt(_flag)) {
 
-                if (accessibilityFlag) this.reduceDataAction();
+                if (_flag) this.reduceDataAction();
                 else this.noPreferenceDataAction();
             }
         }
@@ -1094,7 +1128,4 @@ export default function (P = Ωempty) {
         this.dirtyPathObject = true;
         this.cleanPathObject();
     };
-
-// Return the prototype
-    return P;
 };

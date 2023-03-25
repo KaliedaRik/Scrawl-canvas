@@ -145,7 +145,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // Scrawl-canvas relies on unique __name__ values being present in a factory object for a wide range of functionalities. Most of the library sections store an object by its name value, for example: _scrawl.artefact.myelement_
         name: '',
@@ -153,7 +153,7 @@ export default function (P = Ωempty) {
     P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-    let G = P.getters;
+    const G = P.getters;
 
     G.type = function () {
         return this.type;
@@ -682,8 +682,4 @@ export default function (P = Ωempty) {
 
         return this;
     };
-
-
-// Return the prototype
-    return P;
 };

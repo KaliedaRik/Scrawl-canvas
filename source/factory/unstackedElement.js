@@ -48,7 +48,7 @@ const UnstackedElement = function (el) {
 
 
 // ## UnstackedElement object prototype setup
-let P = UnstackedElement.prototype = Object.create(Object.prototype);
+const P = UnstackedElement.prototype = Object.create(Object.prototype);
 P.type = 'UnstackedElement';
 P.lib = 'unstackedelement';
 P.isArtefact = false;
@@ -56,11 +56,11 @@ P.isAsset = false;
 
 
 // Apply mixins to prototype object
-P = baseMix(P);
+baseMix(P);
 
 
 // ## Define default attributes
-let defaultAttributes = {
+const defaultAttributes = {
 
 
 // TODO - documentation
@@ -76,7 +76,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // ## Define getter, setter and deltaSetter functions
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -294,14 +294,10 @@ P.updateCanvas = function () {
 
 
 // ## Exported factory function
-const makeUnstackedElement = function (items) {
+export const makeUnstackedElement = function (items) {
     
     if (!items) return false;
     return new UnstackedElement(items);
 };
 
 constructors.UnstackedElement = UnstackedElement;
-
-export {
-    makeUnstackedElement,
-};

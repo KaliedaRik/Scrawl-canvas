@@ -338,5 +338,3 @@ export const makeDragZone = function (items = Ωempty) {
     if (processedData.exposeCurrentArtefact) return processedData.getCurrent;
     else return processedData.kill;
 };
-
-

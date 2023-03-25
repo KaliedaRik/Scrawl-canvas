@@ -21,7 +21,7 @@ const Vector = function (x, y, z) {
 
 
 // #### Vector prototype
-let P = Vector.prototype = Object.create(Object.prototype);
+const P = Vector.prototype = Object.create(Object.prototype);
 P.type = 'Vector';
 
 
@@ -289,7 +289,7 @@ P.normalize = function() {
 const vectorPool = [];
 
 // `exported function` - retrieve a Vector from the vector pool
-const requestVector = function (x, y, z) {
+export const requestVector = function (x, y, z) {
 
     if (!vectorPool.length) vectorPool.push(new Vector());
 
@@ -301,24 +301,16 @@ const requestVector = function (x, y, z) {
 };
 
 // `exported function` - return a Vector to the vector pool. Failing to return Vectors to the pool may lead to more inefficient code and possible memory leaks.
-const releaseVector = function (item) {
+export const releaseVector = function (item) {
 
     if (item && item.type === 'Vector') vectorPool.push(item.zero());
 };
 
 
 // #### Factory
-const makeVector = function (x, y, z) {
+export const makeVector = function (x, y, z) {
     
     return new Vector(x, y, z);
 };
 
 constructors.Vector = Vector;
-
-
-// #### Exports
-export {
-    makeVector,
-    requestVector,
-    releaseVector,
-};

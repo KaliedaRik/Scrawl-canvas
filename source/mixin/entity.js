@@ -41,17 +41,17 @@ export default function (P = Ωempty) {
 // + [path](../mixin/path.html)
 // + [anchor](../mixin/anchor.html)
 // + [filter](../mixin/filter.html)
-    P = positionMix(P);
-    P = deltaMix(P);
-    P = pivotMix(P);
-    P = mimicMix(P);
-    P = pathMix(P);
-    P = anchorMix(P);
-    P = filterMix(P);
+    positionMix(P);
+    deltaMix(P);
+    pivotMix(P);
+    mimicMix(P);
+    pathMix(P);
+    anchorMix(P);
+    filterMix(P);
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // __method__ - String value which tells the entity _how_ it will display itself on the canvas. Available options are:
 // + `draw` - stroke the entity outline with the entity's `strokeStyle` color, gradient or pattern - including shadow
@@ -239,7 +239,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let G = P.getters,
+    const G = P.getters,
         S = P.setters,
         D = P.deltaSetters;
 
@@ -798,7 +798,4 @@ export default function (P = Ωempty) {
 
 // `none` - perform all the calculations required, but don't perform the final stamping
     P.none = function (engine) {}
-
-// Return the prototype
-    return P;
 };

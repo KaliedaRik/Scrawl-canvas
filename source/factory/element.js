@@ -84,7 +84,7 @@ const Element = function (items = Ωempty) {
 
 
 // #### Element prototype
-let P = Element.prototype = Object.create(Object.prototype);
+const P = Element.prototype = Object.create(Object.prototype);
 P.type = 'Element';
 P.lib = 'element';
 P.isArtefact = true;
@@ -94,8 +94,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [dom](../mixin/dom.html)
-P = baseMix(P);
-P = domMix(P);
+baseMix(P);
+domMix(P);
 
 
 // #### Element attributes
@@ -129,7 +129,7 @@ P.factoryKill = function () {
 
 
 // #### Get, Set, deltaSet
-let S = P.setters;
+const S = P.setters;
 
 
 // `text` - __this is the preferred way to update an element's text content__ because the text supplied in the argument is not treated as HTML by the browser. 
@@ -285,16 +285,10 @@ P.addCanvas = function (items = Ωempty) {
 //     },
 // });
 // ```
-const makeElement = function (items) {
+export const makeElement = function (items) {
     
     if (!items) return false;
     return new Element(items);
 };
 
 constructors.Element = Element;
-
-
-// #### Exports
-export {
-    makeElement,
-};

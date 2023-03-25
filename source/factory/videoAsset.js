@@ -27,7 +27,7 @@ const VideoAsset = function (items = Ωempty) {
 
 
 // #### VideoAsset prototype
-let P = VideoAsset.prototype = Object.create(Object.prototype);
+const P = VideoAsset.prototype = Object.create(Object.prototype);
 P.type = 'Video';
 P.lib = 'asset';
 P.isArtefact = false;
@@ -35,8 +35,8 @@ P.isAsset = true;
 
 
 // #### Mixins
-P = baseMix(P);
-P = assetMix(P);
+baseMix(P);
+assetMix(P);
 
 
 
@@ -67,7 +67,7 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -212,7 +212,7 @@ P.setSinkId = function () {
 
 // `gettableVideoAssetAtributes`, `settableVideoAssetAtributes` - exported Arrays.
 // + TODO - I was planning to make the &lt;video> element's attributes accessible to Picture entitys and Pattern styles - need to check if work has been completed at their end.
-const gettableVideoAssetAtributes = [
+export const gettableVideoAssetAtributes = [
     'video_audioTracks',
     'video_autoPlay',
     'video_buffered',
@@ -246,7 +246,7 @@ const gettableVideoAssetAtributes = [
     'video_volume',
 ];
 
-const settableVideoAssetAtributes = [
+export const settableVideoAssetAtributes = [
     'video_autoPlay',
     'video_controller',
     'video_controls',
@@ -271,7 +271,7 @@ const settableVideoAssetAtributes = [
 // + Required argument is a query string used to search the dom for matching elements
 // + Scrawl-canvas does not remove &lt;video> elements from the DOM.
 // + If &lt;video> elements should not appear, developers need to hide them in some way - for instance by positioning them (or their parent element) absolutely to the top or left of the display; or by giving their parent element zero width/height; or by setting their CSS: `display: none;`, `opacity: 0;`, etc.
-const importDomVideo = function (query) {
+export const importDomVideo = function (query) {
 
     let reg = /.*\/(.*?)\./;
 
@@ -312,7 +312,7 @@ const importDomVideo = function (query) {
 // `importMediaStream` - __Warning: experimental!__
 // + This function will attempt to link a mediaStream - for instance from a device's camera - to an offscreen &lt;video> element, which then gets wrapped in a videoAsset instance which can be displayed in a canvas via a Picture entity (or even a Pattern style).
 // + TODO - extend functionality so users can manipulate the mediaStream via the Picture entity using it as its asset
-const importMediaStream = function (items = Ωempty) {
+export const importMediaStream = function (items = Ωempty) {
 
     // Setup the constraints object with user-supplied data in the items argument
     let constraints = {};
@@ -403,7 +403,7 @@ const importMediaStream = function (items = Ωempty) {
 //
 // ___Using videos from 3rd Party cloud servers___ - for example, YouTube. DON'T. Services such as YouTube generally require users to embed videos into web pages using their video player technology. This is so page visitors can be served adverts and recommended videos, etc. Attempts to circumvent this functionality will often break the 3rd Party's _Terms of Service_.
 // + This advice does not apply to developers who want to include a 3rd Party video player DOM element in a Scrawl-canvas Stack environment. If that meets your requirements, go for it!
-const importVideo = function (...args) {
+export const importVideo = function (...args) {
 
     let reg = /.*\/(.*?)\./,
         result = '';
@@ -497,24 +497,10 @@ const importVideo = function (...args) {
 
 
 // #### Factory
-const makeVideoAsset = function (items) {
+export const makeVideoAsset = function (items) {
 
     if (!items) return false;
     return new VideoAsset(items);
 };
 
 constructors.VideoAsset = VideoAsset;
-
-
-// #### Exports
-export {
-    makeVideoAsset,
-
-    gettableVideoAssetAtributes,
-    settableVideoAssetAtributes,
-
-    importDomVideo,
-    importVideo,
-
-    importMediaStream,
-};

@@ -32,7 +32,7 @@ const Gradient = function (items = Ωempty) {
 
 
 // #### Gradient prototype
-let P = Gradient.prototype = Object.create(Object.prototype);
+const P = Gradient.prototype = Object.create(Object.prototype);
 
 P.type = 'Gradient';
 P.lib = 'styles';
@@ -41,8 +41,8 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
-P = stylesMix(P);
+baseMix(P);
+stylesMix(P);
 
 
 // #### Gradient attributes
@@ -149,16 +149,10 @@ P.updateGradientArgs = function (x, y) {
 //     method: 'fillAndDraw',
 // });
 // ```
-const makeGradient = function (items) {
+export const makeGradient = function (items) {
 
     if (!items) return false;
     return new Gradient(items);
 };
 
 constructors.Gradient = Gradient;
-
-
-// #### Exports
-export {
-    makeGradient,
-};

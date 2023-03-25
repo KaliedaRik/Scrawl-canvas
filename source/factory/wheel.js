@@ -48,7 +48,7 @@ const Wheel = function (items = Ωempty) {
 
 
 // #### Wheel prototype
-let P = Wheel.prototype = Object.create(Object.prototype);
+const P = Wheel.prototype = Object.create(Object.prototype);
 P.type = 'Wheel';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -58,8 +58,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [entity](../mixin/entity.html)
-P = baseMix(P);
-P = entityMix(P);
+baseMix(P);
+entityMix(P);
 
 
 // #### Wheel attributes
@@ -72,7 +72,7 @@ P = entityMix(P);
 // + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter___.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __radius__ - the circle's radius measured in Number pixels, or as a String% - `'10%' - of the Cell's width
     radius: 5,
@@ -106,7 +106,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 

@@ -113,7 +113,7 @@ const Stack = function (items = Ωempty) {
 
 
 // #### Stack prototype
-let P = Stack.prototype = Object.create(Object.prototype);
+const P = Stack.prototype = Object.create(Object.prototype);
 P.type = 'Stack';
 P.lib = 'stack';
 P.isArtefact = true;
@@ -125,10 +125,10 @@ P.isAsset = false;
 // + [cascade](../mixin/cascade.html)
 // + [dom](../mixin/dom.html)
 // + [display](../mixin/displayShape.html)
-P = baseMix(P);
-P = cascadeMix(P);
-P = domMix(P);
-P = displayMix(P);
+baseMix(P);
+cascadeMix(P);
+domMix(P);
+displayMix(P);
 
 
 // #### Stack attributes
@@ -142,7 +142,7 @@ P = displayMix(P);
 // + Attributes defined in the [cascade mixin](../mixin/cascade.html): __groups__.
 // + Attributes defined in the [dom mixin](../mixin/dom.html): __domElement, pitch, yaw, offsetZ, css, classes, position, actionResize, trackHere, domAttributes__.
 // + Attributes defined in the [display mixin](../mixin/displayShape.html): __breakToBanner, breakToLandscape, breakToPortrait, breakToSkyscraper, actionBannerShape, actionLandscapeShape, actionRectangleShape, actionPortraitShape, actionSkyscraperShape__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __position__, __perspective__ - while most of the Stack wrapper's DOM element's attributes are handled through CSS, Scrawl-canvas takes control of some positioning-related attributes. Most of these are defined in the [dom mixin](../mixin/dom.html) - but the position and perspective attributes are managed in this module
     position: 'relative',
@@ -195,7 +195,7 @@ P.factoryKill = function () {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 

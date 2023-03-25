@@ -148,7 +148,7 @@ const RenderAnimation = function (items = Ωempty) {
 
 
 // #### RenderAnimation prototype
-let P = RenderAnimation.prototype = Object.create(Object.prototype);
+const P = RenderAnimation.prototype = Object.create(Object.prototype);
 
 P.type = 'RenderAnimation';
 P.lib = 'animation';
@@ -157,12 +157,12 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### RenderAnimation attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __order__ - positive integer Number. Determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations.
     order: 1,
@@ -303,16 +303,10 @@ P.halt = function () {
 //     afterShow: report,
 // });
 // ```
-const makeRender = function (items) {
+export const makeRender = function (items) {
     
     if (!items) return false;
     return new RenderAnimation(items);
 };
 
 constructors.RenderAnimation = RenderAnimation;
-
-
-// #### Exports
-export {
-    makeRender,
-};

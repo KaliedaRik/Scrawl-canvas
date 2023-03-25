@@ -21,7 +21,7 @@ const Coordinate = function (items, y) {
 
 
 // #### Coordinate prototype
-let P = Coordinate.prototype = Object.create(Array.prototype);
+const P = Coordinate.prototype = Object.create(Array.prototype);
 P.constructor = Coordinate;
 P.type = 'Coordinate';
 
@@ -218,7 +218,7 @@ P.normalize = function() {
 const coordinatePool = [];
 
 // `exported function` - retrieve a Coordinate from the coordinate pool
-const requestCoordinate = function (items, y) {
+export const requestCoordinate = function (items, y) {
 
     if (!coordinatePool.length) coordinatePool.push(new Coordinate());
 
@@ -228,24 +228,16 @@ const requestCoordinate = function (items, y) {
 };
 
 // `exported function` - return a Coordinate to the coordinate pool. Failing to return Coordinates to the pool may lead to more inefficient code and possible memory leaks.
-const releaseCoordinate = function (coordinate) {
+export const releaseCoordinate = function (coordinate) {
 
     if (coordinate && coordinate.type === 'Coordinate') coordinatePool.push(coordinate.zero());
 };
 
 
 // #### Factory
-const makeCoordinate = function (items, y) {
+export const makeCoordinate = function (items, y) {
 
     return new Coordinate(items, y);
 };
 
 constructors.Coordinate = Coordinate;
-
-
-// #### Exports
-export {
-    makeCoordinate,
-    requestCoordinate,
-    releaseCoordinate,
-};

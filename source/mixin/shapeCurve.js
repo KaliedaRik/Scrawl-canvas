@@ -23,7 +23,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // The __end__ coordinate ('pin') defines where a curve terminates.
 // + Similar to the `start` coordinate, the `end` coordinate can be updated using the pseudo-attributes __endX__ and __endY__.
@@ -92,7 +92,7 @@ P.factoryKill = function () {
 
 
 // #### Get, Set, deltaSet
-    let G = P.getters,
+    const G = P.getters,
         S = P.setters,
         D = P.deltaSetters;
 
@@ -641,8 +641,4 @@ P.factoryKill = function () {
             }
         });
     };
-
-
-// Return the prototype
-    return P;
 };

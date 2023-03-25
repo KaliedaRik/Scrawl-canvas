@@ -61,7 +61,7 @@ const NoiseAsset = function (items = Ωempty) {
 
 
 // #### NoiseAsset prototype
-let P = NoiseAsset.prototype = Object.create(Object.prototype);
+const P = NoiseAsset.prototype = Object.create(Object.prototype);
 P.type = 'NoiseAsset';
 P.lib = 'asset';
 P.isArtefact = false;
@@ -73,10 +73,10 @@ P.isAsset = true;
 // + [asset](../mixin/asset.html)
 // + [assetAdvancedFunctionality](../mixin/assetAdvancedFunctionality.html)
 // + [pattern](../mixin/pattern.html)
-P = baseMix(P);
-P = assetMix(P);
-P = assetAdvancedMix(P);
-P = patternMix(P);
+baseMix(P);
+assetMix(P);
+assetAdvancedMix(P);
+patternMix(P);
 
 
 // #### NoiseAsset attributes
@@ -84,7 +84,7 @@ P = patternMix(P);
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
 // + Attributes defined in the [assetAdvancedFunctionality mixin](../mixin/assetAdvancedFunctionality.html): __color, monochromeStart, monochromeRange, gradientStart, gradientEnd, hueStart, hueRange, saturation, luminosity__.
 // + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     // The offscreen canvas dimensions, within which the noise will be generated, is set using the __width__ and __height__ attributes. These take Number values.
     width: 300,
@@ -157,7 +157,7 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -1085,20 +1085,13 @@ P.worleyNoise = function (input, distanceFunc, outputFunc) {
 //     noiseEngine: 'simplex',
 // });
 // ```
-const makeNoiseAsset = function (items) {
+export const makeNoiseAsset = function (items) {
 
     if (!items) return false;
     return new NoiseAsset(items);
 };
 
 // Deprecated - old name
-const makeNoise = makeNoiseAsset;
+export const makeNoise = makeNoiseAsset;
 
 constructors.NoiseAsset = NoiseAsset;
-
-
-// #### Exports
-export {
-    makeNoiseAsset,
-    makeNoise,
-};

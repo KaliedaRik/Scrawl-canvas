@@ -57,7 +57,7 @@ const Group = function (items = Ωempty) {
 
 
 // #### Group prototype
-let P = Group.prototype = Object.create(Object.prototype);
+const P = Group.prototype = Object.create(Object.prototype);
 P.type = 'Group';
 P.lib = 'group';
 P.isArtefact = false;
@@ -65,14 +65,14 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
-P = filterMix(P);
+baseMix(P);
+filterMix(P);
 
 
 // #### Group attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __artefacts__ - an Array containing the names of all artefact objects included in this group.
     artefacts: null,
@@ -169,7 +169,7 @@ P.killArtefacts = function () {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters;
 
 // Artefect membership of the Group object is better handled by the dedicated artefact management functions - __addArtefacts__, __removeArtefacts__, __clearArtefacts__, __moveArtefactsIntoGroup__.  

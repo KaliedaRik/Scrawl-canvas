@@ -59,7 +59,7 @@ const Rectangle = function (items = Ωempty) {
 
 
 // #### Rectangle prototype
-let P = Rectangle.prototype = Object.create(Object.prototype);
+const P = Rectangle.prototype = Object.create(Object.prototype);
 P.type = 'Rectangle';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -69,8 +69,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [shapeBasic](../mixin/shapeBasic.html)
-P = baseMix(P);
-P = shapeMix(P);
+baseMix(P);
+shapeMix(P);
 
 
 // #### Rectangle attributes
@@ -84,7 +84,7 @@ P = shapeMix(P);
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 // + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     rectangleWidth: 10,
     rectangleHeight: 10,
@@ -115,7 +115,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-let S = P.setters,
+const S = P.setters,
     D = P.deltaSetters;
 
 S.radius = function (item) {
@@ -608,7 +608,7 @@ P.calculateLocalPathAdditionalActions = function () {
 //     method: 'fillAndDraw',
 // });
 // ```
-const makeRectangle = function (items) {
+export const makeRectangle = function (items) {
 
     if (!items) return false;
     items.species = 'rectangle';
@@ -616,9 +616,3 @@ const makeRectangle = function (items) {
 };
 
 constructors.Rectangle = Rectangle;
-
-
-// #### Exports
-export {
-    makeRectangle,
-};

@@ -19,7 +19,7 @@ export default function (P = Ωempty) {
 
 // #### Filter-related attributes
 // All factories using the filter mixin will add these attributes to their objects
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // __filters__ - An array of filter object String names. If only one filter is to be applied, then it is enough to use the String name of that filter object - Scrawl-canvas will make sure it gets added to the Array.
 // + To add/remove new filters to the filters array, use the `addFilters` and `removeFilters` functions. Note that the `set` function will replace all the existing filters in the array with the new filters. To remove all existing filters from the array, use the `clearFilters` function
@@ -41,7 +41,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let S = P.setters;
+    const S = P.setters;
 
 
 // `filters` - ___Dangerous action!__ - replaces the existing filters Array with a new filters Array. If a string name is supplied, will add that name to the existing filters array
@@ -345,7 +345,4 @@ export default function (P = Ωempty) {
 
         if (this.dirtyFilterIdentifier || (this.state && this.state.dirtyFilterIdentifier)) this.updateFilterIdentifier(true);
     };
-
-// Return the prototype
-    return P;
 };

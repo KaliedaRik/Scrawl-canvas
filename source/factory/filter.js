@@ -152,7 +152,7 @@ const Filter = function (items = Ωempty) {
 
 
 // #### Filter prototype
-let P = Filter.prototype = Object.create(Object.prototype);
+const P = Filter.prototype = Object.create(Object.prototype);
 P.type = 'Filter';
 P.lib = 'filter';
 P.isArtefact = false;
@@ -160,13 +160,13 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### Filter attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + ___Note:__ unlike other Scrawl-canvas factory functions, the Filter factory does not set all its default attributes as part of its constructors. The reason for this is that these attributes are often specific to just one or a few filter actions or methods; not setting these defaults help save some object memory.
-let defaultAttributes = {
+const defaultAttributes = {
 
     // ##### How the filter factory builds filters
     // Filter actions are defined in action objects - which are vanilla Javascript Objects collected together in the __actions__ array. Each action object is processed sequentially by the filter engine to produce the final output for that filter.
@@ -390,7 +390,7 @@ P.kill = function () {
 
 
 // #### Get, Set, deltaSet
-let S = P.setters, 
+const S = P.setters, 
     D = P.deltaSetters;
 
 
@@ -1604,16 +1604,10 @@ const setActionsArray = {
 
 
 // #### Factory
-const makeFilter = function (items) {
+export const makeFilter = function (items) {
 
     if (!items) return false;
     return new Filter(items);
 };
 
 constructors.Filter = Filter;
-
-
-// #### Exports
-export {
-    makeFilter,
-};

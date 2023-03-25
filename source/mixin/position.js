@@ -137,7 +137,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // __group__ - every Scrawl-canvas artefact should belong to at least one Group, and can belong to more than one Group. Groups can be used for a variety of purposes, and play a major role in the __Display cycle__ and in __collision detection__.
 // + Most group-related functionality takes place elsewhere. An artefact's `group` attribute is used mainly as a 'convenience handle', to make moving an artefact from one Group to another a bit easier.
@@ -396,7 +396,7 @@ export default function (P = Ωempty) {
 
 // #### Get, Set, deltaSet
 // + The getter functions return the __current, pixel-based values__ for the `start`, `handle`, `offset` and `dimensions` attribute Coordinates.
-    let G = P.getters,
+    const G = P.getters,
         S = P.setters,
         D = P.deltaSetters;
 
@@ -1707,8 +1707,4 @@ export default function (P = Ωempty) {
 
 // `updateImageSubscribers`
     P.updateImageSubscribers = λnull;
-
-
-// Return the prototype
-    return P;
 };

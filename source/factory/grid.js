@@ -75,7 +75,7 @@ const Grid = function (items = Ωempty) {
 
 
 // #### Block prototype
-let P = Grid.prototype = Object.create(Object.prototype);
+const P = Grid.prototype = Object.create(Object.prototype);
 P.type = 'Grid';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -85,8 +85,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [entity](../mixin/entity.html)
-P = baseMix(P);
-P = entityMix(P);
+baseMix(P);
+entityMix(P);
 
 
 // #### Grid attributes
@@ -99,7 +99,7 @@ P = entityMix(P);
 // + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter___.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __columns__, __rows__ - integer Numbers representing the number of columns and rows in the Grid
     columns: 2,
@@ -165,7 +165,7 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -826,16 +826,10 @@ P.checkHit = function (items = [], mycell) {
 //     }],
 // });
 // ```
-const makeGrid = function (items) {
+export const makeGrid = function (items) {
 
     if (!items) return false;
     return new Grid(items);
 };
 
 constructors.Grid = Grid;
-
-
-// #### Exports
-export {
-    makeGrid,
-};

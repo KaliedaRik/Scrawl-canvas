@@ -35,7 +35,7 @@ const ConicGradient = function (items = Ωempty) {
 
 
 // #### ConicGradient prototype
-let P = ConicGradient.prototype = Object.create(Object.prototype);
+const P = ConicGradient.prototype = Object.create(Object.prototype);
 
 P.type = 'ConicGradient';
 P.lib = 'styles';
@@ -44,15 +44,15 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
-P = stylesMix(P);
+baseMix(P);
+stylesMix(P);
 
 
 // #### ConicGradient attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [styles mixin](../mixin/styles.html): __start, end, palette, paletteStart, paletteEnd, cyclePalette__.
 // + Attributes defined in the [Palette factory](./palette.html): __colors, cyclic__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // ConicGradients calculate their gradients as a sweep of color around the `start` (`startX` and `startY`) coordinate. The __startAngle__ attribute - measured in degrees, not radians - represents the angle at which the color stop 0 occurs.
 // + The sweep of colors is, by default, clockwise around the start coordinate; to reverse this, swap the gradient's `paletteStart` and `paletteEnd` attributes.

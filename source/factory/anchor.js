@@ -42,7 +42,7 @@ const Anchor = function (items = Ωempty) {
 
 
 // #### Anchor prototype
-let P = Anchor.prototype = Object.create(Object.prototype);
+const P = Anchor.prototype = Object.create(Object.prototype);
 P.type = 'Anchor';
 P.lib = 'anchor';
 P.isArtefact = false;
@@ -50,12 +50,12 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### Anchor attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __host__ - Every anchor will belong to exactly one Artefact.
     host: null,
@@ -129,7 +129,7 @@ P.demolish = function () {
 
 
 // #### Get, Set, deltaSet
-let S = P.setters;
+const S = P.setters;
 
 // Value should be the artefact object, or its name-String
 S.host = function (item) {
@@ -352,15 +352,10 @@ P.click = function () {
 // // back into the Scrawl-canvas event system
 // scrawl.addListener('up', () => canvas.cascadeEventAction('up'), canvas.domElement);
 // ```
-const makeAnchor = function (items) {
+export const makeAnchor = function (items) {
     
     if (!items) return false;
     return new Anchor(items);
 };
 
 constructors.Anchor = Anchor;
-
-// #### Exports
-export {
-    makeAnchor,
-};

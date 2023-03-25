@@ -39,7 +39,7 @@ const Pattern = function (items = Ωempty) {
 
 
 // #### Pattern prototype
-let P = Pattern.prototype = Object.create(Object.prototype);
+const P = Pattern.prototype = Object.create(Object.prototype);
 
 P.type = 'Pattern';
 P.lib = 'styles';
@@ -48,16 +48,16 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
-P = patternMix(P);
-P = assetConsumerMix(P);
+baseMix(P);
+patternMix(P);
+assetConsumerMix(P);
 
 
 // #### Pattern attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF__.
 // + Attributes defined in the [assetConsumer mixin](../mixin/assetConsumer.html): __asset, spriteTrack, imageSource, spriteSource, videoSource, source__.
-let defaultAttributes = {};
+const defaultAttributes = {};
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
@@ -240,16 +240,10 @@ P.getData = function (entity, cell) {
 //     strokeStyle: 'brick-pattern',
 // });
 // ```
-const makePattern = function (items) {
+export const makePattern = function (items) {
 
     if (!items) return false;
     return new Pattern(items);
 };
 
 constructors.Pattern = Pattern;
-
-
-// #### Exports
-export {
-    makePattern,
-};

@@ -60,7 +60,7 @@ const Tracer = function (items = Ωempty) {
 
 
 // #### Tracer prototype
-let P = Tracer.prototype = Object.create(Object.prototype);
+const P = Tracer.prototype = Object.create(Object.prototype);
 
 P.type = 'Tracer';
 P.lib = 'entity';
@@ -69,8 +69,8 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
-P = entityMix(P);
+baseMix(P);
+entityMix(P);
 
 // #### Tracer attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
@@ -82,7 +82,7 @@ P = entityMix(P);
 // + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter___.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     // Note that Tracer entitys, unlike Emitters or Nets, do not need or use World objects; they are not affected by Forces or springs. They are - effectively - entitys that record their location coordinate, with the ability to remember a history of its recent locations.
     //
@@ -142,7 +142,7 @@ P.factoryKill = function (killArtefact) {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -249,16 +249,10 @@ P.checkHit = function (items = [], mycell) {
 // #### Factory
 // ```
 // ```
-const makeTracer = function (items) {
+export const makeTracer = function (items) {
 
     if (!items) return false;
     return new Tracer(items);
 };
 
 constructors.Tracer = Tracer;
-
-
-// #### Exports
-export {
-    makeTracer,
-};

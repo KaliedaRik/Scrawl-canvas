@@ -209,7 +209,7 @@ const Canvas = function (items = Ωempty) {
 
 
 // #### Canvas prototype
-let P = Canvas.prototype = Object.create(Object.prototype);
+const P = Canvas.prototype = Object.create(Object.prototype);
 P.type = 'Canvas';
 P.lib = 'canvas';
 P.isArtefact = true;
@@ -220,9 +220,9 @@ P.isAsset = false;
 // + [base](../mixin/base.html)
 // + [dom](../mixin/dom.html)
 // + [display](../mixin/displayShape.html)
-P = baseMix(P);
-P = domMix(P);
-P = displayMix(P);
+baseMix(P);
+domMix(P);
+displayMix(P);
 
 
 // #### Canvas attributes
@@ -235,7 +235,7 @@ P = displayMix(P);
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [dom mixin](../mixin/dom.html): __domElement, pitch, yaw, offsetZ, css, classes, position, actionResize, trackHere, domAttributes__.
 // + Attributes defined in the [display mixin](../mixin/displayShape.html): __breakToBanner, breakToLandscape, breakToPortrait, breakToSkyscraper, actionBannerShape, actionLandscapeShape, actionRectangleShape, actionPortraitShape, actionSkyscraperShape__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __position__ - the CSS position value for the &lt;canvas> element. This value will be set to `absolute` when the element is an artefact associated with a Stack; `relative` in other cases.
     position: 'relative',
@@ -338,7 +338,7 @@ P.factoryKill = function () {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 

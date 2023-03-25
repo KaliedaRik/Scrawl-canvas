@@ -53,7 +53,7 @@ const Spring = function (items = Ωempty) {
 
 
 // #### Spring prototype
-let P = Spring.prototype = Object.create(Object.prototype);
+const P = Spring.prototype = Object.create(Object.prototype);
 P.type = 'Spring';
 P.lib = 'spring';
 P.isArtefact = false;
@@ -61,12 +61,12 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### Spring attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     // __particleFrom__, __particleTo__ - String name of a Particle, or the Particle object itself. These attributes hold references to the Particle objects involved in this constraint.
     particleFrom: null,
@@ -105,7 +105,7 @@ P.kill = function () {
 
 
 // #### Get, Set, deltaSet
-let S = P.setters;
+const S = P.setters;
 
 // `particleFrom`, `particleTo`
 S.particleFrom = function (item) {
@@ -205,17 +205,10 @@ P.applySpring = function () {
 //
 // }).run();
 // ```
-const makeSpring = function (items) {
+export const makeSpring = function (items) {
 
     if (!items) return false;
     return new Spring(items);
 };
 
 constructors.Spring = Spring;
-
-
-// #### Exports
-export {
-    makeSpring,
-};
-

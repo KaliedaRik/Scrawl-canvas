@@ -15,7 +15,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 // __repeat__ - String indicating how to repeat the pattern's image. Possible values are: `repeat` (default), `repeat-x`, `repeat-y`, `no-repeat`
         repeat: 'repeat',
@@ -47,7 +47,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let S = P.setters;
+    const S = P.setters;
 
 // __repeat__
     P.repeatValues = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'];
@@ -134,7 +134,4 @@ export default function (P = Ωempty) {
         }
         return 'rgb(0 0 0 / 0)';
     };
-
-// Return the prototype
-    return P;
 };

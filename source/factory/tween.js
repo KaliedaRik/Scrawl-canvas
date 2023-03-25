@@ -91,7 +91,7 @@ const Tween = function (items = Ωempty) {
 
 
 // #### Tween prototype
-let P = Tween.prototype = Object.create(Object.prototype);
+const P = Tween.prototype = Object.create(Object.prototype);
 P.type = 'Tween';
 P.lib = 'tween';
 P.isArtefact = false;
@@ -99,14 +99,14 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
-P = tweenMix(P);
+baseMix(P);
+tweenMix(P);
 
 
 // #### Tween attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [tween mixin](../mixin/tween.html): __order__, __ticker__, __targets__, __time__, __action__, __reverseOnCycleEnd__, __reversed__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __definitions__ - Array of objects defining the animations to be performed by the Tween. Object attributes include:
 // + __attribute__ (required) - String attribute key.
@@ -241,7 +241,7 @@ P.postCloneAction = function(clone, items) {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters;
 
 // __definitions__

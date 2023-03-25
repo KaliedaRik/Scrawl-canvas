@@ -190,7 +190,4 @@ export default function (P = Ωempty) {
         sub.dirtyImageSubscribers = true;
         sub.dirtyFilterIdentifier = true;
     };
-
-// Return the prototype
-    return P;
 };

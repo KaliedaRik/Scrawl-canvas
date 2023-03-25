@@ -43,7 +43,7 @@ export default function (P = Ωempty) {
 
 
 // #### Shared attributes
-    let defaultAttributes = {
+    const defaultAttributes = {
 
 
 // __start__, __end__ - Gradient-type styles use Coordinate factory Arrays to hold details of their start and end coordinates. The following _pseudo-attributes_ can also be used to reference these values:
@@ -156,7 +156,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    let G = P.getters,
+    const G = P.getters,
         S = P.setters,
         D = P.deltaSetters;
 
@@ -734,7 +734,4 @@ export default function (P = Ωempty) {
 
         return this;
     };
-
-// Return the prototype
-    return P;
 };

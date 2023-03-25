@@ -29,7 +29,7 @@ const Quaternion = function (items = Ωempty) {
 
 
 // #### Quaternion prototype
-let P = Quaternion.prototype = Object.create(Object.prototype);
+const P = Quaternion.prototype = Object.create(Object.prototype);
 P.type = 'Quaternion';
 
 

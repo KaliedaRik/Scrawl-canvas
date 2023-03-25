@@ -117,7 +117,7 @@ const Cell = function (items = Ωempty) {
 
 
 // #### Cell prototype
-let P = Cell.prototype = Object.create(Object.prototype);
+const P = Cell.prototype = Object.create(Object.prototype);
 P.type = 'Cell';
 P.lib = 'cell';
 P.isArtefact = false;
@@ -136,18 +136,18 @@ P.isAsset = true;
 // + [cascade](../mixin/cascade.html)
 // + [pattern](../mixin/pattern.html)
 // + [filter](../mixin/filter.html)
-P = baseMix(P);
-P = cellMix(P);
-P = assetMix(P);
-P = positionMix(P);
-P = deltaMix(P);
-P = pivotMix(P);
-P = mimicMix(P);
-P = pathMix(P);
-P = anchorMix(P);
-P = cascadeMix(P);
-P = patternMix(P);
-P = filterMix(P);
+baseMix(P);
+cellMix(P);
+assetMix(P);
+positionMix(P);
+deltaMix(P);
+pivotMix(P);
+mimicMix(P);
+pathMix(P);
+anchorMix(P);
+cascadeMix(P);
+patternMix(P);
+filterMix(P);
 
 
 // #### Cell attributes
@@ -162,7 +162,7 @@ P = filterMix(P);
 // + Attributes defined in the [cascade mixin](../mixin/cascade.html): __groups__.
 // + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF__.
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // The following booleans determine whether a Cell canvas will, clear, compile and/or show itself as part of the Display cycle.
 // + Note that as part of the Display cycle, Scrawl-canvas will complete all tasks of the `clear` part of the process before moving on to the `compile` stage, which again will complete before the `show` stage triggers.
@@ -283,7 +283,7 @@ P.factoryKill = function () {
 };
 
 // #### Get, Set, deltaSet
-let G = P.getters, 
+const G = P.getters, 
     S = P.setters,
     D = P.deltaSetters;
 

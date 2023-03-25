@@ -6,7 +6,6 @@
 import { mergeOver, mergeDiscard, xt, Ωempty, λthis, λnull, radian } from '../core/utilities.js';
 import { styles, stylesnames, cell, cellnames } from '../core/library.js';
 import { getPixelRatio, getIgnorePixelRatio } from "../core/events.js";
-// import { makeState } from './state.js';
 
 
 // #### Export function
@@ -362,9 +361,4 @@ export default function (P = Ωempty) {
 
         return this;
     };
-
-
-
-// Return the prototype
-    return P;
 };

@@ -62,7 +62,7 @@ const Force = function (items = Ωempty) {
 
 
 // #### Force prototype
-let P = Force.prototype = Object.create(Object.prototype);
+const P = Force.prototype = Object.create(Object.prototype);
 P.type = 'Force';
 P.lib = 'force';
 P.isArtefact = false;
@@ -70,12 +70,12 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### Force attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     action: null,
 };
@@ -100,7 +100,7 @@ P.kill = function () {
 
 
 // #### Get, Set, deltaSet
-let S = P.setters;
+const S = P.setters;
 
 S.action = function (item) {
 
@@ -139,7 +139,7 @@ S.action = function (item) {
 //     },
 // });
 // ```
-const makeForce = function (items) {
+export const makeForce = function (items) {
 
     if (!items) return false;
     return new Force(items);
@@ -163,10 +163,3 @@ makeForce({
         releaseVector(c);
     },
 });
-
-
-// #### Exports
-export {
-    makeForce,
-};
-

@@ -57,7 +57,7 @@ const Polygon = function (items = Ωempty) {
 
 
 // #### Polygon prototype
-let P = Polygon.prototype = Object.create(Object.prototype);
+const P = Polygon.prototype = Object.create(Object.prototype);
 P.type = 'Polygon';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -67,8 +67,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [shapeBasic](../mixin/shapeBasic.html)
-P = baseMix(P);
-P = shapeMix(P);
+baseMix(P);
+shapeMix(P);
 
 
 // #### Polygon attributes
@@ -82,7 +82,7 @@ P = shapeMix(P);
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 // + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     sides: 0,
     sideLength: 0,
@@ -106,7 +106,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-let S = P.setters,
+const S = P.setters,
     D = P.deltaSetters;
 
 // __sides__
@@ -216,7 +216,7 @@ P.makePolygonPath = function () {
 //     method: 'fillAndDraw',
 // });
 // ```
-const makePolygon = function (items) {
+export const makePolygon = function (items) {
 
     if (!items) return false;
     items.species = 'polygon';
@@ -224,9 +224,3 @@ const makePolygon = function (items) {
 };
 
 constructors.Polygon = Polygon;
-
-
-// #### Exports
-export {
-    makePolygon,
-};

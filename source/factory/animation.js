@@ -48,7 +48,7 @@ const Animation = function (items = Ωempty) {
 
 
 // #### Animation prototype
-let P = Animation.prototype = Object.create(Object.prototype);
+const P = Animation.prototype = Object.create(Object.prototype);
 
 P.type = 'Animation';
 P.lib = 'animation';
@@ -57,12 +57,12 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### Animation attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __order__ - positive integer Number - determines the order in which each Animation object will be actioned before the Display cycle starts. 
 // + Higher order Animations will be processed after lower order Animations. 
@@ -173,16 +173,10 @@ P.kill = function () {
 //     }
 // });
 // ```
-const makeAnimation = function (items) {
+export const makeAnimation = function (items) {
     
     if (!items) return false;
     return new Animation(items);
 };
 
 constructors.Animation = Animation;
-
-
-// #### Exports
-export {
-    makeAnimation,
-};

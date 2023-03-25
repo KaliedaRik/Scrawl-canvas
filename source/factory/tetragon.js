@@ -55,7 +55,7 @@ const Tetragon = function (items = Ωempty) {
 
 
 // #### Tetragon prototype
-let P = Tetragon.prototype = Object.create(Object.prototype);
+const P = Tetragon.prototype = Object.create(Object.prototype);
 P.type = 'Tetragon';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -65,8 +65,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [shapeBasic](../mixin/shapeBasic.html)
-P = baseMix(P);
-P = shapeMix(P);
+baseMix(P);
+shapeMix(P);
 
 
 // #### Tetragon attributes
@@ -80,7 +80,7 @@ P = shapeMix(P);
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 // + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
-let defaultAttributes = {
+const defaultAttributes = {
 
     radiusX: 5,
     radiusY: 5,
@@ -103,7 +103,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-let S = P.setters,
+const S = P.setters,
     D = P.deltaSetters;
 
 S.radius = function (item) {
@@ -282,7 +282,7 @@ P.calculateLocalPathAdditionalActions = function () {
 //     radiusY: 60,
 // });
 // ```
-const makeTetragon = function (items) {
+export const makeTetragon = function (items) {
 
     if (!items) return false;
     items.species = 'tetragon';
@@ -290,9 +290,3 @@ const makeTetragon = function (items) {
 };
 
 constructors.Tetragon = Tetragon;
-
-
-// #### Exports
-export {
-    makeTetragon,
-};

@@ -66,7 +66,7 @@ const RawAsset = function (items = Ωempty) {
 
 
 // #### RawAsset prototype
-let P = RawAsset.prototype = Object.create(Object.prototype);
+const P = RawAsset.prototype = Object.create(Object.prototype);
 
 P.type = 'RawAsset';
 P.lib = 'asset';
@@ -75,15 +75,15 @@ P.isAsset = true;
 
 
 // #### Mixins
-P = baseMix(P);
-P = assetMix(P);
+baseMix(P);
+assetMix(P);
 
 
 // #### RawAsset attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
 // + The __element__ and __engine__ attributes are excluded from the defaults object
-let defaultAttributes = {
+const defaultAttributes = {
 
     // __keytypes__ - a Javascript object made up of `key:String` attributes. Used as part of the factory when generating assets which use user-defined attributes that need to be Scrawl-canvas Quaternions, Vectors (like gravity) or Coordinates.
     // + the `key` should be the attribute's name
@@ -248,16 +248,10 @@ P.initializeAttributes = function (types) {
 // #### Factory
 // ```
 // ```
-const makeRawAsset = function (items) {
+export const makeRawAsset = function (items) {
 
     if (!items) return false;
     return new RawAsset(items);
 };
 
 constructors.RawAsset = RawAsset;
-
-
-// #### Exports
-export {
-    makeRawAsset,
-};

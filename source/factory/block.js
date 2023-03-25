@@ -40,7 +40,7 @@ const Block = function (items = Ωempty) {
 
 
 // #### Block prototype
-let P = Block.prototype = Object.create(Object.prototype);
+const P = Block.prototype = Object.create(Object.prototype);
 P.type = 'Block';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -50,8 +50,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [entity](../mixin/entity.html)
-P = baseMix(P);
-P = entityMix(P);
+baseMix(P);
+entityMix(P);
 
 
 // #### Block attributes
@@ -138,16 +138,10 @@ P.cleanPathObject = function () {
 //     sharedState: true,
 // });
 // ```
-const makeBlock = function (items) {
+export const makeBlock = function (items) {
 
     if (!items) return false;
     return new Block(items);
 };
 
 constructors.Block = Block;
-
-
-// #### Exports
-export {
-    makeBlock,
-};

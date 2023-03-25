@@ -90,7 +90,7 @@ const Palette = function (items = Ωempty) {
 
 
 // #### Palette prototype
-let P = Palette.prototype = Object.create(Object.prototype);
+const P = Palette.prototype = Object.create(Object.prototype);
 
 P.type = 'Palette';
 P.lib = 'palette';
@@ -99,12 +99,12 @@ P.isAsset = false;
 
 
 // #### Mixins
-P = baseMix(P);
+baseMix(P);
 
 
 // #### Palette attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // The __colors__ object is a raw Javascript object which uses stop values `('0 ' - '999 ')` as keys and an Array with four members holding color data as values. 
     colors: null,
@@ -156,7 +156,7 @@ P.kill = function () {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters;
 
 
@@ -564,7 +564,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
 
 // #### Factory
-const makePalette = function (items) {
+export const makePalette = function (items) {
 
     if (!items) return false;
     return new Palette(items);
@@ -572,11 +572,4 @@ const makePalette = function (items) {
 
 constructors.Palette = Palette;
 
-const paletteKeys = ['colors', 'cyclic', 'stops'];
-
-
-// #### Exports
-export {
-    makePalette,
-    paletteKeys,
-};
+export const paletteKeys = ['colors', 'cyclic', 'stops'];

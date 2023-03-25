@@ -147,7 +147,7 @@ const Phrase = function (items = Ωempty) {
 };
 
 // #### Phrase prototype
-let P = Phrase.prototype = Object.create(Object.prototype);
+const P = Phrase.prototype = Object.create(Object.prototype);
 P.type = 'Phrase';
 P.lib = 'entity';
 P.isArtefact = true;
@@ -157,8 +157,8 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [entity](../mixin/entity.html)
-P = baseMix(P);
-P = entityMix(P);
+baseMix(P);
+entityMix(P);
 
 P.midInitActions = function (items) {
 
@@ -192,7 +192,7 @@ P.midInitActions = function (items) {
 // + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter___.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
-let defaultAttributes = {
+const defaultAttributes = {
 
 // __text__ - the text String to be displayed by the Phrase
     text: '',
@@ -347,7 +347,7 @@ P.factoryKill = function () {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -1734,16 +1734,10 @@ P.performRotation = function (engine) {
 //     method: 'draw',
 // });
 // ```
-const makePhrase = function (items) {
+export const makePhrase = function (items) {
 
     if (!items) return false;
     return new Phrase(items);
 };
 
 constructors.Phrase = Phrase;
-
-
-// #### Exports
-export {
-    makePhrase,
-};
