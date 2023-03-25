@@ -138,9 +138,6 @@ $> yarn install
 $> yarn dev
 ```
 
-### Code visualisation
-![Visualization of the codebase](./diagram.svg)
-
 ### Testing
 The code base does not include any ___unit testing___ frameworks. Instead, we rely on a set of Demo tests which allow us to perform ___integration testing___ and ___user interface testing___.
 
