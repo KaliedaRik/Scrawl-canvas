@@ -91,6 +91,8 @@ canvas.buildCell({
 
     shown: false,
     useAsPattern: true,
+
+    // willReadFrequently: false,
 });
 
 canvas.base.set({

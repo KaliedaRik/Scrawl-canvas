@@ -91,6 +91,7 @@ const Cell = function (items = Ωempty) {
         items.element = mycanvas;
     }
 
+    // The `willReadFrequently` argument attribute is not retained by the cell, but is used during the Cell element's construction. Defaults to `true`
     this.installElement(items.element, items.willReadFrequently);
 
     this.set(this.defs);

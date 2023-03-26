@@ -280,3 +280,7 @@ const myAnimation = scrawl.makeRender({
     commence: clock.update,
     afterShow: report,
 });
+
+// #### Development and testing
+console.log(scrawl.library);
+
