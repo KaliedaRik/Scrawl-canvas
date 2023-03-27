@@ -15,9 +15,40 @@
 
 // #### Imports
 import * as library from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, 
-    generateUniqueString, isa_boolean, isa_obj, addStrings, 
-    xt, xta, λnull, Ωempty } from '../core/utilities.js';
+
+import { 
+    addStrings,
+    generateUniqueString,
+    isa_boolean,
+    isa_obj,
+    mergeOver,
+    pushUnique,
+    removeItem,
+    xt,
+    xta,
+    λnull,
+    Ωempty,
+} from '../core/utilities.js';
+
+import {
+    _entries,
+    _isArray,
+    _keys,
+    _parse,
+    _string,
+} from '../core/shared-vars.js'
+
+
+// Local variables
+const UNDEF = 'undefined';
+const NAME = 'name';
+const TYPE_EXCLUSIONS = ['Image', 'Sprite', 'Video', 'Canvas', 'Stack'];
+
+let i = 0, 
+    key = '', 
+    val = null, 
+    fn = null;
+
 
 // #### Export function
 export default function (P = Ωempty) {
@@ -48,18 +79,18 @@ export default function (P = Ωempty) {
 
         if (xt(item)) {
 
-            const getter = this.getters[item];
+            fn = this.getters[item];
 
-            if (getter) return getter.call(this);
+            if (fn) return fn.call(this);
 
             else {
 
                 const def = this.defs[item];
 
-                if (typeof def != 'undefined') {
+                if (typeof def != UNDEF) {
 
-                    const val = this[item];
-                    return (typeof val != 'undefined') ? val : def;
+                    val = this[item];
+                    return (typeof val != UNDEF) ? val : def;
                 }
             }
         }
@@ -77,7 +108,7 @@ export default function (P = Ωempty) {
 // ```
     P.set = function (items = Ωempty) {
 
-        const keys = Object.keys(items),
+        const keys = _keys(items),
             keysLen = keys.length;
 
         if (keysLen) {
@@ -85,19 +116,17 @@ export default function (P = Ωempty) {
             const setters = this.setters,
                 defs = this.defs;
             
-            let predefined, i, key, value;
-
             for (i = 0; i < keysLen; i++) {
 
                 key = keys[i];
-                value = items[key];
+                val = items[key];
 
-                if (key && key !== 'name' && value != null) {
+                if (key && key != NAME && val != null) {
 
-                    predefined = setters[key];
+                    fn = setters[key];
 
-                    if (predefined) predefined.call(this, value);
-                    else if (typeof defs[key] !== 'undefined') this[key] = value;
+                    if (fn) fn.call(this, val);
+                    else if (typeof defs[key] != UNDEF) this[key] = val;
                 }
             }
         }
@@ -116,7 +145,7 @@ export default function (P = Ωempty) {
 // ```
     P.setDelta = function (items = Ωempty) {
 
-        const keys = Object.keys(items),
+        const keys = _keys(items),
             keysLen = keys.length;
 
         if (keysLen) {
@@ -124,19 +153,17 @@ export default function (P = Ωempty) {
             const setters = this.deltaSetters,
                 defs = this.defs;
             
-            let predefined, i, iz, key, value;
-
             for (i = 0; i < keysLen; i++) {
 
                 key = keys[i];
-                value = items[key];
+                val = items[key];
 
-                if (key && key !== 'name' && value != null) {
+                if (key && key != NAME && val != null) {
 
-                    predefined = setters[key];
+                    fn = setters[key];
 
-                    if (predefined) predefined.call(this, value);
-                    else if (typeof defs[key] !== 'undefined') this[key] = addStrings(this[key], value);
+                    if (fn) fn.call(this, val);
+                    else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], val);
                 }
             }
         }
@@ -255,7 +282,7 @@ export default function (P = Ωempty) {
         }
 
         const defs = this.defs,
-            defKeys = Object.keys(defs),
+            defKeys = _keys(defs),
             packetExclusions = this.packetExclusions,
             packetExclusionsByRegex = this.packetExclusionsByRegex,
             packetCoordinates = this.packetCoordinates,
@@ -266,20 +293,20 @@ export default function (P = Ωempty) {
 
         let copy = {};
 
-        if (packetDefaultInclusions && !Array.isArray(packetDefaultInclusions)) {
+        if (packetDefaultInclusions && !_isArray(packetDefaultInclusions)) {
 
-            packetDefaultInclusions = Object.keys(defs);
+            packetDefaultInclusions = _keys(defs);
         }
         else if (!packetDefaultInclusions) packetDefaultInclusions = [];
 
-        Object.entries(this).forEach(([key, val]) => {
+        _entries(this).forEach(([key, val]) => {
 
             let flag = true,
                 test;
 
-            if (defKeys.indexOf(key) < 0) flag = false;
+            if (!defKeys.includes(key)) flag = false;
 
-            if (flag && packetExclusions.indexOf(key) >= 0) flag = false;
+            if (flag && packetExclusions.includes(key)) flag = false;
 
             if (flag) {
 
@@ -289,9 +316,9 @@ export default function (P = Ωempty) {
 
             if (flag) {
 
-                if (packetFunctions.indexOf(key) >= 0) {
+                if (packetFunctions.includes(key)) {
 
-                    if (xt(val) && val !== null) {
+                    if (xt(val) && val != null) {
 
                         let func = this.stringifyFunction(val);
 
@@ -299,11 +326,11 @@ export default function (P = Ωempty) {
                     }
                 }
 
-                else if (packetObjects.indexOf(key) >= 0 && this[key] && this[key].name) copy[key] = this[key].name;
+                else if (packetObjects.includes(key) && this[key] && this[key].name) copy[key] = this[key].name;
 
-                else if (packetCoordinates.indexOf(key) >= 0) {
+                else if (packetCoordinates.includes(key)) {
 
-                    if (packetDefaultInclusions.indexOf(key) >= 0) copy[key] = val;
+                    if (packetDefaultInclusions.includes(key)) copy[key] = val;
                     else if (val[0] || val[1]) copy[key] = val;
                 }
 
@@ -320,7 +347,7 @@ export default function (P = Ωempty) {
         copy = this.finalizePacketOut(copy, items);
 
         // Return a JSON string
-        return JSON.stringify([this.name, this.type, this.lib, copy]);
+        return _string([this.name, this.type, this.lib, copy]);
     };
 
 
@@ -339,11 +366,11 @@ export default function (P = Ωempty) {
     };
 
 // `processPacketOut`
-    P.processPacketOut = function (key, value, includes) {
+    P.processPacketOut = function (key, value, incl) {
 
         let result = true;
 
-        if (includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
+        if (!incl.includes(key) && value === this.defs[key]) result = false;
 
         return result;
     };
@@ -377,7 +404,7 @@ export default function (P = Ωempty) {
                     else reject(report);
                 }
                 // This is not much of a test ...
-                else if (url.indexOf('"name":') >= 0) {
+                else if (url.includes('"name":')) {
 
                     // Looks like we have a packet for processing, but it's malformed
                     reject(new Error('Bad packet supplied for import'));
@@ -402,7 +429,7 @@ export default function (P = Ωempty) {
             });
         };
 
-        if (Array.isArray(items)) {
+        if (_isArray(items)) {
 
             const promises = [];
 
@@ -428,7 +455,6 @@ export default function (P = Ωempty) {
 // 5. Returns the affected artefact/asset/style/tween/etc on success; false otherwise
 //
 // The function can be called directly on any Scrawl-canvas object that uses the base.js mixin - which means that all differing functionality for various types of object have to remain here, in base.js
-    P.actionPacketExclusions = ['Image', 'Sprite', 'Video', 'Canvas', 'Stack'];
     P.actionPacket = function (packet) {
 
         try {
@@ -441,7 +467,7 @@ export default function (P = Ωempty) {
 
                     try {
 
-                        [name, type, lib, update] = JSON.parse(packet);
+                        [name, type, lib, update] = _parse(packet);
                     }
                     catch (e) {
 
@@ -450,7 +476,7 @@ export default function (P = Ωempty) {
 
                     if (xta(name, type, lib, update)) {
 
-                        if (this.actionPacketExclusions.indexOf(type) >= 0) {
+                        if (TYPE_EXCLUSIONS.includes(type)) {
 
                             throw new Error(`Failed to process packet - Stacks, Canvases and visual assets are excluded from the packet system`);
                         }
@@ -532,7 +558,7 @@ export default function (P = Ωempty) {
 
         const fItem = obj[item];
 
-        if (xt(fItem) && fItem !== null && fItem.substring) {
+        if (xt(fItem) && fItem != null && fItem.substring) {
 
             if (fItem === '~~~') obj[item] = λnull;
             else {
@@ -545,7 +571,7 @@ export default function (P = Ωempty) {
                 args = args.map(a => a.trim());
 
                 // Native code raises non-terminal errors (because it is native code!) - so we dodge that bullet.
-                if (func.indexOf('[native code]') < 0) {
+                if (!func.includes('[native code]')) {
 
                     f = new Function(...args, func);
 
@@ -622,7 +648,7 @@ export default function (P = Ωempty) {
 // `makeName` - If the developer doesn't supply a name value for a factory function, then Scrawl-canvas will generate a random name for the object to use.
     P.makeName = function (item) {
 
-        if (item && item.substring && library[`${this.lib}names`].indexOf(item) < 0) this.name = item;                
+        if (item && item.substring && !library[`${this.lib}names`].includes(item)) this.name = item;                
         else this.name = generateUniqueString();
 
         return this;

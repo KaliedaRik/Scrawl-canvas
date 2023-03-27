@@ -419,7 +419,7 @@ makeCog({
 // Create entitys to use the above Shape entitys as paths along which they can be animated
 makePicture({
 
-    name: name('_tab'),
+    name: name('tab-bear'),
     imageSource: 'img/bunny.png',
 
     width: 26,
@@ -441,212 +441,212 @@ makePicture({
     },
 
 }).clone({
-    name: name('_blockRectangle'),
+    name: name('blockRectangle-bear'),
     path: name('blockRectangle'),
     pathPosition: 0.05,
 
 }).clone({
-    name: name('_circle'),
+    name: name('circle-bear'),
     path: name('circle'),
     pathPosition: 0.1,
 
 }).clone({
-    name: name('_egg'),
+    name: name('egg-bear'),
     path: name('egg'),
     pathPosition: 0.15,
 
 }).clone({
-    name: name('_ellipse'),
+    name: name('ellipse-bear'),
     path: name('ellipse'),
     pathPosition: 0.2,
 
 }).clone({
-    name: name('_firstBezier'),
+    name: name('firstBezier-bear'),
     path: name('firstBezier'),
     pathPosition: 0.25,
 
 }).clone({
-    name: name('_firstLine'),
+    name: name('firstLine-bear'),
     path: name('firstLine'),
     pathPosition: 0.3,
 
 }).clone({
-    name: name('_firstQuad'),
+    name: name('firstQuad-bear'),
     path: name('firstQuad'),
     pathPosition: 0.35,
 
 }).clone({
-    name: name('_notRectangle'),
+    name: name('notRectangle-bear'),
     path: name('notRectangle'),
     pathPosition: 0.4,
 
 }).clone({
-    name: name('_ovalRectangle'),
+    name: name('ovalRectangle-bear'),
     path: name('ovalRectangle'),
     pathPosition: 0.45,
 
 }).clone({
-    name: name('_secondBezier'),
+    name: name('secondBezier-bear'),
     path: name('secondBezier'),
     pathPosition: 0.5,
 
 }).clone({
-    name: name('_secondLine'),
+    name: name('secondLine-bear'),
     path: name('secondLine'),
     pathPosition: 0.55,
 
 }).clone({
-    name: name('_secondQuad'),
+    name: name('secondQuad-bear'),
     path: name('secondQuad'),
     pathPosition: 0.6,
 
 }).clone({
-    name: name('_shield'),
+    name: name('shield-bear'),
     path: name('shield'),
     pathPosition: 0.65,
 
 }).clone({
-    name: name('_splodge'),
+    name: name('splodge-bear'),
     path: name('splodge'),
     pathPosition: 0.7,
 
 }).clone({
-    name: name('_thirdBezier'),
+    name: name('thirdBezier-bear'),
     path: name('thirdBezier'),
     pathPosition: 0.75,
 
 }).clone({
-    name: name('_thirdQuad'),
+    name: name('thirdQuad-bear'),
     path: name('thirdQuad'),
     pathPosition: 0.8,
 
 }).clone({
-    name: name('_thirdLine'),
+    name: name('thirdLine-bear'),
     path: name('thirdLine'),
     pathPosition: 0.85,
 
 }).clone({
-    name: name('_square'),
+    name: name('square-bear'),
     path: name('square'),
     pathPosition: 0,
 
 }).clone({
-    name: name('_diamond'),
+    name: name('diamond-bear'),
     path: name('diamond'),
     pathPosition: 0.05,
 
 }).clone({
-    name: name('_triangle'),
+    name: name('triangle-bear'),
     path: name('triangle'),
     pathPosition: 0.1,
 
 }).clone({
-    name: name('_arrow'),
+    name: name('arrow-bear'),
     path: name('arrow'),
     pathPosition: 0.15,
 
 }).clone({
-    name: name('_skewarrow'),
+    name: name('skewarrow-bear'),
     path: name('skewarrow'),
     pathPosition: 0.2,
 
 }).clone({
-    name: name('_equiTriangle'),
+    name: name('equiTriangle-bear'),
     path: name('equiTriangle'),
     pathPosition: 0.25,
 
 }).clone({
-    name: name('_pentagon'),
+    name: name('pentagon-bear'),
     path: name('pentagon'),
     pathPosition: 0.3,
 
 }).clone({
-    name: name('_hexagon'),
+    name: name('hexagon-bear'),
     path: name('hexagon'),
     pathPosition: 0.35,
 
 }).clone({
-    name: name('_11sides'),
+    name: name('11sides-bear'),
     path: name('11sides'),
     pathPosition: 0.4,
 
 }).clone({
-    name: name('_5star'),
+    name: name('5star-bear'),
     path: name('5star'),
     pathPosition: 0.45,
 
 }).clone({
-    name: name('_6star'),
+    name: name('6star-bear'),
     path: name('6star'),
     pathPosition: 0.5,
 
 }).clone({
-    name: name('_twistedstar'),
+    name: name('twistedstar-bear'),
     path: name('twistedstar'),
     pathPosition: 0.55,
 
 }).clone({
-    name: name('_spiral1'),
+    name: name('spiral1-bear'),
     path: name('spiral1'),
     pathPosition: 0,
 
 }).clone({
-    name: name('_spiral2'),
+    name: name('spiral2-bear'),
     path: name('spiral2'),
     pathPosition: 0.25,
 
 }).clone({
-    name: name('_spiral3'),
+    name: name('spiral3-bear'),
     path: name('spiral3'),
     pathPosition: 0.5,
 
 }).clone({
-    name: name('_spiral4'),
+    name: name('spiral4-bear'),
     path: name('spiral4'),
     pathPosition: 0.75,
 
 }).clone({
-    name: name('_tooth-cog'),
+    name: name('tooth-cog-bear'),
     path: name('tooth-cog'),
     pathPosition: 0,
 
 }).clone({
-    name: name('_blade-tooth-cog'),
+    name: name('blade-tooth-cog-bear'),
     path: name('blade-tooth-cog'),
     pathPosition: 0.3,
 
 }).clone({
-    name: name('_twist-tooth-cog'),
+    name: name('twist-tooth-cog-bear'),
     path: name('twist-tooth-cog'),
     pathPosition: 0.6,
 
 }).clone({
-    name: name('_hill-cog'),
+    name: name('hill-cog-bear'),
     path: name('hill-cog'),
     pathPosition: 0.1,
 
 }).clone({
-    name: name('_blade-hill-cog'),
+    name: name('blade-hill-cog-bear'),
     path: name('blade-hill-cog'),
     pathPosition: 0.4,
 
 }).clone({
-    name: name('_twist-hill-cog'),
+    name: name('twist-hill-cog-bear'),
     path: name('twist-hill-cog'),
     pathPosition: 0.7,
 
 }).clone({
-    name: name('_smooth-cog'),
+    name: name('smooth-cog-bear'),
     path: name('smooth-cog'),
     pathPosition: 0.2,
 
 }).clone({
-    name: name('_blade-smooth-cog'),
+    name: name('blade-smooth-cog-bear'),
     path: name('blade-smooth-cog'),
     pathPosition: 0.5,
 
 }).clone({
-    name: name('_twist-smooth-cog'),
+    name: name('twist-smooth-cog-bear'),
     path: name('twist-smooth-cog'),
     pathPosition: 0.8,
 });
