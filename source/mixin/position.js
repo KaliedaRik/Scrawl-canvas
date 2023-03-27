@@ -124,12 +124,79 @@
 
 
 // #### Imports
-import { artefact, group, tween, particle } from '../core/library.js';
-import { λnull, mergeOver, isa_obj, xt, xta, xto, xtGet, addStrings, pushUnique, isa_boolean, Ωempty } from '../core/utilities.js';
+import { 
+    artefact,
+    group,
+    particle,
+    tween,
+} from '../core/library.js';
+
+import { 
+    addStrings,
+    isa_boolean,
+    isa_obj,
+    mergeOver,
+    pushUnique,
+    xt,
+    xta,
+    xtGet,
+    xto,
+    λnull,
+    Ωempty,
+} from '../core/utilities.js';
+
 import { currentCorePosition } from '../core/userInteraction.js';
 
-import { makeCoordinate, requestCoordinate, releaseCoordinate } from '../factory/coordinate.js';
-import { requestCell, releaseCell } from '../factory/cell-fragment.js';
+import { 
+    makeCoordinate,
+    releaseCoordinate,
+    requestCoordinate,
+} from '../factory/coordinate.js';
+
+import { 
+    releaseCell,
+    requestCell,
+} from '../factory/cell-fragment.js';
+
+import {
+    _keys,
+    _isArray,
+    _values,
+} from '../core/shared-vars.js'
+
+
+// Local variables
+const ALL = 'all';
+const BOTTOM = 'bottom';
+const CENTER = 'center';
+const DIMENSIONS = 'dimensions';
+const FILTER = 'filter';
+const HANDLE = 'handle';
+const LEFT = 'left';
+const MIMIC = 'mimic';
+const MOUSE = 'mouse';
+const OFFSET = 'offset';
+const PARTICLE = 'particle';
+const PATH = 'path';
+const PIVOT = 'pivot';
+const RIGHT = 'right';
+const START = 'start';
+const STARTX = 'startX';
+const STARTY = 'startY';
+const T_GROUP = 'Group';
+const T_POLYLINE = 'Polyline';
+const TOP = 'top';
+
+let key = '',
+    val = null,
+    dims = null,
+    x = 0,
+    y = 0,
+    w = 0,
+    h = 0,
+    i = 0,
+    iz = 0,
+    flag = false;
 
 
 // #### Export function
@@ -341,44 +408,44 @@ export default function (P = Ωempty) {
 
 // #### Kill management
     P.kill = function (flag1 = false, flag2 = false) {
-
-        let myname = this.name
+console.log('position.kill');
+        const name = this.name;
 
         // Remove artefact from all groups
-        Object.entries(group).forEach(([name, grp]) => {
+        _values(group).forEach(val => {
 
-            if (grp.artefacts.indexOf(myname) >= 0) grp.removeArtefacts(myname);
+            if (val.artefacts.indexOf(name) >= 0) val.removeArtefacts(name);
         });
 
         // If the artefact has an anchor, it needs to be removed
         if (this.anchor) this.demolishAnchor();
 
         // Remove from other artefacts
-        Object.entries(artefact).forEach(([name, art]) => {
+        _values(artefact).forEach(val => {
 
-            if (art.name !== myname) {
+            if (val.name !== name) {
 
-                if (art.pivot && art.pivot.name === myname) art.set({ pivot: false});
-                if (art.mimic && art.mimic.name === myname) art.set({ mimic: false});
-                if (art.path && art.path.name === myname) art.set({ path: false});
-                if (art.generateAlongPath && art.generateAlongPath.name === myname) art.set({ generateAlongPath: false});
-                if (art.generateInArea && art.generateInArea.name === myname) art.set({ generateInArea: false});
-                if (art.artefact && art.artefact.name === myname) art.set({ artefact: false});
+                if (val.pivot && val.pivot.name === name) val.set({ pivot: false});
+                if (val.mimic && val.mimic.name === name) val.set({ mimic: false});
+                if (val.path && val.path.name === name) val.set({ path: false});
+                if (val.generateAlongPath && val.generateAlongPath.name === name) val.set({ generateAlongPath: false});
+                if (val.generateInArea && val.generateInArea.name === name) val.set({ generateInArea: false});
+                if (val.artefact && val.artefact.name === name) val.set({ artefact: false});
 
-                if (Array.isArray(art.pins)) {
+                if (_isArray(val.pins)) {
 
-                	art.pins.forEach((item, index) => {
+                	val.pins.forEach((item, index) => {
 
-                		if (isa_obj(item) && item.name === myname) art.removePinAt(index);
+                		if (isa_obj(item) && item.name === name) val.removePinAt(index);
                 	});
                 }
             }
         });
 
         // Remove from tweens and actions targets arrays
-        Object.entries(tween).forEach(([name, t]) => {
+        _values(tween).forEach(val => {
 
-            if (t.checkForTarget(myname)) t.removeFromTargets(this);
+            if (val.checkForTarget(name)) val.removeFromTargets(this);
         });
 
         // Factory-specific actions required to complete the kill
@@ -447,7 +514,7 @@ export default function (P = Ωempty) {
     };
     S.start = function (x, y) {
 
-        this.setCoordinateHelper('start', x, y);
+        this.setCoordinateHelper(START, x, y);
         this.dirtyStart = true;
     };
     D.startX = function (coord) {
@@ -464,7 +531,7 @@ export default function (P = Ωempty) {
     };
     D.start = function (x, y) {
 
-        this.setDeltaCoordinateHelper('start', x, y);
+        this.setDeltaCoordinateHelper(START, x, y);
         this.dirtyStart = true;
     };
 
@@ -499,7 +566,7 @@ export default function (P = Ωempty) {
     };
     S.handle = function (x, y) {
 
-        this.setCoordinateHelper('handle', x, y);
+        this.setCoordinateHelper(HANDLE, x, y);
         this.dirtyHandle = true;
     };
     D.handleX = function (coord) {
@@ -516,7 +583,7 @@ export default function (P = Ωempty) {
     };
     D.handle = function (x, y) {
 
-        this.setDeltaCoordinateHelper('handle', x, y);
+        this.setDeltaCoordinateHelper(HANDLE, x, y);
         this.dirtyHandle = true;
     };
 
@@ -551,7 +618,7 @@ export default function (P = Ωempty) {
     };
     S.offset = function (x, y) {
 
-        this.setCoordinateHelper('offset', x, y);
+        this.setCoordinateHelper(OFFSET, x, y);
         this.dirtyOffset = true;
     };
     D.offsetX = function (coord) {
@@ -568,7 +635,7 @@ export default function (P = Ωempty) {
     };
     D.offset = function (x, y) {
 
-        this.setDeltaCoordinateHelper('offset', x, y);
+        this.setDeltaCoordinateHelper(OFFSET, x, y);
         this.dirtyOffset = true;
     };
 
@@ -603,7 +670,7 @@ export default function (P = Ωempty) {
     };
     S.dimensions = function (w, h) {
 
-        this.setCoordinateHelper('dimensions', w, h);
+        this.setCoordinateHelper(DIMENSIONS, w, h);
         this.dirtyDimensions = true;
     };
     D.width = function (val) {
@@ -620,7 +687,7 @@ export default function (P = Ωempty) {
     };
     D.dimensions = function (w, h) {
 
-        this.setDeltaCoordinateHelper('dimensions', w, h);
+        this.setDeltaCoordinateHelper(DIMENSIONS, w, h);
         this.dirtyDimensions = true;
     };
 
@@ -642,8 +709,8 @@ export default function (P = Ωempty) {
 
             this.particle = null;
 
-            if (this.lockTo[0] === 'particle') this.lockTo[0] = 'start';
-            if (this.lockTo[1] === 'particle') this.lockTo[1] = 'start';
+            if (this.lockTo[0] === PARTICLE) this.lockTo[0] = START;
+            if (this.lockTo[1] === PARTICLE) this.lockTo[1] = START;
 
             this.dirtyStampPositions = true;
             this.dirtyStampHandlePositions = true;
@@ -658,7 +725,7 @@ export default function (P = Ωempty) {
 // __lockXTo__, __lockYTo__, __lockTo__
     S.lockTo = function (item) {
 
-        if (Array.isArray(item)) {
+        if (_isArray(item)) {
 
             this.lockTo[0] = item[0];
             this.lockTo[1] = item[1];
@@ -721,7 +788,7 @@ export default function (P = Ωempty) {
 
         if (item) {
 
-            let host = artefact[item];
+            const host = artefact[item];
 
             if (host && host.here) this.host = host.name;
             else this.host = item;
@@ -737,23 +804,21 @@ export default function (P = Ωempty) {
 // __group__
     S.group = function (item) {
 
-        let g;
-
         if (item) {
 
-            if (this.group && this.group.type === 'Group') this.group.removeArtefacts(this.name);
+            if (this.group && this.group.type === T_GROUP) this.group.removeArtefacts(this.name);
 
             if (item.substring) {
 
-                g = group[item];
+                val = group[item];
 
-                if (g) this.group = g;
+                if (val) this.group = val;
                 else this.group = item;
             }
             else this.group = item;
         }
 
-        if (this.group && this.group.type === 'Group') this.group.addArtefacts(this.name);
+        if (this.group && this.group.type === T_GROUP) this.group.addArtefacts(this.name);
     };
 
 // __noFilters__
@@ -776,7 +841,7 @@ export default function (P = Ωempty) {
 
     		switch (val) {
 
-    			case 'pivot' :
+    			case PIVOT :
                     delete art.pivot;
                     delete art.pivotCorner;
                     delete art.pivotPin;
@@ -785,7 +850,7 @@ export default function (P = Ωempty) {
                     delete art.addPivotRotation;
     				break;
 
-                case 'mimic' :
+                case MIMIC :
                     delete art.mimic;
                     delete art.useMimicDimensions;
                     delete art.useMimicScale;
@@ -802,7 +867,7 @@ export default function (P = Ωempty) {
                     delete art.addOwnRotationToMimic;
                     break;
 
-                case 'path' :
+                case PATH :
                     delete art.path;
                     delete art.pathPosition;
                     delete art.addPathHandle;
@@ -811,7 +876,7 @@ export default function (P = Ωempty) {
                     delete art.constantPathSpeed;
                     break;
 
-                case 'filter' :
+                case FILTER :
                     delete art.filter;
                     delete art.filters;
                     delete art.isStencil;
@@ -821,11 +886,11 @@ export default function (P = Ωempty) {
 
     	if (item.substring) {
 
-            if (item === 'all') item = ['pivot', 'mimic', 'path', 'filter'];
+            if (item === ALL) item = [PIVOT, MIMIC, PATH, FILTER];
             else item = [item];
         }
 
-    	if (Array.isArray(item)) item.forEach(purge => doPurge(this, purge));
+    	if (_isArray(item)) item.forEach(val => doPurge(this, val));
 
         return this;
     };
@@ -856,7 +921,7 @@ export default function (P = Ωempty) {
         this.delta = {};
         this.deltaConstraints = {};
 
-        this.lockTo = ['start', 'start'];
+        this.lockTo = [START, START];
 
         this.pivoted = [];
         this.mimicked = [];
@@ -884,30 +949,30 @@ export default function (P = Ωempty) {
 // + __y__ - if `x` is a Number or String, then `y` should also be a Number or String
     P.setCoordinateHelper = function (label, x, y) {
 
-        let c = this[label];
+        val = this[label];
 
-        if (Array.isArray(x)) {
+        if (_isArray(x)) {
 
-            c[0] = x[0];
-            c[1] = x[1];
+            val[0] = x[0];
+            val[1] = x[1];
         }
         else if (isa_obj(x)) {
 
             if (xto(x.x, x.y)) {
 
-                c[0] = xtGet(x.x, c[0]);
-                c[1] = xtGet(x.y, c[1]);
+                val[0] = xtGet(x.x, val[0]);
+                val[1] = xtGet(x.y, val[1]);
             }
             else {
 
-                c[0] = xtGet(x.width, x.w, c[0]);
-                c[1] = xtGet(x.height, x.h, c[1]);
+                val[0] = xtGet(x.width, x.w, val[0]);
+                val[1] = xtGet(x.height, x.h, val[1]);
             }
         }
         else {
 
-            c[0] = x;
-            c[1] = y;
+            val[0] = x;
+            val[1] = y;
         }
     };
 
@@ -917,34 +982,34 @@ export default function (P = Ωempty) {
 // + __x__ - this can be either an `[x, y]` Array, or an `{x: val, y: val}` object, or a Number, or %String value
 // + (for dimensions, `[w, h]`, or `{w: val, h: val}`, or `{width: val, height: val}`, etc)
 // + __y__ - if `x` is a Number or String, then `y` should also be a Number or String
-    P.setDeltaCoordinateHelper = function (label, x, y) {
+    P.setDeltaCoordinateHelper = function (label, nx, ny) {
 
-        let c = this[label],
-            myX = c[0],
-            myY = c[1];
+        val = this[label];
+            x = val[0];
+            y = val[1];
 
-        if (Array.isArray(x)) {
+        if (_isArray(nx)) {
 
-            c[0] = addStrings(myX, x[0]);
-            c[1] = addStrings(myY, x[1]);
+            val[0] = addStrings(x, nx[0]);
+            val[1] = addStrings(y, nx[1]);
         }
-        else if (isa_obj(x)) {
+        else if (isa_obj(nx)) {
 
-            if (xto(x.x, x.y)) {
+            if (xto(nx.x, nx.y)) {
 
-                c[0] = addStrings(myX, xtGet(x.x, 0));
-                c[1] = addStrings(myY, xtGet(x.y, 0));
+                val[0] = addStrings(x, xtGet(nx.x, 0));
+                val[1] = addStrings(y, xtGet(nx.y, 0));
             }
             else {
 
-                c[0] = addStrings(myX, xtGet(x.width, x.w, 0));
-                c[1] = addStrings(myY, xtGet(x.height, x.h, 0));
+                val[0] = addStrings(x, xtGet(nx.width, nx.w, 0));
+                val[1] = addStrings(y, xtGet(nx.height, nx.h, 0));
             }
         }
         else {
 
-            c[0] = addStrings(myX, x);
-            c[1] = addStrings(myY, y);
+            val[0] = addStrings(x, nx);
+            val[1] = addStrings(y, ny);
         }
     };
 
@@ -961,11 +1026,11 @@ export default function (P = Ωempty) {
         if (this.currentHost) return this.currentHost;
         else if (this.host) {
 
-            let host = artefact[this.host];
+            val = artefact[this.host];
 
-            if (host) {
+            if (val) {
 
-                this.currentHost = host;
+                this.currentHost = val;
                 this.dirtyHost = true;
                 return this.currentHost;
             }
@@ -987,23 +1052,23 @@ export default function (P = Ωempty) {
 // + NOTE: Canvas, Stack, Element (if enabled) and Cell all need to create their `here` attribute immediately after they first calculate their `currentDimensions` Coordinate, which needs to happen as part of the constructor!
     P.getHere = function () {
 
-        let host = this.getHost();
+        const host = this.getHost();
 
         if (host) {
 
-            if (host.here && Object.keys(host.here)) {
+            if (host.here && _keys(host.here)) {
 
             	return host.here;
             }
             else if (host.currentDimensions) {
 
-                let dims = host.currentDimensions;
+                dims = host.currentDimensions;
 
                 if (dims) {
 
                     return {
                         w: dims[0],
-                        h: dims[1]
+                        h: dims[1],
                     }
                 }
             }
@@ -1017,18 +1082,16 @@ export default function (P = Ωempty) {
 // `cleanPosition` - internal helper function used by `cleanStart`, `cleanHandle` and `cleanOffset` functions
     P.cleanPosition = function (current, source, dimensions) {
 
-        let val, dim;
-
-        for (let i = 0; i < 2; i++) {
+        for (i = 0; i < 2; i++) {
 
             val = source[i];
-            dim = dimensions[i];
+            dims = dimensions[i];
 
             if (val.toFixed) current[i] = val;
-            else if (val === 'left' || val === 'top') current[i] = 0;
-            else if (val === 'right' || val === 'bottom') current[i] = dim;
-            else if (val === 'center') current[i] = dim / 2;
-            else current[i] = (parseFloat(val) / 100) * dim;
+            else if (val === LEFT || val === TOP) current[i] = 0;
+            else if (val === RIGHT || val === BOTTOM) current[i] = dims;
+            else if (val === CENTER) current[i] = dims / 2;
+            else current[i] = (parseFloat(val) / 100) * dims;
         }
         this.dirtyFilterIdentifier = true;
     };
@@ -1041,8 +1104,7 @@ export default function (P = Ωempty) {
 
         this.dirtyScale = false;
 
-        let scale,
-            myscale = this.scale,
+        const myscale = this.scale,
             mimic = this.mimic,
             oldScale = this.currentScale;
 
@@ -1050,19 +1112,19 @@ export default function (P = Ωempty) {
 
             if (mimic.currentScale) {
 
-                scale = mimic.currentScale;
+                val = mimic.currentScale;
 
-                if (this.addOwnScaleToMimic) scale += myscale;
+                if (this.addOwnScaleToMimic) val += myscale;
             }
             else {
 
-                scale = myscale;
+                val = myscale;
                 this.dirtyMimicScale = true;
             }
         }
-        else scale = myscale;
+        else val = myscale;
 
-        this.currentScale = scale;
+        this.currentScale = val;
 
         this.dirtyDimensions = true;
         this.dirtyHandle = true;
@@ -1081,35 +1143,33 @@ export default function (P = Ωempty) {
 
         this.dirtyDimensions = false;
 
-        let host = this.getHost(),
-            dims = this.dimensions,
+        const host = this.getHost(),
             curDims = this.currentDimensions;
 
         if (host) {
 
-            let hostDims = (host.currentDimensions) ? host.currentDimensions : [host.w, host.h];
+            dims = (host.currentDimensions) ? host.currentDimensions : [host.w, host.h];
 
-            let [w, h] = dims,
-                oldW = curDims[0],
-                oldH = curDims[1];
+            [w, h] = this.dimensions;
 
-            if (w.substring) w = (parseFloat(w) / 100) * hostDims[0];
+            const [oldW, oldH] = curDims;
+
+            if (w.substring) w = (parseFloat(w) / 100) * dims[0];
 
             if (h.substring) {
 
                 if (h === 'auto') h = 0;
-                else h = (parseFloat(h) / 100) * hostDims[1];
+                else h = (parseFloat(h) / 100) * dims[1];
             }
 
-            let mimic = this.mimic,
-                mimicDims;
+            const mimic = this.mimic;
 
-            if (mimic && mimic.name && this.useMimicDimensions) mimicDims = mimic.currentDimensions;
+            dims = (mimic && mimic.name && this.useMimicDimensions) ? mimic.currentDimensions : null;
 
-            if (mimicDims) {
+            if (dims) {
 
-                curDims[0] = (this.addOwnDimensionsToMimic) ? mimicDims[0] + w : mimicDims[0];
-                curDims[1] = (this.addOwnDimensionsToMimic) ? mimicDims[1] + h : mimicDims[1];
+                curDims[0] = (this.addOwnDimensionsToMimic) ? dims[0] + w : dims[0];
+                curDims[1] = (this.addOwnDimensionsToMimic) ? dims[1] + h : dims[1];
             }
             else {
 
@@ -1151,8 +1211,7 @@ export default function (P = Ωempty) {
 // + Start values do NOT scale
     P.cleanStart = function () {
 
-        let host = this.getHost(),
-        	w, h;
+        const host = this.getHost();
 
         if (host) {
 
@@ -1182,8 +1241,7 @@ export default function (P = Ωempty) {
 // + Offset values do NOT scale
     P.cleanOffset = function () {
 
-        let host = this.getHost(),
-        	w, h;
+        const host = this.getHost();
 
         if (host) {
 
@@ -1201,7 +1259,7 @@ export default function (P = Ωempty) {
 	        else this.dirtyOffset = true;
         }
         
-        if (!this.dirtyStart) {
+        if (!this.dirtyOffset) {
 
             this.cleanPosition(this.currentOffset, this.offset, [w, h]);
             this.dirtyStampPositions = true;
@@ -1219,9 +1277,7 @@ export default function (P = Ωempty) {
 
         this.dirtyHandle = false;
 
-        let current = this.currentHandle;
-
-        this.cleanPosition(current, this.handle, this.currentDimensions);
+        this.cleanPosition(this.currentHandle, this.handle, this.currentDimensions);
         this.dirtyStampHandlePositions = true;
 
         if (this.mimicked && this.mimicked.length) this.dirtyMimicHandle = true;
@@ -1236,49 +1292,48 @@ export default function (P = Ωempty) {
 
         this.dirtyRotation = false;
 
-        let roll,
-            myroll = this.roll,
+        const myroll = this.roll,
             oldRoll = this.currentRotation,
             path = this.path,
             mimic = this.mimic,
             pivot = this.pivot,
             lock = this.lockTo;
 
-        if (path && lock.indexOf('path') >= 0) {
+        if (path && lock.includes(PATH)) {
 
-            roll = myroll;
+            val = myroll;
 
             if (this.addPathRotation) {
 
                 let pathData = this.getPathData();
 
-                if (pathData) roll += pathData.angle;
+                if (pathData) val += pathData.angle;
             }
 
         }
-        else if (mimic && this.useMimicRotation && lock.indexOf('mimic') >= 0) {
+        else if (mimic && this.useMimicRotation && lock.includes(MIMIC)) {
 
             if (xt(mimic.currentRotation)) {
 
-                roll = mimic.currentRotation;
+                val = mimic.currentRotation;
 
-                if (this.addOwnRotationToMimic) roll += myroll;
+                if (this.addOwnRotationToMimic) val += myroll;
             }
             else this.dirtyMimicRotation = true;
         } 
         else {
 
-            roll = myroll;
+            val = myroll;
 
-            if (pivot && this.addPivotRotation && lock.indexOf('pivot') >= 0) {
+            if (pivot && this.addPivotRotation && lock.includes(PIVOT)) {
 
-                if (xt(pivot.currentRotation)) roll += pivot.currentRotation;
+                if (xt(pivot.currentRotation)) val += pivot.currentRotation;
                 else this.dirtyPivotRotation = true;
             }
         }
-        this.currentRotation = roll;
+        this.currentRotation = val;
 
-        if (roll !== oldRoll) this.dirtyPositionSubscribers = true;
+        if (val !== oldRoll) this.dirtyPositionSubscribers = true;
 
         // If this artefact is being mimicked by other artefacts, it needs to check its rotation values on every iteration of the display cycle
         if (this.mimicked && this.mimicked.length) this.dirtyMimicRotation = true;
@@ -1299,7 +1354,13 @@ export default function (P = Ωempty) {
 
         this.dirtyStampPositions = false;
 
-        let {currentStampPosition:stamp, currentStart:start, currentOffset:offset, currentStartCache:cache, currentDragOffset:drag} = this;
+        const {
+            currentDragOffset:drag,
+            currentOffset:offset,
+            currentStampPosition:stamp,
+            currentStart:start,
+            currentStartCache:cache,
+        } = this;
 
         let [oldX, oldY] = stamp;
 
@@ -1310,24 +1371,42 @@ export default function (P = Ωempty) {
         }
         else {
 
-            let {isBeingDragged, lockTo, pivot, pivotCorner, pivotPin, addPivotOffset, path, addPathOffset, mimic, useMimicStart, useMimicOffset, addOwnStartToMimic, addOwnOffsetToMimic, particle:physParticle, ignoreDragForX, ignoreDragForY} = this;
+            const {
+                addOwnOffsetToMimic,
+                addOwnStartToMimic,
+                addPathOffset,
+                addPivotOffset,
+                ignoreDragForX,
+                ignoreDragForY,
+                isBeingDragged,
+                lockTo,
+                mimic,
+                path,
+                pivot,
+                pivotCorner,
+                pivotPin,
+                useMimicOffset,
+                useMimicStart,
+            } = this;
+
+            let physParticle = this.particle;
 
             const confirmLock = function (lock) {
 
-                if (lock === 'pivot' && !pivot) return 'start';
-                else if (lock === 'path' && !path) return 'start';
-                else if (lock === 'mimic' && !mimic) return 'start';
-                else if (lock === 'particle' && !particle) return 'start';
+                if (lock === PIVOT && !pivot) return START;
+                else if (lock === PATH && !path) return START;
+                else if (lock === MIMIC && !mimic) return START;
+                else if (lock === PARTICLE && !particle) return START;
                 return lock;
             };
 
             const getMethods = {
 
-                start: function (coord) {
+                [START]: function (coord) {
 
                     coord.setFromArray(start).add(offset);
                 },
-                path: function (coord) {
+                [PATH]: function (coord) {
 
                     if (pathData) {
 
@@ -1337,7 +1416,7 @@ export default function (P = Ωempty) {
                     }
                     else coord.setFromArray(start).add(offset);
                 },
-                pivot: function (coord) {
+                [PIVOT]: function (coord) {
 
                     // When the pivot is an Element artefact, can use its corner values as pivots
                     if (pivotCorner && pivot.getCornerCoordinate) {
@@ -1346,7 +1425,7 @@ export default function (P = Ωempty) {
                     }
 
                     // When the pivot is a Polyline entity, need also to confirm which pin to use (default 0)
-                    else if (pivot.type == 'Polyline') {
+                    else if (pivot.type == T_POLYLINE) {
 
                         coord.setFromArray(pivot.getPinAt(pivotPin));
                     }
@@ -1358,7 +1437,7 @@ export default function (P = Ωempty) {
 
                     coord.add(offset);
                 },
-                mimic: function (coord) {
+                [MIMIC]: function (coord) {
 
                     if (useMimicStart || useMimicOffset) {
 
@@ -1372,21 +1451,14 @@ export default function (P = Ωempty) {
                     }
                     else coord.setFromArray(start).add(offset);
                 },
-                particle: function (coord) {
+                [PARTICLE]: function (coord) {
 
-                    let temp;
-
-                    if (physParticle.substring) {
-
-                        temp = physParticle;
-
-                        physParticle = particle[physParticle]
-                    }
+                    if (physParticle.substring) physParticle = particle[physParticle]
 
                     if (!physParticle) coord.setFromArray(start).add(offset);
                     else coord.setFromVector(physParticle.position);
                 },
-                mouse: function (coord) {
+                [MOUSE]: function (coord) {
 
                     coord.setFromVector(here);
 
@@ -1400,17 +1472,18 @@ export default function (P = Ωempty) {
                 },
             };
 
-            let localLockArray = requestCoordinate(),
-                hereFlag = false,
-                i, lock, here, pathData;
+            const localLockArray = requestCoordinate();
+            
+            let hereFlag = false,
+                lock, here, pathData;
 
             localLockArray.length = 0;
 
             // `x` and `y` coordinates can have different lockTo values
             if (isBeingDragged) {
 
-                localLockArray.push(ignoreDragForX ? confirmLock(lockTo[0]) : 'mouse');
-                localLockArray.push(ignoreDragForY ? confirmLock(lockTo[1]) : 'mouse');
+                localLockArray.push(ignoreDragForX ? confirmLock(lockTo[0]) : MOUSE);
+                localLockArray.push(ignoreDragForY ? confirmLock(lockTo[1]) : MOUSE);
 
                 hereFlag = true;
 
@@ -1422,9 +1495,9 @@ export default function (P = Ωempty) {
 
                     lock = confirmLock(lockTo[i]);
 
-                    if (lock === 'mouse') hereFlag = true;
+                    if (lock === MOUSE) hereFlag = true;
 
-                    if ('start' !== lock) this.dirtyFilterIdentifier = true;
+                    if (START !== lock) this.dirtyFilterIdentifier = true;
 
                     localLockArray.push(lock);
                 }
@@ -1432,7 +1505,7 @@ export default function (P = Ωempty) {
 
             if (hereFlag) here = this.getHere();
 
-            if (localLockArray.indexOf('path') >= 0) pathData = this.getPathData();
+            if (localLockArray.includes(PATH)) pathData = this.getPathData();
 
             let [lock1, lock2] = localLockArray;
 
@@ -1464,10 +1537,10 @@ export default function (P = Ωempty) {
 
         this.dirtyStampHandlePositions = false;
 
-        let stampHandle = this.currentStampHandlePosition,
-            handle = this.currentHandle,
-            oldX = stampHandle[0],
-            oldY = stampHandle[1];
+        const stampHandle = this.currentStampHandlePosition,
+            handle = this.currentHandle;
+
+        const [oldX, oldY] = stampHandle;
 
         if (this.noPositionDependencies) {
 
@@ -1476,39 +1549,39 @@ export default function (P = Ωempty) {
         }
         else {
 
-            let lockArray = this.lockTo,
-                lock, i, coord, here, myscale,
+            const lockArray = this.lockTo,
                 pivot = this.pivot,
                 path = this.path,
                 mimic = this.mimic;
+
+            let lock, coord, here, myscale;
 
             // We loop twice - once for each coordinate: `x` is calculated on the first loop (`i === 0`); `y` on the second (`i === 1`)
             for (i = 0; i < 2; i++) {
 
                 lock = lockArray[i];
 
-                if (lock === 'pivot' && !pivot) lock = 'start';
-                if (lock === 'path' && !path) lock = 'start';
-                if (lock === 'mimic' && !mimic) lock = 'start';
+                if (lock === PIVOT && !pivot) lock = START;
+                if (lock === PATH && !path) lock = START;
+                if (lock === MIMIC && !mimic) lock = START;
 
                 coord = handle[i];
 
-                if ('start' !== lock) this.dirtyFilterIdentifier = true;
+                if (START !== lock) this.dirtyFilterIdentifier = true;
 
                 switch (lock) {
 
-                    case 'pivot' :
+                    case PIVOT :
                         if (this.addPivotHandle) coord += pivot.currentHandle[i];
                         break;
 
-                    case 'path' :
+                    case PATH :
                         if (this.addPathHandle) coord += path.currentHandle[i];
                         break;
 
-                    case 'mimic' :
+                    case MIMIC :
                         if (this.useMimicHandle) {
 
-                            // coord = (mimic.stampHandle) ? mimic.stampHandle[i] : mimic.currentHandle[i];
                             coord = mimic.currentHandle[i];
 
                             if (this.addOwnHandleToMimic) coord += handle[i];
@@ -1534,56 +1607,53 @@ export default function (P = Ωempty) {
 
         if (this.noUserInteraction) return false;
 
-        if (!this.pathObject || this.dirtyPathObject) {
+        if (!this.pathObject || this.dirtyPathObject) this.cleanPathObject();
 
-            this.cleanPathObject();
-        }
+        const tests = (!_isArray(items)) ?  [items] : items;
 
-        let tests = (!Array.isArray(items)) ?  [items] : items,
-            poolCellFlag = false;
+        flag = false;
 
         if (!mycell) {
 
             mycell = requestCell();
-            poolCellFlag = true;
+            flag = true;
         }
 
-        let engine = mycell.engine,
+        const engine = mycell.engine,
             stamp = this.currentStampPosition,
-            x = stamp[0],
-            y = stamp[1],
-            tx, ty;
+            pathObject = this.pathObject,
+            winding = this.winding;
 
         if (tests.some(test => {
 
-            if (Array.isArray(test)) {
+            if (_isArray(test)) {
 
-                tx = test[0];
-                ty = test[1];
+                x = test[0];
+                y = test[1];
             }
             else if (xta(test, test.x, test.y)) {
 
-                tx = test.x;
-                ty = test.y;
+                x = test.x;
+                y = test.y;
             }
             else return false;
 
-            if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+            if (!x.toFixed || !y.toFixed || isNaN(x) || isNaN(y)) return false;
 
-            mycell.rotateDestination(engine, x, y, this);
+            mycell.rotateDestination(engine, ...stamp, this);
 
-            return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
+            return engine.isPointInPath(pathObject, x, y, winding);
 
         }, this)) {
 
-            let r = this.checkHitReturn(tx, ty, mycell);
+            val = this.checkHitReturn(x, y, mycell);
 
-            if (poolCellFlag) releaseCell(mycell);
+            if (flag) releaseCell(mycell);
 
-            return r;
+            return val;
         }
         
-        if (poolCellFlag) releaseCell(mycell);
+        if (flag) releaseCell(mycell);
         
         return false;
     };
@@ -1610,24 +1680,24 @@ export default function (P = Ωempty) {
 
             this.relativeCoordinates = [...this.start];
 
-            if (this.lockTo[0] === 'start') {
+            if (this.lockTo[0] === START) {
                 this.currentDragOffset[0] = this.currentStart[0] - x;
             }
-            else if (this.lockTo[0] === 'pivot' && this.pivot) {
-                this.currentDragOffset[0] = this.pivot.get('startX') - x;
+            else if (this.lockTo[0] === PIVOT && this.pivot) {
+                this.currentDragOffset[0] = this.pivot.get(STARTX) - x;
             }
-            else if (this.lockTo[0] === 'mimic' && this.mimic) {
-                this.currentDragOffset[0] = this.mimic.get('startX') - x;
+            else if (this.lockTo[0] === MIMIC && this.mimic) {
+                this.currentDragOffset[0] = this.mimic.get(STARTX) - x;
             }
 
-            if (this.lockTo[1] === 'start') {
+            if (this.lockTo[1] === START) {
                 this.currentDragOffset[1] = this.currentStart[1] - y;
             }
-            else if (this.lockTo[1] === 'pivot' && this.pivot) {
-                this.currentDragOffset[1] = this.pivot.get('startY') - y;
+            else if (this.lockTo[1] === PIVOT && this.pivot) {
+                this.currentDragOffset[1] = this.pivot.get(STARTY) - y;
             }
-            else if (this.lockTo[1] === 'mimic' && this.mimic) {
-                this.currentDragOffset[1] = this.mimic.get('startY') - y;
+            else if (this.lockTo[1] === MIMIC && this.mimic) {
+                this.currentDragOffset[1] = this.mimic.get(STARTY) - y;
             }
 
             if (this.bringToFrontOnDrag) {
@@ -1650,12 +1720,12 @@ export default function (P = Ωempty) {
         const host = this.currentHost;
         if (host) {
 
-            const [width, height] = host.get('dimensions');
-            const [x, y] = this.start;
+            [w, h] = host.get(DIMENSIONS);
+            [x, y] = this.start;
             const [relX, relY] = this.relativeCoordinates;
 
-            if (relX.substring) this.start[0] = `${(x / width) * 100}%`;
-            if (relY.substring) this.start[1] = `${(y / height) * 100}%`;
+            if (relX.substring) this.start[0] = `${(x / w) * 100}%`;
+            if (relY.substring) this.start[1] = `${(y / h) * 100}%`;
         }
         delete this.relativeCoordinates;
 
