@@ -13,6 +13,20 @@
 // Given the fundamental nature of the above functionality the base mixin should always, when coding a Scrawl-canvas factory, be the first to be applied to that factory function's prototype.
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // #### Imports
 import * as library from '../core/library.js';
 
@@ -39,15 +53,10 @@ import {
 } from '../core/shared-vars.js'
 
 
-// Local variables
-const UNDEF = 'undefined';
-const NAME = 'name';
-const TYPE_EXCLUSIONS = ['Image', 'Sprite', 'Video', 'Canvas', 'Stack'];
-
-let i = 0, 
-    key = '', 
-    val = null, 
-    fn = null;
+// Local constants
+const UNDEF = 'undefined',
+    NAME = 'name',
+    TYPE_EXCLUSIONS = ['Image', 'Sprite', 'Video', 'Canvas', 'Stack'];
 
 
 // #### Export function
@@ -76,6 +85,8 @@ export default function (P = Ωempty) {
 // -> 200
 // ```
     P.get = function (item) {
+
+        let val, fn;
 
         if (xt(item)) {
 
@@ -108,6 +119,8 @@ export default function (P = Ωempty) {
 // ```
     P.set = function (items = Ωempty) {
 
+        let i, key, val, fn;
+
         const keys = _keys(items),
             keysLen = keys.length;
 
@@ -133,7 +146,6 @@ export default function (P = Ωempty) {
         return this;
     };
 
-
 // `setDelta` - Add a value to an existing attribute value using the __setDelta__ function. It is extremely important that all factory object attributes are updated using the setDelta function; updating an attribute directly will lead to unexpected behaviour! The setDelta function takes a single object as its argument.
 // ```
 // scrawl.artefact.myelement.setDelta({
@@ -144,6 +156,8 @@ export default function (P = Ωempty) {
 // });
 // ```
     P.setDelta = function (items = Ωempty) {
+
+        let i, key, val, fn;
 
         const keys = _keys(items),
             keysLen = keys.length;

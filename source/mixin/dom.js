@@ -54,6 +54,12 @@ import {
     requestQuaternion, 
 } from '../factory/quaternion.js';
 
+import {
+    _isArray,
+    _round,
+    _entries,
+} from '../core/shared-vars.js'
+
 import positionMix from './position.js';
 import deltaMix from './delta.js';
 import pivotMix from './pivot.js';
@@ -62,19 +68,15 @@ import pathMix from './path.js';
 import anchorMix from './anchor.js';
 
 
-// Local variables
-const TOPLEFT = 'topLeft',
-    TOPRIGHT = 'topRight',
+// Local constants
+const BOTTOMLEFT = 'bottomLeft',
     BOTTOMRIGHT = 'bottomRight',
-    BOTTOMLEFT = 'bottomLeft',
-    _cornerCoordinateLabels = [TOPLEFT, TOPRIGHT, BOTTOMRIGHT, BOTTOMLEFT],
-    SPACE = ' ',
     CLASS_REGEX = /[\s\uFEFF\xA0]+/g,
-    _round = Math.round,
-    _isArray = Array.isArray,
-    _emptyElementTagNames = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS'];
-
-let _el, _node, _style, _host, _dims, _flag, _here, i, x, y;
+    CORNER_LABELS = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
+    NO_CORNER_ELEMENTS = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS'],
+    SPACE = ' ',
+    TOPLEFT = 'topLeft',
+    TOPRIGHT = 'topRight';
 
 
 // #### Export function
@@ -191,15 +193,14 @@ export default function (P = Ωempty) {
 
         if (isa_dom(this.domElement)) {
 
-            _el = this.domElement;
+            const el = this.domElement;
+            const node = el.cloneNode(true);
 
-            _node = _el.cloneNode(true);
+            const kids = node.querySelectorAll('[data-scrawl-corner-div="sc"]');
+            kids.forEach(kid => node.removeChild(kid));
 
-            const kids = _node.querySelectorAll('[data-scrawl-corner-div="sc"]');
-            kids.forEach(kid => _node.removeChild(kid));
-
-            copy.outerHTML = _node.outerHTML;
-            copy.host = _el.parentElement.id;
+            copy.outerHTML = node.outerHTML;
+            copy.host = el.parentElement.id;
         }
 
         copy = this.handlePacketAnchor(copy, items);
@@ -340,14 +341,14 @@ export default function (P = Ωempty) {
 
     S.includeInTabNavigation = function (item) {
 
-        _el = this.domElement;
+        const el = this.domElement;
 
-        if (_el) {
+        if (el) {
 
             this.includeInTabNavigation = item;
 
-            if (item) _el.setAttribute('tabindex', 0);
-            else _el.setAttribute('tabindex', -1);
+            if (item) el.setAttribute('tabindex', 0);
+            else el.setAttribute('tabindex', -1);
         }
     };
 
@@ -357,23 +358,23 @@ export default function (P = Ωempty) {
 // `updateDomAttributes` - DOM wrapper objects do not keep track of their DOM element attribute values; this function is a convenience function to make updating those attributes a bit easier. Function arguments can be one of:
 // + `(attribute-String, value)`
 // + `({attribute-String: value, attribute-String: value, etc})`
-    P.updateDomAttributes = function (items, value) {
+    P.updateDomAttributes = function (attr, value) {
 
-        _el = this.domElement;
+        const el = this.domElement;
 
-        if (_el) {
+        if (el) {
 
-            if (items.substring && xt(value)) {
+            if (attr.substring && xt(value)) {
 
-                if (value) _el.setAttribute(items, value);
-                else _el.removeAttribute(items);
+                if (value) el.setAttribute(attr, value);
+                else el.removeAttribute(attr);
             }
-            else if (isa_obj(items)) {
+            else if (isa_obj(attr)) {
 
-                Object.entries(items).forEach(([item, val]) => {
+                _entries(attr).forEach(([key, val]) => {
 
-                    if (val) _el.setAttribute(item, val);
-                    else _el.removeAttribute(item);
+                    if (val) el.setAttribute(key, val);
+                    else el.removeAttribute(key);
                 });
             }
         }
@@ -385,48 +386,48 @@ export default function (P = Ωempty) {
 // + TODO - there's a lot of improvements we can do here - the aim should be to create the wrapper object and update the objects DOM element's style and dimensions attributes - specifically shifting `position` from "static" to "absolute" - in a way that does not disturb the page view in any way whatsoever (pixel-perfect!) so website visitors are completely unaware that the work has taken place
     P.initializeDomLayout = function (items) {
 
-        _el = items.domElement,
-        _style = _el.style;
+        const el = items.domElement,
+            style = el.style;
 
-        _style.boxSizing = 'border-box';
+        style.boxSizing = 'border-box';
 
-        if (_el && items.setInitialDimensions) {
+        if (el && items.setInitialDimensions) {
 
-            _dims = _el.getBoundingClientRect();
-            _host = false;
+            const dims = el.getBoundingClientRect();
+            let host = false;
 
-            const trans = _style.transform,
-                transOrigin = _style.transformOrigin;
+            const trans = style.transform,
+                transOrigin = style.transformOrigin;
                 
             if (items && items.host) {
 
-                _host = items.host;
+                const host = items.host;
 
-                if (_host.substring && artefact[_host]) _host = artefact[_host];
+                if (host.substring && artefact[host]) host = artefact[host];
             }
 
             // TODO - discover scale
 
             // discover dimensions (width, height)
-            this.currentDimensions[0] = _dims.width;
-            this.currentDimensions[1] = _dims.height;
-            items.width = _dims.width;
-            items.height = _dims.height;
+            this.currentDimensions[0] = dims.width;
+            this.currentDimensions[1] = dims.height;
+            items.width = dims.width;
+            items.height = dims.height;
 
             // recover classes already assigned to the element
-            if (_el.className) items.classes = _el.className;
+            if (el.className) items.classes = el.className;
 
             // go with lock defaults - no work required
 
             // discover start (boundingClientRect - will be the difference between this object and its host (parent) object 'top' and 'left' values)
-            if (_host && _host.domElement) {
+            if (host && host.domElement) {
 
-                const hostDims = _host.domElement.getBoundingClientRect();
+                const hostDims = host.domElement.getBoundingClientRect();
 
                 if (hostDims) {
 
-                    items.startX = _dims.left - hostDims.left;
-                    items.startY = _dims.top - hostDims.top;
+                    items.startX = dims.left - hostDims.left;
+                    items.startY = dims.top - hostDims.top;
                 }
             }
 
@@ -445,10 +446,10 @@ export default function (P = Ωempty) {
 
                     // TODO - this isn't working! see Demo DOM 003 where attempting to set the perspective in CSS causes the demo to fail
                     // + Workaround is to explicitly set the stack's perspectiveZ value in Javascript
-                    items.perspectiveZ = (xt(_style.perspective) && _style.perspective) ? parseFloat(_style.perspective) : 0;
+                    items.perspectiveZ = (xt(style.perspective) && style.perspective) ? parseFloat(style.perspective) : 0;
                 }
 
-                let perspectiveOrigin = _style.perspectiveOrigin;
+                let perspectiveOrigin = style.perspectiveOrigin;
 
                 if (perspectiveOrigin.length) {
 
@@ -524,7 +525,7 @@ export default function (P = Ωempty) {
 
         const el = this.domElement;
 
-        if (el && !this.noUserInteraction && !_emptyElementTagNames.includes(el.tagName)) {
+        if (el && !this.noUserInteraction && !NO_CORNER_ELEMENTS.includes(el.tagName)) {
 
             const pointMaker = function () {
 
@@ -648,7 +649,7 @@ export default function (P = Ωempty) {
 // `getCornerCoordinate`
     P.getCornerCoordinate = function (corner) {
 
-        if (_cornerCoordinateLabels.includes(corner)) return this.checkCornerPositions(corner);
+        if (CORNER_LABELS.includes(corner)) return this.checkCornerPositions(corner);
         else return [].concat(this.currentStampPosition);
     };
 
@@ -700,17 +701,17 @@ export default function (P = Ωempty) {
         if (!this.pathObject || this.dirtyPathObject) this.cleanPathObject();
 
         const tests = (!_isArray(items)) ?  [items] : items;
-        _flag = false;
+        let flag = false;
 
         if (!cell) {
 
             cell = requestCell();
-            _flag = true;
+            flag = true;
         }
 
         const engine = cell.engine;
 
-        [x, y] = this.currentStampPosition;
+        const [x, y] = this.currentStampPosition;
 
         let tx, ty;
 
@@ -734,7 +735,7 @@ export default function (P = Ωempty) {
 
         }, this)) {
 
-            if (_flag) releaseCell(cell);
+            if (flag) releaseCell(cell);
 
             return {
                 x: tx,
@@ -743,7 +744,7 @@ export default function (P = Ωempty) {
             };
         }
         
-        if (_flag) releaseCell(cell);
+        if (flag) releaseCell(cell);
         
         return false;
     };
@@ -890,7 +891,7 @@ export default function (P = Ωempty) {
 
         if (this.yaw || this.pitch || this.roll || (this.pivot && this.addPivotRotation) || (this.mimic && this.useMimicRotation) || (this.path && this.addPathRotation)) {
 
-            let v = rotation.v,
+            const v = rotation.v,
                 vx = v.x,
                 vy = v.y,
                 vz = v.z,
@@ -1002,11 +1003,11 @@ export default function (P = Ωempty) {
     };
     P.reducedMotionActions = function () {
 
-        _here = this.here;
+        const here = this.here;
 
-        if (xt(_here)) {
+        if (xt(here)) {
 
-            const accessibilityFlag = _here.prefersReducedMotion;
+            const accessibilityFlag = here.prefersReducedMotion;
 
             if (xt(accessibilityFlag)) {
 
@@ -1031,15 +1032,15 @@ export default function (P = Ωempty) {
     };
     P.colorSchemeActions = function () {
 
-        _here = this.here;
+        const here = this.here;
 
-        if (xt(_here)) {
+        if (xt(here)) {
 
-            _flag = _here.prefersDarkColorScheme;
+            const flag = here.prefersDarkColorScheme;
 
-            if (xt(_flag)) {
+            if (xt(flag)) {
 
-                if (_flag) this.colorSchemeDarkAction();
+                if (flag) this.colorSchemeDarkAction();
                 else this.colorSchemeLightAction();
             }
         }
@@ -1061,15 +1062,15 @@ export default function (P = Ωempty) {
     };
     P.reducedTransparencyActions = function () {
 
-        _here = this.here;
+        const here = this.here;
 
-        if (xt(_here)) {
+        if (xt(here)) {
 
-            _flag = _here.prefersReduceTransparency;
+            const flag = here.prefersReduceTransparency;
 
-            if (xt(_flag)) {
+            if (xt(flag)) {
 
-                if (_flag) this.reduceTransparencyAction();
+                if (flag) this.reduceTransparencyAction();
                 else this.noPreferenceTransparencyAction();
             }
         }
@@ -1091,15 +1092,15 @@ export default function (P = Ωempty) {
     };
     P.reducedDataActions = function () {
 
-        _here = this.here;
+        const here = this.here;
 
-        if (xt(_here)) {
+        if (xt(here)) {
 
-            _flag = _here.prefersReduceData;
+            const flag = here.prefersReduceData;
 
-            if (xt(_flag)) {
+            if (xt(flag)) {
 
-                if (_flag) this.reduceDataAction();
+                if (flag) this.reduceDataAction();
                 else this.noPreferenceDataAction();
             }
         }

@@ -6,6 +6,7 @@ export const _keys = Object.keys;
 export const _values = Object.values;
 export const _entries = Object.entries;
 export const _isArray = Array.isArray;
+export const _round = Math.round;
 
 /* mixin/base */
 // export const UNDEF = 'undefined';
@@ -33,3 +34,14 @@ export const _isArray = Array.isArray;
 // export const T_GROUP = 'Group';
 // export const T_POLYLINE = 'Polyline';
 // export const TOP = 'top';
+
+/* mixin/dom */
+// export const BOTTOMLEFT = 'bottomLeft';
+// export const BOTTOMRIGHT = 'bottomRight';
+// export const CLASS_REGEX = /[\s\uFEFF\xA0]+/g;
+// export const CORNER_LABELS = [TOPLEFT, TOPRIGHT, BOTTOMRIGHT, BOTTOMLEFT];
+// export const NO_CORNER_ELEMENTS = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS'];
+// export const SPACE = ' ';
+// export const TOPLEFT = 'topLeft';
+// export const TOPRIGHT = 'topRight';
+

@@ -165,38 +165,29 @@ import {
 } from '../core/shared-vars.js'
 
 
-// Local variables
-const ALL = 'all';
-const BOTTOM = 'bottom';
-const CENTER = 'center';
-const DIMENSIONS = 'dimensions';
-const FILTER = 'filter';
-const HANDLE = 'handle';
-const LEFT = 'left';
-const MIMIC = 'mimic';
-const MOUSE = 'mouse';
-const OFFSET = 'offset';
-const PARTICLE = 'particle';
-const PATH = 'path';
-const PIVOT = 'pivot';
-const RIGHT = 'right';
-const START = 'start';
-const STARTX = 'startX';
-const STARTY = 'startY';
-const T_GROUP = 'Group';
-const T_POLYLINE = 'Polyline';
-const TOP = 'top';
-
-let key = '',
-    val = null,
-    dims = null,
-    x = 0,
-    y = 0,
-    w = 0,
-    h = 0,
-    i = 0,
-    iz = 0,
-    flag = false;
+// Local constants
+const ALL = 'all',
+    BOTTOM = 'bottom',
+    CENTER = 'center',
+    DIMENSIONS = 'dimensions',
+    ENTITY = 'entity',
+    FILTER = 'filter',
+    HANDLE = 'handle',
+    LEFT = 'left',
+    LOCKTO = 'lockTo',
+    MIMIC = 'mimic',
+    MOUSE = 'mouse',
+    OFFSET = 'offset',
+    PARTICLE = 'particle',
+    PATH = 'path',
+    PIVOT = 'pivot',
+    RIGHT = 'right',
+    START = 'start',
+    STARTX = 'startX',
+    STARTY = 'startY',
+    T_GROUP = 'Group',
+    T_POLYLINE = 'Polyline',
+    TOP = 'top';
 
 
 // #### Export function
@@ -368,26 +359,25 @@ export default function (P = Ωempty) {
     P.packetObjects = pushUnique(P.packetObjects, ['group']);
     P.packetFunctions = pushUnique(P.packetFunctions, []);
 
-    P.processPacketOut = function (key, value, includes) {
+    P.processPacketOut = function (key, value, inc) {
 
         let result = true;
 
         switch (key) {
 
-            case 'lockTo' :
+            case LOCKTO :
 
-                if (value[0] === 'start' && value[1] === 'start') {
+                if (value[0] === START && value[1] === START) {
 
-                    result = (includes.indexOf('lockTo') >= 0) ? true : false;
+                    result = (inc.includes(LOCKTO)) ? true : false;
                 }
                 break;
 
             default :
 
-                if (this.lib === 'entity') result = this.processEntityPacketOut(key, value, includes);
-                else if (this.isArtefact) result = this.processDOMPacketOut(key, value, includes);
+                if (this.lib === ENTITY) result = this.processEntityPacketOut(key, value, inc);
+                else if (this.isArtefact) result = this.processDOMPacketOut(key, value, inc);
         }
-
         return result;
     };
 
@@ -408,7 +398,7 @@ export default function (P = Ωempty) {
 
 // #### Kill management
     P.kill = function (flag1 = false, flag2 = false) {
-console.log('position.kill');
+
         const name = this.name;
 
         // Remove artefact from all groups
@@ -810,7 +800,7 @@ console.log('position.kill');
 
             if (item.substring) {
 
-                val = group[item];
+                const val = group[item];
 
                 if (val) this.group = val;
                 else this.group = item;
@@ -949,30 +939,30 @@ console.log('position.kill');
 // + __y__ - if `x` is a Number or String, then `y` should also be a Number or String
     P.setCoordinateHelper = function (label, x, y) {
 
-        val = this[label];
+        const c = this[label];
 
         if (_isArray(x)) {
 
-            val[0] = x[0];
-            val[1] = x[1];
+            c[0] = x[0];
+            c[1] = x[1];
         }
         else if (isa_obj(x)) {
 
             if (xto(x.x, x.y)) {
 
-                val[0] = xtGet(x.x, val[0]);
-                val[1] = xtGet(x.y, val[1]);
+                c[0] = xtGet(x.x, c[0]);
+                c[1] = xtGet(x.y, c[1]);
             }
             else {
 
-                val[0] = xtGet(x.width, x.w, val[0]);
-                val[1] = xtGet(x.height, x.h, val[1]);
+                c[0] = xtGet(x.width, x.w, c[0]);
+                c[1] = xtGet(x.height, x.h, c[1]);
             }
         }
         else {
 
-            val[0] = x;
-            val[1] = y;
+            c[0] = x;
+            c[1] = y;
         }
     };
 
@@ -984,32 +974,32 @@ console.log('position.kill');
 // + __y__ - if `x` is a Number or String, then `y` should also be a Number or String
     P.setDeltaCoordinateHelper = function (label, nx, ny) {
 
-        val = this[label];
-            x = val[0];
-            y = val[1];
+        const c = this[label],
+            cx = c[0],
+            cy = c[1];
 
         if (_isArray(nx)) {
 
-            val[0] = addStrings(x, nx[0]);
-            val[1] = addStrings(y, nx[1]);
+            c[0] = addStrings(cx, nx[0]);
+            c[1] = addStrings(cy, nx[1]);
         }
         else if (isa_obj(nx)) {
 
             if (xto(nx.x, nx.y)) {
 
-                val[0] = addStrings(x, xtGet(nx.x, 0));
-                val[1] = addStrings(y, xtGet(nx.y, 0));
+                c[0] = addStrings(cx, xtGet(nx.x, 0));
+                c[1] = addStrings(cy, xtGet(nx.y, 0));
             }
             else {
 
-                val[0] = addStrings(x, xtGet(nx.width, nx.w, 0));
-                val[1] = addStrings(y, xtGet(nx.height, nx.h, 0));
+                c[0] = addStrings(cx, xtGet(nx.width, nx.w, 0));
+                c[1] = addStrings(cy, xtGet(nx.height, nx.h, 0));
             }
         }
         else {
 
-            val[0] = addStrings(x, nx);
-            val[1] = addStrings(y, ny);
+            c[0] = addStrings(cx, nx);
+            c[1] = addStrings(cy, ny);
         }
     };
 
@@ -1026,7 +1016,7 @@ console.log('position.kill');
         if (this.currentHost) return this.currentHost;
         else if (this.host) {
 
-            val = artefact[this.host];
+            const val = artefact[this.host];
 
             if (val) {
 
@@ -1062,7 +1052,7 @@ console.log('position.kill');
             }
             else if (host.currentDimensions) {
 
-                dims = host.currentDimensions;
+                const dims = host.currentDimensions;
 
                 if (dims) {
 
@@ -1082,16 +1072,16 @@ console.log('position.kill');
 // `cleanPosition` - internal helper function used by `cleanStart`, `cleanHandle` and `cleanOffset` functions
     P.cleanPosition = function (current, source, dimensions) {
 
-        for (i = 0; i < 2; i++) {
+        for (let i = 0; i < 2; i++) {
 
-            val = source[i];
-            dims = dimensions[i];
+            const s = source[i],
+                d = dimensions[i];
 
-            if (val.toFixed) current[i] = val;
-            else if (val === LEFT || val === TOP) current[i] = 0;
-            else if (val === RIGHT || val === BOTTOM) current[i] = dims;
-            else if (val === CENTER) current[i] = dims / 2;
-            else current[i] = (parseFloat(val) / 100) * dims;
+            if (s.toFixed) current[i] = s;
+            else if (s === LEFT || s === TOP) current[i] = 0;
+            else if (s === RIGHT || s === BOTTOM) current[i] = d;
+            else if (s === CENTER) current[i] = d / 2;
+            else current[i] = (parseFloat(s) / 100) * d;
         }
         this.dirtyFilterIdentifier = true;
     };
@@ -1107,6 +1097,8 @@ console.log('position.kill');
         const myscale = this.scale,
             mimic = this.mimic,
             oldScale = this.currentScale;
+
+        let val = 0;
 
         if(mimic && this.useMimicScale) {
 
@@ -1148,11 +1140,13 @@ console.log('position.kill');
 
         if (host) {
 
+            let dims, w, h, oldW, oldH;
+
             dims = (host.currentDimensions) ? host.currentDimensions : [host.w, host.h];
 
             [w, h] = this.dimensions;
 
-            const [oldW, oldH] = curDims;
+            [oldW, oldH] = curDims;
 
             if (w.substring) w = (parseFloat(w) / 100) * dims[0];
 
@@ -1213,6 +1207,9 @@ console.log('position.kill');
 
         const host = this.getHost();
 
+        let w = 0,
+            h = 0;
+
         if (host) {
 
 	        this.dirtyStart = false;
@@ -1242,6 +1239,9 @@ console.log('position.kill');
     P.cleanOffset = function () {
 
         const host = this.getHost();
+
+        let w = 0,
+            h = 0;
 
         if (host) {
 
@@ -1299,15 +1299,17 @@ console.log('position.kill');
             pivot = this.pivot,
             lock = this.lockTo;
 
+        let r = 0;
+
         if (path && lock.includes(PATH)) {
 
-            val = myroll;
+            r = myroll;
 
             if (this.addPathRotation) {
 
                 let pathData = this.getPathData();
 
-                if (pathData) val += pathData.angle;
+                if (pathData) r += pathData.angle;
             }
 
         }
@@ -1315,25 +1317,25 @@ console.log('position.kill');
 
             if (xt(mimic.currentRotation)) {
 
-                val = mimic.currentRotation;
+                r = mimic.currentRotation;
 
-                if (this.addOwnRotationToMimic) val += myroll;
+                if (this.addOwnRotationToMimic) r += myroll;
             }
             else this.dirtyMimicRotation = true;
         } 
         else {
 
-            val = myroll;
+            r = myroll;
 
             if (pivot && this.addPivotRotation && lock.includes(PIVOT)) {
 
-                if (xt(pivot.currentRotation)) val += pivot.currentRotation;
+                if (xt(pivot.currentRotation)) r += pivot.currentRotation;
                 else this.dirtyPivotRotation = true;
             }
         }
-        this.currentRotation = val;
+        this.currentRotation = r;
 
-        if (val !== oldRoll) this.dirtyPositionSubscribers = true;
+        if (r !== oldRoll) this.dirtyPositionSubscribers = true;
 
         // If this artefact is being mimicked by other artefacts, it needs to check its rotation values on every iteration of the display cycle
         if (this.mimicked && this.mimicked.length) this.dirtyMimicRotation = true;
@@ -1362,7 +1364,7 @@ console.log('position.kill');
             currentStartCache:cache,
         } = this;
 
-        let [oldX, oldY] = stamp;
+        const [oldX, oldY] = stamp;
 
         if (this.noPositionDependencies) {
 
@@ -1491,7 +1493,7 @@ console.log('position.kill');
             }
             else {
                 
-                for (i = 0; i < 2; i++) {
+                for (let i = 0; i < 2; i++) {
 
                     lock = confirmLock(lockTo[i]);
 
@@ -1507,9 +1509,9 @@ console.log('position.kill');
 
             if (localLockArray.includes(PATH)) pathData = this.getPathData();
 
-            let [lock1, lock2] = localLockArray;
+            const [lock1, lock2] = localLockArray;
 
-            let coord1 = requestCoordinate(),
+            const coord1 = requestCoordinate(),
                 coord2 = requestCoordinate();
 
             getMethods[lock1](coord1);
@@ -1557,7 +1559,7 @@ console.log('position.kill');
             let lock, coord, here, myscale;
 
             // We loop twice - once for each coordinate: `x` is calculated on the first loop (`i === 0`); `y` on the second (`i === 1`)
-            for (i = 0; i < 2; i++) {
+            for (let i = 0; i < 2; i++) {
 
                 lock = lockArray[i];
 
@@ -1611,7 +1613,9 @@ console.log('position.kill');
 
         const tests = (!_isArray(items)) ?  [items] : items;
 
-        flag = false;
+        let flag = false,
+            x = 0, 
+            y = 0;
 
         if (!mycell) {
 
@@ -1624,17 +1628,17 @@ console.log('position.kill');
             pathObject = this.pathObject,
             winding = this.winding;
 
-        if (tests.some(test => {
+        if (tests.some(t => {
 
-            if (_isArray(test)) {
+            if (_isArray(t)) {
 
-                x = test[0];
-                y = test[1];
+                x = t[0];
+                y = t[1];
             }
-            else if (xta(test, test.x, test.y)) {
+            else if (xta(t, t.x, t.y)) {
 
-                x = test.x;
-                y = test.y;
+                x = t.x;
+                y = t.y;
             }
             else return false;
 
@@ -1646,7 +1650,7 @@ console.log('position.kill');
 
         }, this)) {
 
-            val = this.checkHitReturn(x, y, mycell);
+            const val = this.checkHitReturn(x, y, mycell);
 
             if (flag) releaseCell(mycell);
 
@@ -1671,7 +1675,7 @@ console.log('position.kill');
 // `pickupArtefact`
     P.pickupArtefact = function (items = Ωempty) {
 
-        let {x, y} = items;
+        const {x, y} = items;
 
         if (xta(x, y)) {
 
@@ -1720,8 +1724,8 @@ console.log('position.kill');
         const host = this.currentHost;
         if (host) {
 
-            [w, h] = host.get(DIMENSIONS);
-            [x, y] = this.start;
+            const [w, h] = host.get(DIMENSIONS);
+            const [x, y] = this.start;
             const [relX, relY] = this.relativeCoordinates;
 
             if (relX.substring) this.start[0] = `${(x / w) * 100}%`;
