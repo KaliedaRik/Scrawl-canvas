@@ -6,8 +6,27 @@
 
 
 // #### Imports
-import { mergeOver, isa_number, Ωempty } from '../core/utilities.js';
+import { 
+    isa_number, 
+    mergeOver, 
+    Ωempty, 
+} from '../core/utilities.js';
+
 import { cell } from '../core/library.js';
+
+
+// Local constants
+const _A = 'a',
+    _B = 'b',
+    _C = 'c',
+    _D = 'd',
+    _E = 'e',
+    _F = 'f',
+    BLANK = 'rgb(0 0 0 / 0)',
+    MAT_POS = ['a', 'b', 'c', 'd', 'e', 'f'],
+    MAT_REPEAT = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'],
+    T_CELL = 'Cell',
+    T_NOISE = 'Noise';
 
 
 // #### Export function
@@ -50,42 +69,39 @@ export default function (P = Ωempty) {
     const S = P.setters;
 
 // __repeat__
-    P.repeatValues = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'];
     S.repeat = function (item) {
 
-        if (this.repeatValues.indexOf(item) >= 0) this.repeat = item;
+        if (MAT_REPEAT.includes(item)) this.repeat = item;
         else this.repeat = this.defs.repeat;
     };
 
 // `updateMatrixNumber` - internal helper function
-    P.matrixNumberPosCheck = ['a', 'b', 'c', 'd', 'e', 'f'];
-
     P.updateMatrixNumber = function (item, pos) {
 
         if (!this.patternMatrix) this.patternMatrix = new DOMMatrix();
 
         item = (item.substring) ? parseFloat(item) : item;
 
-        let posCheck = this.matrixNumberPosCheck.indexOf(pos);
+        let posCheck = MAT_POS.includes(pos);
 
-        if (isa_number(item) && posCheck >= 0) this.patternMatrix[pos] = item;
+        if (isa_number(item) && posCheck) this.patternMatrix[pos] = item;
     };
 
 // __matrixA__, __matrixB__, __matrixC__, __matrixD__, __matrixE__, __matrixF__ - these _pseudo-attributes_ can be used to set individual attributes of the `patternMatrix` DOMMatrix object
-    S.matrixA = function (item) { this.updateMatrixNumber(item, 'a'); };
-    S.matrixB = function (item) { this.updateMatrixNumber(item, 'b'); };
-    S.matrixC = function (item) { this.updateMatrixNumber(item, 'c'); };
-    S.matrixD = function (item) { this.updateMatrixNumber(item, 'd'); };
-    S.matrixE = function (item) { this.updateMatrixNumber(item, 'e'); };
-    S.matrixF = function (item) { this.updateMatrixNumber(item, 'f'); };
+    S.matrixA = function (item) { this.updateMatrixNumber(item, _A); };
+    S.matrixB = function (item) { this.updateMatrixNumber(item, _B); };
+    S.matrixC = function (item) { this.updateMatrixNumber(item, _C); };
+    S.matrixD = function (item) { this.updateMatrixNumber(item, _D); };
+    S.matrixE = function (item) { this.updateMatrixNumber(item, _E); };
+    S.matrixF = function (item) { this.updateMatrixNumber(item, _F); };
 
 // __stretchX__, __skewY__, __skewX__, __stretchY__, __shiftX__, __shiftY__ - these _pseudo-attributes_ can be used to set individual attributes of the `patternMatrix` DOMMatrix object
-    S.stretchX = function (item) { this.updateMatrixNumber(item, 'a'); };
-    S.skewY = function (item) { this.updateMatrixNumber(item, 'b'); };
-    S.skewX = function (item) { this.updateMatrixNumber(item, 'c'); };
-    S.stretchY = function (item) { this.updateMatrixNumber(item, 'd'); };
-    S.shiftX = function (item) { this.updateMatrixNumber(item, 'e'); };
-    S.shiftY = function (item) { this.updateMatrixNumber(item, 'f'); };
+    S.stretchX = function (item) { this.updateMatrixNumber(item, _A); };
+    S.skewY = function (item) { this.updateMatrixNumber(item, _B); };
+    S.skewX = function (item) { this.updateMatrixNumber(item, _C); };
+    S.stretchY = function (item) { this.updateMatrixNumber(item, _D); };
+    S.shiftX = function (item) { this.updateMatrixNumber(item, _E); };
+    S.shiftY = function (item) { this.updateMatrixNumber(item, _F); };
 
 // __patternMatrix__ - the argument must be an Array containing 6 Number elements in the form of `[a, b, c, d, e, f]`
     S.patternMatrix = function (item) {
@@ -94,12 +110,12 @@ export default function (P = Ωempty) {
 
             let update = this.updateMatrixNumber;
 
-            update(item[0], 'a');
-            update(item[1], 'b');
-            update(item[2], 'c');
-            update(item[3], 'd');
-            update(item[4], 'e');
-            update(item[5], 'f');
+            update(item[0], _A);
+            update(item[1], _B);
+            update(item[2], _C);
+            update(item[3], _D);
+            update(item[4], _E);
+            update(item[5], _F);
         }
     };
 
@@ -118,7 +134,7 @@ export default function (P = Ωempty) {
                 repeat = this.repeat,
                 engine = mycell.engine;
 
-            if (this.type === 'Cell' || this.type === 'Noise') {
+            if (this.type == T_CELL || this.type == T_NOISE) {
 
                 source = this.element;
                 loaded = true;
@@ -132,6 +148,6 @@ export default function (P = Ωempty) {
                 return p;
             }
         }
-        return 'rgb(0 0 0 / 0)';
+        return BLANK;
     };
 };

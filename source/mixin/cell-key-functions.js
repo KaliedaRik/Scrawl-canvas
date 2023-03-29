@@ -3,9 +3,43 @@
 
 
 // #### Imports
-import { mergeOver, mergeDiscard, xt, Ωempty, λthis, λnull, radian } from '../core/utilities.js';
-import { styles, stylesnames, cell, cellnames } from '../core/library.js';
-import { getPixelRatio, getIgnorePixelRatio } from "../core/events.js";
+import { 
+    mergeDiscard, 
+    mergeOver, 
+    radian,
+    xt, 
+    λnull, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    cell, 
+    cellnames, 
+    styles, 
+    stylesnames, 
+} from '../core/library.js';
+
+import { 
+    getIgnorePixelRatio, 
+    getPixelRatio, 
+} from "../core/events.js";
+
+import { 
+    _cos,
+    _entries,
+    _isArray,
+    _keys,
+    _sin,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const BLANK = 'rgb(0 0 0 / 0)',
+    LEFT = 'left',
+    LINE_DASH = 'lineDash',
+    STYLES_ARR = ['Gradient', 'RadialGradient', 'Pattern'],
+    TOP = 'top';
 
 
 // #### Export function
@@ -18,26 +52,26 @@ export default function (P = Ωempty) {
     P.setEngineFromState = function (engine) {
 
         const state = this.state,
-            stateKeys = state.allKeys,
-            stateKeysLen = stateKeys.length;
+            keys = state.allKeys,
+            len = keys.length;
 
-        let i, iz, key, eVal, sVal;
+        let i, key, eVal, sVal;
 
-        for (i = 0; i < stateKeysLen; i++) {
+        for (i = 0; i < len; i++) {
 
-            key = stateKeys[i];
+            key = keys[i];
             eVal = engine[key];
             sVal = state[key];
 
-            if (key === 'lineDash') {
+            if (key === LINE_DASH) {
 
                 engine.lineDash = sVal;
                 engine.setLineDash(engine.lineDash);
             }
             else if (eVal !== sVal) engine[key] = sVal;
         }
-        if (engine.textAlign !== 'left') engine.textAlign = 'left';
-        if (engine.textBaseline !== 'top') engine.textBaseline = 'top';
+        if (engine.textAlign !== LEFT) engine.textAlign = LEFT;
+        if (engine.textBaseline !== TOP) engine.textBaseline = TOP;
 
         return this;
     };
@@ -47,17 +81,16 @@ export default function (P = Ωempty) {
 
         const items = this.state.defs,
             state = this.state,
-            engine = this.engine,
-            isArray = Array.isArray;
+            engine = this.engine;
 
-        Object.entries(items).forEach(([key, value]) => {
+        _entries(items).forEach(([key, value]) => {
 
-            if (key === 'lineDash') {
+            if (key === LINE_DASH) {
 
-                if (!isArray(engine.lineDash)) engine.lineDash = [];
+                if (!_isArray(engine.lineDash)) engine.lineDash = [];
                 else engine.lineDash.length = 0;
 
-                if (!isArray(state.lineDash)) state.lineDash = [];
+                if (!_isArray(state.lineDash)) state.lineDash = [];
                 else state.lineDash.length = 0;
             }
             else {
@@ -67,14 +100,13 @@ export default function (P = Ωempty) {
             }
         });
 
-        engine.textAlign = state.textAlign = 'left';
-        engine.textBaseline = state.textBaseline = 'top';
+        engine.textAlign = state.textAlign = LEFT;
+        engine.textBaseline = state.textBaseline = TOP;
 
         return this;
     };
 
     // `setEngine` - internal function: set engine to match the entity object's State attribute values
-    P.stylesArray = ['Gradient', 'RadialGradient', 'Pattern'];
     P.setEngine = function (entity) {
 
         const state = this.state,
@@ -83,16 +115,15 @@ export default function (P = Ωempty) {
         if (entityState) {
 
             const changes = entityState.getChanges(entity, state),
-                action = this.setEngineActions,
-                stylesArray = this.stylesArray;
+                action = this.setEngineActions;
 
-            if (Object.keys(changes).length) {
+            if (_keys(changes).length) {
 
                 const engine = this.engine;
 
                 for (const item in changes) {
 
-                    action[item](changes[item], engine, stylesArray, entity, this);
+                    action[item](changes[item], engine, STYLES_ARR, entity, this);
                     state[item] = changes[item];
                 }
             }
@@ -103,14 +134,14 @@ export default function (P = Ωempty) {
     // __setEngineActions__ - an Object containing functions for updating the engine's attributes; used by `setEngine`
     P.setEngineActions = {
 
-        fillStyle: function (item, engine, stylesArray, entity, layer) {
+        fillStyle: function (item, engine, STYLES_ARR, entity, layer) {
 
             if (item.substring) {
 
                 let brokenStyle = false;
 
-                if (stylesnames.indexOf(item) >= 0) brokenStyle = styles[item];
-                else if (cellnames.indexOf(item) >= 0) brokenStyle = cell[item];
+                if (stylesnames.includes(item)) brokenStyle = styles[item];
+                else if (cellnames.includes(item)) brokenStyle = cell[item];
 
                 if (brokenStyle) {
                     
@@ -187,14 +218,14 @@ export default function (P = Ωempty) {
             engine.shadowOffsetY = item;
         },
 
-        strokeStyle: function (item, engine, stylesArray, entity, layer) {
+        strokeStyle: function (item, engine, STYLES_ARR, entity, layer) {
 
             if (item.substring) {
 
                 let brokenStyle = false;
 
-                if (stylesnames.indexOf(item) >= 0) brokenStyle = styles[item];
-                else if (cellnames.indexOf(item) >= 0) brokenStyle = cell[item];
+                if (stylesnames.includes(item)) brokenStyle = styles[item];
+                else if (cellnames.includes(item)) brokenStyle = cell[item];
 
                 if (brokenStyle) {
                     
@@ -243,12 +274,12 @@ export default function (P = Ωempty) {
     // `setToClearShape`
     P.setToClearShape = function () {
 
-        this.engine.fillStyle = 'rgb(0 0 0 / 0)';
-        this.engine.strokeStyle = 'rgb(0 0 0 / 0)';
-        this.engine.shadowColor = 'rgb(0 0 0 / 0)';
-        this.state.fillStyle = 'rgb(0 0 0 / 0)';
-        this.state.strokeStyle = 'rgb(0 0 0 / 0)';
-        this.state.shadowColor = 'rgb(0 0 0 / 0)';
+        this.engine.fillStyle = BLANK;
+        this.engine.strokeStyle = BLANK;
+        this.engine.shadowColor = BLANK;
+        this.state.fillStyle = BLANK;
+        this.state.strokeStyle = BLANK;
+        this.state.shadowColor = BLANK;
 
         return this;
     };
@@ -352,8 +383,8 @@ export default function (P = Ωempty) {
 
             rotation *= radian;
 
-            const cos = Math.cos(rotation),
-                sin = Math.sin(rotation);
+            const cos = _cos(rotation),
+                sin = _sin(rotation);
 
             engine.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), x, y);
         }

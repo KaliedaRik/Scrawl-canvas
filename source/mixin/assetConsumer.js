@@ -5,12 +5,36 @@
 
 
 // #### Imports
-import { mergeOver, xt, Ωempty } from '../core/utilities.js';
+import { 
+    mergeOver, 
+    xt, 
+    Ωempty, 
+} from '../core/utilities.js';
+
 import { asset } from '../core/library.js';
+
+import { 
+    _now,
+} from '../core/shared-vars.js';
 
 import { importImage } from '../factory/imageAsset.js';
 import { importVideo } from '../factory/videoAsset.js';
 import { importSprite } from '../factory/spriteAsset.js';
+
+
+// Local constants
+const ADD_TEXT_TRACK = 'addTextTrack',
+    CAN_PLAY_TYPE = 'canPlayType',
+    CAPTURE_STREAM = 'captureStream',
+    DEFAULT = 'default',
+    FAST_SEEK = 'fastSeek',
+    LOAD = 'load',
+    PAUSE = 'pause',
+    PLAY = 'play',
+    SET_MEDIA_KEYS = 'setMediaKeys',
+    SET_SINK_ID = 'setSinkId',
+    T_SPRITE = 'Sprite',
+    T_VIDEO = 'Video';
 
 
 // #### Export function
@@ -35,13 +59,12 @@ export default function (P = Ωempty) {
         spriteIsRunning: false,
         spriteLastFrameChange: 0,
         spriteCurrentFrame: 0,
-        spriteTrack: 'default',
+        spriteTrack: DEFAULT,
         spriteForward: true,
         spriteFrameDuration: 100,
         spriteWillLoop: true,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
-
 
 // #### Packet management
 // No additional packet functionality defined here
@@ -168,7 +191,7 @@ export default function (P = Ωempty) {
 
         const myAsset = this.asset;
 
-        if (myAsset && myAsset.type === 'Video') return myAsset[action](...args);
+        if (myAsset && myAsset.type === T_VIDEO) return myAsset[action](...args);
     };
 
 // `videoPromiseAction` - internal helper function
@@ -176,53 +199,53 @@ export default function (P = Ωempty) {
 
         const myAsset = this.asset;
 
-        if (myAsset && myAsset.type === 'Video') return myAsset[action](...args);
+        if (myAsset && myAsset.type === T_VIDEO) return myAsset[action](...args);
         else return Promise.reject('Asset not a video');
     };
 
 // `videoAddTextTrack`
     P.videoAddTextTrack = function (kind, label, language) {
-        return this.videoAction('addTextTrack', kind, label, language);
+        return this.videoAction(ADD_TEXT_TRACK, kind, label, language);
     };
 
 // `videoCaptureStream`
     P.videoCaptureStream = function () {
-        return this.videoAction('captureStream');
+        return this.videoAction(CAPTURE_STREAM);
     };
 
 // `videoCanPlayType`
     P.videoCanPlayType = function (mytype) {
-        return this.videoAction('canPlayType', mytype);
+        return this.videoAction(CAN_PLAY_TYPE, mytype);
     };
 
 // `videoFastSeek`
     P.videoFastSeek = function (time) {
-        return this.videoAction('fastSeek', time);
+        return this.videoAction(FAST_SEEK, time);
     };
 
 // `videoLoad`
     P.videoLoad = function () {
-        return this.videoAction('load');
+        return this.videoAction(LOAD);
     };
 
 // `videoPause`
     P.videoPause = function () {
-        return this.videoAction('pause');
+        return this.videoAction(PAUSE);
     };
 
 // `videoPlay`
     P.videoPlay = function () {
-        return this.videoPromiseAction('play');
+        return this.videoPromiseAction(PLAY);
     };
 
 // `videoSetMediaKeys`
     P.videoSetMediaKeys = function (keys) {
-        return this.videoPromiseAction('setMediaKeys', keys);
+        return this.videoPromiseAction(SET_MEDIA_KEYS, keys);
     };
 
 // `videoSetSinkId`
     P.videoSetSinkId = function () {
-        return this.videoPromiseAction('setSinkId');
+        return this.videoPromiseAction(SET_SINK_ID);
     };
 
 
@@ -234,7 +257,7 @@ export default function (P = Ωempty) {
 
         const asset = this.asset;
 
-        if (asset && asset.type === 'Sprite' && asset.manifest) {
+        if (asset && asset.type === T_SPRITE && asset.manifest) {
 
             const copyArray = this.copyArray;
 
@@ -242,7 +265,7 @@ export default function (P = Ωempty) {
 
                 const last = this.spriteLastFrameChange,
                     choke = this.spriteFrameDuration,
-                    now = Date.now();
+                    now = _now();
 
                 if (now > last + choke) {
 
@@ -309,7 +332,7 @@ export default function (P = Ωempty) {
         if (xt(forward)) this.spriteForward = forward;
         if (xt(frame)) this.spriteCurrentFrame = frame;
 
-        this.spriteLastFrameChange = Date.now();
+        this.spriteLastFrameChange = _now();
         this.spriteIsRunning = true;
     }
 

@@ -7,8 +7,11 @@ export const _isArray = Array.isArray;
 export const _keys = Object.keys;
 export const _parse = JSON.parse;
 export const _round = Math.round;
+export const _cos = Math.cos;
+export const _sin = Math.sin;
 export const _string = JSON.stringify;
 export const _values = Object.values;
+export const _now = Date.now;
 
 /* mixin/base */
 // export const UNDEF = 'undefined';
@@ -122,6 +125,79 @@ export const _values = Object.values;
 // export const T_RDASSET = 'RdAsset';
 // export const T_SPRITE = 'Sprite';
 // export const T_VIDEO = 'Video';
+
+/* mixin/entity */
+// export const GOOD_HOST = ['Cell', 'CellFragment'];
+// export const IMG = 'img';
+// export const MOUSE = 'mouse';
+// export const NAME = 'name';
+// export const PARTICLE = 'particle';
+// export const SOURCE_IN = 'source-in';
+// export const SOURCE_OVER = 'source-over';
+// export const UNDEF = 'undefined';
+
+/* mixin/assetAdvancedFunctionality */
+// export const _2D = '2d';
+// export const CANVAS = 'canvas';
+// export const PC100 = '100%';
+
+/* mixin/assetConsumers */
+// export const ADD_TEXT_TRACK = 'addTextTrack';
+// export const CAN_PLAY_TYPE = 'canPlayType';
+// export const CAPTURE_STREAM = 'captureStream';
+// export const DEFAULT = 'default';
+// export const FAST_SEEK = 'fastSeek';
+// export const LOAD = 'load';
+// export const PAUSE = 'pause';
+// export const PLAY = 'play';
+// export const SET_MEDIA_KEYS = 'setMediaKeys';
+// export const SET_SINK_ID = 'setSinkId';
+// export const T_SPRITE = 'Sprite';
+// export const T_VIDEO = 'Video';
+
+/* mixin/cascade */
+// export const ADD_ARTEFACT_CLASSES = 'addArtefactClasses';
+// export const REMOVE_ARTEFACT_CLASSES = 'removeArtefactClasses';
+// export const REVERSE_BY_DELTA = 'reverseByDelta';
+// export const SET_ARTEFACTS = 'setArtefacts';
+// export const UPDATE_ARTEFACTS = 'updateArtefacts';
+// export const UPDATE_BY_DELTA = 'updateByDelta';
+
+
+/* mixin/cell-key-functions */
+// export const BLANK = 'rgb(0 0 0 / 0)';
+// export const LEFT = 'left';
+// export const LINE_DASH = 'lineDash';
+// export const STYLES_ARR = ['Gradient', 'RadialGradient', 'Pattern'];
+// export const TOP = 'top';
+
+/* mixin/displayShape */
+// export const BANNER = 'banner';
+// export const LANDSCAPE = 'landscape';
+// export const LARGER = 'larger';
+// export const LARGEST = 'largest';
+// export const PORTRAIT = 'portrait';
+// export const RECTANGLE = 'rectangle';
+// export const REGULAR = 'regular';
+// export const SKYSCRAPER = 'skyscraper';
+// export const SMALLER = 'smaller';
+// export const SMALLEST = 'smallest';
+// export const ZERO_STR = '';
+
+/* mixin/pattern */
+// export const MAT_POS = ['a', 'b', 'c', 'd', 'e', 'f'];
+// export const MAT_REPEAT = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'];
+// export const _A = 'a';
+// export const _B = 'b';
+// export const _C = 'c';
+// export const _D = 'd';
+// export const _E = 'e';
+// export const _F = 'f';
+// export const T_CELL = 'Cell';
+// export const T_NOISE = 'Noise';
+// export const BLANK = 'rgb(0 0 0 / 0)';
+
+
 
 
 

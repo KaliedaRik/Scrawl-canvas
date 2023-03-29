@@ -8,7 +8,27 @@
 
 // #### Imports
 import { group } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, xtGet, Ωempty } from '../core/utilities.js';
+
+import { 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    xtGet, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    _floor,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const ADD_ARTEFACT_CLASSES = 'addArtefactClasses',
+    REMOVE_ARTEFACT_CLASSES = 'removeArtefactClasses',
+    REVERSE_BY_DELTA = 'reverseByDelta',
+    SET_ARTEFACTS = 'setArtefacts',
+    UPDATE_ARTEFACTS = 'updateArtefacts',
+    UPDATE_BY_DELTA = 'updateByDelta';
 
 
 // #### Export function
@@ -68,8 +88,7 @@ export default function (P = Ωempty) {
 
             this.batchResort = false;
 
-            const floor = Math.floor,
-                groupnames = this.groups,
+            const groupnames = this.groups,
                 buckets = [];
             
             let mygroup, order;
@@ -77,7 +96,7 @@ export default function (P = Ωempty) {
             groupnames.forEach(name => {
 
                 mygroup = group[name];
-                order = (mygroup) ? floor(mygroup.order) : 0;
+                order = (mygroup) ? _floor(mygroup.order) : 0;
 
                 if (!buckets[order]) buckets[order] = [];
 
@@ -103,7 +122,7 @@ export default function (P = Ωempty) {
 // `addGroups`
     P.addGroups = function (...args) {
 
-        args.forEach( item => {
+        args.forEach(item => {
 
             if (item && item.substring) pushUnique(this.groups, item);
             else if (group[item]) pushUnique(this.groups, item.name);
@@ -145,47 +164,45 @@ export default function (P = Ωempty) {
         return this;
     };
 
-
 // `updateArtefacts` - Update all artefact objects in all the controller object's Groups. The supplied argument will be passed on to each artefact's `setDelta` function.
     P.updateArtefacts = function (items) {
 
-        this.cascadeAction(items, 'updateArtefacts');
+        this.cascadeAction(items, UPDATE_ARTEFACTS);
         return this;
     };
-
 
 // `updateArtefacts` - Set all artefact objects in all the controller object's Groups. The supplied argument will be passed on to each artefact's `set` functions
     P.setArtefacts = function (items) {
 
-        this.cascadeAction(items, 'setArtefacts');
+        this.cascadeAction(items, SET_ARTEFACTS);
         return this;
     };
 
 // `addArtefactClasses` - specific to DOM-related artefacts (Stack, Canvas, Element)
     P.addArtefactClasses = function (items) {
 
-        this.cascadeAction(items, 'addArtefactClasses');
+        this.cascadeAction(items, ADD_ARTEFACT_CLASSES);
         return this;
     };
 
 // `removeArtefactClasses` - specific to DOM-related artefacts (Stack, Canvas, Element)
     P.removeArtefactClasses = function (items) {
 
-        this.cascadeAction(items, 'removeArtefactClasses');
+        this.cascadeAction(items, REMOVE_ARTEFACT_CLASSES);
         return this;
     };
 
 // `updateByDelta` - triggers the related artefact function, to update (add) its attributes by values held in its `delta` object attribute
     P.updateByDelta = function () {
 
-        this.cascadeAction(false, 'updateByDelta');
+        this.cascadeAction(false, UPDATE_BY_DELTA);
         return this;
     };
 
 // `reverseByDelta` - triggers the related artefact function, to reverse (subtract) its attributes by values held in its `delta` object attribute
     P.reverseByDelta = function () {
 
-        this.cascadeAction(false, 'reverseByDelta');
+        this.cascadeAction(false, REVERSE_BY_DELTA);
         return this;
     };
 

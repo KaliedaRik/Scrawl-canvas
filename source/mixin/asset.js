@@ -24,7 +24,12 @@
 
 
 // #### Imports
-import { mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
+import { 
+    mergeOver, 
+    pushUnique, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 
 // #### Export function

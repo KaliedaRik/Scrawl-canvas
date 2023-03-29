@@ -7,7 +7,33 @@
 
 
 // #### Imports
-import { mergeOver, pushUnique, λnull, isa_obj, isa_number, isa_fn, Ωempty } from '../core/utilities.js';
+import { 
+    isa_fn, 
+    isa_number, 
+    isa_obj, 
+    mergeOver, 
+    pushUnique, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    _entries,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const BANNER = 'banner',
+    LANDSCAPE = 'landscape',
+    LARGER = 'larger',
+    LARGEST = 'largest',
+    PORTRAIT = 'portrait',
+    RECTANGLE = 'rectangle',
+    REGULAR = 'regular',
+    SKYSCRAPER = 'skyscraper',
+    SMALLER = 'smaller',
+    SMALLEST = 'smallest',
+    ZERO_STR = '';
 
 
 // #### Export function
@@ -103,7 +129,7 @@ export default function (P = Ωempty) {
 // Set __displayShapeBreakpoints__ - breakpoints can be set individually, or alternatively they can be supplied in an object keyed to this attribute
     S.displayShapeBreakpoints = function (items = Ωempty) {
 
-        for (const [key, val] of Object.entries(items)) {
+        for (const [key, val] of _entries(items)) {
 
             if (isa_number(val)) {
 
@@ -311,7 +337,7 @@ export default function (P = Ωempty) {
         this.actionPortraitShape = λnull;
         this.actionSkyscraperShape = λnull;
 
-        this.currentDisplayShape = '';
+        this.currentDisplayShape = ZERO_STR;
         this.dirtyDisplayShape = true;
 
         this.actionSmallestArea = λnull;
@@ -320,10 +346,10 @@ export default function (P = Ωempty) {
         this.actionLargerArea = λnull;
         this.actionLargestArea = λnull;
 
-        this.currentDisplayArea = '';
+        this.currentDisplayArea = ZERO_STR;
         this.dirtyDisplayArea = true;
     };
- 
+
 // `cleanDisplayShape` - internal function; replaces the function defined in the dom.js mixin, invoked when required as part of the DOM artefact `prestamp` functionality
     P.cleanDisplayShape = function () {
 
@@ -342,9 +368,9 @@ export default function (P = Ωempty) {
 
             if (ratio > banner) {
 
-                if (current !== 'banner') {
+                if (current != BANNER) {
 
-                    this.currentDisplayShape = 'banner';
+                    this.currentDisplayShape = BANNER;
                     this.actionBannerShape();
                     return true;
                 }
@@ -352,9 +378,9 @@ export default function (P = Ωempty) {
             }
             else if (ratio > landscape) {
 
-                if (current !== 'landscape') {
+                if (current != LANDSCAPE) {
 
-                    this.currentDisplayShape = 'landscape';
+                    this.currentDisplayShape = LANDSCAPE;
                     this.actionLandscapeShape();
                     return true;
                 }
@@ -362,9 +388,9 @@ export default function (P = Ωempty) {
             }
             else if (ratio < skyscraper) {
                 
-                if (current !== 'skyscraper') {
+                if (current != SKYSCRAPER) {
 
-                    this.currentDisplayShape = 'skyscraper';
+                    this.currentDisplayShape = SKYSCRAPER;
                     this.actionSkyscraperShape();
                     return true;
                 }
@@ -372,9 +398,9 @@ export default function (P = Ωempty) {
             }
             else if (ratio < portrait) {
                 
-                if (current !== 'portrait') {
+                if (current != PORTRAIT) {
 
-                    this.currentDisplayShape = 'portrait';
+                    this.currentDisplayShape = PORTRAIT;
                     this.actionPortraitShape();
                     return true;
                 }
@@ -382,9 +408,9 @@ export default function (P = Ωempty) {
             }
             else {
 
-                if (current !== 'rectangle') {
+                if (current != RECTANGLE) {
 
-                    this.currentDisplayShape = 'rectangle';
+                    this.currentDisplayShape = RECTANGLE;
                     this.actionRectangleShape();
                     return true;
                 }
@@ -417,9 +443,9 @@ export default function (P = Ωempty) {
 
             if (area > largest) {
 
-                if (current !== 'largest') {
+                if (current != LARGEST) {
 
-                    this.currentDisplayArea = 'largest';
+                    this.currentDisplayArea = LARGEST;
                     this.actionLargestArea();
                     return true;
                 }
@@ -427,9 +453,9 @@ export default function (P = Ωempty) {
             }
             else if (area > larger) {
 
-                if (current !== 'larger') {
+                if (current != LARGER) {
 
-                    this.currentDisplayArea = 'larger';
+                    this.currentDisplayArea = LARGER;
                     this.actionLargerArea();
                     return true;
                 }
@@ -437,9 +463,9 @@ export default function (P = Ωempty) {
             }
             else if (area < smallest) {
                 
-                if (current !== 'smallest') {
+                if (current != SMALLEST) {
 
-                    this.currentDisplayArea = 'smallest';
+                    this.currentDisplayArea = SMALLEST;
                     this.actionSmallestArea();
                     return true;
                 }
@@ -447,9 +473,9 @@ export default function (P = Ωempty) {
             }
             else if (area < smaller) {
                 
-                if (current !== 'smaller') {
+                if (current != SMALLER) {
 
-                    this.currentDisplayArea = 'smaller';
+                    this.currentDisplayArea = SMALLER;
                     this.actionSmallerArea();
                     return true;
                 }
@@ -457,9 +483,9 @@ export default function (P = Ωempty) {
             }
             else {
 
-                if (current !== 'regular') {
+                if (current != REGULAR) {
 
-                    this.currentDisplayArea = 'regular';
+                    this.currentDisplayArea = REGULAR;
                     this.actionRegularArea();
                     return true;
                 }
@@ -476,14 +502,14 @@ export default function (P = Ωempty) {
 // `updateDisplayShape` - use this function to force the Canvas or Stack artefact to re-evaluate its current display shape, and invoke the action hook function associated with that shape.
     P.updateDisplayShape = function () {
 
-        this.currentDisplayShape = '';
+        this.currentDisplayShape = ZERO_STR;
         this.dirtyDisplayShape = true;
     };
 
 // `updateDisplayArea` - use this function to force the Canvas or Stack artefact to re-evaluate its current display area, and invoke the action hook function associated with that area.
     P.updateDisplayArea = function () {
 
-        this.currentDisplayArea = '';
+        this.currentDisplayArea = ZERO_STR;
         this.dirtyDisplayArea = true;
     };
 

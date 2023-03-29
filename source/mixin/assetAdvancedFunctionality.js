@@ -3,8 +3,25 @@
 
 
 // #### Imports
-import { mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
+import { 
+    mergeOver, 
+    pushUnique, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    _floor,
+    _now,
+} from '../core/shared-vars.js';
+
 import { makeGradient } from '../factory/gradient.js';
+
+
+// Local constants
+const _2D = '2d',
+    CANVAS = 'canvas',
+    PC100 = '100%';
 
 
 // #### Export function
@@ -117,26 +134,26 @@ export default function (P = Ωempty) {
     // `installElement` - internal function, used by the constructor
     P.installElement = function (name) {
 
-        const element = document.createElement('canvas');
+        const element = document.createElement(CANVAS);
         element.id = name;
         this.element = element;
-        this.engine = this.element.getContext('2d', {
+        this.engine = this.element.getContext(_2D, {
             willReadFrequently: true,
         });
 
         // The color canvas allows us to map contour-like lines across a noise or rd asset's output.
-        const color = document.createElement('canvas');
+        const color = document.createElement(CANVAS);
         color.id = `${name}-color`;
         color.width = 256;
         color.height = 1;
         this.colorElement = color;
-        this.colorEngine = this.colorElement.getContext('2d', {
+        this.colorEngine = this.colorElement.getContext(_2D, {
             willReadFrequently: true,
         });
 
         this.gradient = makeGradient({
             name: `${name}-gradient`,
-            endX: '100%',
+            endX: PC100,
             delta: {
                 paletteStart: 0,
                 paletteEnd: 0,
@@ -215,7 +232,7 @@ export default function (P = Ωempty) {
                 
                 let i, v, c;
 
-                const now = Date.now();
+                const now = _now();
 
                 if (gradientLastUpdated + choke < now) {
 
@@ -225,18 +242,18 @@ export default function (P = Ωempty) {
 
                 if (palette.dirtyPalette) palette.recalculate();
 
-                const G = colorEngine.createLinearGradient(0, 0, 255, 0);
+                const lg = colorEngine.createLinearGradient(0, 0, 255, 0);
 
-                gradient.addStopsToGradient(G, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
+                gradient.addStopsToGradient(lg, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
 
-                colorEngine.fillStyle = G;
+                colorEngine.fillStyle = lg;
                 colorEngine.fillRect(0, 0, 256, 1);
 
                 const gData = colorEngine.getImageData(0, 0, 256, 1).data;
 
                 for (i = 0; i < len; i++) {
 
-                    v = Math.floor(this.getOutputValue(i, width) * 255) * 4;
+                    v = _floor(this.getOutputValue(i, width) * 255) * 4;
                     
                     c = i * 4;
 

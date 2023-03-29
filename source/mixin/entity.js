@@ -23,8 +23,16 @@ import {
 import { scrawlCanvasHold } from '../core/document.js';
 import { asset } from '../core/library.js';
 
-import { makeState, stateKeys } from '../factory/state.js';
-import { requestCell, releaseCell } from '../factory/cell-fragment.js';
+import { 
+    makeState, 
+    stateKeys, 
+} from '../factory/state.js';
+
+import { 
+    releaseCell, 
+    requestCell, 
+} from '../factory/cell-fragment.js';
+
 import { filterEngine } from '../factory/filterEngine.js';
 import { importDomImage } from '../factory/imageAsset.js';
 import { currentGroup } from '../factory/canvas.js';
@@ -36,6 +44,23 @@ import mimicMix from '../mixin/mimic.js';
 import pathMix from '../mixin/path.js';
 import anchorMix from '../mixin/anchor.js';
 import filterMix from '../mixin/filter.js';
+
+import { 
+    _floor,
+    _keys,
+    _parse, 
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const GOOD_HOST = ['Cell', 'CellFragment'],
+    IMG = 'img',
+    MOUSE = 'mouse',
+    NAME = 'name',
+    PARTICLE = 'particle',
+    SOURCE_IN = 'source-in',
+    SOURCE_OVER = 'source-over',
+    UNDEF = 'undefined';
 
 
 // #### Export function
@@ -207,7 +232,7 @@ export default function (P = Ωempty) {
 
     P.finalizePacketOut = function (copy, items) {
 
-        let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+        const stateCopy = _parse(this.state.saveAsPacket(items))[3];
         copy = mergeOver(copy, stateCopy);
 
         copy = this.handlePacketAnchor(copy, items);
@@ -274,15 +299,14 @@ export default function (P = Ωempty) {
 
         else {
 
-            let def = this.defs[item],
-                state = this.state;
-
+            const state = this.state;
+            let def = this.defs[item];
             let val;
 
             if (def != null) {
 
                 val = this[item];
-                return (typeof val != 'undefined') ? val : def;
+                return (typeof val != UNDEF) ? val : def;
             }
 
             def = state.defs[item];
@@ -290,7 +314,7 @@ export default function (P = Ωempty) {
             if (def != null) {
 
                 val = state[item];
-                return (typeof val != 'undefined') ? val : def;
+                return (typeof val != UNDEF) ? val : def;
             }
             return null;
         }
@@ -298,10 +322,10 @@ export default function (P = Ωempty) {
 
     P.set = function (items = Ωempty) {
 
-        const keys = Object.keys(items),
-            keysLen = keys.length;
+        const keys = _keys(items),
+            len = keys.length;
 
-        if (keysLen) {
+        if (len) {
 
             const setters = this.setters,
                 defs = this.defs,
@@ -310,28 +334,28 @@ export default function (P = Ωempty) {
             const stateSetters = (state) ? state.setters : Ωempty;
             const stateDefs = (state) ? state.defs : Ωempty;
 
-            let predefined, i, key, value;
+            let fn, i, key, val;
 
-            for (i = 0; i < keysLen; i++) {
+            for (i = 0; i < len; i++) {
 
                 key = keys[i];
-                value = items[key];
+                val = items[key];
 
-                if (key && key != 'name' && value != null) {
+                if (key && key != NAME && val != null) {
 
-                    if (stateKeys.indexOf(key) < 0) {
+                    if (!stateKeys.includes(key)) {
 
-                        predefined = setters[key];
+                        fn = setters[key];
 
-                        if (predefined) predefined.call(this, value);
-                        else if (typeof defs[key] != 'undefined') this[key] = value;
+                        if (fn) fn.call(this, val);
+                        else if (typeof defs[key] != UNDEF) this[key] = val;
                     }
                     else {
 
-                        predefined = stateSetters[key];
+                        fn = stateSetters[key];
 
-                        if (predefined) predefined.call(state, value);
-                        else if (typeof stateDefs[key] != 'undefined') state[key] = value;
+                        if (fn) fn.call(state, val);
+                        else if (typeof stateDefs[key] != UNDEF) state[key] = val;
                     }
                 }
             }
@@ -341,10 +365,10 @@ export default function (P = Ωempty) {
 
     P.setDelta = function (items = Ωempty) {
 
-        const keys = Object.keys(items),
-            keysLen = keys.length;
+        const keys = _keys(items),
+            len = keys.length;
 
-        if (keysLen) {
+        if (len) {
 
             const setters = this.deltaSetters,
                 defs = this.defs,
@@ -353,28 +377,28 @@ export default function (P = Ωempty) {
             const stateSetters = (state) ? state.deltaSetters : Ωempty;
             const stateDefs = (state) ? state.defs : Ωempty;
 
-            let predefined, i, key, value;
+            let fn, i, key, val;
 
-            for (i = 0; i < keysLen; i++) {
+            for (i = 0; i < len; i++) {
 
                 key = keys[i];
-                value = items[key];
+                val = items[key];
 
-                if (key && key != 'name' && value != null) {
+                if (key && key != NAME && val != null) {
 
-                    if (stateKeys.indexOf(key) < 0) {
+                    if (!stateKeys.includes(key)) {
 
-                        predefined = setters[key];
+                        fn = setters[key];
 
-                        if (predefined) predefined.call(this, value);
-                        else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+                        if (fn) fn.call(this, val);
+                        else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], val);
                     }
                     else {
 
-                        predefined = stateSetters[key];
+                        fn = stateSetters[key];
 
-                        if (predefined) predefined.call(state, value);
-                        else if (typeof stateDefs[key] != 'undefined') state[key] = addStrings(state[key], value);
+                        if (fn) fn.call(state, val);
+                        else if (typeof stateDefs[key] != UNDEF) state[key] = addStrings(state[key], val);
                     }
                 }
             }
@@ -467,7 +491,7 @@ export default function (P = Ωempty) {
         if (this.dirtyRotation) this.cleanRotation();
 
 // To handle situations where the entity position is currently under the influence of the mouse/touch cursor - where true, entity will set its own `dirtyStampPositions`, `dirtyStampHandlePositions` flags
-        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0 || this.lockTo.indexOf('particle') >= 0) {
+        if (this.isBeingDragged || this.lockTo.includes(MOUSE) || this.lockTo.includes(PARTICLE)) {
 
             this.dirtyStampPositions = true;
             this.dirtyStampHandlePositions = true;
@@ -493,21 +517,19 @@ export default function (P = Ωempty) {
         }
     };
 
-
 // `cleanPathObject` - ___this function will be overwritten by every entity Factory___, to meet their individual requirements.
 // + The function needs to build a Canvas API [Path2D](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) object and store it in the __pathObject__ attribute. The Path2D object is used for both entity stamping (see below) and entity collision detection work.
     P.cleanPathObject = λnull;
 
 // ##### Step 2: invoke the entity's stamp action
 // `stamp` - this is the function invoked by Group objects as they cascade the Display cycle __compile__ step through to their member artefacts.
-    P.acceptableHosts = ['Cell', 'CellFragment'];
     P.stamp = function (force = false, host, changes) {
 
-        let filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
+        const filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
 
         if (force) {
 
-            if (host && this.acceptableHosts.includes(host.type)) this.currentHost = host;
+            if (host && GOOD_HOST.includes(host.type)) this.currentHost = host;
 
             if (changes) this.set(changes);
 
@@ -534,7 +556,7 @@ export default function (P = Ωempty) {
 // + We only use the transformation's `save` and `restore` methods where it makes sense to do so - for instance in very limited actions where the save and restore invocations are close enough in the code base that we don't lose sight of them (and remember to restore after the action completes). They are ___not___ used when updating the engine's attributes to match an entity's stamping requirements!
     P.regularStamp = function () {
 
-        let dest = this.currentHost;
+        const dest = this.currentHost;
 
         if (dest) {
 
@@ -600,7 +622,7 @@ export default function (P = Ωempty) {
                 if (this.isStencil) {
 
                     filterEng.save();
-                    filterEng.globalCompositeOperation = 'source-in';
+                    filterEng.globalCompositeOperation = SOURCE_IN;
                     filterEng.globalAlpha = 1;
                     filterEng.setTransform(1, 0, 0, 1, 0, 0);
                     filterEng.drawImage(currEl, 0, 0);
@@ -623,7 +645,7 @@ export default function (P = Ωempty) {
 
                 if (img) {
 
-                    filterEng.globalCompositeOperation = 'source-over';
+                    filterEng.globalCompositeOperation = SOURCE_OVER;
                     filterEng.globalAlpha = 1;
                     filterEng.setTransform(1, 0, 0, 1, 0, 0);
                     filterEng.putImageData(img, 0, 0);
@@ -632,7 +654,7 @@ export default function (P = Ωempty) {
             currEng.save();
 
             currEng.globalAlpha = (state && state.globalAlpha) ? state.globalAlpha : 1;
-            currEng.globalCompositeOperation = (state && state.globalCompositeOperation) ? state.globalCompositeOperation : 'source-over';
+            currEng.globalCompositeOperation = (state && state.globalCompositeOperation) ? state.globalCompositeOperation : SOURCE_OVER;
             
             currEng.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -660,7 +682,7 @@ export default function (P = Ωempty) {
 
                     if (!this.stashedImage) {
 
-                        const newimg = this.stashedImage = document.createElement('img');
+                        const newimg = this.stashedImage = document.createElement(IMG);
 
                         newimg.id = stashId;
 
@@ -700,7 +722,7 @@ export default function (P = Ωempty) {
 
             if (data[counter]) {
 
-                y = Math.floor(i / width); 
+                y = _floor(i / width); 
                 x = i - (y * width);
 
                 if (minX > x) minX = x;
@@ -719,7 +741,7 @@ export default function (P = Ωempty) {
 // + Will ignore any filters assigned to the entity
     P.simpleStamp = function (host, changes = Ωempty) {
 
-        if (host && this.acceptableHosts.includes(host.type)) {
+        if (host && GOOD_HOST.includes(host.type)) {
 
             this.currentHost = host;
             
@@ -749,7 +771,7 @@ export default function (P = Ωempty) {
 // `drawAndFill` - stamp the entity stroke, then fill, then remove shadow and repeat
     P.drawAndFill = function (engine) {
 
-        let p = this.pathObject;
+        const p = this.pathObject;
 
         engine.stroke(p);
         engine.fill(p, this.winding);
@@ -761,7 +783,7 @@ export default function (P = Ωempty) {
 // `drawAndFill` - stamp the entity fill, then stroke, then remove shadow and repeat
     P.fillAndDraw = function (engine) {
 
-        let p = this.pathObject;
+        const p = this.pathObject;
 
         engine.fill(p, this.winding);
         engine.stroke(p);
@@ -773,7 +795,7 @@ export default function (P = Ωempty) {
 // `drawThenFill` - stroke the entity's outline, then fill it (shadow applied twice)
     P.drawThenFill = function (engine) {
 
-        let p = this.pathObject;
+        const p = this.pathObject;
 
         engine.stroke(p);
         engine.fill(p, this.winding);
@@ -782,7 +804,7 @@ export default function (P = Ωempty) {
 // `fillThenDraw` - fill the entity's outline, then stroke it (shadow applied twice)
     P.fillThenDraw = function (engine) {
 
-        let p = this.pathObject;
+        const p = this.pathObject;
 
         engine.fill(p, this.winding);
         engine.stroke(p);
@@ -797,7 +819,7 @@ export default function (P = Ωempty) {
 // `clear` - remove everything that would have been covered if the entity had performed fill (including shadow)
     P.clear = function (engine) {
 
-        let gco = engine.globalCompositeOperation;
+        const gco = engine.globalCompositeOperation;
 
         engine.globalCompositeOperation = 'destination-out';
         engine.fill(this.pathObject, this.winding);
