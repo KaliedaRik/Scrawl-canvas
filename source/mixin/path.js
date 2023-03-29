@@ -4,7 +4,19 @@
 
 // #### Imports
 import { artefact } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, isa_boolean, Ωempty } from '../core/utilities.js';
+
+import { 
+    isa_boolean, 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    Ωempty,
+} from '../core/utilities.js';
+
+
+// Local constants
+const PATH = 'path',
+    START = 'start';
 
 
 // #### Export function
@@ -33,7 +45,7 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
-    P.packetObjects = pushUnique(P.packetObjects, ['path']);
+    P.packetObjects = pushUnique(P.packetObjects, [PATH]);
 
 
 // #### Clone management
@@ -58,8 +70,8 @@ export default function (P = Ωempty) {
 
             this.path = null;
 
-            if (this.lockTo[0] === 'path') this.lockTo[0] = 'start';
-            if (this.lockTo[1] === 'path') this.lockTo[1] = 'start';
+            if (this.lockTo[0] === PATH) this.lockTo[0] = START;
+            if (this.lockTo[1] === PATH) this.lockTo[1] = START;
 
             this.dirtyStampPositions = true;
             this.dirtyStampHandlePositions = true;
@@ -133,22 +145,20 @@ export default function (P = Ωempty) {
 
         if (this.currentPathData) return this.currentPathData;
 
-        let pathPos = this.pathPosition,
-            path = this.path,
-            currentPathData;
+        const pos = this.pathPosition,
+            path = this.path;
 
         if (path) {
 
             // Note: the old attribute `constantPathSpeed` has been deprecated because the ShapeBasic mixin adds that attributes to shapes where it has different functionality. This code is temporary until Scrawl-canvas v9 is released
-            let speed = this.constantSpeedAlongPath || this.constantPathSpeed || false;
-
-            currentPathData = path.getPathPositionData(pathPos, speed);
+            const speed = this.constantSpeedAlongPath || this.constantPathSpeed || false;
+            const val = path.getPathPositionData(pos, speed);
 
             if (this.addPathRotation) this.dirtyRotation = true;
 
-            this.currentPathData = currentPathData;
+            this.currentPathData = val;
 
-            return currentPathData;
+            return val;
         }
         return false;
     };

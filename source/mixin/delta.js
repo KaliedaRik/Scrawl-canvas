@@ -3,7 +3,32 @@
 
 
 // #### Imports
-import { mergeOver, mergeDiscard, xt, Ωempty } from '../core/utilities.js';
+import { 
+    mergeDiscard,
+    mergeOver,
+    xt,
+    Ωempty,
+} from '../core/utilities.js';
+
+import {
+    _isArray,
+    _keys,
+} from '../core/shared-vars.js'
+
+
+// Local constants
+const ADD = 'add',
+    LONGCHECK = ['startX', 'startY', 'handleX', 'handleY', 'offsetX', 'offsetY', 'width', 'height'],
+    LOOP = 'loop',
+    MULTIPLY = 'multiply',
+    NEWNUMBER = 'newNumber',
+    NEWSTRING = 'newString',
+    PC = '%',
+    REMOVE = 'remove',
+    REVERSE = 'reverse',
+    SEPARATOR = ':',
+    SHORTCHECK = ['startY', 'handleY', 'offsetY', 'height'],
+    UPDATE = 'update';
 
 
 // #### Export function
@@ -94,18 +119,19 @@ export default function (P = Ωempty) {
 // `reverseByDelta` - The opposite action to 'updateByDelta'; values in the __delta__ attribute object will be subtracted from the current value for that Scrawl-canvas object.
     P.reverseByDelta = function () {
 
-        const temp = {};
-        
-        const delta = this.delta,
-            deltaKeys = Object.keys(delta),
+        const temp = {},
+            delta = this.delta,
+            deltaKeys = _keys(delta),
             deltaLen = deltaKeys.length;
 
-        for (let i = 0, key, val; i < deltaLen; i++) {
+        let i, key, val;
+
+        for (i = 0; i < deltaLen; i++) {
 
             key = deltaKeys[i];
             val = delta[key];
 
-            if (val.substring) val = -(parseFloat(val)) + '%';
+            if (val.substring) val = -(parseFloat(val)) + PC;
             else val = -val;
 
             temp[key] = val;
@@ -117,89 +143,86 @@ export default function (P = Ωempty) {
         return this;
     };
 
-    const deltaConstraintsLongCheck = ['startX', 'startY', 'handleX', 'handleY', 'offsetX', 'offsetY', 'width', 'height'];
-    const deltaConstraintsShortCheck = ['startY', 'handleY', 'offsetY', 'height'];
     P.performDeltaConstraintsChecks = function () {
 
         const {delta, deltaConstraints} = this;
 
         if (this.performDeltaChecks) {
 
-            const keys = Object.keys(deltaConstraints),
+            const keys = _keys(deltaConstraints),
                 keysLen = keys.length;
 
-            let key, keyIndex, item, min, max, action, performAction, performActionBecause, valArray, valIndex, val, i, isString, fMin, fMax, fVal;
+            let key, keyIndex, item, min, max, action, act, loopAct, arr, valIndex, val, i, fMin, fMax, fVal;
 
             for (i = 0; i < keysLen; i++) {
 
                 key = keys[i];
                 item = deltaConstraints[key];
 
-                if (Array.isArray(item) && item.length === 3) {
+                if (_isArray(item) && item.length == 3) {
 
                     [min, max, action] = deltaConstraints[key];
-                    isString = (min.substring) ? true : false;
 
-                    if (isString) {
+                    if (min.substring) {
 
-                        keyIndex = deltaConstraintsLongCheck.indexOf(key);
-                        valArray = false;
+                        keyIndex = LONGCHECK.indexOf(key);
+                        arr = false;
                         valIndex = 0;
 
                         if (keyIndex >= 0) {
 
-                            if (keyIndex < 2) valArray = this.start;
-                            else if (keyIndex < 4) valArray = this.handle;
-                            else if (keyIndex < 6) valArray = this.offset;
-                            else if (keyIndex < 8) valArray = this.dimensions;
+                            if (keyIndex < 2) arr = this.start;
+                            else if (keyIndex < 4) arr = this.handle;
+                            else if (keyIndex < 6) arr = this.offset;
+                            else if (keyIndex < 8) arr = this.dimensions;
 
-                            if (deltaConstraintsShortCheck.indexOf(key) >= 0) valIndex = 1;
+                            if (SHORTCHECK.indexOf(key) >= 0) valIndex = 1;
 
-                            val = valArray[valIndex];
+                            val = arr[valIndex];
                         }
                         else val = this.get(key);
 
                         fMin = parseFloat(min);
                         fMax = parseFloat(max);
                         fVal = parseFloat(val);
-                        performAction = '';
+                        act = '';
 
                         if (fVal < fMin) {
 
-                            performAction = action;
-                            performActionBecause = 0;
+                            act = action;
+                            loopAct = 0;
                         }
                         else if (fVal > fMax) {
 
-                            performAction = action;
-                            performActionBecause = 1;
+                            act = action;
+                            loopAct = 1;
                         }
 
-                        if (performAction) {
+                        if (act) {
 
-                            switch (performAction) {
+                            switch (act) {
 
-                                case 'reverse' :
+                                case REVERSE :
 
-                                    delta[key] = -parseFloat(delta[key]) + '%';
+                                    delta[key] = -parseFloat(delta[key]) + PC;
 
                                     this.set({
-                                        [key]: fVal + parseFloat(delta[key]) + '%',
+                                        [key]: fVal + parseFloat(delta[key]) + PC,
                                     });
                                     break; 
 
-                                case 'loop' :
+                                case LOOP :
 
-                                    if (performActionBecause) {
+                                    if (loopAct) {
 
                                         this.set({
-                                            [key]: fVal - (fMax - fMin) + '%',
+                                            [key]: fVal - (fMax - fMin) + PC,
                                         });
                                     }
                                     else {
 
                                         this.set({
-                                            [key]: fVal + (fMax - fMin) + '%',
+                                            [key]: fVal + (fMax - fMin) + PC,
                                         });
                                     }
                                     break; 
@@ -210,24 +233,24 @@ export default function (P = Ωempty) {
 
                         val = this.get(key);
 
-                        performAction = '';
+                        act = '';
 
                         if (val < min) {
 
-                            performAction = action;
-                            performActionBecause = 0;
+                            act = action;
+                            loopAct = 0;
                         }
                         else if (val > max) {
 
-                            performAction = action;
-                            performActionBecause = 1;
+                            act = action;
+                            loopAct = 1;
                         }
 
-                        if (performAction) {
+                        if (act) {
 
-                            switch (performAction) {
+                            switch (act) {
 
-                                case 'reverse' :
+                                case REVERSE :
 
                                     delta[key] = -delta[key];
 
@@ -236,9 +259,9 @@ export default function (P = Ωempty) {
                                     });
                                     break; 
 
-                                case 'loop' :
+                                case LOOP :
 
-                                    if (performActionBecause) {
+                                    if (loopAct) {
 
                                         this.set({
                                             [key]: val - (max - min),
@@ -288,55 +311,57 @@ export default function (P = Ωempty) {
     P.setDeltaValues = function (items = Ωempty) {
 
         const delta = this.delta,
-            keys = Object.keys(items),
+            keys = _keys(items),
             keysLen = keys.length;
 
-        for (let i = 0, key, item, action, val, old; i < keysLen; i++) {
+        let i, key, item, action, val, old
+
+        for (i = 0; i < keysLen; i++) {
 
             key = keys[i];
             item = items[key];
             old = delta[key];
 
-            if (item.indexOf(':') < 0) {
+            if (!item.includes(SEPARATOR)) {
                 action = item;
                 val = false;
             }
             else {
-                [action, val] = item.split(':');
+                [action, val] = item.split(SEPARATOR);
             }
 
             switch (action) {
 
-                case 'newString' :
+                case NEWSTRING :
                     if (val != null) delta[key] = val;
                     break;
 
-                case 'newNumber' :
+                case NEWNUMBER :
                     if (val != null) delta[key] = parseFloat(val);
                     break;
 
-                case 'remove' :
+                case REMOVE :
                     delete delta[key];
                     break;
 
-                case 'update' :
+                case UPDATE :
                     if (val != null) delta[key] = (old.substring) ? val : parseFloat(val);
                     break;
 
-                case 'reverse' :
-                    if (old.substring) val = -(parseFloat(old)) + '%';
+                case REVERSE :
+                    if (old.substring) val = -(parseFloat(old)) + PC;
                     else val = -old;
                     delta[key] = val;
                     break;
 
-                case 'add' :
-                    if (old.substring) val = (parseFloat(old) + parseFloat(val)) + '%';
+                case ADD :
+                    if (old.substring) val = (parseFloat(old) + parseFloat(val)) + PC;
                     else val += old;
                     delta[key] = val;
                     break;
 
-                case 'multiply' :
-                    if (old.substring) val = (parseFloat(old) * parseFloat(val)) + '%';
+                case MULTIPLY :
+                    if (old.substring) val = (parseFloat(old) * parseFloat(val)) + PC;
                     else val *= old;
                     delta[key] = val;
                     break;

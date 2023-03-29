@@ -3,8 +3,29 @@
 
 
 // #### Imports
-import { artefact, asset } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, isa_boolean, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    asset, 
+} from '../core/library.js';
+
+import { 
+    isa_boolean, 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+
+// Local constants
+const CORNER_LABELS = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
+    PIVOT = 'pivot',
+    START = 'start',
+    T_BEZIER = 'Bezier',
+    T_CELL = 'Cell',
+    T_LINE = 'Line',
+    T_POLYLINE = 'Polyline',
+    T_QUADRATIC = 'Quadratic';
 
 
 // #### Export function
@@ -33,7 +54,7 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
-    P.packetObjects = pushUnique(P.packetObjects, ['pivot']);
+    P.packetObjects = pushUnique(P.packetObjects, [PIVOT]);
 
 
 // #### Clone management
@@ -59,8 +80,8 @@ export default function (P = Ωempty) {
 
             this.pivot = null;
 
-            if (this.lockTo[0] === 'pivot') this.lockTo[0] = 'start';
-            if (this.lockTo[1] === 'pivot') this.lockTo[1] = 'start';
+            if (this.lockTo[0] === PIVOT) this.lockTo[0] = START;
+            if (this.lockTo[1] === PIVOT) this.lockTo[1] = START;
 
             this.dirtyStampPositions = true;
             this.dirtyStampHandlePositions = true;
@@ -76,7 +97,7 @@ export default function (P = Ωempty) {
 
                 newPivot = asset[item];
 
-                if (newPivot && newPivot.type !== 'Cell') newPivot = false;
+                if (newPivot && newPivot.type !== T_CELL) newPivot = false;
             }
 
             if (newPivot && newPivot.name) {
@@ -92,12 +113,10 @@ export default function (P = Ωempty) {
         }
     };
 
-
 // __pivotCorner__
-    P.pivotCorners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'];
     S.pivotCorner = function (item) {
 
-        if (this.pivotCorners.indexOf(item) >= 0) this.pivotCorner = item;
+        if (CORNER_LABELS.includes(item)) this.pivotCorner = item;
     };
 
 
@@ -132,7 +151,7 @@ export default function (P = Ωempty) {
 
                 instance = asset[name];
 
-                if (!instance || instance.type !== 'Cell') instance = false;
+                if (!instance || instance.type !== T_CELL) instance = false;
             }
 
             if (instance) {
@@ -142,8 +161,8 @@ export default function (P = Ωempty) {
                 if (instance.addPivotOffset) instance.dirtyOffset = true;
                 if (instance.addPivotRotation) instance.dirtyRotation = true;
 
-                if (instance.type === 'Polyline') instance.dirtyPins = true;
-                else if (instance.type === 'Line' || instance.type === 'Quadratic' || instance.type === 'Bezier') instance.dirtyPins.push(this.name);
+                if (instance.type === T_POLYLINE) instance.dirtyPins = true;
+                else if (instance.type === T_LINE || instance.type === T_QUADRATIC || instance.type === T_BEZIER) instance.dirtyPins.push(this.name);
             }
         }, this);
     };

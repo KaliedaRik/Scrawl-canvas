@@ -161,12 +161,14 @@ import {
 import {
     _keys,
     _isArray,
+    _parse,
     _values,
 } from '../core/shared-vars.js'
 
 
 // Local constants
 const ALL = 'all',
+    AUTO = 'auto',
     BOTTOM = 'bottom',
     CENTER = 'center',
     DIMENSIONS = 'dimensions',
@@ -385,7 +387,7 @@ export default function (P = Ωempty) {
 
         if (this.anchor) {
 
-            let a = JSON.parse(this.anchor.saveAsPacket(items))[3];
+            let a = _parse(this.anchor.saveAsPacket(items))[3];
             copy.anchor = a;
         }
         return copy;
@@ -1152,7 +1154,7 @@ export default function (P = Ωempty) {
 
             if (h.substring) {
 
-                if (h === 'auto') h = 0;
+                if (h === AUTO) h = 0;
                 else h = (parseFloat(h) / 100) * dims[1];
             }
 

@@ -69,14 +69,31 @@ import anchorMix from './anchor.js';
 
 
 // Local constants
-const BOTTOMLEFT = 'bottomLeft',
+const ABSOLUTE = 'absolute',
+    ARIA_HIDDEN = 'aria-hidden',
+    BORDER_BOX = 'border-box',
+    BOTTOMLEFT = 'bottomLeft',
     BOTTOMRIGHT = 'bottomRight',
     CLASS_REGEX = /[\s\uFEFF\xA0]+/g,
+    CORNER_ATTR = 'data-scrawl-corner-div',
+    CORNER_ATTR_VAL = 'sc',
     CORNER_LABELS = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
+    DIV = 'div',
+    LOCAL = 'local',
+    MIMIC = 'mimic',
+    MOUSE = 'mouse',
     NO_CORNER_ELEMENTS = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS'],
+    PARTICLE = 'particle',
+    PATH = 'path',
+    PC0 = '0%',
+    PC100 = '100%',
+    PIVOT = 'pivot',
     SPACE = ' ',
+    T_STACK = 'Stack',
+    TABINDEX = 'tabindex',
     TOPLEFT = 'topLeft',
-    TOPRIGHT = 'topRight';
+    TOPRIGHT = 'topRight',
+    TRUE = 'true';
 
 
 // #### Export function
@@ -126,7 +143,7 @@ export default function (P = Ωempty) {
 // + by default all Scrawl-canvas Stack, Canvas and Element wrapper DOM elements are given a position value of `absolute`
 // + root Stack and Canvas wrappers have a position value of `relative` - this is to make sure their DOM elements remain in the document flow, thus attempting to minimize Scrawl-canvas's impact on the wider environment
 // + other possible values - except `static` - will be respected if they are explicitly set on the DOM elements prior to Scrawl-canvas initialization.
-        position: 'absolute',
+        position: ABSOLUTE,
 
 // __smoothFont__ - a Boolean to handle the non-standards `font-smooth`, `-webkit-font-smoothing` and `-moz-osx-font-smoothing` CSS properties.
 // + by default all Scrawl-canvas Stack, Canvas and Element wrapper DOM will automatically smooth fonts
@@ -238,7 +255,7 @@ export default function (P = Ωempty) {
 
                 pushUnique(uiSubscribedElements, this.name);
 
-                if (val == 'local') addLocalMouseMoveListener(this);
+                if (val == LOCAL) addLocalMouseMoveListener(this);
             }
             else {
 
@@ -347,8 +364,8 @@ export default function (P = Ωempty) {
 
             this.includeInTabNavigation = item;
 
-            if (item) el.setAttribute('tabindex', 0);
-            else el.setAttribute('tabindex', -1);
+            if (item) el.setAttribute(TABINDEX, 0);
+            else el.setAttribute(TABINDEX, -1);
         }
     };
 
@@ -389,7 +406,7 @@ export default function (P = Ωempty) {
         const el = items.domElement,
             style = el.style;
 
-        style.boxSizing = 'border-box';
+        style.boxSizing = BORDER_BOX;
 
         if (el && items.setInitialDimensions) {
 
@@ -439,7 +456,7 @@ export default function (P = Ωempty) {
             // TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
 
             // for Stack artefacts only, discover perspective and perspective-origin values
-            if (this.type == 'Stack') {
+            if (this.type == T_STACK) {
 
                 // TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values
                 if (!xt(items.perspective) && !xt(items.perspectiveZ)) {
@@ -529,18 +546,18 @@ export default function (P = Ωempty) {
 
             const pointMaker = function () {
 
-                const p = document.createElement('div');
+                const p = document.createElement(DIV);
                 const s = p.style;
 
                 s.width = 0;
                 s.height = 0;
-                s.position = 'absolute';
+                s.position = ABSOLUTE;
                 s.margin = 0;
                 s.border = 0;
                 s.padding = 0;
 
-                p.setAttribute('data-scrawl-corner-div', 'sc');
-                p.setAttribute('aria-hidden', 'true');
+                p.setAttribute(CORNER_ATTR, CORNER_ATTR_VAL);
+                p.setAttribute(ARIA_HIDDEN, TRUE);
 
                 return p;
             };
@@ -552,17 +569,17 @@ export default function (P = Ωempty) {
                 br = pointMaker(),
                 bl = pointMaker();
 
-            tl.style.top = '0%';
-            tl.style.left = '0%';
+            tl.style.top = PC0;
+            tl.style.left = PC0;
 
-            tr.style.top = '0%';
-            tr.style.left = '100%';
+            tr.style.top = PC0;
+            tr.style.left = PC100;
 
-            br.style.top = '100%';
-            br.style.left = '100%';
+            br.style.top = PC100;
+            br.style.left = PC100;
 
-            bl.style.top = '100%';
-            bl.style.left = '0%';
+            bl.style.top = PC100;
+            bl.style.left = PC0;
 
             el.appendChild(tl);
             el.appendChild(tr);
@@ -777,13 +794,13 @@ export default function (P = Ωempty) {
             pivot = this.pivot,
             lock = this.lockTo;
 
-        if (path && lock.indexOf('path') >= 0) {
+        if (path && lock.indexOf(PATH) >= 0) {
 
             processedRotation.set(calculatedRotation);
             // TODO check to see if path roll needs to be added
 
         }
-        else if (mimic && this.useMimicRotation && lock.indexOf('mimic') >= 0) {
+        else if (mimic && this.useMimicRotation && lock.indexOf(MIMIC) >= 0) {
 
             if (xt(mimic.currentRotation)) {
 
@@ -796,7 +813,7 @@ export default function (P = Ωempty) {
 
             processedRotation.set(calculatedRotation);
 
-            if (pivot && this.addPivotRotation && lock.indexOf('pivot') >= 0) {
+            if (pivot && this.addPivotRotation && lock.indexOf(PIVOT) >= 0) {
 
                 if (xt(pivot.currentRotation)) processedRotation.quaternionRotate(pivot.currentRotation);
                 else this.dirtyPivotRotation = true;
@@ -850,7 +867,7 @@ export default function (P = Ωempty) {
         if (this.dirtyHandle) this.cleanHandle();
         if (this.dirtyRotation) this.cleanRotation();
 
-        if (this.isBeingDragged || this.lockTo.includes('mouse') || this.lockTo.includes('particle')) {
+        if (this.isBeingDragged || this.lockTo.includes(MOUSE) || this.lockTo.includes(PARTICLE)) {
 
             this.dirtyStampPositions = true;
             this.dirtyStampHandlePositions = true;

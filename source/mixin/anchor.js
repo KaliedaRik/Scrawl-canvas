@@ -6,9 +6,29 @@
 
 // #### Imports
 import { canvas } from '../core/library.js';
-import { mergeOver, isa_obj, Ωempty } from '../core/utilities.js';
+
+import { 
+    isa_obj, 
+    mergeOver, 
+    Ωempty, 
+} from '../core/utilities.js';
+
 import { makeAnchor } from '../factory/anchor.js';
 import { scrawlNavigationHold } from '../core/document.js';
+
+
+// Local constants
+const DESCRIPTION = 'description',
+    DOWNLOAD = 'download',
+    HREF = 'href',
+    HREFLANG = 'hreflang',
+    PING = 'ping',
+    REFERRERPOLICY = 'referrerpolicy',
+    REL = 'rel',
+    T_CANVAS = 'Canvas',
+    T_CELL = 'Cell',
+    TARGET = 'target',
+    TYPE = 'type';
 
 
 // #### Export function
@@ -65,7 +85,7 @@ export default function (P = Ωempty) {
 // __anchorDescription__
     G.anchorDescription = function () {
 
-        if (this.anchor) return this.anchor.get('description');
+        if (this.anchor) return this.anchor.get(DESCRIPTION);
         return '';
     };
     S.anchorDescription = function (item) {
@@ -77,7 +97,7 @@ export default function (P = Ωempty) {
 // __anchorType__
     G.anchorType = function () {
 
-        if (this.anchor) return this.anchor.get('type');
+        if (this.anchor) return this.anchor.get(TYPE);
         return '';
     };
     S.anchorType = function (item) {
@@ -89,7 +109,7 @@ export default function (P = Ωempty) {
 // __anchorTarget__
     G.anchorTarget = function () {
 
-        if (this.anchor) return this.anchor.get('target');
+        if (this.anchor) return this.anchor.get(TARGET);
         return '';
     };
     S.anchorTarget = function (item) {
@@ -101,7 +121,7 @@ export default function (P = Ωempty) {
 // __anchorRel__
     G.anchorRel = function () {
 
-        if (this.anchor) return this.anchor.get('rel');
+        if (this.anchor) return this.anchor.get(REL);
         return '';
     };
     S.anchorRel = function (item) {
@@ -113,7 +133,7 @@ export default function (P = Ωempty) {
 // __anchorReferrerPolicy__
     G.anchorReferrerPolicy = function () {
 
-        if (this.anchor) return this.anchor.get('referrerpolicy');
+        if (this.anchor) return this.anchor.get(REFERRERPOLICY);
         return '';
     };
     S.anchorReferrerPolicy = function (item) {
@@ -125,7 +145,7 @@ export default function (P = Ωempty) {
 // __anchorPing__
     G.anchorPing = function () {
 
-        if (this.anchor) return this.anchor.get('ping');
+        if (this.anchor) return this.anchor.get(PING);
         return '';
     };
     S.anchorPing = function (item) {
@@ -137,7 +157,7 @@ export default function (P = Ωempty) {
 // __anchorHreflang__
     G.anchorHreflang = function () {
 
-        if (this.anchor) return this.anchor.get('hreflang');
+        if (this.anchor) return this.anchor.get(HREFLANG);
         return '';
     };
     S.anchorHreflang = function (item) {
@@ -149,7 +169,7 @@ export default function (P = Ωempty) {
 // __anchorHref__
     G.anchorHref = function () {
 
-        if (this.anchor) return this.anchor.get('href');
+        if (this.anchor) return this.anchor.get(HREF);
         return '';
     };
     S.anchorHref = function (item) {
@@ -161,7 +181,7 @@ export default function (P = Ωempty) {
 // __anchorDownload__
     G.anchorDownload = function () {
 
-        if (this.anchor) return this.anchor.get('download');
+        if (this.anchor) return this.anchor.get(DOWNLOAD);
         return '';
     };
     S.anchorDownload = function (item) {
@@ -238,13 +258,13 @@ export default function (P = Ωempty) {
 
         if (entityHost) {
 
-            if (entityHost.type === 'Canvas') return entityHost.navigation;
+            if (entityHost.type === T_CANVAS) return entityHost.navigation;
 
-            if (entityHost.type === 'Cell') {
+            if (entityHost.type === T_CELL) {
 
                 let cellHost = (entityHost.currentHost) ? entityHost.currentHost : canvas[entityHost.host];
 
-                if (cellHost && cellHost.type === 'Canvas') return cellHost.navigation;
+                if (cellHost && cellHost.type === T_CANVAS) return cellHost.navigation;
             }
         }
         this.dirtyAnchorHold = true;

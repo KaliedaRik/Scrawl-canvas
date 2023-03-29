@@ -8,9 +8,43 @@
 
 
 // #### Imports
-import { filter, asset, styles } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, Ωempty, generateUuid } from '../core/utilities.js';
-import { requestCell, releaseCell } from '../factory/cell-fragment.js';
+import { 
+    asset, 
+    filter, 
+    styles, 
+} from '../core/library.js';
+
+import { 
+    generateUuid, 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    _abs,
+    _floor,
+    _isArray, 
+} from '../core/shared-vars.js';
+
+import { 
+    releaseCell, 
+    requestCell, 
+} from '../factory/cell-fragment.js';
+
+
+// Local constants
+const PROCESS_IMAGE = 'process-image',
+    SOURCE_OVER = 'source-over',
+    T_CELL = 'Cell',
+    T_FILTER = 'Filter',
+    T_IMAGE = 'Image',
+    T_NOISE = 'Noise',
+    T_RAWASSET = 'RawAsset',
+    T_RDASSET = 'RdAsset',
+    T_SPRITE = 'Sprite',
+    T_VIDEO = 'Video';
 
 
 // #### Export function
@@ -47,11 +81,11 @@ export default function (P = Ωempty) {
 // `filters` - ___Dangerous action!__ - replaces the existing filters Array with a new filters Array. If a string name is supplied, will add that name to the existing filters array
     S.filters = function (item) {
 
-        if (!Array.isArray(this.filters)) this.filters = [];
+        if (!_isArray(this.filters)) this.filters = [];
 
         if (item) {
 
-            if (Array.isArray(item)) {
+            if (_isArray(item)) {
 
                 this.filters = item;
 
@@ -115,7 +149,6 @@ export default function (P = Ωempty) {
         if (!this.filters) this.filters = [];
 
         let myfilters = this.filters,
-            floor = Math.floor,
             buckets = [],
             myobj, order;
 
@@ -125,7 +158,7 @@ export default function (P = Ωempty) {
 
             if (myobj) {
 
-                order = floor(myobj.order) || 0;
+                order = _floor(myobj.order) || 0;
 
                 if (!buckets[order]) buckets[order] = [];
 
@@ -141,11 +174,11 @@ export default function (P = Ωempty) {
 // + Filters are added to the end of the `filters` array. If the filters need to be reordered, use the `set` functionality instead to replace the array with an array containing the desired filter order
     P.addFilters = function (...args) {
 
-        if (!Array.isArray(this.filters)) this.filters = [];
+        if (!_isArray(this.filters)) this.filters = [];
 
         args.forEach(item => {
 
-            if (item && item.type === 'Filter') item = item.name;
+            if (item && item.type === T_FILTER) item = item.name;
             pushUnique(this.filters, item);
 
         }, this);
@@ -159,11 +192,11 @@ export default function (P = Ωempty) {
 
     P.removeFilters = function (...args) {
 
-        if (!Array.isArray(this.filters)) this.filters = [];
+        if (!_isArray(this.filters)) this.filters = [];
 
         args.forEach(item => {
 
-            if (item && item.type === 'Filter') item = item.name;
+            if (item && item.type === T_FILTER) item = item.name;
             removeItem(this.filters, item);
 
         }, this);
@@ -178,7 +211,7 @@ export default function (P = Ωempty) {
 // `clearFilters` - Clears the filters array
     P.clearFilters = function () {
 
-        if (!Array.isArray(this.filters)) this.filters = [];
+        if (!_isArray(this.filters)) this.filters = [];
 
         this.filters.length = 0;
 
@@ -200,7 +233,7 @@ export default function (P = Ωempty) {
 
                 obj = filter.actions[j];
 
-                if (obj.action == 'process-image') {
+                if (obj.action == PROCESS_IMAGE) {
 
                     let flag = true;
 
@@ -208,13 +241,13 @@ export default function (P = Ωempty) {
 
                     if (img) {
 
-                        if ('Image' !== img.type) {
+                        if (T_IMAGE !== img.type) {
 
                             img.checkSource();
                             this.dirtyFilterIdentifier = true;
                         }
 
-                        if (img.type === 'Video' || img.type === 'Sprite' || img.type === 'Noise' || img.type === 'Cell' || img.type === 'RawAsset' || img.type === 'RdAsset') {
+                        if (img.type === T_VIDEO || img.type === T_SPRITE || img.type === T_NOISE || img.type === T_CELL || img.type === T_RAWASSET || img.type === T_RDASSET) {
 
                             img.checkSource();
                         }
@@ -258,12 +291,12 @@ export default function (P = Ωempty) {
                             if (destHeight.substring) destHeight = (parseFloat(destHeight) / 100) * height;
 
 
-                            copyX = Math.abs(copyX);
-                            copyY = Math.abs(copyY);
-                            copyWidth = Math.abs(copyWidth);
-                            copyHeight = Math.abs(copyHeight);
-                            destWidth = Math.abs(destWidth);
-                            destHeight = Math.abs(destHeight);
+                            copyX = _abs(copyX);
+                            copyY = _abs(copyY);
+                            copyWidth = _abs(copyWidth);
+                            copyHeight = _abs(copyHeight);
+                            destWidth = _abs(destWidth);
+                            destHeight = _abs(destHeight);
 
                             if (copyX > width) {
                                 copyX = width - 2;
@@ -302,7 +335,7 @@ export default function (P = Ωempty) {
                             canvas.height = destHeight;
 
                             engine.setTransform(1, 0, 0, 1, 0, 0);
-                            engine.globalCompositeOperation = 'source-over';
+                            engine.globalCompositeOperation = SOURCE_OVER;
                             engine.globalAlpha = 1;
 
                             const src = img.source || img.element;

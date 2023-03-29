@@ -3,8 +3,24 @@
 
 
 // #### Imports
-import { artefact, asset } from '../core/library.js';
-import { mergeOver, pushUnique, isa_boolean, Ωempty, removeItem } from '../core/utilities.js';
+import { 
+    artefact, 
+    asset, 
+} from '../core/library.js';
+
+import { 
+    isa_boolean, 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+
+// Local constants
+const MIMIC = 'mimic',
+    START = 'start',
+    T_CELL = 'Cell';
 
 
 // #### Export function
@@ -39,7 +55,7 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
-    P.packetObjects = pushUnique(P.packetObjects, ['mimic']);
+    P.packetObjects = pushUnique(P.packetObjects, [MIMIC]);
 
 
 // #### Clone management
@@ -65,8 +81,8 @@ export default function (P = Ωempty) {
 
             this.mimic = null;
 
-            if (this.lockTo[0] === 'mimic') this.lockTo[0] = 'start';
-            if (this.lockTo[1] === 'mimic') this.lockTo[1] = 'start';
+            if (this.lockTo[0] === MIMIC) this.lockTo[0] = START;
+            if (this.lockTo[1] === MIMIC) this.lockTo[1] = START;
 
             this.dirtyStampPositions = true;
             this.dirtyStampHandlePositions = true;
@@ -82,7 +98,7 @@ export default function (P = Ωempty) {
 
                 newMimic = asset[item];
 
-                if (newMimic && newMimic.type !== 'Cell') newMimic = false;
+                if (newMimic && newMimic.type !== T_CELL) newMimic = false;
             }
 
             if (newMimic && newMimic.name) {
@@ -188,7 +204,7 @@ export default function (P = Ωempty) {
 
                 instance = asset[name];
 
-                if (!instance || instance.type !== 'Cell') instance = false;
+                if (!instance || instance.type !== T_CELL) instance = false;
             }
 
             if (instance) {

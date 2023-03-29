@@ -13,20 +13,6 @@
 // Given the fundamental nature of the above functionality the base mixin should always, when coding a Scrawl-canvas factory, be the first to be applied to that factory function's prototype.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // #### Imports
 import * as library from '../core/library.js';
 

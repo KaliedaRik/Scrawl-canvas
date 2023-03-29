@@ -10,7 +10,16 @@
 
 
 // #### Imports
-import { λnull, mergeOver, pushUnique, xt, addStrings, isa_obj, Ωempty } from '../core/utilities.js';
+import { 
+    addStrings, 
+    isa_obj, 
+    mergeOver, 
+    pushUnique, 
+    xt, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
+
 import { scrawlCanvasHold } from '../core/document.js';
 import { asset } from '../core/library.js';
 
