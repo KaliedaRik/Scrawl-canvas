@@ -5,7 +5,20 @@
 
 
 // #### Imports
-// No imports required
+import { 
+    _pow,
+    _sqrt,
+} from '../core/shared-vars.js';
+
+// Local constants
+const BEZIER = 'bezier',
+    CLOSE = 'close',
+    GET_BEZIER = 'getBezierXY',
+    GET_QUADRATIC = 'getQuadraticXY',
+    LINEAR = 'linear',
+    MOVE = 'move',
+    QUADRATIC = 'quadratic',
+    UNKNOWN = 'unknown';
 
 
 // #### Export function
@@ -341,19 +354,19 @@ export default function (d, scale, start, useAsPath, precision) {
                 switch (c) {
 
                     case 'h' :
-                        units[i] = ['linear', x, y, p[0] + x, y];
+                        units[i] = [LINEAR, x, y, p[0] + x, y];
                         break;
 
                     case 'v' :
-                        units[i] = ['linear', x, y, x, p[0] + y];
+                        units[i] = [LINEAR, x, y, x, p[0] + y];
                         break;
                         
                     case 'm' :
-                        units[i] = ['move', x, y];
+                        units[i] = [MOVE, x, y];
                         break;
                         
                     case 'l' :
-                        units[i] = ['linear', x, y, p[0] + x, p[1] + y];
+                        units[i] = [LINEAR, x, y, p[0] + x, p[1] + y];
                         break;
                         
                     case 't' :
@@ -362,13 +375,13 @@ export default function (d, scale, start, useAsPath, precision) {
                             setVector(v, prevData.rx - cx, prevData.ry - cy);
                             rotateVector(v, 180);
 
-                            units[i] = ['quadratic', x, y, v.x + cx, v.y + cy, p[0] + x, p[1] + y];
+                            units[i] = [QUADRATIC, x, y, v.x + cx, v.y + cy, p[0] + x, p[1] + y];
                         }
-                        else units[i] = ['quadratic', x, y, x, y, p[0] + x, p[1] + y];
+                        else units[i] = [QUADRATIC, x, y, x, y, p[0] + x, p[1] + y];
                         break;
                         
                     case 'q' :
-                        units[i] = ['quadratic', x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
+                        units[i] = [QUADRATIC, x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
                         break;
                         
                     case 's' :
@@ -377,29 +390,29 @@ export default function (d, scale, start, useAsPath, precision) {
                             setVector(v, prevData.rx - cx, prevData.ry - cy);
                             rotateVector(v, 180);
 
-                            units[i] = ['bezier', x, y, v.x + cx, v.y + cy, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
+                            units[i] = [BEZIER, x, y, v.x + cx, v.y + cy, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
                         }
-                        else units[i] = ['bezier', x, y, x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
+                        else units[i] = [BEZIER, x, y, x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
                         break;
                         
                     case 'c' :
-                        units[i] = ['bezier', x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y, p[4] + x, p[5] + y];
+                        units[i] = [BEZIER, x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y, p[4] + x, p[5] + y];
                         break;
                         
                     case 'a' :
-                        units[i] = ['linear', x, y, p[5] + x, p[6] + y];
+                        units[i] = [LINEAR, x, y, p[5] + x, p[6] + y];
                         break;
                         
                     case 'z' :
                         if (isNaN(x)) x = 0;
                         if (isNaN(y)) y = 0;
-                        units[i] = ['close', x, y];
+                        units[i] = [CLOSE, x, y];
                         break;
 
                     default :
                         if (isNaN(x)) x = 0;
                         if (isNaN(y)) y = 0;
-                        units[i] = ['unknown', x, y];
+                        units[i] = [UNKNOWN, x, y];
                 }
             }
             else units[i] = [`no-points-${c}`, x, y];
@@ -414,9 +427,9 @@ export default function (d, scale, start, useAsPath, precision) {
 
             switch (spec) {
 
-                case 'linear' :
-                case 'quadratic' :
-                case 'bezier' :
+                case LINEAR :
+                case QUADRATIC :
+                case BEZIER :
                     results = getShapeUnitMetaData(spec, precision, data);
                     unitLengths[i] = results.length;
                     xPoints = xPoints.concat(results.xPoints);
@@ -503,21 +516,21 @@ const getShapeUnitMetaData = function (species, precision, args) {
 
     // We want to separate out linear species before going into the while loop
     // + because these calculations will be simple
-    if (species === 'linear') {
+    if (species == LINEAR) {
 
         let [sx, sy, ex, ey] = args;
 
         w = ex - sx,
         h = ey - sy;
 
-        len = Math.sqrt((w * w) + (h * h));
+        len = _sqrt((w * w) + (h * h));
 
         xPts = xPts.concat([sx, ex]);
         yPts = yPts.concat([sy, ey]);
     }
-    else if (species === 'bezier' || (species === 'quadratic')) {
+    else if (species == BEZIER || (species == QUADRATIC)) {
 
-        let func = (species === 'bezier') ? 'getBezierXY' : 'getQuadraticXY',
+        let func = (species == BEZIER) ? GET_BEZIER : GET_QUADRATIC,
             flag = false,
             step = 0.25,
             currentLength = 0,
@@ -549,7 +562,7 @@ const getShapeUnitMetaData = function (species, precision, args) {
                 w = x - oldX,
                 h = y - oldY;
 
-                newLength += Math.sqrt((w * w) + (h * h));
+                newLength += _sqrt((w * w) + (h * h));
                 oldX = x;
                 oldY = y;
 
@@ -581,17 +594,17 @@ const getShapeUnitMetaData = function (species, precision, args) {
 // `getXY`
 const getXY = {
 
-    getBezierXY: function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
+    [GET_BEZIER]: function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 
         let T = 1 - t;
 
         return {
-            x: (Math.pow(T, 3) * sx) + (3 * t * Math.pow(T, 2) * cp1x) + (3 * t * t * T * cp2x) + (t * t * t * ex),
-            y: (Math.pow(T, 3) * sy) + (3 * t * Math.pow(T, 2) * cp1y) + (3 * t * t * T * cp2y) + (t * t * t * ey)
+            x: (_pow(T, 3) * sx) + (3 * t * _pow(T, 2) * cp1x) + (3 * t * t * T * cp2x) + (t * t * t * ex),
+            y: (_pow(T, 3) * sy) + (3 * t * _pow(T, 2) * cp1y) + (3 * t * t * T * cp2y) + (t * t * t * ey)
         };
     },
 
-    getQuadraticXY: function (t, sx, sy, cp1x, cp1y, ex, ey) {
+    [GET_QUADRATIC]: function (t, sx, sy, cp1x, cp1y, ex, ey) {
 
         let T = 1 - t;
 

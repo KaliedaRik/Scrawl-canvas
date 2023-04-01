@@ -160,16 +160,16 @@ S.size = function (item) {
             size = 0, 
             metric = 'medium';
 
-        if (item.indexOf('xx-small') >= 0) metric = 'xx-small';
-        else if (item.indexOf('x-small') >= 0) metric = 'x-small';
-        else if (item.indexOf('smaller') >= 0) metric = 'smaller';
-        else if (item.indexOf('small') >= 0) metric = 'small';
-        else if (item.indexOf('medium') >= 0) metric = 'medium';
-        else if (item.indexOf('xxx-large') >= 0) metric = 'xxx-large';
-        else if (item.indexOf('xx-large') >= 0) metric = 'xx-large';
-        else if (item.indexOf('x-large') >= 0) metric = 'x-large';
-        else if (item.indexOf('larger') >= 0) metric = 'larger';
-        else if (item.indexOf('large') >= 0) metric = 'large';
+        if (item.includes('xx-small')) metric = 'xx-small';
+        else if (item.includes('x-small')) metric = 'x-small';
+        else if (item.includes('smaller')) metric = 'smaller';
+        else if (item.includes('small')) metric = 'small';
+        else if (item.includes('medium')) metric = 'medium';
+        else if (item.includes('xxx-large')) metric = 'xxx-large';
+        else if (item.includes('xx-large')) metric = 'xx-large';
+        else if (item.includes('x-large')) metric = 'x-large';
+        else if (item.includes('larger')) metric = 'larger';
+        else if (item.includes('large')) metric = 'large';
 
         else {
             size = 12;
@@ -257,8 +257,8 @@ S.style = function (item) {
 
         let v = 'normal';
 
-        v = (item.indexOf('italic') >= 0) ? 'italic' : v;
-        v = (item.indexOf('oblique') >= 0) ? 'oblique' : v;
+        v = (item.includes('italic')) ? 'italic' : v;
+        v = (item.includes('oblique')) ? 'oblique' : v;
 
         if (v !== this.style) {
 
@@ -275,7 +275,7 @@ S.variant = function (item) {
 
         let v = 'normal';
 
-        v = (item.indexOf('small-caps') >= 0) ? 'small-caps' : v;
+        v = (item.includes('small-caps')) ? 'small-caps' : v;
 
         if (v !== this.variant) {
 
@@ -296,20 +296,20 @@ S.weight = function (item) {
         if (item.toFixed) v = item;
         else {
 
-            v = (item.indexOf('bold') >= 0) ? 'bold' : v;
-            v = (item.indexOf('lighter') >= 0) ? 'lighter' : v;
-            v = (item.indexOf('bolder') >= 0) ? 'bolder' : v;
+            v = (item.includes('bold')) ? 'bold' : v;
+            v = (item.includes('lighter')) ? 'lighter' : v;
+            v = (item.includes('bolder')) ? 'bolder' : v;
 
             // Putting spaces around the number should help identify it as a Weight value within the font string the string
-            v = (item.indexOf(' 100 ') >= 0) ? '100' : v;
-            v = (item.indexOf(' 200 ') >= 0) ? '200' : v;
-            v = (item.indexOf(' 300 ') >= 0) ? '300' : v;
-            v = (item.indexOf(' 400 ') >= 0) ? '400' : v;
-            v = (item.indexOf(' 500 ') >= 0) ? '500' : v;
-            v = (item.indexOf(' 600 ') >= 0) ? '600' : v;
-            v = (item.indexOf(' 700 ') >= 0) ? '700' : v;
-            v = (item.indexOf(' 800 ') >= 0) ? '800' : v;
-            v = (item.indexOf(' 900 ') >= 0) ? '900' : v;
+            v = (item.includes(' 100 ')) ? '100' : v;
+            v = (item.includes(' 200 ')) ? '200' : v;
+            v = (item.includes(' 300 ')) ? '300' : v;
+            v = (item.includes(' 400 ')) ? '400' : v;
+            v = (item.includes(' 500 ')) ? '500' : v;
+            v = (item.includes(' 600 ')) ? '600' : v;
+            v = (item.includes(' 700 ')) ? '700' : v;
+            v = (item.includes(' 800 ')) ? '800' : v;
+            v = (item.includes(' 900 ')) ? '900' : v;
 
             // Also need to capture instances where a number value has been directly set with no other font attributes around it
             v = (/^\d00$/.test(item)) ? item : v;
@@ -330,14 +330,14 @@ S.stretch = function (item) {
 
         let v = 'normal';
 
-        v = (item.indexOf('semi-condensed') >= 0) ? 'semi-condensed' : v;
-        v = (item.indexOf('condensed') >= 0) ? 'condensed' : v;
-        v = (item.indexOf('extra-condensed') >= 0) ? 'extra-condensed' : v;
-        v = (item.indexOf('ultra-condensed') >= 0) ? 'ultra-condensed' : v;
-        v = (item.indexOf('semi-expanded') >= 0) ? 'semi-expanded' : v;
-        v = (item.indexOf('expanded') >= 0) ? 'expanded' : v;
-        v = (item.indexOf('extra-expanded') >= 0) ? 'extra-expanded' : v;
-        v = (item.indexOf('ultra-expanded') >= 0) ? 'ultra-expanded' : v;
+        v = (item.includes('condensed')) ? 'condensed' : v;
+        v = (item.includes('semi-condensed')) ? 'semi-condensed' : v;
+        v = (item.includes('extra-condensed')) ? 'extra-condensed' : v;
+        v = (item.includes('ultra-condensed')) ? 'ultra-condensed' : v;
+        v = (item.includes('expanded')) ? 'expanded' : v;
+        v = (item.includes('semi-expanded')) ? 'semi-expanded' : v;
+        v = (item.includes('extra-expanded')) ? 'extra-expanded' : v;
+        v = (item.includes('ultra-expanded')) ? 'ultra-expanded' : v;
 
         if (v !== this.stretch) {
 
@@ -372,8 +372,8 @@ S.family = function (item) {
                 let el = itemArray[counter];
 
                 if (!el.length) counter++;
-                else if (this.rfsTestArray1.indexOf(el) >= 0) counter++;
-                else if (this.rfsTestArray2.indexOf(el[0]) >= 0) counter++;
+                else if (this.rfsTestArray1.includes(el)) counter++;
+                else if (this.rfsTestArray2.includes(el[0])) counter++;
                 else flag = false;
             }
         }
@@ -428,7 +428,7 @@ P.calculateSize = function () {
 
         if (!gcfs) {
 
-            if (['in', 'cm', 'mm', 'Q', 'pc', 'pt', 'px'].indexOf(sizeMetric) < 0) {
+            if (!['in', 'cm', 'mm', 'Q', 'pc', 'pt', 'px'].includes(sizeMetric)) {
 
                 this.dirtyFont = true;
                 return '12px';

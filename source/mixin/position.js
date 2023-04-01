@@ -406,7 +406,7 @@ export default function (P = Ωempty) {
         // Remove artefact from all groups
         _values(group).forEach(val => {
 
-            if (val.artefacts.indexOf(name) >= 0) val.removeArtefacts(name);
+            if (val.artefacts.includes(name)) val.removeArtefacts(name);
         });
 
         // If the artefact has an anchor, it needs to be removed

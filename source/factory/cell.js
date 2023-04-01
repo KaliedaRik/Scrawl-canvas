@@ -251,7 +251,7 @@ P.factoryKill = function () {
     // Remove artefact from all canvases
     Object.entries(canvas).forEach(([name, cvs]) => {
 
-        if (cvs.cells.indexOf(myname) >= 0) cvs.removeCell(myname);
+        if (cvs.cells.includes(myname)) cvs.removeCell(myname);
 
         if (cvs.base && cvs.base.name === myname) {
 
@@ -1188,7 +1188,7 @@ P.prepareStamp = function () {
     if (this.dirtyHandle) this.cleanHandle();
     if (this.dirtyRotation) this.cleanRotation();
 
-    if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
+    if (this.isBeingDragged || this.lockTo.includes('mouse')) {
 
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;

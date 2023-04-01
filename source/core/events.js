@@ -275,7 +275,7 @@ const updatePixelRatio = () => {
     // __Note:__ I have no idea what Safari is doing - maybe device pixel ratio stuff is handled internally? 
     // + Whatever. Safari does not like, or respond to, this matchmedia query
     // + As long as the demos display as expected in Safari on both 1dppx and 2dppx (Retina) screens, and dragging the Safari browser between screens with different dppx values doesn't break the display or freeze the page, then I think we're okay
-    if (browserIs.indexOf('safari') < 0) {
+    if (!browserIs.includes('safari')) {
 
         matchMedia(`(resolution: ${dpr}dppx)`).addEventListener("change", updatePixelRatio, { once: true });
     }

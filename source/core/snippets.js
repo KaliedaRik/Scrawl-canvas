@@ -72,7 +72,7 @@ const makeUnstackedSnippet = function (domElement, canvasSpecs, animationHooks, 
 
     const unsupportedElements = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'];
 
-    if (!domElement || unsupportedElements.indexOf(domElement.tagName) >= 0) return {};
+    if (!domElement || unsupportedElements.includes(domElement.tagName)) return {};
 
     let myElement,
         id = domElement.id;

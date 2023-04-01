@@ -336,7 +336,7 @@ export default function (P = Ωempty) {
 
                 const art = item.artefact;
 
-                if (art.visibility && resultNames.indexOf(art.name) < 0) {
+                if (art.visibility && !resultNames.includes(art.name)) {
 
                     resultNames.push(art.name);
                     response.push(art);

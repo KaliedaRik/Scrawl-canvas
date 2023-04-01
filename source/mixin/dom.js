@@ -190,17 +190,17 @@ export default function (P = Ωempty) {
     P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 
 // `processDOMPacketOut` - internal helper function
-    P.processDOMPacketOut = function (key, value, includes) {
+    P.processDOMPacketOut = function (key, value, incs) {
 
-        return this.processFactoryPacketOut(key, value, includes);
+        return this.processFactoryPacketOut(key, value, incs);
     };
 
 // `processFactoryPacketOut` - internal helper function
-    P.processFactoryPacketOut = function (key, value, includes) {
+    P.processFactoryPacketOut = function (key, value, incs) {
 
         let result = true;
 
-        if(includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
+        if(!incs.includes(key) && value === this.defs[key]) result = false;
 
         return result;
     };
@@ -794,13 +794,13 @@ export default function (P = Ωempty) {
             pivot = this.pivot,
             lock = this.lockTo;
 
-        if (path && lock.indexOf(PATH) >= 0) {
+        if (path && lock.includes(PATH)) {
 
             processedRotation.set(calculatedRotation);
             // TODO check to see if path roll needs to be added
 
         }
-        else if (mimic && this.useMimicRotation && lock.indexOf(MIMIC) >= 0) {
+        else if (mimic && this.useMimicRotation && lock.includes(MIMIC)) {
 
             if (xt(mimic.currentRotation)) {
 
@@ -813,7 +813,7 @@ export default function (P = Ωempty) {
 
             processedRotation.set(calculatedRotation);
 
-            if (pivot && this.addPivotRotation && lock.indexOf(PIVOT) >= 0) {
+            if (pivot && this.addPivotRotation && lock.includes(PIVOT)) {
 
                 if (xt(pivot.currentRotation)) processedRotation.quaternionRotate(pivot.currentRotation);
                 else this.dirtyPivotRotation = true;

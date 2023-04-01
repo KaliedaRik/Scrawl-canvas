@@ -154,7 +154,7 @@ P.defs = {
 
 
 // #### Packet management
-P.processPacketOut = function (key, value, includes) {
+P.processPacketOut = function (key, value, incs) {
 
     let result = true;
 
@@ -164,13 +164,13 @@ P.processPacketOut = function (key, value, includes) {
 
             if (!value.length) {
 
-                result = (includes.indexOf('lineDash') >= 0) ? true : false;
+                result = (incs.includes('lineDash')) ? true : false;
             }
             break;
 
         default : 
 
-            if (includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
+            if (!incs.includes(key) && value === this.defs[key]) result = false;
     }
     return result;
 };

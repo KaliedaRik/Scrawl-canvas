@@ -631,7 +631,7 @@ export const addStack = function (items = Ωempty) {
     // in case any of the child elements were already a Scrawl-canvas stack, un-root them (if required)
     Array.from(el.childNodes).forEach(child => {
 
-        if (child.id && rootElements.indexOf(child.id) >= 0) removeItem(rootElements, child.id);
+        if (child.id && rootElements.includes(child.id)) removeItem(rootElements, child.id);
     });
 
     // set the new Stack's remaining attributes, clearing out any attributes already handled

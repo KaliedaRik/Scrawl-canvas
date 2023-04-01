@@ -423,7 +423,7 @@ S.text = function (item) {
 P.permittedJustifications = ['left', 'right', 'center', 'full'];
 S.justify = function (item) {
 
-    if (this.permittedJustifications.indexOf(item) >= 0) this.justify = item;
+    if (this.permittedJustifications.includes(item)) this.justify = item;
     
     this.dirtyText = true;
     this.dirtyPathObject = true;
@@ -971,8 +971,8 @@ P.calculateTextPositions = function (mytext) {
 
             let brokenStyle = false;
 
-            if (stylesnames.indexOf(item) >= 0) brokenStyle = styles[item];
-            else if (cellnames.indexOf(item) >= 0) brokenStyle = cell[item];
+            if (stylesnames.includes(item)) brokenStyle = styles[item];
+            else if (cellnames.includes(item)) brokenStyle = cell[item];
 
             if (brokenStyle) return brokenStyle;
         }
@@ -1151,7 +1151,7 @@ P.calculateTextPositions = function (mytext) {
                         currentFont = item;
                         gPos[0] = currentFont;
 
-                        if (fontArray.indexOf(currentFont) < 0) fontArray.push(currentFont);
+                        if (!fontArray.includes(currentFont)) fontArray.push(currentFont);
                     }
                 }
             }
@@ -1585,7 +1585,7 @@ P.preStamper = function (dest, engine, entity, args) {
             engine.fillRect(data[1], data[2], data[3], textHeight);
         }
 
-        if (underline && noUnderlineGlyphs.indexOf(data[0]) < 0) {
+        if (underline && !noUnderlineGlyphs.includes(data[0])) {
 
             engine.fillStyle = makeStyle(underlineStyle);
             engine.fillRect(data[1], data[2] + (textHeight * underlinePosition), data[3], underlineWidth);

@@ -101,7 +101,7 @@ S.source = function (item) {
     if (item) {
 
         // For &lt;img> and &lt;picture> elements
-        if (['IMG', 'PICTURE'].indexOf(item.tagName.toUpperCase()) >= 0) {
+        if (['IMG', 'PICTURE'].includes(item.tagName.toUpperCase())) {
 
             this.source = item;
             this.sourceNaturalWidth = item.naturalWidth;
@@ -296,7 +296,7 @@ export const importDomImage = function (query) {
 
         let name;
 
-        if (['IMG', 'PICTURE'].indexOf(item.tagName.toUpperCase()) >= 0) {
+        if (['IMG', 'PICTURE'].includes(item.tagName.toUpperCase())) {
 
             if (item.id || item.name) name = item.id || item.name;
             else {

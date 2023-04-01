@@ -5,19 +5,37 @@
 
 // #### Imports
 import * as library from '../core/library.js';
+
 import { animationtickers } from '../core/library.js';
-import { mergeOver, isa_fn, isa_obj, xt, xtGet, convertTime, λnull, Ωempty } from '../core/utilities.js';
+
+import { 
+    convertTime, 
+    isa_fn, 
+    isa_obj, 
+    mergeOver, 
+    xt, 
+    xtGet, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 
-// __locateTarget__ - a private function and attribute to help retrieve data from the scrawl-canvas library
-const locateTargetSections = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'];
+// Local constants
+const FUNCTION = 'function',
+    PC = '%',
+    TARGET_SECTIONS = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'],
+    UNKNOWN = 'unknown',
+    UNNAMED = 'unnamed';
+
+
+// Helper function
 const locateTarget = (item) => {
 
     if(item && item.substring){
 
         let result;
 
-        return (locateTargetSections.some(section => {
+        return (TARGET_SECTIONS.some(section => {
             
             result = library[section][item];
             return result;
@@ -113,7 +131,7 @@ export default function (P = Ωempty) {
 
         this.action = item;
         
-        if (typeof this.action !== 'function') this.action = λnull;
+        if (typeof this.action != FUNCTION) this.action = λnull;
     };
 
 
@@ -132,7 +150,7 @@ export default function (P = Ωempty) {
 
         this.effectiveTime = 0;
 
-        if (cType === '%' && cTime <= 100) {
+        if (cType == PC && cTime <= 100) {
 
             if (this.ticker) {
 
@@ -225,9 +243,9 @@ export default function (P = Ωempty) {
 
         items.forEach(item => {
 
-            if (typeof item === 'function') {
+            if (typeof item == FUNCTION) {
 
-                if (typeof item.set === 'function') this.targets.push(item);
+                if (typeof item.set == FUNCTION) this.targets.push(item);
             }
             else {
 
@@ -250,25 +268,25 @@ export default function (P = Ωempty) {
 
         newTargets.forEach(target => {
 
-            let type = target.type || 'unknown',
-                name = target.name || 'unnamed';
+            let type = target.type || UNKNOWN,
+                name = target.name || UNNAMED;
 
-            if (type !== 'unknown' && name !== 'unnamed') identifiers.push(`${type}_${name}`);
+            if (type != UNKNOWN && name != UNNAMED) identifiers.push(`${type}_${name}`);
         });
 
         items.forEach(item => {
 
             let myObj;
             
-            if (typeof item === 'function') myObj = item;
+            if (typeof item == FUNCTION) myObj = item;
             else myObj = locateTarget(item);
 
             if (myObj) {
 
-                let type = myObj.type || 'unknown',
-                    name = myObj.name || 'unnamed';
+                let type = myObj.type || UNKNOWN,
+                    name = myObj.name || UNNAMED;
 
-                if (type !== 'unknown' && name !== 'unnamed') {
+                if (type != UNKNOWN && name != UNNAMED) {
 
                     let objName = `${type}_${name}`,
                         doRemove = identifiers.indexOf(objName);

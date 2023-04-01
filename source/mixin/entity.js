@@ -53,10 +53,13 @@ import {
 
 
 // Local constants
-const GOOD_HOST = ['Cell', 'CellFragment'],
+const 
+    FILL = 'fill',
+    GOOD_HOST = ['Cell', 'CellFragment'],
     IMG = 'img',
     MOUSE = 'mouse',
     NAME = 'name',
+    NONZERO = 'nonzero',
     PARTICLE = 'particle',
     SOURCE_IN = 'source-in',
     SOURCE_OVER = 'source-over',
@@ -97,14 +100,14 @@ export default function (P = Ωempty) {
 // + `clip` - use shape to restrict future drawing area (best used in a separate group)
 // + `clear` - remove everything that would have been covered if the entity had performed fill (including shadow)
 // + `none` - perform all the calculations required, but don't perform the final stamping
-        method: 'fill',
+        method: FILL,
 
 // __pathObject__ - Scrawl-canvas holds details of every type of entity's outline in a `Path2D` object - used both for draw/fill operations, and for collision detection work
         pathObject: null,
 
 // __winding__ - String with value `evenodd` or `nonzero` (default)
 // + Canvas fill (flood) drawing operations can take into account an entity's winding choice. Two are available: the [non-zero rule](https://en.wikipedia.org/wiki/Nonzero-rule); and the [even-odd rule](https://en.wikipedia.org/wiki/Even%E2%80%93odd_rule)
-        winding: 'nonzero',
+        winding: NONZERO,
 
 // __flipReverse__, __flipUpend__ - Boolean flags which determine the orientation of the entity when it stamps itself on the display. 
 // + a `reversed` entity is effectively flipped 180&deg; around a vertical line passing through that entity's rotation-reflection (start) point - a face looking to the right will now look to the left
@@ -216,16 +219,16 @@ export default function (P = Ωempty) {
     P.packetExclusions = pushUnique(P.packetExclusions, ['state']);
     P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 
-    P.processEntityPacketOut = function (key, value, includes) {
+    P.processEntityPacketOut = function (key, value, incs) {
 
-        return this.processFactoryPacketOut(key, value, includes);
+        return this.processFactoryPacketOut(key, value, incs);
     };
 
-    P.processFactoryPacketOut = function (key, value, includes) {
+    P.processFactoryPacketOut = function (key, value, incs) {
 
         let result = true;
 
-        if(includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
+        if(!incs.indexOf(key) && value === this.defs[key]) result = false;
 
         return result;
     };

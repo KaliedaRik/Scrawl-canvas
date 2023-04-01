@@ -4,13 +4,51 @@
 
 // #### Imports
 import { artefact } from '../core/library.js';
-import { radian, mergeOver, xt, λnull, pushUnique, Ωempty } from '../core/utilities.js';
 
-import { requestVector, releaseVector } from '../factory/vector.js';
+import { 
+    mergeOver, 
+    pushUnique, 
+    radian, 
+    xt, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    releaseVector, 
+    requestVector, 
+} from '../factory/vector.js';
 
 import calculatePath from './shapePathCalculation.js';
 
 import entityMix from './entity.js';
+
+import { 
+    _atan2,
+    _ceil,
+    _floor,
+    _parse,
+    _piHalf,
+    _pow,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const BEZIER = 'bezier',
+    CLOSE = 'close',
+    DESTINATION_OUT = 'destination-out',
+    HALFTRANS = 'rgb(0 0 0 / 0.5)',
+    LINEAR = 'linear',
+    MOUSE = 'mouse',
+    MOVE = 'move',
+    PARTICLE = 'particle',
+    QUADRATIC = 'quadratic',
+    SOURCE_OVER = 'source-over',
+    T_BEZIER = 'Bezier',
+    T_LINE = 'Line',
+    T_POLYLINE = 'Polyline',
+    T_QUADRATIC = 'Quadratic',
+    UNKNOWN = 'unknown';
 
 
 // #### Export function
@@ -34,7 +72,7 @@ export default function (P = Ωempty) {
         pathDefinition: '',
 
         showBoundingBox: false,
-        boundingBoxColor: 'rgb(0 0 0 / 0.5)',
+        boundingBoxColor: HALFTRANS,
         minimumBoundingBoxDimensions: 20,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
@@ -49,7 +87,7 @@ export default function (P = Ωempty) {
 
     P.finalizePacketOut = function (copy, items) {
 
-        let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+        const stateCopy = _parse(this.state.saveAsPacket(items))[3];
         copy = mergeOver(copy, stateCopy);
 
         copy = this.handlePacketAnchor(copy, items);
@@ -148,7 +186,7 @@ export default function (P = Ωempty) {
     // `positionPointOnPath`
     P.positionPointOnPath = function (vals) {
 
-        let v = requestVector(vals);
+        const v = requestVector(vals);
 
         v.vectorSubtract(this.currentStampHandlePosition);
 
@@ -159,7 +197,7 @@ export default function (P = Ωempty) {
 
         v.vectorAdd(this.currentStampPosition);
 
-        let res = {
+        const res = {
             x: v.x,
             y: v.y
         }
@@ -172,18 +210,18 @@ export default function (P = Ωempty) {
     // `getBezierXY`
     P.getBezierXY = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 
-        let T = 1 - t;
+        const T = 1 - t;
 
         return {
-            x: (Math.pow(T, 3) * sx) + (3 * t * Math.pow(T, 2) * cp1x) + (3 * t * t * T * cp2x) + (t * t * t * ex),
-            y: (Math.pow(T, 3) * sy) + (3 * t * Math.pow(T, 2) * cp1y) + (3 * t * t * T * cp2y) + (t * t * t * ey)
+            x: (_pow(T, 3) * sx) + (3 * t * _pow(T, 2) * cp1x) + (3 * t * t * T * cp2x) + (t * t * t * ex),
+            y: (_pow(T, 3) * sy) + (3 * t * _pow(T, 2) * cp1y) + (3 * t * t * T * cp2y) + (t * t * t * ey)
         };
     };
 
     // `getQuadraticXY`
     P.getQuadraticXY = function (t, sx, sy, cp1x, cp1y, ex, ey) {
 
-        let T = 1 - t;
+        const T = 1 - t;
 
         return {
             x: T * T * sx + 2 * T * t * cp1x + t * t * ex,
@@ -203,30 +241,30 @@ export default function (P = Ωempty) {
     // `getBezierAngle`
     P.getBezierAngle = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 
-        let T = 1 - t,
-            dx = Math.pow(T, 2) * (cp1x - sx) + 2 * t * T * (cp2x - cp1x) + t * t * (ex - cp2x),
-            dy = Math.pow(T, 2) * (cp1y - sy) + 2 * t * T * (cp2y - cp1y) + t * t * (ey - cp2y);
+        const T = 1 - t,
+            dx = _pow(T, 2) * (cp1x - sx) + 2 * t * T * (cp2x - cp1x) + t * t * (ex - cp2x),
+            dy = _pow(T, 2) * (cp1y - sy) + 2 * t * T * (cp2y - cp1y) + t * t * (ey - cp2y);
 
-        return (-Math.atan2(dx, dy) + (0.5 * Math.PI)) / radian;
+        return (-_atan2(dx, dy) + _piHalf) / radian;
     };
 
     // `getQuadraticAngle`
     P.getQuadraticAngle = function (t, sx, sy, cp1x, cp1y, ex, ey) {
 
-        let T = 1 - t,
+        const T = 1 - t,
             dx = 2 * T * (cp1x - sx) + 2 * t * (ex - cp1x),
             dy = 2 * T * (cp1y - sy) + 2 * t * (ey - cp1y);
 
-        return (-Math.atan2(dx, dy) + (0.5 * Math.PI)) / radian;
+        return (-_atan2(dx, dy) + _piHalf) / radian;
     };
 
     // `getLinearAngle`
     P.getLinearAngle = function (t, sx, sy, ex, ey) {
 
-        let dx = ex - sx,
+        const dx = ex - sx,
             dy = ey - sy;
 
-        return (-Math.atan2(dx, dy) + (0.5 * Math.PI)) / radian;
+        return (-_atan2(dx, dy) + _piHalf) / radian;
     };
 
     // `getConstantPosition` - internal function called by `getPathPositionData`
@@ -235,17 +273,17 @@ export default function (P = Ωempty) {
         if (!pos || !pos.toFixed || isNaN(pos)) return 0;
         if (pos >= 1) return 0.9999;
 
-        let positions = this.unitPositions;
+        const positions = this.unitPositions;
 
         if (positions && positions.length) {
 
-            let len = this.length,
+            const len = this.length,
                 progress = this.unitProgression,
-                positions = this.unitPositions,
-                requiredProgress = pos * len,
-                index = -1,
-                currentProgress, indexProgress, lastProgress, diffProgress,
-                currentPosition, indexPosition, nextPosition, diffPosition;
+                requiredProgress = pos * len;
+
+            let currentProgress, indexProgress, lastProgress, diffProgress,
+                currentPosition, indexPosition, nextPosition, diffPosition,
+                index = -1;
 
             for (let i = 0, iz = progress.length; i < iz; i++) {
 
@@ -292,17 +330,17 @@ export default function (P = Ωempty) {
 
             switch (unitSpecies) {
 
-                case 'linear' :
+                case LINEAR :
                     myPoint = this.positionPointOnPath(this.getLinearXY(myLen, ...vars));
                     angle = this.getLinearAngle(myLen, ...vars);
                     break;
 
-                case 'quadratic' :
+                case QUADRATIC :
                     myPoint = this.positionPointOnPath(this.getQuadraticXY(myLen, ...vars));
                     angle = this.getQuadraticAngle(myLen, ...vars);
                     break;
                     
-                case 'bezier' :
+                case BEZIER :
                     myPoint = this.positionPointOnPath(this.getBezierXY(myLen, ...vars));
                     angle = this.getBezierAngle(myLen, ...vars);
                     break;
@@ -330,10 +368,12 @@ export default function (P = Ωempty) {
 
         if (this.useAsPath && xt(pos) && pos.toFixed) {
 
-            let remainder = pos % 1,
-                unitPartials = this.unitPartials,
-                previousLen = 0, 
-                stoppingLen, myLen, i, iz, unit, species;
+            const unitPartials = this.unitPartials;
+            
+            let previousLen = 0,
+                remainder = pos % 1;
+            
+            let stoppingLen, myLen, i, iz, unit, species;
 
             // ... because sometimes everything doesn't all add up to 1
             if (pos === 0) remainder = 0;
@@ -345,7 +385,7 @@ export default function (P = Ωempty) {
             for (i = 0, iz = unitPartials.length; i < iz; i++) {
 
                 species = this.units[i][0];
-                if (species === 'move' || species === 'close' || species === 'unknown') continue;
+                if (species == MOVE || species == CLOSE || species == UNKNOWN) continue;
 
                 stoppingLen = unitPartials[i];
 
@@ -380,7 +420,7 @@ export default function (P = Ωempty) {
             if (this.dirtyScale || this.dirtySpecies)  this.pathCalculatedOnce = false;
        }
 
-        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0 || this.lockTo.indexOf('particle') >= 0) this.dirtyStampPositions = true;
+        if (this.isBeingDragged || this.lockTo.includes(MOUSE) || this.lockTo.includes(PARTICLE)) this.dirtyStampPositions = true;
 
         if (this.dirtyScale) this.cleanScale();
 
@@ -535,8 +575,8 @@ export default function (P = Ωempty) {
                 if (instance.addPathOffset) instance.dirtyOffset = true;
                 if (instance.addPathRotation) instance.dirtyRotation = true;
 
-                if (instance.type === 'Polyline') instance.dirtyPins = true;
-                else if (instance.type === 'Line' || instance.type === 'Quadratic' || instance.type === 'Bezier') instance.dirtyPins.push(this.name);
+                if (instance.type == T_POLYLINE) instance.dirtyPins = true;
+                else if (instance.type == T_LINE || instance.type == T_QUADRATIC || instance.type == T_BEZIER) instance.dirtyPins.push(this.name);
             }
         }, this);
     };
@@ -561,7 +601,7 @@ export default function (P = Ωempty) {
     // `drawAndFill`
     P.drawAndFill = function (engine) {
 
-        let p = this.pathObject;
+        const p = this.pathObject;
 
         engine.stroke(p);
         this.currentHost.clearShadow();
@@ -572,7 +612,7 @@ export default function (P = Ωempty) {
     // `fillAndDraw`
     P.fillAndDraw = function (engine) {
 
-        let p = this.pathObject;
+        const p = this.pathObject;
 
         engine.stroke(p);
         this.currentHost.clearShadow();
@@ -584,7 +624,7 @@ export default function (P = Ωempty) {
     // `drawThenFill`
     P.drawThenFill = function (engine) {
 
-        let p = this.pathObject;
+        const p = this.pathObject;
 
         engine.stroke(p);
         engine.fill(p, this.winding);
@@ -594,7 +634,7 @@ export default function (P = Ωempty) {
     // `fillThenDraw`
     P.fillThenDraw = function (engine) {
 
-        let p = this.pathObject;
+        const p = this.pathObject;
 
         engine.fill(p, this.winding);
         engine.stroke(p);
@@ -604,9 +644,9 @@ export default function (P = Ωempty) {
     // `clear`
     P.clear = function (engine) {
 
-        let gco = engine.globalCompositeOperation;
+        const gco = engine.globalCompositeOperation;
 
-        engine.globalCompositeOperation = 'destination-out';
+        engine.globalCompositeOperation = DESTINATION_OUT;
         engine.fill(this.pathObject, this.winding);
         
         engine.globalCompositeOperation = gco;
@@ -621,7 +661,7 @@ export default function (P = Ωempty) {
 
         engine.strokeStyle = this.boundingBoxColor;
         engine.lineWidth = 1;
-        engine.globalCompositeOperation = 'source-over';
+        engine.globalCompositeOperation = SOURCE_OVER;
         engine.globalAlpha = 1;
         engine.shadowOffsetX = 0;
         engine.shadowOffsetY = 0;
@@ -635,9 +675,7 @@ export default function (P = Ωempty) {
     // `getBoundingBox`
     P.getBoundingBox = function () {
 
-        let floor = Math.floor,
-            ceil = Math.ceil,
-            minDims = this.minimumBoundingBoxDimensions;
+        const minDims = this.minimumBoundingBoxDimensions;
 
         let [x, y, w, h] = this.localBox;
         let [hX, hY] = this.currentStampHandlePosition;
@@ -647,6 +685,6 @@ export default function (P = Ωempty) {
         if (w < minDims) w = minDims;
         if (h < minDims) h = minDims;
 
-        return [floor(x - hX), floor(y - hY), ceil(w), ceil(h), sX, sY];
+        return [_floor(x - hX), _floor(y - hY), _ceil(w), _ceil(h), sX, sY];
     };
 };

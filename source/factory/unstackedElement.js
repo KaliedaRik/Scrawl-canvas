@@ -245,7 +245,7 @@ P.updateCanvas = function () {
 
         for (let [key, value] of Object.entries(updates)) {
 
-            if (mimics.indexOf(key) >= 0) {
+            if (mimics.includes(key)) {
 
                 style[key] = value;
             }

@@ -140,7 +140,7 @@ P.kill = function (killArtefacts = false) {
     // Remove the Group object from affected Stack and Cell objects' `groups` attribute
     Object.entries(artefact).forEach(([name, art]) => {
 
-        if (Array.isArray(art.groups) && art.groups.indexOf(myname) >= 0) {
+        if (Array.isArray(art.groups) && art.groups.includes(myname)) {
 
             removeItem(art.groups, myname);
             art.batchResort = true;
@@ -149,7 +149,7 @@ P.kill = function (killArtefacts = false) {
 
     Object.entries(cell).forEach(([name, obj]) => {
 
-        if (Array.isArray(obj.groups) && obj.groups.indexOf(myname) >= 0) {
+        if (Array.isArray(obj.groups) && obj.groups.includes(myname)) {
 
             removeItem(obj.groups, myname);
             obj.batchResort = true;
@@ -592,7 +592,7 @@ P.addArtefacts = function (...args) {
 // `getArtefact` - return the artifact with the given name IF the artefact is a member of the group
 P.getArtefact = function (name) {
 
-    if (this.artefacts.indexOf(name) >= 0) return artefact[name] || false;
+    if (this.artefacts.includes(name)) return artefact[name] || false;
     return false;
 };
 
@@ -825,7 +825,7 @@ P.getAllArtefactsAt = function (items) {
 
                 const hit = result.artefact;
 
-                if (resultNames.indexOf(hit.name) < 0) {
+                if (!resultNames.includes(hit.name)) {
 
                     resultNames.push(hit.name);
                     results.push(result);

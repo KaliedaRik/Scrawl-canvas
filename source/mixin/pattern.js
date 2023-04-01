@@ -25,6 +25,7 @@ const _A = 'a',
     BLANK = 'rgb(0 0 0 / 0)',
     MAT_POS = ['a', 'b', 'c', 'd', 'e', 'f'],
     MAT_REPEAT = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'],
+    REPEAT = 'repeat',
     T_CELL = 'Cell',
     T_NOISE = 'Noise';
 
@@ -37,7 +38,7 @@ export default function (P = Ωempty) {
     const defaultAttributes = {
 
 // __repeat__ - String indicating how to repeat the pattern's image. Possible values are: `repeat` (default), `repeat-x`, `repeat-y`, `no-repeat`
-        repeat: 'repeat',
+        repeat: REPEAT,
 
 // __patternMatrix__ - Scrawl-canvas will apply a 2d-style, 6 value [DOMMatrix](https://developer.mozilla.org/en-US/docs/Web/API/DOMMatrix) to the pattern each time it is recreated. Changing the values of the matrix will change the rotation, skew, etc of the pattern. Pseudo-attributes can be used to set individual elements of the matrix, as follows:
 // + `stretchX` (or `matrixA`) - generally used for horizontal (x axis) scale

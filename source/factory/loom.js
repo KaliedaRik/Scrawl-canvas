@@ -231,11 +231,11 @@ P.packetCoordinates = pushUnique(P.packetCoordinates, []);
 P.packetObjects = pushUnique(P.packetObjects, ['group', 'fromPath', 'toPath', 'source']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 
-P.processPacketOut = function (key, value, includes) {
+P.processPacketOut = function (key, value, incs) {
 
     let result = true;
 
-    if(includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
+    if(!incs.includes(key) && value === this.defs[key]) result = false;
 
     return result;
 };
@@ -330,7 +330,7 @@ P.set = function (items = Ωempty) {
 
             if (key && key != 'name' && value != null) {
 
-                if (stateKeys.indexOf(key) < 0) {
+                if (!stateKeys.includes(key)) {
 
                     predefined = setters[key];
 
@@ -374,7 +374,7 @@ P.setDelta = function (items = Ωempty) {
 
             if (key && key != 'name' && value != null) {
 
-                if (stateKeys.indexOf(key) < 0) {
+                if (!stateKeys.includes(key)) {
 
                     predefined = setters[key];
 

@@ -5,17 +5,58 @@
 
 
 // #### Imports
-import { artefact, particle } from '../core/library.js';
-import { mergeOver, isa_boolean, xt, xta, addStrings, removeItem, pushUnique, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    particle, 
+} from '../core/library.js';
+
+import { 
+    addStrings, 
+    isa_boolean, 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    xt, 
+    xta, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
+
+import { 
+    _entries,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const BEZIER = 'bezier',
+    CONTROL = 'control',
+    COORD = 'coord',
+    END = 'end',
+    END_CONTROL = 'endControl',
+    END_PARTICLE = 'endParticle',
+    END_PATH = 'endPath',
+    END_PIVOT = 'endPivot',
+    LINEAR = 'linear',
+    MOUSE = 'mouse',
+    PARTICLE = 'particle',
+    PATH = 'path',
+    PIVOT = 'pivot',
+    QUADRATIC = 'quadratic',
+    START_CONTROL = 'startControl',
+    T_BEZIER = 'Bezier',
+    T_LINE = 'Line',
+    T_PARTICLE = 'Particle',
+    T_PATH = 'Path',
+    T_PIVOT = 'Pivot',
+    T_QUADRATIC = 'Quadratic';
 
 
 const capitalize = (s) => {
 
-    if (typeof s !== 'string') return '';
+    if (!s.substring) return '';
     return s.charAt(0).toUpperCase() + s.slice(1);
-}
+};
 
 
 // #### Export function
@@ -73,7 +114,7 @@ export default function (P = Ωempty) {
 // #### Kill management
 P.factoryKill = function () {
 
-    Object.entries(artefact).forEach(([name, art]) => {
+    _entries(artefact).forEach(([name, art]) => {
 
         if (art.name !== this.name) {
 
@@ -114,7 +155,7 @@ P.factoryKill = function () {
     // __endPivot__
     S.endPivot = function (item) {
 
-        this.setControlHelper(item, 'endPivot', 'end');
+        this.setControlHelper(item, END_PIVOT, END);
         this.updateDirty();
         this.dirtyEnd = true;
     };
@@ -122,7 +163,7 @@ P.factoryKill = function () {
     // __endParticle__
     S.endParticle = function (item) {
 
-        this.setControlHelper(item, 'endParticle', 'end');
+        this.setControlHelper(item, END_PARTICLE, END);
         this.updateDirty();
         this.dirtyEnd = true;
     };
@@ -130,7 +171,7 @@ P.factoryKill = function () {
     // __endPath__
     S.endPath = function (item) {
 
-        this.setControlHelper(item, 'endPath', 'end');
+        this.setControlHelper(item, END_PATH, END);
         this.updateDirty();
         this.dirtyEnd = true;
     };
@@ -188,7 +229,7 @@ P.factoryKill = function () {
     };
     S.end = function (x, y) {
 
-        this.setCoordinateHelper('end', x, y);
+        this.setCoordinateHelper(END, x, y);
         this.updateDirty();
         this.dirtyEnd = true;
         this.currentEndPathData = false;
@@ -211,7 +252,7 @@ P.factoryKill = function () {
     };
     D.end = function (x, y) {
 
-        this.setDeltaCoordinateHelper('end', x, y);
+        this.setDeltaCoordinateHelper(END, x, y);
         this.updateDirty();
         this.dirtyEnd = true;
         this.currentEndPathData = false;
@@ -233,7 +274,7 @@ P.factoryKill = function () {
 
         this.end = makeCoordinate();
         this.currentEnd = makeCoordinate();
-        this.endLockTo = 'coord';
+        this.endLockTo = COORD;
         this.dirtyEnd = true;
 
         this.dirtyPins = [];
@@ -249,9 +290,9 @@ P.factoryKill = function () {
 
             this[attr] = null;
 
-            if (label === 'startControl') this.dirtyStartControlLock = true;
-            else if (label === 'control') this.dirtyControlLock = true;
-            else if (label === 'endControl') this.dirtyEndControlLock = true;
+            if (label == START_CONTROL) this.dirtyStartControlLock = true;
+            else if (label == CONTROL) this.dirtyControlLock = true;
+            else if (label == END_CONTROL) this.dirtyEndControlLock = true;
             else this.dirtyEndLock = true;
         }
         else if (item) {
@@ -259,7 +300,7 @@ P.factoryKill = function () {
             let oldControl = this[attr],
                 newControl = (item.substring) ? artefact[item] : item;
 
-            if (attr.indexOf('Pivot') > 0) {
+            if (attr.includes(T_PIVOT)) {
                 
                 if (newControl && newControl.isArtefact) {
 
@@ -269,7 +310,7 @@ P.factoryKill = function () {
                 }
             }
 
-            else if (attr.indexOf('Path') > 0) {
+            else if (attr.includes(T_PATH)) {
                 
                 if (newControl && newControl.isArtefact) {
 
@@ -279,7 +320,7 @@ P.factoryKill = function () {
                 }
             }
 
-            else if (attr.indexOf('Particle') > 0) {
+            else if (attr.includes(T_PARTICLE)) {
                 
                 newControl = (item.substring) ? particle[item] : item;
 
@@ -289,9 +330,9 @@ P.factoryKill = function () {
 
                     this.updateDirty();
 
-                    if (label === 'startControl') this.dirtyStartControl = true;
-                    else if (label === 'control') this.dirtyControl = true;
-                    else if (label === 'endControl') this.dirtyEndControl = true;
+                    if (label == START_CONTROL) this.dirtyStartControl = true;
+                    else if (label == CONTROL) this.dirtyControl = true;
+                    else if (label == END_CONTROL) this.dirtyEndControl = true;
                     else this.dirtyEnd = true;
 
                     this[attr] = item;
@@ -305,23 +346,23 @@ P.factoryKill = function () {
 
         if (unit) {
 
-            let [unitSpecies, ...vars] = unit;
+            const [unitSpecies, ...vars] = unit;
 
             let myPoint, angle;
 
             switch (unitSpecies) {
 
-                case 'linear' :
+                case LINEAR :
                     myPoint = this.positionPointOnPath(this.getLinearXY(myLen, ...vars));
                     angle = this.getLinearAngle(myLen, ...vars);
                     break;
 
-                case 'quadratic' :
+                case QUADRATIC :
                     myPoint = this.positionPointOnPath(this.getQuadraticXY(myLen, ...vars));
                     angle = this.getQuadraticAngle(myLen, ...vars);
                     break;
                     
-                case 'bezier' :
+                case BEZIER :
                     myPoint = this.positionPointOnPath(this.getBezierXY(myLen, ...vars));
                     angle = this.getBezierAngle(myLen, ...vars);
                     break;
@@ -335,9 +376,7 @@ P.factoryKill = function () {
 
             angle += this.roll;
 
-            let stamp = this.currentStampPosition,
-                lineOffset = this.controlledLineOffset,
-                localBox = this.localBox;
+            const lineOffset = this.controlledLineOffset;
 
             myPoint.x += lineOffset[0];
             myPoint.y += lineOffset[1];
@@ -365,10 +404,10 @@ P.factoryKill = function () {
 
 // `dirtyLock` flags (one for each control) - trigger __cleanLock__ functions - which in turn set appropriate dirty flags on the entity.
         if (this.dirtyLock) this.cleanLock();
-        if (this.dirtyStartControlLock) this.cleanControlLock('startControl');
-        if (this.dirtyEndControlLock) this.cleanControlLock('endControl');
-        if (this.dirtyControlLock) this.cleanControlLock('control');
-        if (this.dirtyEndLock) this.cleanControlLock('end');
+        if (this.dirtyStartControlLock) this.cleanControlLock(START_CONTROL);
+        if (this.dirtyEndControlLock) this.cleanControlLock(END_CONTROL);
+        if (this.dirtyControlLock) this.cleanControlLock(CONTROL);
+        if (this.dirtyEndLock) this.cleanControlLock(END);
 
         if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyHandle) {
 
@@ -385,7 +424,7 @@ P.factoryKill = function () {
             if (this.dirtyScale || this.dirtySpecies || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd)  this.pathCalculatedOnce = false;
         }
 
-        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0 || this.lockTo.indexOf('particle') >= 0) {
+        if (this.isBeingDragged || this.lockTo.includes(MOUSE) || this.lockTo.includes(PARTICLE)) {
 
             this.dirtyStampPositions = true;
 
@@ -404,10 +443,10 @@ P.factoryKill = function () {
 
         if (this.dirtyStart) this.cleanStart();
 
-        if (this.dirtyStartControl || this.startControlLockTo === 'particle') this.cleanControl('startControl');
-        if (this.dirtyEndControl || this.endControlLockTo === 'particle') this.cleanControl('endControl');
-        if (this.dirtyControl || this.controlLockTo === 'particle') this.cleanControl('control');
-        if (this.dirtyEnd || this.endLockTo === 'particle') this.cleanControl('end');
+        if (this.dirtyStartControl || this.startControlLockTo == PARTICLE) this.cleanControl(START_CONTROL);
+        if (this.dirtyEndControl || this.endControlLockTo == PARTICLE) this.cleanControl(END_CONTROL);
+        if (this.dirtyControl || this.controlLockTo == PARTICLE) this.cleanControl(CONTROL);
+        if (this.dirtyEnd || this.endLockTo == PARTICLE) this.cleanControl(END);
 
         if (this.dirtyOffset) this.cleanOffset();
         if (this.dirtyRotation) this.cleanRotation();
@@ -475,13 +514,13 @@ P.factoryKill = function () {
             raw = this[label],
             current = this[`current${capLabel}`];
 
-        if (lock === 'pivot' && (!pivot || pivot.substring)) lock = 'coord';
-        else if (lock === 'path' && (!path || path.substring)) lock = 'coord';
-        else if (lock === 'particle' && (!part || part.substring)) lock = 'coord';
+        if (lock === PIVOT && (!pivot || pivot.substring)) lock = COORD;
+        else if (lock === PATH && (!path || path.substring)) lock = COORD;
+        else if (lock === PARTICLE && (!part || part.substring)) lock = COORD;
 
         switch(lock) {
 
-            case 'pivot' :
+            case PIVOT :
 
                 if (this.pivotCorner && pivot.getCornerCoordinate) {
 
@@ -498,7 +537,7 @@ P.factoryKill = function () {
 
                 break;
 
-            case 'path' :
+            case PATH :
 
                 pathData = this.getControlPathData(path, label, capLabel);
 
@@ -513,7 +552,7 @@ P.factoryKill = function () {
 
                 break;
 
-            case 'particle' :
+            case PARTICLE :
 
                 x = part.position.x;
                 y = part.position.y;
@@ -521,7 +560,7 @@ P.factoryKill = function () {
 
                 break;
 
-            case 'mouse' :
+            case MOUSE :
 
                 here = this.getHere();
 
@@ -618,15 +657,15 @@ P.factoryKill = function () {
 
             if (instance) {
 
-                if (instance.type === 'Line' || instance.type === 'Quadratic' || instance.type === 'Bezier') {
+                if (instance.type == T_LINE || instance.type == T_QUADRATIC || instance.type == T_BEZIER) {
 
-                    if (instance.type === 'Quadratic') {
+                    if (instance.type == T_QUADRATIC) {
 
                         instance.dirtyControl = true;
                         instance.currentControlPathData = false;
                     }
 
-                    else if (instance.type === 'Bezier') {
+                    else if (instance.type == T_BEZIER) {
 
                         instance.dirtyStartControl = true;
                         instance.dirtyEndControl = true;

@@ -264,7 +264,7 @@ P.start = function () {
 // `isRunning` - returns Boolean true if animation is running; false otherwise
 P.isRunning = function () {
 
-    return (animate.indexOf(this.name) >= 0) ? true : false;
+    return (animate.includes(this.name)) ? true : false;
 };
 
 

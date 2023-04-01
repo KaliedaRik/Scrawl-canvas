@@ -346,7 +346,7 @@ const G = P.getters,
 P.fitDefaults = ['fill', 'contain', 'cover'];
 S.fit = function (item) {
 
-    this.fit = (this.fitDefaults.indexOf(item) >= 0) ? item : 'none';
+    this.fit = (this.fitDefaults.includes(item)) ? item : 'none';
 };
 
 // `title` - String
@@ -789,11 +789,11 @@ P.cascadeEventAction = function (action, e = {}) {
         item = testActiveEntityObjects[i];
         name = item.name;
 
-        if (testActiveEntityNames.indexOf(name) < 0) {
+        if (!testActiveEntityNames.includes(name)) {
 
             testActiveEntityNames.push(name);
 
-            if (currentActiveEntityNames.indexOf(name) < 0) {
+            if (!currentActiveEntityNames.includes(name)) {
 
                 newActiveEntityObjects.push(item);
                 newActiveEntityNames.push(name);

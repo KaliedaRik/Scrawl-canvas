@@ -1052,7 +1052,7 @@ const generators = {
 
             let i, p, f, t, hub;
 
-            if (['Bezier', 'Line', 'Oval', 'Polygon', 'Polyline', 'Quadratic', 'Rectangle', 'Shape', 'Spiral', 'Star', 'Tetragon'].indexOf(shapeTemplate.type) >= 0) {
+            if (['Bezier', 'Line', 'Oval', 'Polygon', 'Polyline', 'Quadratic', 'Rectangle', 'Shape', 'Spiral', 'Star', 'Tetragon'].includes(shapeTemplate.type)) {
 
                 // build the rim
                 for (i = 0; i < precision; i++) {
@@ -1118,7 +1118,7 @@ const generators = {
                     springMaker(f, t, `${name}-${precision - 1}~${name}-${1}`);
                 }
             }
-            else if (['Block', 'Cell', 'Element', 'Grid', 'Phrase', 'Picture', 'Stack'].indexOf(host.type) >= 0) {
+            else if (['Block', 'Cell', 'Element', 'Grid', 'Phrase', 'Picture', 'Stack'].includes(host.type)) {
 
             }
             else if (host.type === 'Wheel') {

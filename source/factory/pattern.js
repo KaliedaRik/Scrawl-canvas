@@ -126,8 +126,8 @@ P.get = function (item) {
 
     if ((item.indexOf('video_') === 0 || item.indexOf('image_') === 0) && source) {
 
-        if (gettableVideoAssetAtributes.indexOf(item) >= 0) return source[item.substring(6)];
-        else if (gettableImageAssetAtributes.indexOf(item) >= 0) return source[item.substring(6)];
+        if (gettableVideoAssetAtributes.includes(item)) return source[item.substring(6)];
+        else if (gettableImageAssetAtributes.includes(item)) return source[item.substring(6)];
     }
 
     else {
@@ -172,8 +172,8 @@ P.set = function (items = Ωempty) {
 
             if ((key.indexOf('video_') === 0 || key.indexOf('image_') === 0) && source) {
 
-                if (settableVideoAssetAtributes.indexOf(key) >= 0) source[key.substring(6)] = value
-                else if (settableImageAssetAtributes.indexOf(key) >= 0) source[key.substring(6)] = value
+                if (settableVideoAssetAtributes.includes(key)) source[key.substring(6)] = value
+                else if (settableImageAssetAtributes.includes(key)) source[key.substring(6)] = value
             }
 
             else if (key && key !== 'name' && value != null) {

@@ -24,7 +24,7 @@ const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRem
 
     if (zone.substring) zone = artefact[zone];
 
-    if (!zone || ['Canvas', 'Stack'].indexOf(zone.type) < 0) return new Error('keyboardZone constructor - zone object is not a Stack or Canvas wrapper');
+    if (!zone || !['Canvas', 'Stack'].includes(zone.type)) return new Error('keyboardZone constructor - zone object is not a Stack or Canvas wrapper');
 
     let target = zone.domElement;
 

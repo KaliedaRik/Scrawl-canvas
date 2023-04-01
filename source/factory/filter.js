@@ -365,21 +365,21 @@ P.kill = function () {
     Object.entries(entity).forEach(([name, ent]) => {
 
         let f = ent.filters;
-        if (f && f.indexOf(myname) >= 0) removeItem(f, myname);
+        if (f && f.includes(myname)) removeItem(f, myname);
     });
     
     // Remove filter from all group filters attribute
     Object.entries(group).forEach(([name, grp]) => {
 
         let f = grp.filters;
-        if (f && f.indexOf(myname) >= 0) removeItem(f, myname);
+        if (f && f.includes(myname)) removeItem(f, myname);
     });
     
     // Remove filter from all cell filters attribute
     Object.entries(cell).forEach(([name, c]) => {
 
         let f = c.filters;
-        if (f && f.indexOf(myname) >= 0) removeItem(f, myname);
+        if (f && f.includes(myname)) removeItem(f, myname);
     });
     
     // Remove filter from the Scrawl-canvas library

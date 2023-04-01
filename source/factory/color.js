@@ -705,7 +705,7 @@ P.getAlphaValue = function (alpha) {
 
     if (alpha != null) {
 
-        if (alpha.indexOf('%') > 0) a = parseFloat(alpha) / 100;
+        if (alpha.includes('%')) a = parseFloat(alpha) / 100;
         else a = parseFloat(alpha);
     }
     // This test should capture alpha values of `none`
@@ -721,10 +721,10 @@ P.getHueValue = function (hue) {
 
     if (hue === 'none') return 0;
 
-    if (hue.indexOf('deg') >= 0) hue = parseFloat(hue)
-    else if (hue.indexOf('rad') >= 0) hue = parseFloat(hue) / radian;
-    else if (hue.indexOf('grad') >= 0) hue = (parseFloat(hue) / 400) * 360;
-    else if (hue.indexOf('turn') >= 0) hue = parseFloat(hue) * 360;
+    if (hue.includes('deg')) hue = parseFloat(hue)
+    else if (hue.includes('rad')) hue = parseFloat(hue) / radian;
+    else if (hue.includes('grad')) hue = (parseFloat(hue) / 400) * 360;
+    else if (hue.includes('turn')) hue = parseFloat(hue) * 360;
     else hue = parseFloat(hue);
 
     // We test and correct for the hue-related `none` value here
@@ -812,11 +812,11 @@ P.extractFromLabColorString = function (color) {
     if (b > 100) b = 100;
     if (b < 0) b = 0;
 
-    c = (vals[1].indexOf('%') > 0) ? parseFloat(vals[1]) * 1.25 : parseFloat(vals[1]);
+    c = (vals[1].includes('%')) ? parseFloat(vals[1]) * 1.25 : parseFloat(vals[1]);
     if (c > 160) c = 160;
     if (c < -160) c = -160;
 
-    d = (vals[2].indexOf('%') > 0) ? parseFloat(vals[2]) * 1.25 : parseFloat(vals[2]);
+    d = (vals[2].includes('%')) ? parseFloat(vals[2]) * 1.25 : parseFloat(vals[2]);
     if (d > 160) d = 160;
     if (d < -160) d = -160;
 
@@ -833,15 +833,15 @@ P.extractFromOklabColorString = function (color) {
     let vals, a, b, c, d;
 
     vals = getColorValuesFromString(color, 'oklab');
-    b = (vals[0].indexOf('%') > 0) ? parseFloat(vals[0]) / 100 : parseFloat(vals[0]);
+    b = (vals[0].includes('%')) ? parseFloat(vals[0]) / 100 : parseFloat(vals[0]);
     if (b > 1) b = 1;
     if (b < 0) b = 0;
 
-    c = (vals[1].indexOf('%') > 0) ? (parseFloat(vals[1]) / 100) * 0.4 : parseFloat(vals[1]);
+    c = (vals[1].includes('%')) ? (parseFloat(vals[1]) / 100) * 0.4 : parseFloat(vals[1]);
     if (c > 0.5) c = 0.5;
     if (c < -0.5) c = -0.5;
 
-    d = (vals[2].indexOf('%') > 0) ? (parseFloat(vals[2]) / 100) * 0.4 : parseFloat(vals[2]);
+    d = (vals[2].includes('%')) ? (parseFloat(vals[2]) / 100) * 0.4 : parseFloat(vals[2]);
     if (d > 0.5) d = 0.5;
     if (d < -0.5) d = -0.5;
 
@@ -862,7 +862,7 @@ P.extractFromLchColorString = function (color) {
     if (b > 100) b = 100;
     if (b < 0) b = 0;
 
-    c = (vals[1].indexOf('%') > 0) ? parseFloat(vals[1]) * 1.5 : parseFloat(vals[1]);
+    c = (vals[1].includes('%')) ? parseFloat(vals[1]) * 1.5 : parseFloat(vals[1]);
     if (c > 230) c = 230;
     if (c < 0) c = 0;
 
@@ -880,11 +880,11 @@ P.extractFromOklchColorString = function (color) {
     let vals, a, b, c, d;
 
     vals = getColorValuesFromString(color, 'oklch');
-    b = b = (vals[0].indexOf('%') > 0) ? parseFloat(vals[0]) / 100 : parseFloat(vals[0]);
+    b = b = (vals[0].includes('%')) ? parseFloat(vals[0]) / 100 : parseFloat(vals[0]);
     if (b > 1) b = 1;
     if (b < 0) b = 0;
 
-    c = (vals[1].indexOf('%') > 0) ? (parseFloat(vals[1]) / 100) * 0.4 : parseFloat(vals[1]);
+    c = (vals[1].includes('%')) ? (parseFloat(vals[1]) / 100) * 0.4 : parseFloat(vals[1]);
     if (c > 0.4) c = 0.4;
     if (c < 0) c = 0;
 
@@ -931,7 +931,7 @@ P.convert = function (color, suffix = '') {
 
     let a, b, c, d;
 
-    if (color.indexOf('hwb') >= 0 && !supportsHWB) {
+    if (color.includes('hwb') && !supportsHWB) {
 
         [a, b, c, d] = this.extractFromHwbColorString(color);
 
@@ -944,7 +944,7 @@ P.convert = function (color, suffix = '') {
         oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
         oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
     } 
-    else if (color.indexOf('xyz') >= 0) {
+    else if (color.includes('xyz')) {
         
         [a, b, c, d] = this.extractFromXyzColorString(color);
 
@@ -957,7 +957,7 @@ P.convert = function (color, suffix = '') {
         oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
         oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
     }
-    else if (color.indexOf('oklab') >= 0 && !supportsOKLAB) {
+    else if (color.includes('oklab') && !supportsOKLAB) {
 
         [a, b, c, d] = this.extractFromOklabColorString(color);
 
@@ -970,7 +970,7 @@ P.convert = function (color, suffix = '') {
         hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
         hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
     }
-    else if (color.indexOf('oklch') >= 0 && !supportsOKLCH) {
+    else if (color.includes('oklch') && !supportsOKLCH) {
 
         [a, b, c, d] = this.extractFromOklchColorString(color);
 
@@ -983,7 +983,7 @@ P.convert = function (color, suffix = '') {
         hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
         hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
     }
-    else if (color.indexOf('lab') >= 0 && !supportsLAB) {
+    else if (color.includes('lab') && !supportsLAB) {
 
         [a, b, c, d] = this.extractFromLabColorString(color);
 
@@ -996,7 +996,7 @@ P.convert = function (color, suffix = '') {
         oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
         oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
     }
-    else if (color.indexOf('lch') >= 0 && !supportsLCH) {
+    else if (color.includes('lch') && !supportsLCH) {
 
         [a, b, c, d] = this.extractFromLchColorString(color);
 
@@ -1047,7 +1047,7 @@ P.extractRGBfromColor = function (color) {
         [a, b, c, d] = this.extractFromOklabColorString(color);
         return [...this.convertXYZtoRGB(...this.convertOKLABtoXYZ(b, c, d)), a]; 
     }
-    else if (color.indexOf('oklch') >= 0 && !supportsOKLCH) {
+    else if (color.includes('oklch') && !supportsOKLCH) {
 
         [a, b, c, d] = this.extractFromOklchColorString(color);
         return [...this.convertXYZtoRGB(...this.convertOKLABtoXYZ(...this.convertOKLCHtoOKLAB(b, c, d))), a]; 
@@ -1057,7 +1057,7 @@ P.extractRGBfromColor = function (color) {
         [a, b, c, d] = this.extractFromLabColorString(color);
         return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(b, c, d)), a]; 
     }
-    else if (color.indexOf('lch') >= 0 && !supportsLCH) {
+    else if (color.includes('lch') && !supportsLCH) {
 
         [a, b, c, d] = this.extractFromLchColorString(color);
         return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(...this.convertLCHtoLAB(b, c, d))), a]; 

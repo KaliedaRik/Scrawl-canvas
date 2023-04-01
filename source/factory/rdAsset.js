@@ -227,7 +227,7 @@ S.maxGenerations = function (item) {
 P.initialSettingPreferenceValues = ['random', 'entity'];
 S.initialSettingPreference = function (item) {
 
-    if (item.substring && this.initialSettingPreferenceValues.indexOf(item) >= 0) {
+    if (item.substring && this.initialSettingPreferenceValues.includes(item)) {
 
         this.initialSettingPreference = item;
         this.dirtyScene = true;

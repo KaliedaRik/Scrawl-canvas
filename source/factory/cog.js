@@ -206,7 +206,7 @@ D.twist = function (item) {
 // __useBezierCurve__
 S.curve = function (item) {
 
-    if (item && ['line', 'quadratic', 'bezier'].indexOf(item) >= 0) {
+    if (item && ['line', 'quadratic', 'bezier'].includes(item)) {
 
         this.curve = item;
         this.updateDirty();

@@ -14,12 +14,55 @@
 
 
 // #### Imports
-import { entity, palette, styles, stylesnames } from '../core/library.js';
-import { addStrings, λnull, mergeOver, xt, isa_obj, mergeDiscard, Ωempty } from '../core/utilities.js';
+import { 
+    entity, 
+    palette, 
+    styles, 
+    stylesnames, 
+} from '../core/library.js';
+
+import { 
+    addStrings, 
+    isa_obj, 
+    mergeDiscard, 
+    mergeOver, 
+    xt, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { makeAnimation } from '../factory/animation.js';
 import { makeCoordinate } from '../factory/coordinate.js';
-import { makePalette, paletteKeys } from '../factory/palette.js';
+
+import { 
+    makePalette, 
+    paletteKeys, 
+} from '../factory/palette.js';
+
+import { 
+    _entries,
+    _isArray,
+    _keys,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const BLACK = 'rgb(0 0 0 / 1)',
+    BLANK = 'rgb(0 0 0 / 0)',
+    BOTTOM = 'bottom',
+    CENTER = 'center',
+    COLORS = 'colors',
+    END = 'end',
+    LEFT = 'left',
+    LINEAR = 'linear',
+    NAME = 'name',
+    RGB = 'RGB',
+    RIGHT = 'right',
+    START = 'start',
+    T_PALETTE = 'Palette',
+    TOP = 'top',
+    UNDEFINED = 'undefined',
+    WHITE = 'rgb(255 255 255 / 1)';
 
 
 // Create an animation to handle automated delta gradient animation
@@ -98,13 +141,13 @@ export default function (P = Ωempty) {
     P.finalizePacketOut = function (copy, items) {
 
         if (items.colors) copy.colors = items.colors;
-        else if (this.palette) copy.colors = this.palette.get('colors');
-        else copy.colors = [[0, 'rgba(0 0 0 / 1)'], [999, 'rgba(255 255 255 / 1)']];
+        else if (this.palette) copy.colors = this.palette.get(COLORS);
+        else copy.colors = [[0, BLACK], [999, WHITE]];
 
         // TODO: don't think this will return bespoke easing functions - need to think further on how to accomplish this
         if (items.easing) copy.easing = items.easing;
         else if (this.palette && this.palette.easing) copy.easing = this.palette.easing;
-        else copy.easing = 'linear';
+        else copy.easing = LINEAR;
 
         if (xt(items.precision)) copy.precision = items.precision;
         else if (this.palette && xt(this.palette.precision)) copy.precision = this.palette.precision;
@@ -112,11 +155,11 @@ export default function (P = Ωempty) {
 
         if (items.colorSpace) copy.colorSpace = items.colorSpace;
         else if (this.palette) copy.colorSpace = this.palette.getColorSpace();
-        else copy.colorSpace = 'RGB';
+        else copy.colorSpace = RGB;
 
         if (items.returnColorAs) copy.returnColorAs = items.returnColorAs;
         else if (this.palette) copy.returnColorAs = this.palette.getReturnColorAs();
-        else copy.returnColorAs = 'RGB';
+        else copy.returnColorAs = RGB;
 
         return copy;
     };
@@ -129,18 +172,18 @@ export default function (P = Ωempty) {
 // #### Kill management
     P.kill = function () {
 
-        let myname = this.name;
+        const myname = this.name;
 
         if (this.palette && this.palette.kill) this.palette.kill();
 
         // Remove style from all entity state objects
-        Object.entries(entity).forEach(([name, ent]) => {
+        _entries(entity).forEach(([name, ent]) => {
 
-            let state = ent.state;
+            const state = ent.state;
 
             if (state) {
 
-                let fill = state.fillStyle,
+                const fill = state.fillStyle,
                     stroke = state.strokeStyle;
 
                 if (isa_obj(fill) && fill.name === myname) state.fillStyle = state.defs.fillStyle;
@@ -187,7 +230,7 @@ export default function (P = Ωempty) {
     };
     S.start = function (x, y) {
 
-        this.setCoordinateHelper('start', x, y);
+        this.setCoordinateHelper(START, x, y);
         this.dirtyStart = true;
     };
     D.startX = function (coord) {
@@ -204,10 +247,9 @@ export default function (P = Ωempty) {
     };
     D.start = function (x, y) {
 
-        this.setDeltaCoordinateHelper('start', x, y);
+        this.setDeltaCoordinateHelper(START, x, y);
         this.dirtyStart = true;
     };
-
 
 // `end`, `endX`, `endY`
     G.endX = function () {
@@ -236,7 +278,7 @@ export default function (P = Ωempty) {
     };
     S.end = function (x, y) {
 
-        this.setCoordinateHelper('end', x, y);
+        this.setCoordinateHelper(END, x, y);
         this.dirtyEnd = true;
     };
     D.endX = function (coord) {
@@ -253,14 +295,14 @@ export default function (P = Ωempty) {
     };
     D.end = function (x, y) {
 
-        this.setDeltaCoordinateHelper('end', x, y);
+        this.setDeltaCoordinateHelper(END, x, y);
         this.dirtyEnd = true;
     };
 
 // `palette` - argument has to be a Palette object
     S.palette = function (item = Ωempty) {
 
-        if(item.type === 'Palette') this.palette = item;
+        if(item.type == T_PALETTE) this.palette = item;
     };
 
 // `paletteStart` - argument must be a positive integer Number in the range 0 - 999
@@ -326,7 +368,7 @@ export default function (P = Ωempty) {
 // + String is any legitimate CSS color string value
     S.colors = function (item) {
 
-        if (Array.isArray(item) && this.palette) this.palette.set({ colors: item });
+        if (_isArray(item) && this.palette) this.palette.set({ colors: item });
     };
 
 // `easing`, `easingFunction` - the easing to be applied to the gradient 
@@ -375,18 +417,18 @@ export default function (P = Ωempty) {
                 palette = this.palette,
                 val;
 
-            if (typeof def !== 'undefined') {
+            if (typeof def != UNDEFINED) {
 
                 val = this[item];
-                return (typeof val !== 'undefined') ? val : def;
+                return (typeof val != UNDEFINED) ? val : def;
             }
 
             def = palette.defs[item];
 
-            if (typeof def !== 'undefined') {
+            if (typeof def != UNDEFINED) {
 
                 val = palette[item];
-                return (typeof val !== 'undefined') ? val : def;
+                return (typeof val != UNDEFINED) ? val : def;
             }
             else return undef;
         }
@@ -396,7 +438,7 @@ export default function (P = Ωempty) {
 // `set` - Overwrites function defined in mixin/base.js - takes into account Palette object attributes
     P.set = function (items = Ωempty) {
 
-        let keys = Object.keys(items),
+        const keys = _keys(items),
             keysLen = keys.length;
 
         if (keysLen) {
@@ -418,21 +460,21 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 value = items[key];
 
-                if (key && key != 'name' && value != null) {
+                if (key && key != NAME && value != null) {
 
-                    if (paletteKeys.indexOf(key) < 0) {
+                    if (!paletteKeys.includes(key)) {
 
                         predefined = setters[key];
 
                         if (predefined) predefined.call(this, value);
-                        else if (typeof defs[key] != 'undefined') this[key] = value;
+                        else if (typeof defs[key] != UNDEFINED) this[key] = value;
                     }
                     else {
 
                         predefined = paletteSetters[key];
 
                         if (predefined) predefined.call(palette, value);
-                        else if (typeof paletteDefs[key] != 'undefined') palette[key] = value;
+                        else if (typeof paletteDefs[key] != UNDEFINED) palette[key] = value;
                     }
                 }
             }
@@ -441,16 +483,15 @@ export default function (P = Ωempty) {
         return this;
     };
 
-
 // `setDelta` - Overwrites function defined in mixin/base.js - takes into account Palette object attributes
     P.setDelta = function (items = Ωempty) {
 
-        let keys = Object.keys(items),
+        let keys = _keys(items),
             keysLen = keys.length;
 
         if (keysLen) {
 
-            let setters = this.deltaSetters,
+            const setters = this.deltaSetters,
                 defs = this.defs,
                 palette = this.palette;
 
@@ -467,21 +508,21 @@ export default function (P = Ωempty) {
                 key = keys[i];
                 value = items[key];
 
-                if (key && key != 'name' && value != null) {
+                if (key && key != NAME && value != null) {
 
-                    if (paletteKeys.indexOf(key) < 0) {
+                    if (!paletteKeys.includes(key)) {
 
                         predefined = setters[key];
 
                         if (predefined) predefined.call(this, value);
-                        else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+                        else if (typeof defs[key] != UNDEFINED) this[key] = addStrings(this[key], value);
                     }
                     else {
 
                         predefined = paletteSetters[key];
 
                         if (predefined) predefined.call(palette, value);
-                        else if (typeof paletteDefs[key] != 'undefined') palette[key] = addStrings(this[key], value);
+                        else if (typeof paletteDefs[key] != UNDEFINED) palette[key] = addStrings(this[key], value);
                     }
                 }
             }
@@ -495,7 +536,7 @@ export default function (P = Ωempty) {
 
         let c = this[label];
 
-        if (Array.isArray(x)) {
+        if (_isArray(x)) {
 
             c[0] = x[0];
             c[1] = x[1];
@@ -514,7 +555,7 @@ export default function (P = Ωempty) {
             myX = c[0],
             myY = c[1];
 
-        if (Array.isArray(x)) {
+        if (_isArray(x)) {
 
             c[0] = addStrings(myX, x[0]);
             c[1] = addStrings(myY, x[1]);
@@ -612,9 +653,9 @@ export default function (P = Ωempty) {
             dim = dimensions[i];
 
             if (val.toFixed) current[i] = val;
-            else if (val === 'left' || val === 'top') current[i] = 0;
-            else if (val === 'right' || val === 'bottom') current[i] = dim;
-            else if (val === 'center') current[i] = dim / 2;
+            else if (val == LEFT || val == TOP) current[i] = 0;
+            else if (val == RIGHT || val == BOTTOM) current[i] = dim;
+            else if (val == CENTER) current[i] = dim / 2;
             else current[i] = (parseFloat(val) / 100) * dim;
         }
     };
@@ -650,7 +691,7 @@ export default function (P = Ωempty) {
 // `buildStyle` - Just in case something went wrong with loading other styles Factory modules, which must overwrite this function, we can return transparent color here
     P.buildStyle = function (cell) {
 
-        return 'rgb(0 0 0 / 0)';
+        return BLANK;
     };
 
 // `addStopsToGradient` - internal function, called by the `buildStyle` function (which is overwritten by the Gradient and RadialGradient factories)

@@ -321,7 +321,7 @@ S.worleyDepth = function (item) {
 P.worleyOutputStrings = ['X', 'Y', 'Z', 'XminusY', 'XminusZ', 'YminusX', 'YminusZ', 'ZminusX', 'ZminusY', 'XaddY', 'XaddZ', 'YaddZ', 'XaddYminusZ', 'XaddZminusY', 'YaddZminusX', 'XmultiplyY', 'XmultiplyZ', 'YmultiplyZ', 'XmultiplyYaddZ', 'XmultiplyZaddY', 'YmultiplyZaddX', 'XmultiplyYminusZ', 'XmultiplyZminusY', 'YmultiplyZminusX', 'sum'];
 S.worleyOutput = function (item) {
 
-    if (item.substring && this.worleyOutputStrings.indexOf(item) >= 0) {
+    if (item.substring && this.worleyOutputStrings.includes(item)) {
 
         this.worleyOutput = item;
         this.dirtyNoise = true;
@@ -382,7 +382,7 @@ P.cleanNoise = function () {
 
             // This is the core of the calculation, performed for each cell in the noiseValues 2d array
             let name = noiseEngine.name;
-            if (['stripes', 'smoothed-stripes', 'worley-euclidean', 'worley-manhattan'].indexOf(name) >= 0) {
+            if (['stripes', 'smoothed-stripes', 'worley-euclidean', 'worley-manhattan'].includes(name)) {
 
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {

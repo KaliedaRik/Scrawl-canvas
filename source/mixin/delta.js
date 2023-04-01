@@ -176,7 +176,7 @@ export default function (P = Ωempty) {
                             else if (keyIndex < 6) arr = this.offset;
                             else if (keyIndex < 8) arr = this.dimensions;
 
-                            if (SHORTCHECK.indexOf(key) >= 0) valIndex = 1;
+                            if (SHORTCHECK.includes(key)) valIndex = 1;
 
                             val = arr[valIndex];
                         }

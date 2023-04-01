@@ -390,7 +390,7 @@ P.prepareStamp = function() {
         if (this.dirtyScale || this.dirtySpecies)  this.pathCalculatedOnce = false;
     }
 
-    if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0 || this.lockTo.indexOf('particle') >= 0) this.dirtyStampPositions = true;
+    if (this.isBeingDragged || this.lockTo.includes('mouse') || this.lockTo.includes('particle')) this.dirtyStampPositions = true;
 
     if (this.dirtyScale) this.cleanScale();
 
@@ -559,7 +559,7 @@ P.cleanPinsArray = function () {
 
                     let name = this.name;
 
-                    if (temp.pivoted.indexOf(name) < 0) pushUnique(temp.pivoted, name);
+                    if (!temp.pivoted.includes(name)) pushUnique(temp.pivoted, name);
 
                     current.push([...temp.currentStampPosition]);
                 }
