@@ -26,6 +26,7 @@ const FUNCTION = 'function',
     TARGET_SECTIONS = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'],
     UNKNOWN = 'unknown',
     UNNAMED = 'unnamed';
+const ZERO_STR = '';
 
 
 // Helper function
@@ -58,7 +59,7 @@ export default function (P = Ωempty) {
         order: 1,
 
 // __ticker__ - String - the name-String of the Ticker the Tween/Action uses for its timeline
-        ticker: '',
+        ticker: ZERO_STR,
 
 // __targets__ - Array containing the Scrawl-canvas objects on which the Tween/Action will act; one Tween/Action can modify attributes in multiple objects
         targets: null,

@@ -32,6 +32,12 @@ import {
 } from '../core/utilities.js';
 
 
+// Local constants
+const SOURCE = 'source',
+    SOURCE_LOADED = 'sourceLoaded',
+    SUBSCRIBERS = 'subscribers';
+
+
 // #### Export function
 export default function (P = Ωempty) {
 
@@ -60,10 +66,9 @@ export default function (P = Ωempty) {
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
-
 // #### Packet management
 // Assets do not include their source images (or videos!) in their packet output. They do include the String name values of each of their subscribers.
-    P.packetExclusions = pushUnique(P.packetExclusions, ['sourceLoaded', 'source', 'subscribers']);
+    P.packetExclusions = pushUnique(P.packetExclusions, [SOURCE_LOADED, SOURCE, SUBSCRIBERS]);
 
 
     P.finalizePacketOut = function (copy, items) {

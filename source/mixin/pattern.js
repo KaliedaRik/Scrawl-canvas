@@ -14,6 +14,10 @@ import {
 
 import { cell } from '../core/library.js';
 
+import { 
+    _isArray,
+} from '../core/shared-vars.js';
+
 
 // Local constants
 const _A = 'a',
@@ -107,7 +111,7 @@ export default function (P = Ωempty) {
 // __patternMatrix__ - the argument must be an Array containing 6 Number elements in the form of `[a, b, c, d, e, f]`
     S.patternMatrix = function (item) {
 
-        if (Array.isArray(item)) {
+        if (_isArray(item)) {
 
             let update = this.updateMatrixNumber;
 

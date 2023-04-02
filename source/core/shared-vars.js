@@ -33,7 +33,9 @@ export const _values = Object.values;
 // export const TYPE = 'type';
 
 /* mixin/asset */
-/* none identified */
+// export const SOURCE = 'source';
+// export const SOURCE_LOADED = 'sourceLoaded';
+// export const SUBSCRIBERS = 'subscribers';
 
 /* mixin/assetAdvancedFunctionality */
 // export const _2D = '2d';
@@ -55,9 +57,15 @@ export const _values = Object.values;
 // export const T_VIDEO = 'Video';
 
 /* mixin/base */
-// export const UNDEF = 'undefined';
+// export const ARG_SPLITTER = ',';
+// export const BAD_PACKET_CHECK = '"name":';
+// export const HAS_PACKET_CHECK = '[';
 // export const NAME = 'name';
+// export const NATIVE_CODE = '[native code]';
+// export const PACKET_DIVIDER = '~~~';
 // export const TYPE_EXCLUSIONS = ['Image', 'Sprite', 'Video', 'Canvas', 'Stack'];
+// export const UNDEF = 'undefined';
+// export const ZERO_STR = '';
 
 /* mixin/cascade */
 // export const ADD_ARTEFACT_CLASSES = 'addArtefactClasses';
@@ -192,6 +200,7 @@ export const _values = Object.values;
 // export const CENTER = 'center';
 // export const DIMENSIONS = 'dimensions';
 // export const FILTER = 'filter';
+// export const GROUP = 'group';
 // export const HANDLE = 'handle';
 // export const LEFT = 'left';
 // export const MIMIC = 'mimic';
@@ -282,5 +291,125 @@ export const _values = Object.values;
 // export const TARGET_SECTIONS = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'];
 // export const UNKNOWN = 'unknown';
 // export const UNNAMED = 'unnamed';
+
+/* factory/action */
+// export const FUNCTION = 'function';
+// export const NAME = 'name';
+// export const T_ACTION = 'Action';
+// export const TWEEN = 'tween';
+// export const UNDEF = 'undefined';
+
+/* factory/anchor */
+// export const _A = 'a';
+// export const ANCHOR = 'anchor';
+// export const BLUR = 'blur';
+// export const CLICK = 'click';
+// export const DOWNLOAD = 'download';
+// export const FOCUS = 'focus';
+// export const HREF = 'href';
+// export const HREFLANG = 'hreflang';
+// export const ONCLICK = 'onclick';
+// export const PING = 'ping';
+// export const REFERRERPOLICY = 'referrerpolicy';
+// export const REL = 'rel';
+// export const T_ANCHOR = 'Anchor';
+// export const TARGET = 'target';
+// export const TYPE = 'type';
+// export const ZERO_STR = '';
+
+/* factory/anchor */
+// export const ANIMATION = 'animation';
+// export const T_ANIMATION = 'Animation';
+
+/* factory/animation */
+// export const ANIMATION = 'animation';
+// export const T_ANIMATION = 'Animation';
+
+/* factory/bezier */
+// export const BEZIER = 'bezier';
+// export const COORD = 'coord';
+// export const END_CONTROL = 'endControl';
+// export const END_CONTROL_PARTICLE = 'endControlParticle';
+// export const END_CONTROL_PATH = 'endControlPath';
+// export const END_CONTROL_PIVOT = 'endControlPivot';
+// export const ENTITY = 'entity';
+// export const PATH = 'path';
+// export const START_CONTROL = 'startControl';
+// export const START_CONTROL_PARTICLE = 'startControlParticle';
+// export const START_CONTROL_PATH = 'startControlPath';
+// export const START_CONTROL_PIVOT = 'startControlPivot';
+// export const T_BEZIER = 'Bezier';
+// export const ZERO_PATH = 'M0,0';
+// export const ZERO_STR = '';
+
+/* factory/block */
+// export const T_BLOCK = 'Block';
+// export const ENTITY = 'entity';
+
+/* factory/canvas */
+// export const _2D = '2d';
+// export const ABSOLUTE = 'absolute';
+// export const ARIA_DESCRIBEDBY = 'aria-describedby';
+// export const ARIA_LABELLEDBY = 'aria-labelledby';
+// export const ARIA_LIVE = 'aria-live';
+// export const CANVAS = 'canvas';
+// export const CANVAS_QUERY = '[data-scrawl-canvas]';
+// export const DATA_SCRAWL_GROUP = 'data-scrawl-group';
+// export const DIV = 'div';
+// export const FIT_DEFS = ['fill', 'contain', 'cover'];
+// export const HIDDEN = 'hidden';
+// export const IMG = 'img';
+// export const NAME = 'name';
+// export const NAV = 'nav';
+// export const NONE = 'none';
+// export const PC0 = '0%';
+// export const PC100 = '100%';
+// export const PC50 = '50%';
+// export const POLITE = 'polite';
+// export const PX0 = '0px';
+// export const RELATIVE = 'relative';
+// export const ROLE = 'role';
+// export const ROOT = 'root';
+// export const SUBSCRIBE = 'subscribe';
+// export const T_CANVAS = 'Canvas';
+// export const T_STACK = 'Stack';
+// export const TITLE = 'title';
+// export const ZERO_STR = '';
+
+/* factory/cell-fragment */
+// export const _2D = '2d';
+// export const CANVAS = 'canvas';
+// export const T_CELLFRAGMENT = 'CellFragment';
+
+/* factory/cell */
+// export const _2D = '2d';
+// export const AUTO = 'auto';
+// export const CANVAS = 'canvas';
+// export const CELL = 'cell';
+// export const CONTAIN = 'contain';
+// export const COVER = 'cover';
+// export const DIMENSIONS = 'dimensions';
+// export const FILL = 'fill';
+// export const GRAYSCALE = 'grayscale';
+// export const HEIGHT = 'height';
+// export const IMG = 'img';
+// export const MOUSE = 'mouse';
+// export const MOZOSX_FONT_SMOOTHING = 'mozOsxFontSmoothing';
+// export const NEVER = 'never';
+// export const NONE = 'none';
+// export const SMOOTH_FONT = 'smoothFont';
+// export const SOURCE_OVER = 'source-over';
+// export const T_CELL = 'Cell';
+// export const TRANSPARENT_VALS = ['rgb(0 0 0 / 0)', 'rgba(0 0 0 / 0)', 'rgba(0,0,0,0)', 'rgba(0, 0, 0, 0)', 'transparent', '#00000000', '#0000'];
+// export const WEBKIT_FONT_SMOOTHING = 'webkitFontSmoothing';
+// export const WIDTH = 'width';
+// export const ZERO_STR = '';
+
+
+
+
+
+
+
 
 

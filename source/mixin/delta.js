@@ -28,7 +28,8 @@ const ADD = 'add',
     REVERSE = 'reverse',
     SEPARATOR = ':',
     SHORTCHECK = ['startY', 'handleY', 'offsetY', 'height'],
-    UPDATE = 'update';
+    UPDATE = 'update',
+    ZERO_STR = '';
 
 
 // #### Export function
@@ -233,7 +234,7 @@ export default function (P = Ωempty) {
 
                         val = this.get(key);
 
-                        act = '';
+                        act = ZERO_STR;
 
                         if (val < min) {
 

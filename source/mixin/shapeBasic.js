@@ -49,6 +49,7 @@ const BEZIER = 'bezier',
     T_POLYLINE = 'Polyline',
     T_QUADRATIC = 'Quadratic',
     UNKNOWN = 'unknown';
+const ZERO_STR = '';
 
 
 // #### Export function
@@ -63,13 +64,13 @@ export default function (P = Ωempty) {
 // #### Shared attributes
     const defaultAttributes = {
 
-        species: '',
+        species: ZERO_STR,
         useAsPath: false,
 
         precision: 10,
         constantPathSpeed: false,
 
-        pathDefinition: '',
+        pathDefinition: ZERO_STR,
 
         showBoundingBox: false,
         boundingBoxColor: HALFTRANS,

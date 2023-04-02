@@ -64,6 +64,13 @@ const
     SOURCE_IN = 'source-in',
     SOURCE_OVER = 'source-over',
     UNDEF = 'undefined';
+const STATE = 'state';
+const ON_ENTER = 'onEnter';
+const ON_LEAVE = 'onLeave';
+const ON_DOWN = 'onDown';
+const ON_UP = 'onUp';
+const ZERO_STR = '';
+const DESTINATION_OUT = 'destination-out';
 
 
 // #### Export function
@@ -214,10 +221,9 @@ export default function (P = Ωempty) {
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
-
 // #### Packet management
-    P.packetExclusions = pushUnique(P.packetExclusions, ['state']);
-    P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
+    P.packetExclusions = pushUnique(P.packetExclusions, [STATE]);
+    P.packetFunctions = pushUnique(P.packetFunctions, [ON_ENTER, ON_LEAVE, ON_DOWN, ON_UP]);
 
     P.processEntityPacketOut = function (key, value, incs) {
 
@@ -283,7 +289,7 @@ export default function (P = Ωempty) {
 // __group__ - returns the entity's latest Group's String name, not the Group object itself
     G.group = function () {
 
-        return (this.group) ? this.group.name : '';
+        return (this.group) ? this.group.name : ZERO_STR;
     };
 
 // __lockStylesToEntity__ - a pseudo-attribute which will set the `lockFillStyleToEntity` and `lockStrokeStyleToEntity` flags to the same Boolean value
@@ -824,7 +830,7 @@ export default function (P = Ωempty) {
 
         const gco = engine.globalCompositeOperation;
 
-        engine.globalCompositeOperation = 'destination-out';
+        engine.globalCompositeOperation = DESTINATION_OUT;
         engine.fill(this.pathObject, this.winding);
         
         engine.globalCompositeOperation = gco;

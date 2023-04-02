@@ -6,9 +6,13 @@
 
 // #### Imports
 import { 
+    _atan2,
+    _cos,
     _pow,
+    _sin,
     _sqrt,
 } from '../core/shared-vars.js';
+
 
 // Local constants
 const BEZIER = 'bezier',
@@ -19,7 +23,7 @@ const BEZIER = 'bezier',
     MOVE = 'move',
     QUADRATIC = 'quadratic',
     UNKNOWN = 'unknown';
-
+const ZERO_STR = '';
 
 // #### Export function
 export default function (d, scale, start, useAsPath, precision) {
@@ -27,8 +31,8 @@ export default function (d, scale, start, useAsPath, precision) {
     // Setup local variables
     let points = [],
         myData = [],
-        command = '',
-        localPath = '',
+        command = ZERO_STR,
+        localPath = ZERO_STR,
         units = [],
         unitLengths = [],
         unitPartials = [],
@@ -493,13 +497,13 @@ const setVector = function (v, x, y) {
 
 const rotateVector = function (v, angle) {
 
-    let arg = Math.atan2(v.y, v.x);
+    let arg = _atan2(v.y, v.x);
     arg += (angle * 0.01745329251);
     
-    let mag = Math.sqrt((v.x * v.x) + (v.y * v.y));
+    let mag = _sqrt((v.x * v.x) + (v.y * v.y));
 
-    v.x = mag * Math.cos(arg);
-    v.y = mag * Math.sin(arg);
+    v.x = mag * _cos(arg);
+    v.y = mag * _sin(arg);
 };
 
 // #### Helper functions

@@ -40,9 +40,15 @@ import {
 
 
 // Local constants
-const UNDEF = 'undefined',
+const ARG_SPLITTER = ',',
+    BAD_PACKET_CHECK = '"name":',
+    HAS_PACKET_CHECK = '[',
     NAME = 'name',
-    TYPE_EXCLUSIONS = ['Image', 'Sprite', 'Video', 'Canvas', 'Stack'];
+    NATIVE_CODE = '[native code]',
+    PACKET_DIVIDER = '~~~',
+    TYPE_EXCLUSIONS = ['Image', 'Sprite', 'Video', 'Canvas', 'Stack'],
+    UNDEF = 'undefined',
+    ZERO_STR = '';
 
 
 // #### Export function
@@ -362,7 +368,7 @@ export default function (P = Ωempty) {
             vars = matches[1],
             func = matches[2];
 
-        return (xta(vars, func)) ? `${vars}~~~${func}` : false;
+        return (xta(vars, func)) ? `${vars}${PACKET_DIVIDER}${func}` : false;
     };
 
 // `processPacketOut`
@@ -396,7 +402,7 @@ export default function (P = Ωempty) {
 
                 if (!url.substring) reject(new Error('Packet url supplied for import is not a string'));
 
-                if (url[0] === '[') {
+                if (url[0] == HAS_PACKET_CHECK) {
 
                     // Looks like we already have a packet for processing
                     report = self.actionPacket(url);
@@ -404,7 +410,7 @@ export default function (P = Ωempty) {
                     else reject(report);
                 }
                 // This is not much of a test ...
-                else if (url.includes('"name":')) {
+                else if (url.includes(BAD_PACKET_CHECK)) {
 
                     // Looks like we have a packet for processing, but it's malformed
                     reject(new Error('Bad packet supplied for import'));
@@ -461,7 +467,7 @@ export default function (P = Ωempty) {
 
             if (packet && packet.substring) {
 
-                if (packet[0] === '[') {
+                if (packet[0] == HAS_PACKET_CHECK) {
 
                     let name, type, lib, update;
 
@@ -560,18 +566,18 @@ export default function (P = Ωempty) {
 
         if (xt(fItem) && fItem != null && fItem.substring) {
 
-            if (fItem === '~~~') obj[item] = λnull;
+            if (fItem === PACKET_DIVIDER) obj[item] = λnull;
             else {
 
                 let args, func, f;
 
-                [args, func] = fItem.split('~~~');
+                [args, func] = fItem.split(PACKET_DIVIDER);
 
-                args = args.split(',');
+                args = args.split(ARG_SPLITTER);
                 args = args.map(a => a.trim());
 
                 // Native code raises non-terminal errors (because it is native code!) - so we dodge that bullet.
-                if (!func.includes('[native code]')) {
+                if (!func.includes(NATIVE_CODE)) {
 
                     f = new Function(...args, func);
 
@@ -598,7 +604,7 @@ export default function (P = Ωempty) {
 
         let myPacket, myTicker, myAnchor;
 
-        this.name = items.name || '';
+        this.name = items.name || ZERO_STR;
 
         // Tickers are specific to Tween and Action objects
         if (items.useNewTicker) {

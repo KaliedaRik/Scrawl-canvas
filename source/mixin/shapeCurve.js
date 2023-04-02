@@ -50,6 +50,7 @@ const BEZIER = 'bezier',
     T_PATH = 'Path',
     T_PIVOT = 'Pivot',
     T_QUADRATIC = 'Quadratic';
+const ZERO_STR = '';
 
 
 const capitalize = (s) => {
@@ -72,26 +73,26 @@ export default function (P = Ωempty) {
 
 // __endPivot__, __endPivotCorner__, __addEndPivotHandle__, __addEndPivotOffset__
 // + Like the `start` coordinate, the `end` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes. 
-        endPivot: '',
-        endPivotCorner: '',
+        endPivot: ZERO_STR,
+        endPivotCorner: ZERO_STR,
         addEndPivotHandle: false,
         addEndPivotOffset: false,
 
 // __endPath__, __endPathPosition__, __addEndPathHandle__, __addEndPathOffset__
 // + Like the `start` coordinate, the `end` coordinate can be __pathed__ to another artefact. These attributes are used in the same way as the `path`, 'pathPosition', `addPathHandle` and `addPathOffset` attributes.
-        endPath: '',
+        endPath: ZERO_STR,
         endPathPosition: 0,
         addEndPathHandle: false,
         addEndPathOffset: true,
 
 // __endParticle__ - attribute to store any particle the artefact mey be using for its position reference
-        endParticle: '',
+        endParticle: ZERO_STR,
 
 // __endLockTo__
 // + Like the `start` coordinate, the `end` coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: `coord` (default, for absolute positioning), `pivot`, `path`, `position`, `mouse`.
 // + The end coordinate does not support 'mimic' relative positioning.
 // + The end lock does not support setting the `x` and `y` coordinates separately - its value is a string argument, not an `[x, y]` array!
-        endLockTo: '',
+        endLockTo: ZERO_STR,
 
 // __useStartAsControlPoint__ - by default, updating the curve entity's `start` coordinate will move the entire curve. In situations where we need to treat the start coordinate like a curve 'pin', set this attribute to `true`.
         useStartAsControlPoint: false,

@@ -28,10 +28,37 @@
 
 
 // #### Imports
-import { canvas as libCanvas, cell, constructors, artefact, group, purge } from '../core/library.js';
-import { domShow, scrawlCanvasHold } from '../core/document.js';
-import { rootElements, setRootElementsSort } from "../core/document-rootElements.js";
-import { mergeOver, pushUnique, removeItem, xt, isa_dom, λthis, λnull, Ωempty } from '../core/utilities.js';
+import { 
+    canvas as libCanvas, 
+    cell, 
+    constructors, 
+    artefact, 
+    group, 
+    purge, 
+} from '../core/library.js';
+
+import { 
+    domShow, 
+    scrawlCanvasHold, 
+} from '../core/document.js';
+
+import { 
+    rootElements, 
+    setRootElementsSort, 
+} from "../core/document-rootElements.js";
+
+import { 
+    doCreate,
+    isa_dom, 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    xt, 
+    λnull, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
+
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeState } from './state.js';
@@ -41,6 +68,37 @@ import { makeCoordinate } from './coordinate.js';
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/displayShape.js';
+
+
+// Local constants
+const _2D = '2d',
+    ABSOLUTE = 'absolute',
+    ARIA_DESCRIBEDBY = 'aria-describedby',
+    ARIA_LABELLEDBY = 'aria-labelledby',
+    ARIA_LIVE = 'aria-live',
+    CANVAS = 'canvas',
+    CANVAS_QUERY = '[data-scrawl-canvas]',
+    DATA_SCRAWL_GROUP = 'data-scrawl-group',
+    DIV = 'div',
+    FIT_DEFS = ['fill', 'contain', 'cover'],
+    HIDDEN = 'hidden',
+    IMG = 'img',
+    NAME = 'name',
+    NAV = 'nav',
+    NONE = 'none',
+    PC0 = '0%',
+    PC100 = '100%',
+    PC50 = '50%',
+    POLITE = 'polite',
+    PX0 = '0px',
+    RELATIVE = 'relative',
+    ROLE = 'role',
+    ROOT = 'root',
+    SUBSCRIBE = 'subscribe',
+    T_CANVAS = 'Canvas',
+    T_STACK = 'Stack',
+    TITLE = 'title',
+    ZERO_STR = '';
 
 
 // #### Canvas constructor
@@ -60,8 +118,8 @@ const Canvas = function (items = Ωempty) {
     this.here = {};
     this.perspective = {
 
-        x: '50%',
-        y: '50%',
+        x: PC50,
+        y: PC50,
         z: 0
     };
     this.dirtyPerspective = true;
@@ -85,7 +143,7 @@ const Canvas = function (items = Ωempty) {
     if (!el) this.cleanDimensions();
     else {
 
-        this.engine = this.domElement.getContext('2d');
+        this.engine = this.domElement.getContext(_2D);
 
         this.state = makeState({
             engine: this.engine
@@ -104,8 +162,8 @@ const Canvas = function (items = Ωempty) {
 
         if (ds.isResponsive) {
 
-            el.style.width = '100%';
-            el.style.height = '100%';
+            el.style.width = PC100;
+            el.style.height = PC100;
 
             let baseMatches = true;
 
@@ -153,47 +211,47 @@ const Canvas = function (items = Ωempty) {
         // ##### Accessibility
         // if (!el.getAttribute('role')) el.setAttribute('role', 'img');
 
-        const navigation = document.createElement('nav');
+        const navigation = document.createElement(NAV);
         navigation.id = `${this.name}-navigation`;
-        navigation.style.width = '0px';
-        navigation.style.height = '0px';
-        navigation.style.maxWidth = '0px';
-        navigation.style.maxHeight = '0px';
-        navigation.style.border = '0px';
-        navigation.style.padding = '0px';
-        navigation.style.margin = '0px';
-        navigation.style.overflow = 'hidden';
+        navigation.style.width = PX0;
+        navigation.style.height = PX0;
+        navigation.style.maxWidth = PX0;
+        navigation.style.maxHeight = PX0;
+        navigation.style.border = PX0;
+        navigation.style.padding = PX0;
+        navigation.style.margin = PX0;
+        navigation.style.overflow = HIDDEN;
         this.navigation = navigation;
         el.appendChild(navigation);
 
-        const textHold = document.createElement('div');
+        const textHold = document.createElement(DIV);
         textHold.id = `${this.name}-text-hold`;
-        textHold.style.width = '0px';
-        textHold.style.height = '0px';
-        textHold.style.maxWidth = '0px';
-        textHold.style.maxHeight = '0px';
-        textHold.style.border = '0px';
-        textHold.style.padding = '0px';
-        textHold.style.margin = '0px';
-        textHold.style.overflow = 'hidden';
+        textHold.style.width = PX0;
+        textHold.style.height = PX0;
+        textHold.style.maxWidth = PX0;
+        textHold.style.maxHeight = PX0;
+        textHold.style.border = PX0;
+        textHold.style.padding = PX0;
+        textHold.style.margin = PX0;
+        textHold.style.overflow = HIDDEN;
         this.textHold = textHold;
         el.appendChild(textHold);
 
-        const ariaLabel = document.createElement('div');
+        const ariaLabel = document.createElement(DIV);
         ariaLabel.id = `${this.name}-ARIA-label`;
         ariaLabel.textContent = this.label;
         this.ariaLabelElement = ariaLabel;
         scrawlCanvasHold.appendChild(ariaLabel);
-        el.setAttribute('aria-labelledby', ariaLabel.id);
-        el.setAttribute('aria-live', 'polite');
+        el.setAttribute(ARIA_LABELLEDBY, ariaLabel.id);
+        el.setAttribute(ARIA_LIVE, POLITE);
 
-        const ariaDescription = document.createElement('div');
+        const ariaDescription = document.createElement(DIV);
         ariaDescription.id = `${this.name}-ARIA-description`;
         ariaDescription.textContent = this.description;
         this.ariaDescriptionElement = ariaDescription;
         scrawlCanvasHold.appendChild(ariaDescription);
-        el.setAttribute('aria-describedby', ariaDescription.id);
-        el.setAttribute('aria-live', 'polite');
+        el.setAttribute(ARIA_DESCRIBEDBY, ariaDescription.id);
+        el.setAttribute(ARIA_LIVE, POLITE);
 
         this.cleanAria();
     }
@@ -209,9 +267,9 @@ const Canvas = function (items = Ωempty) {
 
 
 // #### Canvas prototype
-const P = Canvas.prototype = Object.create(Object.prototype);
-P.type = 'Canvas';
-P.lib = 'canvas';
+const P = Canvas.prototype = doCreate();
+P.type = T_CANVAS;
+P.lib = CANVAS;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -238,16 +296,16 @@ displayMix(P);
 const defaultAttributes = {
 
 // __position__ - the CSS position value for the &lt;canvas> element. This value will be set to `absolute` when the element is an artefact associated with a Stack; `relative` in other cases.
-    position: 'relative',
+    position: RELATIVE,
 
 
 // __trackHere__
-    trackHere: 'subscribe',
+    trackHere: SUBSCRIBE,
 
 // __fit__ - String indicating how the base Cell should copy its contents over to the &lt;canvas> element as the final step in the Display cycle. Accepted values are: `fill`, `contain`, `cover`, `none` (but not `scale-down`).
 // 
 // The aim of this functionality is to replicate the CSS `object-fit` property - [detailed here](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) - for &lt;canvas> elements. We apply the fit attribute to the Canvas wrapper, not the element itself or its parent element.
-    fit: 'none',
+    fit: NONE,
 
 // DEPRECATED (because it is a really bad name) __isComponent__ replaced by __baseMatchesCanvasDimensions__ - set to true if, for example, canvas is being used as part of a Scrawl-canvas snippet.
     isComponent: false,
@@ -274,11 +332,11 @@ const defaultAttributes = {
 // If no label value is supplied to the Canvas factory (as part of the function's argument object), then Scrawl-canvas will auto-generate a label based on the canvas's name. All three attributes can be updated dynamically using the usual `set()` functionality.
 //
 // Beyond the Canvas object, Scrawl-canvas also encourages Phrase entitys (which handle graphical text in the canvas display) to expose their content to the DOM, to make it accessible. Also, any artefact given an Anchor link will expose the Anchor's &lt;a> element in the DOM, which allows the canvas display to become part of the document's navigation (for example, by keyboard tabbing).
-    title: '',
-    label: '',
-    description: '',
+    title: ZERO_STR,
+    label: ZERO_STR,
+    description: ZERO_STR,
 
-    role: 'img',
+    role: IMG,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -298,9 +356,8 @@ P.clone = λthis;
 // #### Kill functionality
 P.factoryKill = function () {
 
-    let name = this.name,
-        host = this.host,
-        h, g;
+    const name = this.name,
+        host = this.host;
 
     // rootElements and uiSubscribedElements arrays
     removeItem(rootElements, name);
@@ -309,15 +366,15 @@ P.factoryKill = function () {
     removeItem(uiSubscribedElements, name);
 
     // Host and host Group
-    if (host && host !== 'root') {
+    if (host && host !== ROOT) {
 
-        h = (this.currentHost) ? this.currentHost : artefact[host];
+        const h = (this.currentHost) ? this.currentHost : artefact[host];
 
         if (h) {
 
             h.removeGroups(name);
 
-            g = group[h.name];
+            const g = group[h.name];
             if (g) g.removeArtefacts(name);
         }
     }
@@ -343,10 +400,9 @@ const G = P.getters,
     D = P.deltaSetters;
 
 // `fit`
-P.fitDefaults = ['fill', 'contain', 'cover'];
 S.fit = function (item) {
 
-    this.fit = (this.fitDefaults.includes(item)) ? item : 'none';
+    this.fit = (FIT_DEFS.includes(item)) ? item : NONE;
 };
 
 // `title` - String
@@ -508,16 +564,18 @@ P.setBaseHelper = function () {
 
     let items = {};
 
-    if (this.base.dirtyScale) items.dirtyScale = true;
-    if (this.base.dirtyDimensions) items.dirtyDimensions = true;
-    if (this.base.dirtyLock) items.dirtyLock = true;
-    if (this.base.dirtyStart) items.dirtyStart = true;
-    if (this.base.dirtyOffset) items.dirtyOffset = true;
-    if (this.base.dirtyHandle) items.dirtyHandle = true;
-    if (this.base.dirtyRotation) items.dirtyRotation = true;
+    const base = this.base;
+
+    if (base.dirtyScale) items.dirtyScale = true;
+    if (base.dirtyDimensions) items.dirtyDimensions = true;
+    if (base.dirtyLock) items.dirtyLock = true;
+    if (base.dirtyStart) items.dirtyStart = true;
+    if (base.dirtyOffset) items.dirtyOffset = true;
+    if (base.dirtyHandle) items.dirtyHandle = true;
+    if (base.dirtyRotation) items.dirtyRotation = true;
 
     this.cleanCells();
-    this.base.prepareStamp();
+    base.prepareStamp();
 
     this.updateCells(items);
 };
@@ -526,9 +584,9 @@ P.setBaseHelper = function () {
 P.updateCells = function (items = Ωempty) {
 
     const c = this.cells;
-    for (let i = 0, iz = c.length, mycell; i < iz; i++) {
+    for (let i = 0, iz = c.length; i < iz; i++) {
 
-        mycell = cell[c[i]];
+        const mycell = cell[c[i]];
 
         if (mycell) {
 
@@ -546,11 +604,11 @@ P.updateCells = function (items = Ωempty) {
 // `buildCell` - create a Cell wrapper (wrapping a &lt;canvas> element not attached to the DOM) and add it to this Canvas wrapper's complement of Cells
 P.buildCell = function (items = Ωempty) {
 
-    let host = items.host || false;
+    const host = items.host || false;
 
     if (!host) items.host = this.base.name;
 
-    let mycell = makeCell(items);
+    const mycell = makeCell(items);
     
     this.addCell(mycell);
     this.cleanCells();
@@ -592,7 +650,6 @@ P.addCell = function (item) {
 
             pushUnique(this.cells, item);
             this.dirtyCells = true;
-            // this.domShowRequired = true;
         }
     }
     return this;
@@ -607,16 +664,14 @@ P.removeCell = function (item) {
 
         removeItem(this.cells, item);
         this.dirtyCells = true;
-        // this.domShowRequired = true;
     }
     return this;
 };
 
-
 // `killCell` - invoke a Cell object's __kill__ function; argument can be the Cell's name-String, or the Cell object itself
 P.killCell = function (item) {
 
-    let mycell = (item.substring) ? cell[item] : item;
+    const mycell = (item.substring) ? cell[item] : item;
 
     if (mycell) mycell.kill();
 
@@ -885,8 +940,8 @@ P.checkHover = function () {
 P.cleanAria = function () {
 
     this.dirtyAria = false;
-    this.domElement.setAttribute('title', this.title);
-    this.domElement.setAttribute('role', this.role);
+    this.domElement.setAttribute(TITLE, this.title);
+    this.domElement.setAttribute(ROLE, this.role);
     this.ariaLabelElement.textContent = this.label;
     this.ariaDescriptionElement.textContent = this.description;
 }
@@ -904,7 +959,7 @@ constructors.Canvas = Canvas;
 
 // #### Canvas discovery
 // `Exported function` (to modules). Parse the DOM, looking for &lt;canvas> elements; then create __Canvas__ artefact and __Cell__ asset wrappers for each canvas found. Canvas elements do not need to be part of a stack and can appear anywhere in the HTML body.
-export const getCanvases = function (query = '[data-scrawl-canvas]') {
+export const getCanvases = function (query = CANVAS_QUERY) {
 
     let item;
 
@@ -919,14 +974,14 @@ export const getCanvases = function (query = '[data-scrawl-canvas]') {
 // Create a __canvas__ artefact wrapper for a given canvas element.
 const addInitialCanvasElement = function (el) {
 
-    let mygroup = el.getAttribute('data-scrawl-group'),
-        myname = el.id || el.getAttribute('name'),
-        position = 'absolute';
+    let mygroup = el.getAttribute(DATA_SCRAWL_GROUP),
+        myname = el.id || el.getAttribute(NAME),
+        position = ABSOLUTE;
 
     if (!mygroup) {
 
-        el.setAttribute('data-scrawl-group', 'root');
-        mygroup = 'root';
+        el.setAttribute(DATA_SCRAWL_GROUP, ROOT);
+        mygroup = ROOT;
         position = el.style.position;
     }
 
@@ -993,7 +1048,7 @@ export const setCurrentCanvas = function (item) {
                 changeFlag = true;    
             }
         }
-        else if (item.type === 'Canvas') {
+        else if (item.type == T_CANVAS) {
 
             currentCanvas = item;    
             changeFlag = true;    
@@ -1016,13 +1071,13 @@ export const setCurrentCanvas = function (item) {
 // By default, Scrawl-canvas will setup the new Canvas as the 'current canvas', and will add mouse/pointer tracking functionality to it. If no dimensions are supplied then the Canvas will default to 300px wide and 150px high.
 export const addCanvas = function (items = Ωempty) {
 
-    let el = document.createElement('canvas'),
+    let el = document.createElement(CANVAS),
         myname = (items.name) ? items.name : generateUniqueString(),
         host = items.host,
-        mygroup = 'root',
+        mygroup = ROOT,
         width = items.width || 300,
         height = items.height || 150,
-        position = 'relative';
+        position = RELATIVE;
 
     if (host.substring) {
 
@@ -1039,10 +1094,10 @@ export const addCanvas = function (items = Ωempty) {
 
     if (host) {
 
-        if (host.type === 'Stack') {
+        if (host.type == T_STACK) {
 
             mygroup = host.name;
-            position = 'absolute';
+            position = ABSOLUTE;
             host = host.domElement;
         }
         else if (!isa_dom(host)) host = document.body;
@@ -1050,7 +1105,7 @@ export const addCanvas = function (items = Ωempty) {
     else host = document.body;
 
     el.id = myname;
-    el.setAttribute('data-scrawl-group', mygroup);
+    el.setAttribute(DATA_SCRAWL_GROUP, mygroup);
     el.width = width;
     el.height = height;
     el.style.position = position;
@@ -1065,7 +1120,7 @@ export const addCanvas = function (items = Ωempty) {
         position: position,
         setInitialDimensions: false,
         setAsCurrentCanvas: (xt(items.setAsCurrentCanvas)) ? items.setAsCurrentCanvas : true,
-        trackHere: (xt(items.trackHere)) ? items.trackHere : 'subscribe',
+        trackHere: (xt(items.trackHere)) ? items.trackHere : SUBSCRIBE,
     });
 
     delete items.group;

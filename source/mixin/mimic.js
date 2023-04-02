@@ -21,6 +21,7 @@ import {
 const MIMIC = 'mimic',
     START = 'start',
     T_CELL = 'Cell';
+const ZERO_STR = '';
 
 
 // #### Export function
@@ -31,7 +32,7 @@ export default function (P = Ωempty) {
     const defaultAttributes = {
 
 // __mimic__ - reference artefact object. Can also be set using the artefact's name-String.
-        mimic: '',
+        mimic: ZERO_STR,
 
 // __useMimic...__ - a set of Boolean flags determining which attributes should be taken from the mimic reference artefact. By default, the artefact will use its own attribute values; setting any of these flags changes the behaviour for that attribute.
         useMimicDimensions: false,

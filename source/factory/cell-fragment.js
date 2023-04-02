@@ -3,7 +3,11 @@
 
 
 // #### Imports
-import { λthis, λnull } from '../core/utilities.js';
+import { 
+    doCreate,
+    λnull, 
+    λthis, 
+} from '../core/utilities.js';
 
 import { makeState } from './state.js';
 
@@ -11,13 +15,19 @@ import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
 
 
+// Local constants
+const _2D = '2d',
+    CANVAS = 'canvas',
+    T_CELLFRAGMENT = 'CellFragment';
+
+
 // #### CellFragment constructor
 const CellFragment = function (name) {
 
     this.name = name;
 
-    const element = this.element = document.createElement('canvas');
-    const engine = this.engine = element.getContext('2d', {
+    const element = this.element = document.createElement(CANVAS);
+    const engine = this.engine = element.getContext(_2D, {
         willReadFrequently: true,
     });
 
@@ -33,8 +43,8 @@ const CellFragment = function (name) {
 
 
 // #### CellFragment prototype
-const P = CellFragment.prototype = Object.create(Object.prototype);
-P.type = 'CellFragment';
+const P = CellFragment.prototype = doCreate();
+P.type = T_CELLFRAGMENT;
 
 
 // #### Mixins
@@ -83,7 +93,7 @@ export const requestCell = function () {
 // `Exported function` - __releaseCell__
 export const releaseCell = function (c) {
 
-    if (c && c.type === 'CellFragment') {
+    if (c && c.type == T_CELLFRAGMENT) {
 
         c.engine.restore();
         cellPool.push(c);

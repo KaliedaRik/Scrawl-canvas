@@ -45,6 +45,7 @@ const PROCESS_IMAGE = 'process-image',
     T_RDASSET = 'RdAsset',
     T_SPRITE = 'Sprite',
     T_VIDEO = 'Video';
+const ZERO_STR = '';
 
 
 // #### Export function
@@ -118,7 +119,7 @@ export default function (P = Ωempty) {
         if (this.state) this.state.dirtyFilterIdentifier = false;
 
         if (this.memoizeFilterOutput && item) this.filterIdentifier = generateUuid();
-        else this.filterIdentifier = '';
+        else this.filterIdentifier = ZERO_STR;
 
     };
 

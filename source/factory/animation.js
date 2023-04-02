@@ -21,12 +21,36 @@
 
 
 // #### Imports
-import { animation, constructors } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, xt, λnull, λpromise, λthis, Ωempty } from '../core/utilities.js';
+import { 
+    animation, 
+    constructors, 
+} from '../core/library.js';
+
+import { 
+    doCreate,
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    xt, 
+    λnull, 
+    λpromise, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
+
 import { forceUpdate } from '../core/system-flags.js';
-import { animate, resortAnimations } from '../core/animationloop.js';
+
+import { 
+    animate, 
+    resortAnimations, 
+} from '../core/animationloop.js';
 
 import baseMix from '../mixin/base.js';
+
+
+// Local constants
+const ANIMATION = 'animation',
+    T_ANIMATION = 'Animation';
 
 
 // #### Animation constructor
@@ -48,10 +72,10 @@ const Animation = function (items = Ωempty) {
 
 
 // #### Animation prototype
-const P = Animation.prototype = Object.create(Object.prototype);
+const P = Animation.prototype = doCreate();
 
-P.type = 'Animation';
-P.lib = 'animation';
+P.type = T_ANIMATION;
+P.lib = ANIMATION;
 P.isArtefact = false;
 P.isAsset = false;
 

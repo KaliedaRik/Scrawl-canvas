@@ -13,10 +13,15 @@ import {
     Ωempty,
 } from '../core/utilities.js';
 
+import { 
+    _abs,
+} from '../core/shared-vars.js';
+
 
 // Local constants
 const PATH = 'path',
     START = 'start';
+const ZERO_STR = '';
 
 
 // #### Export function
@@ -27,7 +32,7 @@ export default function (P = Ωempty) {
     const defaultAttributes = {
 
 // __path__ - reference Shape entity object. Can also be set using the Shape's name-String.
-        path: '',
+        path: ZERO_STR,
 
 // __pathPosition__ - float Number between `0.0` - `1.0` representing the distance along the Shape path which is to be used as the reference coordinate.
         pathPosition: 0,
@@ -99,7 +104,7 @@ export default function (P = Ωempty) {
 // + TODO: current functionality is for pathPosition to loop - is there a case for adding a pathPosition loop flag? If yes, then when that flag is false values < 0 would be corrected back to 0, and vals > 1 would be corrected back to 1.
     S.pathPosition = function (item) {
 
-        if (item < 0) item = Math.abs(item);
+        if (item < 0) item = _abs(item);
         if (item > 1) item = item % 1;
 
         this.pathPosition = parseFloat(item.toFixed(6));

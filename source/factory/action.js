@@ -13,10 +13,31 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    mergeOver, 
+    pushUnique, 
+    xt, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
+
+import { 
+    _isArray,
+    _keys,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const FUNCTION = 'function',
+    NAME = 'name',
+    T_ACTION = 'Action',
+    TWEEN = 'tween',
+    UNDEF = 'undefined';
 
 
 // #### Action constructor
@@ -38,11 +59,10 @@ const Action = function (items = Ωempty) {
     return this;
 };
 
-
 // #### Action prototype
-const P = Action.prototype = Object.create(Object.prototype);
-P.type = 'Action';
-P.lib = 'tween';
+const P = Action.prototype = doCreate();
+P.type = T_ACTION;
+P.lib = TWEEN;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -69,7 +89,7 @@ P.packetFunctions = pushUnique(P.packetFunctions, ['revert', 'action']);
 
 P.finalizePacketOut = function (copy, items) {
 
-    if (Array.isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
+    if (_isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
 
     return copy;
 };
@@ -91,7 +111,7 @@ S.revert = function (item) {
 
     this.revert = item;
 
-    if (typeof this.revert !== 'function') this.revert = λnull;
+    if (typeof this.revert != FUNCTION) this.revert = λnull;
 };
 
 // Internal attribute. Set true after the ticker moves past the instance's time value (and set false if the ticker is moving backwards)
@@ -111,7 +131,7 @@ S.triggered = function (item) {
 // + recalculating effectiveDuration happens here if the __time__ value change
 P.set = function (items = Ωempty) {
 
-    const keys = Object.keys(items),
+    const keys = _keys(items),
         keysLen = keys.length;
 
     if (keysLen) {
@@ -126,12 +146,12 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key !== 'name' && value != null) {
+            if (key && key != NAME && value != null) {
 
                 predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
-                else if (typeof defs[key] !== 'undefined') this[key] = value;
+                else if (typeof defs[key] != UNDEF) this[key] = value;
             }
         }
 

@@ -94,7 +94,14 @@ const ABSOLUTE = 'absolute',
     TOPLEFT = 'topLeft',
     TOPRIGHT = 'topRight',
     TRUE = 'true';
-
+const ON_ENTER = 'onEnter';
+const ON_LEAVE = 'onLeave';
+const ON_DOWN = 'onDown';
+const ON_UP = 'onUp';
+const DOM_ELEMENT = 'domElement';
+const PATH_CORNERS = 'pathCorners';
+const ROTATION = 'rotation';
+const ZERO_STR = '';
 
 // #### Export function
 export default function (P = Ωempty) {
@@ -121,7 +128,7 @@ export default function (P = Ωempty) {
 
 
 // __domElement__ - Wrapper objects reference handle to its DOM element
-        domElement: '',
+        domElement: ZERO_STR,
 
 
 // __pitch__, __yaw__ - rotation management in the `x` and `y` axes, to go with the __roll__ attribute (for `z` axis rotation) defined in the position mixin. Like roll, values should be Numbers representing ___degrees___ (not radians)
@@ -137,7 +144,7 @@ export default function (P = Ωempty) {
         css: null,
 
 // __classes__ - a String representation of the DOM element's `classNode` attribute.
-        classes: '',
+        classes: ZERO_STR,
 
 // __position__ - a String representation of the DOM element's `position` attribute.
 // + by default all Scrawl-canvas Stack, Canvas and Element wrapper DOM elements are given a position value of `absolute`
@@ -160,7 +167,7 @@ export default function (P = Ωempty) {
 // + Element wrappers default to false `''`, as expected
 // + The value can also be set to `'local'`, which will set up a local listener to help track mouse movements across a 3d rotated DOM element
 // + ___BE AWARE___ that setting the value to `'local'` is an _experimental technology!_ There are a number of issues surrounding the functionality - principally that we lose the ability to dynamically resize the rotated element/canvas: changing the element's dimensions will lead to inaccuracies in mouse cursor positioning!
-        trackHere: '',
+        trackHere: ZERO_STR,
 
 // __activePadding__ - Number - if the `trackHere` attribute is set to `'local'` then the here object will generally remain true whatever the position of the mouse cursor - this is because here coordinates are only updated as the cursor moves over the element, not when it moves beyond its borders. The activePadding Number supplies a padding area along the inside edge of the element - if the mouse moves into this area then a the here.active boolean will become false. This is not foolproof because it will often miss a rapidly moving cursor!
         activePadding: 5,
@@ -186,8 +193,8 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
-    P.packetExclusions = pushUnique(P.packetExclusions, ['domElement', 'pathCorners', 'rotation']);
-    P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
+    P.packetExclusions = pushUnique(P.packetExclusions, [DOM_ELEMENT, PATH_CORNERS, ROTATION]);
+    P.packetFunctions = pushUnique(P.packetFunctions, [ON_ENTER, ON_LEAVE, ON_DOWN, ON_UP]);
 
 // `processDOMPacketOut` - internal helper function
     P.processDOMPacketOut = function (key, value, incs) {

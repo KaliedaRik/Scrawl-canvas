@@ -19,10 +19,20 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, xt, Ωempty } from '../core/utilities.js';
+import { 
+    doCreate,
+    mergeOver, 
+    xt, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
+
+
+// Local constants
+const T_BLOCK = 'Block',
+    ENTITY = 'entity';
 
 
 // #### Block constructor
@@ -40,9 +50,9 @@ const Block = function (items = Ωempty) {
 
 
 // #### Block prototype
-const P = Block.prototype = Object.create(Object.prototype);
-P.type = 'Block';
-P.lib = 'entity';
+const P = Block.prototype = doCreate();
+P.type = T_BLOCK;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -93,13 +103,13 @@ P.cleanPathObject = function () {
 
     if (!this.noPathUpdates || !this.pathObject) {
 
-        let p = this.pathObject = new Path2D();
+        const p = this.pathObject = new Path2D();
         
-        let handle = this.currentStampHandlePosition,
+        const handle = this.currentStampHandlePosition,
             scale = this.currentScale,
             dims = this.currentDimensions;
 
-        let x = -handle[0] * scale,
+        const x = -handle[0] * scale,
             y = -handle[1] * scale,
             w = dims[0] * scale,
             h = dims[1] * scale;

@@ -41,21 +41,53 @@
 
 
 // #### Imports
-import { artefact, asset, tween, constructors, styles, stylesnames, cell, cellnames, group, canvas } from '../core/library.js';
+import { 
+    artefact, 
+    asset, 
+    canvas, 
+    cell, 
+    cellnames, 
+    constructors, 
+    group, 
+    styles, 
+    stylesnames, 
+    tween, 
+} from '../core/library.js';
 
-import { generateUniqueString, isa_canvas, mergeOver, λthis, λnull, Ωempty, radian } from '../core/utilities.js';
+import { 
+    doCreate,
+    generateUniqueString, 
+    isa_canvas, 
+    mergeOver, 
+    radian, 
+    λnull, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
-import { getPixelRatio, getIgnorePixelRatio } from "../core/events.js";
+import { 
+    getIgnorePixelRatio, 
+    getPixelRatio, 
+} from "../core/events.js";
 
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
-import { makeCoordinate, requestCoordinate, releaseCoordinate } from './coordinate.js';
+
+import { 
+    makeCoordinate, 
+    releaseCoordinate, 
+    requestCoordinate, 
+} from './coordinate.js';
+
 import { filterEngine } from './filterEngine.js';
 import { importDomImage } from './imageAsset.js';
 
-import { requestCell, releaseCell } from '../factory/cell-fragment.js';
+import { 
+    releaseCell, 
+    requestCell, 
+} from '../factory/cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
@@ -70,6 +102,37 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
+import { 
+    _entries,
+    _floor,
+    _round,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const _2D = '2d',
+    AUTO = 'auto',
+    CANVAS = 'canvas',
+    CELL = 'cell',
+    CONTAIN = 'contain',
+    COVER = 'cover',
+    DIMENSIONS = 'dimensions',
+    FILL = 'fill',
+    GRAYSCALE = 'grayscale',
+    HEIGHT = 'height',
+    IMG = 'img',
+    MOUSE = 'mouse',
+    MOZOSX_FONT_SMOOTHING = 'mozOsxFontSmoothing',
+    NEVER = 'never',
+    NONE = 'none',
+    SMOOTH_FONT = 'smoothFont',
+    SOURCE_OVER = 'source-over',
+    T_CELL = 'Cell',
+    TRANSPARENT_VALS = ['rgb(0 0 0 / 0)', 'rgba(0 0 0 / 0)', 'rgba(0,0,0,0)', 'rgba(0, 0, 0, 0)', 'transparent', '#00000000', '#0000'],
+    WEBKIT_FONT_SMOOTHING = 'webkitFontSmoothing',
+    WIDTH = 'width',
+    ZERO_STR = '';
+
 
 // #### Cell constructor
 const Cell = function (items = Ωempty) {
@@ -83,7 +146,7 @@ const Cell = function (items = Ωempty) {
 
     if (!isa_canvas(items.element)) {
 
-        let mycanvas = document.createElement('canvas');
+        let mycanvas = document.createElement(CANVAS);
         mycanvas.id = this.name;
 
         mycanvas.width = 300;
@@ -118,9 +181,9 @@ const Cell = function (items = Ωempty) {
 
 
 // #### Cell prototype
-const P = Cell.prototype = Object.create(Object.prototype);
-P.type = 'Cell';
-P.lib = 'cell';
+const P = Cell.prototype = doCreate();
+P.type = T_CELL;
+P.lib = CELL;
 P.isArtefact = false;
 P.isAsset = true;
 
@@ -184,7 +247,7 @@ const defaultAttributes = {
 
 // By default, cells have a background color of `rgb(0 0 0 / 0)` - transparent black, which gets applied as the end step in the clear part of the display cycle. Setting the __backgroundColor__ attribute ensures the Cell will use that color instead. Any CSS color String is a valid argument (but not gradients or patterns, which get applied at a later stage in the Display cycle).
 // + Base cells can have this attribute set via their controller Canvas.
-    backgroundColor: '',
+    backgroundColor: ZERO_STR,
 
 
 // __clearAlpha__ - a Number with a value between 0 and 1. When not zero, the cell will not clear itself; rather it will copy its current contents, clear itself, set its globalAlpha to this value, copy back its contents (now faded) and then restore its globalAlpha value
@@ -193,7 +256,7 @@ const defaultAttributes = {
 
 // Non-base Cells will stamp themselves onto the 'base' Cell as part of the Display cycle's show stage. We can mediate this action by setting the Cell's __alpha__ and __composite__ attributes to valid Rendering2DContext `globalAlpha` and `globalCompositeOperation` values.
     alpha: 1,
-    composite: 'source-over',
+    composite: SOURCE_OVER,
 
 // We can also scale the Cell's size in the displayed Canvas by setting the __scale__ attribute to an appropriate value.
     scale: 1,
@@ -206,7 +269,7 @@ const defaultAttributes = {
 
 // __filter__ - the Canvas 2D engine supports the [filter attribute](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) on an experimental basis, thus it is not guaranteed to work in all browsers and devices. The filter attribute takes a String value (default: 'none') defining one or more filter functions to be applied to the Cell as it is stamped on its host canvas.
 // + Be aware that Cells can also take a `filters` Array - this represents an array of Scrawl-canvas filters to be applied to the Cell. The two filter systems are completely separate - combine their effects at your own risk!
-    filter: 'none',
+    filter: NONE,
 
 // Scrawl-canvas sets the following attributes automatically; do not change their values!
 
@@ -249,11 +312,11 @@ P.factoryKill = function () {
     let myname = this.name
 
     // Remove artefact from all canvases
-    Object.entries(canvas).forEach(([name, cvs]) => {
+    _entries(canvas).forEach(([name, cvs]) => {
 
         if (cvs.cells.includes(myname)) cvs.removeCell(myname);
 
-        if (cvs.base && cvs.base.name === myname) {
+        if (cvs.base && cvs.base.name == myname) {
 
             cvs.set({
                 visibility: false,
@@ -262,19 +325,19 @@ P.factoryKill = function () {
     });
 
     // Remove from other artefacts
-    Object.entries(artefact).forEach(([name, art]) => {
+    _entries(artefact).forEach(([name, art]) => {
 
         if (art.name !== myname) {
 
-            let state = art.state;
+            const state = art.state;
 
             if (state) {
 
-                let fill = state.fillStyle,
+                const fill = state.fillStyle,
                     stroke = state.strokeStyle;
 
-                if (fill.name && fill.name === myname) state.fillStyle = state.defs.fillStyle;
-                if (stroke.name && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+                if (fill.name && fill.name == myname) state.fillStyle = state.defs.fillStyle;
+                if (stroke.name && stroke.name == myname) state.strokeStyle = state.defs.strokeStyle;
             }
         }
     });
@@ -292,7 +355,7 @@ const G = P.getters,
 // `get` - overwrites the mixin/position function
 P.get = function (item) {
 
-    let getter = this.getters[item];
+    const getter = this.getters[item];
 
     if (getter) return getter.call(this);
 
@@ -322,7 +385,7 @@ P.get = function (item) {
 // `width`
 G.width = function () {
 
-    return this.currentDimensions[0] || this.element.getAttribute('width');
+    return this.currentDimensions[0] || this.element.getAttribute(WIDTH);
 };
 S.width = function (val) {
 
@@ -337,7 +400,7 @@ S.width = function (val) {
 // `height`
 G.height = function () {
 
-    return this.currentDimensions[1] || this.element.getAttribute('height');
+    return this.currentDimensions[1] || this.element.getAttribute(HEIGHT);
 };
 S.height = function (val) {
 
@@ -351,14 +414,14 @@ S.height = function (val) {
 
 G.dimensions = function () {
 
-    const w = this.currentDimensions[0] || this.element.getAttribute('width');
-    const h = this.currentDimensions[1] || this.element.getAttribute('height');
+    const w = this.currentDimensions[0] || this.element.getAttribute(WIDTH);
+    const h = this.currentDimensions[1] || this.element.getAttribute(HEIGHT);
 
     return [w, h];
 };
 S.dimensions = function (w, h) {
 
-    this.setCoordinateHelper('dimensions', w, h);
+    this.setCoordinateHelper(DIMENSIONS, w, h);
     this.dirtyDimensions = true;
     this.dirtyDimensionsOverride = true;
 };
@@ -377,7 +440,7 @@ S.element = function (item) {
 S.backgroundColor = function (item) {
 
     // If we try to clear the cell with a transparent color, it will not clear. Setting it to an empty string fixes this issue
-    if ('rgb(0 0 0 / 0)' === item || 'rgba(0 0 0 / 0)' === item || 'rgba(0,0,0,0)' === item || 'rgba(0, 0, 0, 0)' === item || 'transparent' === item || '#00000000' === item || '#0000' === item) item = '';
+    if (TRANSPARENT_VALS.includes(item)) item = '';
     this.backgroundColor = item;
 };
 
@@ -501,7 +564,6 @@ D.clearAlpha = function (val) {
     }
 };
 
-
 // `smoothFont` - handle this directly; don't save the attribute state
 S.smoothFont = function (item) {
 
@@ -514,14 +576,14 @@ S.smoothFont = function (item) {
         if (style) {
 
             if (item) {
-                style['webkitFontSmoothing'] = 'auto';
-                style['mozOsxFontSmoothing'] = 'auto';
-                style['smoothFont'] = 'auto';
+                style[WEBKIT_FONT_SMOOTHING] = AUTO;
+                style[MOZOSX_FONT_SMOOTHING] = AUTO;
+                style[SMOOTH_FONT] = AUTO;
             }
             else {
-                style['webkitFontSmoothing'] = 'none';
-                style['mozOsxFontSmoothing'] = 'grayscale';
-                style['smoothFont'] = 'never';
+                style[WEBKIT_FONT_SMOOTHING] = NONE;
+                style[MOZOSX_FONT_SMOOTHING] = GRAYSCALE;
+                style[SMOOTH_FONT] = NEVER;
             }
         }
     }
@@ -609,12 +671,13 @@ P.cleanDimensionsAdditionalActions = function() {
 
     if (element) {
 
-        let control = this.controller,
+        const control = this.controller,
             current = this.currentDimensions,
-            base = this.isBase;
+            base = this.isBase,
+            ignoreDpr = getIgnorePixelRatio(),
+            dpr = getPixelRatio();
 
-        let ignoreDpr = getIgnorePixelRatio();
-        let dpr = getPixelRatio();
+        let controlDims, dims, w, h;
 
         // DEPRECATED (because it is a really bad name) __isComponent__ replaced by __baseMatchesCanvasDimensions__
         if (this.cleared || this.dirtyDimensionsOverride) {
@@ -625,14 +688,14 @@ P.cleanDimensionsAdditionalActions = function() {
 
                 if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
 
-                    let controlDims = this.controller.currentDimensions,
-                        dims = this.dimensions;
+                    controlDims = this.controller.currentDimensions;
+                    dims = this.dimensions;
 
                     dims[0] = current[0] = controlDims[0];
                     dims[1] = current[1] = controlDims[1];
                 }
 
-                let [w, h] = current;
+                [w, h] = current;
 
                 element.width = w;
                 element.height = h;
@@ -641,14 +704,14 @@ P.cleanDimensionsAdditionalActions = function() {
 
                 if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
 
-                    let controlDims = this.controller.currentDimensions,
-                        dims = this.dimensions;
+                    controlDims = this.controller.currentDimensions;
+                    dims = this.dimensions;
 
                     dims[0] = current[0] = controlDims[0];
                     dims[1] = current[1] = controlDims[1];
                 }
 
-                let [w, h] = current;
+                [w, h] = current;
 
                 if (ignoreDpr) {
 
@@ -706,7 +769,7 @@ P.subscribeAction = function (sub = {}) {
 P.installElement = function (element, willReadFrequently = true) {
 
     this.element = element;
-    this.engine = this.element.getContext('2d', {
+    this.engine = this.element.getContext(_2D, {
         willReadFrequently,
     });
 
@@ -725,7 +788,7 @@ P.updateControllerCells = function () {
     if (controller) controller.dirtyCells = true;
     else if (currentHost) {
 
-        let host = currentHost.getHost();
+        const host = currentHost.getHost();
 
         if (host) host.dirtyCells = true;
     }
@@ -739,9 +802,9 @@ P.clear = function () {
 
     this.prepareStamp();
 
-    let dpr = checkEngineScale(engine);
+    const dpr = checkEngineScale(engine);
 
-    let w = width * dpr,
+    const w = width * dpr,
         h = height * dpr;
 
     if (this.useAsPattern) {
@@ -754,7 +817,7 @@ P.clear = function () {
 
         engine.save();
         engine.fillStyle = backgroundColor;
-        engine.globalCompositeOperation = 'source-over';
+        engine.globalCompositeOperation = SOURCE_OVER;
         engine.globalAlpha = 1;
         engine.fillRect(0, 0, width, height);
         engine.restore();
@@ -762,9 +825,9 @@ P.clear = function () {
     else if (clearAlpha) {
 
         engine.save();
-        let tempCell = requestCell();
+        const tempCell = requestCell();
         
-        let {engine:tempEngine, element:tempEl} = tempCell;
+        const {engine:tempEngine, element:tempEl} = tempCell;
 
         if (this.useAsPattern) {
 
@@ -831,19 +894,29 @@ P.show = function () {
 
     if (engine) {
 
-        let floor = Math.floor,
-            hostDimensions = host.currentDimensions,
-            destWidth = floor(hostDimensions[0]),
-            destHeight = floor(hostDimensions[1]);
+        const hostDimensions = host.currentDimensions,
+            destWidth = _floor(hostDimensions[0]),
+            destHeight = _floor(hostDimensions[1]);
 
         // Cannot draw to the destination canvas if either of its dimensions === 0
         if (!destWidth || !destHeight) return false;
 
-        let { currentScale:scale, currentDimensions, composite, alpha, controller, element, isBase, currentStampHandlePosition:handle, currentStampPosition:stamp } = this;
+        const { 
+            currentScale:scale, 
+            currentDimensions, 
+            composite, 
+            alpha, 
+            controller, 
+            element, 
+            isBase, 
+            currentStampHandlePosition:handle, 
+            currentStampPosition:stamp, 
+        } = this;
 
-        let curWidth = floor(currentDimensions[0]),
-            curHeight = floor(currentDimensions[1]),
-            paste;
+        const curWidth = _floor(currentDimensions[0]),
+            curHeight = _floor(currentDimensions[1]);
+
+        let paste;
 
         engine.save();
 
@@ -859,73 +932,74 @@ P.show = function () {
             // copy the base canvas over to the display canvas. This copy operation ignores any scale, roll or position attributes set on the base cell, instead complying with the controller's fit attribute requirements
             if (!this.cleared && !this.compiled) this.prepareStamp();
 
-            engine.globalCompositeOperation = 'source-over';
+            engine.globalCompositeOperation = SOURCE_OVER;
             engine.globalAlpha = 1;
             engine.clearRect(0, 0, destWidth, destHeight);
 
             engine.globalCompositeOperation = composite;
             engine.globalAlpha = alpha;
 
-            let fit = (controller) ? controller.fit : 'none',
-                relWidth, relHeight;
+            const fit = (controller) ? controller.fit : NONE;
+            
+            let relWidth, relHeight;
 
             switch (fit) {
 
-                case 'contain' :
+                case CONTAIN :
                     // base must copy into display resized, centered, letterboxing if necessary, maintaining aspect ratio
                     relWidth = destWidth / (curWidth || 1);
                     relHeight = destHeight / (curHeight || 1);
 
                     if (relWidth > relHeight) {
 
-                        paste[0] = floor((destWidth - (curWidth * relHeight)) / 2);
+                        paste[0] = _floor((destWidth - (curWidth * relHeight)) / 2);
                         paste[1] = 0;
-                        paste[2] = floor(curWidth * relHeight);
-                        paste[3] = floor(curHeight * relHeight);
+                        paste[2] = _floor(curWidth * relHeight);
+                        paste[3] = _floor(curHeight * relHeight);
                     }
                     else {
 
                         paste[0] = 0;
-                        paste[1] = floor((destHeight - (curHeight * relWidth)) / 2);
-                        paste[2] = floor(curWidth * relWidth);
-                        paste[3] = floor(curHeight * relWidth);
+                        paste[1] = _floor((destHeight - (curHeight * relWidth)) / 2);
+                        paste[2] = _floor(curWidth * relWidth);
+                        paste[3] = _floor(curHeight * relWidth);
                     }
                     break;
 
-                case 'cover' :
+                case COVER :
                     // base must copy into display resized, centered, leaving no letterbox area, maintaining aspect ratio
                     relWidth = destWidth / (curWidth || 1);
                     relHeight = destHeight / (curHeight || 1);
 
                     if (relWidth < relHeight) {
 
-                        paste[0] = floor((destWidth - (curWidth * relHeight)) / 2);
+                        paste[0] = _floor((destWidth - (curWidth * relHeight)) / 2);
                         paste[1] = 0;
-                        paste[2] = floor(curWidth * relHeight);
-                        paste[3] = floor(curHeight * relHeight);
+                        paste[2] = _floor(curWidth * relHeight);
+                        paste[3] = _floor(curHeight * relHeight);
                     }
                     else{
 
                         paste[0] = 0;
-                        paste[1] = floor((destHeight - (curHeight * relWidth)) / 2);
-                        paste[2] = floor(curWidth * relWidth);
-                        paste[3] = floor(curHeight * relWidth);
+                        paste[1] = _floor((destHeight - (curHeight * relWidth)) / 2);
+                        paste[2] = _floor(curWidth * relWidth);
+                        paste[3] = _floor(curHeight * relWidth);
                     }
                     break;
 
-                case 'fill' :
+                case FILL :
                     // base must copy into display resized, distorting the aspect ratio as necessary
                     paste[0] = 0;
                     paste[1] = 0;
-                    paste[2] = floor(destWidth);
-                    paste[3] = floor(destHeight);
+                    paste[2] = _floor(destWidth);
+                    paste[3] = _floor(destHeight);
                     break;
 
-                case 'none' :
+                case NONE :
                 default :
                     // base copies into display as-is, centred, maintaining aspect ratio
-                    paste[0] = floor((destWidth - curWidth) / 2);
-                    paste[1] = floor((destHeight - curHeight) / 2);
+                    paste[0] = _floor((destWidth - curWidth) / 2);
+                    paste[1] = _floor((destHeight - curHeight) / 2);
                     paste[2] = curWidth;
                     paste[3] = curHeight;
             }
@@ -944,10 +1018,10 @@ P.show = function () {
             engine.globalCompositeOperation = composite;
             engine.globalAlpha = alpha;
 
-            paste[0] = floor(-handle[0] * scale);
-            paste[1] = floor(-handle[1] * scale);
-            paste[2] = floor(curWidth * scale);
-            paste[3] = floor(curHeight * scale);
+            paste[0] = _floor(-handle[0] * scale);
+            paste[1] = _floor(-handle[1] * scale);
+            paste[2] = _floor(curWidth * scale);
+            paste[3] = _floor(curHeight * scale);
 
             this.rotateDestination(engine, ...stamp);
         }
@@ -956,17 +1030,16 @@ P.show = function () {
     }
 };
 
-
 // `applyFilters` - Internal function - add filters to the Cell's current output.
 P.applyFilters = function () {
 
-    let engine = this.engine;
+    const engine = this.engine;
 
-    let image = engine.getImageData(0, 0, this.currentDimensions[0], this.currentDimensions[1]);
+    const image = engine.getImageData(0, 0, this.currentDimensions[0], this.currentDimensions[1]);
 
     this.preprocessFilters(this.currentFilters);
 
-    let img = filterEngine.action({
+    const img = filterEngine.action({
         identifier: this.filterIdentifier,
         image: image,
         filters: this.currentFilters
@@ -987,9 +1060,9 @@ P.stashOutputAction = function () {
 
         this.stashOutput = false;
 
-        let { currentDimensions, stashCoordinates, stashDimensions, engine } = this;
+        const { currentDimensions, stashCoordinates, stashDimensions, engine } = this;
 
-        let [cellWidth, cellHeight] = currentDimensions;
+        const [cellWidth, cellHeight] = currentDimensions;
 
         let stashX = (stashCoordinates) ? stashCoordinates[0] : 0, 
             stashY = (stashCoordinates) ? stashCoordinates[1] : 0, 
@@ -1029,10 +1102,8 @@ P.stashOutputAction = function () {
 
             this.stashOutputAsAsset = false;
 
-            let sourcecanvas, mycanvas;
-                
-            mycanvas = requestCell();
-            sourcecanvas = mycanvas.element;
+            const mycanvas = requestCell(),
+                sourcecanvas = mycanvas.element;
 
             sourcecanvas.width = stashWidth;
             sourcecanvas.height = stashHeight;
@@ -1041,7 +1112,7 @@ P.stashOutputAction = function () {
 
             if (!this.stashedImage) {
 
-                let newimg = this.stashedImage = document.createElement('img');
+                const newimg = this.stashedImage = document.createElement(IMG);
 
                 newimg.id = stashId;
 
@@ -1060,7 +1131,6 @@ P.stashOutputAction = function () {
     }
 };
 
-
 // `getHost` - Internal function - get a reference to the Cell's current host (where it will be stamping itself as part of the Display cycle).
 // + Note that Cells can (in theory: not tested yet) belong to more than one Canvas object Group - they can be used in multiple &lt;canvas> elements, thus the need to check which canvas is the current host at this point in the Display cycle.
 P.getHost = function () {
@@ -1068,7 +1138,7 @@ P.getHost = function () {
     if (this.currentHost) return this.currentHost;
     else if (this.host) {
 
-        let host = asset[this.host] || artefact[this.host];
+        const host = asset[this.host] || artefact[this.host];
 
         if (host) this.currentHost = host;
         
@@ -1077,75 +1147,75 @@ P.getHost = function () {
     return false;
 };
 
-
 // `updateBaseHere` - Internal function - keeping the Canvas object's 'base' Cell's `.here` attribute up-to-date with accurate mouse/pointer/touch cursor data
 P.updateBaseHere = function (controllerHere, fit) {
 
     if (this.isBase) {
 
         if (!this.here) this.here = {};
-        let here = this.here,
+
+        const here = this.here,
             dims = this.currentDimensions;
 
-        let active = controllerHere.active;
+        const active = controllerHere.active;
 
-        let controllerWidth = (controllerHere.localListener) ? controllerHere.originalWidth : controllerHere.w;
-        let controllerHeight = (controllerHere.localListener) ? controllerHere.originalHeight : controllerHere.h;
+        const controllerWidth = (controllerHere.localListener) ? controllerHere.originalWidth : controllerHere.w;
+        const controllerHeight = (controllerHere.localListener) ? controllerHere.originalHeight : controllerHere.h;
 
         if (dims[0] !== controllerWidth || dims[1] !== controllerHeight) {
 
             if (!this.basePaste) this.basePaste = [];
 
-            let pasteX = this.basePaste[0];
+            const pasteX = this.basePaste[0];
 
-            let localWidth = dims[0],
+            const localWidth = dims[0],
                 localHeight = dims[1],
                 remoteWidth = controllerWidth,
                 remoteHeight = controllerHeight,
                 remoteX = controllerHere.x,
                 remoteY = controllerHere.y;
 
-            let relWidth = localWidth / remoteWidth || 1,
-                relHeight = localHeight / remoteHeight || 1,
-                round = Math.round,
-                offsetX, offsetY;
+            const relWidth = localWidth / remoteWidth || 1,
+                relHeight = localHeight / remoteHeight || 1;
+            
+            let offsetX, offsetY;
 
             here.w = localWidth;
             here.h = localHeight;
 
             switch (fit) {
 
-                case 'contain' :
-                case 'cover' :
+                case CONTAIN :
+                case COVER :
 
                     if (pasteX) {
 
                         offsetX = (remoteWidth - (localWidth / relHeight)) / 2;
 
-                        here.x = round((remoteX - offsetX) * relHeight);
-                        here.y = round(remoteY * relHeight);
+                        here.x = _round((remoteX - offsetX) * relHeight);
+                        here.y = _round(remoteY * relHeight);
                     }
                     else {
 
                         offsetY = (remoteHeight - (localHeight / relWidth)) / 2;
 
-                        here.x = round(remoteX * relWidth);
-                        here.y = round((remoteY - offsetY) * relWidth);
+                        here.x = _round(remoteX * relWidth);
+                        here.y = _round((remoteY - offsetY) * relWidth);
                     }
                     break;
 
-                case 'fill' :
-                    here.x = round(remoteX * relWidth);
-                    here.y = round(remoteY * relHeight);
+                case FILL :
+                    here.x = _round(remoteX * relWidth);
+                    here.y = _round(remoteY * relHeight);
                     break;
 
-                case 'none' :
+                case NONE :
                 default :
                     offsetX = (remoteWidth - localWidth) / 2;
                     offsetY = (remoteHeight - localHeight) / 2;
 
-                    here.x = round(remoteX - offsetX);
-                    here.y = round(remoteY - offsetY);
+                    here.x = _round(remoteX - offsetX);
+                    here.y = _round(remoteY - offsetY);
             }
 
             if (here.x < 0 || here.x > localWidth) active = false;
@@ -1188,7 +1258,7 @@ P.prepareStamp = function () {
     if (this.dirtyHandle) this.cleanHandle();
     if (this.dirtyRotation) this.cleanRotation();
 
-    if (this.isBeingDragged || this.lockTo.includes('mouse')) {
+    if (this.isBeingDragged || this.lockTo.includes(MOUSE)) {
 
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
@@ -1215,13 +1285,13 @@ P.cleanPathObject = function () {
 
     if (!this.noPathUpdates || !this.pathObject) {
 
-        let p = this.pathObject = new Path2D();
+        const p = this.pathObject = new Path2D();
         
-        let handle = this.currentStampHandlePosition,
+        const handle = this.currentStampHandlePosition,
             scale = this.currentScale,
             dims = this.currentDimensions;
 
-        let x = -handle[0] * scale,
+        const x = -handle[0] * scale,
             y = -handle[1] * scale,
             w = dims[0] * scale,
             h = dims[1] * scale;
@@ -1230,42 +1300,41 @@ P.cleanPathObject = function () {
     }
 };
 
-
 // `updateHere` - Internal function - get the Cell to update its .here information
 P.updateHere = function () {
 
-    if (!this.here) this.here = {};
-
-    let localHere = this.here;
-
-    let [width, height] = this.currentDimensions;
-
-    localHere.w = width;
-    localHere.h = height;
-    localHere.x = -10000;
-    localHere.y = -10000;
-    localHere.active = false;
-
-    let host = this.currentHost;
+    const host = this.currentHost;
 
     if (host) {
 
-        let hostHere = host.here;
+        if (!this.here) this.here = {};
+
+        const localHere = this.here;
+
+        const [width, height] = this.currentDimensions;
+
+        localHere.w = width;
+        localHere.h = height;
+        localHere.x = -10000;
+        localHere.y = -10000;
+        localHere.active = false;
+
+        const hostHere = host.here;
 
         if (hostHere && hostHere.active) {
 
-            let {x:hostX, y:hostY, w:hostWidth, h:hostHeight} = hostHere;
+            const {x:hostX, y:hostY, w:hostWidth, h:hostHeight} = hostHere;
 
             if (!this.pathObject || this.dirtyPathObject) this.cleanPathObject();
 
-            let tempCell = requestCell();
-            let tempEngine = tempCell.engine;
+            const tempCell = requestCell();
+            const tempEngine = tempCell.engine;
 
-            let [stampX, stampY] = this.currentStampPosition;
+            const [stampX, stampY] = this.currentStampPosition;
 
             tempCell.rotateDestination(tempEngine, stampX, stampY, this);
 
-            let active = tempEngine.isPointInPath(this.pathObject, hostX, hostY);
+            const active = tempEngine.isPointInPath(this.pathObject, hostX, hostY);
 
             releaseCell(tempCell);
 
@@ -1273,7 +1342,7 @@ P.updateHere = function () {
 
             if (active) {
 
-                let [stampHandleX, stampHandleY] = this.currentStampHandlePosition;
+                const [stampHandleX, stampHandleY] = this.currentStampHandlePosition;
 
                 let {flipUpend, flipReverse, roll, scale} = this;
 
@@ -1289,7 +1358,7 @@ P.updateHere = function () {
 
                         if ((flipReverse && !flipUpend) || (!flipReverse && flipUpend)) roll = -roll;
 
-                        let coord = requestCoordinate(left, top);
+                        const coord = requestCoordinate(left, top);
                         coord.rotate(-roll);
 
                         [left, top] = coord;
@@ -1307,7 +1376,6 @@ P.updateHere = function () {
         }
     }
 };
-
 
 // `checkEngineScale`
 // DPR is detected in the `core/events.js` file, but mainly handled here

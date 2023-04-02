@@ -28,7 +28,8 @@ const DESCRIPTION = 'description',
     T_CANVAS = 'Canvas',
     T_CELL = 'Cell',
     TARGET = 'target',
-    TYPE = 'type';
+    TYPE = 'type',
+    ZERO_STR = '';
 
 
 // #### Export function
@@ -86,7 +87,7 @@ export default function (P = Ωempty) {
     G.anchorDescription = function () {
 
         if (this.anchor) return this.anchor.get(DESCRIPTION);
-        return '';
+        return ZERO_STR;
     };
     S.anchorDescription = function (item) {
 
@@ -98,7 +99,7 @@ export default function (P = Ωempty) {
     G.anchorType = function () {
 
         if (this.anchor) return this.anchor.get(TYPE);
-        return '';
+        return ZERO_STR;
     };
     S.anchorType = function (item) {
 
@@ -110,7 +111,7 @@ export default function (P = Ωempty) {
     G.anchorTarget = function () {
 
         if (this.anchor) return this.anchor.get(TARGET);
-        return '';
+        return ZERO_STR;
     };
     S.anchorTarget = function (item) {
 
@@ -122,7 +123,7 @@ export default function (P = Ωempty) {
     G.anchorRel = function () {
 
         if (this.anchor) return this.anchor.get(REL);
-        return '';
+        return ZERO_STR;
     };
     S.anchorRel = function (item) {
 
@@ -134,7 +135,7 @@ export default function (P = Ωempty) {
     G.anchorReferrerPolicy = function () {
 
         if (this.anchor) return this.anchor.get(REFERRERPOLICY);
-        return '';
+        return ZERO_STR;
     };
     S.anchorReferrerPolicy = function (item) {
 
@@ -146,7 +147,7 @@ export default function (P = Ωempty) {
     G.anchorPing = function () {
 
         if (this.anchor) return this.anchor.get(PING);
-        return '';
+        return ZERO_STR;
     };
     S.anchorPing = function (item) {
 
@@ -158,7 +159,7 @@ export default function (P = Ωempty) {
     G.anchorHreflang = function () {
 
         if (this.anchor) return this.anchor.get(HREFLANG);
-        return '';
+        return ZERO_STR;
     };
     S.anchorHreflang = function (item) {
 
@@ -170,7 +171,7 @@ export default function (P = Ωempty) {
     G.anchorHref = function () {
 
         if (this.anchor) return this.anchor.get(HREF);
-        return '';
+        return ZERO_STR;
     };
     S.anchorHref = function (item) {
 
@@ -182,7 +183,7 @@ export default function (P = Ωempty) {
     G.anchorDownload = function () {
 
         if (this.anchor) return this.anchor.get(DOWNLOAD);
-        return '';
+        return ZERO_STR;
     };
     S.anchorDownload = function (item) {
 

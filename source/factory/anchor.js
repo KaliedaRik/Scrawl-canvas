@@ -20,10 +20,40 @@
 
 
 // #### Imports
-import { constructors, artefact } from '../core/library.js';
-import { mergeOver, pushUnique, isa_fn, isa_dom, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    constructors, 
+} from '../core/library.js';
+
+import { 
+    doCreate,
+    isa_dom, 
+    isa_fn, 
+    mergeOver, 
+    pushUnique, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
+
+
+// Local constants
+const _A = 'a',
+    ANCHOR = 'anchor',
+    BLUR = 'blur',
+    CLICK = 'click',
+    DOWNLOAD = 'download',
+    FOCUS = 'focus',
+    HREF = 'href',
+    HREFLANG = 'hreflang',
+    ONCLICK = 'onclick',
+    PING = 'ping',
+    REFERRERPOLICY = 'referrerpolicy',
+    REL = 'rel',
+    T_ANCHOR = 'Anchor',
+    TARGET = 'target',
+    TYPE = 'type',
+    ZERO_STR = '';
 
 
 // #### Anchor constructor
@@ -42,9 +72,9 @@ const Anchor = function (items = Ωempty) {
 
 
 // #### Anchor prototype
-const P = Anchor.prototype = Object.create(Object.prototype);
-P.type = 'Anchor';
-P.lib = 'anchor';
+const P = Anchor.prototype = doCreate();
+P.type = T_ANCHOR;
+P.lib = ANCHOR;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -61,20 +91,20 @@ const defaultAttributes = {
     host: null,
 
 // __description__ - The text that Scrawl-canvas will include between the anchor tags, when building the anchor. __Always include a description__ for accessibility.
-    description: '',
+    description: ZERO_STR,
 
 // The following attributes are detailed in [MDN's &lt;a> reference page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a)
 // + They are (most of) the DOM element's attributes: __download__, __href__, __hreflang__, __ping__, __referrerpolicy__, __rel__, __target__, __anchorType__.
 // + The HTML Anchor element `type` attribute is stored in the Scrawl-canvas Anchor object using the key __anchorType__.
 // + Scrawl-canvas will build a link element and add it to the DOM, then invoke a click event on it when required to do so.
-    download: '',
-    href: '',
-    hreflang: '',
-    ping: '',
-    referrerpolicy: '',
+    download: ZERO_STR,
+    href: ZERO_STR,
+    hreflang: ZERO_STR,
+    ping: ZERO_STR,
+    referrerpolicy: ZERO_STR,
     rel: 'noreferrer',
     target: '_blank',
-    anchorType: '',
+    anchorType: ZERO_STR,
 
 // The __clickAction__ attribute is a ___function which returns a string command___ which in turn gets attached to the anchor DOM element's __onclick__ attribute. Invoking the result is handled entirely by the browser (as is normal).
 
@@ -186,49 +216,49 @@ S.hold = function (item) {
 S.download = function (item) {
 
     this.download = item;
-    if (this.domElement) this.update('download');
+    if (this.domElement) this.update(DOWNLOAD);
 };
 
 S.href = function (item) {
 
     this.href = item;
-    if (this.domElement) this.update('href');
+    if (this.domElement) this.update(HREF);
 };
 
 S.hreflang = function (item) {
 
     this.hreflang = item;
-    if (this.domElement) this.update('hreflang');
+    if (this.domElement) this.update(HREFLANG);
 };
 
 S.ping = function (item) {
 
     this.ping = item;
-    if (this.domElement) this.update('ping');
+    if (this.domElement) this.update(PING);
 };
 
 S.referrerpolicy = function (item) {
 
     this.referrerpolicy = item;
-    if (this.domElement) this.update('referrerpolicy');
+    if (this.domElement) this.update(REFERRERPOLICY);
 };
 
 S.rel = function (item) {
 
     this.rel = item;
-    if (this.domElement) this.update('rel');
+    if (this.domElement) this.update(REL);
 };
 
 S.target = function (item) {
 
     this.target = item;
-    if (this.domElement) this.update('target');
+    if (this.domElement) this.update(TARGET);
 };
 
 S.anchorType = function (item) {
 
     this.anchorType = item;
-    if (this.domElement) this.update('type');
+    if (this.domElement) this.update(TYPE);
 };
 
 // These last setters do not follow previous behaviour because Scrawl-canvas anchor objects save the values for each under a different attribute key, compared to the DOM element's attribute key:
@@ -246,7 +276,7 @@ S.clickAction = function (item) {
     if (isa_fn(item)) {
 
         this.clickAction = item;
-        if (this.domElement) this.domElement.setAttribute('onclick', item());
+        if (this.domElement) this.domElement.setAttribute(ONCLICK, item());
     }
 };
 
@@ -261,25 +291,25 @@ P.build = function () {
 
     if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
 
-    let link = document.createElement('a');
+    let link = document.createElement(_A);
 
     link.id = this.name;
 
-    if (this.download) link.setAttribute('download', this.download);
-    if (this.href) link.setAttribute('href', this.href);
-    if (this.hreflang) link.setAttribute('hreflang', this.hreflang);
-    if (this.ping) link.setAttribute('ping', this.ping);
-    if (this.referrerpolicy) link.setAttribute('referrerpolicy', this.referrerpolicy);
-    if (this.rel) link.setAttribute('rel', this.rel);
-    if (this.target) link.setAttribute('target', this.target);
-    if (this.anchorType) link.setAttribute('type', this.anchorType);
+    if (this.download) link.setAttribute(DOWNLOAD, this.download);
+    if (this.href) link.setAttribute(HREF, this.href);
+    if (this.hreflang) link.setAttribute(HREFLANG, this.hreflang);
+    if (this.ping) link.setAttribute(PING, this.ping);
+    if (this.referrerpolicy) link.setAttribute(REFERRERPOLICY, this.referrerpolicy);
+    if (this.rel) link.setAttribute(REL, this.rel);
+    if (this.target) link.setAttribute(TARGET, this.target);
+    if (this.anchorType) link.setAttribute(TYPE, this.anchorType);
 
-    if (this.clickAction && isa_fn(this.clickAction)) link.setAttribute('onclick', this.clickAction());
+    if (this.clickAction && isa_fn(this.clickAction)) link.setAttribute(ONCLICK, this.clickAction());
 
     if (this.description) link.textContent = this.description;
 
-    if (this.focusAction) link.addEventListener('focus', (e) => this.host.onEnter(), false);
-    if (this.blurAction) link.addEventListener('blur', (e) => this.host.onLeave(), false);
+    if (this.focusAction) link.addEventListener(FOCUS, (e) => this.host.onEnter(), false);
+    if (this.blurAction) link.addEventListener(BLUR, (e) => this.host.onLeave(), false);
 
     this.domElement = link;
 
@@ -299,7 +329,7 @@ P.click = function () {
 
     if (!this.hasBeenRecentlyClicked) {
 
-        let e = new MouseEvent('click', {
+        let e = new MouseEvent(CLICK, {
             view: window,
             bubbles: true,
             cancelable: true

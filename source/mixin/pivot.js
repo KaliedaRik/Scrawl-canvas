@@ -26,6 +26,7 @@ const CORNER_LABELS = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
     T_LINE = 'Line',
     T_POLYLINE = 'Polyline',
     T_QUADRATIC = 'Quadratic';
+const ZERO_STR = '';
 
 
 // #### Export function
@@ -36,10 +37,10 @@ export default function (P = Ωempty) {
     const defaultAttributes = {
 
 // __pivot__ - reference artefact object. Can also be set using the artefact's name-String.
-        pivot: '',
+        pivot: ZERO_STR,
 
 // __pivotCorner__ - Element artefacts allow other artefacts to use their corner positions as pivots, by setting this attribute to `topLeft`, `topRight`, `bottomRight` or `bottomLeft`; default is `''` to use the Element's start coordinate.
-        pivotCorner: '',  
+        pivotCorner: ZERO_STR,  
 
 // __pivotPin__ - Polyline entitys are composed of a set of pin coordinates with the start being pin[0]; can reference other pins by setting this attribute to the appropriate index value (for example, the second pin will be pin[1]).
         pivotPin: 0,

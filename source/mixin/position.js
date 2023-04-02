@@ -190,7 +190,7 @@ const ALL = 'all',
     T_GROUP = 'Group',
     T_POLYLINE = 'Polyline',
     TOP = 'top';
-
+const GROUP = 'group';
 
 // #### Export function
 export default function (P = Ωempty) {
@@ -357,8 +357,8 @@ export default function (P = Ωempty) {
 // #### Packet management
     P.packetExclusions = pushUnique(P.packetExclusions, ['pathObject', 'mimicked', 'pivoted']);
     P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)', 'Subscriber$']);
-    P.packetCoordinates = pushUnique(P.packetCoordinates, ['start', 'handle', 'offset']);
-    P.packetObjects = pushUnique(P.packetObjects, ['group']);
+    P.packetCoordinates = pushUnique(P.packetCoordinates, [START, HANDLE, OFFSET]);
+    P.packetObjects = pushUnique(P.packetObjects, [GROUP]);
     P.packetFunctions = pushUnique(P.packetFunctions, []);
 
     P.processPacketOut = function (key, value, inc) {

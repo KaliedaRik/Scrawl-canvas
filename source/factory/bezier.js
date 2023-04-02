@@ -39,14 +39,42 @@
 
 
 // #### Imports
-import { constructors, artefact } from '../core/library.js';
-import { mergeOver, addStrings, pushUnique, Ωempty } from '../core/utilities.js';
+import { 
+    constructors, 
+    artefact, 
+} from '../core/library.js';
+
+import { 
+    addStrings, 
+    doCreate,
+    mergeOver, 
+    pushUnique, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 import curveMix from '../mixin/shapeCurve.js';
+
+
+// Local constants
+const BEZIER = 'bezier',
+    COORD = 'coord',
+    END_CONTROL = 'endControl',
+    END_CONTROL_PARTICLE = 'endControlParticle',
+    END_CONTROL_PATH = 'endControlPath',
+    END_CONTROL_PIVOT = 'endControlPivot',
+    ENTITY = 'entity',
+    PATH = 'path',
+    START_CONTROL = 'startControl',
+    START_CONTROL_PARTICLE = 'startControlParticle',
+    START_CONTROL_PATH = 'startControlPath',
+    START_CONTROL_PIVOT = 'startControlPivot',
+    T_BEZIER = 'Bezier',
+    ZERO_PATH = 'M0,0',
+    ZERO_STR = '';
 
 
 // #### Bezier constructor
@@ -58,8 +86,8 @@ const Bezier = function (items = Ωempty) {
     this.currentStartControl = makeCoordinate();
     this.currentEndControl = makeCoordinate();
 
-    this.startControlLockTo = 'coord';
-    this.endControlLockTo = 'coord';
+    this.startControlLockTo = COORD;
+    this.endControlLockTo = COORD;
 
     this.curveInit(items);
     this.shapeInit(items);
@@ -72,9 +100,9 @@ const Bezier = function (items = Ωempty) {
 
 
 // #### Bezier prototype
-const P = Bezier.prototype = Object.create(Object.prototype);
-P.type = 'Bezier';
-P.lib = 'entity';
+const P = Bezier.prototype = doCreate();
+P.type = T_BEZIER;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -108,20 +136,20 @@ const defaultAttributes = {
 
 // __startControlPivot__, __startControlPivotCorner__, __addStartControlPivotHandle__, __addStartControlPivotOffset__
 // + Like the `start` coordinate, the `startControl` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes. 
-    startControlPivot: '',
-    startControlPivotCorner: '',
+    startControlPivot: ZERO_STR,
+    startControlPivotCorner: ZERO_STR,
     addStartControlPivotHandle: false,
     addStartControlPivotOffset: false,
 
 // __startControlPath__, __startControlPathPosition__, __addStartControlPathHandle__, __addStartControlPathOffset__
 // + Like the `start` coordinate, the `startControl` coordinate can be __pathed__ to another artefact. These attributes are used in the same way as the `path`, 'pathPosition', `addPathHandle` and `addPathOffset` attributes.
-    startControlPath: '',
+    startControlPath: ZERO_STR,
     startControlPathPosition: 0,
     addStartControlPathHandle: false,
     addStartControlPathOffset: true,
 
 // __startControlParticle__ - attribute to store any particle the artefact mey be using for its position reference
-    startControlParticle: '',
+    startControlParticle: ZERO_STR,
 
 // The __endControl__ coordinate ('pin') defines the bezier curve's second control point.
 // + Similar to the `start` coordinate, the `endControl` coordinate can be updated using the pseudo-attributes __endControlX__ and __endControlY__.
@@ -129,27 +157,27 @@ const defaultAttributes = {
 
 // __endControlPivot__, __endControlPivotCorner__, __addEndControlPivotHandle__, __addEndControlPivotOffset__
 // + Like the `start` coordinate, the `endControl` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes. 
-    endControlPivot: '',
-    endControlPivotCorner: '',
+    endControlPivot: ZERO_STR,
+    endControlPivotCorner: ZERO_STR,
     addEndControlPivotHandle: false,
     addEndControlPivotOffset: false,
 
 // __endControlPath__, __endControlPathPosition__, __addEndControlPathHandle__, __addEndControlPathOffset__
 // + Like the `start` coordinate, the `endControl` coordinate can be __pathed__ to another artefact. These attributes are used in the same way as the `path`, 'pathPosition', `addPathHandle` and `addPathOffset` attributes.
-    endControlPath: '',
+    endControlPath: ZERO_STR,
     endControlPathPosition: 0,
     addEndControlPathHandle: false,
     addEndControlPathOffset: true,
 
 // __endControlParticle__ - attribute to store any particle the artefact mey be using for its position reference
-    endControlParticle: '',
+    endControlParticle: ZERO_STR,
 
 // __startControlLockTo__, __endControlLockTo__
 // + Like the `start` coordinate, the `startControl` and `endControl` coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: `coord` (default, for absolute positioning), `pivot`, `path`, `mouse`.
 // + These coordinates do not support 'mimic' relative positioning.
 // + These locks do not support setting the `x` and `y` coordinates separately - their value is a string argument, not an `[x, y]` array!
-    startControlLockTo: '',
-    endControlLockTo: '',
+    startControlLockTo: ZERO_STR,
+    endControlLockTo: ZERO_STR,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -157,8 +185,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 // #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, []);
 P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, ['startControl', 'endControl']);
-P.packetObjects = pushUnique(P.packetObjects, ['startControlPivot', 'startControlPath', 'endControlPivot', 'endControlPath']);
+P.packetCoordinates = pushUnique(P.packetCoordinates, [START_CONTROL, END_CONTROL]);
+P.packetObjects = pushUnique(P.packetObjects, [START_CONTROL_PIVOT, START_CONTROL_PARTICLE, START_CONTROL_PATH, END_CONTROL_PIVOT, END_CONTROL_PARTICLE, END_CONTROL_PATH]);
 P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 
@@ -178,7 +206,7 @@ const G = P.getters,
 // __endControlPivot__
 S.endControlPivot = function (item) {
 
-    this.setControlHelper(item, 'endControlPivot', 'endControl');
+    this.setControlHelper(item, END_CONTROL_PIVOT, END_CONTROL);
     this.updateDirty();
     this.dirtyEndControl = true;
 };
@@ -186,7 +214,7 @@ S.endControlPivot = function (item) {
 // __endControlParticle__
 S.endControlParticle = function (item) {
 
-    this.setControlHelper(item, 'endControlParticle', 'endControl');
+    this.setControlHelper(item, END_CONTROL_PARTICLE, END_CONTROL);
     this.updateDirty();
     this.dirtyEndControl = true;
 };
@@ -194,7 +222,7 @@ S.endControlParticle = function (item) {
 // __endControlPath__
 S.endControlPath = function (item) {
 
-    this.setControlHelper(item, 'endControlPath', 'endControl');
+    this.setControlHelper(item, END_CONTROL_PATH, END_CONTROL);
     this.updateDirty();
     this.dirtyEndControl = true;
     this.currentEndControlPathData = false;
@@ -219,7 +247,7 @@ D.endControlPathPosition = function (item) {
 // __startControlPivot__
 S.startControlPivot = function (item) {
 
-    this.setControlHelper(item, 'startControlPivot', 'startControl');
+    this.setControlHelper(item, START_CONTROL_PIVOT, START_CONTROL);
     this.updateDirty();
     this.dirtyStartControl = true;
 };
@@ -227,7 +255,7 @@ S.startControlPivot = function (item) {
 // __startControlParticle__
 S.startControlParticle = function (item) {
 
-    this.setControlHelper(item, 'startControlParticle', 'startControl');
+    this.setControlHelper(item, START_CONTROL_PARTICLE, START_CONTROL);
     this.updateDirty();
     this.dirtyStartControl = true;
 };
@@ -235,7 +263,7 @@ S.startControlParticle = function (item) {
 // __startControlPath__
 S.startControlPath = function (item) {
 
-    this.setControlHelper(item, 'startControlPath', 'startControl');
+    this.setControlHelper(item, START_CONTROL_PATH, START_CONTROL);
     this.updateDirty();
     this.dirtyStartControl = true;
     this.currentStartControlPathData = false;
@@ -294,14 +322,14 @@ S.startControlY = function (coord) {
 };
 S.startControl = function (x, y) {
 
-    this.setCoordinateHelper('startControl', x, y);
+    this.setCoordinateHelper(START_CONTROL, x, y);
     this.updateDirty();
     this.dirtyStartControl = true;
     this.currentStartControlPathData = false;
 };
 D.startControlX = function (coord) {
 
-    let c = this.startControl;
+    const c = this.startControl;
     c[0] = addStrings(c[0], coord);
     this.updateDirty();
     this.dirtyStartControl = true;
@@ -309,7 +337,7 @@ D.startControlX = function (coord) {
 };
 D.startControlY = function (coord) {
 
-    let c = this.startControl;
+    const c = this.startControl;
     c[1] = addStrings(c[1], coord);
     this.updateDirty();
     this.dirtyStartControl = true;
@@ -317,7 +345,7 @@ D.startControlY = function (coord) {
 };
 D.startControl = function (x, y) {
 
-    this.setDeltaCoordinateHelper('startControl', x, y);
+    this.setDeltaCoordinateHelper(START_CONTROL, x, y);
     this.updateDirty();
     this.dirtyStartControl = true;
     this.currentStartControlPathData = false;
@@ -360,14 +388,14 @@ S.endControlY = function (coord) {
 };
 S.endControl = function (x, y) {
 
-    this.setCoordinateHelper('endControl', x, y);
+    this.setCoordinateHelper(END_CONTROL, x, y);
     this.updateDirty();
     this.dirtyEndControl = true;
     this.currentEndControlPathData = false;
 };
 D.endControlX = function (coord) {
 
-    let c = this.endControl;
+    const c = this.endControl;
     c[0] = addStrings(c[0], coord);
     this.updateDirty();
     this.dirtyEndControl = true;
@@ -375,7 +403,7 @@ D.endControlX = function (coord) {
 };
 D.endControlY = function (coord) {
 
-    let c = this.endControl;
+    const c = this.endControl;
     c[1] = addStrings(c[1], coord);
     this.updateDirty();
     this.dirtyEndControl = true;
@@ -383,7 +411,7 @@ D.endControlY = function (coord) {
 };
 D.endControl = function (x, y) {
 
-    this.setDeltaCoordinateHelper('endControl', x, y);
+    this.setDeltaCoordinateHelper(END_CONTROL, x, y);
     this.updateDirty();
     this.dirtyEndControl = true;
     this.currentEndControlPathData = false;
@@ -414,7 +442,7 @@ P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
 
-    let p = 'M0,0';
+    let p = ZERO_PATH;
 
     p = this.makeBezierPath();
     
@@ -472,19 +500,19 @@ P.preparePinsForStamp = function () {
         if ((scPivot && scPivot.name == name) || (scPath && scPath.name == name)) {
 
             this.dirtyStartControl = true;
-            if (this.startControlLockTo.includes('path')) this.currentStartControlPathData = false;
+            if (this.startControlLockTo.includes(PATH)) this.currentStartControlPathData = false;
         }
 
         if ((ecPivot && ecPivot.name == name) || (ecPath && ecPath.name == name)) {
 
             this.dirtyEndControl = true;
-            if (this.endControlLockTo.includes('path')) this.currentEndControlPathData = false;
+            if (this.endControlLockTo.includes(PATH)) this.currentEndControlPathData = false;
         }
 
         if ((ePivot && ePivot.name == name) || (ePath && ePath.name == name)) {
 
             this.dirtyEnd = true;
-            if (this.endLockTo.includes('path')) this.currentEndPathData = false;
+            if (this.endLockTo.includes(PATH)) this.currentEndPathData = false;
         }
     }
     dirtyPins.length = 0;
@@ -532,7 +560,7 @@ P.preparePinsForStamp = function () {
 export const makeBezier = function (items = Ωempty) {
 
     if (!items) return false;
-    items.species = 'bezier';
+    items.species = BEZIER;
     return new Bezier(items);
 };
 
