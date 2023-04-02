@@ -40,12 +40,29 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, Ωempty } from '../core/utilities.js';
+import { 
+    doCreate,
+    mergeOver, 
+    Ωempty, 
+} from '../core/utilities.js';
 
-import { requestVector, releaseVector } from './vector.js';
+import { 
+    requestVector, 
+    releaseVector, 
+} from './vector.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
+
+
+// Local constants
+const BEZIER = 'bezier',
+    ENTITY = 'entity',
+    LINE = 'line',
+    PERMITTED_CURVES = ['line', 'quadratic', 'bezier'],
+    QUADRATIC = 'quadratic',
+    T_COG = 'Cog',
+    ZERO_PATH = 'M0,0';
 
 
 // #### Cog constructor
@@ -57,9 +74,9 @@ const Cog = function (items = Ωempty) {
 
 
 // #### Cog prototype
-const P = Cog.prototype = Object.create(Object.prototype);
-P.type = 'Cog';
-P.lib = 'entity';
+const P = Cog.prototype = doCreate();
+P.type = T_COG;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -92,7 +109,7 @@ const defaultAttributes = {
     innerControlsOffset: 0,
     points: 0,
     twist: 0,
-    curve: 'bezier',
+    curve: BEZIER,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -206,16 +223,10 @@ D.twist = function (item) {
 // __useBezierCurve__
 S.curve = function (item) {
 
-    if (item && ['line', 'quadratic', 'bezier'].includes(item)) {
-
-        this.curve = item;
-        this.updateDirty();
-    }
-    else {
-
-        this.curve = 'bezier';
-        this.updateDirty();
-    }
+    if (item && PERMITTED_CURVES.includes(item)) this.curve = item;
+    else this.curve = BEZIER;
+    
+    this.updateDirty();
 };
 
 // #### Prototype functions
@@ -225,7 +236,7 @@ P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
 
-    let p = 'M0,0';
+    let p = ZERO_PATH;
     p = this.makeCogPath();
 
     this.pathDefinition = p;
@@ -235,18 +246,19 @@ P.cleanSpecies = function () {
 // `makeCogPath` - internal helper function - called by `cleanSpecies`
 P.makeCogPath = function () {
 
-    let {points, twist, outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset, curve} = this;
+    const {points, twist, outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset, curve} = this;
 
-    let turn = 360 / points,
-        xPts = [],
-        currentTrailX, currentTrailY, currentPointX, currentPointY, currentLeadX, currentLeadY, 
+    const turn = 360 / points,
+        xPts = [];
+
+    let currentTrailX, currentTrailY, currentPointX, currentPointY, currentLeadX, currentLeadY, 
         controlStartX, controlStartY, deltaX, deltaY, controlEndX, controlEndY,
         myMin, myXoffset, myYoffset, i,
         myPath = '';
 
     if (outerRadius.substring || innerRadius.substring || outerControlsDistance.substring || innerControlsDistance.substring || outerControlsOffset.substring || innerControlsOffset.substring) {
 
-        let host = this.getHost();
+        const host = this.getHost();
 
         if (host) {
 
@@ -261,7 +273,7 @@ P.makeCogPath = function () {
         } 
     }
 
-    let outerPoint = requestVector({x: 0, y: -outerRadius}),
+    const outerPoint = requestVector({x: 0, y: -outerRadius}),
         innerPoint = requestVector({x: 0, y: -innerRadius}),
         outerPointLead = requestVector({x: outerControlsDistance + outerControlsOffset, y: -outerRadius}),
         innerPointTrail = requestVector({x: -innerControlsDistance + innerControlsOffset, y: -innerRadius}),
@@ -280,7 +292,7 @@ P.makeCogPath = function () {
 
     xPts.push(currentPointX);
 
-    if (curve == 'bezier') {
+    if (curve == BEZIER) {
 
         for (i = 0; i < points; i++) {
 
@@ -323,7 +335,7 @@ P.makeCogPath = function () {
             myPath += `${deltaX},${deltaY} `;
         }
     }
-    else if (curve == 'quadratic') {
+    else if (curve == QUADRATIC) {
 
         for (i = 0; i < points; i++) {
 
@@ -416,8 +428,8 @@ P.makeCogPath = function () {
     myMin = Math.min(...xPts);
     myXoffset = Math.abs(myMin).toFixed(1);
 
-    if (curve == 'bezier') return `m${myXoffset},0c${myPath}z`;
-    if (curve == 'quadratic') return `m${myXoffset},0q${myPath}z`;
+    if (curve == BEZIER) return `m${myXoffset},0c${myPath}z`;
+    if (curve == QUADRATIC) return `m${myXoffset},0q${myPath}z`;
     return `m${myXoffset},0l${myPath}z`;
 };
 

@@ -4,15 +4,37 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { xt, isa_number } from '../core/utilities.js';
+
+import { 
+    isa_number, 
+    xt, 
+} from '../core/utilities.js';
+
+import { 
+    _atan2,
+    _cos,
+    _create, 
+    _hypot,
+    _isArray,
+    _seal,
+    _setPrototypeOf, 
+    _sin,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const T_COORDINATE = 'Coordinate';
+const T_QUATERNION = 'Quaternion';
+const T_VECTOR = 'Vector';
 
 
 // #### Coordinate constructor
 const Coordinate = function (items, y) {
 
-    let coords = [0, 0];
+    const coords = [0, 0];
 
-    Object.setPrototypeOf(coords, Coordinate.prototype);
+    _setPrototypeOf(coords, Coordinate.prototype);
+    _seal(coords);
 
     if (items) coords.set(items, y);
 
@@ -21,9 +43,9 @@ const Coordinate = function (items, y) {
 
 
 // #### Coordinate prototype
-const P = Coordinate.prototype = Object.create(Array.prototype);
+const P = Coordinate.prototype = _create(Array.prototype);
 P.constructor = Coordinate;
-P.type = 'Coordinate';
+P.type = T_COORDINATE;
 
 
 // #### Mixins
@@ -45,10 +67,10 @@ P.set = function (items, y) {
 
     if (xt(items)) {
 
-        if (items.type === 'Coordinate') this.setFromArray(items);
-        else if (items.type === 'Vector') this.setFromVector(items);
-        else if (items.type === 'Quaternion') this.setFromVector(items.v);
-        else if (Array.isArray(items)) this.setFromArray(items);
+        if (items.type == T_COORDINATE) this.setFromArray(items);
+        else if (items.type == T_VECTOR) this.setFromVector(items);
+        else if (items.type == T_QUATERNION) this.setFromVector(items.v);
+        else if (_isArray(items)) this.setFromArray(items);
         else if (xt(y)) this.setFromArray([items, y]);
     }
     return this;
@@ -165,7 +187,7 @@ P.scalarDivide = function (item) {
 // Get the Array's __magnitude__ value (treating the Coordinate as if it was a 2D vector)
 P.getMagnitude = function () {
 
-    return Math.hypot(this[0], this[1]);
+    return _hypot(this[0], this[1]);
 };
 
 // Rotate the Coordinate by the argument number (treating the Coordinate as if it was a 2D vector) - the argument represents degrees, not radians
@@ -175,12 +197,12 @@ P.rotate = function (angle) {
         y = this[1],
         r0, r1;
 
-    r0 = Math.atan2(y, x);
+    r0 = _atan2(y, x);
     r0 += (angle * 0.01745329251);
-    r1 = Math.hypot(x, y);
+    r1 = _hypot(x, y);
 
-    this[0] = r1 * Math.cos(r0);
-    this[1] = r1 * Math.sin(r0);
+    this[0] = r1 * _cos(r0);
+    this[1] = r1 * _sin(r0);
 
     return this;
 };
@@ -228,9 +250,9 @@ export const requestCoordinate = function (items, y) {
 };
 
 // `exported function` - return a Coordinate to the coordinate pool. Failing to return Coordinates to the pool may lead to more inefficient code and possible memory leaks.
-export const releaseCoordinate = function (coordinate) {
+export const releaseCoordinate = function (c) {
 
-    if (coordinate && coordinate.type === 'Coordinate') coordinatePool.push(coordinate.zero());
+    if (c && c.type == T_COORDINATE) coordinatePool.push(c.zero());
 };
 
 

@@ -1481,13 +1481,11 @@ export default function (P = Ωempty) {
             let hereFlag = false,
                 lock, here, pathData;
 
-            localLockArray.length = 0;
-
             // `x` and `y` coordinates can have different lockTo values
             if (isBeingDragged) {
 
-                localLockArray.push(ignoreDragForX ? confirmLock(lockTo[0]) : MOUSE);
-                localLockArray.push(ignoreDragForY ? confirmLock(lockTo[1]) : MOUSE);
+                localLockArray[0] = ignoreDragForX ? confirmLock(lockTo[0]) : MOUSE;
+                localLockArray[0] = ignoreDragForY ? confirmLock(lockTo[1]) : MOUSE;
 
                 hereFlag = true;
 
@@ -1499,11 +1497,11 @@ export default function (P = Ωempty) {
 
                     lock = confirmLock(lockTo[i]);
 
-                    if (lock === MOUSE) hereFlag = true;
+                    if (lock == MOUSE) hereFlag = true;
 
-                    if (START !== lock) this.dirtyFilterIdentifier = true;
+                    if (START != lock) this.dirtyFilterIdentifier = true;
 
-                    localLockArray.push(lock);
+                    localLockArray[i] = lock;
                 }
             }
 
@@ -1527,7 +1525,7 @@ export default function (P = Ωempty) {
             releaseCoordinate(localLockArray, coord1, coord2);
         }
 
-        if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true;
+        if (oldX != stamp[0] || oldY != stamp[1]) this.dirtyPositionSubscribers = true;
     };
 
 

@@ -1157,7 +1157,7 @@ P.updateBaseHere = function (controllerHere, fit) {
         const here = this.here,
             dims = this.currentDimensions;
 
-        const active = controllerHere.active;
+        let active = controllerHere.active;
 
         const controllerWidth = (controllerHere.localListener) ? controllerHere.originalWidth : controllerHere.w;
         const controllerHeight = (controllerHere.localListener) ? controllerHere.originalHeight : controllerHere.h;

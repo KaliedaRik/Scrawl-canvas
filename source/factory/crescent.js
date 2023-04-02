@@ -10,17 +10,41 @@
 // + Crescents can be cloned, and killed.
 
 // #### Demos:
-// + [Canvas-055](../../demo/canvas-055.html) - TODO
+// + [Canvas-055](../../demo/canvas-055.html) - Crescent entity functionality
 
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, radian, xt, xto, xta, isa_number, Ωempty } from '../core/utilities.js';
-import { requestCoordinate, releaseCoordinate } from './coordinate.js';
-import { requestCell, releaseCell } from './cell-fragment.js';
+
+import { 
+    doCreate,
+    isa_number, 
+    mergeOver, 
+    radian, 
+    xt, 
+    xta, 
+    xto, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    releaseCoordinate, 
+    requestCoordinate, 
+} from './coordinate.js';
+
+import { 
+    releaseCell, 
+    requestCell, 
+} from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
+
+
+// Local constants
+const T_CRESCENT = 'Crescent',
+    ENTITY = 'entity',
+    DESTINATION_OUT = 'destination-out';
 
 
 // __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
@@ -47,9 +71,9 @@ const Crescent = function (items = Ωempty) {
 
 
 // #### Crescent prototype
-const P = Crescent.prototype = Object.create(Object.prototype);
-P.type = 'Crescent';
-P.lib = 'entity';
+const P = Crescent.prototype = doCreate();
+P.type = T_CRESCENT;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -71,14 +95,20 @@ entityMix(P);
 // + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter___.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
+//
+// Note that the `flipUpend` attribute appears to have no effect, though `flipReverse` does work. This is due to the way the crescent is constructed and is thus expected behaviour.
+
+
 const defaultAttributes = {
 
 // __outerRadius__, __innerRadius__ - the circles' radius measured in Number pixels, or as a String% - `'10%'` - of the Cell's width
     outerRadius: 20,
     innerRadius: 10,
 
+// __displacement__ - the displacement (rightwards) of the inner circle relative to the outer circle. Measured in positive Number pixels; negative values will be set to `0`
     displacement: 0,
 
+// __displayIntersect__ - a Boolean flag determining which of the two parts of the combined circles to display. Defaults to `false`, which shows the portion of the outer circle not covered by the inner circle; set to `true`, will display the intersection of the inner and outer circles
     displayIntersect: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -189,13 +219,14 @@ P.cleanDimensionsAdditionalActions = function () {
 
     const { outerRadius:oR, innerRadius:iR, displacement:disp } = this;
 
-    let host = this.getHost(),
-        hostDims;
+    const host = this.getHost();
+
+    let hostDims;
 
     if (host) hostDims = (host.currentDimensions) ? host.currentDimensions : [host.w, host.h];
     else hostDims = [300, 150];
 
-    let [w, h] = hostDims;
+    const [w, h] = hostDims;
 
     this.currentOuterRadius = (oR.substring) ? (parseFloat(oR) / 100) * w : oR;
     this.currentInnerRadius = (iR.substring) ? (parseFloat(iR) / 100) * h : iR;
@@ -223,10 +254,10 @@ P.calculateInterception = function () {
     this.drawOuterCircle = false;
     this.drawDonut = false;
 
-    let dMax = oR + iR,
+    const dMax = oR + iR,
         dMin = oR - iR;
 
-    let equalCircles = (!dMin) ? true : false;
+    const equalCircles = (!dMin) ? true : false;
 
     if (equalCircles && !disp) this.drawOuterCircle = true;
     else {
@@ -234,12 +265,13 @@ P.calculateInterception = function () {
         if (disp >= dMax) this.drawOuterCircle = true;
         else if (disp < dMax && disp > dMin) {
 
-            let cell = requestCell();
+            const cell = requestCell();
 
-            let {engine, element} = cell;
+            const {engine, element} = cell;
 
-            let v = requestCoordinate(),
-                a, b;
+            const v = requestCoordinate();
+            
+            let a, b;
 
             // Decided to calculate the start/end angles for each circle through brute force
             // + Trigonometry is the proper answer, but I can't get the equations to stay still and play nicely
@@ -296,15 +328,17 @@ P.cleanPathObject = function () {
 
         this.calculateInterception();
 
-        let { currentStampHandlePosition:handle, currentScale:scale, currentOuterRadius:oR, currentInnerRadius:iR, outerCircleStart:ocs, outerCircleEnd:oce, innerCircleStart:ics, innerCircleEnd:ice, drawOuterCircle, currentDisplacement:disp, displayIntersect } = this;
+        const { currentStampHandlePosition:handle, currentScale:scale, outerCircleStart:ocs, outerCircleEnd:oce, innerCircleStart:ics, innerCircleEnd:ice, drawOuterCircle, displayIntersect } = this;
 
-        let p = this.pathObject = new Path2D();
+        let { currentOuterRadius:oR, currentInnerRadius:iR, currentDisplacement:disp } = this;
+
+        const p = this.pathObject = new Path2D();
 
         oR *= scale;
         iR *= scale;
         disp *= scale;
 
-        let x = oR - (handle[0] * scale),
+        const x = oR - (handle[0] * scale),
             y = oR - (handle[1] * scale);
 
 
@@ -318,8 +352,8 @@ P.cleanPathObject = function () {
         }
         else {
 
-            let pOuter = this.pathObjectOuter = new Path2D();
-            let pInner = this.pathObjectInner = new Path2D();
+            const pOuter = this.pathObjectOuter = new Path2D();
+            const pInner = this.pathObjectInner = new Path2D();
         
             if (displayIntersect) p.arc(x, y, oR, ocs, oce);
             else p.arc(x, y, oR, ocs, oce, true);
@@ -357,7 +391,7 @@ P.drawAndFill = function (engine) {
 
     if (!this.drawDonut) {
 
-        let p = this.pathObject;
+        const p = this.pathObject;
 
         engine.stroke(p);
         engine.fill(p, this.winding);
@@ -367,7 +401,7 @@ P.drawAndFill = function (engine) {
     }
     else {
 
-        let p = this.pathObject,
+        const p = this.pathObject,
             pOuter = this.pathObjectOuter,
             pInner = this.pathObjectInner;
 
@@ -386,7 +420,7 @@ P.fillAndDraw = function (engine) {
 
     if (!this.drawDonut) {
 
-        let p = this.pathObject;
+        const p = this.pathObject;
 
         engine.fill(p, this.winding);
         engine.stroke(p);
@@ -396,7 +430,7 @@ P.fillAndDraw = function (engine) {
     }
     else {
 
-        let p = this.pathObject,
+        const p = this.pathObject,
             pOuter = this.pathObjectOuter,
             pInner = this.pathObjectInner;
 
@@ -415,14 +449,14 @@ P.drawThenFill = function (engine) {
 
     if (!this.drawDonut) {
 
-        let p = this.pathObject;
+        const p = this.pathObject;
 
         engine.stroke(p);
         engine.fill(p, this.winding);
     }
     else {
 
-        let p = this.pathObject,
+        const p = this.pathObject,
             pOuter = this.pathObjectOuter,
             pInner = this.pathObjectInner;
 
@@ -437,14 +471,14 @@ P.fillThenDraw = function (engine) {
 
     if (!this.drawDonut) {
 
-        let p = this.pathObject;
+        const p = this.pathObject;
 
         engine.fill(p, this.winding);
         engine.stroke(p);
     }
     else {
 
-        let p = this.pathObject,
+        const p = this.pathObject,
             pOuter = this.pathObjectOuter,
             pInner = this.pathObjectInner;
 
@@ -463,9 +497,9 @@ P.clip = function (engine) {
 // `clear` - remove everything that would have been covered if the entity had performed fill (including shadow)
 P.clear = function (engine) {
 
-    let gco = engine.globalCompositeOperation;
+    const gco = engine.globalCompositeOperation;
 
-    engine.globalCompositeOperation = 'destination-out';
+    engine.globalCompositeOperation = DESTINATION_OUT;
     engine.fill(this.pathObject, this.winding);
     
     engine.globalCompositeOperation = gco;

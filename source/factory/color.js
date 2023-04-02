@@ -13,20 +13,161 @@
 
 
 // #### Imports
-import { constructors, entity } from '../core/library.js';
-import { mergeOver, xt, xtGet, isa_obj, isa_fn, easeEngines, Ωempty, λfirstArg, pushUnique, interpolate, correctAngle, radian } from '../core/utilities.js';
+import { 
+    constructors, 
+    entity, 
+} from '../core/library.js';
+
+import { 
+    mergeOver, 
+    xt, 
+    xtGet, 
+    isa_obj, 
+    doCreate,
+    isa_fn, 
+    easeEngines, 
+    Ωempty, 
+    λfirstArg, 
+    pushUnique, 
+    interpolate, 
+    correctAngle, 
+    radian, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-const element = document.createElement('canvas');
+import { 
+    _abs,
+    _atan2,
+    _cbrt,
+    _cos,
+    _entries,
+    _floor,
+    _isArray,
+    _keys,
+    _max,
+    _min,
+    _pi,
+    _pow,
+    _random,
+    _round,
+    _sin,
+    _sqrt,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const _0 = '0',
+    _2D = '2d',
+    _HSL = 'hsl',
+    _HWB = 'hwb',
+    _LAB = 'lab',
+    _LCH = 'lch',
+    _MAX = '_max',
+    _MIN = '_min',
+    _OKLAB = 'oklab',
+    _OKLCH = 'oklch',
+    _RGB = 'rgb',
+    _XYZ = 'xyz',
+    BLACK = 'rgb(0 0 0 / 1)',
+    BLACK_HEX = '#000000',
+    BLANK = 'rgb(0 0 0 / 0)',
+    CANVAS = 'canvas',
+    DEG = 'deg',
+    FUNCTION = 'function',
+    GRAD = 'grad',
+    HSL = 'HSL',
+    HSL_HWB_ARRAY = ['HSL', 'HWB'],
+    HWB = 'HWB',
+    INT_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'],
+    LAB = 'LAB',
+    LCH = 'LCH',
+    LINEAR = 'linear',
+    MAX = 'max',
+    MIN = 'min',
+    NAME = 'name',
+    NONE = 'none',
+    OKLAB = 'OKLAB',
+    OKLCH = 'OKLCH',
+    PC = '%',
+    RAD = 'rad',
+    RANDOM = 'random',
+    RET_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH'],
+    RGB = 'RGB',
+    SOURCE_OVER = 'source-over',
+    SPACE = ' ',
+    STYLES = 'styles',
+    T_COLOR = 'Color',
+    TURN = 'turn',
+    UNDEF = 'undefined',
+    WHITE = 'rgb(255 255 255 / 1)',
+    XYZ = 'XYZ',
+    ZERO_STR = '';
+
+const E = 216/24389;
+const K = 24389/27;
+const cbrt = (_cbrt != null) ? _cbrt : (val) => _pow(val, 1 / 3);
+const D50 = [0.3457 / 0.3585, 1.00000, (1.0 - 0.3457 - 0.3585) / 0.3585];
+const D65 = [0.3127 / 0.3290, 1.00000, (1.0 - 0.3127 - 0.3290) / 0.3290];
+
+const D65_to_D50_matrix = [
+    [  1.0479298208405488,    0.022946793341019088,  -0.05019222954313557 ],
+    [  0.029627815688159344,  0.990434484573249,     -0.01707382502938514 ],
+    [ -0.009243058152591178,  0.015055144896577895,   0.7518742899580008  ]
+];
+
+const D50_to_D65_matrix = [
+    [  0.9554734527042182,   -0.023098536874261423,  0.0632593086610217   ],
+    [ -0.028369706963208136,  1.0099954580058226,    0.021041398966943008 ],
+    [  0.012314001688319899, -0.020507696433477912,  1.3303659366080753   ]
+];
+
+const convertRGBtoXYZ_matrix = [
+    [ 506752 / 1228815,  87881 / 245763,   12673 /   70218 ],
+    [  87098 /  409605, 175762 / 245763,   12673 /  175545 ],
+    [   7918 /  409605,  87881 / 737289, 1001167 / 1053270 ],
+];
+
+const convertXYZtoRGB_matrix = [
+    [   12831 /   3959,    -329 /    214, -1974 /   3959 ],
+    [ -851781 / 878810, 1648619 / 878810, 36519 / 878810 ],
+    [     705 /  12673,   -2585 /  12673,   705 /    667 ],
+];
+
+const XYZtoLMS = [
+    [ 0.8190224432164319,    0.3619062562801221,   -0.12887378261216414  ],
+    [ 0.0329836671980271,    0.9292868468965546,     0.03614466816999844 ],
+    [ 0.048177199566046255,  0.26423952494422764,    0.6335478258136937  ]
+];
+
+const LMStoOKLab = [
+    [  0.2104542553,   0.7936177850,  -0.0040720468 ],
+    [  1.9779984951,  -2.4285922050,   0.4505937099 ],
+    [  0.0259040371,   0.7827717662,  -0.8086757660 ]
+];
+
+const LMStoXYZ =  [
+    [  1.2268798733741557,  -0.5578149965554813,   0.28139105017721583 ],
+    [ -0.04057576262431372,  1.1122868293970594,  -0.07171106666151701 ],
+    [ -0.07637294974672142, -0.4214933239627914,   1.5869240244272418  ]
+];
+
+const OKLabtoLMS = [
+    [ 0.99999999845051981432,  0.39633779217376785678,   0.21580375806075880339  ],
+    [ 1.0000000088817607767,  -0.1055613423236563494,   -0.063854174771705903402 ],
+    [ 1.0000000546724109177,  -0.089484182094965759684, -1.2914855378640917399   ]
+];
+
+// Local dedicated canvas
+const element = document.createElement(CANVAS);
 element.width = 1;
 element.height = 1;
 
-const engine = element.getContext('2d', {
+const engine = element.getContext(_2D, {
     willReadFrequently: true,
 });
 engine.globalAlpha = 1;
-engine.globalCompositeOperation = 'source-over';
+engine.globalCompositeOperation = SOURCE_OVER;
 
 // #### Color constructor
 const Color = function (items = Ωempty) {
@@ -69,9 +210,9 @@ const Color = function (items = Ωempty) {
 
     this.easingFunction = λfirstArg;
 
-    this.convert('transparent');
-    this.convert('black', '_min');
-    this.convert('white', '_max');
+    this.convert(BLANK);
+    this.convert(BLACK, _MIN);
+    this.convert(WHITE, _MAX);
 
     this.set(items);
 
@@ -80,9 +221,9 @@ const Color = function (items = Ωempty) {
 
 
 // #### Color prototype
-const P = Color.prototype = Object.create(Object.prototype);
-P.type = 'Color';
-P.lib = 'styles';
+const P = Color.prototype = doCreate();
+P.type = T_COLOR;
+P.lib = STYLES;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -141,17 +282,17 @@ const defaultAttributes = {
     oklch_min: null,
 
 // The __easing__ and __easingFunction__ attributes affect the `getRangeColor` function, applying an easing function to those requests. Value may be a predefined easing String name, or a function accepting a Number value and returning a Number value, both values to be positive floats in the range 0-1
-    easing: 'linear',
+    easing: LINEAR,
     easingFunction: null,
 
 // __colorSpace__ - String value defining the color space to be used by the Color object for its internal calculations.
 // + Accepted values from: `'RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'`
-    colorSpace: 'RGB',
+    colorSpace: RGB,
 
 // __returnColorAs__ - String value defining the type of color String the Color object will return.
 // + This is a shorter list than the internal colorSpace attribute as we only return values for CSS specified color spaces. Note that some of these color spaces are not widely supported across browsers and will lead to errors in canvases displayed on non-supported browsers
 // + Accepted values from: `'RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH'`
-    returnColorAs: 'RGB',
+    returnColorAs: RGB,
 
 
 // ##### Non-retained argument attributes (for factory, clone, set functions)
@@ -173,22 +314,22 @@ P.packetFunctions = pushUnique(P.packetFunctions, ['easingFunction']);
 // Overwrites ./mixin/base.js
 P.kill = function () {
 
-    let myname = this.name;
+    const myname = this.name;
 
     // Remove style from all entity state objects
-    Object.entries(entity).forEach(([name, ent]) => {
+    _entries(entity).forEach(([name, ent]) => {
 
-        let state = ent.state;
+        const state = ent.state;
 
         if (state) {
 
-            let fill = state.fillStyle,
+            const fill = state.fillStyle,
                 stroke = state.strokeStyle,
                 shadow = state.shadowColor;
 
-            if (isa_obj(fill) && fill.name === myname) state.fillStyle = state.defs.fillStyle;
-            if (isa_obj(stroke) && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
-            if (isa_obj(shadow) && shadow.name === myname) state.shadowColor = state.defs.shadowColor;
+            if (isa_obj(fill) && fill.name == myname) state.fillStyle = state.defs.fillStyle;
+            if (isa_obj(stroke) && stroke.name == myname) state.strokeStyle = state.defs.strokeStyle;
+            if (isa_obj(shadow) && shadow.name == myname) state.shadowColor = state.defs.shadowColor;
         }
     });
     
@@ -212,15 +353,15 @@ P.get = function (item) {
 
         return this.getRangeColor(item);
     }
-    else if (item === 'min') {
+    else if (item == MIN) {
 
         return this.getMinimumColor();
     }
-    else if (item === 'max') {
+    else if (item == MAX) {
 
         return this.getMaximumColor();
     }
-    else if (item === 'random') {
+    else if (item == RANDOM) {
 
         this.generateRandomColor();
         return this.getCurrentColor();
@@ -235,21 +376,20 @@ P.get = function (item) {
 
             let def = this.defs[item];
 
-            if (typeof def != 'undefined') {
+            if (typeof def != UNDEF) {
 
                 let val = this[item];
-                return (typeof val != 'undefined') ? val : def;
+                return (typeof val != UNDEF) ? val : def;
             }
             return undef;
         }
     }
 };
 
-
 // `set` - overrides function in mixin/base.js - see above for the additional attributes the set object argument can use.
 P.set = function (items = Ωempty) {
 
-    const keys = Object.keys(items),
+    const keys = _keys(items),
         keysLen = keys.length;
 
     if (keysLen) {
@@ -264,12 +404,12 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key !== 'name' && value != null) {
+            if (key && key != NAME && value != null) {
 
                 predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
-                else if (typeof defs[key] !== 'undefined') this[key] = value;
+                else if (typeof defs[key] != UNDEF) this[key] = value;
             }
         }
         if (items.random) this.generateRandomColor();
@@ -300,21 +440,21 @@ P.setColor = function (item) {
 
 S.minimumColor = function (item) {
 
-    this.convert(item, '_min');
+    this.convert(item, _MIN);
 };
 P.setMinimumColor = function (item) {
 
-    this.convert(item, '_min');
+    this.convert(item, _MIN);
     return this;
 };
 
 S.maximumColor = function (item) {
 
-    this.convert(item, '_max');
+    this.convert(item, _MAX);
 };
 P.setMaximumColor = function (item) {
 
-    this.convert(item, '_max');
+    this.convert(item, _MAX);
     return this;
 };
 
@@ -337,7 +477,7 @@ P.setEasingHelper = function (item) {
 
     if (isa_fn(item)) {
 
-        this.easing = 'function';
+        this.easing = FUNCTION;
         this.easingFunction = item;
     }
     else if (item.substring && easeEngines[item]) {
@@ -347,12 +487,11 @@ P.setEasingHelper = function (item) {
     }
     else {
 
-        this.easing = 'linear'; 
+        this.easing = LINEAR; 
         this.easingFunction = λfirstArg;
     }
 };
 
-P.internalColorSpaces = ['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'];
 S.colorSpace = function (item) {
 
     this.setColorSpaceHelper(item);
@@ -368,7 +507,7 @@ P.setColorSpaceHelper = function (item) {
 
         item = item.toUpperCase();
 
-        if (this.internalColorSpaces.includes(item)) {
+        if (INT_COLOR_SPACES.includes(item)) {
 
             const current = this.getCurrentColor(),
                 min = this.getMinimumColor(),
@@ -380,7 +519,6 @@ P.setColorSpaceHelper = function (item) {
     }
 };
 
-P.returnedColorSpaces = ['RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH'];
 S.returnColorAs = function (item) {
 
     this.setReturnColorAsHelper(item);
@@ -396,7 +534,7 @@ P.setReturnColorAsHelper = function (item) {
 
         item = item.toUpperCase();
 
-        if (this.returnedColorSpaces.includes(item)) {
+        if (RET_COLOR_SPACES.includes(item)) {
 
             const current = this.getCurrentColor(),
                 min = this.getMinimumColor(),
@@ -414,8 +552,8 @@ P.setReturnColorAsHelper = function (item) {
 P.updateColorConversions = function (current, min, max) {
 
     this.convert(current);
-    this.convert(min, '_min');
-    this.convert(max, '_max');
+    this.convert(min, _MIN);
+    this.convert(max, _MAX);
 };
 
 // `getData` function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
@@ -457,32 +595,32 @@ P.returnColor = function (rgb, hsl, hwb, lab, lch, oklab, oklch) {
 
     switch (returnColorAs) {
 
-        case 'RGB' : return buildColorString(...rgb, 'RGB');
+        case RGB: return buildColorString(...rgb, RGB);
 
-        case 'HSL' : return buildColorString(...hsl, 'HSL');
+        case HSL : return buildColorString(...hsl, HSL);
 
-        case 'HWB' :
-            if (!supportsHWB) return buildColorString(...rgb, 'RGB');
-            return buildColorString(...hwb, 'HWB');
+        case HWB :
+            if (!supportsHWB) return buildColorString(...rgb, RGB);
+            return buildColorString(...hwb, HWB);
 
-        case 'LAB' :
-            if (!supportsLAB) return buildColorString(...rgb, 'RGB');
-            return buildColorString(...lab, 'LAB');
+        case LAB :
+            if (!supportsLAB) return buildColorString(...rgb, RGB);
+            return buildColorString(...lab, LAB);
 
-        case 'LCH' :
-            if (!supportsLCH) return buildColorString(...rgb, 'RGB');
-            return buildColorString(...lch, 'LCH');
+        case LCH :
+            if (!supportsLCH) return buildColorString(...rgb, RGB);
+            return buildColorString(...lch, LCH);
 
-        case 'OKLAB' :
-            if (!supportsOKLAB) return buildColorString(...rgb, 'RGB');
-            return buildColorString(...oklab, 'OKLAB');
+        case OKLAB :
+            if (!supportsOKLAB) return buildColorString(...rgb, RGB);
+            return buildColorString(...oklab, OKLAB);
 
-        case 'OKLCH' :
-            if (!supportsOKLCH) return buildColorString(...rgb, 'RGB');
-            return buildColorString(...oklch, 'OKLCH');
+        case OKLCH :
+            if (!supportsOKLCH) return buildColorString(...rgb, RGB);
+            return buildColorString(...oklch, OKLCH);
 
         default :
-            return 'rgba(0 0 0 / 0)';
+            return BLANK;
     }
 };
 
@@ -494,13 +632,13 @@ P.returnColorFromValues = function (b, c, d, a) {
     let col = this.buildColorString(b, c, d, a, colorSpace);
 
     let flag = false;
-    if ('XYZ' === colorSpace) flag = true;
-    else if (colorSpace !== returnColorAs) flag = true;
-    else if ('HWB' === returnColorAs && !supportsHWB) flag = true;
-    else if ('LAB' === returnColorAs && !supportsLAB) flag = true;
-    else if ('LCH' === returnColorAs && !supportsLCH) flag = true;
-    else if ('OKLAB' === returnColorAs && !supportsOKLAB) flag = true;
-    else if ('OKLCH' === returnColorAs && !supportsOKLCH) flag = true;
+    if (XYZ == colorSpace) flag = true;
+    else if (colorSpace != returnColorAs) flag = true;
+    else if (HWB == returnColorAs && !supportsHWB) flag = true;
+    else if (LAB == returnColorAs && !supportsLAB) flag = true;
+    else if (LCH == returnColorAs && !supportsLCH) flag = true;
+    else if (OKLAB == returnColorAs && !supportsOKLAB) flag = true;
+    else if (OKLCH == returnColorAs && !supportsOKLCH) flag = true;
 
     if (flag) {
 
@@ -517,24 +655,24 @@ P.buildColorString = function (a, b, c, d, req) {
 
     switch (req) {
 
-        case 'RGB' : return `rgb(${Math.round(a)} ${Math.round(b)} ${Math.round(c)} / ${d})`;
-        case 'HSL' : return `hsl(${a} ${b}% ${c}% / ${d})`;
-        case 'HWB' : return `hwb(${a} ${b}% ${c}% / ${d})`;
-        case 'LAB' : return `lab(${a}% ${b} ${c} / ${d})`;
-        case 'LCH' : return `lch(${a}% ${b} ${c} / ${d})`;
-        case 'OKLAB' : return `oklab(${a * 100}% ${b} ${c} / ${d})`;
-        case 'OKLCH' : return `oklch(${a * 100}% ${b} ${c} / ${d})`;
-        case 'XYZ' : return `xyz(${a} ${b} ${c} / ${d})`;
-        default : return 'rgb(0 0 0 / 0)';
+        case RGB : return `rgb(${_round(a)} ${_round(b)} ${_round(c)} / ${d})`;
+        case HSL : return `hsl(${a} ${b}% ${c}% / ${d})`;
+        case HWB : return `hwb(${a} ${b}% ${c}% / ${d})`;
+        case LAB : return `lab(${a}% ${b} ${c} / ${d})`;
+        case LCH : return `lch(${a}% ${b} ${c} / ${d})`;
+        case OKLAB : return `oklab(${a * 100}% ${b} ${c} / ${d})`;
+        case OKLCH : return `oklch(${a * 100}% ${b} ${c} / ${d})`;
+        case XYZ : return `xyz(${a} ${b} ${c} / ${d})`;
+        default : return BLANK;
     }
 }
 
 // `generateRandomColor` - generate a random, fully opaque color
 P.generateRandomColor = function () {
 
-    let r = Math.floor(Math.random() * 256),
-        g = Math.floor(Math.random() * 256),
-        b= Math.floor(Math.random() * 256);
+    let r = _floor(_random() * 256),
+        g = _floor(_random() * 256),
+        b= _floor(_random() * 256);
 
     if (r > 255) r = 255;
     if (g > 255) g = 255;
@@ -548,22 +686,22 @@ P.checkColor = function (item) {
 
     if (item.substring) {
 
-        let colSpace = 'RGB';
+        let colSpace = RGB;
 
-        if (item.includes('hsl')) colSpace = 'HSL';
-        else if (item.includes('hwb')) colSpace = 'HWB';
-        else if (item.includes('oklab')) colSpace = 'OKLAB';
-        else if (item.includes('oklch')) colSpace = 'OKLCH';
-        else if (item.includes('lab')) colSpace = 'LAB';
-        else if (item.includes('lch')) colSpace = 'LCH';
-        else if (item.includes('xyz')) colSpace = 'XYZ';
+        if (item.includes(_HSL)) colSpace = HSL;
+        else if (item.includes(_HWB)) colSpace = HWB;
+        else if (item.includes(_OKLAB)) colSpace = OKLAB;
+        else if (item.includes(_OKLCH)) colSpace = OKLCH;
+        else if (item.includes(_LAB)) colSpace = LAB;
+        else if (item.includes(_LCH)) colSpace = LCH;
+        else if (item.includes(_XYZ)) colSpace = XYZ;
 
-        if ('RGB' === colSpace || 'HSL' === colSpace) return item;
+        if (RGB == colSpace || HSL == colSpace) return item;
 
         this.colorSpace = colSpace;
 
         let colRet = colSpace;
-        if ('XYZ' === colSpace) colRet = 'RGB';
+        if (XYZ == colSpace) colRet = RGB;
 
         this.returnColorAs = colSpace;
 
@@ -571,7 +709,7 @@ P.checkColor = function (item) {
 
         return this.returnColor();
     }
-    return 'rgba(0 0 0 / 0)';
+    return BLANK;
 };
 
 // `getRangeColor` - function which generates a color in the range between the minimum and maximum colors. 
@@ -586,9 +724,12 @@ P.getRangeColor = function (item, internalGradientBuild = false) {
         let col = this.colorSpace;
 
         // KNOWN issue with HSL/HWB/LCH/OKLCH gradients which this line attempts to fix
-        if (internalGradientBuild && ['HSL', 'HWB'].includes(col)) col = 'RGB';
-        else if (internalGradientBuild && 'LCH' === col) col = 'LAB';
-        else if (internalGradientBuild && 'OKLCH' === col) col = 'OKLAB';
+        if (internalGradientBuild) {
+
+            if (HSL_HWB_ARRAY.includes(col)) col = RGB;
+            else if (LCH == col) col = LAB;
+            else if (OKLCH == col) col = OKLAB;
+        }
 
         const vals = this.calculateRangeColorValues(item, internalGradientBuild),
             res = this.buildColorString(...vals, col);
@@ -608,24 +749,27 @@ P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
     let col = colorSpace.toLowerCase();
 
     // KNOWN issue with HSL/HWB/LCH gradients which this line attempts to fix
-    if (internalGradientBuild && ['HSL', 'HWB'].includes(colorSpace)) col = 'rgb';
-    else if (internalGradientBuild && 'LCH' === colorSpace) col = 'lab';
-    else if (internalGradientBuild && 'OKLCH' === colorSpace) col = 'oklab';
+    if (internalGradientBuild) {
+
+        if (HSL_HWB_ARRAY.includes(colorSpace)) col = _RGB;
+        else if (LCH == colorSpace) col = _LAB;
+        else if (OKLCH == colorSpace) col = _OKLAB;
+    }
 
     const [bMin, cMin, dMin, aMin] = this[`${col}_min`];
     const [bMax, cMax, dMax, aMax] = this[`${col}_max`];
 
     let e = easingFunction;
 
-    if (!internalGradientBuild && easing !== 'function' && easeEngines[easing]) e = easeEngines[easing];
+    if (!internalGradientBuild && easing != FUNCTION && easeEngines[easing]) e = easeEngines[easing];
 
     const val = (internalGradientBuild) ? item : e(item);
 
     switch (col) {
 
         // These aren't producing colors like CSS gradients - something wierd about seeing bright violet between red/blue, instead of a more muddy purple (matching what gets presented in the RGB color space) which CSS gradients present.
-        case 'hsl' :
-        case 'hwb' :
+        case _HSL :
+        case _HWB :
 
             test = bMax - bMin;
 
@@ -652,8 +796,8 @@ P.calculateRangeColorValues = function (item, internalGradientBuild = false) {
             return [b, c, d, a];
 
         // LCH, OKLCH also has the HSL/HWB issue, but not as pronounced
-        case 'lch' :
-        case 'oklch' :
+        case _LCH :
+        case _OKLCH :
 
             test = dMax - dMin;
 
@@ -705,7 +849,7 @@ P.getAlphaValue = function (alpha) {
 
     if (alpha != null) {
 
-        if (alpha.includes('%')) a = parseFloat(alpha) / 100;
+        if (alpha.includes(PC)) a = parseFloat(alpha) / 100;
         else a = parseFloat(alpha);
     }
     // This test should capture alpha values of `none`
@@ -719,12 +863,12 @@ P.getAlphaValue = function (alpha) {
 // `getHueValue` - internal helper function - because the CSS `hue` definition is massively overloaded with possibilities
 P.getHueValue = function (hue) {
 
-    if (hue === 'none') return 0;
+    if (hue == NONE) return 0;
 
-    if (hue.includes('deg')) hue = parseFloat(hue)
-    else if (hue.includes('rad')) hue = parseFloat(hue) / radian;
-    else if (hue.includes('grad')) hue = (parseFloat(hue) / 400) * 360;
-    else if (hue.includes('turn')) hue = parseFloat(hue) * 360;
+    if (hue.includes(DEG)) hue = parseFloat(hue)
+    else if (hue.includes(RAD)) hue = parseFloat(hue) / radian;
+    else if (hue.includes(GRAD)) hue = (parseFloat(hue) / 400) * 360;
+    else if (hue.includes(TURN)) hue = parseFloat(hue) * 360;
     else hue = parseFloat(hue);
 
     // We test and correct for the hue-related `none` value here
@@ -736,17 +880,17 @@ P.getHueValue = function (hue) {
 // `getColorValuesFromString` - internal helper function
 P.getColorValuesFromString = function(str, col) {
 
-    str = str.replace(col, '');
-    str = str.replace('(', '');
-    str = str.replace(')', '');
-    str = str.replace('/', '');
+    str = str.replace(col, ZERO_STR);
+    str = str.replace('(', ZERO_STR);
+    str = str.replace(')', ZERO_STR);
+    str = str.replace('/', ZERO_STR);
 
-    const res = str.split(' ').filter(e => e != null && e !== '');
+    const res = str.split(SPACE).filter(e => e != null && e !== ZERO_STR);
 
     // We test and correct for the `none` value here (excluding alpha channel)
-    if (res[0] == null || res[0] === 'none') res[0] = '0';
-    if (res[1] == null || res[1] === 'none') res[1] = '0';
-    if (res[2] == null || res[2] === 'none') res[2] = '0';
+    if (res[0] == null || res[0] == NONE) res[0] = _0;
+    if (res[1] == null || res[1] == NONE) res[1] = _0;
+    if (res[2] == null || res[2] == NONE) res[2] = _0;
 
     return res;
 };
@@ -758,7 +902,7 @@ P.extractFromHwbColorString = function (color) {
     const { getAlphaValue, getHueValue, getColorValuesFromString } = this;
     let vals, a, b, c, d, hue, white, black;
 
-    vals = getColorValuesFromString(color, 'hwb');
+    vals = getColorValuesFromString(color, _HWB);
 
     hue = getHueValue(vals[0]);
     white = parseFloat(vals[1]);
@@ -767,15 +911,15 @@ P.extractFromHwbColorString = function (color) {
 
     [b, c, d] = this.convertHWBtoRGB(hue, white, black);
 
-    b = Math.floor(b * 255);
+    b = _floor(b * 255);
     if (b > 255) b = 255;
     if (b < 0) b = 0;
 
-    c = Math.floor(c * 255);
+    c = _floor(c * 255);
     if (c > 255) c = 255;
     if (c < 0) c = 0;
 
-    d = Math.floor(d * 255);
+    d = _floor(d * 255);
     if (d > 255) d = 255;
     if (d < 0) d = 0;
 
@@ -791,7 +935,7 @@ P.extractFromXyzColorString = function (color) {
     const { getAlphaValue, getColorValuesFromString } = this;
     let vals, a, b, c, d;
 
-    vals = getColorValuesFromString(color, 'xyz');
+    vals = getColorValuesFromString(color, _XYZ);
     b = parseFloat(vals[0]);
     c = parseFloat(vals[1]);
     d = parseFloat(vals[2]);
@@ -807,16 +951,16 @@ P.extractFromLabColorString = function (color) {
     const { getAlphaValue, getColorValuesFromString } = this;
     let vals, a, b, c, d;
 
-    vals = getColorValuesFromString(color, 'lab');
+    vals = getColorValuesFromString(color, _LAB);
     b = parseFloat(vals[0]);
     if (b > 100) b = 100;
     if (b < 0) b = 0;
 
-    c = (vals[1].includes('%')) ? parseFloat(vals[1]) * 1.25 : parseFloat(vals[1]);
+    c = (vals[1].includes(PC)) ? parseFloat(vals[1]) * 1.25 : parseFloat(vals[1]);
     if (c > 160) c = 160;
     if (c < -160) c = -160;
 
-    d = (vals[2].includes('%')) ? parseFloat(vals[2]) * 1.25 : parseFloat(vals[2]);
+    d = (vals[2].includes(PC)) ? parseFloat(vals[2]) * 1.25 : parseFloat(vals[2]);
     if (d > 160) d = 160;
     if (d < -160) d = -160;
 
@@ -832,16 +976,16 @@ P.extractFromOklabColorString = function (color) {
     const { getAlphaValue, getColorValuesFromString } = this;
     let vals, a, b, c, d;
 
-    vals = getColorValuesFromString(color, 'oklab');
-    b = (vals[0].includes('%')) ? parseFloat(vals[0]) / 100 : parseFloat(vals[0]);
+    vals = getColorValuesFromString(color, _OKLAB);
+    b = (vals[0].includes(PC)) ? parseFloat(vals[0]) / 100 : parseFloat(vals[0]);
     if (b > 1) b = 1;
     if (b < 0) b = 0;
 
-    c = (vals[1].includes('%')) ? (parseFloat(vals[1]) / 100) * 0.4 : parseFloat(vals[1]);
+    c = (vals[1].includes(PC)) ? (parseFloat(vals[1]) / 100) * 0.4 : parseFloat(vals[1]);
     if (c > 0.5) c = 0.5;
     if (c < -0.5) c = -0.5;
 
-    d = (vals[2].includes('%')) ? (parseFloat(vals[2]) / 100) * 0.4 : parseFloat(vals[2]);
+    d = (vals[2].includes(PC)) ? (parseFloat(vals[2]) / 100) * 0.4 : parseFloat(vals[2]);
     if (d > 0.5) d = 0.5;
     if (d < -0.5) d = -0.5;
 
@@ -857,12 +1001,12 @@ P.extractFromLchColorString = function (color) {
     const { getAlphaValue, getHueValue, getColorValuesFromString } = this;
     let vals, a, b, c, d;
 
-    vals = getColorValuesFromString(color, 'lch');
+    vals = getColorValuesFromString(color, _LCH);
     b = parseFloat(vals[0]);
     if (b > 100) b = 100;
     if (b < 0) b = 0;
 
-    c = (vals[1].includes('%')) ? parseFloat(vals[1]) * 1.5 : parseFloat(vals[1]);
+    c = (vals[1].includes(PC)) ? parseFloat(vals[1]) * 1.5 : parseFloat(vals[1]);
     if (c > 230) c = 230;
     if (c < 0) c = 0;
 
@@ -879,12 +1023,12 @@ P.extractFromOklchColorString = function (color) {
     const { getAlphaValue, getHueValue, getColorValuesFromString } = this;
     let vals, a, b, c, d;
 
-    vals = getColorValuesFromString(color, 'oklch');
-    b = b = (vals[0].includes('%')) ? parseFloat(vals[0]) / 100 : parseFloat(vals[0]);
+    vals = getColorValuesFromString(color, _OKLCH);
+    b = b = (vals[0].includes(PC)) ? parseFloat(vals[0]) / 100 : parseFloat(vals[0]);
     if (b > 1) b = 1;
     if (b < 0) b = 0;
 
-    c = (vals[1].includes('%')) ? (parseFloat(vals[1]) / 100) * 0.4 : parseFloat(vals[1]);
+    c = (vals[1].includes(PC)) ? (parseFloat(vals[1]) / 100) * 0.4 : parseFloat(vals[1]);
     if (c > 0.4) c = 0.4;
     if (c < 0) c = 0;
 
@@ -902,7 +1046,7 @@ P.extractFromOklchColorString = function (color) {
 // + `convertLABtoLCH`, `convertLCHtoLAB`
 // + `convertXYZtoOKLAB`, `convertOKLABtoXYZ`
 // + `convertOKLABtoOKLCH`, `convertOKLCHtoOKLAB`
-P.convert = function (color, suffix = '') {
+P.convert = function (color, suffix = ZERO_STR) {
 
     // Currently converting to as many color spaces as possible - we can make this more sane by only converting for the colors we want to convert (RGB + the internal color space + the returned color space)
 
@@ -931,7 +1075,7 @@ P.convert = function (color, suffix = '') {
 
     let a, b, c, d;
 
-    if (color.includes('hwb') && !supportsHWB) {
+    if (color.includes(_HWB) && !supportsHWB) {
 
         [a, b, c, d] = this.extractFromHwbColorString(color);
 
@@ -944,7 +1088,7 @@ P.convert = function (color, suffix = '') {
         oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
         oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
     } 
-    else if (color.includes('xyz')) {
+    else if (color.includes(_XYZ)) {
         
         [a, b, c, d] = this.extractFromXyzColorString(color);
 
@@ -957,7 +1101,7 @@ P.convert = function (color, suffix = '') {
         oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
         oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
     }
-    else if (color.includes('oklab') && !supportsOKLAB) {
+    else if (color.includes(_OKLAB) && !supportsOKLAB) {
 
         [a, b, c, d] = this.extractFromOklabColorString(color);
 
@@ -970,7 +1114,7 @@ P.convert = function (color, suffix = '') {
         hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
         hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
     }
-    else if (color.includes('oklch') && !supportsOKLCH) {
+    else if (color.includes(_OKLCH) && !supportsOKLCH) {
 
         [a, b, c, d] = this.extractFromOklchColorString(color);
 
@@ -983,7 +1127,7 @@ P.convert = function (color, suffix = '') {
         hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
         hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
     }
-    else if (color.includes('lab') && !supportsLAB) {
+    else if (color.includes(_LAB) && !supportsLAB) {
 
         [a, b, c, d] = this.extractFromLabColorString(color);
 
@@ -996,7 +1140,7 @@ P.convert = function (color, suffix = '') {
         oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
         oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
     }
-    else if (color.includes('lch') && !supportsLCH) {
+    else if (color.includes(_LCH) && !supportsLCH) {
 
         [a, b, c, d] = this.extractFromLchColorString(color);
 
@@ -1025,6 +1169,7 @@ P.convert = function (color, suffix = '') {
     return this;
 };
 
+
 // `extractRGBfromColor` - takes a color string and returns it's RGB equivalent channel values:
 P.extractRGBfromColor = function (color) {
 
@@ -1032,32 +1177,32 @@ P.extractRGBfromColor = function (color) {
 
     let a, b, c, d;
 
-    if (color.includes('hwb') && !supportsHWB) {
+    if (color.includes(_HWB) && !supportsHWB) {
 
         [a, b, c, d] = this.extractFromHwbColorString(color);
         return [b, c, d, a];
     } 
-    else if (color.includes('xyz')) {
+    else if (color.includes(_XYZ)) {
         
         [a, b, c, d] = this.extractFromXyzColorString(color);
         return [...this.convertXYZtoRGB(b, c, d), a];
     }
-    else if (color.includes('oklab') && !supportsOKLAB) {
+    else if (color.includes(_OKLAB) && !supportsOKLAB) {
 
         [a, b, c, d] = this.extractFromOklabColorString(color);
         return [...this.convertXYZtoRGB(...this.convertOKLABtoXYZ(b, c, d)), a]; 
     }
-    else if (color.includes('oklch') && !supportsOKLCH) {
+    else if (color.includes(_OKLCH) && !supportsOKLCH) {
 
         [a, b, c, d] = this.extractFromOklchColorString(color);
         return [...this.convertXYZtoRGB(...this.convertOKLABtoXYZ(...this.convertOKLCHtoOKLAB(b, c, d))), a]; 
     }
-    else if (color.includes('lab') && !supportsLAB) {
+    else if (color.includes(_LAB) && !supportsLAB) {
 
         [a, b, c, d] = this.extractFromLabColorString(color);
         return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(b, c, d)), a]; 
     }
-    else if (color.includes('lch') && !supportsLCH) {
+    else if (color.includes(_LCH) && !supportsLCH) {
 
         [a, b, c, d] = this.extractFromLchColorString(color);
         return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(...this.convertLCHtoLAB(b, c, d))), a]; 
@@ -1074,13 +1219,13 @@ P.convertRGBtoHex = function (red, green, blue) {
 
     if (!isNaN(red) && !isNaN(green) && !isNaN(blue)) {
 
-        const r = ("0"+(red).toString(16)).slice(-2),
-            g = ("0"+(green).toString(16)).slice(-2),
-            b = ("0"+(blue).toString(16)).slice(-2);
+        const r = (_0 + (red).toString(16)).slice(-2),
+            g = (_0 + (green).toString(16)).slice(-2),
+            b = (_0 + (blue).toString(16)).slice(-2);
 
         return `#${r}${g}${b}`;
     }
-    return '#000000';
+    return BLACK_HEX;
 };
 
 // `getColorFromCanvas` - internal helper function
@@ -1106,6 +1251,7 @@ P.getColorFromCanvas = function (color) {
     return [r, g, b, a];
 };
 
+
 // #### Color space conversions
 // The following functionality has been lifted/adapted from [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/)
 
@@ -1116,15 +1262,15 @@ P.convertRGBtoHSL = function (red, green, blue) {
     green /= 255;
     blue /= 255;
 
-    let max = Math.max(red, green, blue);
-    let min = Math.min(red, green, blue);
+    let max = _max(red, green, blue);
+    let min = _min(red, green, blue);
     let [hue, sat, light] = [0, 0, (min + max)/2];
     let d = max - min;
 
     if (d !== 0) {
         sat = (light === 0 || light === 1)
             ? 0
-            : (max - light) / Math.min(light, 1 - light);
+            : (max - light) / _min(light, 1 - light);
 
         switch (max) {
             case red:   hue = (green - blue) / d + (green < blue ? 6 : 0); break;
@@ -1147,8 +1293,8 @@ P.convertHSLtoRGB = function (hue, sat, light) {
 
     const f = function (n) {
         let k = (n + hue/30) % 12;
-        let a = sat * Math.min(light, 1 - light);
-        return light - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+        let a = sat * _min(light, 1 - light);
+        return light - a * _max(-1, _min(k - 3, 9 - k, 1));
     }
     return [f(0), f(8), f(4)];
 };
@@ -1162,8 +1308,8 @@ P.convertRGBtoHWB = function (red, green, blue) {
     green /= 256;
     blue /= 256;
 
-    let white = Math.min(red, green, blue);
-    let black = 1 - Math.max(red, green, blue);
+    let white = _min(red, green, blue);
+    let black = 1 - _max(red, green, blue);
 
     return [hsl[0], white * 100, black * 100];
 };
@@ -1175,8 +1321,8 @@ P.convertRGBHtoHWB = function (red, green, blue, hue) {
     green /= 256;
     blue /= 256;
 
-    let white = Math.min(red, green, blue);
-    let black = 1 - Math.max(red, green, blue);
+    let white = _min(red, green, blue);
+    let black = 1 - _max(red, green, blue);
 
     return [hue, white * 100, black * 100];
 };
@@ -1209,15 +1355,15 @@ P.multiplyMatrices = function (A, B) {
 
     const m = A.length;
 
-    if (!Array.isArray(A[0])) A = [A];
-    if (!Array.isArray(B[0])) B = B.map(x => [x]);
+    if (!_isArray(A[0])) A = [A];
+    if (!_isArray(B[0])) B = B.map(x => [x]);
 
     const p = B[0].length;
     const B_cols = B[0].map((_, i) => B.map(x => x[i]));
 
     let product = A.map(row => B_cols.map(col => {
 
-        if (!Array.isArray(row)) {
+        if (!_isArray(row)) {
 
             return col.reduce((a, c) => a + c * row, 0);
         }
@@ -1232,35 +1378,15 @@ P.multiplyMatrices = function (A, B) {
 };
 
 // `convertRGBtoXYZ` - internal helper function
-P.D50 = [0.3457 / 0.3585, 1.00000, (1.0 - 0.3457 - 0.3585) / 0.3585];
-P.D65 = [0.3127 / 0.3290, 1.00000, (1.0 - 0.3127 - 0.3290) / 0.3290];
+P.lin_sRGB = function (myRgb) {
 
-P.D65_to_D50_matrix = [
-    [  1.0479298208405488,    0.022946793341019088,  -0.05019222954313557 ],
-    [  0.029627815688159344,  0.990434484573249,     -0.01707382502938514 ],
-    [ -0.009243058152591178,  0.015055144896577895,   0.7518742899580008  ]
-];
+    return myRgb.map(val => {
 
-P.D50_to_D65_matrix = [
-    [  0.9554734527042182,   -0.023098536874261423,  0.0632593086610217   ],
-    [ -0.028369706963208136,  1.0099954580058226,    0.021041398966943008 ],
-    [  0.012314001688319899, -0.020507696433477912,  1.3303659366080753   ]
-];
-
-P.convertRGBtoXYZ_matrix = [
-    [ 506752 / 1228815,  87881 / 245763,   12673 /   70218 ],
-    [  87098 /  409605, 175762 / 245763,   12673 /  175545 ],
-    [   7918 /  409605,  87881 / 737289, 1001167 / 1053270 ],
-];
-P.lin_sRGB = function (RGB) {
-
-    return RGB.map(val => {
-
-        let sign = val < 0 ? -1 : 1;
-        let abs = Math.abs(val);
+        const sign = val < 0 ? -1 : 1;
+        const abs = _abs(val);
 
         if (abs < 0.04045) return val / 12.92;
-        return sign * (Math.pow((abs + 0.055) / 1.055, 2.4));
+        return sign * (_pow((abs + 0.055) / 1.055, 2.4));
     });
 }
 P.convertRGBtoXYZ = function (r, g, b) {
@@ -1268,7 +1394,7 @@ P.convertRGBtoXYZ = function (r, g, b) {
     const sRGB = [r / 255, g / 255, b / 255];
     const lRGB = this.lin_sRGB(sRGB)
 
-    return this.multiplyMatrices([...this.convertRGBtoXYZ_matrix], [...lRGB]);
+    return this.multiplyMatrices([...convertRGBtoXYZ_matrix], [...lRGB]);
 };
 
 P.convertRGBtoOKLAB = function (r, g, b) {
@@ -1279,9 +1405,9 @@ P.convertRGBtoOKLAB = function (r, g, b) {
     const m = 0.2119034982 * _r + 0.6806995451 * _g + 0.1073969566 * _b;
     const s = 0.0883024619 * _r + 0.2817188376 * _g + 0.6299787005 * _b;
 
-    const _l = this.cbrt(l);
-    const _m = this.cbrt(m);
-    const _s = this.cbrt(s);
+    const _l = cbrt(l);
+    const _m = cbrt(m);
+    const _s = cbrt(s);
 
     return [
         0.2104542553 * _l + 0.7936177850 * _m - 0.0040720468 * _s,
@@ -1291,45 +1417,33 @@ P.convertRGBtoOKLAB = function (r, g, b) {
 };
 
 // `convertXYZtoRGB` - internal helper function
-P.convertXYZtoRGB_matrix = [
-    [   12831 /   3959,    -329 /    214, -1974 /   3959 ],
-    [ -851781 / 878810, 1648619 / 878810, 36519 / 878810 ],
-    [     705 /  12673,   -2585 /  12673,   705 /    667 ],
-];
-P.gam_sRGB = function (RGB) {
+P.gam_sRGB = function (myRgb) {
 
-    return RGB.map(val => {
+    return myRgb.map(val => {
 
-        let sign = val < 0 ? -1 : 1;
-        let abs = Math.abs(val);
+        const sign = val < 0 ? -1 : 1;
+        const abs = _abs(val);
 
-        if (abs > 0.0031308) return sign * (1.055 * Math.pow(abs, 1/2.4) - 0.055);
+        if (abs > 0.0031308) return sign * (1.055 * _pow(abs, 1/2.4) - 0.055);
         return 12.92 * val;
     });
 }
 P.convertXYZtoRGB = function (x, y, z) {
 
-    const lRGB = this.multiplyMatrices([...this.convertXYZtoRGB_matrix], [x, y, z]);
+    const lRGB = this.multiplyMatrices([...convertXYZtoRGB_matrix], [x, y, z]);
     const sRGB = this.gam_sRGB(lRGB);
-    const round = Math.round;
 
     return [
-        round(sRGB[0] * 255),
-        round(sRGB[1] * 255),
-        round(sRGB[2] * 255),
+        _round(sRGB[0] * 255),
+        _round(sRGB[1] * 255),
+        _round(sRGB[2] * 255),
     ];
 };
-
-P.E = 216/24389;
-P.K = 24389/27;
-P.cbrt = (Math.cbrt != null) ? Math.cbrt : (val) => Math.pow(val, 1 / 3);
 
 // `convertXYZtoLAB` - internal helper function
 P.convertXYZtoLAB = function (x, y, z) {
 
-    const { D50, K, E, cbrt } = this;
-
-    const toD50 = this.multiplyMatrices([...this.D65_to_D50_matrix], [x, y, z]);
+    const toD50 = this.multiplyMatrices([...D65_to_D50_matrix], [x, y, z]);
     const xyz = toD50.map((val, i) => val / D50[i]);
     const f = xyz.map(val => val > E ? cbrt(val) : (K * val + 16) / 116);
 
@@ -1343,34 +1457,31 @@ P.convertXYZtoLAB = function (x, y, z) {
 // `convertLABtoXYZ` - internal helper function
 P.convertLABtoXYZ = function (l, a, b) {
 
-    const { D50, K, E, cbrt } = this;
     const f = [];
-    const pow = Math.pow;
 
     f[1] = (l + 16) / 116;
     f[0] = a / 500 + f[1];
     f[2] = f[1] - b / 200;
 
     const xyz = [
-        (pow(f[0], 3) > E) ? pow(f[0], 3) : (116 * f[0] - 16) / K,
-        (l > K * E) ? pow((l + 16) / 116, 3) : l / K,
-        (pow(f[2], 3) > E) ? pow(f[2], 3) : (116 * f[2] - 16) / K,
+        (_pow(f[0], 3) > E) ? _pow(f[0], 3) : (116 * f[0] - 16) / K,
+        (l > K * E) ? _pow((l + 16) / 116, 3) : l / K,
+        (_pow(f[2], 3) > E) ? _pow(f[2], 3) : (116 * f[2] - 16) / K,
     ];
 
     const toD50 = xyz.map((val, i) => val * D50[i]);
 
-    return this.multiplyMatrices([...this.D50_to_D65_matrix], [...toD50]);
+    return this.multiplyMatrices([...D50_to_D65_matrix], [...toD50]);
 };
 
 // `convertLABtoLCH` - internal helper function
 P.convertLABtoLCH = function (l, a, b) {
 
-    const pow = Math.pow;
-    const hue = Math.atan2(b, a) * 180 / Math.PI;
+    const hue = _atan2(b, a) * 180 / _pi;
 
     return [
         l,
-        Math.sqrt(pow(a, 2) + pow(b, 2)),
+        _sqrt(_pow(a, 2) + _pow(b, 2)),
         (hue >= 0) ? hue : hue + 360
     ];
 };
@@ -1378,57 +1489,35 @@ P.convertLABtoLCH = function (l, a, b) {
 // `convertLCHtoLAB` - internal helper function
 P.convertLCHtoLAB = function (l, c, h) {
 
-    const PI = Math.PI;
     return [
         l,
-        c * Math.cos(h * PI / 180),
-        c * Math.sin(h * PI / 180),
+        c * _cos(h * _pi / 180),
+        c * _sin(h * _pi / 180),
     ];
 };
 
 // `convertXYZtoOKLAB` - internal helper function
-P.XYZtoLMS = [
-    [ 0.8190224432164319,    0.3619062562801221,   -0.12887378261216414  ],
-    [ 0.0329836671980271,    0.9292868468965546,     0.03614466816999844 ],
-    [ 0.048177199566046255,  0.26423952494422764,    0.6335478258136937  ]
-];
-P.LMStoOKLab = [
-    [  0.2104542553,   0.7936177850,  -0.0040720468 ],
-    [  1.9779984951,  -2.4285922050,   0.4505937099 ],
-    [  0.0259040371,   0.7827717662,  -0.8086757660 ]
-];
 P.convertXYZtoOKLAB = function (x, y, z) {
 
-    const cbrt = this.cbrt;
-    const LMS = this.multiplyMatrices([...this.XYZtoLMS], [x, y, z]);
-    return this.multiplyMatrices([...this.LMStoOKLab], LMS.map(c => cbrt(c)));
+    const LMS = this.multiplyMatrices([...XYZtoLMS], [x, y, z]);
+    return this.multiplyMatrices([...LMStoOKLab], LMS.map(c => cbrt(c)));
 };
 
 // `convertOKLABtoXYZ` - internal helper function
-P.LMStoXYZ =  [
-    [  1.2268798733741557,  -0.5578149965554813,   0.28139105017721583 ],
-    [ -0.04057576262431372,  1.1122868293970594,  -0.07171106666151701 ],
-    [ -0.07637294974672142, -0.4214933239627914,   1.5869240244272418  ]
-];
-P.OKLabtoLMS = [
-    [ 0.99999999845051981432,  0.39633779217376785678,   0.21580375806075880339  ],
-    [ 1.0000000088817607767,  -0.1055613423236563494,   -0.063854174771705903402 ],
-    [ 1.0000000546724109177,  -0.089484182094965759684, -1.2914855378640917399   ]
-];
 P.convertOKLABtoXYZ = function (l, a, b) {
 
-    const LMSnl = this.multiplyMatrices([...this.OKLabtoLMS], [l, a, b]);
-    return this.multiplyMatrices([...this.LMStoXYZ], LMSnl.map(c => c ** 3));
+    const LMSnl = this.multiplyMatrices([...OKLabtoLMS], [l, a, b]);
+    return this.multiplyMatrices([...LMStoXYZ], LMSnl.map(c => c ** 3));
 };
 
 // `convertOKLABtoOKLCH` - internal helper function
 P.convertOKLABtoOKLCH = function (l, a, b) {
 
-    const hue = Math.atan2(b, a) * 180 / Math.PI;
+    const hue = _atan2(b, a) * 180 / _pi;
 
     return [
         l,
-        Math.sqrt(a ** 2 + b ** 2),
+        _sqrt(a ** 2 + b ** 2),
         hue >= 0 ? hue : hue + 360,
     ];
 };
@@ -1438,8 +1527,8 @@ P.convertOKLCHtoOKLAB = function (l, c, h) {
 
     return [
         l,
-        c * Math.cos(h * Math.PI / 180),
-        c * Math.sin(h * Math.PI / 180),
+        c * _cos(h * _pi / 180),
+        c * _sin(h * _pi / 180),
     ];
 };
 
@@ -1457,7 +1546,7 @@ P.calculateColorBlend = function (iR, iG, iB, mR, mG, mB) {
 
     const [r, g, b] = this.convertHSLtoRGB(iH, iS, mL);
 
-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    return [_round(r * 255), _round(g * 255), _round(b * 255)];
 };
 
 // `calculateHueBlend` - internal helper function
@@ -1468,7 +1557,7 @@ P.calculateHueBlend = function (iR, iG, iB, mR, mG, mB) {
 
     const [r, g, b] = this.convertHSLtoRGB(iH, mS, mL);
 
-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    return [_round(r * 255), _round(g * 255), _round(b * 255)];
 };
 
 // `calculateSaturationBlend` - internal helper function
@@ -1479,7 +1568,7 @@ P.calculateSaturationBlend = function (iR, iG, iB, mR, mG, mB) {
 
     const [r, g, b] = this.convertHSLtoRGB(mH, iS, mL);
 
-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    return [_round(r * 255), _round(g * 255), _round(b * 255)];
 };
 
 // `calculateLuminosityBlend` - internal helper function
@@ -1490,7 +1579,7 @@ P.calculateLuminosityBlend = function (iR, iG, iB, mR, mG, mB) {
 
     const [r, g, b] = this.convertHSLtoRGB(mH, mS, iL);
 
-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    return [_round(r * 255), _round(g * 255), _round(b * 255)];
 };
 
 

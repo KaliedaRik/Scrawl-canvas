@@ -20,10 +20,25 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, radian, addStrings, isa_number, pushUnique, Ωempty } from '../core/utilities.js';
+
+import { 
+    addStrings, 
+    doCreate,
+    isa_number, 
+    mergeOver, 
+    pushUnique, 
+    radian, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
+
+
+// Local constants
+const PALETTE = 'palette',
+    STYLES = 'styles',
+    T_CONIC_GRADIENT = 'ConicGradient';
 
 
 // #### ConicGradient constructor
@@ -35,10 +50,10 @@ const ConicGradient = function (items = Ωempty) {
 
 
 // #### ConicGradient prototype
-const P = ConicGradient.prototype = Object.create(Object.prototype);
+const P = ConicGradient.prototype = doCreate();
 
-P.type = 'ConicGradient';
-P.lib = 'styles';
+P.type = T_CONIC_GRADIENT;
+P.lib = STYLES;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -82,7 +97,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 // + `cyclic`
 
 // #### Packet management
-P.packetObjects = pushUnique(P.packetObjects, ['palette']);
+P.packetObjects = pushUnique(P.packetObjects, [PALETTE]);
 
 
 // #### Clone management
@@ -104,13 +119,13 @@ P.buildStyle = function (cell) {
     
     if (cell) {
 
-        let engine = cell.engine;
+        const engine = cell.engine;
 
         if (engine) {
 
             if (!engine.createConicGradient) return 'rgb(0 0 0 / 0)';
 
-            let gradient = engine.createConicGradient(...this.gradientArgs);
+            const gradient = engine.createConicGradient(...this.gradientArgs);
             
             return this.addStopsToGradient(gradient, this.paletteStart, this.paletteEnd, this.cyclePalette);
         }
@@ -121,11 +136,11 @@ P.buildStyle = function (cell) {
 // `updateGradientArgs` - internal function
 P.updateGradientArgs = function (x, y) {
 
-    let gradientArgs = this.gradientArgs,
+    const gradientArgs = this.gradientArgs,
         currentStart = this.currentStart,
         angle = this.angle * radian;
 
-    let sx = currentStart[0] + x,
+    const sx = currentStart[0] + x,
         sy = currentStart[1] + y;
 
     gradientArgs.length = 0;

@@ -2,9 +2,13 @@
 
 export const _abs = Math.abs;
 export const _atan2 = Math.atan2;
+export const _cbrt = Math.cbrt;
 export const _ceil = Math.ceil;
 export const _cos = Math.cos;
+export const _create = Object.create;
 export const _entries = Object.entries;
+export const _setPrototypeOf = Object.setPrototypeOf;
+export const _seal = Object.seal;
 export const _floor = Math.floor;
 export const _isArray = Array.isArray;
 export const _keys = Object.keys;
@@ -13,6 +17,10 @@ export const _parse = JSON.parse;
 export const _pi = Math.PI;
 export const _piHalf = Math.PI * 0.5;
 export const _pow = Math.pow;
+export const _hypot = Math.hypot;
+export const _max = Math.max;
+export const _min = Math.min;
+export const _random = Math.random;
 export const _round = Math.round;
 export const _sin = Math.sin;
 export const _sqrt = Math.sqrt;
@@ -405,6 +413,77 @@ export const _values = Object.values;
 // export const WIDTH = 'width';
 // export const ZERO_STR = '';
 
+/* factory/cog */
+// export const BEZIER = 'bezier';
+// export const ENTITY = 'entity';
+// export const LINE = 'line';
+// export const PERMITTED_CURVES = ['line', 'quadratic', 'bezier'];
+// export const QUADRATIC = 'quadratic';
+// export const T_COG = 'Cog';
+// export const ZERO_PATH = 'M0,0';
+
+/* factory/color */
+// export const _0 = '0';
+// export const _2D = '2d';
+// export const _HSL = 'hsl';
+// export const _HWB = 'hwb';
+// export const _LAB = 'lab';
+// export const _LCH = 'lch';
+// export const _MAX = '_max';
+// export const _MIN = '_min';
+// export const _OKLAB = 'oklab';
+// export const _OKLCH = 'oklch';
+// export const _RGB = 'rgb';
+// export const _XYZ = 'xyz';
+// export const BLACK = 'rgb(0 0 0 / 1)';
+// export const BLACK_HEX = '#000000';
+// export const BLANK = 'rgb(0 0 0 / 0)';
+// export const CANVAS = 'canvas';
+// export const DEG = 'deg';
+// export const FUNCTION = 'function';
+// export const GRAD = 'grad';
+// export const HSL = 'HSL';
+// export const HSL_HWB_ARRAY = ['HSL', 'HWB'];
+// export const HWB = 'HWB';
+// export const INT_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'];
+// export const LAB = 'LAB';
+// export const LCH = 'LCH';
+// export const LINEAR = 'linear';
+// export const MAX = 'max';
+// export const MIN = 'min';
+// export const NAME = 'name';
+// export const NONE = 'none';
+// export const OKLAB = 'OKLAB';
+// export const OKLCH = 'OKLCH';
+// export const PC = '%';
+// export const RAD = 'rad';
+// export const RANDOM = 'random';
+// export const RET_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH'];
+// export const RGB = 'RGB';
+// export const SOURCE_OVER = 'source-over';
+// export const SPACE = ' ';
+// export const STYLES = 'styles';
+// export const T_COLOR = 'Color';
+// export const TURN = 'turn';
+// export const UNDEF = 'undefined';
+// export const WHITE = 'rgb(255 255 255 / 1)';
+// export const XYZ = 'XYZ';
+// export const ZERO_STR = '';
+
+/* factory/conicGradient */
+// export const PALETTE = 'palette';
+// export const STYLES = 'styles';
+// export const T_CONIC_GRADIENT = 'ConicGradient';
+
+/* factory/coordinate */
+// export const T_COORDINATE = 'Coordinate';
+// export const T_QUATERNION = 'Quaternion';
+// export const T_VECTOR = 'Vector';
+
+/* factory/crescent */
+// export const T_CRESCENT = 'Crescent';
+// export const ENTITY = 'entity';
+// export const DESTINATION_OUT = 'destination-out';
 
 
 
