@@ -16,11 +16,88 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique, xt, Ωempty } from '../core/utilities.js';
 
-import { requestCell, releaseCell } from './cell-fragment.js';
+import { 
+    doCreate,
+    mergeOver, 
+    pushUnique, 
+    xt, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    releaseCell, 
+    requestCell, 
+} from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
+
+import { 
+    _isArray,
+    _max,
+    _min,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const _PC = 'pc',
+    _Q = 'Q',
+    BOLD = 'bold',
+    BOLDER = 'bolder',
+    CAP = 'cap',
+    CH = 'ch',
+    CM = 'cm',
+    CONDENSED = 'condensed',
+    DEFAULT_SIZE = '12px',
+    EM = 'em',
+    EX = 'ex',
+    EXPANDED = 'expanded',
+    EXTRA_CONDENSED = 'extra-condensed',
+    EXTRA_EXPANDED = 'extra-expanded',
+    FONT_ATTRIBUTE = 'fontattribute',
+    IC = 'ic',
+    IN = 'in',
+    ITALIC = 'italic',
+    LARGE = 'large',
+    LARGER = 'larger',
+    LH = 'lh',
+    LIGHTER = 'lighter',
+    MEDIUM = 'medium',
+    MM = 'mm',
+    NORMAL = 'normal',
+    OBLIQUE = 'oblique',
+    PC = '%',
+    PT = 'pt',
+    PX = 'px',
+    REM = 'rem',
+    RLH = 'rlh',
+    SANS_SERIF = 'sans-serif',
+    SEMI_CONDENSED = 'semi-condensed',
+    SEMI_EXPANDED = 'semi-expanded',
+    SIZE_SUFFIX = ['in', 'cm', 'mm', 'Q', 'pc', 'pt', 'px'],
+    SMALL = 'small',
+    SMALL_CAPS = 'small-caps',
+    SMALLER = 'smaller',
+    SPACE = ' ',
+    STOP = '.',
+    T_CELL = 'Cell',
+    T_FONT_ATTRIBUTES = 'FontAttributes',
+    ULTRA_CONDENSED = 'ultra-condensed',
+    ULTRA_EXPANDED = 'ultra-expanded',
+    VB = 'vb',
+    VH = 'vh',
+    VI = 'vi',
+    VMAX = 'vmax',
+    VMIN = 'vmin',
+    VW = 'vw',
+    X_LARGE = 'x-large',
+    X_SMALL = 'x-small',
+    XX_LARGE = 'xx-large',
+    XX_SMALL = 'xx-small',
+    XXX_LARGE = 'xxx-large',
+    ZERO_STR = '',
+    RFS_ARRAY_1 = ['italic','oblique','small-caps','normal','bold','lighter','bolder','ultra-condensed','extra-condensed','semi-condensed','condensed','ultra-expanded','extra-expanded','semi-expanded','expanded','xx-small','x-small','small','medium','xxx-large','xx-large','x-large','large'],
+    RFS_ARRAY_2 = ['0','1','2','3','4','5','6','7','8','9'];
 
 
 // #### FontAttributes constructor
@@ -35,9 +112,9 @@ const FontAttributes = function (items = Ωempty) {
 
 
 // #### FontAttributes prototype
-const P = FontAttributes.prototype = Object.create(Object.prototype);
-P.type = 'FontAttributes';
-P.lib = 'fontattribute';
+const P = FontAttributes.prototype = doCreate();
+P.type = T_FONT_ATTRIBUTES;
+P.lib = FONT_ATTRIBUTE;
 
 
 // #### Mixins
@@ -53,22 +130,20 @@ const defaultAttributes = {
 
 // _font-style_ - saved in the __style__ String attribute - acceptable values are: `normal`, `italic` and `oblique`. Note that browser handling of oblique (sloped rather than explicitly italic) fonts by their respective canvas context engines is, at best, idiosyncratic.
 // + To explicitly use an oblique font design (often called 'slanted' or 'sloped'), reference the font face directly in the `family` or font strings.
-    style: 'normal',
+    style: NORMAL,
 
 
 // _font-variant_ - saved in the __variant__ String attribute - the standard indicates that canvas context engine should only recognise `normal` and `small-caps` values. Do not use other possibilities (_font-variant-caps, font-variant-numeric, font-variant-ligatures, font-variant-east-asian, font-variant-alternates_) in font strings; scrawl-canvas will remove and/or ignore them when it parses the font string.
-    variant: 'normal',
+    variant: NORMAL,
 
 
 // _font-weight_ - saved in the __weight__ String attribute - acceptable values are: `normal`, `bold`, `lighter`, `bolder`; or a number (100. 200, 300, ... 900). Bold is generally the equivalent of 700, and normal is 400; lighter/bolder are values relative to the &lt;canvas> element's computed font weight. Note that browser handling of font weight requirements by their respective canvas context engines is not entirely standards compliant - for instance Safari browsers will generally ignore weight assertions in font strings.
 // + To explicitly use a light, bold or heavy font design, reference the font face directly in the `family` or font strings.
-    weight: 'normal',
-
-
+    weight: NORMAL,
 
 // __font-stretch__ - saved in the __stretch__ String attribute acceptable values are: `normal`, `semi-condensed`, `condensed`, `extra-condensed`, `ultra-condensed`, `semi-expanded`, `expanded`, `extra-expanded`, `ultra-expanded`. Browser support for these values by the &lt;canvas> element's context engine is, for the most part, non-existant.
 // + To explicitly use a condensed or stretched font design, reference the font face directly in the `family` or font strings.
-    stretch: 'normal',
+    stretch: NORMAL,
 
 
 // _font-size_ - broken into two parts and saved in the __sizeValue__ Number and __sizeMetric__ String, each of which can be set separately. The W3C HTML Canvas 2D Context Recommendation states: _"with the 'font-size' component converted to CSS pixels"_. However, Scrawl-canvas makes every effort to respect and interpret non-px-based font-size requests.
@@ -114,13 +189,13 @@ const defaultAttributes = {
 // 
 // Note: we break down the `size` attribute into two components: __sizeValue__ and __sizeMetric__. Line height values are ignored and, when present in a font string, may break the code!
     sizeValue: 12,
-    sizeMetric: 'px',
+    sizeMetric: PX,
 
 
 // __font-family__ - any part of the font string that comes after the above declarations.
 // + It is generally a good idea to include one of the preset defaults - `serif`, `sans-serif`, `monospace`, `cursive`, `fantasy`, `system-ui`, `math`, `emoji`, `fangsong` - at the end of the font or family string, to act as a fallback default as other fonts load.
 // + Scrawl-canvas will attempt to redraw the display when fonts complete their (asynchronous) upload, but this may fail and need to be triggered manually.
-    family: 'sans-serif',
+    family: SANS_SERIF,
 
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -158,33 +233,33 @@ S.size = function (item) {
 
         let res, 
             size = 0, 
-            metric = 'medium';
+            metric = MEDIUM;
 
-        if (item.includes('xx-small')) metric = 'xx-small';
-        else if (item.includes('x-small')) metric = 'x-small';
-        else if (item.includes('smaller')) metric = 'smaller';
-        else if (item.includes('small')) metric = 'small';
-        else if (item.includes('medium')) metric = 'medium';
-        else if (item.includes('xxx-large')) metric = 'xxx-large';
-        else if (item.includes('xx-large')) metric = 'xx-large';
-        else if (item.includes('x-large')) metric = 'x-large';
-        else if (item.includes('larger')) metric = 'larger';
-        else if (item.includes('large')) metric = 'large';
+        if (item.includes(XX_SMALL)) metric = XX_SMALL;
+        else if (item.includes(X_SMALL)) metric = X_SMALL;
+        else if (item.includes(SMALLER)) metric = SMALLER;
+        else if (item.includes(SMALL)) metric = SMALL;
+        else if (item.includes(MEDIUM)) metric = MEDIUM;
+        else if (item.includes(XXX_LARGE)) metric = XXX_LARGE;
+        else if (item.includes(XX_LARGE)) metric = XX_LARGE;
+        else if (item.includes(X_LARGE)) metric = X_LARGE;
+        else if (item.includes(LARGER)) metric = LARGER;
+        else if (item.includes(LARGE)) metric = LARGE;
 
         else {
             size = 12;
-            metric = 'px'
+            metric = PX
         }
 
         let full, val, suffix;
 
         let r = item.match(/(\d+\.\d+|\d+|\.\d+)(rem|em|rlh|lh|ex|cap|ch|ic|%|vw|vh|vmax|vmin|vi|vb|in|cm|mm|Q|pc|pt|px)?/i);
 
-        if (Array.isArray(r)) {
+        if (_isArray(r)) {
 
             [full, val, suffix] = r;
 
-            if (val && suffix && val != '.') {
+            if (val && suffix && val != STOP) {
 
                 size = val;
                 metric = suffix;
@@ -194,23 +269,23 @@ S.size = function (item) {
 
             r = item.match(/\/(\d+\.\d+|\d+|\.\d+)(rem|em|rlh|lh|ex|cap|ch|ic|%|vw|vh|vmax|vmin|vi|vb|in|cm|mm|Q|pc|pt|px)?/i);
 
-            if (Array.isArray(r)) {
+            if (_isArray(r)) {
 
                 [full, val, suffix] = r;
 
-                if (val && suffix && val != '.') {
+                if (val && suffix && val != STOP) {
 
                     size = val;
                     metric = suffix;
                 }
             }
         }
-        if (size !== this.sizeValue) {
+        if (size != this.sizeValue) {
 
             this.sizeValue = size;
             this.dirtyFont = true;
         }
-        if (metric !== this.sizeMetric) {
+        if (metric != this.sizeMetric) {
 
             this.sizeMetric = metric;
             this.dirtyFont = true;
@@ -255,12 +330,12 @@ S.style = function (item) {
 
     if (xt(item)) {
 
-        let v = 'normal';
+        let v = NORMAL;
 
-        v = (item.includes('italic')) ? 'italic' : v;
-        v = (item.includes('oblique')) ? 'oblique' : v;
+        v = (item.includes(ITALIC)) ? ITALIC : v;
+        v = (item.includes(OBLIQUE)) ? OBLIQUE : v;
 
-        if (v !== this.style) {
+        if (v != this.style) {
 
             this.style = v;
             this.dirtyFont = true;
@@ -273,9 +348,9 @@ S.variant = function (item) {
 
     if (xt(item)) {
 
-        let v = 'normal';
+        let v = NORMAL;
 
-        v = (item.includes('small-caps')) ? 'small-caps' : v;
+        v = (item.includes(SMALL_CAPS)) ? SMALL_CAPS : v;
 
         if (v !== this.variant) {
 
@@ -290,15 +365,15 @@ S.weight = function (item) {
 
     if (xt(item)) {
 
-        let v = 'normal';
+        let v = NORMAL;
 
         // Handling direct entry of numbers
         if (item.toFixed) v = item;
         else {
 
-            v = (item.includes('bold')) ? 'bold' : v;
-            v = (item.includes('lighter')) ? 'lighter' : v;
-            v = (item.includes('bolder')) ? 'bolder' : v;
+            v = (item.includes(BOLD)) ? BOLD : v;
+            v = (item.includes(LIGHTER)) ? LIGHTER : v;
+            v = (item.includes(BOLDER)) ? BOLDER : v;
 
             // Putting spaces around the number should help identify it as a Weight value within the font string the string
             v = (item.includes(' 100 ')) ? '100' : v;
@@ -315,7 +390,7 @@ S.weight = function (item) {
             v = (/^\d00$/.test(item)) ? item : v;
         }
 
-        if (v !== this.weight) {
+        if (v != this.weight) {
 
             this.weight = v;
             this.dirtyFont = true;
@@ -328,18 +403,18 @@ S.stretch = function (item) {
 
     if (xt(item)) {
 
-        let v = 'normal';
+        let v = NORMAL;
 
-        v = (item.includes('condensed')) ? 'condensed' : v;
-        v = (item.includes('semi-condensed')) ? 'semi-condensed' : v;
-        v = (item.includes('extra-condensed')) ? 'extra-condensed' : v;
-        v = (item.includes('ultra-condensed')) ? 'ultra-condensed' : v;
-        v = (item.includes('expanded')) ? 'expanded' : v;
-        v = (item.includes('semi-expanded')) ? 'semi-expanded' : v;
-        v = (item.includes('extra-expanded')) ? 'extra-expanded' : v;
-        v = (item.includes('ultra-expanded')) ? 'ultra-expanded' : v;
+        v = (item.includes(CONDENSED)) ? CONDENSED : v;
+        v = (item.includes(SEMI_CONDENSED)) ? SEMI_CONDENSED : v;
+        v = (item.includes(EXTRA_CONDENSED)) ? EXTRA_CONDENSED : v;
+        v = (item.includes(ULTRA_CONDENSED)) ? ULTRA_CONDENSED : v;
+        v = (item.includes(EXPANDED)) ? EXPANDED : v;
+        v = (item.includes(SEMI_EXPANDED)) ? SEMI_EXPANDED : v;
+        v = (item.includes(EXTRA_EXPANDED)) ? EXTRA_EXPANDED : v;
+        v = (item.includes(ULTRA_EXPANDED)) ? ULTRA_EXPANDED : v;
 
-        if (v !== this.stretch) {
+        if (v != this.stretch) {
 
             this.stretch = v;
             this.dirtyFont = true;
@@ -348,15 +423,13 @@ S.stretch = function (item) {
 };
 
 // __family__
-P.rfsTestArray1 = ['italic','oblique','small-caps','normal','bold','lighter','bolder','ultra-condensed','extra-condensed','semi-condensed','condensed','ultra-expanded','extra-expanded','semi-expanded','expanded','xx-small','x-small','small','medium','xxx-large','xx-large','x-large','large'];
-P.rfsTestArray2 = ['0','1','2','3','4','5','6','7','8','9'];
 S.family = function (item) {
 
     if (xt(item)) {
 
-        let v = 'sans-serif';
+        let v = SANS_SERIF;
 
-        let itemArray = item.split(' '),
+        const itemArray = item.split(SPACE),
             len = itemArray.length;
 
         if (len === 1) v = item;
@@ -369,17 +442,17 @@ S.family = function (item) {
             if (counter === len) flag = false;
             else {
 
-                let el = itemArray[counter];
+                const el = itemArray[counter];
 
                 if (!el.length) counter++;
-                else if (this.rfsTestArray1.includes(el)) counter++;
-                else if (this.rfsTestArray2.includes(el[0])) counter++;
+                else if (RFS_ARRAY_1.includes(el)) counter++;
+                else if (RFS_ARRAY_2.includes(el[0])) counter++;
                 else flag = false;
             }
         }
-        if (counter < len) v = itemArray.slice(counter).join(' ');
+        if (counter < len) v = itemArray.slice(counter).join(SPACE);
 
-        if (v !== this.family) {
+        if (v != this.family) {
 
             this.family = v;
             this.dirtyFont = true;
@@ -409,8 +482,8 @@ P.updateMetadata = function (scale, lineHeight, host) {
         this.dirtyFont = true;
     }
     
-    let currentHost = (this.host && this.host.type && this.host.type === 'Cell') ? this.host.name : '';
-    if (host && host.type && host.type === 'Cell' && host.name !== currentHost) {
+    const currentHost = (this.host && this.host.type && this.host.type == T_CELL) ? this.host.name : ZERO_STR;
+    if (host && host.type && host.type == T_CELL && host.name !== currentHost) {
 
         this.host = host;
         this.dirtyFont = true;
@@ -421,17 +494,17 @@ P.calculateSize = function () {
 
     if (this.host) {
 
-        let {scale, lineHeight, host, sizeValue, sizeMetric} = this;
+        const {scale, lineHeight, host, sizeValue, sizeMetric} = this;
 
         let gcfs = host.getComputedFontSizes(),
             parentSize, rootSize, viewportWidth, viewportHeight;
 
         if (!gcfs) {
 
-            if (!['in', 'cm', 'mm', 'Q', 'pc', 'pt', 'px'].includes(sizeMetric)) {
+            if (!SIZE_SUFFIX.includes(sizeMetric)) {
 
                 this.dirtyFont = true;
-                return '12px';
+                return DEFAULT_SIZE;
             }
         }
         else {
@@ -445,133 +518,133 @@ P.calculateSize = function () {
 
         switch (sizeMetric) {
 
-            case 'rem' :
+            case REM :
                 res = rootSize * sizeValue;
                 break;
 
-            case 'em' :
+            case EM :
                 res = parentSize * sizeValue;
                 break;
 
-            case 'rlh' :
+            case RLH :
                 res = (rootSize * lineHeight) * sizeValue;
                 break;
 
-            case 'lh' :
+            case LH :
                 res = (parentSize * lineHeight) * sizeValue;
                 break;
 
-            case 'ex' :
+            case EX :
                 res = (parentSize / 2) * sizeValue;
                 break;
 
-            case 'cap' :
+            case CAP :
                 res = parentSize * sizeValue;
                 break;
 
-            case 'ch' :
+            case CH :
                 res = parentSize * sizeValue;
                 break;
 
-            case 'ic' :
+            case IC :
                 res = parentSize * sizeValue;
                 break;
 
-            case '%' :
+            case PC :
                 res = (parentSize / 100) * sizeValue;
                 break;
 
-            case 'vw' :
+            case VW :
                 res = (viewportWidth / 100) * sizeValue;
                 break;
 
-            case 'vh' :
+            case VH :
                 res = (viewportHeight / 100) * sizeValue;
                 break;
 
-            case 'vmax' :
-                res = (Math.max(viewportWidth, viewportHeight) / 100) * sizeValue;
+            case VMAX :
+                res = (_max(viewportWidth, viewportHeight) / 100) * sizeValue;
                 break;
 
-            case 'vmin' :
-                res = (Math.min(viewportWidth, viewportHeight) / 100) * sizeValue;
+            case VMIN :
+                res = (_min(viewportWidth, viewportHeight) / 100) * sizeValue;
                 break;
 
-            case 'vi' :
+            case VI :
                 res = (viewportWidth / 100) * sizeValue;
                 break;
 
-            case 'vb' :
+            case VB :
                 res = (viewportHeight / 100) * sizeValue;
                 break;
 
-            case 'in' :
+            case IN :
                 res = 96 * sizeValue;
                 break;
 
-            case 'cm' :
+            case CM :
                 res = 37.8 * sizeValue;
                 break;
 
-            case 'mm' :
+            case MM :
                 res = 3.78 * sizeValue;
                 break;
 
-            case 'Q' :
+            case _Q :
                 res = 0.95 * sizeValue;
                 break;
 
-            case 'pc' :
+            case _PC :
                 res = 16 * sizeValue;
                 break;
 
-            case 'pt' :
+            case PT :
                 res = 1.33 * sizeValue;
                 break;
 
-            case 'px' :
+            case PX :
                 res = sizeValue;
                 break;
 
-            case 'xx-small' :
+            case XX_SMALL :
                 res = 0.6 * parentSize;
                 break;
 
-            case 'x-small' :
+            case X_SMALL :
                 res = 0.75 * parentSize;
                 break;
 
-            case 'smaller' :
+            case SMALLER :
                 res = 0.8 * parentSize;
                 break;
 
-            case 'small' :
+            case SMALL :
                 res = 0.89 * parentSize;
                 break;
 
-            case 'xxx-large' :
+            case XXX_LARGE :
                 res = 3 * parentSize;
                 break;
 
-            case 'xx-large' :
+            case XX_LARGE :
                 res = 2 * parentSize;
                 break;
 
-            case 'x-large' :
+            case X_LARGE :
                 res = 1.5 * parentSize;
                 break;
 
-            case 'larger' :
+            case LARGER :
                 res = 1.3 * parentSize;
                 break;
 
-            case 'large' :
+            case LARGE :
                 res = 1.2 * parentSize;
                 break;
         }
         return `${res * scale}px`;
     }
-    return '12px';
+    return `${12 * scale}px`;
 }
 
 // `buildFont` - internal function
@@ -580,19 +653,19 @@ P.buildFont = function () {
 
     this.dirtyFont = false;
 
-    let font = ''
+    let font = ZERO_STR;
 
-    if (this.style !== 'normal') font += `${this.style} `;
-    if (this.variant !== 'normal') font += `${this.variant} `;
-    if (this.weight !== 'normal') font += `${this.weight} `;
-    if (this.stretch !== 'normal') font += `${this.stretch} `;
+    if (this.style != NORMAL) font += `${this.style} `;
+    if (this.variant != NORMAL) font += `${this.variant} `;
+    if (this.weight != NORMAL) font += `${this.weight} `;
+    if (this.stretch != NORMAL) font += `${this.stretch} `;
 
     font += `${this.calculateSize()} `;
 
     font += `${this.family}`;
 
     // Temper the font string. Submit it to a canvas context engine to see what it makes of it
-    let myCell = requestCell();
+    const myCell = requestCell();
     myCell.engine.font = font;
     font = myCell.engine.font;
     releaseCell(myCell);

@@ -19,13 +19,52 @@
 
 
 // #### Imports
-import { constructors, entity } from '../core/library.js';
-import { mergeOver, pushUnique, isa_number, isa_obj, λnull, xt, xta, Ωempty } from '../core/utilities.js';
+import { 
+    constructors, 
+    entity, 
+} from '../core/library.js';
 
-import { requestCell, releaseCell } from './cell-fragment.js';
+import { 
+    doCreate,
+    isa_number, 
+    isa_obj, 
+    mergeOver, 
+    pushUnique, 
+    xt, 
+    xta, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    releaseCell, 
+    requestCell, 
+} from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
+
+import { 
+    _isArray,
+    _isInteger,
+    _parse,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const BLACK = 'rgb(0 0 0 / 1)',
+    CELL_GRADIENT = 'cellGradient',
+    COLOR = 'color',
+    ENTITY = 'entity',
+    FILL = 'fill',
+    GRAY = 'rgb(127 127 127 / 1)',
+    GRID_GRADIENT = 'gridGradient',
+    GRID_PICTURE = 'gridPicture',
+    SOURCE_IN = 'source-in',
+    SOURCE_OVER = 'source-over',
+    T_GRID = 'Grid',
+    TILE_PICTURE = 'tilePicture',
+    WHITE = 'rgb(255 255 255 / 1)';
 
 
 // #### Grid constructor
@@ -40,13 +79,13 @@ const Grid = function (items = Ωempty) {
 
         this.tileSources = [].concat([{
 
-            type: 'color',
-            source: '#000000',
+            type: COLOR,
+            source: BLACK,
         },
         {
 
-            type: 'color',
-            source: '#ffffff',
+            type: COLOR,
+            source: WHITE,
         }]);
     }
 
@@ -55,7 +94,7 @@ const Grid = function (items = Ωempty) {
         this.tileFill.length = this.columns * this.rows;
         this.tileFill.fill(0);
     }
-    else if (Array.isArray(items.tileFill) && this.tileFill.length === items.tileFill.length) {
+    else if (_isArray(items.tileFill) && this.tileFill.length === items.tileFill.length) {
 
         this.tileFill = items.tileFill;
     }
@@ -75,9 +114,9 @@ const Grid = function (items = Ωempty) {
 
 
 // #### Block prototype
-const P = Grid.prototype = Object.create(Object.prototype);
-P.type = 'Grid';
-P.lib = 'entity';
+const P = Grid.prototype = doCreate();
+P.type = T_GRID;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -124,7 +163,7 @@ const defaultAttributes = {
 // + A valid CSS color String
 // + The name-String of a Scrawl-canvas Gradient or RadialGradient object, or the object itself
 // + An integer Number representing the index of a tileSource object
-    gutterColor: '#808080',
+    gutterColor: GRAY,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -134,7 +173,7 @@ P.packetExclusions = pushUnique(P.packetExclusions, ['tileSources']);
 
 P.finalizePacketOut = function (copy, items) {
 
-    let cSources = copy.tileSources = [],
+    const cSources = copy.tileSources = [],
         tSources = this.tileSources;
 
     tSources.forEach(item => {
@@ -147,7 +186,7 @@ P.finalizePacketOut = function (copy, items) {
 
     if (isa_obj(copy.gutterColor)) copy.gutterColor = copy.gutterColor.name;
 
-    let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+    const stateCopy = _parse(this.state.saveAsPacket(items))[3];
     copy = mergeOver(copy, stateCopy);
 
     copy = this.handlePacketAnchor(copy, items);
@@ -174,7 +213,7 @@ S.columns = function (item) {
 
     if (isa_number(item)) {
 
-        if (!Number.isInteger(item)) item = parseInt(item, 10);
+        if (!_isInteger(item)) item = parseInt(item, 10);
 
         if (item !== this.columns) {
 
@@ -206,7 +245,7 @@ S.rows = function (item) {
 
     if (isa_number(item)) {
 
-        if (!Number.isInteger(item)) item = parseInt(item, 10);
+        if (!_isInteger(item)) item = parseInt(item, 10);
 
         if (item !== this.rows) {
 
@@ -233,7 +272,7 @@ P.setAllTilesTo = function (val) {
 
     if (isa_number(val)) {
 
-        if (!Number.isInteger(val)) val = parseInt(val, 10);
+        if (!_isInteger(val)) val = parseInt(val, 10);
 
         this.tileFill.fill(val);
         this.dirtyFilterIdentifier = true;
@@ -247,7 +286,7 @@ P.setTileFill = function (item) {
 
     const { columns, rows } = this;
 
-    if (Array.isArray(item) && item.length === columns * rows) {
+    if (_isArray(item) && item.length === columns * rows) {
 
         this.tileFill = item;
         this.dirtyFilterIdentifier = true;
@@ -260,14 +299,14 @@ P.setTileFill = function (item) {
 // + Second argument is an integer Number representing the index of a tileSource object
 P.setTilesTo = function (tiles, val) {
 
-    let tileFill = this.tileFill;
+    const tileFill = this.tileFill;
 
     if (xt(tiles) && isa_number(val)) {
 
-        if (!Number.isInteger(val)) val = parseInt(val, 10);
+        if (!_isInteger(val)) val = parseInt(val, 10);
 
         if (isa_number(tiles)) tileFill[tiles] = val;
-        else if (Array.isArray(tiles)) {
+        else if (_isArray(tiles)) {
 
             tiles.forEach(tile => {
 
@@ -320,7 +359,7 @@ P.getTileSource = function (row, col) {
 // `getTilesUsingSource` - returns an Array of tileFill index Numbers representing tiles that are currently using the tileSource Object at the given tileSource index.
 P.getTilesUsingSource = function (key) {
 
-    let res = [];
+    const res = [];
 
     if (isa_number(key)) this.tileFill.forEach((val, index) => val == key && res.push(index));
 
@@ -335,36 +374,37 @@ P.cleanPathObject = function () {
 
     if (!this.noPathUpdates || !this.pathObject) {
 
-        let p = this.pathObject = new Path2D(),
+        const p = this.pathObject = new Path2D(),
             rowLines = new Path2D(),
             colLines = new Path2D();
         
-        let handle = this.currentStampHandlePosition,
+        const handle = this.currentStampHandlePosition,
             scale = this.currentScale,
             dims = this.currentDimensions;
 
-        let x = -handle[0] * scale,
+        const x = -handle[0] * scale,
             y = -handle[1] * scale,
             w = dims[0] * scale,
             h = dims[1] * scale;
 
         p.rect(x, y, w, h);
 
-        let cols = this.columns,
+        const cols = this.columns,
             rows = this.rows,
             colWidth = w / cols,
             rowHeight = h / rows,
             paths = this.tilePaths,
             real = this.tileRealCoordinates,
-            virtual = this.tileVirtualCoordinates,
-            i, j, cx, cy;
+            virtual = this.tileVirtualCoordinates;
+        
+        let i, j, cx, cy;
 
         rowLines.moveTo(x, y);
         rowLines.lineTo(x + w, y);
 
         for (i = 1; i <= rows; i++) {
 
-            let ry = y + (i * rowHeight);
+            const ry = y + (i * rowHeight);
 
             rowLines.moveTo(x, ry);
             rowLines.lineTo(x + w, ry);
@@ -376,7 +416,7 @@ P.cleanPathObject = function () {
 
         for (j = 1; j <= cols; j++) {
 
-            let cx = x + (j * colWidth);
+            cx = x + (j * colWidth);
 
             colLines.moveTo(cx, y);
             colLines.lineTo(cx, y + h);
@@ -391,7 +431,7 @@ P.cleanPathObject = function () {
 
             for (j = 0; j < cols; j++) {
 
-                let path = new Path2D();
+                const path = new Path2D();
 
                 cx = j * colWidth;
                 cy = i * rowHeight;
@@ -419,11 +459,11 @@ P.performFill = function (engine) {
     // Grab the current engine values for various things
     engine.save();
 
-    let composer = requestCell(),
+    const composer = requestCell(),
         compEngine = composer.engine,
         compCanvas = composer.element;
 
-    let tileSources = this.tileSources,
+    const tileSources = this.tileSources,
         tileFill = this.tileFill,
         tilePaths = this.tilePaths,
         tileRealCoords = this.tileRealCoordinates,
@@ -433,7 +473,7 @@ P.performFill = function (engine) {
         tileHeight = this.currentTileHeight,
         scale = this.scale;
 
-    let dims = this.currentDimensions;
+    const dims = this.currentDimensions;
 
     let currentPicture;
 
@@ -445,18 +485,18 @@ P.performFill = function (engine) {
 
             switch (obj.type) {
 
-                case 'color' :
+                case COLOR :
 
                     engine.fillStyle = obj.source;
                     break;
 
-                case 'cellGradient' :
+                case CELL_GRADIENT :
 
                     this.lockFillStyleToEntity = false;
                     engine.fillStyle = obj.source.getData(this, this.currentHost);
                     break;
 
-                case 'gridGradient' :
+                case GRID_GRADIENT :
 
                     this.lockFillStyleToEntity = true;
                     engine.fillStyle = obj.source.getData(this, this.currentHost);
@@ -472,7 +512,7 @@ P.performFill = function (engine) {
             switch (obj.type) {
 
                 // Use pool canvas to compose the output
-                case 'gridPicture' :
+                case GRID_PICTURE :
 
                     currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
 
@@ -480,29 +520,29 @@ P.performFill = function (engine) {
 
                         compCanvas.width = dims[0] * scale;
                         compCanvas.height = dims[1] * scale;
-                        compEngine.globalCompositeOperation = 'source-over';
-                        compEngine.fillStyle = '#000000';
+                        compEngine.globalCompositeOperation = SOURCE_OVER;
+                        compEngine.fillStyle = BLACK;
 
                         validTiles.forEach((tile, pos) => {
 
                             if (tile) compEngine.fillRect(tileVirtualCoords[pos][0], tileVirtualCoords[pos][1], tileWidth, tileHeight);
                         });
 
-                        compEngine.globalCompositeOperation = 'source-in';
+                        compEngine.globalCompositeOperation = SOURCE_IN;
 
                         currentPicture.simpleStamp(composer, {
                             startX: 0,
                             startY: 0,
                             width: dims[0] * scale,
                             height: dims[1] * scale,
-                            method: 'fill'
+                            method: FILL,
                         });
 
                         engine.drawImage(compCanvas, tileRealCoords[0][0], tileRealCoords[0][1]);
                     }
                     break;
 
-                case 'tilePicture' :
+                case TILE_PICTURE :
 
                     currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
 
@@ -510,14 +550,14 @@ P.performFill = function (engine) {
 
                         compCanvas.width = tileWidth;
                         compCanvas.height = tileHeight;
-                        compEngine.globalCompositeOperation = 'source-over';
+                        compEngine.globalCompositeOperation = SOURCE_OVER;
 
                         currentPicture.simpleStamp(composer, {
                             startX: 0,
                             startY: 0,
                             width: tileWidth,
                             height: tileHeight,
-                            method: 'fill'
+                            method: FILL,
                         });
 
                         validTiles.forEach((tile, pos) => tile && engine.drawImage(compCanvas, tileRealCoords[pos][0], tileRealCoords[pos][1]));
@@ -542,7 +582,7 @@ P.performFill = function (engine) {
         if (gColor.substring) {
 
             gObject = {
-                type: 'color',
+                type: COLOR,
                 source: this.gutterColor
             };
         }
@@ -552,19 +592,19 @@ P.performFill = function (engine) {
         // Set the engine's strokeStyle to the appropriate value (if needed)
         switch (gObject.type) {
 
-            case 'cellGradient' :
+            case CELL_GRADIENT :
 
                 this.lockFillStyleToEntity = false;
                 engine.strokeStyle = gObject.source.getData(this, this.currentHost);
                 break;
 
-            case 'gridGradient' :
+            case GRID_GRADIENT :
 
                 this.lockFillStyleToEntity = true;
                 engine.strokeStyle = gObject.source.getData(this, this.currentHost);
                 break;
 
-            case 'color' :
+            case COLOR :
 
                 engine.strokeStyle = gObject.source;
                 break;
@@ -574,8 +614,8 @@ P.performFill = function (engine) {
 
             // Use pool canvas to compose the output
             // + gridPicture and tilePicture both treated the same
-            case 'gridPicture' :
-            case 'tilePicture' :
+            case GRID_PICTURE :
+            case TILE_PICTURE :
 
                 if(gRow || gCol) {
 
@@ -590,8 +630,8 @@ P.performFill = function (engine) {
                             
                         compCanvas.width = dims[0] * scale;
                         compCanvas.height = dims[1] * scale;
-                        compEngine.globalCompositeOperation = 'source-over';
-                        compEngine.strokeStyle = '#000000';
+                        compEngine.globalCompositeOperation = SOURCE_OVER;
+                        compEngine.strokeStyle = BLACK;
                         compEngine.translate(x, y);
 
                         if (gRow) {
@@ -606,14 +646,14 @@ P.performFill = function (engine) {
                             compEngine.stroke(this.columnLines);
                         }
 
-                        compEngine.globalCompositeOperation = 'source-in';
+                        compEngine.globalCompositeOperation = SOURCE_IN;
 
                         currentPicture.simpleStamp(composer, {
                             startX: 0,
                             startY: 0,
                             width: dims[0] * scale,
                             height: dims[1] * scale,
-                            method: 'fill'
+                            method: FILL,
                         });
 
                         engine.drawImage(compCanvas, tileRealCoords[0][0], tileRealCoords[0][1]);
@@ -653,7 +693,7 @@ P.fill = function (engine) {
 // `drawAndFill`
 P.drawAndFill = function (engine) {
 
-    let p = this.pathObject;
+    const p = this.pathObject;
 
     engine.stroke(p);
     this.currentHost.clearShadow();
@@ -663,7 +703,7 @@ P.drawAndFill = function (engine) {
 // `fillAndDraw`
 P.fillAndDraw = function (engine) {
 
-    let p = this.pathObject;
+    const p = this.pathObject;
 
     engine.stroke(p);
     this.currentHost.clearShadow();
@@ -674,7 +714,7 @@ P.fillAndDraw = function (engine) {
 // `drawThenFill`
 P.drawThenFill = function (engine) {
 
-    let p = this.pathObject;
+    const p = this.pathObject;
 
     engine.stroke(p);
     this.performFill(engine);
@@ -683,7 +723,7 @@ P.drawThenFill = function (engine) {
 // `fillThenDraw`
 P.fillThenDraw = function (engine) {
 
-    let p = this.pathObject;
+    const p = this.pathObject;
 
     this.performFill(engine);
     engine.stroke(p);
@@ -704,7 +744,6 @@ P.fillThenDraw = function (engine) {
 //     artefact: the Grid entity object
 // }
 // ```
-
 P.checkHit = function (items = [], mycell) {
 
     if (this.noUserInteraction) return false;
@@ -714,8 +753,9 @@ P.checkHit = function (items = [], mycell) {
         this.cleanPathObject();
     }
 
-    let tests = (!Array.isArray(items)) ?  [items] : items,
-        poolCellFlag = false;
+    const tests = (!_isArray(items)) ?  [items] : items;
+
+    let poolCellFlag = false;
 
     if (!mycell) {
 
@@ -723,19 +763,20 @@ P.checkHit = function (items = [], mycell) {
         poolCellFlag = true;
     }
 
-    let engine = mycell.engine,
+    const engine = mycell.engine,
         stamp = this.currentStampPosition,
         x = stamp[0],
         y = stamp[1],
-        isGood, tx, ty,
         tiles = new Set(),
         tilePaths = this.tilePaths;
+
+    let isGood, tx, ty;
 
     const getCoords = (coords) => {
 
         let x, y;
 
-        if (Array.isArray(coords)) {
+        if (_isArray(coords)) {
 
             x = coords[0];
             y = coords[1];

@@ -25,19 +25,75 @@
 
 
 // #### Imports
-import { constructors, tween, artefact, group, world } from '../core/library.js';
-import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    constructors, 
+    group, 
+    tween, 
+    world, 
+} from '../core/library.js';
+
+import { 
+    doCreate,
+    isa_fn, 
+    isa_obj, 
+    mergeOver, 
+    pushUnique, 
+    xt, 
+    xta, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
+
 import { currentGroup } from './canvas.js';
 
-import { requestParticle, releaseParticle } from './particle.js';
-import { requestCell, releaseCell } from './cell-fragment.js';
-import { makeVector, requestVector, releaseVector } from './vector.js';
-import { requestCoordinate, releaseCoordinate } from './coordinate.js';
+import { 
+    releaseParticle, 
+    requestParticle, 
+} from './particle.js';
+
+import { 
+    releaseCell, 
+    requestCell, 
+} from './cell-fragment.js';
+
+import { 
+    makeVector, 
+    releaseVector, 
+    requestVector, 
+} from './vector.js';
+
+import { 
+    requestCoordinate, 
+    releaseCoordinate, 
+} from './coordinate.js';
+
 import { makeColor } from './color.js';
+
 import { filterEngine } from './filterEngine.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
+
+import { 
+    _now,
+    _floor,
+    _random,
+    _piDouble,
+    _abs,
+    _tick,
+    _isArray,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const T_EMITTER = 'Emitter',
+    T_WORLD = 'World',
+    ENTITY = 'entity',
+    EULER = 'euler',
+    BLACK = 'rgb(0 0 0 / 1)',
+    MOUSE = 'mouse',
+    PARTICLE = 'particle';
 
 
 // #### Emitter constructor
@@ -83,10 +139,9 @@ const Emitter = function (items = Ωempty) {
 
 
 // #### Emitter prototype
-const P = Emitter.prototype = Object.create(Object.prototype);
-
-P.type = 'Emitter';
-P.lib = 'entity';
+const P = Emitter.prototype = doCreate();
+P.type = T_EMITTER;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -167,7 +222,7 @@ const defaultAttributes = {
     massVariation: 0,
 
     // Physics calculations are handled by the Emitter entity's physics __engine__ which must be a String value of either `euler` (the default engine), `improved-euler` or `runge-kutta`.
-    engine: 'euler',
+    engine: EULER,
 
     // Note that the __hitRadius__ attribute is tied directly to the __width__ and __height__ attributes (which are effectively meaningless for this entity)
     // + This attribute is absolute - unlike other Scrawl-canvas radius attributes it cannot be set using a percentage String value
@@ -175,7 +230,7 @@ const defaultAttributes = {
 
     // We can tell the entity to display its hit zone by setting the `showHitRadius` flag. The hit zone outline color attribute `hitRadiusColor` accepts any valid CSS color String value
     showHitRadius: false,
-    hitRadiusColor: '#000000',
+    hitRadiusColor: BLACK,
 
     // __resetAfterBlur__ - positive float Number (measuring seconds) - physics simulations can be brittle, particularly if they are forced to calculate Particle loads (accelerations), velocities and speeds over a large time step. Rather than manage that time step in cases where the user may neglect or navigate away from the browser tab containing the physics animation, Scrawl-canvas will stop, clear, and recreate the scene if the time it takes the user to return to (re-focus on) the web page is greater than the value set in this attribute.
     resetAfterBlur: 3,
@@ -202,10 +257,10 @@ P.packetFunctions = pushUnique(P.packetFunctions, ['preAction', 'stampAction', '
 
 P.finalizePacketOut = function (copy, items) {
 
-    let forces = items.forces || this.forces || false;
+    const forces = items.forces || this.forces || false;
     if (forces) {
 
-        let tempForces = [];
+        const tempForces = [];
         forces.forEach(f => {
 
             if (f.substring) tempForces.push(f);
@@ -214,7 +269,7 @@ P.finalizePacketOut = function (copy, items) {
         copy.forces = tempForces;
     }
 
-    let tempParticles = [];
+    const tempParticles = [];
     this.particleStore.forEach(p => tempParticles.push(p.saveAsPacket()));
     copy.particleStore = tempParticles;
 
@@ -292,7 +347,7 @@ S.world = function (item) {
     let w;
 
     if (item.substring) w = world[item];
-    else if (isa_obj(item) && item.type === 'World') w = item;
+    else if (isa_obj(item) && item.type == T_WORLD) w = item;
 
     if (w) {
 
@@ -437,7 +492,7 @@ P.prepareStamp = function () {
 
     if (this.dirtyRotation) this.cleanRotation();
 
-    if (this.lockTo.includes('mouse') || this.lockTo.includes('particle')) {
+    if (this.lockTo.includes(MOUSE) || this.lockTo.includes(PARTICLE)) {
 
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
@@ -447,9 +502,11 @@ P.prepareStamp = function () {
     if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
     // Functionality specific to Emitter entitys
-    let now = Date.now();
+    const now = _now();
 
-    let {particleStore, deadParticles, liveParticles, particleCount, generationRate, generatorChoke, resetAfterBlur} = this;
+    const {particleStore, deadParticles, liveParticles, particleCount, generationRate, resetAfterBlur} = this;
+
+    let generatorChoke = this.generatorChoke;
 
     // Create thew generator choke, if necessary
     if (!generatorChoke) {
@@ -483,11 +540,11 @@ P.prepareStamp = function () {
 
     if (elapsed > 0 && generationRate) {
 
-        let canGenerate = Math.floor((generationRate / 1000) * elapsed);
+        let canGenerate = _floor((generationRate / 1000) * elapsed);
 
         if (particleCount) {
 
-            let reqParticles = particleCount - particleStore.length;
+            const reqParticles = particleCount - particleStore.length;
             
             if (reqParticles <= 0) canGenerate = 0;
             else if (reqParticles < canGenerate) canGenerate = reqParticles;
@@ -518,30 +575,29 @@ P.prepareStamp = function () {
 // + ___mouse___ - use the mouse/touch/pointer cursor value as the emitter's coordinate
 P.addParticles = function (req) {
 
-    const rnd = Math.random;
-
     // internal helper functions, used when creating the particle
     const calc = function (item, itemVar) {
-        return item + ((rnd() * itemVar * 2) - itemVar);
+        return item + ((_random() * itemVar * 2) - itemVar);
     };
 
     const velocityCalc = function (item, itemVar) {
-        return item + (rnd() * itemVar);
+        return item + (_random() * itemVar);
     };
 
-    let i, p, cx, cy,
-        timeChoke = Date.now();
+    let i, p, cx, cy, timeKill, radiusKill;
+    
+    const timeChoke = _now();
 
     // The emitter object retains details of the initial values required for eachg particle it generates
-    let {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea, generateFromExistingParticles, generateFromExistingParticleHistories, limitDirectionToAngleMultiples, generationChoke} = this;
+    const {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea, generateFromExistingParticles, generateFromExistingParticleHistories, limitDirectionToAngleMultiples, generationChoke} = this;
 
-    let {x, y, z} = range;
-    let {x:fx, y:fy, z:fz} = rangeFrom;
+    const {x, y, z} = range;
+    const {x:fx, y:fy, z:fz} = rangeFrom;
 
     // Use an artefact's current area location to determine where the particle will be generated
     if (generateInArea) {
 
-        let host = this.currentHost;
+        const host = this.currentHost;
 
         if (host) {
 
@@ -555,7 +611,7 @@ P.addParticles = function (req) {
                 testEngine = testCell.engine,
                 coord = requestCoordinate();
 
-            let {pathObject, winding, currentStart} = generateInArea;
+            const {pathObject, winding, currentStart} = generateInArea;
 
             [cx, cy] = currentStart;
 
@@ -570,9 +626,9 @@ P.addParticles = function (req) {
 
                 while (!coordFlag) {
 
-                    if (timeChoke + generationChoke < Date.now()) break GenerateInAreaLoops;
+                    if (timeChoke + generationChoke < _now()) break GenerateInAreaLoops;
 
-                    coord.set(rnd() * width, rnd() * height);
+                    coord.set(_random() * width, _random() * height);
 
                     if (test(coord)) coordFlag = true;
                 }
@@ -594,12 +650,12 @@ P.addParticles = function (req) {
 
                     mass: calc(mass, massVariation), 
 
-                    fill: fillColorFactory.getRangeColor(Math.random()),
-                    stroke: strokeColorFactory.getRangeColor(Math.random()),
+                    fill: fillColorFactory.getRangeColor(_random()),
+                    stroke: strokeColorFactory.getRangeColor(_random()),
                 });
 
-                let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
-                let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
+                timeKill = _abs(calc(killAfterTime, killAfterTimeVariation));
+                radiusKill = _abs(calc(killRadius, killRadiusVariation));
 
                 p.run(timeKill, radiusKill, killBeyondCanvas);
 
@@ -624,9 +680,9 @@ P.addParticles = function (req) {
 
                 while (!coordFlag) {
 
-                    if (timeChoke + generationChoke < Date.now()) break GenerateAlongPathLoops;
+                    if (timeChoke + generationChoke < _now()) break GenerateAlongPathLoops;
 
-                    coord = generateAlongPath.getPathPositionData(rnd(), true);
+                    coord = generateAlongPath.getPathPositionData(_random(), true);
                     
                     if (coord) coordFlag = true;
                 }
@@ -648,12 +704,12 @@ P.addParticles = function (req) {
 
                     mass: calc(mass, massVariation), 
  
-                    fill: fillColorFactory.getRangeColor(Math.random()),
-                    stroke: strokeColorFactory.getRangeColor(Math.random()),
+                    fill: fillColorFactory.getRangeColor(_random()),
+                    stroke: strokeColorFactory.getRangeColor(_random()),
                 });
 
-                let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
-                let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
+                timeKill = _abs(calc(killAfterTime, killAfterTimeVariation));
+                radiusKill = _abs(calc(killRadius, killRadiusVariation));
 
                 p.run(timeKill, radiusKill, killBeyondCanvas);
 
@@ -663,20 +719,22 @@ P.addParticles = function (req) {
     }
     // TODO: documentation
     else if (generateFromExistingParticleHistories) {
-        let len = particleStore.length,
-            v, r, parent, history, ignore1, ignore2, startval,
+
+        const len = particleStore.length,
             res = requestVector();
+
+        let v, r, parent, history, ignore1, ignore2, startval;
 
         for (i = 0; i < req; i++) {
 
             if (len) {
 
-                parent = particleStore[Math.floor(Math.random() * len)];
+                parent = particleStore[_floor(_random() * len)];
                 history = parent.history;
 
                 if (history && history.length > 1) {
 
-                    [ignore1, ignore2, ...startval] = history[Math.floor(Math.random() * history.length)];
+                    [ignore1, ignore2, ...startval] = history[_floor(_random() * history.length)];
 
                     if (startval) res.setFromArray(startval);
                     else res.setFromVector(parent.position);
@@ -698,16 +756,16 @@ P.addParticles = function (req) {
 
                 mass: calc(mass, massVariation), 
 
-                fill: fillColorFactory.getRangeColor(Math.random()),
-                stroke: strokeColorFactory.getRangeColor(Math.random()),
+                fill: fillColorFactory.getRangeColor(_random()),
+                stroke: strokeColorFactory.getRangeColor(_random()),
             });
 
             if (limitDirectionToAngleMultiples) {
 
                 res.zero();
-                r = Math.floor(360 / limitDirectionToAngleMultiples)
+                r = _floor(360 / limitDirectionToAngleMultiples)
                 res.x = velocityCalc(fx, x);
-                res.rotate((Math.floor(Math.random() * r)) * limitDirectionToAngleMultiples);
+                res.rotate((_floor(_random() * r)) * limitDirectionToAngleMultiples);
 
                 p.set({
                     velocityX: res.x,
@@ -727,8 +785,8 @@ P.addParticles = function (req) {
 
             p.velocity.rotate(currentRotation);
 
-            let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
-            let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
+            timeKill = _abs(calc(killAfterTime, killAfterTimeVariation));
+            radiusKill = _abs(calc(killRadius, killRadiusVariation));
 
             p.run(timeKill, radiusKill, killBeyondCanvas);
 
@@ -739,14 +797,15 @@ P.addParticles = function (req) {
     else if (generateFromExistingParticles) {
 
         let len = particleStore.length,
-            v, r, parent,
             res = requestVector();
+
+        let v, r, parent;
 
         for (i = 0; i < req; i++) {
 
             if (len) {
 
-                parent = particleStore[Math.floor(Math.random() * len)];
+                parent = particleStore[_floor(_random() * len)];
                 res.setFromVector(parent.position);
             }
             else res.setFromArray(currentStampPosition);
@@ -764,16 +823,16 @@ P.addParticles = function (req) {
 
                 mass: calc(mass, massVariation), 
 
-                fill: fillColorFactory.getRangeColor(Math.random()),
-                stroke: strokeColorFactory.getRangeColor(Math.random()),
+                fill: fillColorFactory.getRangeColor(_random()),
+                stroke: strokeColorFactory.getRangeColor(_random()),
             });
 
             if (limitDirectionToAngleMultiples) {
 
                 res.zero();
-                r = Math.floor(360 / limitDirectionToAngleMultiples)
+                r = _floor(360 / limitDirectionToAngleMultiples)
                 res.x = velocityCalc(fx, x);
-                res.rotate((Math.floor(Math.random() * r)) * limitDirectionToAngleMultiples);
+                res.rotate((_floor(_random() * r)) * limitDirectionToAngleMultiples);
 
                 p.set({
                     velocityX: res.x,
@@ -793,8 +852,8 @@ P.addParticles = function (req) {
 
             p.velocity.rotate(currentRotation);
 
-            let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
-            let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
+            timeKill = _abs(calc(killAfterTime, killAfterTimeVariation));
+            radiusKill = _abs(calc(killRadius, killRadiusVariation));
 
             p.run(timeKill, radiusKill, killBeyondCanvas);
 
@@ -825,14 +884,14 @@ P.addParticles = function (req) {
 
                 mass: calc(mass, massVariation), 
 
-                fill: fillColorFactory.getRangeColor(Math.random()),
-                stroke: strokeColorFactory.getRangeColor(Math.random()),
+                fill: fillColorFactory.getRangeColor(_random()),
+                stroke: strokeColorFactory.getRangeColor(_random()),
             });
 
             p.velocity.rotate(currentRotation);
 
-            let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
-            let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
+            timeKill = _abs(calc(killAfterTime, killAfterTimeVariation));
+            radiusKill = _abs(calc(killRadius, killRadiusVariation));
 
             p.run(timeKill, radiusKill, killBeyondCanvas);
 
@@ -848,8 +907,8 @@ P.regularStamp = function () {
 
     const host = this.currentHost;
 
-    let deltaTime = 16 / 1000,
-        now = Date.now();
+    let deltaTime = _tick,
+        now = _now();
 
     if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 
@@ -858,7 +917,7 @@ P.regularStamp = function () {
 
         particleStore.forEach(p => releaseParticle(p));
         particleStore.length = 0;
-        deltaTime = 16 / 1000;
+        deltaTime = _tick;
     }
 
     particleStore.forEach(p => p.applyForces(world, host));
@@ -887,7 +946,7 @@ P.regularStamp = function () {
 
         engine.setTransform(1, 0, 0, 1, 0, 0);
         engine.beginPath();
-        engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
+        engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, _piDouble);
         engine.stroke();
 
         engine.restore();
@@ -903,15 +962,15 @@ P.checkHit = function (items = [], mycell) {
 
     if (this.noUserInteraction) return false;
 
-    let tests = (!Array.isArray(items)) ?  [items] : items;
+    const tests = (!_isArray(items)) ?  [items] : items;
+    const currentStampPosition = this.currentStampPosition;
 
-    let currentStampPosition = this.currentStampPosition,
-        res = false,
+    let res = false,
         tx, ty;
 
     if (tests.some(test => {
 
-        if (Array.isArray(test)) {
+        if (_isArray(test)) {
 
             tx = test[0];
             ty = test[1];
@@ -925,7 +984,7 @@ P.checkHit = function (items = [], mycell) {
 
         if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
 
-        let v = requestVector(currentStampPosition).vectorSubtract(test);
+        const v = requestVector(currentStampPosition).vectorSubtract(test);
 
         if (v.getMagnitude() < this.hitRadius) res = true;
 
@@ -935,9 +994,7 @@ P.checkHit = function (items = [], mycell) {
 
     }, this)) {
 
-        let r = this.checkHitReturn(tx, ty, mycell);
-
-        return r;
+        return this.checkHitReturn(tx, ty, mycell);
     }
     return false;
 };

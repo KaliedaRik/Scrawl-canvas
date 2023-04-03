@@ -1485,7 +1485,7 @@ export default function (P = Ωempty) {
             if (isBeingDragged) {
 
                 localLockArray[0] = ignoreDragForX ? confirmLock(lockTo[0]) : MOUSE;
-                localLockArray[0] = ignoreDragForY ? confirmLock(lockTo[1]) : MOUSE;
+                localLockArray[1] = ignoreDragForY ? confirmLock(lockTo[1]) : MOUSE;
 
                 hereFlag = true;
 

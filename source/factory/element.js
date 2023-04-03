@@ -33,14 +33,37 @@
 
 
 // #### Imports
-import { element, elementnames, artefact, artefactnames, constructors } from '../core/library.js';
-import { pushUnique, removeItem, isa_dom, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    artefactnames, 
+    constructors, 
+    element, 
+    elementnames, 
+} from '../core/library.js';
+
+import { 
+    doCreate,
+    isa_dom, 
+    pushUnique, 
+    removeItem, 
+    Ωempty, 
+} from '../core/utilities.js';
+
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeCanvas } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
+
+
+// Local constants
+const T_ELEMENT = 'Element',
+    ELEMENT = 'element',
+    CORNER_SELECTOR = '[data-scrawl-corner-div="sc"]',
+    CANVAS = 'canvas',
+    ABSOLUTE = 'absolute',
+    MIMIC = 'mimic';
 
 
 // #### Element constructor
@@ -84,9 +107,9 @@ const Element = function (items = Ωempty) {
 
 
 // #### Element prototype
-const P = Element.prototype = Object.create(Object.prototype);
-P.type = 'Element';
-P.lib = 'element';
+const P = Element.prototype = doCreate();
+P.type = T_ELEMENT;
+P.lib = ELEMENT;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -139,8 +162,8 @@ S.text = function (item) {
 
     if (isa_dom(this.domElement)) {
 
-        let el = this.domElement,
-            kids = el.querySelectorAll('[data-scrawl-corner-div="sc"]');
+        const el = this.domElement,
+            kids = el.querySelectorAll(CORNER_SELECTOR);
 
         el.textContent = item;
 
@@ -158,8 +181,8 @@ S.content = function (item) {
 
     if (this.domElement) {
 
-        let el = this.domElement,
-            kids = el.querySelectorAll('[data-scrawl-corner-div="sc"]');
+        const el = this.domElement,
+            kids = el.querySelectorAll(CORNER_SELECTOR);
 
         el.innerHTML = item;
 
@@ -189,27 +212,27 @@ P.addCanvas = function (items = Ωempty) {
 
     if (!this.canvas) {
 
-        let canvas = document.createElement('canvas'),
+        const canvas = document.createElement(CANVAS),
             el = this.domElement;
 
         canvas.id = `${this.name}-canvas`;
         
-        let rect = el.getBoundingClientRect(),
+        const rect = el.getBoundingClientRect(),
             style = window.getComputedStyle(el);
 
         el.parentNode.insertBefore(canvas, this.domElement);
 
-        let art = makeCanvas({
+        const art = makeCanvas({
             name: `${this.name}-canvas`,
             domElement: canvas,
 
-            position: 'absolute',
+            position: ABSOLUTE,
 
             width: rect.width,
             height: rect.height,
 
             mimic: this.name,
-            lockTo: 'mimic',
+            lockTo: MIMIC,
             
             useMimicDimensions: true,
             useMimicScale: true,

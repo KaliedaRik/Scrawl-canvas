@@ -1,9 +1,4 @@
 // # Drag-and-drop zones.
-
-import * as library from "../core/library.js";
-import { xta, isa_fn, isa_boolean, isa_obj, λnull, Ωempty } from "../core/utilities.js";
-import { addListener, removeListener } from "../core/events.js";
-
 // __makeDragZone__ is an attempt to make setting up drag-and-drop functionality within a Scrawl-canvas stack or canvas as simple as possible. The functionality has been designed to allow multiple drag zones to be set on a canvas or stack element, while limiting the number of event listeners that need to be applied to the element to make the magic happen.
 //
 // Required attribute of the argument object:
@@ -34,7 +29,44 @@ import { addListener, removeListener } from "../core/events.js";
 // + null, undefined, any other falsy argument - return the collision data object
 //
 // If the `exposeCurrentArtefact` attribute is false, or omitted, the function returns a kill function that can be invoked (with no arguments) to remove the event listeners from the Stack or Canvas zone's DOM element.
-// 
+
+import * as library from "../core/library.js";
+
+import { 
+    xta, 
+    isa_fn, 
+    isa_boolean, 
+    isa_obj, 
+    λnull, 
+    Ωempty, 
+} from "../core/utilities.js";
+
+import { 
+    addListener, 
+    removeListener, 
+} from "../core/events.js";
+
+import { 
+    _isArray, 
+} from "../core/shared-vars.js";
+
+
+// Local constants
+const $BODY = 'BODY',
+    ACCEPTED_WRAPPERS = ['Canvas', 'Stack'],
+    DOWN = 'down',
+    DROP = 'drop',
+    EXIT = 'exit',
+    MOVE = 'move',
+    T_CANVAS = 'Canvas',
+    T_GROUP = 'Group',
+    TOUCH_CANCEL = 'touchcancel',
+    TOUCH_END = 'touchend',
+    TOUCH_MOVE = 'touchmove',
+    TOUCH_START = 'touchstart',
+    UP = 'up';
+
+
 // NOTE: drag-and-drop functionality using this factory function __is not guaranteed__ for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.
 const dragZones = {};
 
@@ -66,7 +98,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
     if (zone.substring) zone = artefact[zone];
 
-    if (!zone || !['Canvas', 'Stack'].includes(zone.type)) return new Error('dragZone constructor - zone object is not a Stack or Canvas wrapper');
+    if (!zone || !ACCEPTED_WRAPPERS.includes(zone.type)) return new Error('dragZone constructor - zone object is not a Stack or Canvas wrapper');
 
     let target = zone.domElement;
 
@@ -76,12 +108,12 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
     // + must be a Group object
     if (!collisionGroup) {
 
-        if (zone.type === 'Canvas') collisionGroup = library.group[zone.base.name];
+        if (zone.type == T_CANVAS) collisionGroup = library.group[zone.base.name];
         else collisionGroup = library.group[zone.name];
     }
     else if (collisionGroup.substring) collisionGroup = library.group[collisionGroup];
 
-    if (!collisionGroup || collisionGroup.type !== 'Group') return new Error('dragZone constructor - unable to recover collisionGroup group');
+    if (!collisionGroup || collisionGroup.type != T_GROUP) return new Error('dragZone constructor - unable to recover collisionGroup group');
 
     // `coordinateSource` will be an object containing `x` and `y` attributes
     // + default's to the zone's `here` object
@@ -92,15 +124,15 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
     }
     else {
 
-        if (zone.type === 'Canvas') coordinateSource = zone.base.here;
+        if (zone.type == T_CANVAS) coordinateSource = zone.base.here;
         else coordinateSource = zone.here;
     }
 
     if (!coordinateSource) return new Error('dragZone constructor - unable to discover a usable coordinateSource object');
 
     // `startOn`, `endOn` - if supplied, then need to be arrays
-    if (!Array.isArray(startOn)) startOn = ['down'];
-    if (!Array.isArray(endOn)) endOn = ['up'];
+    if (!_isArray(startOn)) startOn = [DOWN];
+    if (!_isArray(endOn)) endOn = [UP];
 
     if (exposeCurrentArtefact == null) exposeCurrentArtefact = false;
     if (preventTouchDefaultWhenDragging == null) preventTouchDefaultWhenDragging = false;
@@ -156,7 +188,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
         checkE(e);
 
         let type = e.type;
-        if (type === 'touchstart' || type === 'touchcancel') touchAction(e, resetCoordsToZeroOnTouchEnd);
+        if (type == TOUCH_START || type == TOUCH_CANCEL) touchAction(e, resetCoordsToZeroOnTouchEnd);
 
         current = collisionGroup.getArtefactAt(coordinateSource);
 
@@ -180,7 +212,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
             checkE(e);
 
             let type = e.type;
-            if (type === 'touchmove') touchAction(e);
+            if (type == TOUCH_MOVE) touchAction(e);
 
             if (e.shiftKey) updateWhileShiftMoving(e);
             else updateWhileMoving(e);
@@ -194,7 +226,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
             checkE(e);
 
             let type = e.type;
-            if (type === 'touchend') {
+            if (type == TOUCH_END) {
 
                 touchAction(e, resetCoordsToZeroOnTouchEnd);
             }
@@ -228,7 +260,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
         if (actionKill) {
 
-            if (actionKill === 'exit' || actionKill === 'drop') {
+            if (actionKill == EXIT || actionKill == DROP) {
 
                 drop();
                 updateOnPrematureExit();
@@ -276,7 +308,7 @@ export const makeDragZone = function (items = Ωempty) {
             while (!name) {
 
                 if (dragZones[myTarget.id]) name = myTarget.id;
-                if (myTarget.tagName === 'BODY') break;
+                if (myTarget.tagName == $BODY) break;
                 myTarget = myTarget.parentElement;
             }
 
@@ -320,7 +352,7 @@ export const makeDragZone = function (items = Ωempty) {
     const doAddListeners = (startOn, endOn, target) => {
 
         addListener(startOn, pickup, target);
-        addListener('move', move, target);
+        addListener(MOVE, move, target);
         addListener(endOn, drop, target);
     };
 
@@ -328,7 +360,7 @@ export const makeDragZone = function (items = Ωempty) {
     const doRemoveListeners = (startOn, endOn, target) => {
 
         removeListener(startOn, pickup, target);
-        removeListener('move', move, target);
+        removeListener(MOVE, move, target);
         removeListener(endOn, drop, target);
     };
 

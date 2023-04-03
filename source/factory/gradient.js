@@ -17,10 +17,21 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { pushUnique, Ωempty } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    pushUnique, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
+
+
+// Local constants
+const BLANK = 'rgb(0 0 0 / 0)',
+    STYLES = 'styles',
+    T_GRADIENT = 'Gradient';
 
 
 // #### Gradient constructor
@@ -32,10 +43,10 @@ const Gradient = function (items = Ωempty) {
 
 
 // #### Gradient prototype
-const P = Gradient.prototype = Object.create(Object.prototype);
+const P = Gradient.prototype = doCreate();
 
-P.type = 'Gradient';
-P.lib = 'styles';
+P.type = T_GRADIENT;
+P.lib = STYLES;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -75,32 +86,32 @@ P.buildStyle = function (cell) {
     
     if (cell) {
 
-        let engine = cell.engine;
+        const engine = cell.engine;
 
         if (engine) {
 
-            let gradient = engine.createLinearGradient(...this.gradientArgs);
+            const gradient = engine.createLinearGradient(...this.gradientArgs);
             
             return this.addStopsToGradient(gradient, this.paletteStart, this.paletteEnd, this.cyclePalette);
         }
     }
-    return 'rgb(0 0 0 / 0)';
+    return BLANK;
 };
 
 // `updateGradientArgs` - internal function
 P.updateGradientArgs = function (x, y) {
 
-    let gradientArgs = this.gradientArgs,
+    const gradientArgs = this.gradientArgs,
         currentStart = this.currentStart,
         currentEnd = this.currentEnd;
 
-    let sx = currentStart[0] + x,
+    const sx = currentStart[0] + x,
         sy = currentStart[1] + y,
         ex = currentEnd[0] + x,
         ey = currentEnd[1] + y;
 
     // check to correct situation where coordinates represent a '0 x 0' box - which will cause errors in some browsers
-    if (sx === ex && sy === ey) ex++;
+    if (sx == ex && sy == ey) ex++;
 
     gradientArgs.length = 0;
     gradientArgs.push(sx, sy, ex, ey);

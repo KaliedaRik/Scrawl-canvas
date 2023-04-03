@@ -15,6 +15,7 @@ export const _keys = Object.keys;
 export const _now = Date.now;
 export const _parse = JSON.parse;
 export const _pi = Math.PI;
+export const _piDouble = Math.PI * 2;
 export const _piHalf = Math.PI * 0.5;
 export const _pow = Math.pow;
 export const _hypot = Math.hypot;
@@ -26,6 +27,9 @@ export const _sin = Math.sin;
 export const _sqrt = Math.sqrt;
 export const _string = JSON.stringify;
 export const _values = Object.values;
+export const _isInteger = Number.isInteger;
+
+export const _tick = 16 / 1000;
 
 /* mixin/anchor */
 // export const DESCRIPTION = 'description';
@@ -127,6 +131,7 @@ export const _values = Object.values;
 // export const CORNER_ATTR = 'data-scrawl-corner-div';
 // export const CORNER_ATTR_VAL = 'sc';
 // export const CORNER_LABELS = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'];
+// export const CORNER_SELECTOR = '[data-scrawl-corner-div="sc"]';
 // export const DIV = 'div';
 // export const LOCAL = 'local';
 // export const MIMIC = 'mimic';
@@ -484,6 +489,126 @@ export const _values = Object.values;
 // export const T_CRESCENT = 'Crescent';
 // export const ENTITY = 'entity';
 // export const DESTINATION_OUT = 'destination-out';
+
+/* factory/dragZone */
+// export const ACCEPTED_WRAPPERS = ['Canvas', 'Stack'];
+// export const T_CANVAS = 'Canvas';
+// export const T_GROUP = 'Group';
+// export const DOWN = 'down';
+// export const UP = 'up';
+// export const TOUCH_START = 'touchstart';
+// export const TOUCH_CANCEL = 'touchcancel';
+// export const TOUCH_MOVE = 'touchmove';
+// export const TOUCH_END = 'touchend';
+// export const EXIT = 'exit';
+// export const DROP = 'drop';
+// export const $BODY = 'BODY';
+// export const MOVE = 'move';
+
+/* factory/element */
+// export const T_ELEMENT = 'Element';
+// export const ELEMENT = 'element';
+// export const CORNER_SELECTOR = '[data-scrawl-corner-div="sc"]';
+// export const CANVAS = 'canvas';
+// export const ABSOLUTE = 'absolute';
+// export const MIMIC = 'mimic';
+
+/* factory/emitter */
+// export const T_EMITTER = 'Emitter';
+// export const T_WORLD = 'World';
+// export const ENTITY = 'entity';
+// export const EULER = 'euler';
+// export const BLACK = 'rgb(0 0 0 / 1)';
+// export const MOUSE = 'mouse';
+// export const PARTICLE = 'particle';
+
+/* factory/filter */
+
+/* factory/filterEngine-bluenoiseData */
+
+/* factory/filterEngine */
+
+/* factory/fontAttributes */
+// export const _PC = 'pc';
+// export const _Q = 'Q';
+// export const BOLD = 'bold';
+// export const BOLDER = 'bolder';
+// export const CAP = 'cap';
+// export const CH = 'ch';
+// export const CM = 'cm';
+// export const CONDENSED = 'condensed';
+// export const DEFAULT_SIZE = '12px';
+// export const EM = 'em';
+// export const EX = 'ex';
+// export const EXPANDED = 'expanded';
+// export const EXTRA_CONDENSED = 'extra-condensed';
+// export const EXTRA_EXPANDED = 'extra-expanded';
+// export const FONT_ATTRIBUTE = 'fontattribute';
+// export const IC = 'ic';
+// export const IN = 'in';
+// export const ITALIC = 'italic';
+// export const LARGE = 'large';
+// export const LARGER = 'larger';
+// export const LH = 'lh';
+// export const LIGHTER = 'lighter';
+// export const MEDIUM = 'medium';
+// export const MM = 'mm';
+// export const NORMAL = 'normal';
+// export const OBLIQUE = 'oblique';
+// export const PC = '%';
+// export const PT = 'pt';
+// export const PX = 'px';
+// export const REM = 'rem';
+// export const RLH = 'rlh';
+// export const SANS_SERIF = 'sans-serif';
+// export const SEMI_CONDENSED = 'semi-condensed';
+// export const SEMI_EXPANDED = 'semi-expanded';
+// export const SIZE_SUFFIX = ['in', 'cm', 'mm', 'Q', 'pc', 'pt', 'px'];
+// export const SMALL = 'small';
+// export const SMALL_CAPS = 'small-caps';
+// export const SMALLER = 'smaller';
+// export const SPACE = ' ';
+// export const STOP = '.';
+// export const T_CELL = 'Cell';
+// export const T_FONT_ATTRIBUTES = 'FontAttributes';
+// export const ULTRA_CONDENSED = 'ultra-condensed';
+// export const ULTRA_EXPANDED = 'ultra-expanded';
+// export const VB = 'vb';
+// export const VH = 'vh';
+// export const VI = 'vi';
+// export const VMAX = 'vmax';
+// export const VMIN = 'vmin';
+// export const VW = 'vw';
+// export const X_LARGE = 'x-large';
+// export const X_SMALL = 'x-small';
+// export const XX_LARGE = 'xx-large';
+// export const XX_SMALL = 'xx-small';
+// export const XXX_LARGE = 'xxx-large';
+// export const ZERO_STR = '';
+// export const RFS_ARRAY_1 = ['italic','oblique','small-caps','normal','bold','lighter','bolder','ultra-condensed','extra-condensed','semi-condensed','condensed','ultra-expanded','extra-expanded','semi-expanded','expanded','xx-small','x-small','small','medium','xxx-large','xx-large','x-large','large'];
+// export const RFS_ARRAY_2 = ['0','1','2','3','4','5','6','7','8','9'];
+
+/* factory/gradient */
+// export const BLANK = 'rgb(0 0 0 / 0)';
+// export const STYLES = 'styles';
+// export const T_GRADIENT = 'Gradient';
+
+/* factory/grid */
+// export const BLACK = 'rgb(0 0 0 / 1)';
+// export const CELL_GRADIENT = 'cellGradient';
+// export const COLOR = 'color';
+// export const ENTITY = 'entity';
+// export const FILL = 'fill';
+// export const GRAY = 'rgb(127 127 127 / 1)';
+// export const GRID_GRADIENT = 'gridGradient';
+// export const GRID_PICTURE = 'gridPicture';
+// export const SOURCE_IN = 'source-in';
+// export const SOURCE_OVER = 'source-over';
+// export const T_GRID = 'Grid';
+// export const TILE_PICTURE = 'tilePicture';
+// export const WHITE = 'rgb(255 255 255 / 1)';
+
+
 
 
 

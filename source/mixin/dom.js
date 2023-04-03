@@ -78,6 +78,7 @@ const ABSOLUTE = 'absolute',
     CORNER_ATTR = 'data-scrawl-corner-div',
     CORNER_ATTR_VAL = 'sc',
     CORNER_LABELS = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
+    CORNER_SELECTOR = '[data-scrawl-corner-div="sc"]',
     DIV = 'div',
     LOCAL = 'local',
     MIMIC = 'mimic',
@@ -220,7 +221,7 @@ export default function (P = Ωempty) {
             const el = this.domElement;
             const node = el.cloneNode(true);
 
-            const kids = node.querySelectorAll('[data-scrawl-corner-div="sc"]');
+            const kids = node.querySelectorAll(CORNER_SELECTOR);
             kids.forEach(kid => node.removeChild(kid));
 
             copy.outerHTML = node.outerHTML;
