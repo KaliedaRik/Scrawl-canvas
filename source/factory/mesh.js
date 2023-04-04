@@ -22,16 +22,68 @@
 
 
 // #### Imports
-import { constructors, artefact } from '../core/library.js';
-import { mergeOver, mergeDiscard, pushUnique, λnull, λthis, xta, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    constructors, 
+} from '../core/library.js';
 
-import { makeState, stateKeys } from './state.js';
-import { requestCell, releaseCell } from './cell-fragment.js';
+import { 
+    doCreate,
+    mergeDiscard, 
+    mergeOver, 
+    pushUnique, 
+    xta, 
+    λnull, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    makeState, 
+    stateKeys, 
+} from './state.js';
+
+import { 
+    releaseCell, 
+    requestCell, 
+} from './cell-fragment.js';
+
 import { currentGroup } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
 import anchorMix from '../mixin/anchor.js';
+
+import { 
+    _atan2,
+    _ceil,
+    _cos,
+    _floor,
+    _hypot,
+    _isArray,
+    _keys,
+    _max,
+    _min,
+    _parse,
+    _piHalf,
+    _sin,
+    _sqrt,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const ARG_SPLITTER = ',',
+    DESTINATION_OUT = 'destination-out',
+    ENTITY = 'entity',
+    FILL = 'fill',
+    NAME = 'name',
+    T_CELL = 'Cell',
+    T_GROUP = 'Group',
+    T_MESH = 'Mesh',
+    T_NET = 'Net',
+    T_PICTURE = 'Picture',
+    UNDEFINED = 'undefined',
+    ZERO_STR = '';
 
 
 // #### Mesh constructor
@@ -68,9 +120,9 @@ const Mesh = function (items = Ωempty) {
 
 
 // #### Mesh prototype
-const P = Mesh.prototype = Object.create(Object.prototype);
-P.type = 'Mesh';
-P.lib = 'entity';
+const P = Mesh.prototype = doCreate();
+P.type = T_MESH;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -168,7 +220,7 @@ const defaultAttributes = {
 // ```
 //
 // __method__ - All normal Scrawl-canvas entity stamping methods are supported.
-    method: 'fill',
+    method: FILL,
 
 
 // Mesh entitys support appropriate styling attributes, mainly for their stroke styles (used with the `draw`, `drawAndFill`, `fillAndDraw`, `drawThenFill` and `fillThenDraw` stamping methods). 
@@ -218,7 +270,7 @@ P.processPacketOut = function (key, value, incl) {
 
 P.finalizePacketOut = function (copy, items) {
 
-    let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+    const stateCopy = _parse(this.state.saveAsPacket(items))[3];
     copy = mergeOver(copy, stateCopy);
 
     copy = this.handlePacketAnchor(copy, items);
@@ -230,7 +282,7 @@ P.handlePacketAnchor = function (copy, items) {
 
     if (this.anchor) {
 
-        let a = JSON.parse(this.anchor.saveAsPacket(items))[3];
+        const a = _parse(this.anchor.saveAsPacket(items))[3];
         copy.anchor = a;
     }
     return copy;
@@ -265,18 +317,18 @@ P.get = function (item) {
 
         let val;
 
-        if (typeof def != 'undefined') {
+        if (typeof def != UNDEFINED) {
 
             val = this[item];
-            return (typeof val != 'undefined') ? val : def;
+            return (typeof val != UNDEFINED) ? val : def;
         }
 
         def = state.defs[item];
 
-        if (typeof def != 'undefined') {
+        if (typeof def != UNDEFINED) {
 
             val = state[item];
-            return (typeof val != 'undefined') ? val : def;
+            return (typeof val != UNDEFINED) ? val : def;
         }
         return null;
     }
@@ -285,7 +337,7 @@ P.get = function (item) {
 // __set__ - copied over from the entity mixin.
 P.set = function (items = Ωempty) {
 
-    const keys = Object.keys(items),
+    const keys = _keys(items),
         keysLen = keys.length;
 
     if (keysLen) {
@@ -297,21 +349,21 @@ P.set = function (items = Ωempty) {
         const stateSetters = (state) ? state.setters : Ωempty;
         const stateDefs = (state) ? state.defs : Ωempty;
 
-        let predefined, i, key, value;
+        let fn, i, key, value;
 
         for (i = 0; i < keysLen; i++) {
 
             key = keys[i];
             value = items[key];
 
-            if (key && key != 'name' && value != null) {
+            if (key && key != NAME && value != null) {
 
                 if (!stateKeys.includes(key)) {
 
-                    predefined = setters[key];
+                    fn = setters[key];
 
-                    if (predefined) predefined.call(this, value);
-                    else if (typeof defs[key] != 'undefined') {
+                    if (fn) fn.call(this, value);
+                    else if (typeof defs[key] != UNDEFINED) {
 
                         this[key] = value;
                         this.dirtyFilterIdentifier = true;
@@ -319,10 +371,10 @@ P.set = function (items = Ωempty) {
                 }
                 else {
 
-                    predefined = stateSetters[key];
+                    fn = stateSetters[key];
 
-                    if (predefined) predefined.call(state, value);
-                    else if (typeof stateDefs[key] != 'undefined') state[key] = value;
+                    if (fn) fn.call(state, value);
+                    else if (typeof stateDefs[key] != UNDEFINED) state[key] = value;
                 }
             }
         }
@@ -333,7 +385,7 @@ P.set = function (items = Ωempty) {
 // __setDelta__ - copied over from the entity mixin.
 P.setDelta = function (items = Ωempty) {
 
-    const keys = Object.keys(items),
+    const keys = _keys(items),
         keysLen = keys.length;
 
     if (keysLen) {
@@ -345,21 +397,21 @@ P.setDelta = function (items = Ωempty) {
         const stateSetters = (state) ? state.deltaSetters : Ωempty;
         const stateDefs = (state) ? state.defs : Ωempty;
 
-        let predefined, i, key, value;
+        let fn, i, key, value;
 
         for (i = 0; i < keysLen; i++) {
 
             key = keys[i];
             value = items[key];
 
-            if (key && key != 'name' && value != null) {
+            if (key && key != NAME && value != null) {
 
                 if (!stateKeys.includes(key)) {
 
-                    predefined = setters[key];
+                    fn = setters[key];
 
-                    if (predefined) predefined.call(this, value);
-                    else if (typeof defs[key] != 'undefined') {
+                    if (fn) fn.call(this, value);
+                    else if (typeof defs[key] != UNDEFINED) {
 
                         this[key] = addStrings(this[key], value);
                         this.dirtyFilterIdentifier = true;
@@ -367,10 +419,10 @@ P.setDelta = function (items = Ωempty) {
                 }
                 else {
 
-                    predefined = stateSetters[key];
+                    fn = stateSetters[key];
 
-                    if (predefined) predefined.call(state, value);
-                    else if (typeof stateDefs[key] != 'undefined') state[key] = addStrings(state[key], value);
+                    if (fn) fn.call(state, value);
+                    else if (typeof stateDefs[key] != UNDEFINED) state[key] = addStrings(state[key], value);
                 }
             }
         }
@@ -388,14 +440,14 @@ S.host = function (item) {
         if (host && host.here) this.host = host.name;
         else this.host = item;
     }
-    else this.host = '';
+    else this.host = ZERO_STR;
     this.dirtyFilterIdentifier = true;
 };
 
 // __group__ - copied over from the position mixin.
 G.group = function () {
 
-    return (this.group) ? this.group.name : '';
+    return (this.group) ? this.group.name : ZERO_STR;
 };
 S.group = function (item) {
 
@@ -403,7 +455,7 @@ S.group = function (item) {
 
     if (item) {
 
-        if (this.group && this.group.type === 'Group') this.group.removeArtefacts(this.name);
+        if (this.group && this.group.type == T_GROUP) this.group.removeArtefacts(this.name);
 
         if (item.substring) {
 
@@ -415,7 +467,7 @@ S.group = function (item) {
         else this.group = item;
     }
 
-    if (this.group && this.group.type === 'Group') this.group.addArtefacts(this.name);
+    if (this.group && this.group.type == T_GROUP) this.group.addArtefacts(this.name);
 };
 
 // __getHere__ - returns current core position.
@@ -431,7 +483,7 @@ S.net = function (item) {
 
         item = (item.substring) ? artefact[item] : item;
 
-        if (item && item.type === 'Net') {
+        if (item && item.type == T_NET) {
 
             this.net = item;
             this.dirtyStart = true;
@@ -445,11 +497,11 @@ S.source = function (item) {
 
     item = (item.substring) ? artefact[item] : item;
 
-    if (item && item.type === 'Picture') {
+    if (item && item.type == T_PICTURE) {
 
-        let src = this.source;
+        const src = this.source;
 
-        if (src && src.type === 'Picture') src.imageUnsubscribe(this.name);
+        if (src && src.type == T_PICTURE) src.imageUnsubscribe(this.name);
 
         this.source = item;
         item.imageSubscribe(this.name);
@@ -475,7 +527,7 @@ P.getHost = function () {
     if (this.currentHost) return this.currentHost;
     else if (this.host) {
 
-        let host = artefact[this.host];
+        const host = artefact[this.host];
 
         if (host) {
 
@@ -501,11 +553,13 @@ P.prepareStamp = function() {
     this.badNet = true;
     this.dirtyParticles = false;
 
-    let {net, particlePositions} = this;
+    if (!this.particlePositions) this.particlePositions = [];
+
+    const {net, particlePositions} = this;
 
     if (net && net.particleStore && net.particleStore.length > 3) {
 
-        let {rows, columns, particleStore} = net;
+        const {rows, columns, particleStore} = net;
 
         if (rows && columns) {
 
@@ -513,22 +567,20 @@ P.prepareStamp = function() {
             this.rows = rows;
             this.columns = columns;
 
-            if (!particlePositions) particlePositions = [];
-
             // Sanity check
             // + We will recalculate stuff if any of the net particles have moved since the last check. This is most simply done by constructing a string of all current particle position values and comparing it to the previous string. If they are the same, then we can use the stashed image construct, otherwise we build and stash a new image construct
 
-            let checkPositions = [];
+            const checkPositions = [];
 
             particleStore.forEach(p => {
 
-                let pos = p.position;
-                let {x, y} = pos;
+                const pos = p.position;
+                const {x, y} = pos;
 
                 checkPositions.push([x, y]);
             });
-            let checkPositionsString = checkPositions.join(','),
-                particlePositionsString = particlePositions.join(',');
+            const checkPositionsString = checkPositions.join(ARG_SPLITTER),
+                particlePositionsString = particlePositions.join(ARG_SPLITTER);
 
             if (particlePositionsString !== checkPositionsString) {
 
@@ -613,19 +665,19 @@ P.setSourceDimension = function () {
                 dx = x1 - x0;
                 dy = y1 - y0;
 
-                l = Math.sqrt((dx * dx) + (dy * dy));
+                l = _sqrt((dx * dx) + (dy * dy));
                 res += l;
                 len.push(l);
             }
             results.push(res);
         }
-        this.sourceDimension = Math.max(...results);
+        this.sourceDimension = _max(...results);
 
         // Sanity check - the particle system, when it breaks down, can create some massive dimension values!
         let host = this.currentHost || this.getHost();
         if (host) {
 
-            let max = Math.max(...host.currentDimensions);
+            let max = _max(...host.currentDimensions);
             if (this.sourceDimension > max) this.sourceDimension = max;
         }
 
@@ -645,10 +697,10 @@ P.setSourceDimension = function () {
 
         this.struts = coords;
 
-        let xMin = Math.min(...xPos),
-            yMin = Math.min(...yPos),
-            xMax = Math.max(...xPos),
-            yMax = Math.max(...yPos);
+        let xMin = _min(...xPos),
+            yMin = _min(...yPos),
+            xMax = _max(...xPos),
+            yMax = _max(...yPos);
 
         this.boundingBox = [xMin, yMin, xMax - xMin, yMax - yMin];
 
@@ -687,7 +739,7 @@ P.setSourceDimension = function () {
 // + TODO: we may have to disable this functionality for the Mesh entity, if we use a Web Assembly module for either the prepareStamp calculations, or to build the output image itself
 P.simpleStamp = function (host, changes) {
 
-    if (host && host.type === 'Cell') {
+    if (host && host.type == T_CELL) {
 
         this.currentHost = host;
         
@@ -710,7 +762,7 @@ P.stamp = function (force = false, host, changes) {
 
     if (force) {
 
-        if (host && host.type === 'Cell') this.currentHost = host;
+        if (host && host.type == T_CELL) this.currentHost = host;
 
         if (changes) {
 
@@ -743,7 +795,7 @@ P.cleanInput = function () {
 
     this.setSourceDimension();
 
-    let sourceDimension = this.sourceDimension;
+    const sourceDimension = this.sourceDimension;
 
     if (!sourceDimension) {
 
@@ -751,7 +803,7 @@ P.cleanInput = function () {
         return false;
     }
 
-    let cell = requestCell(),
+    const cell = requestCell(),
         engine = cell.engine,
         canvas = cell.element;
 
@@ -772,7 +824,7 @@ P.cleanInput = function () {
         width: sourceDimension,
         height: sourceDimension,
 
-        method: 'fill',
+        method: FILL,
     })
     let sourceImageData = engine.getImageData(0, 0, sourceDimension, sourceDimension);
 
@@ -784,13 +836,13 @@ P.cleanInput = function () {
 // + If you're not a fan of big functions, please look away now.
 P.cleanOutput = function () {
     
-    const halfPi = Math.PI / 2;
+    // const _piHalf = Math.PI / 2;
 
     this.dirtyOutput = false;
 
     let {sourceDimension, sourceImageData, columns, rows, struts, boundingBox} = this;
 
-    sourceDimension = Math.ceil(sourceDimension);
+    sourceDimension = _ceil(sourceDimension);
 
     if (sourceImageData && rows - 1 > 0) {
 
@@ -838,7 +890,7 @@ P.cleanOutput = function () {
                 tLen *= sourceDimension;
                 bLen *= sourceDimension;
 
-                maxLen = Math.max(tLen, bLen, inputStrutWidth);
+                maxLen = _max(tLen, bLen, inputStrutWidth);
 
                 tStep = tLen / maxLen;
                 bStep = bLen / maxLen;
@@ -860,8 +912,8 @@ P.cleanOutput = function () {
 
                     xLen = tx - bx;
                     yLen = ty - by;
-                    stripLength = Math.sqrt((xLen * xLen) + (yLen * yLen));
-                    stripAngle = Math.atan2(yLen, xLen) + halfPi;
+                    stripLength = _sqrt((xLen * xLen) + (yLen * yLen));
+                    stripAngle = _atan2(yLen, xLen) + _piHalf;
 
                     outputEngine.setTransform(1, 0, 0, 1, tx, ty);
                     outputEngine.rotate(stripAngle);
@@ -875,11 +927,11 @@ P.cleanOutput = function () {
             }
         }
 
-        let iFactor = this.interferenceFactor,
+        const iFactor = this.interferenceFactor,
             iLoops = this.interferenceLoops,
 
-            iWidth = Math.ceil(outputWidth * iFactor),
-            iHeight = Math.ceil(outputHeight * iFactor);
+            iWidth = _ceil(outputWidth * iFactor),
+            iHeight = _ceil(outputHeight * iFactor);
 
         inputCanvas.width = iWidth;
         inputCanvas.height = iHeight;
@@ -893,7 +945,7 @@ P.cleanOutput = function () {
             outputEngine.drawImage(inputCanvas, 0, 0, iWidth, iHeight, 0, 0, outputWidth, outputHeight);
         }
 
-        let outputData = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
+        const outputData = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
 
         releaseCell(inputCell);
         releaseCell(outputCell);
@@ -908,11 +960,11 @@ P.cleanOutput = function () {
 // `regularStamp` - internal function called by `stamp`
 P.regularStamp = function () {
 
-    let dest = this.currentHost;
+    const dest = this.currentHost;
 
     if (dest) {
 
-        let engine = dest.engine;
+        const engine = dest.engine;
 
         if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
@@ -987,7 +1039,7 @@ P.clear = function (engine) {
 
         tempEngine.putImageData(output, 0, 0);
         engine.setTransform(1, 0, 0, 1, 0, 0);
-        engine.globalCompositeOperation = 'destination-out';
+        engine.globalCompositeOperation = DESTINATION_OUT;
         engine.drawImage(tempCanvas, 0, 0);
         engine.globalCompositeOperation = gco;
 
@@ -1014,16 +1066,16 @@ P.doStroke = function (engine) {
 // + Problem solved by putting output into a pool cell, then drawing it from there to the host cell
 P.doFill = function (engine) {
 
-    let output = this.output,
+    const output = this.output,
         canvas = (this.currentHost) ? this.currentHost.element : false;
 
     if (output && canvas) {
 
-        let tempCell = requestCell(),
+        const tempCell = requestCell(),
             tempEngine = tempCell.engine,
             tempCanvas = tempCell.element;
 
-        let w = canvas.width,
+        const w = canvas.width,
             h = canvas.height;
 
         tempCanvas.width = w;
@@ -1048,7 +1100,7 @@ P.checkHit = function (items = [], mycell) {
 
     if (!this.pathObject) return false;
 
-    let tests = (!Array.isArray(items)) ?  [items] : items,
+    let tests = (!_isArray(items)) ?  [items] : items,
         poolCellFlag = false;
 
     if (!mycell) {
@@ -1062,7 +1114,7 @@ P.checkHit = function (items = [], mycell) {
 
     if (tests.some(test => {
 
-        if (Array.isArray(test)) {
+        if (_isArray(test)) {
 
             tx = test[0];
             ty = test[1];
@@ -1080,7 +1132,7 @@ P.checkHit = function (items = [], mycell) {
 
     }, this)) {
 
-        let r = {
+        const r = {
             x: tx,
             y: ty,
             artefact: this

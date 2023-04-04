@@ -1,8 +1,4 @@
 // # Keyboard zones.
-
-import { λnull, Ωempty, mergeDiscard } from "../core/utilities.js";
-import { addNativeListener, removeNativeListener } from "../core/events.js";
-
 // __makeKeyboardZone__ is an attempt to make setting up keyboard listeners (for accessibility) within a Scrawl-canvas stack or canvas as simple as possible. Similar to the drag zone functionality, SC tries to limit the number of keyboard event listeners attached to a particular DOM element to the bare minimum
 //
 // Required attribute of the argument object:
@@ -10,13 +6,39 @@ import { addNativeListener, removeNativeListener } from "../core/events.js";
 //
 // Additional, optional, attributes in the argument object
 // + `'none', 'shiftOnly', 'altOnly', 'ctrlOnly', 'metaOnly', 'shiftAlt', 'shiftCtrl', 'shiftMeta', 'altCtrl', 'altMeta', 'ctrlMeta', 'shiftAltCtrl', 'shiftAltMeta', 'shiftCtrlMeta', 'altCtrlMeta', 'all'` - a set of objects containing `keyboard Key: function` attributes defining the group of actions to take when the user presses the associated key or key-combination.
+
+import { 
+    mergeDiscard, 
+    λnull, 
+    Ωempty, 
+} from "../core/utilities.js";
+
+import { 
+    addNativeListener, 
+    removeNativeListener, 
+} from "../core/events.js";
+
+import { 
+    _keys,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const $BODY = 'BODY',
+    ACCEPTED_WRAPPERS = ['Canvas', 'Stack'],
+    KEY_DOWN = 'keydown',
+    KEY_UP = 'keyup',
+    keyGroupsArray = ['none', 'shiftOnly', 'altOnly', 'ctrlOnly', 'metaOnly', 'shiftAlt', 'shiftCtrl', 'shiftMeta', 'altCtrl', 'altMeta', 'ctrlMeta', 'shiftAltCtrl', 'shiftAltMeta', 'shiftCtrlMeta', 'altCtrlMeta', 'all'],
+    NONE = 'none',
+    T_ESCAPE = 'Escape',
+    T_TAB = 'Tab';
+
+
 const keyboardZones = {};
 
 const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRemoveListeners) {
 
-    let {
-        zone, 
-    } = items;
+    let zone = items.zone;
 
     // `zone` is required
     // + must be either a Canvas or Stack wrapper, or a wrapper's String name
@@ -24,9 +46,9 @@ const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRem
 
     if (zone.substring) zone = artefact[zone];
 
-    if (!zone || !['Canvas', 'Stack'].includes(zone.type)) return new Error('keyboardZone constructor - zone object is not a Stack or Canvas wrapper');
+    if (!zone || !ACCEPTED_WRAPPERS.includes(zone.type)) return new Error('keyboardZone constructor - zone object is not a Stack or Canvas wrapper');
 
-    let target = zone.domElement;
+    const target = zone.domElement;
 
     if (!target) return new Error('keyboardZone constructor - zone does not contain a target DOM element');
 
@@ -48,25 +70,6 @@ const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRem
             Meta: false,
         };
     }
-
-    const keyGroupsArray = [
-        'none',
-        'shiftOnly',
-        'altOnly',
-        'ctrlOnly',
-        'metaOnly',
-        'shiftAlt',
-        'shiftCtrl',
-        'shiftMeta',
-        'altCtrl',
-        'altMeta',
-        'ctrlMeta',
-        'shiftAltCtrl',
-        'shiftAltMeta',
-        'shiftCtrlMeta',
-        'altCtrlMeta',
-        'all',
-    ];
 
     if (!zoneItem.keyGroups) {
 
@@ -95,7 +98,7 @@ const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRem
                 const { key } = e;
 
                // Tab, Esc
-                if ('Tab' === key || 'Escape' === key) {
+                if (T_TAB == key || T_ESCAPE == key) {
 
                     target.blur();
                     return;
@@ -170,8 +173,8 @@ const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRem
 
                 e.preventDefault();
 
-                const { extraKeys } = zoneItem;
-                const { key } = e;
+                const extraKeys = zoneItem.extraKeys;
+                const key = e.key;
 
                 if (extraKeys[key] != null) extraKeys[key] = false;
             }
@@ -190,11 +193,11 @@ const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRem
 
     // __getMappedKeys__ - A function which returns an Array of the defined keys for the given group, the name of which should be supplied as the function's argument
     // + To update key mappings, invoke the `makeKeyboardZone` function again, including the new mappings as part of the argument object
-    const getMappedKeys = (keyGroup = 'none') => {
+    const getMappedKeys = (keyGroup = NONE) => {
 
         if (zoneItem.keyGroups[keyGroup] != null) {
 
-            return Object.keys(zoneItem.keyGroups[keyGroup]);
+            return _keys(zoneItem.keyGroups[keyGroup]);
         }
         return [];
     }
@@ -220,7 +223,7 @@ export const makeKeyboardZone = function (items = Ωempty) {
             while (!name) {
 
                 if (keyboardZones[myTarget.id]) name = myTarget.id;
-                if (myTarget.tagName === 'BODY') break;
+                if (myTarget.tagName == $BODY) break;
                 myTarget = myTarget.parentElement;
             }
 
@@ -246,16 +249,16 @@ export const makeKeyboardZone = function (items = Ωempty) {
     // Listeners are added to the DOM element when the first keyboard zone is created for that target
     const doAddListeners = (target) => {
 
-        addNativeListener('keydown', actionKeyDown, target);
-        addNativeListener('keyup', actionKeyUp, target);
+        addNativeListener(KEY_DOWN, actionKeyDown, target);
+        addNativeListener(KEY_UP, actionKeyUp, target);
     };
 
 
     // Listeners are only removed from the DOM element when all the keyboard zones associated with that target have been killed
     const doRemoveListeners = (target) => {
 
-        removeNativeListener('keydown', actionKeyDown, target);
-        removeNativeListener('keyup', actionKeyUp, target);
+        removeNativeListener(KEY_DOWN, actionKeyDown, target);
+        removeNativeListener(KEY_UP, actionKeyUp, target);
     };
 
     // Returns an object containing the `kill` and `getMappedKeys` functions for this keyboard mapping

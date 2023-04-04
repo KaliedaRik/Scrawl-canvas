@@ -20,16 +20,69 @@
 
 
 // #### Imports
-import { constructors, artefact, artefactnames, entity, world, particle } from '../core/library.js';
-import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    artefactnames, 
+    constructors, 
+    entity, 
+    particle, 
+    world, 
+} from '../core/library.js';
+
+import { 
+    doCreate,
+    isa_fn, 
+    isa_obj, 
+    mergeOver, 
+    pushUnique, 
+    xt, 
+    xta, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
-import { requestVector, releaseVector } from './vector.js';
 import { makeSpring } from './particleSpring.js';
+
+import { 
+    releaseVector, 
+    requestVector, 
+} from './vector.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
+
+import { 
+    _floor,
+    _isArray,
+    _now,
+    _piDouble,
+    _tick,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const BLACK = 'rgb(0 0 0 / 1)',
+    BLANK = 'rgb(0 0 0 / 0)',
+    ENTITY = 'entity',
+    EULER = 'euler',
+    FILL_STYLE = 'fillStyle',
+    HUB_ARTEFACTS_1 = ['Bezier', 'Line', 'Oval', 'Polygon', 'Polyline', 'Quadratic', 'Rectangle', 'Shape', 'Spiral', 'Star', 'Tetragon'],
+    HUB_ARTEFACTS_2 = ['Block', 'Cell', 'Element', 'Grid', 'Phrase', 'Picture', 'Stack'],
+    HUB_ARTEFACTS_3 = ['Wheel'],
+    HUB_SPOKE = 'hub-spoke',
+    POSITION = 'position',
+    SOURCE_OVER = 'source-over',
+    STROKE_STYLE = 'strokeStyle',
+    STRONG_NET = 'strong-net',
+    STRONG_SHAPE = 'strong-shape',
+    T_NET = 'Net',
+    T_PARTICLE = 'Particle',
+    T_POLYLINE = 'Polyline',
+    T_WORLD = 'World',
+    WEAK_NET = 'weak-net',
+    WEAK_SHAPE = 'weak-shape';
 
 
 // #### Net constructor
@@ -70,10 +123,9 @@ const Net = function (items = Ωempty) {
 
 
 // #### Net prototype
-const P = Net.prototype = Object.create(Object.prototype);
-
-P.type = 'Net';
-P.lib = 'entity';
+const P = Net.prototype = doCreate();
+P.type = T_NET;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -113,7 +165,7 @@ const defaultAttributes = {
     mass: 1,
 
     // Physics calculations are handled by the Net entity's physics __engine__ which must be a String value of either `euler` (the default engine), `improved-euler` or `runge-kutta`.
-    engine: 'euler',
+    engine: EULER,
 
     // __springConstant__, __damperConstant__ - positive float Numbers - used for the initial values for any Spring objects generated to connect two Particles
     springConstant: 50,
@@ -126,7 +178,7 @@ const defaultAttributes = {
     showSprings: false,
 
     // __showSpringColor__ - CSS color String - the strokeStyle color used to display the Spring objects
-    showSpringsColor: '#000000',
+    showSpringsColor: BLACK,
 
     // ##### weak-net, strong-net
     // __rows__, __columns__ - positive integer Numbers
@@ -157,7 +209,7 @@ const defaultAttributes = {
     showHitRadius: false,
 
     // __hitRadiusColor__ - CSS color String - the strokeStyle color used to display the hit radius
-    hitRadiusColor: '#000000',
+    hitRadiusColor: BLACK,
 
     // __resetAfterBlur__ - positive float Number (measuring seconds) - physics simulations can be brittle, particularly if they are forced to calculate Particle loads (accelerations), velocities and speeds over a large time step. Rather than manage that time step in cases where the user may neglect or navigate away from the browser tab containing the physics animation, Scrawl-canvas will stop, clear, and recreate the scene if the time it takes the user to return to (re-focus on) the web page is greater than the value set in this attribute.
     resetAfterBlur: 3,
@@ -171,6 +223,7 @@ const defaultAttributes = {
     // __springs__ - Array - holds all the entity's Spring objects
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+
 
 // #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['forces', 'springs', 'particleStore']);
@@ -211,7 +264,7 @@ P.postCloneAction = function(clone, items) {
 P.factoryKill = function (killArtefact, killWorld) {
 
     this.isRunning = false;
-    if (killArtefact) {
+    if (killArtefact) {       
 
         this.artefact.kill();
         if (this.shapeTemplate) this.shapeTemplate.kill();
@@ -223,23 +276,25 @@ P.factoryKill = function (killArtefact, killWorld) {
 
 P.purgeParticlesFromLibrary = function () {
 
-    let {particleStore, springs} = this;
+    const {particleStore, springs} = this;
+
+    let tempArt;
 
     // Net entity particles can be referenced by other artefacts (when using them for positioning coordinates. New particles will be created with the same names as the old ones, so it is enough to replace these references with the String names of the particles)
     artefactnames.forEach(a => {
 
-        let tempArt = artefact[a];
+        tempArt = artefact[a];
 
         if (tempArt) {
 
             if (tempArt.particle && !tempArt.particle.substring && tempArt.particle.name) tempArt.particle = tempArt.particle.name;
 
             // Polyline entitys go one step further in that they can also use Particles in their pin array
-            if (tempArt.type === 'Polyline' && tempArt.useParticlesAsPins) {
+            if (tempArt.type == T_POLYLINE && tempArt.useParticlesAsPins) {
 
                 tempArt.pins.forEach((pin, index) => {
 
-                    if (isa_obj(pin) && pin.type === 'Particle') {
+                    if (isa_obj(pin) && pin.type == T_PARTICLE) {
 
                         tempArt.pins[index] = pin.name;
                         tempArt.dirtyPins = true;
@@ -287,7 +342,7 @@ S.world = function (item) {
     let w;
 
     if (item.substring) w = world[item];
-    else if (isa_obj(item) && item.type === 'World') w = item;
+    else if (isa_obj(item) && item.type == T_WORLD) w = item;
 
     if (w) this.world = w;
 };
@@ -322,18 +377,18 @@ P.regularStamp = function () {
     let {world, artefact:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = this;
 
     let globalAlpha = 1,
-        globalCompositeOperation = 'source-over';
+        globalCompositeOperation = SOURCE_OVER;
 
     if (this.state) {
         globalAlpha = this.state.globalAlpha;
         globalCompositeOperation = this.state.globalCompositeOperation;
     }
 
-    let host = this.currentHost;
+    const host = this.currentHost;
 
     // The particle system is a physics system, which means we need to advance it by a small amount of time as part of each Display cycle
-    let deltaTime = 16 / 1000,
-        now = Date.now();
+    let deltaTime = _tick,
+        now = _now();
 
     if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 
@@ -341,7 +396,7 @@ P.regularStamp = function () {
     if (deltaTime > resetAfterBlur) {
 
         this.purgeParticlesFromLibrary();
-        deltaTime = 16 / 1000;
+        deltaTime = _tick;
     }
 
     // If we have no particles, we need to generate them
@@ -362,7 +417,7 @@ P.regularStamp = function () {
     // Additional visuals are available - specifically we can draw in the springs acting on particle pairs before we stamp the artefact on them
     if (showSprings) {
 
-        let engine = host.engine;
+        const engine = host.engine;
 
         engine.save();
         engine.globalAlpha = globalAlpha;
@@ -371,7 +426,7 @@ P.regularStamp = function () {
         engine.shadowOffsetX = 0,
         engine.shadowOffsetY = 0,
         engine.shadowBlur = 0,
-        engine.shadowColor = 'rgb(0 0 0 / 0)',
+        engine.shadowColor = BLANK,
         engine.lineWidth = 1;
         engine.setTransform(1, 0, 0, 1, 0, 0);
         engine.beginPath();
@@ -399,7 +454,7 @@ P.regularStamp = function () {
     // A second set of additional visuals - display each particle's hit region
     if (showHitRadius) {
 
-        let engine = host.engine;
+        const engine = host.engine;
 
         engine.save();
         engine.globalAlpha = globalAlpha;
@@ -409,14 +464,14 @@ P.regularStamp = function () {
         engine.shadowOffsetX = 0,
         engine.shadowOffsetY = 0,
         engine.shadowBlur = 0,
-        engine.shadowColor = 'rgb(0 0 0 / 0)',
+        engine.shadowColor = BLANK,
 
         engine.setTransform(1, 0, 0, 1, 0, 0);
         engine.beginPath();
 
         particleStore.forEach(p => {
             engine.moveTo(p.position.x, p.position.y);
-            engine.arc(p.position.x, p.position.y, hitRadius, 0, Math.PI * 2);
+            engine.arc(p.position.x, p.position.y, hitRadius, 0, _piDouble);
         });
         
         engine.stroke();
@@ -432,7 +487,7 @@ P.restart = function () {
 
     this.purgeParticlesFromLibrary();
     
-    this.lastUpdated = Date.now();
+    this.lastUpdated = _now();
 
     return this;
 };
@@ -448,7 +503,7 @@ P.checkHit = function (items = [], mycell) {
 
     if (this.noUserInteraction) return false;
 
-    let tests = (!Array.isArray(items)) ?  [items] : items;
+    const tests = (!_isArray(items)) ?  [items] : items;
 
     let particleStore = this.particleStore,
         res = false,
@@ -456,7 +511,7 @@ P.checkHit = function (items = [], mycell) {
 
     if (tests.some(test => {
 
-        if (Array.isArray(test)) {
+        if (_isArray(test)) {
 
             tx = test[0];
             ty = test[1];
@@ -470,7 +525,7 @@ P.checkHit = function (items = [], mycell) {
 
         if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
 
-        let v = requestVector();
+        const v = requestVector();
 
         for (i = 0, iz = particleStore.length; i < iz; i++) {
 
@@ -490,7 +545,7 @@ P.checkHit = function (items = [], mycell) {
 
     }, this)) {
 
-        let r = this.checkHitReturn(tx, ty, mycell, res);
+        const r = this.checkHitReturn(tx, ty, mycell, res);
 
         this.lastHitParticle = res;
 
@@ -515,7 +570,7 @@ P.checkHitReturn = function (x, y, cell, particle) {
 // + One of the entity's Particle objects is being dragged, not the entity itself
 P.pickupArtefact = function (items) {
 
-    let particle = this.lastHitParticle;
+    const particle = this.lastHitParticle;
 
     if (xta(items, particle)) {
 
@@ -537,12 +592,13 @@ P.dropArtefact = function () {
     return this;
 };
 
+
 // #### Pre-defined Net generators
 const generators = {
 
     // `weak-net` - a net made up of rows and columns, with particles at each row/column intersection. The generator will connect each Particle with springs to up to four of its closest horizontal and vertical neighbors
     // + Can be used to model cloth
-    'weak-net': function (host) {
+    [WEAK_NET]: function (host) {
 
         let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
 
@@ -583,8 +639,8 @@ const generators = {
 
                         mass,
 
-                        fill: art.get('fillStyle'),
-                        stroke: art.get('strokeStyle'),
+                        fill: art.get(FILL_STYLE),
+                        stroke: art.get(STROKE_STYLE),
                     });
 
                     p.run(0, 0, false);
@@ -644,7 +700,7 @@ const generators = {
 
     // `strong-net` - a net made up of rows and columns, with particles at each row/column intersection. The generator will connect each Particle with springs to up to eight of its closest horizontal, vertical and diagonal neighbors
     // + Can be used to model a soft-bodied object
-    'strong-net': function (host) {
+    [STRONG_NET]: function (host) {
 
         let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
 
@@ -685,8 +741,8 @@ const generators = {
 
                         mass,
 
-                        fill: art.get('fillStyle'),
-                        stroke: art.get('strokeStyle'),
+                        fill: art.get(FILL_STYLE),
+                        stroke: art.get(STROKE_STYLE),
                     });
 
                     p.run(0, 0, false);
@@ -765,7 +821,7 @@ const generators = {
     },
 
     // `weak-shape` - __Warning: not very stable!__ - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors
-    'weak-shape': function (host) {
+    [WEAK_SHAPE]: function (host) {
 
         let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = this;
 
@@ -819,8 +875,8 @@ const generators = {
 
                     mass,
 
-                    fill: art.get('fillStyle'),
-                    stroke: art.get('strokeStyle'),
+                    fill: art.get(FILL_STYLE),
+                    stroke: art.get(STROKE_STYLE),
                 });
 
                 p.run(0, 0, false);
@@ -885,7 +941,7 @@ const generators = {
     },
 
     // `strong-shape` - __Warning: generally unstable!__ - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors, and make an additional connection with a Particle at some distance from it (to act as a strut)
-    'strong-shape': function (host) {
+    [STRONG_SHAPE]: function (host) {
 
         let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = this;
 
@@ -939,8 +995,8 @@ const generators = {
 
                     mass,
 
-                    fill: art.get('fillStyle'),
-                    stroke: art.get('strokeStyle'),
+                    fill: art.get(FILL_STYLE),
+                    stroke: art.get(STROKE_STYLE),
                 });
 
                 p.run(0, 0, false);
@@ -1002,7 +1058,7 @@ const generators = {
                 springMaker(f, t, `${name}-${precision - 1}~${name}-${2}`);
             }
 
-            let halfPrecision = Math.floor(precision / 2);
+            let halfPrecision = _floor(precision / 2);
 
             for (i = 0; i < precision - halfPrecision; i++) {
 
@@ -1018,7 +1074,7 @@ const generators = {
     },
 
     // `hub-spoke` - __Warning: highly unstable!__ - a rope of Particles set along a path. The generator will connect each Particle with springs to its closest neighbors, and make an additional connection with a 'hub' particle at the template's rotation-reflection point.
-    'hub-spoke': function (host) {
+    [HUB_SPOKE]: function (host) {
 
         let { shapeTemplate, precision } = this;
 
@@ -1052,7 +1108,7 @@ const generators = {
 
             let i, p, f, t, hub;
 
-            if (['Bezier', 'Line', 'Oval', 'Polygon', 'Polyline', 'Quadratic', 'Rectangle', 'Shape', 'Spiral', 'Star', 'Tetragon'].includes(shapeTemplate.type)) {
+            if (HUB_ARTEFACTS_1.includes(shapeTemplate.type)) {
 
                 // build the rim
                 for (i = 0; i < precision; i++) {
@@ -1077,8 +1133,8 @@ const generators = {
 
                         mass,
 
-                        fill: art.get('fillStyle'),
-                        stroke: art.get('strokeStyle'),
+                        fill: art.get(FILL_STYLE),
+                        stroke: art.get(STROKE_STYLE),
                     });
 
                     p.run(0, 0, false);
@@ -1118,14 +1174,14 @@ const generators = {
                     springMaker(f, t, `${name}-${precision - 1}~${name}-${1}`);
                 }
             }
-            else if (['Block', 'Cell', 'Element', 'Grid', 'Phrase', 'Picture', 'Stack'].includes(host.type)) {
+            else if (HUB_ARTEFACTS_2.includes(host.type)) {
 
             }
-            else if (host.type === 'Wheel') {
+            else if (HUB_ARTEFACTS_3.includes(host.type)) {
 
             }
 
-            let [x, y] = shapeTemplate.get('position');
+            let [x, y] = shapeTemplate.get(POSITION);
 
             hub = makeParticle({
 
@@ -1145,8 +1201,8 @@ const generators = {
 
                 mass,
 
-                fill: art.get('fillStyle'),
-                stroke: art.get('strokeStyle'),
+                fill: art.get(FILL_STYLE),
+                stroke: art.get(STROKE_STYLE),
             });
 
             hub.run(0, 0, false);

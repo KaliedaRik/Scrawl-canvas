@@ -21,16 +21,68 @@
 
 
 // #### Imports
-import { constructors, artefact, group } from '../core/library.js';
-import { mergeOver, mergeDiscard, pushUnique, λnull, λthis, xta, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    constructors, 
+    group, 
+} from '../core/library.js';
 
-import { makeState, stateKeys } from './state.js';
-import { requestCell, releaseCell } from './cell-fragment.js';
+import { 
+    doCreate,
+    mergeDiscard, 
+    mergeOver, 
+    pushUnique, 
+    xta, 
+    λnull, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    makeState, 
+    stateKeys, 
+} from './state.js';
+
+import { 
+    releaseCell, 
+    requestCell, 
+} from './cell-fragment.js';
+
 import { currentGroup } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
 import anchorMix from '../mixin/anchor.js';
+
+import { 
+    _atan2,
+    _ceil,
+    _cos,
+    _floor,
+    _hypot,
+    _isArray,
+    _keys,
+    _max,
+    _min,
+    _parse,
+    _piHalf,
+    _sin,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const BLACK = 'rgb(0 0 0 / 1)',
+    DESTINATION_OUT = 'destination-out',
+    ENTITY = 'entity',
+    FILL = 'fill',
+    GOOD_HOST = ['Cell', 'CellFragment'],
+    NAME = 'name',
+    SOURCE_OVER = 'source-over',
+    T_GROUP = 'Group',
+    T_LOOM = 'Loom',
+    T_PICTURE = 'Picture',
+    UNDEFINED = 'undefined',
+    ZERO_STR = '';
 
 
 // #### Loom constructor
@@ -67,9 +119,9 @@ const Loom = function (items = Ωempty) {
 
 
 // #### Loom prototype
-const P = Loom.prototype = Object.create(Object.prototype);
-P.type = 'Loom';
-P.lib = 'entity';
+const P = Loom.prototype = doCreate();
+P.type = T_LOOM;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -114,7 +166,7 @@ const defaultAttributes = {
 
 // __showBoundingBox__ (Boolean), __boundingBoxColor__ (CSS color String) - Mainly for library development/testing work - shows the loom entity's bounding box - which is calculated from the constituent Shape entitys' current bounding boxes.
     showBoundingBox: false,
-    boundingBoxColor: '#000000',
+    boundingBoxColor: BLACK,
 
 // __source__ - The Picture entity source for this loom. For initialization and/or `set`, we can supply either the Picture entity itself, or its name-String value.
 // + The content image displayed by the Loom entity are set in the Picture entity, not the Loom, and can be any artefact supported by the Picture (image, video, sprite, or a Cell artefact).
@@ -192,7 +244,7 @@ const defaultAttributes = {
 // Note that Loom entitys DO NOT SUPPORT the sensor component of the Scrawl-canvas collisions system and will return an empty array when asked to supply sensor coordinates for testing against other artefacts.
 
 // __method__ - All normal Scrawl-canvas entity stamping methods are supported.
-    method: 'fill',
+    method: FILL,
 
 
 // Loom entitys support appropriate styling attributes, mainly for their stroke styles (used with the `draw`, `drawAndFill`, `fillAndDraw`, `drawThenFill` and `fillThenDraw` stamping methods). 
@@ -242,7 +294,7 @@ P.processPacketOut = function (key, value, incs) {
 
 P.finalizePacketOut = function (copy, items) {
 
-    let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+    let stateCopy = _parse(this.state.saveAsPacket(items))[3];
     copy = mergeOver(copy, stateCopy);
 
     copy = this.handlePacketAnchor(copy, items);
@@ -254,7 +306,7 @@ P.handlePacketAnchor = function (copy, items) {
 
     if (this.anchor) {
 
-        let a = JSON.parse(this.anchor.saveAsPacket(items))[3];
+        let a = _parse(this.anchor.saveAsPacket(items))[3];
         copy.anchor = a;
     }
     return copy;
@@ -292,7 +344,7 @@ P.get = function (item) {
         if (def != null) {
 
             val = this[item];
-            return (typeof val != 'undefined') ? val : def;
+            return (typeof val != UNDEFINED) ? val : def;
         }
 
         def = state.defs[item];
@@ -300,7 +352,7 @@ P.get = function (item) {
         if (def != null) {
 
             val = state[item];
-            return (typeof val != 'undefined') ? val : def;
+            return (typeof val != UNDEFINED) ? val : def;
         }
         return null;
     }
@@ -309,7 +361,7 @@ P.get = function (item) {
 // __set__ - copied over from the entity mixin.
 P.set = function (items = Ωempty) {
 
-    const keys = Object.keys(items),
+    const keys = _keys(items),
         keysLen = keys.length;
 
     if (keysLen) {
@@ -321,28 +373,28 @@ P.set = function (items = Ωempty) {
         const stateSetters = (state) ? state.setters : Ωempty;
         const stateDefs = (state) ? state.defs : Ωempty;
 
-        let predefined, i, key, value;
+        let fn, i, key, value;
 
         for (i = 0; i < keysLen; i++) {
 
             key = keys[i];
             value = items[key];
 
-            if (key && key != 'name' && value != null) {
+            if (key && key != NAME && value != null) {
 
                 if (!stateKeys.includes(key)) {
 
-                    predefined = setters[key];
+                    fn = setters[key];
 
-                    if (predefined) predefined.call(this, value);
-                    else if (typeof defs[key] != 'undefined') this[key] = value;
+                    if (fn) fn.call(this, value);
+                    else if (typeof defs[key] != UNDEFINED) this[key] = value;
                 }
                 else {
 
-                    predefined = stateSetters[key];
+                    fn = stateSetters[key];
 
-                    if (predefined) predefined.call(state, value);
-                    else if (typeof stateDefs[key] != 'undefined') state[key] = value;
+                    if (fn) fn.call(state, value);
+                    else if (typeof stateDefs[key] != UNDEFINED) state[key] = value;
                 }
             }
         }
@@ -353,7 +405,7 @@ P.set = function (items = Ωempty) {
 // __setDelta__ - copied over from the entity mixin.
 P.setDelta = function (items = Ωempty) {
 
-    const keys = Object.keys(items),
+    const keys = _keys(items),
         keysLen = keys.length;
 
     if (keysLen) {
@@ -365,28 +417,28 @@ P.setDelta = function (items = Ωempty) {
         const stateSetters = (state) ? state.deltaSetters : Ωempty;
         const stateDefs = (state) ? state.defs : Ωempty;
 
-        let predefined, i, key, value;
+        let fn, i, key, value;
 
         for (i = 0; i < keysLen; i++) {
 
             key = keys[i];
             value = items[key];
 
-            if (key && key != 'name' && value != null) {
+            if (key && key != NAME && value != null) {
 
                 if (!stateKeys.includes(key)) {
 
-                    predefined = setters[key];
+                    fn = setters[key];
 
-                    if (predefined) predefined.call(this, value);
-                    else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+                    if (fn) fn.call(this, value);
+                    else if (typeof defs[key] != UNDEFINED) this[key] = addStrings(this[key], value);
                 }
                 else {
 
-                    predefined = stateSetters[key];
+                    fn = stateSetters[key];
 
-                    if (predefined) predefined.call(state, value);
-                    else if (typeof stateDefs[key] != 'undefined') state[key] = addStrings(state[key], value);
+                    if (fn) fn.call(state, value);
+                    else if (typeof stateDefs[key] != UNDEFINED) state[key] = addStrings(state[key], value);
                 }
             }
         }
@@ -399,18 +451,18 @@ S.host = function (item) {
 
     if (item) {
 
-        let host = artefact[item];
+        const host = artefact[item];
 
         if (host && host.here) this.host = host.name;
         else this.host = item;
     }
-    else this.host = '';
+    else this.host = ZERO_STR;
 };
 
 // __group__ - copied over from the position mixin.
 G.group = function () {
 
-    return (this.group) ? this.group.name : '';
+    return (this.group) ? this.group.name : ZERO_STR;
 };
 S.group = function (item) {
 
@@ -418,7 +470,7 @@ S.group = function (item) {
 
     if (item) {
 
-        if (this.group && this.group.type === 'Group') this.group.removeArtefacts(this.name);
+        if (this.group && this.group.type == T_GROUP) this.group.removeArtefacts(this.name);
 
         if (item.substring) {
 
@@ -430,7 +482,7 @@ S.group = function (item) {
         else this.group = item;
     }
 
-    if (this.group && this.group.type === 'Group') this.group.addArtefacts(this.name);
+    if (this.group && this.group.type == T_GROUP) this.group.addArtefacts(this.name);
 };
 
 // __getHere__ - returns current core position.
@@ -451,7 +503,7 @@ S.fromPath = function (item) {
 
     if (item) {
 
-        let oldPath = this.fromPath,
+        const oldPath = this.fromPath,
             newPath = (item.substring) ? artefact[item] : item,
             name = this.name;
 
@@ -473,7 +525,7 @@ S.toPath = function (item) {
 
     if (item) {
 
-        let oldPath = this.toPath,
+        const oldPath = this.toPath,
             newPath = (item.substring) ? artefact[item] : item,
             name = this.name;
 
@@ -495,11 +547,11 @@ S.source = function (item) {
 
     item = (item.substring) ? artefact[item] : item;
 
-    if (item && item.type === 'Picture') {
+    if (item && item.type == T_PICTURE) {
 
         let src = this.source;
 
-        if (src && src.type === 'Picture') src.imageUnsubscribe(this.name);
+        if (src && src.type == T_PICTURE) src.imageUnsubscribe(this.name);
 
         this.source = item;
         item.imageSubscribe(this.name);
@@ -535,20 +587,17 @@ S.loopPathCursors = function (item) {
 
     if (item) {
 
-        let c,
-            floor = Math.floor;
-
-        c = this.fromPathStart
-        if (c < 0 || c > 1) this.fromPathStart = c - floor(c);
+        let c = this.fromPathStart;
+        if (c < 0 || c > 1) this.fromPathStart = c - _floor(c);
 
         c = this.fromPathEnd
-        if (c < 0 || c > 1) this.fromPathEnd = c - floor(c);
+        if (c < 0 || c > 1) this.fromPathEnd = c - _floor(c);
 
         c = this.toPathStart
-        if (c < 0 || c > 1) this.toPathStart = c - floor(c);
+        if (c < 0 || c > 1) this.toPathStart = c - _floor(c);
 
         c = this.toPathEnd
-        if (c < 0 || c > 1) this.toPathEnd = c - floor(c);
+        if (c < 0 || c > 1) this.toPathEnd = c - _floor(c);
     }
 
     this.dirtyOutput = true;
@@ -557,7 +606,7 @@ S.loopPathCursors = function (item) {
 // __fromPathStart__
 S.fromPathStart = function (item) {
 
-    if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
+    if (this.loopPathCursors && (item < 0 || item > 1)) item = item - _floor(item);
     this.fromPathStart = item;
     if (this.synchronizePathCursors) this.toPathStart = item;
     this.dirtyPathData = true;
@@ -566,7 +615,7 @@ D.fromPathStart = function (item) {
 
     let val = this.fromPathStart += item;
 
-    if (this.loopPathCursors && (val < 0 || val > 1)) val = val - Math.floor(val);
+    if (this.loopPathCursors && (val < 0 || val > 1)) val = val - _floor(val);
     this.fromPathStart = val;
     if (this.synchronizePathCursors) this.toPathStart = val;
     this.dirtyPathData = true;
@@ -575,7 +624,7 @@ D.fromPathStart = function (item) {
 // __fromPathEnd__
 S.fromPathEnd = function (item) {
 
-    if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
+    if (this.loopPathCursors && (item < 0 || item > 1)) item = item - _floor(item);
     this.fromPathEnd = item;
     if (this.synchronizePathCursors) this.toPathEnd = item;
     this.dirtyPathData = true;
@@ -584,7 +633,7 @@ D.fromPathEnd = function (item) {
 
     let val = this.fromPathEnd += item;
 
-    if (this.loopPathCursors && (val < 0 || val > 1)) val = val - Math.floor(val);
+    if (this.loopPathCursors && (val < 0 || val > 1)) val = val - _floor(val);
     this.fromPathEnd = val;
     if (this.synchronizePathCursors) this.toPathEnd = val;
     this.dirtyPathData = true;
@@ -593,7 +642,7 @@ D.fromPathEnd = function (item) {
 // __toPathStart__
 S.toPathStart = function (item) {
 
-    if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
+    if (this.loopPathCursors && (item < 0 || item > 1)) item = item - _floor(item);
     this.toPathStart = item;
     if (this.synchronizePathCursors) this.fromPathStart = item;
     this.dirtyPathData = true;
@@ -602,7 +651,7 @@ D.toPathStart = function (item) {
 
     let val = this.toPathStart += item;
 
-    if (this.loopPathCursors && (val < 0 || val > 1)) val = val - Math.floor(val);
+    if (this.loopPathCursors && (val < 0 || val > 1)) val = val - _floor(val);
     this.toPathStart = val;
     if (this.synchronizePathCursors) this.fromPathStart = val;
     this.dirtyPathData = true;
@@ -611,7 +660,7 @@ D.toPathStart = function (item) {
 // __toPathEnd__
 S.toPathEnd = function (item) {
 
-    if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
+    if (this.loopPathCursors && (item < 0 || item > 1)) item = item - _floor(item);
     this.toPathEnd = item;
     if (this.synchronizePathCursors) this.fromPathEnd = item;
     this.dirtyPathData = true;
@@ -620,7 +669,7 @@ D.toPathEnd = function (item) {
 
     let val = this.toPathEnd += item;
 
-    if (this.loopPathCursors && (val < 0 || val > 1)) val = val - Math.floor(val);
+    if (this.loopPathCursors && (val < 0 || val > 1)) val = val - _floor(val);
     this.toPathEnd = val;
     if (this.synchronizePathCursors) this.fromPathEnd = val;
     this.dirtyPathData = true;
@@ -635,7 +684,7 @@ P.getHost = function () {
     if (this.currentHost) return this.currentHost;
     else if (this.host) {
 
-        let host = artefact[this.host];
+        const host = artefact[this.host];
 
         if (host) {
 
@@ -667,25 +716,25 @@ P.update = function () {
 // + If we perform the recalculation, then we need to make sure to set the __dirtyOutput__ flag, which will trigger the output image build.
 P.prepareStamp = function() {
 
-    let fPath = this.fromPath,
+    const fPath = this.fromPath,
         tPath = this.toPath;
 
     // Sanity check 1
     // + `getBoundingBox` will recalculate and set the `dirtyPathData` flag 
     // + if paths have set the Loom's `dirtyStart` flag
-    let [startX, startY, outputWidth, outputHeight] = this.getBoundingBox();
+    const [startX, startY, outputWidth, outputHeight] = this.getBoundingBox();
 
     // Sanity check 2
     // + we can set the `dirtyPathData` ourselves if paths `start/end` coordinates have changed
     // + in case Shape path `roll/scale/flip/etc` updates don't get messaged to the Loom entity
     if (!this.dirtyPathData) {
 
-        let {x: testFromStartX, y: testFromStartY} = fPath.getPathPositionData(0);
-        let {x: testFromEndX, y: testFromEndY} = fPath.getPathPositionData(1);
-        let {x: testToStartX, y: testToStartY} = tPath.getPathPositionData(0);
-        let {x: testToEndX, y: testToEndY} = tPath.getPathPositionData(1);
+        const {x: testFromStartX, y: testFromStartY} = fPath.getPathPositionData(0);
+        const {x: testFromEndX, y: testFromEndY} = fPath.getPathPositionData(1);
+        const {x: testToStartX, y: testToStartY} = tPath.getPathPositionData(0);
+        const {x: testToEndX, y: testToEndY} = tPath.getPathPositionData(1);
 
-        let localPathTests = [testFromStartX, testFromStartY, testFromEndX, testFromEndY, testToStartX, testToStartY, testToEndX, testToEndY];
+        const localPathTests = [testFromStartX, testFromStartY, testFromEndX, testFromEndY, testToStartX, testToStartY, testToEndX, testToEndY];
 
         if (!this.pathTests || this.pathTests.some((item, index) => item !== localPathTests[index])) {
 
@@ -702,24 +751,19 @@ P.prepareStamp = function() {
         this.engineInstructions.length = 0;
         this.engineDeltaLengths.length = 0;
 
-        let mCeil = Math.ceil,
-            mMax = Math.max,
-            mMin = Math.min,
-            mFloor = Math.floor;
-
-        let fromPathData = this.fromPathData;
+        const fromPathData = this.fromPathData;
         fromPathData.length = 0;
 
-        let toPathData = this.toPathData;
+        const toPathData = this.toPathData;
         toPathData.length = 0;
 
         if(fPath && tPath) {
 
-            let fPathLength = mCeil(fPath.length),
-                tPathLength = mCeil(tPath.length),
+            let fPathLength = _ceil(fPath.length),
+                tPathLength = _ceil(tPath.length),
                 pathSteps, pathDelta, x, y;
 
-            pathSteps = this.setSourceDimension(mMax(fPathLength, tPathLength));
+            pathSteps = this.setSourceDimension(_max(fPathLength, tPathLength));
 
             let fPathStart = this.fromPathStart,
                 fPathEnd = this.fromPathEnd,
@@ -736,7 +780,7 @@ P.prepareStamp = function() {
             else tPartial = tPathEnd + (1 - tPathStart);
             if (tPartial < 0.005) tPartial = 0.005;
 
-            minPartial = mCeil(mMin(fPartial, tPartial));
+            minPartial = _ceil(_min(fPartial, tPartial));
 
             pathDelta = 1 / (pathSteps * (1 / minPartial));
 
@@ -781,16 +825,15 @@ P.setSourceDimension = function (val) {
     // + other functions do it as a sanity check 
     else {
 
-        let fPath = this.fromPath,
+        const fPath = this.fromPath,
             tPath = this.toPath;
 
         if(fPath && tPath) {
 
-            let mCeil = Math.ceil,
-                fPathLength = mCeil(fPath.length),
-                tPathLength = mCeil(tPath.length);
+            const fPathLength = _ceil(fPath.length),
+                tPathLength = _ceil(tPath.length);
 
-            let steps = Math.max(fPathLength, tPathLength);
+            const steps = _max(fPathLength, tPathLength);
 
             if (this.sourceDimension !== steps) this.sourceDimension = steps;
         }
@@ -801,10 +844,9 @@ P.setSourceDimension = function (val) {
 
 // `simpleStamp` - Simple stamping is entirely synchronous
 // + TODO: we may have to disable this functionality for the Loom entity, if we use a Web Assembly module for either the prepareStamp calculations, or to build the output image itself
-P.acceptableHosts = ['Cell', 'CellFragment'];
 P.simpleStamp = function (host, changes) {
 
-    if (host && this.acceptableHosts.includes(host.type)) {
+    if (host && GOOD_HOST.includes(host.type)) {
 
         this.currentHost = host;
         
@@ -827,7 +869,7 @@ P.stamp = function (force = false, host, changes) {
 
     if (force) {
 
-        if (host && this.acceptableHosts.includes(host.type)) this.currentHost = host;
+        if (host && GOOD_HOST.includes(host.type)) this.currentHost = host;
 
         if (changes) {
 
@@ -884,7 +926,7 @@ P.cleanInput = function () {
         width: sourceDimension,
         height: sourceDimension,
 
-        method: 'fill',
+        method: FILL,
     });
 
     this.sourceImageData = engine.getImageData(0, 0, sourceDimension, sourceDimension);
@@ -904,13 +946,6 @@ P.cleanOutput = function () {
 
     if (sourceDimension && sourceData) {
 
-        let mHypot = Math.hypot,
-            mFloor = Math.floor,
-            mCeil = Math.ceil,
-            mAtan2 = Math.atan2,
-            mCos = Math.cos,
-            mSin = Math.sin;
-
         let fromPathData = this.fromPathData,
             toPathData = this.toPathData,
 
@@ -924,8 +959,7 @@ P.cleanOutput = function () {
             tCursor = tPathStart * dataLen,
             tStep = this.toPathSteps || 1,
 
-            magicHorizontalPi = 0.5 * Math.PI,
-            magicVerticalPi = magicHorizontalPi - 1.5708,
+            magicVerticalPi = _piHalf - 1.5708,
 
             isHorizontalCopy = this.isHorizontalCopy,
             loop = this.loopPathCursors,
@@ -970,28 +1004,28 @@ P.cleanOutput = function () {
 
                 if (fCursor < dataLen && tCursor < dataLen && fCursor >= 0 && tCursor >= 0) {
 
-                    [fx, fy] = fromPathData[mFloor(fCursor)];
-                    [tx, ty] = toPathData[mFloor(tCursor)];
+                    [fx, fy] = fromPathData[_floor(fCursor)];
+                    [tx, ty] = toPathData[_floor(tCursor)];
 
                     dx = tx - fx;
                     dy = ty - fy;
 
-                    dLength = mHypot(dx, dy);
+                    dLength = _hypot(dx, dy);
 
                     if (isHorizontalCopy) {
 
-                        dAngle = -mAtan2(dx, dy) + magicHorizontalPi;
-                        cos = mCos(dAngle);
-                        sin = mSin(dAngle);
+                        dAngle = -_atan2(dx, dy) + _piHalf;
+                        cos = _cos(dAngle);
+                        sin = _sin(dAngle);
 
                         engineInstructions.push([cos, sin, -sin, cos, fx, fy]);
                         engineDeltaLengths.push(dLength);
                     }
                     else {
 
-                        dAngle = -mAtan2(dx, dy) + magicVerticalPi;
-                        cos = mCos(dAngle);
-                        sin = mSin(dAngle);
+                        dAngle = -_atan2(dx, dy) + magicVerticalPi;
+                        cos = _cos(dAngle);
+                        sin = _sin(dAngle);
 
                         engineInstructions.push([cos, sin, -sin, cos, fx, fy, dLength]);
                         engineDeltaLengths.push(dLength);
@@ -1050,11 +1084,11 @@ P.cleanOutput = function () {
             }
         }
 
-        let iFactor = this.interferenceFactor,
+        const iFactor = this.interferenceFactor,
             iLoops = this.interferenceLoops,
 
-            iWidth = mCeil(outputWidth * iFactor),
-            iHeight = mCeil(outputHeight * iFactor);
+            iWidth = _ceil(outputWidth * iFactor),
+            iHeight = _ceil(outputHeight * iFactor);
 
         inputCanvas.width = iWidth;
         inputCanvas.height = iHeight;
@@ -1068,7 +1102,7 @@ P.cleanOutput = function () {
             outputEngine.drawImage(inputCanvas, 0, 0, iWidth, iHeight, 0, 0, outputWidth, outputHeight);
         }
 
-        let outputData = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
+        const outputData = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
 
         releaseCell(inputCell);
         releaseCell(outputCell);
@@ -1078,17 +1112,16 @@ P.cleanOutput = function () {
         return outputData;
     }
     return false;
-        // else return new Error(`${this.name} - cleanOutput Error: source has a zero dimension, or no data`);
 };
 
 // `regularStamp` - internal function called by `stamp`
 P.regularStamp = function () {
 
-    let dest = this.currentHost;
+    const dest = this.currentHost;
 
     if (dest) {
 
-        let engine = dest.engine;
+        const engine = dest.engine;
 
         if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
@@ -1125,10 +1158,10 @@ P.getBoundingBox = function () {
                 lex += ex;
                 ley += ey;
 
-                let minX = Math.min(lsx, lex);
-                let maxX = Math.max(lsx + sw, lex + ew);
-                let minY = Math.min(lsy, ley);
-                let maxY = Math.max(lsy + sh, ley + eh);
+                let minX = _min(lsx, lex);
+                let maxX = _max(lsx + sw, lex + ew);
+                let minY = _min(lsy, ley);
+                let maxY = _max(lsy + sh, ley + eh);
 
                 this.boundingBox = [minX, minY, maxX - minX, maxY - minY];
 
@@ -1222,7 +1255,7 @@ P.clear = function (engine) {
 
         tempEngine.putImageData(output, 0, 0);
         engine.setTransform(1, 0, 0, 1, 0, 0);
-        engine.globalCompositeOperation = 'destination-out';
+        engine.globalCompositeOperation = DESTINATION_OUT;
         engine.drawImage(tempCanvas, 0, 0, w, h, x, y, w, h);
         engine.globalCompositeOperation = gco;
 
@@ -1240,16 +1273,16 @@ P.clip = λnull;
 // `doStroke`
 P.doStroke = function (engine) {
 
-    let fPath = this.fromPath,
+    const fPath = this.fromPath,
         tPath = this.toPath;
 
     if(fPath && fPath.getBoundingBox && tPath && tPath.getBoundingBox) {
 
-        let host = this.currentHost;
+        const host = this.currentHost;
 
         if (host) {
 
-            let fStart = fPath.currentStampPosition,
+            const fStart = fPath.currentStampPosition,
                 fEnd = fPath.getPathPositionData(1),
                 tStart = tPath.currentStampPosition,
                 tEnd = tPath.getPathPositionData(1);
@@ -1312,7 +1345,7 @@ P.drawBoundingBox = function (engine) {
 
     engine.strokeStyle = this.boundingBoxColor;
     engine.lineWidth = 1;
-    engine.globalCompositeOperation = 'source-over';
+    engine.globalCompositeOperation = SOURCE_OVER;
     engine.globalAlpha = 1;
     engine.shadowOffsetX = 0;
     engine.shadowOffsetY = 0;
@@ -1334,7 +1367,7 @@ P.checkHit = function (items = []) {
 
     if (this.noUserInteraction) return false;
 
-    let tests = (!Array.isArray(items)) ?  [items] : items,
+    let tests = (!_isArray(items)) ?  [items] : items,
         targetData = (this.output && this.output.data) ? this.output.data : false, 
         tx, ty, cx, cy, index;
 
@@ -1344,7 +1377,7 @@ P.checkHit = function (items = []) {
 
         if (tests.some(test => {
 
-            if (Array.isArray(test)) {
+            if (_isArray(test)) {
 
                 tx = test[0];
                 ty = test[1];

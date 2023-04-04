@@ -40,11 +40,22 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { Ωempty } from '../core/utilities.js';
+import { 
+    doCreate,
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 import curveMix from '../mixin/shapeCurve.js';
+
+
+// Local constants
+const T_LINE = 'Line',
+    LINE = 'line',
+    ENTITY = 'entity',
+    ZERO_PATH = 'M0,0',
+    PATH = 'path';
 
 
 // #### Line constructor
@@ -58,9 +69,9 @@ const Line = function (items = Ωempty) {
 
 
 // #### Line prototype
-const P = Line.prototype = Object.create(Object.prototype);
-P.type = 'Line';
-P.lib = 'entity';
+const P = Line.prototype = doCreate();
+P.type = T_LINE;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -112,24 +123,26 @@ curveMix(P);
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
-
-    let p = 'M0,0';
-
-    p = this.makeLinePath();
-    
-    this.pathDefinition = p;
+    this.pathDefinition = this.makeLinePath();
 };
 
 // `makeLinePath` - internal helper function - called by `cleanSpecies`
 P.makeLinePath = function () {
     
-    let [startX, startY] = this.currentStampPosition;
-    let [endX, endY] = this.currentEnd;
+    let p = ZERO_PATH;
+    const { currentStampPosition, currentEnd } = this;
 
-    let x = (endX - startX).toFixed(2),
-        y = (endY - startY).toFixed(2);
+    if (currentStampPosition && currentEnd) {
 
-    return `m0,0l${x},${y}`;
+        const [startX, startY] = this.currentStampPosition;
+        const [endX, endY] = this.currentEnd;
+
+        const x = (endX - startX).toFixed(2),
+            y = (endY - startY).toFixed(2);
+
+        p = `m0,0l${x},${y}`;
+    }
+    return p;
 };
 
 // `cleanDimensions` - internal helper function called by `prepareStamp` 
@@ -144,7 +157,6 @@ P.cleanDimensions = function () {
     this.dirtyEnd = true;
 };
 
-
 P.preparePinsForStamp = function () {
 
     const dirtyPins = this.dirtyPins,
@@ -158,7 +170,7 @@ P.preparePinsForStamp = function () {
         if ((ePivot && ePivot.name == name) || (ePath && ePath.name == name)) {
 
             this.dirtyEnd = true;
-            if (this.endLockTo.includes('path')) this.currentEndPathData = false;
+            if (this.endLockTo.includes(PATH)) this.currentEndPathData = false;
         }
     };
     dirtyPins.length = 0;
@@ -194,7 +206,7 @@ P.preparePinsForStamp = function () {
 export const makeLine = function (items) {
 
     if (!items) return false;
-    items.species = 'line';
+    items.species = LINE;
     return new Line(items);
 };
 

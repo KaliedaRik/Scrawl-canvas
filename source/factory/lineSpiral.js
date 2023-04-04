@@ -40,12 +40,27 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, Ωempty } from '../core/utilities.js';
 
-import { requestCoordinate, releaseCoordinate } from './coordinate.js';
+import { 
+    doCreate,
+    mergeOver, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    releaseCoordinate, 
+    requestCoordinate, 
+} from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
+
+
+// Local constants
+const T_LINE_SPIRAL = 'LineSpiral',
+    ENTITY = 'entity',
+    ZERO_PATH = 'M0,0',
+    LINE_SPIRAL = 'linespiral';
 
 
 // #### LineSpiral constructor
@@ -57,9 +72,9 @@ const LineSpiral = function (items = Ωempty) {
 
 
 // #### LineSpiral prototype
-const P = LineSpiral.prototype = Object.create(Object.prototype);
-P.type = 'LineSpiral';
-P.lib = 'entity';
+const P = LineSpiral.prototype = doCreate();
+P.type = T_LINE_SPIRAL;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -206,7 +221,7 @@ P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
 
-    let p = 'm0,0';
+    let p = ZERO_PATH;
     p = this.makeLineSpiralPath();
 
     this.pathDefinition = p;
@@ -216,7 +231,7 @@ P.cleanSpecies = function () {
 // `makeLineSpiralPath` - internal helper function - called by `cleanSpecies`
 P.makeLineSpiralPath = function () {
 
-    let path = 'm0,0 m';
+    let path = `${ZERO_PATH} m`;
 
     let {startRadius, radiusIncrement, radiusIncrementAdjust, startAngle, angleIncrement, angleIncrementAdjust, stepLimit} = this;
 
@@ -255,7 +270,7 @@ P.calculateLocalPathAdditionalActions = function () {
     let [x, y, w, h] = this.localBox,
         scale = this.scale;
 
-    this.pathDefinition = this.pathDefinition.replace('m0,0 ', `m${-x / scale},${-y / scale}`);
+    this.pathDefinition = this.pathDefinition.replace(`${ZERO_PATH} `, `m${-x / scale},${-y / scale}`);
 
     this.pathCalculatedOnce = false;
 
@@ -292,7 +307,7 @@ P.calculateLocalPathAdditionalActions = function () {
 export const makeLineSpiral = function (items) {
 
     if (!items) return false;
-    items.species = 'linespiral';
+    items.species = LINE_SPIRAL;
     return new LineSpiral(items);
 };
 

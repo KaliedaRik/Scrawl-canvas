@@ -22,16 +22,58 @@
 
 
 // #### Imports
-import { constructors, cell, artefact, group, entity, asset } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, Ωempty, λnull } from '../core/utilities.js';
+import { 
+    artefact, 
+    asset, 
+    cell, 
+    constructors, 
+    entity, 
+    group, 
+} from '../core/library.js';
+
+import { 
+    doCreate,
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
+
 import { scrawlCanvasHold } from '../core/document.js';
 
 import { filterEngine } from './filterEngine.js';
-import { requestCell, releaseCell } from './cell-fragment.js';
+
+import { 
+    releaseCell, 
+    requestCell, 
+} from './cell-fragment.js';
+
 import { importDomImage } from './imageAsset.js';
 
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
+
+import { 
+    _isArray,
+    _entries,
+    _floor,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const ACCEPTED_OWNERS = ['Cell', 'Stack'],
+    ADD_CLASSES = 'addClasses',
+    ENTITY = 'entity',
+    GROUP = 'group',
+    REMOVE_CLASSES = 'removeClasses',
+    REVERSE_BY_DELTA = 'reverseByDelta',
+    SET = 'set',
+    SET_DELTA = 'setDelta',
+    SOURCE_IN = 'source-in',
+    SOURCE_OVER = 'source-over',
+    T_GROUP = 'Group',
+    UPDATE_BY_DELTA = 'updateByDelta';
 
 
 // #### Group constructor
@@ -57,9 +99,9 @@ const Group = function (items = Ωempty) {
 
 
 // #### Group prototype
-const P = Group.prototype = Object.create(Object.prototype);
-P.type = 'Group';
-P.lib = 'group';
+const P = Group.prototype = doCreate();
+P.type = T_GROUP;
+P.lib = GROUP;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -135,21 +177,21 @@ P.kill = function (killArtefacts = false) {
 
     if (killArtefacts) this.artefactCalculateBuckets.forEach(item => item.kill());
 
-    let myname = this.name;
+    const myname = this.name;
 
     // Remove the Group object from affected Stack and Cell objects' `groups` attribute
-    Object.entries(artefact).forEach(([name, art]) => {
+    _entries(artefact).forEach(([name, art]) => {
 
-        if (Array.isArray(art.groups) && art.groups.includes(myname)) {
+        if (_isArray(art.groups) && art.groups.includes(myname)) {
 
             removeItem(art.groups, myname);
             art.batchResort = true;
         };
     });
 
-    Object.entries(cell).forEach(([name, obj]) => {
+    _entries(cell).forEach(([name, obj]) => {
 
-        if (Array.isArray(obj.groups) && obj.groups.includes(myname)) {
+        if (_isArray(obj.groups) && obj.groups.includes(myname)) {
 
             removeItem(obj.groups, myname);
             obj.batchResort = true;
@@ -191,7 +233,7 @@ S.artefacts = function (item) {
 // Adds the Group to a new controller Stack or Cell object. NOTE that this does not remove the Group from its existing host!
 S.host = function (item) {
 
-    let host = this.getHost(item);
+    const host = this.getHost(item);
 
     if (host && host.addGroups) {
         
@@ -205,7 +247,7 @@ S.host = function (item) {
 // Update the Group's `order` attribute, and tell its current host that it will need to resort its associated Groups
 S.order = function (item) {
 
-    let host = this.getHost(this.host);
+    const host = this.getHost(this.host);
 
     this.order = item;
 
@@ -231,7 +273,7 @@ P.getHost = function (item) {
 
     if (item) {
 
-        if (item.type && ['Cell', 'Stack'].includes(item.type)) return item;
+        if (item.type && ACCEPTED_OWNERS.includes(item.type)) return item;
         if (item.substring) return artefact[item] || cell[item];
     }
 
@@ -245,12 +287,11 @@ P.getHost = function (item) {
 // `forceStamp` - invoke the Group to instruct its artefact members to perform a `stamp` action, ignoring whether the Group `visibility` flag setting
 P.forceStamp = function () {
 
-    let v = this.visibility;
+    const v = this.visibility;
     this.visibility = true;
     this.stamp()
     this.visibility = v;
 };
-
 
 // `stamp` - the Display Cycle is mediated through Groups.
 P.stamp = function () {
@@ -260,7 +301,7 @@ P.stamp = function () {
 
         this.dirtyHost = false;
 
-        let currentHost = this.getHost(this.host);
+        const currentHost = this.getHost(this.host);
 
         if (currentHost) this.currentHost = currentHost;
         else this.dirtyHost = true;
@@ -323,14 +364,15 @@ P.sortArtefacts = function () {
 
         this.batchResort = false;
 
-        let floor = Math.floor,
-            buckets = [];
+        const buckets = [];
+
+        let obj, order;
         
         // Sort for artefact calculateOrder
         this.artefacts.forEach(name => {
 
-            let obj = artefact[name],
-                order = floor(obj.calculateOrder) || 0;
+            obj = artefact[name];
+            order = _floor(obj.calculateOrder) || 0;
 
             if (!buckets[order]) buckets[order] = [];
 
@@ -342,8 +384,8 @@ P.sortArtefacts = function () {
         buckets.length = 0;
         this.artefacts.forEach(name => {
 
-            let obj = artefact[name],
-                order = floor(obj.stampOrder) || 0;
+            obj = artefact[name];
+            order = _floor(obj.stampOrder) || 0;
 
             if (!buckets[order]) buckets[order] = [];
 
@@ -362,9 +404,9 @@ P.prepareStamp = function (myCell) {
 
     this.artefactCalculateBuckets.forEach(art => {
 
-        if (art.lib === 'entity') {
+        if (art.lib == ENTITY) {
             
-            if (!art.currentHost || art.currentHost.name !== host.name) {
+            if (!art.currentHost || art.currentHost.name != host.name) {
 
                 art.currentHost = host;
                 if (!myCell) art.dirtyHost = true;
@@ -380,9 +422,9 @@ P.prepareStamp = function (myCell) {
 // `stampAction` - the key Group-mediated action in the Display cycle, invoked as part of the `compile` functionality.
 P.stampAction = function (myCell) {
 
-    let mystash = (this.currentHost && this.currentHost.stashOutput) ? true : false;
+    const mystash = (this.currentHost && this.currentHost.stashOutput) ? true : false;
 
-    let { dirtyFilters, currentFilters, artefactStampBuckets, noFilters, filters, stashOutput, currentHost } = this;
+    const { dirtyFilters, currentFilters, artefactStampBuckets, noFilters, filters, stashOutput, currentHost } = this;
 
     if (dirtyFilters || !currentFilters) this.cleanFilters();
 
@@ -395,13 +437,13 @@ P.stampAction = function (myCell) {
 
         if (!noFilters && filters && filters.length) {
 
-            let img = this.applyFilters(myCell);
+            const img = this.applyFilters(myCell);
             this.stashAction(img);
         }
         else if (stashOutput) {
 
             // We set up things to draw the group on a pool cell if the Group's `stashOutput` flag is set to true - so now we have to paint it back into the host Cell
-            let tempElement = myCell.element,
+            const tempElement = myCell.element,
                 tempEngine = myCell.engine,
                 realEngine = (currentHost && currentHost.engine) ? currentHost.engine : false;
 
@@ -409,7 +451,7 @@ P.stampAction = function (myCell) {
 
                 realEngine.save();
                 
-                realEngine.globalCompositeOperation = 'source-over';
+                realEngine.globalCompositeOperation = SOURCE_OVER;
                 realEngine.globalAlpha = 1;
                 realEngine.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -417,7 +459,7 @@ P.stampAction = function (myCell) {
                 
                 realEngine.restore();
 
-                let tempImg = tempEngine.getImageData(0, 0, tempElement.width, tempElement.height);
+                const tempImg = tempEngine.getImageData(0, 0, tempElement.width, tempElement.height);
 
                 this.stashAction(tempImg);
             }
@@ -428,23 +470,22 @@ P.stampAction = function (myCell) {
 // `applyFilters` - filters can be applied to entity artefacts at the group level, in addition to any filters applied at the entity level.
 P.applyFilters = function (myCell) {
 
-    let currentHost = this.currentHost,
-        filterHost = myCell;
+    const currentHost = this.currentHost;
 
-    if (!currentHost || !filterHost) return false;
+    if (!currentHost || !myCell) return false;
 
     // Get handles to current and filter Cell elements and engines
-    let currentElement = currentHost.element,
+    const currentElement = currentHost.element,
         currentEngine = currentHost.engine;
 
-    let filterCellElement = filterHost.element,
-        filterCellEngine = filterHost.engine;
+    const filterCellElement = myCell.element,
+        filterCellEngine = myCell.engine;
 
     // Action a request to use the filtered artefacts as a stencil - as determined by the Group's `isStencil` flag
     if (this.isStencil) {
         
         filterCellEngine.save();
-        filterCellEngine.globalCompositeOperation = 'source-in';
+        filterCellEngine.globalCompositeOperation = SOURCE_IN;
         filterCellEngine.globalAlpha = 1;
         filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
         filterCellEngine.drawImage(currentElement, 0, 0);
@@ -456,11 +497,11 @@ P.applyFilters = function (myCell) {
     // At this point we will send the contents of the filterHost canvas over to the filter engine
     filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-    let myimage = filterCellEngine.getImageData(0, 0, filterCellElement.width, filterCellElement.height);
+    const myimage = filterCellEngine.getImageData(0, 0, filterCellElement.width, filterCellElement.height);
 
     this.preprocessFilters(this.currentFilters);
 
-    let img = filterEngine.action({
+    const img = filterEngine.action({
         identifier: this.filterIdentifier,
         image: myimage,
         filters: this.currentFilters,
@@ -468,7 +509,7 @@ P.applyFilters = function (myCell) {
 
     if (img) {
 
-        filterCellEngine.globalCompositeOperation = 'source-over';
+        filterCellEngine.globalCompositeOperation = SOURCE_OVER;
         filterCellEngine.globalAlpha = 1;
         filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
         filterCellEngine.putImageData(img, 0, 0);
@@ -536,10 +577,11 @@ P.stashAction = function (img) {
 // `getCellCoverage` - internal function which calculates the cumulative coverage of the Group's artefacts. Used as part of the `stashAction` functionality
 P.getCellCoverage = function (img) {
 
-    let width = img.width,
+    const width = img.width,
         height = img.height,
-        data = img.data,
-        maxX = 0,
+        data = img.data;
+
+    let maxX = 0,
         maxY = 0,
         minX = width,
         minY = height,
@@ -574,7 +616,7 @@ P.getCellCoverage = function (img) {
 // `addArtefacts` - an artefact can belong to more than one Group
 P.addArtefacts = function (...args) {
 
-    if (args && Array.isArray(args[0])) args = args[0];
+    if (args && _isArray(args[0])) args = args[0];
 
     args.forEach(item => {
 
@@ -653,11 +695,10 @@ P.clearArtefacts = function () {
     return this;
 };
 
-
 // `updateArtefacts` - passes the __items__ argument object through to each of the Group's artefact's `setDelta` function
 P.updateArtefacts = function (items) {
 
-    this.cascadeAction(items, 'setDelta');
+    this.cascadeAction(items, SET_DELTA);
     return this;
 };
 
@@ -665,51 +706,51 @@ P.updateArtefacts = function (items) {
 // `setArtefacts` - passes the __items__ argument object through to each of the Group's artefact's `set` function
 P.setArtefacts = function (items) {
 
-    this.cascadeAction(items, 'set');
+    this.cascadeAction(items, SET);
     return this;
 };
 
 // `updateByDelta` - passes the __items__ argument object through to each of the Group's artefact's `updateByDelta` function
 P.updateByDelta = function () {
 
-    this.cascadeAction(false, 'updateByDelta');
+    this.cascadeAction(false, UPDATE_BY_DELTA);
     return this;
 };
 
 // `reverseByDelta` - passes the __items__ argument object through to each of the Group's artefact's `reverseByDelta` function
 P.reverseByDelta = function () {
 
-    this.cascadeAction(false, 'reverseByDelta');
+    this.cascadeAction(false, REVERSE_BY_DELTA);
     return this;
 };
 
 // `addArtefactClasses` - specifically for non-entity artefacts. Passes the __items__ argument String through to each of the Group's artefact's `addClasses` function
 P.addArtefactClasses = function (items) {
 
-    this.cascadeAction(items, 'addClasses');
+    this.cascadeAction(items, ADD_CLASSES);
     return this;
 };
 
 // `removeArtefactClasses` - specifically for non-entity artefacts. Passes the __items__ argument String through to each of the Group's artefact's `removeClasses` function
 P.removeArtefactClasses = function (items) {
 
-    this.cascadeAction(items, 'removeClasses');
+    this.cascadeAction(items, REMOVE_CLASSES);
     return this;
 };
-
 
 // `cascadeAction` - internal helper function for the above artefact manipulation functionality
 P.cascadeAction = function (items, action) {
 
+    let art;
+
     this.artefacts.forEach(name => {
 
-        let art = artefact[name];
+        art = artefact[name];
         
         if(art && art[action]) art[action](items);
     });
     return this;
 };
-
 
 // `setDeltaValues` - passes the __items__ argument object through to each of the Group's artefact's `setDeltaValues` function
 P.setDeltaValues = function (items = Ωempty) {
@@ -725,9 +766,11 @@ P.setDeltaValues = function (items = Ωempty) {
 // TODO: don't think this is tested anywhere - build test!
 P.addFiltersToEntitys = function (...args) {
 
+    let ent;
+
     this.artefacts.forEach(name => {
 
-        let ent = entity[name];
+        ent = entity[name];
         
         if (ent && ent.addFilters) ent.addFilters(args);
     });
@@ -738,9 +781,11 @@ P.addFiltersToEntitys = function (...args) {
 // TODO: don't think this is tested anywhere - build test!
 P.removeFiltersFromEntitys = function (...args) {
 
+    let ent;
+
     this.artefacts.forEach(name => {
 
-        let ent = entity[name];
+        ent = entity[name];
 
         if (ent && ent.removeFilters) ent.removeFilters(args);
     });
@@ -751,9 +796,11 @@ P.removeFiltersFromEntitys = function (...args) {
 // TODO: don't think this is tested anywhere - build test!
 P.clearFiltersFromEntitys = function () {
 
+    let ent;
+
     this.artefacts.forEach(name => {
 
-        let ent = entity[name];
+        ent = entity[name];
 
         if (ent && ent.clearFilters) ent.clearFilters();
     });
@@ -777,16 +824,18 @@ P.getArtefactAt = function (items) {
 
     this.sortArtefacts();
 
-    let myCell = requestCell(),
+    const myCell = requestCell(),
         artBuckets = this.artefactStampBuckets;
+
+    let art, result;
 
     for (let i = artBuckets.length - 1; i >= 0; i--) {
 
-        let art = artBuckets[i];
+        art = artBuckets[i];
         
         if (art) {
 
-            let result = art.checkHit(items, myCell);
+            result = art.checkHit(items, myCell);
 
             if (result) {
 
@@ -795,11 +844,9 @@ P.getArtefactAt = function (items) {
             }
         }
     }
-
     releaseCell(myCell);
     return false;
 };
-
 
 // The `getAllArtefactsAt` function returns an array of hit reports from all of the Group object's artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first in the response array.
 //
@@ -813,17 +860,19 @@ P.getAllArtefactsAt = function (items) {
         resultNames = [],
         results = [];
 
+    let art, result, hit;
+
     for (let i = artBuckets.length - 1; i >= 0; i--) {
 
-        const art = artBuckets[i];
+        art = artBuckets[i];
         
         if (art) {
 
-            const result = art.checkHit(items, myCell);
+            result = art.checkHit(items, myCell);
             
             if (result && result.artefact) {
 
-                const hit = result.artefact;
+                hit = result.artefact;
 
                 if (!resultNames.includes(hit.name)) {
 

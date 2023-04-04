@@ -608,6 +608,122 @@ export const _tick = 16 / 1000;
 // export const TILE_PICTURE = 'tilePicture';
 // export const WHITE = 'rgb(255 255 255 / 1)';
 
+/* factory/group */
+// export const ACCEPTED_OWNERS = ['Cell', 'Stack'];
+// export const ADD_CLASSES = 'addClasses';
+// export const ENTITY = 'entity';
+// export const GROUP = 'group';
+// export const REMOVE_CLASSES = 'removeClasses';
+// export const REVERSE_BY_DELTA = 'reverseByDelta';
+// export const SET = 'set';
+// export const SET_DELTA = 'setDelta';
+// export const SOURCE_IN = 'source-in';
+// export const SOURCE_OVER = 'source-over';
+// export const T_GROUP = 'Group';
+// export const UPDATE_BY_DELTA = 'updateByDelta';
+
+/* factory/imageAsset */
+// export const ANONYMOUS = 'anonymous';
+// export const ASSET = 'asset';
+// export const BLOCK = 'block';
+// export const ELEMENT = 'element';
+// export const IMAGE_ELEMENTS = ['IMG', 'PICTURE'];
+// export const IMG = 'img';
+// export const INTRINSIC = 'intrinsic';
+// export const NONE = 'none';
+// export const SLASH = '/';
+// export const T_CANVAS = 'Canvas';
+// export const T_CELL = 'Cell';
+// export const T_GROUP = 'Group';
+// export const T_IMAGE = 'Image';
+// export const ZERO = 'zero';
+// export const ZERO_STR = '';
+
+/* factory/keyboardZone */
+// export const $BODY = 'BODY';
+// export const ACCEPTED_WRAPPERS = ['Canvas', 'Stack'];
+// export const KEY_DOWN = 'keydown';
+// export const KEY_UP = 'keyup';
+// export const keyGroupsArray = ['none', 'shiftOnly', 'altOnly', 'ctrlOnly', 'metaOnly', 'shiftAlt', 'shiftCtrl', 'shiftMeta', 'altCtrl', 'altMeta', 'ctrlMeta', 'shiftAltCtrl', 'shiftAltMeta', 'shiftCtrlMeta', 'altCtrlMeta', 'all'];
+// export const NONE = 'none';
+// export const T_ESCAPE = 'Escape';
+// export const T_TAB = 'Tab';
+
+/* factory/keyboardZone */
+// export const T_LINE = 'Line';
+// export const LINE = 'line';
+// export const ENTITY = 'entity';
+// export const ZERO_PATH = 'M0,0';
+// export const PATH = 'path';
+
+/* factory/lineSpiral */
+// export const T_LINE_SPIRAL = 'LineSpiral';
+// export const ENTITY = 'entity';
+// export const ZERO_PATH = 'M0,0';
+// export const LINE_SPIRAL = 'linespiral';
+
+/* factory/loom */
+// export const BLACK = 'rgb(0 0 0 / 1)';
+// export const DESTINATION_OUT = 'destination-out';
+// export const ENTITY = 'entity';
+// export const FILL = 'fill';
+// export const GOOD_HOST = ['Cell', 'CellFragment'];
+// export const NAME = 'name';
+// export const SOURCE_OVER = 'source-over';
+// export const T_GROUP = 'Group';
+// export const T_LOOM = 'Loom';
+// export const T_PICTURE = 'Picture';
+// export const UNDEFINED = 'undefined';
+// export const ZERO_STR = '';
+
+/* factory/mesh */
+// export const ARG_SPLITTER = ',';
+// export const DESTINATION_OUT = 'destination-out';
+// export const ENTITY = 'entity';
+// export const FILL = 'fill';
+// export const NAME = 'name';
+// export const T_CELL = 'Cell';
+// export const T_GROUP = 'Group';
+// export const T_MESH = 'Mesh';
+// export const T_NET = 'Net';
+// export const T_PICTURE = 'Picture';
+// export const UNDEFINED = 'undefined';
+// export const ZERO_STR = '';
+
+/* factory/net */
+// export const BLACK = 'rgb(0 0 0 / 1)';
+// export const BLANK = 'rgb(0 0 0 / 0)';
+// export const ENTITY = 'entity';
+// export const EULER = 'euler';
+// export const FILL_STYLE = 'fillStyle';
+// export const HUB_ARTEFACTS_1 = ['Bezier', 'Line', 'Oval', 'Polygon', 'Polyline', 'Quadratic', 'Rectangle', 'Shape', 'Spiral', 'Star', 'Tetragon'];
+// export const HUB_ARTEFACTS_2 = ['Block', 'Cell', 'Element', 'Grid', 'Phrase', 'Picture', 'Stack'];
+// export const HUB_ARTEFACTS_3 = ['Wheel'];
+// export const HUB_SPOKE = 'hub-spoke';
+// export const POSITION = 'position';
+// export const SOURCE_OVER = 'source-over';
+// export const STROKE_STYLE = 'strokeStyle';
+// export const STRONG_NET = 'strong-net';
+// export const STRONG_SHAPE = 'strong-shape';
+// export const T_NET = 'Net';
+// export const T_PARTICLE = 'Particle';
+// export const T_POLYLINE = 'Polyline';
+// export const T_WORLD = 'World';
+// export const WEAK_NET = 'weak-net';
+// export const WEAK_SHAPE = 'weak-shape';
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

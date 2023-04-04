@@ -16,11 +16,47 @@
 
 
 // #### Imports
-import { constructors, canvas, cell, group, artefact } from '../core/library.js';
-import { mergeOver, isa_obj, λthis, λnull, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    canvas, 
+    cell, 
+    constructors, 
+    group, 
+} from '../core/library.js';
+
+import { 
+    doCreate,
+    isa_obj, 
+    mergeOver, 
+    λnull, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
+
+import { 
+    _parse,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const ANONYMOUS = 'anonymous',
+    ASSET = 'asset',
+    BLOCK = 'block',
+    ELEMENT = 'element',
+    IMAGE_ELEMENTS = ['IMG', 'PICTURE'],
+    IMG = 'img',
+    INTRINSIC = 'intrinsic',
+    NONE = 'none',
+    SLASH = '/',
+    T_CANVAS = 'Canvas',
+    T_CELL = 'Cell',
+    T_GROUP = 'Group',
+    T_IMAGE = 'Image',
+    ZERO = 'zero',
+    ZERO_STR = '';
 
 
 // #### ImageAsset constructor
@@ -31,9 +67,9 @@ const ImageAsset = function (items = Ωempty) {
 
 
 // #### ImageAsset prototype
-const P = ImageAsset.prototype = Object.create(Object.prototype);
-P.type = 'Image';
-P.lib = 'asset';
+const P = ImageAsset.prototype = doCreate();
+P.type = T_IMAGE;
+P.lib = ASSET;
 P.isArtefact = false;
 P.isAsset = true;
 
@@ -101,7 +137,7 @@ S.source = function (item) {
     if (item) {
 
         // For &lt;img> and &lt;picture> elements
-        if (['IMG', 'PICTURE'].includes(item.tagName.toUpperCase())) {
+        if (IMAGE_ELEMENTS.includes(item.tagName.toUpperCase())) {
 
             this.source = item;
             this.sourceNaturalWidth = item.naturalWidth;
@@ -117,7 +153,7 @@ S.source = function (item) {
 S.currentSrc = function (item) {
 
     this.currentSrc = item;
-    this.currentFile = this.currentSrc.split("/").pop();
+    this.currentFile = this.currentSrc.split(SLASH).pop();
 };
 
 
@@ -126,8 +162,9 @@ S.currentSrc = function (item) {
 // `checkSource`
 P.checkSource = function (width, height) {
 
-    let el = this.source,
-        action = 'element';
+    const el = this.source;
+    
+    let action = ELEMENT;
 
     if (this.sourceLoaded) {
 
@@ -141,21 +178,21 @@ P.checkSource = function (width, height) {
 
             iDims = this.intrinsicDimensions[this.currentFile];
             
-            if (iDims) action = 'intrinsic';
-            else action = 'zero';
+            if (iDims) action = INTRINSIC;
+            else action = ZERO;
         }
-        else if (iDims) action = 'intrinsic';
+        else if (iDims) action = INTRINSIC;
 
         switch (action) {
 
-            case 'zero' :
+            case ZERO :
 
                 this.sourceNaturalWidth = 0;
                 this.sourceNaturalHeight = 0;
                 this.notifySubscribers();
                 break;
 
-            case 'intrinsic' :
+            case INTRINSIC :
 
                 if (this.sourceNaturalWidth !== iDims[0] || 
                         this.sourceNaturalHeight !== iDims[1]) {
@@ -218,9 +255,9 @@ export const importImage = function (...args) {
 
         if (item.substring) {
 
-            let match = reg.exec(item);
+            const match = reg.exec(item);
 
-            name = (match && match[1]) ? match[1] : '';
+            name = (match && match[1]) ? match[1] : ZERO_STR;
             url = item;
             className = '';
             visibility = false;
@@ -233,10 +270,10 @@ export const importImage = function (...args) {
 
             if (item && item.src) {
 
-                name = item.name || '';
+                name = item.name || ZERO_STR;
 
                 url = item.src;
-                className = item.className || '';
+                className = item.className || ZERO_STR;
                 visibility = item.visibility || false;
                 if (item.parent) parent = document.querySelector(item.parent);
 
@@ -246,18 +283,18 @@ export const importImage = function (...args) {
 
         if (flag) {
 
-            let image = makeImageAsset({
+            const image = makeImageAsset({
                 name: name,
                 intrinsicDimensions: {},
             });
 
-            let img = document.createElement('img');
+            const img = document.createElement(IMG);
 
             img.name = name;
             img.className = className;
-            img.crossorigin = 'anonymous';
+            img.crossorigin = ANONYMOUS;
 
-            img.style.display = (visibility) ? 'block' : 'none';
+            img.style.display = (visibility) ? BLOCK : NONE;
 
             if (parent) parent.appendChild(img);
             
@@ -281,34 +318,33 @@ export const importImage = function (...args) {
     return results;
 };
 
-
 // `importDomImage` - import images defined in the web page HTML code
 // + Required argument is a query string used to search the dom for matching elements
 // + Scrawl-canvas does not remove &lt;img> elements from the DOM (this is a breaking change from Scrawl-canvas v7.0). 
 // + If &lt;img> elements should not appear, developers need to hide them in some way - for instance by positioning them (or their parent element) absolutely to the top or left of the display; or by giving their parent element zero width/height; or by setting their CSS: `display: none;`, `opacity: 0;`, etc.
 export const importDomImage = function (query) {
 
-    let reg = /.*\/(.*?)\./;
+    const reg = /.*\/(.*?)\./;
 
-    let items = document.querySelectorAll(query);
+    const items = document.querySelectorAll(query);
 
     items.forEach(item => {
 
         let name;
 
-        if (['IMG', 'PICTURE'].includes(item.tagName.toUpperCase())) {
+        if (IMAGE_ELEMENTS.includes(item.tagName.toUpperCase())) {
 
             if (item.id || item.name) name = item.id || item.name;
             else {
 
-                let match = reg.exec(item.src);
+                const match = reg.exec(item.src);
                 name = (match && match[1]) ? match[1] : '';
             }
 
-            let intrinsics = item.dataset.dimensions || {};
-            if (intrinsics.substring) intrinsics = JSON.parse(intrinsics);
+            const intrinsics = item.dataset.dimensions || {};
+            if (intrinsics.substring) intrinsics = _parse(intrinsics);
 
-            let image = makeImageAsset({
+            const image = makeImageAsset({
                 name: name,
                 source: item,
                 intrinsicDimensions: intrinsics,
@@ -334,9 +370,9 @@ export const createImageFromCell = function (item, stashAsAsset = false) {
 
     let mycell = (item.substring) ? cell[item] || canvas[item] : item;
 
-    if (mycell.type === 'Canvas') mycell = mycell.base;
+    if (mycell.type == T_CANVAS) mycell = mycell.base;
 
-    if (mycell.type === 'Cell') {
+    if (mycell.type == T_CELL) {
 
         mycell.stashOutput = true;
 
@@ -351,9 +387,9 @@ export const createImageFromGroup = function (item, stashAsAsset = false) {
 
     if (item && !item.substring) {
 
-        if (item.type === 'Group') mygroup = item;
-        else if (item.type === 'Cell') mygroup = group[item.name];
-        else if (item.type === 'Canvas') mygroup = group[item.base.name];
+        if (item.type == T_GROUP) mygroup = item;
+        else if (item.type == T_CELL) mygroup = group[item.name];
+        else if (item.type == T_CANVAS) mygroup = group[item.base.name];
     }
     else if (item && item.substring) mygroup = group[item];
 
@@ -368,7 +404,7 @@ export const createImageFromGroup = function (item, stashAsAsset = false) {
 // `createImageFromEntity`
 export const createImageFromEntity = function (item, stashAsAsset = false) {
 
-    let myentity = (item.substring) ? artefact[item] : item;
+    const myentity = (item.substring) ? artefact[item] : item;
 
     if (myentity.isArtefact) {
 
