@@ -7,27 +7,27 @@ export const _ceil = Math.ceil;
 export const _cos = Math.cos;
 export const _create = Object.create;
 export const _entries = Object.entries;
-export const _setPrototypeOf = Object.setPrototypeOf;
-export const _seal = Object.seal;
 export const _floor = Math.floor;
+export const _hypot = Math.hypot;
 export const _isArray = Array.isArray;
+export const _isInteger = Number.isInteger;
 export const _keys = Object.keys;
+export const _max = Math.max;
+export const _min = Math.min;
 export const _now = Date.now;
 export const _parse = JSON.parse;
 export const _pi = Math.PI;
 export const _piDouble = Math.PI * 2;
 export const _piHalf = Math.PI * 0.5;
 export const _pow = Math.pow;
-export const _hypot = Math.hypot;
-export const _max = Math.max;
-export const _min = Math.min;
 export const _random = Math.random;
 export const _round = Math.round;
+export const _seal = Object.seal;
+export const _setPrototypeOf = Object.setPrototypeOf;
 export const _sin = Math.sin;
 export const _sqrt = Math.sqrt;
 export const _string = JSON.stringify;
 export const _values = Object.values;
-export const _isInteger = Number.isInteger;
 
 export const _tick = 16 / 1000;
 
@@ -712,7 +712,30 @@ export const _tick = 16 / 1000;
 // export const WEAK_NET = 'weak-net';
 // export const WEAK_SHAPE = 'weak-shape';
 
+/* factory/noiseAsset */
+// export const $X = 'X';
+// export const ASSET = 'asset';
+// export const BESPOKE_NOISE_ENGINES = ['stripes', 'smoothed-stripes', 'worley-euclidean', 'worley-manhattan'];
+// export const DEFAULT_SEED = 'any_random_string_will_do';
+// export const EUCLIDEAN_DISTANCE = 'euclidian-distance';
+// export const IMPROVED_PERLIN = 'improved-perlin';
+// export const MANHATTAN_DISTANCE = 'manhattan-distance';
+// export const NONE = 'none';
+// export const PERLIN = 'perlin';
+// export const QUINTIC = 'quintic';
+// export const SIMPLEX = 'simplex';
+// export const SMOOTHED_STRIPES = 'smoothed-stripes';
+// export const STRIPES = 'stripes';
+// export const T_NOISE_ASSET = 'NoiseAsset';
+// export const VALUE = 'value';
+// export const WORLEY_EUCLIDEAN = 'worley-euclidean';
+// export const WORLEY_MANHATTAN = 'worley-manhattan';
+// export const WORLEY_OUTPUTS = ['X', 'Y', 'Z', 'XminusY', 'XminusZ', 'YminusX', 'YminusZ', 'ZminusX', 'ZminusY', 'XaddY', 'XaddZ', 'YaddZ', 'XaddYminusZ', 'XaddZminusY', 'YaddZminusX', 'XmultiplyY', 'XmultiplyZ', 'YmultiplyZ', 'XmultiplyYaddZ', 'XmultiplyZaddY', 'YmultiplyZaddX', 'XmultiplyYminusZ', 'XmultiplyZminusY', 'YmultiplyZminusX', 'sum'];
 
+/* factory/observeUpdate */
+// export const FALSE = 'false';
+// export const T_GROUP = 'Group';
+// export const TRUE = 'true';
 
 
 

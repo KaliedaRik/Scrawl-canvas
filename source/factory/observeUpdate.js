@@ -1,9 +1,4 @@
 // # Observe and update
-
-import * as library from "../core/library.js";
-import { xt, xta, isa_fn, λnull, Ωempty } from "../core/utilities.js";
-import { addListener, addNativeListener, removeListener, removeNativeListener } from "../core/events.js";
-
 // Okay, so I got very bored of writing boilerplate to react to various form elements user interactions across the demos. So I wrote some functions to setup (and take down) batches of DOM event listeners to make my life easier. These are:
 // + scrawl.addNativeListener()
 // + scrawl.removeNativeListener()
@@ -62,6 +57,37 @@ import { addListener, addNativeListener, removeListener, removeNativeListener } 
 //     setup: () => myLoom.update(),
 // });
 // ```
+
+
+import * as library from "../core/library.js";
+
+import { 
+    isa_fn, 
+    xt, 
+    xta, 
+    λnull, 
+    Ωempty, 
+} from "../core/utilities.js";
+
+import { 
+    addListener, 
+    addNativeListener, 
+    removeListener, 
+    removeNativeListener, 
+} from "../core/events.js";
+
+import { 
+    _round,
+    _floor,
+    _ceil,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const FALSE = 'false',
+    T_GROUP = 'Group',
+    TRUE = 'true';
+
 
 // __observeAndUpdate__ - exported function
 export const observeAndUpdate = function (items = Ωempty) {
@@ -130,17 +156,17 @@ export const observeAndUpdate = function (items = Ωempty) {
 
                     // Supplied value rounded up or down to nearest integer Number
                     case 'round' :
-                        val = Math.round(targetVal);
+                        val = _round(targetVal);
                         break;
 
                     // Supplied value rounded down to nearest integer Number
                     case 'roundDown' :
-                        val = Math.floor(targetVal);
+                        val = _floor(targetVal);
                         break;
 
                     // Supplied value rounded up to nearest integer Number
                     case 'roundUp' :
-                        val = Math.ceil(targetVal);
+                        val = _ceil(targetVal);
                         break;
 
                     // Supplied value not modified in any way
@@ -159,8 +185,8 @@ export const observeAndUpdate = function (items = Ωempty) {
 
                             if (targetVal.substring) {
 
-                                if ('true' === targetVal.toLowerCase()) val = true;
-                                else if ('false' === targetVal.toLowerCase()) val = false;
+                                if (TRUE == targetVal.toLowerCase()) val = true;
+                                else if (FALSE == targetVal.toLowerCase()) val = false;
                                 else val = (parseFloat(targetVal)) ? true : false;
                             }
                             else val = (targetVal) ? true : false;
@@ -177,7 +203,7 @@ export const observeAndUpdate = function (items = Ωempty) {
                 // Update - we can apply updates to a Group of artefacts, or to a single artefact
                 if (actionFlag) {
 
-                    if (target.type === 'Group') {
+                    if (target.type == T_GROUP) {
 
                         target.setArtefacts({
                             [actionAttribute]: val

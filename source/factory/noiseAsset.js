@@ -24,7 +24,18 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
-import { mergeOver, λnull, λthis, λfirstArg, removeItem, interpolate, easeEngines, Ωempty } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    easeEngines, 
+    interpolate, 
+    mergeOver, 
+    removeItem, 
+    λfirstArg, 
+    λnull, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
@@ -32,6 +43,38 @@ import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 import assetAdvancedMix from '../mixin/assetAdvancedFunctionality.js';
 import patternMix from '../mixin/pattern.js';
+
+import { 
+    _abs,
+    _floor,
+    _max,
+    _min,
+    _pow,
+    _random,
+    _sin,
+    _sqrt,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const $X = 'X',
+    ASSET = 'asset',
+    BESPOKE_NOISE_ENGINES = ['stripes', 'smoothed-stripes', 'worley-euclidean', 'worley-manhattan'],
+    DEFAULT_SEED = 'any_random_string_will_do',
+    EUCLIDEAN_DISTANCE = 'euclidian-distance',
+    IMPROVED_PERLIN = 'improved-perlin',
+    MANHATTAN_DISTANCE = 'manhattan-distance',
+    NONE = 'none',
+    PERLIN = 'perlin',
+    QUINTIC = 'quintic',
+    SIMPLEX = 'simplex',
+    SMOOTHED_STRIPES = 'smoothed-stripes',
+    STRIPES = 'stripes',
+    T_NOISE_ASSET = 'NoiseAsset',
+    VALUE = 'value',
+    WORLEY_EUCLIDEAN = 'worley-euclidean',
+    WORLEY_MANHATTAN = 'worley-manhattan',
+    WORLEY_OUTPUTS = ['X', 'Y', 'Z', 'XminusY', 'XminusZ', 'YminusX', 'YminusZ', 'ZminusX', 'ZminusY', 'XaddY', 'XaddZ', 'YaddZ', 'XaddYminusZ', 'XaddZminusY', 'YaddZminusX', 'XmultiplyY', 'XmultiplyZ', 'YmultiplyZ', 'XmultiplyYaddZ', 'XmultiplyZaddY', 'YmultiplyZaddX', 'XmultiplyYminusZ', 'XmultiplyZminusY', 'YmultiplyZminusX', 'sum'];
 
 
 // #### NoiseAsset constructor
@@ -61,9 +104,9 @@ const NoiseAsset = function (items = Ωempty) {
 
 
 // #### NoiseAsset prototype
-const P = NoiseAsset.prototype = Object.create(Object.prototype);
-P.type = 'NoiseAsset';
-P.lib = 'asset';
+const P = NoiseAsset.prototype = doCreate();
+P.type = T_NOISE_ASSET;
+P.lib = ASSET;
 P.isArtefact = false;
 P.isAsset = true;
 
@@ -91,10 +134,10 @@ const defaultAttributes = {
     height: 150,
 
     // __noiseEngine__ - String - the currently supported noise engines String values are: `perlin`, `improved-perlin`, `simplex`, `value`, `stripes`, `smoothed-stripes`, `worley-euclidean`, `worley-manhattan`
-    noiseEngine: 'simplex',
+    noiseEngine: SIMPLEX,
 
     // When a noise engine initializes it will create several Arrays of pseudo-random values. The __seed__ attribute is a String used to initialize the pseudo-random number generator, while the __size__ attribute is a Number (often a power of 2 value) which determines the lengths of the Arrays
-    seed: 'any_random_string_will_do',
+    seed: DEFAULT_SEED,
     size: 256,
 
     // The __scale__ attribute determines the relative scale of the noise calculation, which affects the noise output. Think of it as a rather idiosyncratic zoom factor 
@@ -105,16 +148,16 @@ const defaultAttributes = {
     // + __octaveFunction - a String identifying the function to be run at the end of each octave loop. Currently only `none` and `absolute` functions are supported
     // + __persistance__ and __lacunarity__ values change at the conclusion of each octave loop; these attributes set their initial values
     octaves: 1,
-    octaveFunction: 'none',
+    octaveFunction: NONE,
     persistence: 0.5,
     lacunarity: 2,
 
     // The __smoothing__ attribute - a String value - identifies the smoothing function that will be applied pixel noise values as they are calculated. There are a wide number of functions available; default: `quintic`
-    smoothing: 'quintic',
+    smoothing: QUINTIC,
 
     // Post-processing the noise map: The __sumFunction__ attribute - a String value - identifies the smoothing function that will be applied to the noise map once the noise calculations complete. 
     // + Permitted values include: `none`, `sine-x`, `sine-y`, `sine`, `modular`, `random`
-    sumFunction: 'none',
+    sumFunction: NONE,
 
     // __sineFrequencyCoeff__ - a Number - is used by sine-based sum functions
     sineFrequencyCoeff: 1,
@@ -127,7 +170,7 @@ const defaultAttributes = {
     // + we can amend the noise via the `worleyOutput` and `worleyDepth` attributes
     //
     // __worleyOutput__ - String value, one from: 'X', 'Y', 'Z', 'XminusY', 'XminusZ', 'YminusX', 'YminusZ', 'ZminusX', 'ZminusY', 'XaddY', 'XaddZ', 'YaddZ', 'XaddYminusZ', 'XaddZminusY', 'YaddZminusX', 'XmultiplyY', 'XmultiplyZ', 'YmultiplyZ', 'XmultiplyYaddZ', 'XmultiplyZaddY', 'YmultiplyZaddX', 'XmultiplyYminusZ', 'XmultiplyZminusY', 'YmultiplyZminusX', 'sum', 'average'
-    worleyOutput: 'X',
+    worleyOutput: $X,
 
     // worleyDepth - positive integer Number - Scrawl-canvas only uses the x and y dimensions to calculate noise; worley noise also comes with a z dimension which we can amend via this attribute
     worleyDepth: 0,
@@ -190,7 +233,7 @@ S.smoothing = function (item) {
 
 S.noiseEngine = function (item) {
 
-    this.noiseEngine = (null != this.noiseEngines[item]) ? this.noiseEngines[item] : this.noiseEngines['simplex'];
+    this.noiseEngine = (null != this.noiseEngines[item]) ? this.noiseEngines[item] : this.noiseEngines[SIMPLEX];
     this.dirtyNoise = true;
     this.dirtyOutput = true;
 };
@@ -318,10 +361,9 @@ S.worleyDepth = function (item) {
     }
 };
 
-P.worleyOutputStrings = ['X', 'Y', 'Z', 'XminusY', 'XminusZ', 'YminusX', 'YminusZ', 'ZminusX', 'ZminusY', 'XaddY', 'XaddZ', 'YaddZ', 'XaddYminusZ', 'XaddZminusY', 'YaddZminusX', 'XmultiplyY', 'XmultiplyZ', 'YmultiplyZ', 'XmultiplyYaddZ', 'XmultiplyZaddY', 'YmultiplyZaddX', 'XmultiplyYminusZ', 'XmultiplyZminusY', 'YmultiplyZminusX', 'sum'];
 S.worleyOutput = function (item) {
 
-    if (item.substring && this.worleyOutputStrings.includes(item)) {
+    if (item.substring && WORLEY_OUTPUTS.includes(item)) {
 
         this.worleyOutput = item;
         this.dirtyNoise = true;
@@ -331,6 +373,7 @@ S.worleyOutput = function (item) {
 
 
 // #### Prototype functions
+
 // `cleanOutput` - internal function called by the `notifySubscribers` function
 // + The `paintCanvas` function is supplied by the _assetAdvancedFunctionality.js_ mixin
 P.cleanOutput = function () {
@@ -346,7 +389,7 @@ P.cleanNoise = function () {
 
         this.dirtyNoise = false;
 
-        let {noiseEngine, seed, width, height, element, engine, octaves, lacunarity, persistence, scale, octaveFunction, sumFunction} = this;
+        const {noiseEngine, seed, width, height, element, engine, octaves, lacunarity, persistence, scale, octaveFunction, sumFunction} = this;
 
         if (noiseEngine && noiseEngine.init) {
 
@@ -359,8 +402,9 @@ P.cleanNoise = function () {
             // Initialize the appropriate noise function
             noiseEngine.init.call(this);
 
+           const noiseValues = [];
+
             let x, y, o, i, iz,
-                noiseValues = [],
                 scaledX, scaledY,
                 totalNoise, amplitude, frequency;
 
@@ -375,14 +419,14 @@ P.cleanNoise = function () {
             }
 
             // Calculate a relative scale, and setup min/max variables
-            let relativeScale = Math.pow(width, -scale / 100);
+            const relativeScale = _pow(width, -scale / 100);
 
             let max = -1000, 
                 min = 1000;
 
             // This is the core of the calculation, performed for each cell in the noiseValues 2d array
-            let name = noiseEngine.name;
-            if (['stripes', 'smoothed-stripes', 'worley-euclidean', 'worley-manhattan'].includes(name)) {
+            const name = noiseEngine.name;
+            if (BESPOKE_NOISE_ENGINES.includes(name)) {
 
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {
@@ -394,8 +438,8 @@ P.cleanNoise = function () {
 
                         noiseValues[y][x] = totalNoise;
 
-                        min = Math.min(min, totalNoise);
-                        max = Math.max(max, totalNoise);
+                        min = _min(min, totalNoise);
+                        max = _max(max, totalNoise);
                     }
                 }
             }
@@ -437,14 +481,14 @@ P.cleanNoise = function () {
                         noiseValues[y][x] = totalNoise;
 
                         // ... and check for max/min spread of the generated values
-                        min = Math.min(min, totalNoise);
-                        max = Math.max(max, totalNoise);
+                        min = _min(min, totalNoise);
+                        max = _max(max, totalNoise);
                     }
                 }
             }
 
             // Calculate the span of numbers generated - we need to get all the results in the range 0 to 1
-            let noiseSpan = max - min;
+            const noiseSpan = max - min;
 
             for (y = 0; y < height; y++) {
                 for (x = 0; x < width; x++) {
@@ -453,7 +497,7 @@ P.cleanNoise = function () {
                     scaledY = y * relativeScale;
 
                     // Clamp the cell's noise value to between 0 and 1, then update it with the post-calculation sumFunction, if required
-                    let clampedVal = (noiseValues[y][x] - min) / noiseSpan;
+                    const clampedVal = (noiseValues[y][x] - min) / noiseSpan;
                     noiseValues[y][x] = sumFunction.call(this, clampedVal, x * relativeScale, y * relativeScale);
                 }
             }
@@ -471,7 +515,7 @@ P.checkOutputValuesExist = function () {
 };
 P.getOutputValue = function (index, width) {
 
-    let row = Math.floor(index / width),
+    let row = _floor(index / width),
         col = index - (row * width);
 
     return this.noiseValues[row][col];
@@ -483,9 +527,9 @@ P.getOutputValue = function (index, width) {
 // Convenience constants
 // P.F = 0.5 * (Math.sqrt(3) - 1);
 // P.G = (3 - Math.sqrt(3)) / 6;
-P.simplexConstantF = 0.5 * (Math.sqrt(3) - 1);
-P.simplexConstantG = (3 - Math.sqrt(3)) / 6;
-P.simplexConstantDoubleG = ((3 - Math.sqrt(3)) / 6) * 2;
+P.simplexConstantF = 0.5 * (_sqrt(3) - 1);
+P.simplexConstantG = (3 - _sqrt(3)) / 6;
+P.simplexConstantDoubleG = ((3 - _sqrt(3)) / 6) * 2;
 P.perlinGrad = [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [-1, 0], [0, 1], [0, -1]];
 
 // `noiseEngines` - a {key:object} object. Each named object contains two functions:
@@ -494,9 +538,9 @@ P.perlinGrad = [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [-1, 0], [0, 1], [0,
 P.noiseEngines = {
 
     // The classic Perlin noise generator
-    'perlin': {
+    [PERLIN]: {
 
-        name: 'perlin',
+        name: PERLIN,
 
         init: function () {
 
@@ -509,7 +553,7 @@ P.noiseEngines = {
             for(let i = 0; i < size; i++) {
 
                 grad[i] = [(rndEngine.random() * 2) - 1, (rndEngine.random() * 2) - 1];
-                dist = Math.sqrt(grad[i][0] *  grad[i][0] + grad[i][1] * grad[i][1]);
+                dist = _sqrt(grad[i][0] *  grad[i][0] + grad[i][1] * grad[i][1]);
                 grad[i][0] /= dist;
                 grad[i][1] /= dist;
             }
@@ -521,16 +565,16 @@ P.noiseEngines = {
 
             let a, b, u, v;
 
-            let bx0 = Math.floor(x) % size,
+            let bx0 = _floor(x) % size,
                 bx1 = (bx0 + 1) % size;
 
-            let rx0 = x - Math.floor(x),
+            let rx0 = x - _floor(x),
                 rx1 = rx0 - 1;
 
-            let by0 = Math.floor(y) % size,
+            let by0 = _floor(y) % size,
                 by1 = (by0 + 1) % size;
 
-            let ry0 = y - Math.floor(y),
+            let ry0 = y - _floor(y),
                 ry1 = ry0 - 1;
 
             let i = perm[bx0],
@@ -557,9 +601,9 @@ P.noiseEngines = {
     },
 
     // An improved Perlin noise generator
-    'improved-perlin': {
+    [IMPROVED_PERLIN]: {
 
-        name: 'improved-perlin',
+        name: IMPROVED_PERLIN,
 
         init: λnull,
 
@@ -569,16 +613,16 @@ P.noiseEngines = {
 
             let a, b, u, v;
 
-            let bx0 = Math.floor(x) % size, 
+            let bx0 = _floor(x) % size, 
                 bx1 = (bx0 + 1) % size;
 
-            let rx0 = x - Math.floor(x), 
+            let rx0 = x - _floor(x), 
                 rx1 = rx0 - 1;
 
-            let by0 = Math.floor(y) % size, 
+            let by0 = _floor(y) % size, 
                 by1 = (by0 + 1) % size;
 
-            let ry0 = y - Math.floor(y), 
+            let ry0 = y - _floor(y), 
                 ry1 = ry0 - 1;
 
             let i = perm[bx0], 
@@ -605,9 +649,9 @@ P.noiseEngines = {
     },
 
     // A successor to Perlin noise generation, by the person who invented it
-    'simplex': {
+    [SIMPLEX]: {
 
-        name: 'simplex',
+        name: SIMPLEX,
 
         init: λnull,
 
@@ -625,8 +669,8 @@ P.noiseEngines = {
             const {simplexConstantF, simplexConstantG, simplexConstantDoubleG, size, perlinGrad, perm, permMod8} = this;
             
             let summedCoordinates = (x + y) * simplexConstantF,
-                summedX = Math.floor(x + summedCoordinates),
-                summedY = Math.floor(y + summedCoordinates),
+                summedX = _floor(x + summedCoordinates),
+                summedY = _floor(y + summedCoordinates),
                 modifiedSummedCoordinates = (summedX + summedY) * simplexConstantG;
 
             let cornerX = x - (summedX - modifiedSummedCoordinates),
@@ -657,9 +701,9 @@ P.noiseEngines = {
     },
 
     // A simplified form of Perlin noise
-    'value': {
+    [VALUE]: {
 
-        name: 'value',
+        name: VALUE,
 
         init: function () {
 
@@ -677,12 +721,12 @@ P.noiseEngines = {
 
             const {values, size, perm, smoothing} = this;
 
-            let x0 = Math.floor(x) % size,
-                y0 = Math.floor(y) % size,
+            let x0 = _floor(x) % size,
+                y0 = _floor(y) % size,
                 x1 = (x0 + 1) % size,
                 y1 = (y0 + 1) % size,
-                vx = x - Math.floor(x),
-                vy = y - Math.floor(y),
+                vx = x - _floor(x),
+                vy = y - _floor(y),
                 sx = smoothing(vx),
                 sy = smoothing(vy),
                 i = perm[x0],
@@ -699,9 +743,9 @@ P.noiseEngines = {
     },
 
     // For generating repeated stripe gradients, set the sum function to `modular` and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects
-    'stripes': {
+    [STRIPES]: {
 
-        name: 'stripes',
+        name: STRIPES,
 
         init: λnull,
 
@@ -713,9 +757,9 @@ P.noiseEngines = {
 
     // As for stripes, but can apply smoothing function to the output
     // + interesting things start to happen when scale is set to on/around 100 and canvas dimensions are roughly equal, alongside a higher value for sumAmplitude. Best viewed with a modular sum function
-    'smoothed-stripes': {
+    [SMOOTHED_STRIPES]: {
 
-        name: 'smoothed-stripes',
+        name: SMOOTHED_STRIPES,
 
         init: λnull,
 
@@ -731,20 +775,20 @@ P.noiseEngines = {
     },
 
     // Worley functionality found in the [jackunion/tooloud GitHub repository](https://github.com/jackunion/tooloud/blob/master/src/Worley.js)
-    'worley-euclidean': {
+    [WORLEY_EUCLIDEAN]: {
 
-        name: 'worley-euclidean',
+        name: WORLEY_EUCLIDEAN,
 
         init: function () {
 
-            this.worleySeed = Math.floor(this.rndEngine.random() * 1000000);
+            this.worleySeed = _floor(this.rndEngine.random() * 1000000);
         },
 
         getNoiseValue: function (x, y) {
 
             const {width, height, worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = this;
 
-            const f = worleyDistanceFunctions['euclidian-distance'];
+            const f = worleyDistanceFunctions[EUCLIDEAN_DISTANCE];
             const o = worleyOutputFunctions[worleyOutput];
 
             return this.worleyNoise.call(this, {x:x, y:y, z:worleyDepth}, f, o);
@@ -752,20 +796,20 @@ P.noiseEngines = {
     },
 
     // For generating repeated stripe gradients, set the sum function to `modular` and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects
-    'worley-manhattan': {
+    [WORLEY_MANHATTAN]: {
 
-        name: 'worley-manhattan',
+        name: WORLEY_MANHATTAN,
 
         init: function () {
 
-            this.worleySeed = Math.floor(this.rndEngine.random() * 1000000);
+            this.worleySeed = _floor(this.rndEngine.random() * 1000000);
         },
 
         getNoiseValue: function (x, y) {
 
             const {width, height, worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = this;
 
-            const f = worleyDistanceFunctions['manhattan-distance'];
+            const f = worleyDistanceFunctions[MANHATTAN_DISTANCE];
             const o = worleyOutputFunctions[worleyOutput];
 
             return this.worleyNoise.call(this, {x:x, y:y, z:worleyDepth}, f, o);
@@ -792,7 +836,7 @@ P.generatePermutationTable = function () {
     
     while (--i) {
 
-        j = Math.floor(rndEngine.random() * size);
+        j = _floor(rndEngine.random() * size);
         k = perm[i];
         perm[i] = perm[j];
         perm[j] = k;
@@ -810,7 +854,7 @@ P.generatePermutationTable = function () {
 P.octaveFunctions = {
 
     none: λfirstArg,
-    absolute: function (octave) { return Math.abs((octave * 2) - 1) },
+    absolute: function (octave) { return _abs((octave * 2) - 1) },
 };
 
 // `sumFunctions` - a {key:functions} object holding functions used to modify noise values after their calculation has completed (post-processing)
@@ -820,14 +864,14 @@ P.sumFunctions = {
     none: λfirstArg,
 
     // These functions modify the final output using a sine frequency calculation based on the pixel position within the canvas
-    'sine-x': function (v, sx, sy) { return 0.5 + (Math.sin((sx * this.sineFrequencyCoeff) + v) / 2) },
-    'sine-y': function (v, sx, sy) { return 0.5 + (Math.sin((sy * this.sineFrequencyCoeff) + v) / 2) },
-    sine: function (v, sx, sy) { return 0.5 + (Math.sin((sx * this.sineFrequencyCoeff) + v) / 4) + (Math.sin((sy * this.sineFrequencyCoeff) + v) / 4) },
+    'sine-x': function (v, sx, sy) { return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 2) },
+    'sine-y': function (v, sx, sy) { return 0.5 + (_sin((sy * this.sineFrequencyCoeff) + v) / 2) },
+    sine: function (v, sx, sy) { return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 4) + (_sin((sy * this.sineFrequencyCoeff) + v) / 4) },
 
     // This function creates repeating bands, the frequency of which depends on the sumAmplitude attribute
     modular: function(v) {
         let g = v * this.sumAmplitude;
-        return g - Math.floor(g);
+        return g - _floor(g);
     },
 
     // This function adds random interference to the final output, the strength of which depends on the sumAmplitude attribute (lower values create a stronger effect)
@@ -859,7 +903,7 @@ P.wHash = function (i, j, k) {
 
 P.worleyDistanceFunctions = {
 
-    'euclidian-distance': function (p1, p2) {
+    [EUCLIDEAN_DISTANCE]: function (p1, p2) {
 
         const d = function (p1, p2) {
             return [p1.x - p2.x, p1.y - p2.y, p1.z - p2.z];
@@ -868,13 +912,13 @@ P.worleyDistanceFunctions = {
         return d(p1, p2).reduce((sum, x) => sum + (x * x), 0);
     },
 
-    'manhattan-distance': function (p1, p2) {
+    [MANHATTAN_DISTANCE]: function (p1, p2) {
 
         const d = function (p1, p2) {
             return [p1.x - p2.x, p1.y - p2.y, p1.z - p2.z];
         };
 
-        return d(p1, p2).reduce((sum, x) => sum + Math.abs(x), 0);
+        return d(p1, p2).reduce((sum, x) => sum + _abs(x), 0);
     },
 };
 
@@ -1021,9 +1065,9 @@ P.worleyNoise = function (input, distanceFunc, outputFunc) {
     let distanceArray = [9999999, 9999999, 9999999];
 
     let {x:inputX, y:inputY, z:inputZ} = input;
-    inputX = Math.floor(inputX);
-    inputY = Math.floor(inputY);
-    inputZ = Math.floor(inputZ);
+    inputX = _floor(inputX);
+    inputY = _floor(inputY);
+    inputZ = _floor(inputZ);
 
     for (let i = -1; i < 2; ++i) {
 
