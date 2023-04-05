@@ -18,10 +18,21 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, radian, xt, xto, isa_number, Ωempty } from '../core/utilities.js';
+
+import { 
+    isa_number, 
+    mergeOver, 
+    xt, 
+    xto, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
+
+import { 
+    _radian, 
+} from '../core/shared-vars.js';
 
 
 // __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
@@ -285,8 +296,8 @@ P.cleanPathObject = function () {
             radius = this.currentRadius * scale,
             x = radius - (handle[0] * scale),
             y = radius - (handle[1] * scale),
-            starts = this.startAngle * radian,
-            ends = this.endAngle * radian;
+            starts = this.startAngle * _radian,
+            ends = this.endAngle * _radian;
 
         p.arc(x, y, radius, starts, ends, !this.clockwise);
 

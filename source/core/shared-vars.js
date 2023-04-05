@@ -1,6 +1,8 @@
-// # Shared variables
+const _freeze = Object.freeze;
 
+// # Shared variables
 export const _abs = Math.abs;
+export const _assign = Object.assign;
 export const _atan2 = Math.atan2;
 export const _cbrt = Math.cbrt;
 export const _ceil = Math.ceil;
@@ -30,6 +32,14 @@ export const _string = JSON.stringify;
 export const _values = Object.values;
 
 export const _tick = 16 / 1000;
+export const _radian = Math.PI / 180;
+
+// Convenience set, used internally
+export const _css = _freeze(new Set(['all', 'background', 'backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'border', 'borderBottom', 'borderBottomColor', 'borderBottomStyle', 'borderBottomWidth', 'borderCollapse', 'borderColor', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderSpacing', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopStyle', 'borderTopWidth', 'borderWidth', 'clear', 'color', 'columns', 'content', 'counterIncrement', 'counterReset', 'cursor', 'direction', 'display', 'emptyCells', 'float', 'font', 'fontFamily', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontSynthesis', 'fontVariant', 'fontVariantAlternates', 'fontVariantCaps', 'fontVariantEastAsian', 'fontVariantLigatures', 'fontVariantNumeric', 'fontVariantPosition', 'fontWeight', 'grid', 'gridArea', 'gridAutoColumns', 'gridAutoFlow', 'gridAutoPosition', 'gridAutoRows', 'gridColumn', 'gridColumnStart', 'gridColumnEnd', 'gridRow', 'gridRowStart', 'gridRowEnd', 'gridTemplate', 'gridTemplateAreas', 'gridTemplateRows', 'gridTemplateColumns', 'imageResolution', 'imeMode', 'inherit', 'inlineSize', 'isolation', 'letterSpacing', 'lineBreak', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginBlockStart', 'marginBlockEnd', 'marginInlineStart', 'marginInlineEnd', 'marginBottom', 'marginLeft', 'marginRight', 'marginTop', 'marks', 'mask', 'maskType', 'maxWidth', 'maxHeight', 'maxBlockSize', 'maxInlineSize', 'maxZoom', 'minWidth', 'minHeight', 'minBlockSize', 'minInlineSize', 'minZoom', 'mixBlendMode', 'objectFit', 'objectPosition', 'offsetBlockStart', 'offsetBlockEnd', 'offsetInlineStart', 'offsetInlineEnd', 'orphans', 'overflow', 'overflowWrap', 'overflowX', 'overflowY', 'pad', 'padding', 'paddingBlockStart', 'paddingBlockEnd', 'paddingInlineStart', 'paddingInlineEnd', 'paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pointerEvents', 'position', 'prefix', 'quotes', 'rubyAlign', 'rubyMerge', 'rubyPosition', 'scrollBehavior', 'scrollSnapCoordinate', 'scrollSnapDestination', 'scrollSnapPointsX', 'scrollSnapPointsY', 'scrollSnapType', 'scrollSnapTypeX', 'scrollSnapTypeY', 'shapeImageThreshold', 'shapeMargin', 'shapeOutside', 'tableLayout', 'textAlign', 'textDecoration', 'textIndent', 'textOrientation', 'textOverflow', 'textRendering', 'textShadow', 'textTransform', 'textUnderlinePosition', 'unicodeRange', 'unset', 'verticalAlign', 'widows', 'willChange', 'wordBreak', 'wordSpacing', 'wordWrap', 'zIndex']));
+        
+
+// Convenience set, used internally
+export const _xcss = _freeze(new Set(['alignContent', 'alignItems', 'alignSelf', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'backfaceVisibility', 'backgroundImage', 'backgroundSize', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderRadius', 'borderTopLeftRadius', 'borderTopRightRadius', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'filter', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap', 'fontFeatureSettings', 'fontKerning', 'fontLanguageOverride', 'hyphens', 'imageRendering', 'imageOrientation', 'initial', 'justifyContent', 'linearGradient', 'opacity', 'order', 'orientation', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'resize', 'tabSize', 'textAlignLast', 'textCombineUpright', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'touchAction', 'transformStyle', 'transition', 'transitionDelay', 'transitionDuration', 'transitionProperty', 'transitionTimingFunction', 'unicodeBidi', 'whiteSpace', 'writingMode']));
 
 /* mixin/anchor */
 // export const DESCRIPTION = 'description';
@@ -75,7 +85,7 @@ export const _tick = 16 / 1000;
 // export const NAME = 'name';
 // export const NATIVE_CODE = '[native code]';
 // export const PACKET_DIVIDER = '~~~';
-// export const TYPE_EXCLUSIONS = ['Image', 'Sprite', 'Video', 'Canvas', 'Stack'];
+// export const TYPE_EXCLUSIONS = _freeze(['Image', 'Sprite', 'Video', 'Canvas', 'Stack']);
 // export const UNDEF = 'undefined';
 // export const ZERO_STR = '';
 
@@ -91,12 +101,12 @@ export const _tick = 16 / 1000;
 // export const BLANK = 'rgb(0 0 0 / 0)';
 // export const LEFT = 'left';
 // export const LINE_DASH = 'lineDash';
-// export const STYLES_ARR = ['Gradient', 'RadialGradient', 'Pattern'];
+// export const STYLES_ARR = _freeze(['Gradient', 'RadialGradient', 'Pattern']);
 // export const TOP = 'top';
 
 /* mixin/delta */
 // export const ADD = 'add';
-// export const LONGCHECK = ['startX', 'startY', 'handleX', 'handleY', 'offsetX', 'offsetY', 'width', 'height'];
+// export const LONGCHECK = _freeze(['startX', 'startY', 'handleX', 'handleY', 'offsetX', 'offsetY', 'width', 'height']);
 // export const LOOP = 'loop';
 // export const MULTIPLY = 'multiply';
 // export const NEWNUMBER = 'newNumber';
@@ -105,7 +115,7 @@ export const _tick = 16 / 1000;
 // export const REMOVE = 'remove';
 // export const REVERSE = 'reverse';
 // export const SEPARATOR = ':';
-// export const SHORTCHECK = ['startY', 'handleY', 'offsetY', 'height'];
+// export const SHORTCHECK = _freeze(['startY', 'handleY', 'offsetY', 'height']);
 // export const UPDATE = 'update';
 
 /* mixin/displayShape */
@@ -130,13 +140,13 @@ export const _tick = 16 / 1000;
 // export const CLASS_REGEX = /[\s\uFEFF\xA0]+/g;
 // export const CORNER_ATTR = 'data-scrawl-corner-div';
 // export const CORNER_ATTR_VAL = 'sc';
-// export const CORNER_LABELS = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'];
+// export const CORNER_LABELS = _freeze(['topLeft', 'topRight', 'bottomRight', 'bottomLeft']);
 // export const CORNER_SELECTOR = '[data-scrawl-corner-div="sc"]';
 // export const DIV = 'div';
 // export const LOCAL = 'local';
 // export const MIMIC = 'mimic';
 // export const MOUSE = 'mouse';
-// export const NO_CORNER_ELEMENTS = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS'];
+// export const NO_CORNER_ELEMENTS = _freeze(['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS']);
 // export const PARTICLE = 'particle';
 // export const PATH = 'path';
 // export const PC0 = '0%';
@@ -151,7 +161,7 @@ export const _tick = 16 / 1000;
 
 /* mixin/entity */
 // export const FILL = 'fill';
-// export const GOOD_HOST = ['Cell', 'CellFragment'];
+// export const GOOD_HOST = _freeze(['Cell', 'CellFragment']);
 // export const IMG = 'img';
 // export const MOUSE = 'mouse';
 // export const NAME = 'name';
@@ -183,8 +193,8 @@ export const _tick = 16 / 1000;
 // export const START = 'start';
 
 /* mixin/pattern */
-// export const MAT_POS = ['a', 'b', 'c', 'd', 'e', 'f'];
-// export const MAT_REPEAT = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'];
+// export const MAT_POS = _freeze(['a', 'b', 'c', 'd', 'e', 'f']);
+// export const MAT_REPEAT = _freeze(['repeat', 'repeat-x', 'repeat-y', 'no-repeat']);
 // export const _A = 'a';
 // export const _B = 'b';
 // export const _C = 'c';
@@ -197,7 +207,7 @@ export const _tick = 16 / 1000;
 // export const BLANK = 'rgb(0 0 0 / 0)';
 
 /* mixin/pivot */
-// export const CORNER_LABELS = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'];
+// export const CORNER_LABELS = _freeze(['topLeft', 'topRight', 'bottomRight', 'bottomLeft']);
 // export const PIVOT = 'pivot';
 // export const START = 'start';
 // export const T_BEZIER = 'Bezier';
@@ -301,7 +311,7 @@ export const _tick = 16 / 1000;
 /* mixin/tween */
 // export const FUNCTION = 'function';
 // export const PC = '%';
-// export const TARGET_SECTIONS = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'];
+// export const TARGET_SECTIONS = _freeze(['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter']);
 // export const UNKNOWN = 'unknown';
 // export const UNNAMED = 'unnamed';
 
@@ -369,7 +379,7 @@ export const _tick = 16 / 1000;
 // export const CANVAS_QUERY = '[data-scrawl-canvas]';
 // export const DATA_SCRAWL_GROUP = 'data-scrawl-group';
 // export const DIV = 'div';
-// export const FIT_DEFS = ['fill', 'contain', 'cover'];
+// export const FIT_DEFS = _freeze(['fill', 'contain', 'cover']);
 // export const HIDDEN = 'hidden';
 // export const IMG = 'img';
 // export const NAME = 'name';
@@ -413,7 +423,7 @@ export const _tick = 16 / 1000;
 // export const SMOOTH_FONT = 'smoothFont';
 // export const SOURCE_OVER = 'source-over';
 // export const T_CELL = 'Cell';
-// export const TRANSPARENT_VALS = ['rgb(0 0 0 / 0)', 'rgba(0 0 0 / 0)', 'rgba(0,0,0,0)', 'rgba(0, 0, 0, 0)', 'transparent', '#00000000', '#0000'];
+// export const TRANSPARENT_VALS = _freeze(['rgb(0 0 0 / 0)', 'rgba(0 0 0 / 0)', 'rgba(0,0,0,0)', 'rgba(0, 0, 0, 0)', 'transparent', '#00000000', '#0000']);
 // export const WEBKIT_FONT_SMOOTHING = 'webkitFontSmoothing';
 // export const WIDTH = 'width';
 // export const ZERO_STR = '';
@@ -422,7 +432,7 @@ export const _tick = 16 / 1000;
 // export const BEZIER = 'bezier';
 // export const ENTITY = 'entity';
 // export const LINE = 'line';
-// export const PERMITTED_CURVES = ['line', 'quadratic', 'bezier'];
+// export const PERMITTED_CURVES = _freeze(['line', 'quadratic', 'bezier']);
 // export const QUADRATIC = 'quadratic';
 // export const T_COG = 'Cog';
 // export const ZERO_PATH = 'M0,0';
@@ -448,9 +458,9 @@ export const _tick = 16 / 1000;
 // export const FUNCTION = 'function';
 // export const GRAD = 'grad';
 // export const HSL = 'HSL';
-// export const HSL_HWB_ARRAY = ['HSL', 'HWB'];
+// export const HSL_HWB_ARRAY = _freeze(['HSL', 'HWB']);
 // export const HWB = 'HWB';
-// export const INT_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'];
+// export const INT_COLOR_SPACES = _freeze(['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH']);
 // export const LAB = 'LAB';
 // export const LCH = 'LCH';
 // export const LINEAR = 'linear';
@@ -463,7 +473,7 @@ export const _tick = 16 / 1000;
 // export const PC = '%';
 // export const RAD = 'rad';
 // export const RANDOM = 'random';
-// export const RET_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH'];
+// export const RET_COLOR_SPACES = _freeze(['RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH']);
 // export const RGB = 'RGB';
 // export const SOURCE_OVER = 'source-over';
 // export const SPACE = ' ';
@@ -491,7 +501,7 @@ export const _tick = 16 / 1000;
 // export const DESTINATION_OUT = 'destination-out';
 
 /* factory/dragZone */
-// export const ACCEPTED_WRAPPERS = ['Canvas', 'Stack'];
+// export const ACCEPTED_WRAPPERS = _freeze(['Canvas', 'Stack']);
 // export const T_CANVAS = 'Canvas';
 // export const T_GROUP = 'Group';
 // export const DOWN = 'down';
@@ -563,7 +573,7 @@ export const _tick = 16 / 1000;
 // export const SANS_SERIF = 'sans-serif';
 // export const SEMI_CONDENSED = 'semi-condensed';
 // export const SEMI_EXPANDED = 'semi-expanded';
-// export const SIZE_SUFFIX = ['in', 'cm', 'mm', 'Q', 'pc', 'pt', 'px'];
+// export const SIZE_SUFFIX = _freeze(['in', 'cm', 'mm', 'Q', 'pc', 'pt', 'px']);
 // export const SMALL = 'small';
 // export const SMALL_CAPS = 'small-caps';
 // export const SMALLER = 'smaller';
@@ -585,8 +595,8 @@ export const _tick = 16 / 1000;
 // export const XX_SMALL = 'xx-small';
 // export const XXX_LARGE = 'xxx-large';
 // export const ZERO_STR = '';
-// export const RFS_ARRAY_1 = ['italic','oblique','small-caps','normal','bold','lighter','bolder','ultra-condensed','extra-condensed','semi-condensed','condensed','ultra-expanded','extra-expanded','semi-expanded','expanded','xx-small','x-small','small','medium','xxx-large','xx-large','x-large','large'];
-// export const RFS_ARRAY_2 = ['0','1','2','3','4','5','6','7','8','9'];
+// export const RFS_ARRAY_1 = _freeze(['italic','oblique','small-caps','normal','bold','lighter','bolder','ultra-condensed','extra-condensed','semi-condensed','condensed','ultra-expanded','extra-expanded','semi-expanded','expanded','xx-small','x-small','small','medium','xxx-large','xx-large','x-large','large']);
+// export const RFS_ARRAY_2 = _freeze(['0','1','2','3','4','5','6','7','8','9']);
 
 /* factory/gradient */
 // export const BLANK = 'rgb(0 0 0 / 0)';
@@ -627,7 +637,7 @@ export const _tick = 16 / 1000;
 // export const ASSET = 'asset';
 // export const BLOCK = 'block';
 // export const ELEMENT = 'element';
-// export const IMAGE_ELEMENTS = ['IMG', 'PICTURE'];
+// export const IMAGE_ELEMENTS = _freeze(['IMG', 'PICTURE']);
 // export const IMG = 'img';
 // export const INTRINSIC = 'intrinsic';
 // export const NONE = 'none';
@@ -641,10 +651,10 @@ export const _tick = 16 / 1000;
 
 /* factory/keyboardZone */
 // export const $BODY = 'BODY';
-// export const ACCEPTED_WRAPPERS = ['Canvas', 'Stack'];
+// export const ACCEPTED_WRAPPERS = _freeze(['Canvas', 'Stack']);
 // export const KEY_DOWN = 'keydown';
 // export const KEY_UP = 'keyup';
-// export const keyGroupsArray = ['none', 'shiftOnly', 'altOnly', 'ctrlOnly', 'metaOnly', 'shiftAlt', 'shiftCtrl', 'shiftMeta', 'altCtrl', 'altMeta', 'ctrlMeta', 'shiftAltCtrl', 'shiftAltMeta', 'shiftCtrlMeta', 'altCtrlMeta', 'all'];
+// export const keyGroupsArray = _freeze(['none', 'shiftOnly', 'altOnly', 'ctrlOnly', 'metaOnly', 'shiftAlt', 'shiftCtrl', 'shiftMeta', 'altCtrl', 'altMeta', 'ctrlMeta', 'shiftAltCtrl', 'shiftAltMeta', 'shiftCtrlMeta', 'altCtrlMeta', 'all']);
 // export const NONE = 'none';
 // export const T_ESCAPE = 'Escape';
 // export const T_TAB = 'Tab';
@@ -667,7 +677,7 @@ export const _tick = 16 / 1000;
 // export const DESTINATION_OUT = 'destination-out';
 // export const ENTITY = 'entity';
 // export const FILL = 'fill';
-// export const GOOD_HOST = ['Cell', 'CellFragment'];
+// export const GOOD_HOST = _freeze(['Cell', 'CellFragment']);
 // export const NAME = 'name';
 // export const SOURCE_OVER = 'source-over';
 // export const T_GROUP = 'Group';
@@ -696,9 +706,9 @@ export const _tick = 16 / 1000;
 // export const ENTITY = 'entity';
 // export const EULER = 'euler';
 // export const FILL_STYLE = 'fillStyle';
-// export const HUB_ARTEFACTS_1 = ['Bezier', 'Line', 'Oval', 'Polygon', 'Polyline', 'Quadratic', 'Rectangle', 'Shape', 'Spiral', 'Star', 'Tetragon'];
-// export const HUB_ARTEFACTS_2 = ['Block', 'Cell', 'Element', 'Grid', 'Phrase', 'Picture', 'Stack'];
-// export const HUB_ARTEFACTS_3 = ['Wheel'];
+// export const HUB_ARTEFACTS_1 = _freeze(['Bezier', 'Line', 'Oval', 'Polygon', 'Polyline', 'Quadratic', 'Rectangle', 'Shape', 'Spiral', 'Star', 'Tetragon']);
+// export const HUB_ARTEFACTS_2 = _freeze(['Block', 'Cell', 'Element', 'Grid', 'Phrase', 'Picture', 'Stack']);
+// export const HUB_ARTEFACTS_3 = _freeze(['Wheel']);
 // export const HUB_SPOKE = 'hub-spoke';
 // export const POSITION = 'position';
 // export const SOURCE_OVER = 'source-over';
@@ -715,7 +725,7 @@ export const _tick = 16 / 1000;
 /* factory/noiseAsset */
 // export const $X = 'X';
 // export const ASSET = 'asset';
-// export const BESPOKE_NOISE_ENGINES = ['stripes', 'smoothed-stripes', 'worley-euclidean', 'worley-manhattan'];
+// export const BESPOKE_NOISE_ENGINES = _freeze(['stripes', 'smoothed-stripes', 'worley-euclidean', 'worley-manhattan']);
 // export const DEFAULT_SEED = 'any_random_string_will_do';
 // export const EUCLIDEAN_DISTANCE = 'euclidian-distance';
 // export const IMPROVED_PERLIN = 'improved-perlin';
@@ -730,16 +740,40 @@ export const _tick = 16 / 1000;
 // export const VALUE = 'value';
 // export const WORLEY_EUCLIDEAN = 'worley-euclidean';
 // export const WORLEY_MANHATTAN = 'worley-manhattan';
-// export const WORLEY_OUTPUTS = ['X', 'Y', 'Z', 'XminusY', 'XminusZ', 'YminusX', 'YminusZ', 'ZminusX', 'ZminusY', 'XaddY', 'XaddZ', 'YaddZ', 'XaddYminusZ', 'XaddZminusY', 'YaddZminusX', 'XmultiplyY', 'XmultiplyZ', 'YmultiplyZ', 'XmultiplyYaddZ', 'XmultiplyZaddY', 'YmultiplyZaddX', 'XmultiplyYminusZ', 'XmultiplyZminusY', 'YmultiplyZminusX', 'sum'];
+// export const WORLEY_OUTPUTS = _freeze(['X', 'Y', 'Z', 'XminusY', 'XminusZ', 'YminusX', 'YminusZ', 'ZminusX', 'ZminusY', 'XaddY', 'XaddZ', 'YaddZ', 'XaddYminusZ', 'XaddZminusY', 'YaddZminusX', 'XmultiplyY', 'XmultiplyZ', 'YmultiplyZ', 'XmultiplyYaddZ', 'XmultiplyZaddY', 'YmultiplyZaddX', 'XmultiplyYminusZ', 'XmultiplyZminusY', 'YmultiplyZminusX', 'sum']);
 
 /* factory/observeUpdate */
 // export const FALSE = 'false';
 // export const T_GROUP = 'Group';
 // export const TRUE = 'true';
 
+/* factory/oval */
+// export const ENTITY = 'entity';
+// export const OVAL = 'oval';
+// export const RADIUS_X = _freeze(['radiusX']);
+// export const RADIUS_XY = _freeze(['radiusX', 'radiusY']);
+// export const RADIUS_Y = _freeze(['radiusY']);
+// export const T_OVAL = 'Oval';
+// export const ZERO_PATH = 'M0,0';
 
+/* factory/palette */
+// export const BLACK = 'rgb(0 0 0 / 1)';
+// export const BLANK = 'rgb(0 0 0 / 0)';
+// export const FUNCTION = 'function';
+// export const INT_COLOR_SPACES = _freeze(['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH']);
+// export const LINEAR = 'linear';
+// export const PALETTE = 'palette';
+// export const PALETTE_KEYS = _freeze(['colors', 'cyclic', 'stops']);
+// export const RGB = 'RGB';
+// export const SPACE = ' ';
+// export const T_PALETTE = 'Palette';
+// export const WHITE = 'rgb(255 255 255 / 1)';
 
-
+/* factory/particle */
+// export const BLACK = 'rgb(0 0 0 / 1)';
+// export const EULER = 'euler';
+// export const PARTICLE = 'particle';
+// export const T_PARTICLE = 'Particle';
 
 
 

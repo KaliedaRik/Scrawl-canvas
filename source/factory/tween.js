@@ -37,8 +37,22 @@
 
 
 // #### Imports
-import { constructors, animationtickers } from '../core/library.js';
-import { mergeOver, pushUnique, radian, xt, xtGet, xto, convertTime, λnull, easeEngines, Ωempty } from '../core/utilities.js';
+import { 
+    animationtickers, 
+    constructors, 
+} from '../core/library.js';
+
+import { 
+    convertTime, 
+    easeEngines, 
+    mergeOver, 
+    pushUnique, 
+    xt, 
+    xtGet, 
+    xto, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { makeTicker } from './ticker.js';
 

@@ -39,14 +39,45 @@
 
 
 // #### Imports
-import { constructors, force, spring, springnames } from '../core/library.js';
-import { mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
+import { 
+    constructors, 
+    force, 
+    spring, 
+    springnames, 
+} from '../core/library.js';
 
-import { requestParticleHistoryObject, releaseParticleHistoryObject } from './particleHistory.js';
-import { requestVector, releaseVector, makeVector } from './vector.js';
+import { 
+    doCreate,
+    mergeOver, 
+    pushUnique, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    releaseParticleHistoryObject, 
+    requestParticleHistoryObject, 
+} from './particleHistory.js';
+
+import { 
+    makeVector, 
+    releaseVector, 
+    requestVector, 
+} from './vector.js';
 
 // The Particle object uses the base mixin, thus it supports all the normal Scrawl-canvas functionality such as `get`, `set`, `setDelta`, `clone`, `kill`, etc.
 import baseMix from '../mixin/base.js';
+
+import { 
+    _isArray,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const BLACK = 'rgb(0 0 0 / 1)',
+    EULER = 'euler',
+    PARTICLE = 'particle',
+    T_PARTICLE = 'Particle';
 
 
 // #### Particle constructor
@@ -64,11 +95,11 @@ const Particle = function (items = Ωempty) {
 
 
 // #### Particle prototype
-const P = Particle.prototype = Object.create(Object.prototype);
+const P = Particle.prototype = doCreate();
 
 // Particles have their own section in the Scrawl-canvas library. They are not artefacts or assets.
-P.type = 'Particle';
-P.lib = 'particle';
+P.type = T_PARTICLE;
+P.lib = PARTICLE;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -100,7 +131,7 @@ const defaultAttributes = {
 //+ __'euler'__ - the simplest, quickest and least stable engine (default)
 //+ __'runge-kutta'__ - the most complex, slowest and most stable engine
 //+ __'improved-euler'__ - an engine that sits between the other two engines in terms of complexity, speed and stability.
-    engine: 'euler',
+    engine: EULER,
 
 // __forces__ - an Array to hold Force objects that will be applied to this Particle.
     forces: null,
@@ -109,8 +140,8 @@ const defaultAttributes = {
     mass: 1,
 
 // __fill__ and __stroke__ - CSS color values which can be used to display the Particle during the animation.
-    fill: '#000000',
-    stroke: '#000000',
+    fill: BLACK,
+    stroke: BLACK,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -206,7 +237,7 @@ S.forces = function (item) {
 
     if (item) {
 
-        if (Array.isArray(item)) {
+        if (_isArray(item)) {
 
             this.forces.length = 0;
             this.forces = this.forces.concat(item);
@@ -245,11 +276,13 @@ P.applyForces = function (world, host) {
 
     this.load.zero();
 
+    let f;
+
     if (!this.isBeingDragged) {
 
         this.forces.forEach(key => {
 
-            let f = force[key];
+            f = force[key];
 
             if (f && f.action) f.action(this, world, host);
         });
@@ -407,7 +440,7 @@ export const requestParticle = function (items) {
 // `exported function` - return a Particle to the particle pool. Failing to return Particles to the pool may lead to more inefficient code and possible memory leaks.
 export const releaseParticle = function (item) {
 
-    if (item && item.type === 'Particle') {
+    if (item && item.type == T_PARTICLE) {
 
         item.history.forEach(h => releaseParticleHistoryObject(h));
         item.history.length = 0;

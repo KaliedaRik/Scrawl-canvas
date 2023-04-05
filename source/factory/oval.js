@@ -40,10 +40,25 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, Ωempty } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    mergeOver, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
+
+
+// Local constants
+const ENTITY = 'entity',
+    OVAL = 'oval',
+    RADIUS_X = ['radiusX'],
+    RADIUS_XY = ['radiusX', 'radiusY'],
+    RADIUS_Y = ['radiusY'],
+    T_OVAL = 'Oval',
+    ZERO_PATH = 'M0,0';
 
 
 // #### Oval constructor
@@ -55,9 +70,9 @@ const Oval = function (items = Ωempty) {
 
 
 // #### Oval prototype
-const P = Oval.prototype = Object.create(Object.prototype);
-P.type = 'Oval';
-P.lib = 'entity';
+const P = Oval.prototype = doCreate();
+P.type = T_OVAL;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -110,27 +125,27 @@ const S = P.setters,
 
 S.radius = function (item) {
 
-    this.setRectHelper(item, ['radiusX', 'radiusY']);
+    this.setRectHelper(item, RADIUS_XY);
 };
 S.radiusX = function (item) {
 
-    this.setRectHelper(item, ['radiusX']);
+    this.setRectHelper(item, RADIUS_X);
 };
 S.radiusY = function (item) {
 
-    this.setRectHelper(item, ['radiusY']);
+    this.setRectHelper(item, RADIUS_Y);
 };
 D.radius = function (item) {
 
-    this.deltaRectHelper(item, ['radiusX', 'radiusY']);
+    this.deltaRectHelper(item, RADIUS_XY);
 };
 D.radiusX = function (item) {
 
-    this.deltaRectHelper(item, ['radiusX']);
+    this.deltaRectHelper(item, RADIUS_X);
 };
 D.radiusY = function (item) {
 
-    this.deltaRectHelper(item, ['radiusY']);
+    this.deltaRectHelper(item, RADIUS_Y);
 };
 
 S.offshootA = function (item) {
@@ -218,7 +233,7 @@ P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
 
-    let p = 'M0,0';
+    let p = ZERO_PATH;
     p = this.makeOvalPath();
 
     this.pathDefinition = p;
@@ -228,29 +243,22 @@ P.cleanSpecies = function () {
 // `makeOvalPath` - internal helper function - called by `cleanSpecies`
 P.makeOvalPath = function () {
 
-    let A = parseFloat(this.offshootA.toFixed(6)),
+    const A = parseFloat(this.offshootA.toFixed(6)),
         B = parseFloat(this.offshootB.toFixed(6)),
         radiusX = this.radiusX,
-        radiusY = this.radiusY,
-        width, height;
+        radiusY = this.radiusY;
+    
+    let width, height;
 
     if (radiusX.substring || radiusY.substring) {
 
-        // let here = this.getHere();
-
-        // let rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * here.w : radiusX,
-        //     ry = (radiusY.substring) ? (parseFloat(radiusY) / 100) * here.h : radiusY;
-
-        // width = rx * 2;
-        // height = ry * 2;
-
-        let host = this.getHost();
+        const host = this.getHost();
 
         if (host) {
 
-            let [hW, hH] = host.currentDimensions;
+            const [hW, hH] = host.currentDimensions;
 
-            let rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * hW : radiusX,
+            const rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * hW : radiusX,
                 ry = (radiusY.substring) ? (parseFloat(radiusY) / 100) * hH : radiusY;
 
             width = rx * 2;
@@ -268,7 +276,7 @@ P.makeOvalPath = function () {
         fore = parseFloat((height * this.intersectY).toFixed(2)),
         aft = parseFloat((height - fore).toFixed(2));
 
-    let myData = `m0,0`;
+    let myData = ZERO_PATH;
 
     myData += `c${starboard * A},${fore * B} ${starboard - (starboard * B)},${fore - (fore * A)}, ${starboard},${fore} `;
     myData += `${-starboard * B},${aft * A} ${-starboard + (starboard * A)},${aft - (aft * B)} ${-starboard},${aft} `;
@@ -280,9 +288,9 @@ P.makeOvalPath = function () {
 
 P.calculateLocalPathAdditionalActions = function () {
 
-    let [x, y, w, h] = this.localBox;
+    const [x, y, w, h] = this.localBox;
 
-    this.pathDefinition = this.pathDefinition.replace('m0,0', `m${-x},${-y}`);
+    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x},${-y}`);
 
     this.pathCalculatedOnce = false;
 
@@ -323,7 +331,7 @@ P.calculateLocalPathAdditionalActions = function () {
 export const makeOval = function (items) {
 
     if (!items) return false;
-    items.species = 'oval';
+    items.species = OVAL;
     return new Oval(items);
 };
 

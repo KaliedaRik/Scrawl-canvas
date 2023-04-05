@@ -5,11 +5,20 @@
 
 
 // #### Imports
-import { pushUnique, css, xcss } from "./utilities.js";
+// import { pushUnique, css, xcss } from "./utilities.js";
+import { pushUnique } from "./utilities.js";
 import { artefact } from "./library.js";
-
 import { rootElements } from "./document-rootElements.js";
-import { getPixelRatio, getIgnorePixelRatio } from "./events.js";
+
+import { 
+    getPixelRatio, 
+    getIgnorePixelRatio, 
+} from "./events.js";
+
+import { 
+    _css,
+    _xcss,
+} from './shared-vars.js';
 
 // #### DOM element updates
 // Scrawl-canvas will batch process all DOM element updates, to minimize disruptive impacts on web page performance. We don't maintain a full/comprehensive 'shadow' or 'virtual' DOM, but Scrawl-canvas does maintain a record of element (absolute) position and dimension data, alongside details of scaling, perspective and any other CSS related data (including CSS classes) which we tell it about, on a per-element basis.
@@ -179,7 +188,7 @@ export const domShow = function (singleArtefact = '') {
                     key = keys[j];
                     value = items[key];
 
-                    if (xcss.has(key)) {
+                    if (_xcss.has(key)) {
 
                         keyName = `${key[0].toUpperCase}${key.substr(1)}`;
 
@@ -189,7 +198,7 @@ export const domShow = function (singleArtefact = '') {
                         style[`o${keyName}`] = value;
                         style[key] = value;
                     }
-                    else if (css.has(key)) style[key] = value;
+                    else if (_css.has(key)) style[key] = value;
                 }
             }
 

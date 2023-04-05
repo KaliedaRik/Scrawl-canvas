@@ -10,9 +10,24 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { radian, isa_quaternion, isa_number, xt, xto, Ωempty } from '../core/utilities.js';
 
-import { requestVector, releaseVector, makeVector } from './vector.js';
+import { 
+    isa_number, 
+    isa_quaternion, 
+    xt, 
+    xto, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    makeVector, 
+    releaseVector, 
+    requestVector, 
+} from './vector.js';
+
+import { 
+    _radian,
+} from '../core/shared-vars.js';
 
 
 // #### Quaternion constructor
@@ -101,9 +116,9 @@ P.setFromEuler = function (items = Ωempty) {
         sin = Math.sin,
         tv = this.v;
 
-    pitch = (items.pitch || items.x || 0) * radian;
-    yaw = (items.yaw || items.y || 0) * radian;
-    roll = (items.roll || items.z || 0) * radian;
+    pitch = (items.pitch || items.x || 0) * _radian;
+    yaw = (items.yaw || items.y || 0) * _radian;
+    roll = (items.roll || items.z || 0) * _radian;
 
     c1 = cos( pitch / 2 );
     c2 = cos( yaw / 2 );
@@ -207,7 +222,7 @@ P.getAngle = function (degree) {
 
     if(degree){
 
-        result *= (1 / radian);
+        result *= (1 / _radian);
     }
 
     return (result > -0.000001 && result < 0.000001) ? 0 : result;

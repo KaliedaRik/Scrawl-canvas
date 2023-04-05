@@ -56,11 +56,46 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { λnull, λfirstArg, isa_obj, isa_fn, mergeOver, xt, xta, pushUnique, Ωempty, easeEngines } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    easeEngines, 
+    isa_fn, 
+    isa_obj, 
+    mergeOver, 
+    pushUnique, 
+    xt, 
+    xta, 
+    λfirstArg, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
+
+import { 
+    _assign,
+    _entries,
+    _floor,
+    _isArray,
+    _keys,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const BLACK = 'rgb(0 0 0 / 1)',
+    BLANK = 'rgb(0 0 0 / 0)',
+    FUNCTION = 'function',
+    INT_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'],
+    LINEAR = 'linear',
+    PALETTE = 'palette',
+    RGB = 'RGB',
+    SPACE = ' ',
+    T_PALETTE = 'Palette',
+    WHITE = 'rgb(255 255 255 / 1)';
+export const PALETTE_KEYS = ['colors', 'cyclic', 'stops'];
 
 
 // #### Palette constructor
@@ -90,10 +125,9 @@ const Palette = function (items = Ωempty) {
 
 
 // #### Palette prototype
-const P = Palette.prototype = Object.create(Object.prototype);
-
-P.type = 'Palette';
-P.lib = 'palette';
+const P = Palette.prototype = doCreate();
+P.type = T_PALETTE;
+P.lib = PALETTE;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -116,7 +150,7 @@ const defaultAttributes = {
     cyclic: false,
 
 // The __easing__ and __easingFunction__ attributes affect represents a transformation that will be applied to a copy of the color stops Array - this allows us to create non-linear gradients
-    easing: 'linear',
+    easing: LINEAR,
     easingFunction: null,
 
 // The __precision__ value - higher values lead to fewer stops being added to the gradient; setting the value to `0` forces the palette to skip setting the stops between defined colors in the `colors` Array
@@ -172,19 +206,19 @@ G.colors = function () {
 
         const colorSpace = f.colorSpace;
 
-        for (const [key, value] of Object.entries(this.colors)) {
+        for (const [key, value] of _entries(this.colors)) {
 
             res.push([parseInt(key, 10), f.buildColorString(...value, colorSpace)]);
         }
     }
-    else res.push([0, 'rgba(0 0 0 / 1)'], [999, 'rgba(255 255 255 / 1)']);
+    else res.push([0, BLACK], [999, WHITE]);
 
     return res;
 };
 
 S.colors = function (item) {
 
-    if (Array.isArray(item)) {
+    if (_isArray(item)) {
 
         let f = this.factory,
             newCols = {},
@@ -222,7 +256,7 @@ P.setEasingHelper = function (item) {
 
     if (isa_fn(item)) {
 
-        this.easing = 'function';
+        this.easing = FUNCTION;
         this.easingFunction = item;
     }
     else if (item.substring && easeEngines[item]) {
@@ -232,7 +266,7 @@ P.setEasingHelper = function (item) {
     }
     else {
 
-        this.easing = 'linear'; 
+        this.easing = LINEAR; 
         this.easingFunction = λfirstArg;
     }
     this.dirtyPalette = true;
@@ -250,15 +284,15 @@ S.colorSpace = function (item) {
         const ITM = item.toUpperCase();
         const itm = item.toLowerCase();
 
-        if (['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'].includes(ITM)) {
+        if (INT_COLOR_SPACES.includes(ITM)) {
 
-            const oldColors = Object.assign({}, this.colors);
+            const oldColors = _assign({}, this.colors);
 
             const oldSpace = this.factory.colorSpace;
 
             this.factory.set({ colorSpace: ITM });
 
-            for (const [key, value] of Object.entries(oldColors)) {
+            for (const [key, value] of _entries(oldColors)) {
 
                 const color = this.factory.buildColorString(...value, oldSpace);
 
@@ -306,13 +340,13 @@ S.stops = λnull;
 P.getColorSpace = function () {
 
     if (this.factory) return this.factory.colorSpace;
-    return 'RGB';
+    return RGB;
 };
 
 P.getReturnColorAs = function () {
 
     if (this.factory) return this.factory.returnColorAs;
-    return 'RGB';
+    return RGB;
 };
 
 // `recalculateHold` - internal variable
@@ -325,11 +359,11 @@ P.recalculate = function () {
 
     const { colors, stops, factory } = this;
 
-    stops.fill('rgba(0 0 0 / 0)');
+    stops.fill(BLANK);
 
     const { colorSpace } = factory;
 
-    let colorKeys = Object.keys(colors);
+    let colorKeys = _keys(colors);
     colorKeys = colorKeys.map(n => parseInt(n, 10))
     colorKeys.sort((a, b) => a - b);
 
@@ -369,12 +403,12 @@ P.updateColor = function (index, color) {
 
     if (xta(index, color)) {
 
-        index = (index.substring) ? parseInt(index, 10) : Math.floor(index);
+        index = (index.substring) ? parseInt(index, 10) : _floor(index);
 
         if (index >= 0 && index <= 999) {
 
             f.convert(color);
-            index += ' ';
+            index += SPACE;
             this.colors[index] = [...f[colorSpace]];
             this.dirtyPalette = true;
         }
@@ -387,11 +421,11 @@ P.removeColor = function (index) {
     
     if (xt(index)) {
 
-        index = (index.substring) ? parseInt(index, 10) : Math.floor(index);
+        index = (index.substring) ? parseInt(index, 10) : _floor(index);
         
         if (index >= 0 && index <= 999) {
 
-            index += ' ';
+            index += SPACE;
             delete this.colors[index];
             this.dirtyPalette = true;
         }
@@ -405,7 +439,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
     let { stops, easing, easingFunction, precision } = this;
 
-    let keys = Object.keys(this.colors),
+    let keys = _keys(this.colors),
         spread, offset, i, iz, item, n;
 
     if (gradient) {
@@ -419,14 +453,14 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
         }
 
         let engine = easingFunction;
-        if (easing !== 'function' && easeEngines[easing]) engine = easeEngines[easing];
+        if (easing != FUNCTION && easeEngines[easing]) engine = easeEngines[easing];
 
         const colorSpace = this.getColorSpace();
 
-        const precisionTest = (!precision || (easing === 'linear' && colorSpace === 'RGB')) ? false : true;
+        const precisionTest = (!precision || (easing == LINEAR && colorSpace == RGB)) ? false : true;
 
         // Option 1 start == end, cycle irrelevant
-        if (start === end) return stops[start] || 'rgba(0 0 0 / 0)';
+        if (start === end) return stops[start] || BLANK;
 
         // Option 2: start < end, cycle irrelevant
         else if (start < end) {
@@ -559,7 +593,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
     }
 
     // No gradient: no colors
-    else return 'rgba(0 0 0 / 0)';
+    else return BLANK;
 };
 
 
@@ -571,5 +605,3 @@ export const makePalette = function (items) {
 };
 
 constructors.Palette = Palette;
-
-export const paletteKeys = ['colors', 'cyclic', 'stops'];

@@ -59,7 +59,6 @@ import {
     generateUniqueString, 
     isa_canvas, 
     mergeOver, 
-    radian, 
     λnull, 
     λthis, 
     Ωempty, 

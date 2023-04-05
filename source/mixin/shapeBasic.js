@@ -8,7 +8,6 @@ import { artefact } from '../core/library.js';
 import { 
     mergeOver, 
     pushUnique, 
-    radian, 
     xt, 
     λnull, 
     Ωempty, 
@@ -30,6 +29,7 @@ import {
     _parse,
     _piHalf,
     _pow,
+    _radian, 
 } from '../core/shared-vars.js';
 
 
@@ -246,7 +246,7 @@ export default function (P = Ωempty) {
             dx = _pow(T, 2) * (cp1x - sx) + 2 * t * T * (cp2x - cp1x) + t * t * (ex - cp2x),
             dy = _pow(T, 2) * (cp1y - sy) + 2 * t * T * (cp2y - cp1y) + t * t * (ey - cp2y);
 
-        return (-_atan2(dx, dy) + _piHalf) / radian;
+        return (-_atan2(dx, dy) + _piHalf) / _radian;
     };
 
     // `getQuadraticAngle`
@@ -256,7 +256,7 @@ export default function (P = Ωempty) {
             dx = 2 * T * (cp1x - sx) + 2 * t * (ex - cp1x),
             dy = 2 * T * (cp1y - sy) + 2 * t * (ey - cp1y);
 
-        return (-_atan2(dx, dy) + _piHalf) / radian;
+        return (-_atan2(dx, dy) + _piHalf) / _radian;
     };
 
     // `getLinearAngle`
@@ -265,7 +265,7 @@ export default function (P = Ωempty) {
         const dx = ex - sx,
             dy = ey - sy;
 
-        return (-_atan2(dx, dy) + _piHalf) / radian;
+        return (-_atan2(dx, dy) + _piHalf) / _radian;
     };
 
     // `getConstantPosition` - internal function called by `getPathPositionData`

@@ -20,7 +20,6 @@ import {
     doCreate,
     isa_number, 
     mergeOver, 
-    radian, 
     xt, 
     xta, 
     xto, 
@@ -39,6 +38,10 @@ import {
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
+
+import { 
+    _radian, 
+} from '../core/shared-vars.js';
 
 
 // Local constants
@@ -247,9 +250,9 @@ P.calculateInterception = function () {
     const { currentOuterRadius:oR, currentInnerRadius:iR, currentDisplacement:disp } = this;
 
     this.outerCircleStart = 0;
-    this.outerCircleEnd = 360 * radian;
+    this.outerCircleEnd = 360 * _radian;
     this.innerCircleStart = 0;
-    this.innerCircleEnd = 360 * radian;
+    this.innerCircleEnd = 360 * _radian;
 
     this.drawOuterCircle = false;
     this.drawDonut = false;
@@ -307,10 +310,10 @@ P.calculateInterception = function () {
 
             engine.restore();
 
-            this.outerCircleStart = -b * radian;
-            this.outerCircleEnd = b * radian;
-            this.innerCircleStart = a * radian;
-            this.innerCircleEnd = -a * radian;
+            this.outerCircleStart = -b * _radian;
+            this.outerCircleEnd = b * _radian;
+            this.innerCircleStart = a * _radian;
+            this.innerCircleEnd = -a * _radian;
 
             releaseCoordinate(v);
             releaseCell(cell);

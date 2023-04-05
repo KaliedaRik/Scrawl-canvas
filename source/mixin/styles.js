@@ -36,7 +36,7 @@ import { makeCoordinate } from '../factory/coordinate.js';
 
 import { 
     makePalette, 
-    paletteKeys, 
+    PALETTE_KEYS, 
 } from '../factory/palette.js';
 
 import { 
@@ -462,7 +462,7 @@ export default function (P = Ωempty) {
 
                 if (key && key != NAME && value != null) {
 
-                    if (!paletteKeys.includes(key)) {
+                    if (!PALETTE_KEYS.includes(key)) {
 
                         predefined = setters[key];
 
@@ -510,7 +510,7 @@ export default function (P = Ωempty) {
 
                 if (key && key != NAME && value != null) {
 
-                    if (!paletteKeys.includes(key)) {
+                    if (!PALETTE_KEYS.includes(key)) {
 
                         predefined = setters[key];
 

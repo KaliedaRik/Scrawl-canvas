@@ -19,19 +19,18 @@ import {
 } from '../core/library.js';
 
 import { 
+    correctAngle, 
+    doCreate,
+    easeEngines, 
+    interpolate, 
+    isa_fn, 
+    isa_obj, 
     mergeOver, 
+    pushUnique, 
     xt, 
     xtGet, 
-    isa_obj, 
-    doCreate,
-    isa_fn, 
-    easeEngines, 
-    Ωempty, 
     λfirstArg, 
-    pushUnique, 
-    interpolate, 
-    correctAngle, 
-    radian, 
+    Ωempty, 
 } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
@@ -49,6 +48,7 @@ import {
     _min,
     _pi,
     _pow,
+    _radian, 
     _random,
     _round,
     _sin,
@@ -866,7 +866,7 @@ P.getHueValue = function (hue) {
     if (hue == NONE) return 0;
 
     if (hue.includes(DEG)) hue = parseFloat(hue)
-    else if (hue.includes(RAD)) hue = parseFloat(hue) / radian;
+    else if (hue.includes(RAD)) hue = parseFloat(hue) / _radian;
     else if (hue.includes(GRAD)) hue = (parseFloat(hue) / 400) * 360;
     else if (hue.includes(TURN)) hue = parseFloat(hue) * 360;
     else hue = parseFloat(hue);

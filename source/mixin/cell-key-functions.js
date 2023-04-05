@@ -6,7 +6,6 @@
 import { 
     mergeDiscard, 
     mergeOver, 
-    radian,
     xt, 
     λnull, 
     λthis, 
@@ -30,6 +29,7 @@ import {
     _entries,
     _isArray,
     _keys,
+    _radian,
     _sin,
 } from '../core/shared-vars.js';
 
@@ -381,7 +381,7 @@ export default function (P = Ωempty) {
 
         if (rotation) {
 
-            rotation *= radian;
+            rotation *= _radian;
 
             const cos = _cos(rotation),
                 sin = _sin(rotation);

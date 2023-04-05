@@ -27,12 +27,15 @@ import {
     isa_number, 
     mergeOver, 
     pushUnique, 
-    radian, 
     Ωempty, 
 } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
+
+import { 
+    _radian, 
+} from '../core/shared-vars.js';
 
 
 // Local constants
@@ -138,7 +141,7 @@ P.updateGradientArgs = function (x, y) {
 
     const gradientArgs = this.gradientArgs,
         currentStart = this.currentStart,
-        angle = this.angle * radian;
+        angle = this.angle * _radian;
 
     const sx = currentStart[0] + x,
         sy = currentStart[1] + y;
