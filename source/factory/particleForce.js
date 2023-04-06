@@ -38,11 +38,28 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique, λnull, isa_fn, Ωempty } from '../core/utilities.js';
 
-import { requestVector, releaseVector } from './vector.js';
+import { 
+    doCreate,
+    isa_fn, 
+    mergeOver, 
+    pushUnique, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    releaseVector, 
+    requestVector, 
+} from './vector.js';
 
 import baseMix from '../mixin/base.js';
+
+
+// Local constants
+const FORCE = 'force',
+    GRAVITY = 'gravity',
+    T_FORCE = 'Force';
 
 
 // #### Force constructor
@@ -62,9 +79,9 @@ const Force = function (items = Ωempty) {
 
 
 // #### Force prototype
-const P = Force.prototype = Object.create(Object.prototype);
-P.type = 'Force';
-P.lib = 'force';
+const P = Force.prototype = doCreate();
+P.type = T_FORCE;
+P.lib = FORCE;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -150,12 +167,12 @@ constructors.Force = Force;
 
 makeForce({
 
-    name: 'gravity',
+    name: GRAVITY,
     action: (particle, world, host) => {
 
-        let {mass, load} = particle;
+        const {mass, load} = particle;
 
-        let c = requestVector();
+        const c = requestVector();
 
         c.setFromVector(world.gravity).scalarMultiply(mass);
         load.vectorAdd(c);

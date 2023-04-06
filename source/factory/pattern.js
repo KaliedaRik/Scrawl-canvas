@@ -13,17 +13,51 @@
 
 
 // #### Imports
-import { constructors, cell, entity } from '../core/library.js';
-import { mergeOver, pushUnique, isa_obj, Ωempty } from '../core/utilities.js';
+import { 
+    constructors, 
+    cell, 
+    entity, 
+} from '../core/library.js';
+
+import { 
+    doCreate,
+    mergeOver, 
+    pushUnique, 
+    isa_obj, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { stateKeys } from './state.js';
-import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
-import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
+
+import { 
+    gettableVideoAssetAtributes, 
+    settableVideoAssetAtributes, 
+} from './videoAsset.js';
+
+import { 
+    gettableImageAssetAtributes, 
+    settableImageAssetAtributes, 
+} from './imageAsset.js';
 
 
 import baseMix from '../mixin/base.js';
 import patternMix from '../mixin/pattern.js';
 import assetConsumerMix from '../mixin/assetConsumer.js';
+
+import { 
+    _entries,
+    _isArray,
+    _keys,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const $IMAGE = 'image_',
+    $VIDEO = 'video_',
+    NAME = 'name',
+    STYLES = 'styles',
+    T_PATTERN = 'Pattern',
+    UNDEFINED = 'undefined';
 
 
 // #### Pattern constructor
@@ -39,10 +73,9 @@ const Pattern = function (items = Ωempty) {
 
 
 // #### Pattern prototype
-const P = Pattern.prototype = Object.create(Object.prototype);
-
-P.type = 'Pattern';
-P.lib = 'styles';
+const P = Pattern.prototype = doCreate();
+P.type = T_PATTERN;
+P.lib = STYLES;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -66,7 +99,7 @@ P.packetObjects = pushUnique(P.packetObjects, ['asset']);
 
 P.finalizePacketOut = function (copy, items) {
 
-    if (Array.isArray(items.patternMatrix)) copy.patternMatrix = items.patternMatrix;
+    if (_isArray(items.patternMatrix)) copy.patternMatrix = items.patternMatrix;
     else {
 
         let m = this.patternMatrix;
@@ -83,22 +116,24 @@ P.finalizePacketOut = function (copy, items) {
 // #### Kill management
 P.kill = function () {
 
-    let { name, asset, removeAssetOnKill } = this;
+    const { name, asset, removeAssetOnKill } = this;
+    let state, defs, fill, stroke;
 
     if (isa_obj(asset)) asset.unsubscribe(this);
 
     // Remove style from all entity state objects
-    Object.entries(entity).forEach(([label, ent]) => {
+    _entries(entity).forEach(([label, ent]) => {
 
-        let state = ent.state;
+        state = ent.state;
+        defs = state.defs;
 
         if (state) {
 
-            let fill = state.fillStyle,
-                stroke = state.strokeStyle;
+            fill = state.fillStyle;
+            stroke = state.strokeStyle;
 
-            if (isa_obj(fill) && fill.name === name) state.fillStyle = state.defs.fillStyle;
-            if (isa_obj(stroke) && stroke.name === name) state.strokeStyle = state.defs.strokeStyle;
+            if (isa_obj(fill) && fill.name == name) state.fillStyle = defs.fillStyle;
+            if (isa_obj(stroke) && stroke.name == name) state.strokeStyle = defs.strokeStyle;
         }
     });
 
@@ -124,7 +159,7 @@ P.get = function (item) {
 
     let source = this.source;
 
-    if ((item.indexOf('video_') === 0 || item.indexOf('image_') === 0) && source) {
+    if ((item.indexOf($VIDEO) == 0 || item.indexOf($IMAGE) == 0) && source) {
 
         if (gettableVideoAssetAtributes.includes(item)) return source[item.substring(6)];
         else if (gettableImageAssetAtributes.includes(item)) return source[item.substring(6)];
@@ -141,10 +176,10 @@ P.get = function (item) {
             let def = this.defs[item],
                 val;
 
-            if (typeof def != 'undefined') {
+            if (typeof def != UNDEFINED) {
 
                 val = this[item];
-                return (typeof val != 'undefined') ? val : def;
+                return (typeof val != UNDEFINED) ? val : def;
             }
             return undef;
         }
@@ -154,7 +189,7 @@ P.get = function (item) {
 // `set`
 P.set = function (items = Ωempty) {
 
-    const keys = Object.keys(items),
+    const keys = _keys(items),
         keysLen = keys.length;
 
     if (keysLen) {
@@ -163,25 +198,25 @@ P.set = function (items = Ωempty) {
             source = this.source,
             defs = this.defs;
         
-        let predefined, i, key, value;
+        let fn, i, key, value;
 
         for (i = 0; i < keysLen; i++) {
 
             key = keys[i];
             value = items[key];
 
-            if ((key.indexOf('video_') === 0 || key.indexOf('image_') === 0) && source) {
+            if ((key.indexOf($VIDEO) == 0 || key.indexOf($IMAGE) == 0) && source) {
 
                 if (settableVideoAssetAtributes.includes(key)) source[key.substring(6)] = value
                 else if (settableImageAssetAtributes.includes(key)) source[key.substring(6)] = value
             }
 
-            else if (key && key !== 'name' && value != null) {
+            else if (key && key != NAME && value != null) {
 
-                predefined = setters[key];
+                fn = setters[key];
 
-                if (predefined) predefined.call(this, value);
-                else if (typeof defs[key] !== 'undefined') this[key] = value;
+                if (fn) fn.call(this, value);
+                else if (typeof defs[key] != UNDEFINED) this[key] = value;
             }
         }
         this.dirtyFilterIdentifier = true;

@@ -29,13 +29,32 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, isa_fn, xt, Ωempty } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    isa_fn, 
+    mergeOver, 
+    xt, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { makeQuaternion } from './quaternion.js';
 import { makeVector } from './vector.js';
 import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
+
+import { 
+    _entries,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const T_COORDINATE = 'Coordinate',
+    T_QUATERNION = 'Quaternion',
+    T_VECTOR = 'Vector',
+    T_WORLD = 'World',
+    WORLD = 'world';
 
 
 // #### World constructor
@@ -47,7 +66,7 @@ const World = function (items = Ωempty) {
     this.set(this.defs);
 
     let keytypes = items.keytypes || {};
-    if (!keytypes.gravity) keytypes.gravity = 'Vector';
+    if (!keytypes.gravity) keytypes.gravity = T_VECTOR;
     if (!items.gravity) items.gravity = [0, 9.81, 0];
 
     if (items.userAttributes) {
@@ -69,9 +88,9 @@ const World = function (items = Ωempty) {
 
 
 // #### World prototype
-const P = World.prototype = Object.create(Object.prototype);
-P.type = 'World';
-P.lib = 'world';
+const P = World.prototype = doCreate();
+P.type = T_WORLD;
+P.lib = WORLD;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -134,7 +153,7 @@ S.gravity = function (item) { if (this.gravity && xt(item)) this.gravity.set(ite
 // + [particles-008](../../demo/particles-008.html) Net entity: generation and basic functionality, including Spring objects.
 P.addAttribute = function (items = Ωempty) {
 
-    let {key, defaultValue, setter, deltaSetter, getter} = items;
+    const {key, defaultValue, setter, deltaSetter, getter} = items;
 
     if (key && key.substring) {
 
@@ -164,19 +183,19 @@ P.removeAttribute = function (key) {
 // `initializeAttributes` - internal function called by the constructor.
 P.initializeAttributes = function (types) {
 
-    for (let [key, value] of Object.entries(types)) {
+    for (let [key, value] of _entries(types)) {
 
         switch (value) {
 
-            case 'Quaternion' :
+            case T_QUATERNION :
                 this[key] = makeQuaternion();
                 break;
 
-            case 'Vector' :
+            case T_VECTOR :
                 this[key] = makeVector();
                 break;
 
-            case 'Coordinate' :
+            case T_COORDINATE :
                 this[key] = makeCoordinate();
                 break;
         }

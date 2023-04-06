@@ -28,12 +28,31 @@
 
 
 // #### Imports
-import { constructors, particle } from '../core/library.js';
-import { mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
+import { 
+    constructors, 
+    particle, 
+} from '../core/library.js';
 
-import { requestVector, releaseVector } from './vector.js';
+import { 
+    doCreate,
+    mergeOver, 
+    pushUnique, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    requestVector, 
+    releaseVector, 
+} from './vector.js';
 
 import baseMix from '../mixin/base.js';
+
+
+// Local constants
+const T_SPRING = 'Spring',
+    SPRING = 'spring',
+    T_PARTICLE = 'Particle';
 
 
 // #### Spring constructor
@@ -53,9 +72,9 @@ const Spring = function (items = Ωempty) {
 
 
 // #### Spring prototype
-const P = Spring.prototype = Object.create(Object.prototype);
-P.type = 'Spring';
-P.lib = 'spring';
+const P = Spring.prototype = doCreate();
+P.type = T_SPRING;
+P.lib = SPRING;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -112,13 +131,13 @@ S.particleFrom = function (item) {
 
     if (item.substring) item = particle[item];
 
-    if (item && item.type === 'Particle') this.particleFrom = item;
+    if (item && item.type == T_PARTICLE) this.particleFrom = item;
 };
 S.particleTo = function (item) {
 
     if (item.substring) item = particle[item];
 
-    if (item && item.type === 'Particle') this.particleTo = item;
+    if (item && item.type == T_PARTICLE) this.particleTo = item;
 };
 
 
@@ -126,23 +145,23 @@ S.particleTo = function (item) {
 // `applySpring` - internal function
 P.applySpring = function () {
 
-    let {particleFrom, particleTo, particleFromIsStatic, particleToIsStatic, springConstant, damperConstant, restLength} = this;
+    const {particleFrom, particleTo, particleFromIsStatic, particleToIsStatic, springConstant, damperConstant, restLength} = this;
 
     if (particleFrom && particleTo) {
 
-        let {position: fromPosition, velocity: fromVelocity, load: fromLoad} = particleFrom;
-        let {position: toPosition, velocity: toVelocity, load: toLoad} = particleTo;
+        const {position: fromPosition, velocity: fromVelocity, load: fromLoad} = particleFrom;
+        const {position: toPosition, velocity: toVelocity, load: toLoad} = particleTo;
 
-        let dVelocity = requestVector(toVelocity).vectorSubtract(fromVelocity),
+        const dVelocity = requestVector(toVelocity).vectorSubtract(fromVelocity),
             dPosition = requestVector(toPosition).vectorSubtract(fromPosition);
 
-        let firstNorm = requestVector(dPosition).normalize(),
+        const firstNorm = requestVector(dPosition).normalize(),
             secondNorm = requestVector(firstNorm);
 
         firstNorm.scalarMultiply(springConstant * (dPosition.getMagnitude() - restLength));
         dVelocity.vectorMultiply(secondNorm).scalarMultiply(damperConstant).vectorMultiply(secondNorm);
 
-        let force = requestVector(firstNorm).vectorAdd(dVelocity);
+        const force = requestVector(firstNorm).vectorAdd(dVelocity);
 
         if (!particleFromIsStatic) fromLoad.vectorAdd(force);
         if (!particleToIsStatic) toLoad.vectorSubtract(force);

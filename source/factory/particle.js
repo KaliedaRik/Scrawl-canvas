@@ -162,11 +162,12 @@ P.factoryKill = function () {
 
     this.history.forEach(h => releaseParticleHistoryObject(h));
 
-    let deadSprings = [];
+    const deadSprings = [];
+    let s;
 
     springnames.forEach(name => {
 
-        let s = spring[name];
+        s = spring[name];
 
         if (s.particleFrom && s.particleFrom.name === this.name) deadSprings.push[s];
         else if (s.particleTo && s.particleTo.name === this.name) deadSprings.push[s];
@@ -189,7 +190,7 @@ G.positionZ = function () { return this.position.z; };
 // We return the __position__ value as an `[x, y, z]` Array rather than as an object
 G.position = function () {
 
-    let s = this.position;
+    const s = this.position;
     return [s.x, s.y, s.z];
 };
 
@@ -213,7 +214,7 @@ G.velocityZ = function () { return this.velocity.z; };
 
 G.velocity = function () {
 
-    let s = this.velocity;
+    const s = this.velocity;
     return [s.x, s.y, s.z];
 };
 
@@ -300,7 +301,7 @@ P.update = function (tick, world) {
 // `manageHistory` - internal function. Every particle can retain a history of its previous time and position moments, held in a ParticleHistory Array.
 P.manageHistory = function (tick, host) {
 
-    let {history, remainingTime, position, historyLength, hasLifetime, distanceLimit, initialPosition, killBeyondCanvas} = this;
+    const {history, remainingTime, position, historyLength, hasLifetime, distanceLimit, initialPosition, killBeyondCanvas} = this;
 
     let addHistoryFlag = true,
         remaining = 0;
@@ -317,7 +318,7 @@ P.manageHistory = function (tick, host) {
 
         if (remaining <= 0) {
 
-            let last = history.pop();
+            const last = history.pop();
 
             releaseParticleHistoryObject(last);
 
@@ -331,15 +332,15 @@ P.manageHistory = function (tick, host) {
     // A particle can be killed off under the following additional circumstances:
     // + If we set the emitter's `killBeyondCanvas` flag to `true`
     // + If we set a kill radius - a distance from the particle's initial position beyond which the particle will be removed - defined in the emitter's `killRadius` and `killRadiusVariation` attributes
-    let oldest = history[history.length - 1];
+    const oldest = history[history.length - 1];
 
     if (oldest) {
 
-        let [or, oz, ox, oy] = oldest;
+        const [or, oz, ox, oy] = oldest;
 
         if (killBeyondCanvas) {
 
-            let w = host.element.width,
+            const w = host.element.width,
                 h = host.element.height;
 
             if (ox < 0 || oy < 0 || ox > w || oy > h) {
@@ -351,7 +352,7 @@ P.manageHistory = function (tick, host) {
 
         if (distanceLimit) {
 
-            let test = requestVector(initialPosition);
+            const test = requestVector(initialPosition);
 
             test.vectorSubtractArray([ox, oy, oz]);
 
@@ -367,9 +368,9 @@ P.manageHistory = function (tick, host) {
     // Generate a new ParticleHistory object, if required, and remove any old ParticleHistory object beyond the history array's permitted length (as defined in the emitter's `historyLength` attribute)
     if (addHistoryFlag) {
 
-        let {x, y, z} = position;
+        const {x, y, z} = position;
 
-        let h = requestParticleHistoryObject();
+        const h = requestParticleHistoryObject();
 
         h.push(remaining, z, x, y);
 
@@ -377,7 +378,7 @@ P.manageHistory = function (tick, host) {
 
         if (history.length > historyLength) {
 
-            let old = history.splice(historyLength);
+            const old = history.splice(historyLength);
 
             old.forEach(item => releaseParticleHistoryObject(item));
         }
@@ -430,7 +431,7 @@ export const requestParticle = function (items) {
 
     if (!particlePool.length) particlePool.push(new Particle());
 
-    let v = particlePool.shift();
+    const v = particlePool.shift();
 
     v.set(items);
 
@@ -451,7 +452,7 @@ export const releaseParticle = function (item) {
         // Do not keep excessive numbers of under-utilised particle objects in the pool
         if (particlePool.length > 50) {
 
-            let temp = [].concat(particlePool);
+            const temp = [...particlePool];
             particlePool.length = 0;
             temp.forEach(p => p.kill());
         }
@@ -466,9 +467,9 @@ const particleEngines = {
     // __euler__ - the simplest and quickest engine, and the least accurate
     'euler': function (tick) {
 
-        let {position, velocity, load, mass} = this;
+        const {position, velocity, load, mass} = this;
 
-        let acc = requestVector(),
+        const acc = requestVector(),
             vel = requestVector(velocity);
 
         acc.setFromVector(load).scalarDivide(mass);
@@ -485,9 +486,9 @@ const particleEngines = {
     // __improved-euler__ is more accurate than the euler engine, but takes longer to calculate
     'improved-euler': function (tick) {
 
-        let {position, velocity, load, mass} = this;
+        const {position, velocity, load, mass} = this;
 
-        let acc1 = requestVector(),
+        const acc1 = requestVector(),
             acc2 = requestVector(),
             acc3 = requestVector(),
             vel = requestVector(velocity);
@@ -508,9 +509,9 @@ const particleEngines = {
     // __runge-kutta__ is very accurate, but also a lot more computationally expensive
     'runge-kutta': function (tick) {
 
-        let {position, velocity, load, mass} = this;
+        const {position, velocity, load, mass} = this;
 
-        let acc1 = requestVector(),
+        const acc1 = requestVector(),
             acc2 = requestVector(),
             acc3 = requestVector(),
             acc4 = requestVector(),

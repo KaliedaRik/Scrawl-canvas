@@ -775,10 +775,33 @@ export const _xcss = _freeze(new Set(['alignContent', 'alignItems', 'alignSelf',
 // export const PARTICLE = 'particle';
 // export const T_PARTICLE = 'Particle';
 
+/* factory/particleForce */
+// export const FORCE = 'force';
+// export const GRAVITY = 'gravity';
+// export const T_FORCE = 'Force';
 
+/* factory/particleHistory */
+// export const T_PARTICLE_HISTORY = 'ParticleHistory';
 
+/* factory/particleSpring */
+// export const T_SPRING = 'Spring';
+// export const SPRING = 'spring';
+// export const T_PARTICLE = 'Particle';
 
+/* factory/particleWorld */
+// export const T_COORDINATE = 'Coordinate';
+// export const T_QUATERNION = 'Quaternion';
+// export const T_VECTOR = 'Vector';
+// export const T_WORLD = 'World';
+// export const WORLD = 'world';
 
+/* factory/pattern */
+// export const $IMAGE = 'image_';
+// export const $VIDEO = 'video_';
+// export const NAME = 'name';
+// export const STYLES = 'styles';
+// export const T_PATTERN = 'Pattern';
+// export const UNDEFINED = 'undefined';
 
 
 
