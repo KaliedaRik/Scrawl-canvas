@@ -82,7 +82,7 @@ const ARG_SPLITTER = ',',
     T_MESH = 'Mesh',
     T_NET = 'Net',
     T_PICTURE = 'Picture',
-    UNDEFINED = 'undefined',
+    UNDEF = 'undefined',
     ZERO_STR = '';
 
 
@@ -317,18 +317,18 @@ P.get = function (item) {
 
         let val;
 
-        if (typeof def != UNDEFINED) {
+        if (typeof def != UNDEF) {
 
             val = this[item];
-            return (typeof val != UNDEFINED) ? val : def;
+            return (typeof val != UNDEF) ? val : def;
         }
 
         def = state.defs[item];
 
-        if (typeof def != UNDEFINED) {
+        if (typeof def != UNDEF) {
 
             val = state[item];
-            return (typeof val != UNDEFINED) ? val : def;
+            return (typeof val != UNDEF) ? val : def;
         }
         return null;
     }
@@ -363,7 +363,7 @@ P.set = function (items = Ωempty) {
                     fn = setters[key];
 
                     if (fn) fn.call(this, value);
-                    else if (typeof defs[key] != UNDEFINED) {
+                    else if (typeof defs[key] != UNDEF) {
 
                         this[key] = value;
                         this.dirtyFilterIdentifier = true;
@@ -374,7 +374,7 @@ P.set = function (items = Ωempty) {
                     fn = stateSetters[key];
 
                     if (fn) fn.call(state, value);
-                    else if (typeof stateDefs[key] != UNDEFINED) state[key] = value;
+                    else if (typeof stateDefs[key] != UNDEF) state[key] = value;
                 }
             }
         }
@@ -411,7 +411,7 @@ P.setDelta = function (items = Ωempty) {
                     fn = setters[key];
 
                     if (fn) fn.call(this, value);
-                    else if (typeof defs[key] != UNDEFINED) {
+                    else if (typeof defs[key] != UNDEF) {
 
                         this[key] = addStrings(this[key], value);
                         this.dirtyFilterIdentifier = true;
@@ -422,7 +422,7 @@ P.setDelta = function (items = Ωempty) {
                     fn = stateSetters[key];
 
                     if (fn) fn.call(state, value);
-                    else if (typeof stateDefs[key] != UNDEFINED) state[key] = addStrings(state[key], value);
+                    else if (typeof stateDefs[key] != UNDEF) state[key] = addStrings(state[key], value);
                 }
             }
         }

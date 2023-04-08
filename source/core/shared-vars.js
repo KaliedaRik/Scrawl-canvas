@@ -29,6 +29,7 @@ export const _setPrototypeOf = Object.setPrototypeOf;
 export const _sin = Math.sin;
 export const _sqrt = Math.sqrt;
 export const _string = JSON.stringify;
+export const _stringify = JSON.stringify;
 export const _values = Object.values;
 
 export const _tick = 16 / 1000;
@@ -44,7 +45,7 @@ export const _xcss = _freeze(new Set(['alignContent', 'alignItems', 'alignSelf',
 export const STATE_MAIN_KEYS = _freeze(['filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'shadowBlur', 'shadowOffsetX', 'shadowOffsetY']);
 export const STATE_LINE_KEYS = _freeze(['lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit']);
 export const STATE_STYLE_KEYS = _freeze(['fillStyle', 'shadowColor', 'strokeStyle']);
-export const _textKeys = _freeze(['font']);
+export const STATE_TEXT_KEYS = _freeze(['font']);
 
 // Note: does NOT include 'font', textAlign or textBaseline because we set them in the fontAttributes object and Phrase entity, not the state object
 export const STATE_ALL_KEYS = _freeze(['fillStyle', 'filter', 'font', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle', 'textAlign', 'textBaseline']);
@@ -314,7 +315,7 @@ export const STATE_KEYS = _freeze(['fillStyle', 'filter', 'globalAlpha', 'global
 // export const START = 'start';
 // export const T_PALETTE = 'Palette'
 // export const TOP = 'top';
-// export const UNDEFINED = 'undefined';
+// export const UNDEF = 'undefined';
 // export const WHITE = 'rgb(255 255 255 / 1)';
 
 /* mixin/tween */
@@ -692,7 +693,7 @@ export const STATE_KEYS = _freeze(['fillStyle', 'filter', 'globalAlpha', 'global
 // export const T_GROUP = 'Group';
 // export const T_LOOM = 'Loom';
 // export const T_PICTURE = 'Picture';
-// export const UNDEFINED = 'undefined';
+// export const UNDEF = 'undefined';
 // export const ZERO_STR = '';
 
 /* factory/mesh */
@@ -706,7 +707,7 @@ export const STATE_KEYS = _freeze(['fillStyle', 'filter', 'globalAlpha', 'global
 // export const T_MESH = 'Mesh';
 // export const T_NET = 'Net';
 // export const T_PICTURE = 'Picture';
-// export const UNDEFINED = 'undefined';
+// export const UNDEF = 'undefined';
 // export const ZERO_STR = '';
 
 /* factory/net */
@@ -810,7 +811,7 @@ export const STATE_KEYS = _freeze(['fillStyle', 'filter', 'globalAlpha', 'global
 // export const NAME = 'name';
 // export const STYLES = 'styles';
 // export const T_PATTERN = 'Pattern';
-// export const UNDEFINED = 'undefined';
+// export const UNDEF = 'undefined';
 
 
 /* factory/phrase */
@@ -868,7 +869,7 @@ export const STATE_KEYS = _freeze(['fillStyle', 'filter', 'globalAlpha', 'global
 // export const PARTICLE = 'particle';
 // export const T_PICTURE = 'Picture';
 // export const T_SPRITE = 'Sprite';
-// export const UNDEFINED = 'undefined';
+// export const UNDEF = 'undefined';
 
 /* factory/polygon */
 // export const ENTITY = 'entity';
@@ -1032,7 +1033,7 @@ export const STATE_KEYS = _freeze(['fillStyle', 'filter', 'globalAlpha', 'global
 // export const T_COLOR = 'Color';
 // export const T_PHRASE = 'Phrase';
 // export const TOP = 'top';
-// export const UNDEFINED = 'undefined';
+// export const UNDEF = 'undefined';
 
 /* factory/tetragon */
 // export const ENTITY = 'entity';
@@ -1052,9 +1053,39 @@ export const STATE_KEYS = _freeze(['fillStyle', 'filter', 'globalAlpha', 'global
 // export const T_TWEEN = 'Tween';
 // export const TICKERUPDATE = 'tickerupdate';
 
+/* factory/tracer */
+// export const BLACK = 'rgb(0 0 0 / 1)';
+// export const ENTITY = 'entity';
+// export const T_TRACER = 'Tracer';
 
+/* factory/tween */
+// export const FUNCTION = 'function';
+// export const LINEAR = 'linear';
+// export const NAME = 'name';
+// export const PC = '%';
+// export const T_GROUP = 'Group';
+// export const T_TWEEN = 'Tween';
+// export const TWEEN = 'tween';
+// export const UNDEF = 'undefined';
+// export const ZERO_STR = '';
 
+/* factory/unstackedElement */
+// export const ABSOLUTE = 'absolute';
+// export const AUTO = 'auto';
+// export const CANVAS = 'canvas';
+// export const DATA_SCRAWL_NAME = 'data-scrawl-name';
+// export const HEIGHT = 'height';
+// export const RELATIVE = 'relative';
+// export const STATIC = 'static';
+// export const T_UNSTACKED_ELEMENT = 'UnstackedElement';
+// export const UE_INCLUDED_STYLES = ['width', 'height', 'zIndex', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'];
+// export const UE_MIMICKED_STYLES = ['borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'];
+// export const UNSTACKEDELEMENT = 'unstackedelement';
+// export const WIDTH = 'width';
+// export const Z_INDEX = 'zIndex';
 
+/* factory/vector */
+// export const T_VECTOR = 'Vector';
 
 
 

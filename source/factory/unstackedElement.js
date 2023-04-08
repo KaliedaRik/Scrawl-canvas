@@ -1,4 +1,3 @@
-
 // # UnstackedElement factory
 
 // ___To be aware - this artefact factory is HIGHLY EXPERIMENTAL; its API will be subject to short-notice breaking changes as we amend and inprove the artefact's functionality___
@@ -15,12 +14,43 @@
 
 
 // ## Imports
-import { unstackedelement, constructors } from '../core/library.js';
-import { xt, mergeOver, Ωempty } from '../core/utilities.js';
+import { 
+    constructors, 
+    unstackedelement, 
+} from '../core/library.js';
+
+import { 
+    doCreate,
+    mergeOver, 
+    xt, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { makeCanvas } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
+
+import { 
+    _entries,
+    _floor,
+    _max,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const ABSOLUTE = 'absolute',
+    AUTO = 'auto',
+    CANVAS = 'canvas',
+    DATA_SCRAWL_NAME = 'data-scrawl-name',
+    HEIGHT = 'height',
+    RELATIVE = 'relative',
+    STATIC = 'static',
+    T_UNSTACKED_ELEMENT = 'UnstackedElement',
+    UE_INCLUDED_STYLES = ['width', 'height', 'zIndex', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'],
+    UE_MIMICKED_STYLES = ['borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'],
+    UNSTACKEDELEMENT = 'unstackedelement',
+    WIDTH = 'width',
+    Z_INDEX = 'zIndex';
 
 
 // ## UnstackedElement constructor
@@ -31,7 +61,7 @@ const UnstackedElement = function (el) {
     this.makeName(name);
     this.register();
 
-    el.setAttribute('data-scrawl-name', this.name);
+    el.setAttribute(DATA_SCRAWL_NAME, this.name);
     this.domElement = el;
 
     this.elementComputedStyles = window.getComputedStyle(el);
@@ -48,9 +78,9 @@ const UnstackedElement = function (el) {
 
 
 // ## UnstackedElement object prototype setup
-const P = UnstackedElement.prototype = Object.create(Object.prototype);
-P.type = 'UnstackedElement';
-P.lib = 'unstackedelement';
+const P = UnstackedElement.prototype = doCreate();
+P.type = T_UNSTACKED_ELEMENT;
+P.lib = UNSTACKEDELEMENT;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -99,11 +129,11 @@ P.addCanvas = function (items = Ωempty) {
 
     if (!this.canvas) {
 
-        let canvas = document.createElement('canvas'),
+        let canvas = document.createElement(CANVAS),
             el = this.domElement,
             style = el.style;
 
-        if (style.position === 'static') style.position = 'relative';
+        if (style.position == STATIC) style.position = RELATIVE;
 
         canvas.id = `${this.name}-canvas`;
         
@@ -113,7 +143,7 @@ P.addCanvas = function (items = Ωempty) {
             name: `${this.name}-canvas`,
             domElement: canvas,
 
-            position: 'absolute',
+            position: ABSOLUTE,
         });
 
         this.canvas = art;
@@ -126,77 +156,66 @@ P.addCanvas = function (items = Ωempty) {
     }
 };
 
-
-// DOM element styles that we need to observe for changes, to keep the canvas in step with its element
-P.includedStyles = ['width', 'height', 'zIndex', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'];
-
-
-// Included styles that we can transfer directly from DOM element to canvas with no further processing
-P.mimickedStyles = ['borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'];
-
-
 // Observer function - runs on every RAF loop (when the DOM element is viewable); aim is to:
-
 // + keep canvas dimensions exactly matched with its DOM element's dimensions (including border/padding)
 // + position the canvas correctly over/under the DOM element (taking into account border/padding)
 // + maintain parity between other DOM element CSS values and those values on the canvas (eg border radius)
 P.checkElementStyleValues = function () {
 
-    let results = {};
+    const results = {};
 
-    let el = this.domElement,
+    const el = this.domElement,
         wrapper = this.canvas;
 
     if (el && wrapper && wrapper.domElement) {
 
-        let host = this.hostStyles,
+        const host = this.hostStyles,
             style = this.elementComputedStyles,
-            canvas = wrapper.domElement,
-            includedStyles = this.includedStyles;
+            canvas = wrapper.domElement;
 
         let {x: elX, y: elY, width: elW, height: elH} = el.getBoundingClientRect();
         let {x: canvasX, y: canvasY} = canvas.getBoundingClientRect();
         let {zIndex: styleZ, width: styleW, height: styleH} = style;
 
-        elX = Math.floor(elX);
-        elY = Math.floor(elY);
-        canvasX = Math.floor(canvasX);
-        canvasY = Math.floor(canvasY);
-        elW = Math.floor(elW);
-        elH = Math.floor(elH);
-        styleW = Math.floor(parseFloat(styleW));
-        styleH = Math.floor(parseFloat(styleH));
+        elX = _floor(elX);
+        elY = _floor(elY);
+        canvasX = _floor(canvasX);
+        canvasY = _floor(canvasY);
+        elW = _floor(elW);
+        elH = _floor(elH);
+        styleW = _floor(parseFloat(styleW));
+        styleH = _floor(parseFloat(styleH));
 
-        includedStyles.forEach(item => {
+        UE_INCLUDED_STYLES.forEach(item => {
 
             switch (item) {
 
-                case 'width' :
+                case WIDTH :
 
-                    let w = Math.max(styleW, elW);
-                    if (this.canvasWidth !== w) {
+                    const w = _max(styleW, elW);
+                    if (this.canvasWidth != w) {
 
                         this.canvasWidth = w;
                         this.dirtyDimensions = true;
                     }
                     break;
 
-                case 'height' :
+                case HEIGHT :
 
-                    let h = Math.max(styleH, elH);
-                    if (this.canvasHeight !== h) {
+                    const h = _max(styleH, elH);
+                    if (this.canvasHeight != h) {
 
                         this.canvasHeight = h;
                         this.dirtyDimensions = true;
                     }
                     break;
 
-                case 'zIndex' :
+                case Z_INDEX :
 
-                    let z = (styleZ === 'auto') ? 0 : parseInt(styleZ, 10);
+                    let z = (styleZ == AUTO) ? 0 : parseInt(styleZ, 10);
                     z = (this.canvasOnTop) ? z + 1 : z - 1;
 
-                    if (this.canvasZIndex !== z) {
+                    if (this.canvasZIndex != z) {
 
                         this.canvasZIndex = z;
                         this.dirtyZIndex = true;
@@ -205,10 +224,10 @@ P.checkElementStyleValues = function () {
 
                 default :
 
-                    let hi = host[item],
+                    const hi = host[item],
                         si = style[item];
 
-                    if(!xt(hi) || hi !== si) {
+                    if(!xt(hi) || hi != si) {
                 
                         host[item] = si;
                         results[item] = si;
@@ -216,7 +235,7 @@ P.checkElementStyleValues = function () {
             }
         });
 
-        let dx = elX - canvasX,
+        const dx = elX - canvasX,
             dy = elY - canvasY;
 
         if (dx || dy) {
@@ -238,14 +257,13 @@ P.updateCanvas = function () {
 
     if (this.canvas && this.canvas.domElement) {
 
-        let canvas = this.canvas,
+        const canvas = this.canvas,
             style = canvas.domElement.style,
-            mimics = this.mimickedStyles,
             updates = this.checkElementStyleValues();
 
-        for (let [key, value] of Object.entries(updates)) {
+        for (let [key, value] of _entries(updates)) {
 
-            if (mimics.includes(key)) {
+            if (UE_MIMICKED_STYLES.includes(key)) {
 
                 style[key] = value;
             }
@@ -265,7 +283,7 @@ P.updateCanvas = function () {
 
             this.dirtyDimensions = false;
 
-            let w = this.canvasWidth,
+            const w = this.canvasWidth,
                 h = this.canvasHeight;
 
             canvas.set({

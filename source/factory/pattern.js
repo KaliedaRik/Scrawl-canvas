@@ -56,7 +56,7 @@ const $IMAGE = 'image_',
     NAME = 'name',
     STYLES = 'styles',
     T_PATTERN = 'Pattern',
-    UNDEFINED = 'undefined';
+    UNDEF = 'undefined';
 
 
 // #### Pattern constructor
@@ -175,10 +175,10 @@ P.get = function (item) {
             let def = this.defs[item],
                 val;
 
-            if (typeof def != UNDEFINED) {
+            if (typeof def != UNDEF) {
 
                 val = this[item];
-                return (typeof val != UNDEFINED) ? val : def;
+                return (typeof val != UNDEF) ? val : def;
             }
             return undef;
         }
@@ -215,7 +215,7 @@ P.set = function (items = Ωempty) {
                 fn = setters[key];
 
                 if (fn) fn.call(this, value);
-                else if (typeof defs[key] != UNDEFINED) this[key] = value;
+                else if (typeof defs[key] != UNDEF) this[key] = value;
             }
         }
         this.dirtyFilterIdentifier = true;

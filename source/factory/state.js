@@ -35,6 +35,7 @@ import {
     STATE_MAIN_KEYS,
     STATE_LINE_KEYS,
     STATE_STYLE_KEYS,
+    STATE_TEXT_KEYS,
     STATE_ALL_KEYS,
 } from '../core/shared-vars.js';
 
@@ -59,7 +60,7 @@ const BLACK = 'rgb(0 0 0 / 1)',
     T_COLOR = 'Color',
     T_PHRASE = 'Phrase',
     TOP = 'top',
-    UNDEFINED = 'undefined';
+    UNDEF = 'undefined';
 
 
 import { makeColor } from './color.js';
@@ -253,7 +254,7 @@ P.set = function (items = Ωempty) {
 
         if (key != NAME) {
 
-            if (typeof d[key] != UNDEFINED) {
+            if (typeof d[key] != UNDEF) {
 
                 this[key] = items[key];
                 this.dirtyFilterIdentifier = true;
@@ -330,7 +331,7 @@ P.getChanges = function (ent, engineState) {
         result = {};
 
     let getItem = function (source, key) {
-        return (typeof source[key] != UNDEFINED) ? source[key] : defs[key];
+        return (typeof source[key] != UNDEF) ? source[key] : defs[key];
     };
 
     if (ent.substring) ent = entity[ent];
@@ -419,9 +420,9 @@ P.getChanges = function (ent, engineState) {
     // 'font'
     if (ent.type == T_PHRASE) {
 
-        for (i = 0, iz = textKeys.length; i < iz; i++) {
+        for (i = 0, iz = STATE_TEXT_KEYS.length; i < iz; i++) {
 
-            k = textKeys[i];
+            k = STATE_TEXT_KEYS[i];
             desired = getItem(this, k);
             current = getItem(engineState, k);
 

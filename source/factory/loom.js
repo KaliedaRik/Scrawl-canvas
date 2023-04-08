@@ -79,7 +79,7 @@ const BLACK = 'rgb(0 0 0 / 1)',
     T_GROUP = 'Group',
     T_LOOM = 'Loom',
     T_PICTURE = 'Picture',
-    UNDEFINED = 'undefined',
+    UNDEF = 'undefined',
     ZERO_STR = '';
 
 
@@ -342,7 +342,7 @@ P.get = function (item) {
         if (def != null) {
 
             val = this[item];
-            return (typeof val != UNDEFINED) ? val : def;
+            return (typeof val != UNDEF) ? val : def;
         }
 
         def = state.defs[item];
@@ -350,7 +350,7 @@ P.get = function (item) {
         if (def != null) {
 
             val = state[item];
-            return (typeof val != UNDEFINED) ? val : def;
+            return (typeof val != UNDEF) ? val : def;
         }
         return null;
     }
@@ -385,14 +385,14 @@ P.set = function (items = Ωempty) {
                     fn = setters[key];
 
                     if (fn) fn.call(this, value);
-                    else if (typeof defs[key] != UNDEFINED) this[key] = value;
+                    else if (typeof defs[key] != UNDEF) this[key] = value;
                 }
                 else {
 
                     fn = stateSetters[key];
 
                     if (fn) fn.call(state, value);
-                    else if (typeof stateDefs[key] != UNDEFINED) state[key] = value;
+                    else if (typeof stateDefs[key] != UNDEF) state[key] = value;
                 }
             }
         }
@@ -429,14 +429,14 @@ P.setDelta = function (items = Ωempty) {
                     fn = setters[key];
 
                     if (fn) fn.call(this, value);
-                    else if (typeof defs[key] != UNDEFINED) this[key] = addStrings(this[key], value);
+                    else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], value);
                 }
                 else {
 
                     fn = stateSetters[key];
 
                     if (fn) fn.call(state, value);
-                    else if (typeof stateDefs[key] != UNDEFINED) state[key] = addStrings(state[key], value);
+                    else if (typeof stateDefs[key] != UNDEF) state[key] = addStrings(state[key], value);
                 }
             }
         }

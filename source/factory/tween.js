@@ -44,6 +44,7 @@ import {
 
 import { 
     convertTime, 
+    doCreate,
     easeEngines, 
     mergeOver, 
     pushUnique, 
@@ -58,6 +59,24 @@ import { makeTicker } from './ticker.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
+
+import { 
+    _isArray,
+    _keys,
+    _round,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const FUNCTION = 'function',
+    LINEAR = 'linear',
+    NAME = 'name',
+    PC = '%',
+    T_GROUP = 'Group',
+    T_TWEEN = 'Tween',
+    TWEEN = 'tween',
+    UNDEF = 'undefined',
+    ZERO_STR = '';
 
 
 // #### Tween constructor
@@ -105,9 +124,9 @@ const Tween = function (items = Ωempty) {
 
 
 // #### Tween prototype
-const P = Tween.prototype = Object.create(Object.prototype);
-P.type = 'Tween';
-P.lib = 'tween';
+const P = Tween.prototype = doCreate();
+P.type = T_TWEEN;
+P.lib = TWEEN;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -180,13 +199,13 @@ P.packetFunctions = pushUnique(P.packetFunctions, ['commenceAction', 'completeAc
 
 P.finalizePacketOut = function (copy, items) {
 
-    if (Array.isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
+    if (_isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
 
-    if (Array.isArray(this.definitions)) {
+    if (_isArray(this.definitions)) {
 
         copy.definitions = this.definitions.map(d => {
 
-            let res = {};
+            const res = {};
             res.attribute = d.attribute;
             res.start = d.start;
             res.end = d.end;
@@ -196,7 +215,7 @@ P.finalizePacketOut = function (copy, items) {
 
                 if (xt(d.engine) && d.engine !== null) {
 
-                    let e = this.stringifyFunction(d.engine);
+                    const e = this.stringifyFunction(d.engine);
 
                     if (e) {
 
@@ -219,13 +238,13 @@ P.postCloneAction = function(clone, items) {
 
     if (items.useNewTicker) {
 
-        let ticker = animationtickers[this.ticker];
+        const ticker = animationtickers[this.ticker];
 
         if (xt(items.cycles)) clone.cycles = items.cycles;
         else if (ticker) clone.cycles = ticker.cycles;
         else clone.cycles = 1;
 
-        let cloneTicker = animationtickers[clone.ticker];
+        const cloneTicker = animationtickers[clone.ticker];
         cloneTicker.cycles = clone.cycles;
 
         if (xt(items.duration)) {
@@ -237,7 +256,7 @@ P.postCloneAction = function(clone, items) {
         }
     }
 
-    if (Array.isArray(clone.definitions)) {
+    if (_isArray(clone.definitions)) {
         
         clone.definitions.forEach((def, index) => {
 
@@ -275,7 +294,7 @@ S.commenceAction = function (item) {
 
     this.commenceAction = item;
     
-    if (typeof this.commenceAction !== 'function') this.commenceAction = λnull;
+    if (typeof this.commenceAction != FUNCTION) this.commenceAction = λnull;
 };
 
 // __completeAction__
@@ -283,7 +302,7 @@ S.completeAction = function (item) {
 
     this.completeAction = item;
 
-    if (typeof this.completeAction !== 'function') this.completeAction = λnull;
+    if (typeof this.completeAction != FUNCTION) this.completeAction = λnull;
 };
 
 // `set` - we perform some additional functionality in the Tween `set` function
@@ -291,22 +310,23 @@ S.completeAction = function (item) {
 // + recalculating effectiveDuration happens here if the __time__ or __duration__ values change
 P.set = function (items = Ωempty) {
 
-    let key, i, iz, s,
-        setters = this.setters,
-        keys = Object.keys(items),
+    const setters = this.setters,
+        keys = _keys(items),
         d = this.defs,
         ticker = (xt(items.ticker)) ? this.ticker : false;
+
+    let key, i, iz, s;
 
     for (i = 0, iz = keys.length; i < iz; i++) {
 
         key = keys[i];
         
-        if (key !== 'name') {
+        if (key != NAME) {
 
             s = setters[key];
             
             if (s) s.call(this, items[key]);
-            else if (typeof d[key] !== 'undefined') this[key] = items[key];
+            else if (typeof d[key] != UNDEF) this[key] = items[key];
         }
     }
 
@@ -335,17 +355,18 @@ P.getEndTime = function () {
 // `calculateEffectiveDuration`
 P.calculateEffectiveDuration = function (item) {
 
-    let tweenDuration = xtGet(item, this.duration),
+    const tweenDuration = xtGet(item, this.duration),
         calculatedDur = convertTime(tweenDuration),
         cDur = calculatedDur[1],
         cType = calculatedDur[0],
-        ticker = this.ticker,
-        myticker, 
+        ticker = this.ticker;
+
+    let myticker, 
         tickerDuration = 0;
 
     this.effectiveDuration = 0;
 
-    if (cType === '%') {
+    if (cType == PC) {
     
         if (ticker) {
     
@@ -368,13 +389,14 @@ P.calculateEffectiveDuration = function (item) {
 // + `status` magic numbers: `-1` = "before"; `0` = "running"; `1` = "after".
 P.update = function (items = Ωempty) {
 
-    let starts, ends,
-        tick = items.tick || 0,
+    const tick = items.tick || 0,
         revTick = items.reverseTick || 0,
-        status = 0,
         effectiveTime = this.effectiveTime,
         effectiveDuration = this.effectiveDuration,
         reversed = this.reversed;
+
+    let starts, ends,
+        status = 0;
 
     // Should we do work for this Tween?
     if (!reversed) {
@@ -428,22 +450,20 @@ P.update = function (items = Ωempty) {
 P.doSimpleUpdate = function (items = Ωempty) {
 
     // We create handles to a bunch of attributes so that we only need to look them up once each time the function runs
-    let starts = this.effectiveTime,
-        effectiveTick,
+    const starts = this.effectiveTime,
         actions = this.engineActions,
         effectiveDuration = this.effectiveDuration,
         status = this.status,
         definitions = this.definitions,
         targets = this.targets,
         action = this.action,
-        i, iz, j, jz, progress,
 
         // We store the `setObj` object as an attribute on the Tween object for convenience, and to cut down on the number of objects created during the lifetime of the Tween.
         setObj = this.setObj || {};
 
-    let def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute;
-
-    let round = Math.round;
+    let def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute,
+        i, iz, j, jz, progress,
+        effectiveTick;
 
     effectiveTick = (this.reversed) ? items.reverseTick - starts : items.tick - starts;
 
@@ -464,7 +484,7 @@ P.doSimpleUpdate = function (items = Ωempty) {
         if (engine.substring) val = actions(engine, effectiveStart, effectiveChange, progress);
         else val = engine(effectiveStart, effectiveChange, progress);
 
-        if (int) val = round(val);
+        if (int) val = _round(val);
 
         if (suffix) val += suffix;
 
@@ -475,9 +495,8 @@ P.doSimpleUpdate = function (items = Ωempty) {
 
         const t = targets[j];
 
-        if ('Group' === t.type) t.setArtefacts(setObj);
+        if (T_GROUP == t.type) t.setArtefacts(setObj);
         else t.set(setObj);
-        // targets[j].set(setObj);
     }
 
     this.setObj = setObj;
@@ -498,7 +517,7 @@ P.doSimpleUpdate = function (items = Ωempty) {
 // + For the legacy engines, igher numbers indicates a more intense change between starting, middle and ending speeds
 P.engineActions = function(engine, start, change, position) {
 
-    const e = (null != easeEngines[engine]) ? engine : 'linear';
+    const e = (null != easeEngines[engine]) ? engine : LINEAR;
     return start + (change * easeEngines[e](position));
 };
 
@@ -506,9 +525,10 @@ P.engineActions = function(engine, start, change, position) {
 // + Scrawl-canvas includes functionality to allow `start` and `end` values to be defined as Strings, with a measurement suffix (`%`, `px`, etc) attached to the number
 P.setDefinitionsValues = function () {
 
-    let i, iz, temp, def,
-        parseDefinitionsValue = this.parseDefinitionsValue,
+    const parseDefinitionsValue = this.parseDefinitionsValue,
         definitions = this.definitions;
+
+    let i, iz, temp, def;
 
     for (i = 0, iz = definitions.length; i < iz; i++) {
 
@@ -523,7 +543,7 @@ P.setDefinitionsValues = function () {
             def.effectiveEnd = temp[1];
             
             // The default easing function is `linear`
-            if (!xt(def.engine)) def.engine = 'linear';
+            if (!xt(def.engine)) def.engine = LINEAR;
 
             def.effectiveChange = def.effectiveEnd - def.effectiveStart;
         }
@@ -534,15 +554,14 @@ P.setDefinitionsValues = function () {
 // `parseDefinitionsValue` - internal function invoked by `setDefinitionsValues` function.
 P.parseDefinitionsValue = function (item) {
 
-    let result = ['', 0],
-        a;
-
+    const result = [ZERO_STR, 0];
+    
     if (xt(item)) {
 
         if (item.toFixed) result[1] = item;
         else if (item.substring) {
 
-            a = item.match(/^-?\d+\.?\d*(\D*)/);
+            const a = item.match(/^-?\d+\.?\d*(\D*)/);
             
             if (xt(a[0])) result[1] = parseFloat(a);
             if (xt(a[1])) result[0] = a[1];
@@ -559,14 +578,14 @@ P.parseDefinitionsValue = function (item) {
 // + Trigger the object's `onRun` function.
 P.run = function () {
 
-    let t = animationtickers[this.ticker];
+    const t = animationtickers[this.ticker];
 
     if (t) {
 
         this.commenceAction();
         t.run();
 
-        if (typeof this.onRun === 'function') this.onRun();
+        if (typeof this.onRun == FUNCTION) this.onRun();
     }
     return this;
 };
@@ -574,7 +593,7 @@ P.run = function () {
 // `isRunning` - check to see if Tween is in a running state.
 P.isRunning = function () {
 
-    let tick = animationtickers[this.ticker];
+    const tick = animationtickers[this.ticker];
 
     if (tick) return tick.isRunning();
     return false;
@@ -585,13 +604,13 @@ P.isRunning = function () {
 // + Trigger the object's `onHalt` function.
 P.halt = function() {
 
-    let t = animationtickers[this.ticker];
+    const t = animationtickers[this.ticker];
 
     if (t) {
 
         t.halt();
 
-        if (typeof this.onHalt === 'function') this.onHalt();
+        if (typeof this.onHalt == FUNCTION) this.onHalt();
     }
     return this;
 };
@@ -601,13 +620,13 @@ P.halt = function() {
 // + Trigger the object's `onReverse` function.
 P.reverse = function() {
 
-    let t = animationtickers[this.ticker];
+    const t = animationtickers[this.ticker];
 
     if (t) {
 
         t.reverse();
 
-        if (typeof this.onReverse === 'function') this.onReverse();
+        if (typeof this.onReverse == FUNCTION) this.onReverse();
     }
     return this;
 };
@@ -617,13 +636,13 @@ P.reverse = function() {
 // + Trigger the object's `onResume` function.
 P.resume = function() {
 
-    let t = animationtickers[this.ticker];
+    const t = animationtickers[this.ticker];
 
     if (t) {
 
         t.resume();
 
-        if (typeof this.onResume === 'function') this.onResume();
+        if (typeof this.onResume == FUNCTION) this.onResume();
     }
     return this;
 };
@@ -633,13 +652,13 @@ P.resume = function() {
 // + Trigger the object's `onSeekTo` function.
 P.seekTo = function(milliseconds) {
 
-    let t = animationtickers[this.ticker];
+    const t = animationtickers[this.ticker];
 
     if (t) {
 
         t.seekTo(milliseconds);
 
-        if (typeof this.onSeekTo === 'function') this.onSeekTo();
+        if (typeof this.onSeekTo == FUNCTION) this.onSeekTo();
     }
     return this;
 };
@@ -649,13 +668,13 @@ P.seekTo = function(milliseconds) {
 // + Trigger the object's `onSeekFor` function.
 P.seekFor = function(milliseconds) {
 
-    let t = animationtickers[this.ticker];
+    const t = animationtickers[this.ticker];
 
     if (t) {
 
         t.seekFor(milliseconds);
 
-        if (typeof this.onSeekFor === 'function') this.onSeekFor();
+        if (typeof this.onSeekFor == FUNCTION) this.onSeekFor();
     }
     return this;
 };

@@ -185,8 +185,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 // #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, []);
 P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, [START_CONTROL, END_CONTROL]);
-P.packetObjects = pushUnique(P.packetObjects, [START_CONTROL_PIVOT, START_CONTROL_PARTICLE, START_CONTROL_PATH, END_CONTROL_PIVOT, END_CONTROL_PARTICLE, END_CONTROL_PATH]);
+P.packetCoordinates = pushUnique(P.packetCoordinates, ['startControl', 'endControl']);
+P.packetObjects = pushUnique(P.packetObjects, ['startControlPivot', 'startControlParticle', 'startControlPath', 'endControlPivot', 'endControlParticle', 'endControlPath']);
 P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 

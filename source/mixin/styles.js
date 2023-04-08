@@ -61,7 +61,7 @@ const BLACK = 'rgb(0 0 0 / 1)',
     START = 'start',
     T_PALETTE = 'Palette',
     TOP = 'top',
-    UNDEFINED = 'undefined',
+    UNDEF = 'undefined',
     WHITE = 'rgb(255 255 255 / 1)';
 
 
@@ -417,18 +417,18 @@ export default function (P = Ωempty) {
                 palette = this.palette,
                 val;
 
-            if (typeof def != UNDEFINED) {
+            if (typeof def != UNDEF) {
 
                 val = this[item];
-                return (typeof val != UNDEFINED) ? val : def;
+                return (typeof val != UNDEF) ? val : def;
             }
 
             def = palette.defs[item];
 
-            if (typeof def != UNDEFINED) {
+            if (typeof def != UNDEF) {
 
                 val = palette[item];
-                return (typeof val != UNDEFINED) ? val : def;
+                return (typeof val != UNDEF) ? val : def;
             }
             else return undef;
         }
@@ -467,14 +467,14 @@ export default function (P = Ωempty) {
                         predefined = setters[key];
 
                         if (predefined) predefined.call(this, value);
-                        else if (typeof defs[key] != UNDEFINED) this[key] = value;
+                        else if (typeof defs[key] != UNDEF) this[key] = value;
                     }
                     else {
 
                         predefined = paletteSetters[key];
 
                         if (predefined) predefined.call(palette, value);
-                        else if (typeof paletteDefs[key] != UNDEFINED) palette[key] = value;
+                        else if (typeof paletteDefs[key] != UNDEF) palette[key] = value;
                     }
                 }
             }
@@ -515,14 +515,14 @@ export default function (P = Ωempty) {
                         predefined = setters[key];
 
                         if (predefined) predefined.call(this, value);
-                        else if (typeof defs[key] != UNDEFINED) this[key] = addStrings(this[key], value);
+                        else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], value);
                     }
                     else {
 
                         predefined = paletteSetters[key];
 
                         if (predefined) predefined.call(palette, value);
-                        else if (typeof paletteDefs[key] != UNDEFINED) palette[key] = addStrings(this[key], value);
+                        else if (typeof paletteDefs[key] != UNDEF) palette[key] = addStrings(this[key], value);
                     }
                 }
             }

@@ -341,7 +341,7 @@ export const importDomImage = function (query) {
                 name = (match && match[1]) ? match[1] : '';
             }
 
-            const intrinsics = item.dataset.dimensions || {};
+            let intrinsics = item.dataset.dimensions || {};
             if (intrinsics.substring) intrinsics = _parse(intrinsics);
 
             const image = makeImageAsset({

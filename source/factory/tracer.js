@@ -18,15 +18,45 @@
 
 
 // #### Imports
-import { constructors, tween, artefact, group } from '../core/library.js';
-import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xta, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    constructors, 
+    group, 
+    tween, 
+} from '../core/library.js';
+
+import { 
+    doCreate,
+    isa_fn, 
+    isa_obj, 
+    mergeOver, 
+    pushUnique, 
+    xta, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
-import { requestVector, releaseVector } from './vector.js';
+
+import { 
+    releaseVector, 
+    requestVector, 
+} from './vector.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
+
+import { 
+    _isArray,
+    _piDouble,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const BLACK = 'rgb(0 0 0 / 1)',
+    ENTITY = 'entity',
+    T_TRACER = 'Tracer';
 
 
 // #### Tracer constructor
@@ -60,10 +90,9 @@ const Tracer = function (items = Ωempty) {
 
 
 // #### Tracer prototype
-const P = Tracer.prototype = Object.create(Object.prototype);
-
-P.type = 'Tracer';
-P.lib = 'entity';
+const P = Tracer.prototype = doCreate();
+P.type = T_TRACER;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -71,6 +100,7 @@ P.isAsset = false;
 // #### Mixins
 baseMix(P);
 entityMix(P);
+
 
 // #### Tracer attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
@@ -99,7 +129,7 @@ const defaultAttributes = {
 
     // We can tell the entity to display its hit zone by setting the `showHitRadius` flag. The hit zone outline color attribute `hitRadiusColor` accepts any valid CSS color String value
     showHitRadius: false,
-    hitRadiusColor: '#000000',
+    hitRadiusColor: BLACK,
 
     // ##### Not defined in the defs object, but set up in the constructor and setters
     
@@ -108,6 +138,7 @@ const defaultAttributes = {
     // __stampAction__ - define all major rendering actions in this function. The function receives the following arguments: `(artefact, trace, host)` - where `artefact` is the Tracer entity's artefact object (if any has been defined/set); `trace` is the entity's Particle object whose history needs to be rendered onto the canvas; and `host` is the Cell wrapper on which we will draw our graphics
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+
 
 // #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, []);
@@ -171,9 +202,9 @@ S.artefact = function (item) {
 // `regularStamp` - overwriters the functionality defined in the entity.js mixin
 P.regularStamp = function () {
 
-    let {artefact, trace, stampAction, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
+    const {artefact, trace, stampAction, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
 
-    let host = this.currentHost;
+    const host = this.currentHost;
 
     trace.set({
         position: currentStampPosition,
@@ -184,7 +215,7 @@ P.regularStamp = function () {
 
     if (showHitRadius) {
 
-        let engine = host.engine;
+        const engine = host.engine;
 
         engine.save();
         engine.lineWidth = 1;
@@ -192,7 +223,7 @@ P.regularStamp = function () {
 
         engine.setTransform(1, 0, 0, 1, 0, 0);
         engine.beginPath();
-        engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
+        engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, _piDouble);
         engine.stroke();
 
         engine.restore();
@@ -206,15 +237,16 @@ P.checkHit = function (items = [], mycell) {
 
     if (this.noUserInteraction) return false;
 
-    let tests = (!Array.isArray(items)) ?  [items] : items;
+    const tests = (!_isArray(items)) ?  [items] : items;
 
-    let currentStampPosition = this.currentStampPosition,
-        res = false,
+    const currentStampPosition = this.currentStampPosition;
+
+    let res = false,
         tx, ty;
 
     if (tests.some(test => {
 
-        if (Array.isArray(test)) {
+        if (_isArray(test)) {
 
             tx = test[0];
             ty = test[1];
@@ -228,7 +260,7 @@ P.checkHit = function (items = [], mycell) {
 
         if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
 
-        let v = requestVector(currentStampPosition).vectorSubtract(test);
+        const v = requestVector(currentStampPosition).vectorSubtract(test);
 
         if (v.getMagnitude() < this.hitRadius) res = true;
 
@@ -238,7 +270,7 @@ P.checkHit = function (items = [], mycell) {
 
     }, this)) {
 
-        let r = this.checkHitReturn(tx, ty, mycell);
+        const r = this.checkHitReturn(tx, ty, mycell);
 
         return r;
     }

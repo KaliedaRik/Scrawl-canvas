@@ -88,7 +88,7 @@ const $IMAGE = 'image_',
     PARTICLE = 'particle',
     T_PICTURE = 'Picture',
     T_SPRITE = 'Sprite',
-    UNDEFINED = 'undefined';
+    UNDEF = 'undefined';
 
 
 // #### Picture constructor
@@ -362,18 +362,18 @@ P.get = function (item) {
                 state = this.state,
                 val;
 
-            if (typeof def != UNDEFINED) {
+            if (typeof def != UNDEF) {
 
                 val = this[item];
-                return (typeof val != UNDEFINED) ? val : def;
+                return (typeof val != UNDEF) ? val : def;
             }
 
             def = state.defs[item];
 
-            if (typeof def != UNDEFINED) {
+            if (typeof def != UNDEF) {
 
                 val = state[item];
-                return (typeof val != UNDEFINED) ? val : def;
+                return (typeof val != UNDEF) ? val : def;
             }
             return undef;
         }
@@ -416,14 +416,14 @@ P.set = function (items = Ωempty) {
                     predefined = setters[key];
 
                     if (predefined) predefined.call(this, value);
-                    else if (typeof defs[key] != UNDEFINED) this[key] = value;
+                    else if (typeof defs[key] != UNDEF) this[key] = value;
                 }
                 else {
 
                     predefined = stateSetters[key];
 
                     if (predefined) predefined.call(state, value);
-                    else if (typeof stateDefs[key] != UNDEFINED) state[key] = value;
+                    else if (typeof stateDefs[key] != UNDEF) state[key] = value;
                 }
             }
         }

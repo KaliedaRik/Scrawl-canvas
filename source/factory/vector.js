@@ -4,7 +4,28 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { xt, xta, isa_obj, isa_number, Ωempty } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    isa_number, 
+    isa_obj, 
+    xt, 
+    xta, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    _isArray,
+    _stringify,
+    _cos,
+    _sin,
+    _sqrt,
+    _atan2,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const T_VECTOR = 'Vector';
 
 
 // #### Vector constructor
@@ -21,8 +42,8 @@ const Vector = function (x, y, z) {
 
 
 // #### Vector prototype
-const P = Vector.prototype = Object.create(Object.prototype);
-P.type = 'Vector';
+const P = Vector.prototype = doCreate();
+P.type = T_VECTOR;
 
 
 // #### Mixins
@@ -93,7 +114,7 @@ P.set = function (x, y, z) {
 
     if (isa_obj(x)) return this.setFromVector(x);
 
-    if (Array.isArray(x)) return this.setFromArray(x);
+    if (_isArray(x)) return this.setFromArray(x);
 
     if (xta(x, y)) return this.setFromArray([x, y, z]);
 
@@ -102,9 +123,9 @@ P.set = function (x, y, z) {
 
 P.setFromArray = function (args) {
 
-    if (!Array.isArray(args)) throw new Error(`${this.name} Vector error - setFromArray() arguments error: ${args}`);
+    if (!_isArray(args)) throw new Error(`${this.name} Vector error - setFromArray() arguments error: ${args}`);
 
-    let [x, y, z] = args;
+    const [x, y, z] = args;
     
     if (isa_number(x)) this.x = x;
     if (isa_number(y)) this.y = y;
@@ -115,9 +136,9 @@ P.setFromArray = function (args) {
 
 P.setFromVector = function (item) {
 
-    if (!isa_obj(item)) throw new Error(`${this.name} Vector error - setFromVector() arguments error: ${JSON.stringify(item)}`);
+    if (!isa_obj(item)) throw new Error(`${this.name} Vector error - setFromVector() arguments error: ${_stringify(item)}`);
     
-    let {x, y, z} = item;
+    const {x, y, z} = item;
 
     if (isa_number(x)) this.x = x;
     if (isa_number(y)) this.y = y;
@@ -141,9 +162,9 @@ P.zero = function () {
 // Add a Vector, or an Array of Number values, to this Vector
 P.vectorAdd = function (item = Ωempty) {
 
-    if (Array.isArray(item)) return this.vectorAddArray(item);
+    if (_isArray(item)) return this.vectorAddArray(item);
 
-    let {x, y, z} = item;
+    const {x, y, z} = item;
 
     if (isa_number(x)) this.x += x;
     if (isa_number(y)) this.y += y;
@@ -154,7 +175,7 @@ P.vectorAdd = function (item = Ωempty) {
 
 P.vectorAddArray = function (item = []) {
 
-    let [x, y, z] = item;
+    const [x, y, z] = item;
 
     if (isa_number(x)) this.x += x;
     if (isa_number(y)) this.y += y;
@@ -166,9 +187,9 @@ P.vectorAddArray = function (item = []) {
 // Subtract a Vector, or an Array of Number values, from this Vector
 P.vectorSubtract = function (item = Ωempty) {
 
-    if (Array.isArray(item)) return this.vectorSubtractArray(item);
+    if (_isArray(item)) return this.vectorSubtractArray(item);
 
-    let {x, y, z} = item;
+    const {x, y, z} = item;
 
     if (isa_number(x)) this.x -= x;
     if (isa_number(y)) this.y -= y;
@@ -179,7 +200,7 @@ P.vectorSubtract = function (item = Ωempty) {
 
 P.vectorSubtractArray = function (item) {
 
-    let [x, y, z] = item;
+    const [x, y, z] = item;
 
     if (isa_number(x)) this.x -= x;
     if (isa_number(y)) this.y -= y;
@@ -202,9 +223,9 @@ P.scalarMultiply = function (item) {
 
 P.vectorMultiply = function (item = Ωempty) {
 
-    if (Array.isArray(item)) return this.vectorMultiplyArray(item);
+    if (_isArray(item)) return this.vectorMultiplyArray(item);
 
-    let {x, y, z} = item;
+    const {x, y, z} = item;
 
     if (isa_number(x)) this.x *= x;
     if (isa_number(y)) this.y *= y;
@@ -215,7 +236,7 @@ P.vectorMultiply = function (item = Ωempty) {
 
 P.vectorMultiplyArray = function (item) {
 
-    let [x, y, z] = item;
+    const [x, y, z] = item;
 
     if (isa_number(x)) this.x *= x;
     if (isa_number(y)) this.y *= y;
@@ -241,7 +262,7 @@ P.scalarDivide = function (item) {
 // Get the Vector's __magnitude__ value
 P.getMagnitude = function () {
 
-    return Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z));
+    return _sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z));
 };
 
 // Rotate a Vector by a given angle. Argument is a Number representing degrees, not radians.
@@ -249,13 +270,13 @@ P.rotate = function (angle) {
 
     if (!isa_number(angle)) throw new Error(`${this.name} Vector error - rotate() argument not a number: ${angle}`);
 
-    let arg = Math.atan2(this.y, this.x);
+    let arg = _atan2(this.y, this.x);
     arg += (angle * 0.01745329251);
     
-    let mag = this.getMagnitude();
+    const mag = this.getMagnitude();
 
-    this.x = mag * Math.cos(arg);
-    this.y = mag * Math.sin(arg);
+    this.x = mag * _cos(arg);
+    this.y = mag * _sin(arg);
 
     return this;
 };
@@ -273,7 +294,7 @@ P.reverse = function () {
 // Normalize the Vector
 P.normalize = function() {
     
-    let val = this.getMagnitude();
+    const val = this.getMagnitude();
     
     if (val > 0) {
         this.x /= val;
@@ -293,7 +314,7 @@ export const requestVector = function (x, y, z) {
 
     if (!vectorPool.length) vectorPool.push(new Vector());
 
-    let v = vectorPool.shift();
+    const v = vectorPool.shift();
 
     v.set(x, y, z);
 
@@ -303,7 +324,7 @@ export const requestVector = function (x, y, z) {
 // `exported function` - return a Vector to the vector pool. Failing to return Vectors to the pool may lead to more inefficient code and possible memory leaks.
 export const releaseVector = function (item) {
 
-    if (item && item.type === 'Vector') vectorPool.push(item.zero());
+    if (item && item.type == T_VECTOR) vectorPool.push(item.zero());
 };
 
 
