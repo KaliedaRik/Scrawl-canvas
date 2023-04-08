@@ -31,6 +31,7 @@ import {
     _keys,
     _radian,
     _sin,
+    STATE_ALL_KEYS,
 } from '../core/shared-vars.js';
 
 
@@ -52,26 +53,25 @@ export default function (P = Ωempty) {
     P.setEngineFromState = function (engine) {
 
         const state = this.state,
-            keys = state.allKeys,
-            len = keys.length;
+            len = STATE_ALL_KEYS.length;
 
         let i, key, eVal, sVal;
 
         for (i = 0; i < len; i++) {
 
-            key = keys[i];
+            key = STATE_ALL_KEYS[i];
             eVal = engine[key];
             sVal = state[key];
 
-            if (key === LINE_DASH) {
+            if (key == LINE_DASH) {
 
                 engine.lineDash = sVal;
                 engine.setLineDash(engine.lineDash);
             }
             else if (eVal !== sVal) engine[key] = sVal;
         }
-        if (engine.textAlign !== LEFT) engine.textAlign = LEFT;
-        if (engine.textBaseline !== TOP) engine.textBaseline = TOP;
+        if (engine.textAlign != LEFT) engine.textAlign = LEFT;
+        if (engine.textBaseline != TOP) engine.textBaseline = TOP;
 
         return this;
     };

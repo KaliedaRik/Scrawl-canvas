@@ -12,6 +12,8 @@
 import { constructors } from '../core/library.js';
 
 import { 
+    correctForZero,
+    doCreate,
     isa_number, 
     isa_quaternion, 
     xt, 
@@ -25,17 +27,28 @@ import {
     requestVector, 
 } from './vector.js';
 
+import { _radian } from '../core/shared-vars.js';
+
 import { 
-    _radian,
+    _acos,
+    _cos,
+    _seal,
+    _sin,
+    _sqrt,
 } from '../core/shared-vars.js';
+
+
+// Local constants
+const T_QUATERNION = 'Quaternion';
 
 
 // #### Quaternion constructor
 const Quaternion = function (items = Ωempty) {
 
-    this.name = items.name || 'generic';
     this.n = items.n || 1;
     this.v = makeVector();
+
+    _seal(this);
 
     this.set(items);
 
@@ -44,8 +57,8 @@ const Quaternion = function (items = Ωempty) {
 
 
 // #### Quaternion prototype
-const P = Quaternion.prototype = Object.create(Object.prototype);
-P.type = 'Quaternion';
+const P = Quaternion.prototype = doCreate();
+P.type = T_QUATERNION;
 
 
 // #### Mixins
@@ -71,19 +84,15 @@ P.set = function (obj = Ωempty) {
 
     if (isa_quaternion(obj)) return this.setFromQuaternion(obj);
 
-    /* if ((obj && obj.type && obj.type === 'Vector')) return this.setFromVector(obj); */
-
     if (xto(obj.pitch, obj.yaw, obj.roll)) return this.setFromEuler(obj);
 
-    let x, y, z, n, v,
-        tv = this.v;
+    const tv = this.v,
+        v = (xt(obj.vector) || xt(obj.v)) ? (obj.vector || obj.v) : false,
+        n = (xt(obj.scalar) || xt(obj.n)) ? (obj.scalar || obj.n || 0) : false;
 
-    v = (xt(obj.vector) || xt(obj.v)) ? (obj.vector || obj.v) : false;
-    n = (xt(obj.scalar) || xt(obj.n)) ? (obj.scalar || obj.n || 0) : false;
-
-    x = (v) ? (v.x || 0) : obj.x || false;
-    y = (v) ? (v.y || 0) : obj.y || false;
-    z = (v) ? (v.z || 0) : obj.z || false;
+    const x = (v) ? (v.x || 0) : obj.x || false,
+        y = (v) ? (v.y || 0) : obj.y || false,
+        z = (v) ? (v.z || 0) : obj.z || false;
 
     this.n = (isa_number(n)) ? n : this.n;
 
@@ -98,7 +107,7 @@ P.setFromQuaternion = function (item) {
 
     if (!isa_quaternion(item)) throw new Error(`${this.name} Quaternion error - setFromQuaternion() bad argument: ${item}`);
 
-    let tv = this.v,
+    const tv = this.v,
         iv = item.v;
 
     this.n = item.n;
@@ -111,22 +120,19 @@ P.setFromQuaternion = function (item) {
 
 P.setFromEuler = function (items = Ωempty) {
 
-    let pitch, yaw, roll, c1, c2, c3, s1, s2, s3,
-        cos = Math.cos,
-        sin = Math.sin,
-        tv = this.v;
+    const tv = this.v;
 
-    pitch = (items.pitch || items.x || 0) * _radian;
-    yaw = (items.yaw || items.y || 0) * _radian;
-    roll = (items.roll || items.z || 0) * _radian;
+    const pitch = (items.pitch || items.x || 0) * _radian,
+        yaw = (items.yaw || items.y || 0) * _radian,
+        roll = (items.roll || items.z || 0) * _radian;
 
-    c1 = cos( pitch / 2 );
-    c2 = cos( yaw / 2 );
-    c3 = cos( roll / 2 );
+    const c1 = _cos( pitch / 2 ),
+        c2 = _cos( yaw / 2 ),
+        c3 = _cos( roll / 2 );
 
-    s1 = sin( pitch / 2 );
-    s2 = sin( yaw / 2 );
-    s3 = sin( roll / 2 );
+    const s1 = _sin( pitch / 2 ),
+        s2 = _sin( yaw / 2 ),
+        s3 = _sin( roll / 2 );
 
     tv.x = s1 * c2 * c3 + c1 * s2 * s3;
     tv.y = c1 * s2 * c3 + s1 * c2 * s3;
@@ -143,7 +149,7 @@ P.setFromEuler = function (items = Ωempty) {
 // Set the Quaternion attributes to their default values
 P.zero = function () {
 
-    let v = this.v;
+    const v = this.v;
 
     this.n = 1;
     v.x = 0;
@@ -156,30 +162,23 @@ P.zero = function () {
 // Get the Quaternion's __magnitude__ value
 P.getMagnitude = function () {
 
-    let v = this.v;
+    const v = this.v;
 
-    return Math.sqrt((this.n * this.n) + (v.x * v.x) + (v.y * v.y) + (v.z * v.z));
+    return _sqrt((this.n * this.n) + (v.x * v.x) + (v.y * v.y) + (v.z * v.z));
 };
 
 // Normalize the Quaternion
 P.normalize = function () {
 
-    let mag = this.getMagnitude(),
+    const mag = this.getMagnitude(),
         v = this.v;
 
     if (!mag) throw new Error(`${this.name} Quaternion error - normalize() division by zero: ${mag}`);
 
-    this.n /= mag;
-    this.n = (this.n > -0.000001 && this.n < 0.000001) ? 0 : this.n;
-
-    v.x /= mag;
-    v.x = (v.x > -0.000001 && v.x < 0.000001) ? 0 : v.x;
-
-    v.y /= mag;
-    v.y = (v.y > -0.000001 && v.y < 0.000001) ? 0 : v.y;
-
-    v.z /= mag;
-    v.z = (v.z > -0.000001 && v.z < 0.000001) ? 0 : v.z;
+    this.n = correctForZero(this.n / mag);
+    v.x = correctForZero(v.x / mag);
+    v.y = correctForZero(v.y / mag);
+    v.z = correctForZero(v.z / mag);
 
     return this;
 };
@@ -189,7 +188,7 @@ P.quaternionMultiply = function (item) {
 
     if (!isa_quaternion(item)) throw new Error(`${this.name} Quaternion error - quaternionMultiply() bad argument: ${item}`);
 
-    let tv = this.v,
+    const tv = this.v,
         iv = item.v,
 
         n1 = this.n,
@@ -218,14 +217,14 @@ P.getAngle = function (degree) {
 
     degree = (xt(degree)) ? degree : false;
 
-    result = 2 * Math.acos(this.n);
+    result = 2 * _acos(this.n);
 
     if(degree){
 
         result *= (1 / _radian);
     }
 
-    return (result > -0.000001 && result < 0.000001) ? 0 : result;
+    return correctForZero(result);
 };
 
 // Rotate the Quaternion using another Quaternion's values
@@ -233,7 +232,7 @@ P.quaternionRotate = function (item) {
 
     if (!isa_quaternion(item)) throw new Error(`${this.name} Quaternion error - quaternionRotate() bad argument: ${item}`);
 
-    let q4 = requestQuaternion(item),
+    const q4 = requestQuaternion(item),
         q5 = requestQuaternion(this);
 
     this.setFromQuaternion(q4.quaternionMultiply(q5));
@@ -252,14 +251,9 @@ const quaternionPool = [];
 // `exported function` - retrieve a Quaternion from the quaternion pool
 export const requestQuaternion = function (items) {
 
-    if (!quaternionPool.length) {
+    if (!quaternionPool.length) quaternionPool.push(makeQuaternion());
 
-        quaternionPool.push(makeQuaternion({
-            name: 'pool'
-        }));
-    }
-
-    let q = quaternionPool.shift();
+    const q = quaternionPool.shift();
 
     q.set(items);
     
@@ -269,7 +263,7 @@ export const requestQuaternion = function (items) {
 // `exported function` - return a Quaternion to the quaternion pool. Failing to return Quaternion to the pool may lead to more inefficient code and possible memory leaks.
 export const releaseQuaternion = function (q) {
 
-    if (q && q.type === 'Quaternion') {
+    if (q && q.type == T_QUATERNION) {
 
         quaternionPool.push(q.zero());
     }

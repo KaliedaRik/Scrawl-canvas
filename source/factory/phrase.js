@@ -71,33 +71,108 @@
 
 
 // #### Imports
-import { constructors, cell, cellnames, styles, stylesnames, artefact, sectionClasses } from '../core/library.js';
-import { scrawlCanvasHold } from '../core/document.js';
-import { mergeOver, pushUnique, xt, xta, isa_obj, isa_number, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    cell, 
+    cellnames, 
+    constructors, 
+    sectionClasses, 
+    styles, 
+    stylesnames, 
+} from '../core/library.js';
 
-import { requestCell, releaseCell } from './cell-fragment.js';
+import { scrawlCanvasHold } from '../core/document.js';
+
+import { 
+    doCreate,
+    isa_number, 
+    isa_obj, 
+    mergeOver, 
+    pushUnique, 
+    xt, 
+    xta, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    releaseCell, 
+    requestCell, 
+} from './cell-fragment.js';
 
 import { makeFontAttributes } from './fontAttributes.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
+import { 
+    _abs,
+    _parse,
+    _ceil,
+    _assign,
+    _max,
+    _values,
+    _floor,
+} from '../core/shared-vars.js';
 
-// Constants used by Phrase entitys
+
+// Local constants
+const ARIA_HIDDEN = 'aria-hidden',
+    ARIA_LIVE = 'aria-live',
+    AUTO = 'auto',
+    BLACK = 'rgb(0 0 0 / 1)',
+    BORDER_BOX = 'border-box',
+    CENTER = 'center',
+    CLASS_REGEX = /[\s\uFEFF\xA0]+/g,
+    CLIP = 'clip',
+    DEF_HIGHLIGHT = 'rgb(250 218 94 / 0.4)',
+    DEF_LINE_COLOR = 'rgb(250 0 0 / 1)',
+    DEF_SECTION_MARKERS = '[§<>]',
+    DEFAULT = 'default',
+    DESTINATION_OUT = 'destination-out',
+    DIV = 'div',
+    ENTITY = 'entity',
+    FAMILY = 'family',
+    FULL = 'full',
+    HALFTRANS = 'rgb(0 0 0 / 0.5)',
+    HANDLE = 'handle',
+    JUSTIFICATIONS = ['left', 'right', 'center', 'full'],
+    LEFT = 'left',
+    LTR = 'ltr',
+    NONE = 'none',
+    POLITE = 'polite',
+    RIGHT = 'right',
+    SIZE = 'size',
+    SIZE_METRIC = 'sizeMetric',
+    SIZE_VALUE = 'sizeValue',
+    SOURCE_OVER = 'source-over',
+    SPACE = ' ',
+    STRETCH = 'stretch',
+    STYLE = 'style',
+    T_CANVAS = 'Canvas',
+    T_CELL = 'Cell',
+    T_PHRASE = 'Phrase',
+    T_SHAPE = 'Shape',
+    TEXTAREA = 'textarea',
+    TOP = 'top',
+    TRUE = 'true',
+    VARIANT = 'variant',
+    WEIGHT = 'weight',
+    ZERO_STR = '';
+
 const defaultTextForHeightMeasurements = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
 
-const fontHeightCalculator = document.createElement('div');
+const fontHeightCalculator = document.createElement(DIV);
 fontHeightCalculator.style.padding = 0;
 fontHeightCalculator.style.border = 0;
 fontHeightCalculator.style.margin = 0;
-fontHeightCalculator.style.height = 'auto';
+fontHeightCalculator.style.height = AUTO;
 fontHeightCalculator.style.lineHeight = 1;
-fontHeightCalculator.style.boxSizing = 'border-box';
+fontHeightCalculator.style.boxSizing = BORDER_BOX;
 fontHeightCalculator.innerHTML = defaultTextForHeightMeasurements;
-fontHeightCalculator.setAttribute('aria-hidden', 'true');
+fontHeightCalculator.setAttribute(ARIA_HIDDEN, TRUE);
 scrawlCanvasHold.appendChild(fontHeightCalculator);
 
-const textEntityConverter = document.createElement('textarea');
+const textEntityConverter = document.createElement(TEXTAREA);
 
 
 // __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
@@ -120,7 +195,7 @@ const ensurePositiveFloat = (val, precision) => {
     if (!isa_number(val)) val = 0;
     if (!isa_number(precision)) precision = 0;
 
-    return Math.abs(parseFloat(val.toFixed(precision)));
+    return _abs(parseFloat(val.toFixed(precision)));
 };
 
 
@@ -146,10 +221,11 @@ const Phrase = function (items = Ωempty) {
     return this;
 };
 
+
 // #### Phrase prototype
-const P = Phrase.prototype = Object.create(Object.prototype);
-P.type = 'Phrase';
-P.lib = 'entity';
+const P = Phrase.prototype = doCreate();
+P.type = T_PHRASE;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -163,21 +239,6 @@ entityMix(P);
 P.midInitActions = function (items) {
 
     this.sectionStyles = [];
-    // this.sectionClasses = {
-    //     'DEFAULTS': { defaults: true },
-    //     'BOLD': { weight: 'bold' },
-    //     'ITALIC': { style: 'italic' },
-    //     'SMALL-CAPS': { variant: 'small-caps' },
-    //     'HIGHLIGHT': { highlight: true },
-    //     'UNDERLINE': { underline: true },
-    //     'OVERLINE': { overline: true },
-    //     '/BOLD': { weight: 'normal' },
-    //     '/ITALIC': { style: 'normal' },
-    //     '/SMALL-CAPS': { variant: 'normal' },
-    //     '/HIGHLIGHT': { highlight: false },
-    //     '/UNDERLINE': { underline: false },
-    //     '/OVERLINE': { overline: false }
-    // };
     this.sectionClasses = sectionClasses;
 };
 
@@ -195,11 +256,11 @@ P.midInitActions = function (items) {
 const defaultAttributes = {
 
 // __text__ - the text String to be displayed by the Phrase
-    text: '',
+    text: ZERO_STR,
 
 // __width__ - Number or String
 // + In addition to normal dimensional values, Phrase entitys will accept the String label __'auto'__ (default). When set to 'auto' the width will be calculated as the natural, single line text length.
-    width: 'auto',
+    width: AUTO,
 
 // __exposeText__ - Boolean accessibility feature
 // + When __exposeText__ is set to true (default), Scrawl-canvas will create an element in the DOM and mirror its current text value in that element. 
@@ -214,7 +275,7 @@ const defaultAttributes = {
 
 // __justify__ - String value to indicate how the text should justify itself within its dimensions box.
 // + Permitted values are: `left` (default), `center`, `right`, `full` (for 'justified' text).
-    justify: 'left',
+    justify: LEFT,
 
 // ##### In-text styling
 
@@ -259,7 +320,7 @@ const defaultAttributes = {
 // + `HIGHLIGHT`, `/HIGHLIGHT` - add/remove glyph background highlight
 // + `UNDERLINE`, `/UNDERLINE` - add/remove glyph underline
 // + `OVERLINE`, `/OVERLINE` - add/remove glyph overline
-    sectionClassMarker: '[§<>]',
+    sectionClassMarker: DEF_SECTION_MARKERS,
     sectionClasses: null,
 
 // ##### Overlines, underlines, highlighting
@@ -270,24 +331,24 @@ const defaultAttributes = {
 
 // __overlinePosition__, __overlineStyle__
     overlinePosition: -0.1,
-    overlineStyle: 'rgb(250 0 0)',
+    overlineStyle: DEF_LINE_COLOR,
     overlineWidth: 1,
-    noOverlineGlyphs: '',
+    noOverlineGlyphs: ZERO_STR,
 
 // __underlinePosition__, __underlineStyle__
     underlinePosition: 0.6,
-    underlineStyle: 'rgb(250 0 0)',
+    underlineStyle: DEF_LINE_COLOR,
     underlineWidth: 1,
-    noUnderlineGlyphs: '',
+    noUnderlineGlyphs: ZERO_STR,
 
 // __highlightStyle__
-    highlightStyle: 'rgb(250 218 94 / 0.4)',
+    highlightStyle: DEF_HIGHLIGHT,
 
 // ##### Bounding box
 // The bounding box represents the Phrase entity's collision detection ___hit area___. It contains all of the entity's text, including line spacing.
 
 // __boundingBoxColor__
-    boundingBoxColor: 'rgb(0 0 0 / 0.5)',
+    boundingBoxColor: HALFTRANS,
 
 // __showBoundingBox__ - Boolean flag indicating whether the Phrase entity's bounding box should be displayed
     showBoundingBox: false,
@@ -299,7 +360,7 @@ const defaultAttributes = {
 // We have an additional use case for Phrase text: to ___map each letter along the length of a Shape entity's path___. For this, we have specific `textPath`, `textPathPosition`, etc attributes.
 
 // __textPath__ - Shape entity to be used as the text path; can be supplied either as the entity object itself, or as the entity's name-String.
-    textPath: '',
+    textPath: ZERO_STR,
 
 // __textPathPosition__ - float Number value between `0.0 - 1.0` representing the text's first character's position on the path.
     textPathPosition: 0,
@@ -311,7 +372,7 @@ const defaultAttributes = {
     addTextPathRoll: true,
 
 // __textPathDirection__ - String with values `ltr` or `rtl` - affects how the text glyphs will arrange themselves along the path.
-    textPathDirection: 'ltr',
+    textPathDirection: LTR,
 
 // __treatWordAsGlyph__ - Boolean flag - when true, Scrawl-canvas will treat each word in the text as if it was a glyph/letter; default: false.
     treatWordAsGlyph: false,
@@ -324,10 +385,10 @@ P.packetExclusions = pushUnique(P.packetExclusions, ['textPositions', 'textLines
 
 P.finalizePacketOut = function (copy, items) {
 
-    let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+    const stateCopy = _parse(this.state.saveAsPacket(items))[3];
     copy = mergeOver(copy, stateCopy);
 
-    let fontAttributesCopy = JSON.parse(this.fontAttributes.saveAsPacket(items))[3];
+    const fontAttributesCopy = _parse(this.fontAttributes.saveAsPacket(items))[3];
     delete fontAttributesCopy.name;
     copy = mergeOver(copy, fontAttributesCopy);
 
@@ -375,7 +436,7 @@ S.handleY = function (coord) {
 };
 S.handle = function (x, y) {
 
-    this.setCoordinateHelper('handle', x, y);
+    this.setCoordinateHelper(HANDLE, x, y);
     this.dirtyHandle = true;
     this.dirtyText = true;
     this.dirtyPathObject = true;
@@ -398,7 +459,7 @@ D.handleY = function (coord) {
 };
 D.handle = function (x, y) {
 
-    this.setDeltaCoordinateHelper('handle', x, y);
+    this.setDeltaCoordinateHelper(HANDLE, x, y);
     this.dirtyHandle = true;
     this.dirtyText = true;
     this.dirtyPathObject = true;
@@ -407,7 +468,7 @@ D.handle = function (x, y) {
 // __text__
 G.text = function () {
 
-    return this.currentText || this.text || '';
+    return this.currentText || this.text || ZERO_STR;
 };
 S.text = function (item) {
 
@@ -420,10 +481,9 @@ S.text = function (item) {
 };
 
 // __justify__
-P.permittedJustifications = ['left', 'right', 'center', 'full'];
 S.justify = function (item) {
 
-    if (this.permittedJustifications.includes(item)) this.justify = item;
+    if (JUSTIFICATIONS.includes(item)) this.justify = item;
     
     this.dirtyText = true;
     this.dirtyPathObject = true;
@@ -582,7 +642,7 @@ S.textPathPosition = function (item) {
 
     if (this.textPathLoop) {
 
-        if (item < 0) item = Math.abs(item);
+        if (item < 0) item = _abs(item);
         if (item > 1) item = item % 1;
         this.textPathPosition = parseFloat(item.toFixed(6));
     }
@@ -628,7 +688,7 @@ S.font = function (item) {
 // __style__ - CSS `font-style` String
 G.style = function () {
 
-    return this.fontAttributes.get('style');
+    return this.fontAttributes.get(STYLE);
 };
 S.style = function (item) {
 
@@ -642,7 +702,7 @@ S.style = function (item) {
 // __variant__ - CSS `font-variant` String
 G.variant = function () {
 
-    return this.fontAttributes.get('variant');
+    return this.fontAttributes.get(VARIANT);
 };
 S.variant = function (item) {
 
@@ -656,7 +716,7 @@ S.variant = function (item) {
 // __weight__ - CSS `font-weight` String
 G.weight = function () {
 
-    return this.fontAttributes.get('weight');
+    return this.fontAttributes.get(WEIGHT);
 };
 S.weight = function (item) {
 
@@ -670,7 +730,7 @@ S.weight = function (item) {
 // __stretch__ - CSS `font-stretch` String
 G.stretch = function () {
 
-    return this.fontAttributes.get('stretch');
+    return this.fontAttributes.get(STRETCH);
 };
 S.stretch = function (item) {
 
@@ -684,7 +744,7 @@ S.stretch = function (item) {
 // __size__ - CSS `font-size` String
 G.size = function () {
 
-    return this.fontAttributes.get('size');
+    return this.fontAttributes.get(SIZE);
 };
 S.size = function (item) {
 
@@ -698,7 +758,7 @@ S.size = function (item) {
 // __sizeValue__ - the Number part of the font's size value
 G.sizeValue = function () {
 
-    return this.fontAttributes.get('sizeValue');
+    return this.fontAttributes.get(SIZE_VALUE);
 };
 S.sizeValue = function (item) {
 
@@ -720,7 +780,7 @@ D.sizeValue = function (item) {
 // __sizeMetric__ - the String metric part of the font's size value
 G.sizeMetric = function () {
 
-    return this.fontAttributes.get('sizeMetric');
+    return this.fontAttributes.get(SIZE_METRIC);
 };
 S.sizeMetric = function (item) {
 
@@ -734,7 +794,7 @@ S.sizeMetric = function (item) {
 // __family__ - CSS `font-family` String
 G.family = function () {
 
-    return this.fontAttributes.get('family');
+    return this.fontAttributes.get(FAMILY);
 };
 S.family = function (item) {
     
@@ -754,32 +814,33 @@ P.cleanDimensionsAdditionalActions = function () {
     this.fontAttributes.dirtyFont = true;
     this.fontAttributes.updateMetadata(this.scale, this.lineHeight, this.getHost());
 
-    if (this.dimensions[0] === 'auto') {
+    if (this.dimensions[0] == AUTO) {
 
         this.buildText();
 
-        let myCell = requestCell(),
+        const myCell = requestCell(),
             engine = myCell.engine;
 
         engine.font = this.fontAttributes.getFontString();
 
-        this.currentDimensions[0] = Math.ceil(engine.measureText(this.currentText).width / this.scale);
+        this.currentDimensions[0] = _ceil(engine.measureText(this.currentText).width / this.scale);
 
         releaseCell(myCell);
     }
 
-    if (this.textLines) this.currentDimensions[1] = Math.ceil((this.textHeight * this.textLines.length * this.lineHeight) / this.scale);
+    if (this.textLines) this.currentDimensions[1] = _ceil((this.textHeight * this.textLines.length * this.lineHeight) / this.scale);
     else this.dirtyDimensions = true;
 };
 
 // `setSectionStyles` - internal function
 P.setSectionStyles = function (text) {
 
-    let search = new RegExp(this.sectionClassMarker),
+    const search = new RegExp(this.sectionClassMarker),
         parseArray = text.split(search),
         styles = this.sectionStyles,
-        classes = this.sectionClasses,
-        parsedText = '',
+        classes = this.sectionClasses;
+
+    let parsedText = ZERO_STR,
         classObj, index, styleObj;
 
     styles.length = 0;
@@ -793,8 +854,8 @@ P.setSectionStyles = function (text) {
             index = parsedText.length;
             styleObj = styles[index];
 
-            if (!styleObj) styles[index] = Object.assign({}, classObj);
-            else Object.assign(styleObj, classObj);
+            if (!styleObj) styles[index] = _assign({}, classObj);
+            else _assign(styleObj, classObj);
         }
         else if (xt(item)) parsedText += item;
     });
@@ -835,7 +896,7 @@ P.getTextPath = function () {
 
         path = this.textPath = artefact[this.textPath];
 
-        if (path.type === 'Shape' && path.useAsPath) path.pathed.push(this.name);
+        if (path.type == T_SHAPE && path.useAsPath) path.pathed.push(this.name);
         else {
 
             path = this.path = false;
@@ -867,9 +928,9 @@ P.cleanPathObject = function () {
 
         if (this.dirtyHandle) this.cleanHandle();
 
-        let p = this.pathObject = new Path2D();
+        const p = this.pathObject = new Path2D();
         
-        let handle = this.currentHandle,
+        const handle = this.currentHandle,
             dims = this.currentDimensions,
 
             scale = this.currentScale,
@@ -904,9 +965,9 @@ P.buildText = function () {
 
             if (!this.exposedTextHold) {
 
-                let myhold = document.createElement('div');
+                const myhold = document.createElement(DIV);
                 myhold.id = `${this.name}-text-hold`;
-                myhold.setAttribute('aria-live', 'polite');
+                myhold.setAttribute(ARIA_LIVE, POLITE);
                 this.exposedTextHold = myhold;
                 this.exposedTextHoldAttached = false;
             }
@@ -917,7 +978,7 @@ P.buildText = function () {
 
                 if (this.currentHost) {
 
-                    let hold = this.getCanvasTextHold(this.currentHost);
+                    const hold = this.getCanvasTextHold(this.currentHost);
 
                     if (hold && hold.textHold) {
 
@@ -932,13 +993,12 @@ P.buildText = function () {
 
 P.getCanvasTextHold = function (item) {
 
-    if (item && item.type === 'Cell' && item.controller && item.controller.type === 'Canvas' && item.controller.textHold) return item.controller;
+    if (item && item.type == T_CELL && item.controller && item.controller.type == T_CANVAS && item.controller.textHold) return item.controller;
 
-    if (item && item.type === 'Cell' && item.currentHost) return this.getCanvasTextHold(item.currentHost);
+    if (item && item.type == T_CELL && item.currentHost) return this.getCanvasTextHold(item.currentHost);
 
     return false;
 };
-
 
 // `convertTextEntityCharacters` - internal function called by `buildText`
 // + To convert any HTML entity (eg: &lt; &epsilon;) in the text string into their required glyphs
@@ -947,7 +1007,7 @@ P.convertTextEntityCharacters = function (item) {
 
     let mytext = item.trim();
 
-    mytext = mytext.replace(/[\s\uFEFF\xA0]+/g, ' ');
+    mytext = mytext.replace(CLASS_REGEX, SPACE);
 
     textEntityConverter.innerHTML = mytext;
     return textEntityConverter.value;
@@ -964,7 +1024,7 @@ P.calculateTextPositions = function (mytext) {
 
             self.dirtyPathObject = true;
             self.dirtyText = true;
-            return 'black';
+            return BLACK;
         }
 
         if (item.substring) {
@@ -980,10 +1040,10 @@ P.calculateTextPositions = function (mytext) {
     };
 
     // 1. Setup - get values for text? arrays, current?, highlight?, ?Attributes, etc
-    let myCell = requestCell(),
+    const myCell = requestCell(),
         engine = myCell.engine;
 
-    let self = this,
+    const self = this,
         host = (this.group && this.group.getHost) ? this.group.getHost() : false;
 
     let textGlyphs, 
@@ -1048,7 +1108,7 @@ P.calculateTextPositions = function (mytext) {
 
     // 2. Create `textGlyphs` array
     // + also shove the default font into the `fontLibrary` array
-    textGlyphs = (treatWordAsGlyph) ? mytext.split(' ') : mytext.split('');
+    textGlyphs = (treatWordAsGlyph) ? mytext.split(SPACE) : mytext.split(ZERO_STR);
     fontArray.push(currentFont);
 
     // 3. `textPositions` array will include an array of data for each glyph
@@ -1060,7 +1120,7 @@ P.calculateTextPositions = function (mytext) {
 
         textPositions[i] = [, , , , , , item, 0, 0, 0];
 
-        if (item === ' ') spacesArray.push(i);
+        if (item == SPACE) spacesArray.push(i);
     }
 
     // 4. Process the `sectionStyles` array to start populating the `textPositions` arrays
@@ -1106,7 +1166,7 @@ P.calculateTextPositions = function (mytext) {
                 item = gStyle.stroke;
                 if (item && item !== currentStrokeStyle) {
 
-                    if ('default' === item) currentStrokeStyle = defaultStrokeStyle;
+                    if (DEFAULT == item) currentStrokeStyle = defaultStrokeStyle;
                     else currentStrokeStyle = makeStyle(gStyle.stroke);
                     gPos[1] = currentStrokeStyle;
                 };
@@ -1114,7 +1174,7 @@ P.calculateTextPositions = function (mytext) {
                 item = gStyle.fill;
                 if (item && item !== currentFillStyle) {
 
-                    if ('default' === item) currentFillStyle = defaultFillStyle;
+                    if (DEFAULT == item) currentFillStyle = defaultFillStyle;
                     else currentFillStyle = makeStyle(gStyle.fill);
                     gPos[2] = currentFillStyle;
                 };
@@ -1180,7 +1240,7 @@ P.calculateTextPositions = function (mytext) {
 
         if (f.actualBoundingBoxAscent != null && f.actualBoundingBoxDescent != null) {
 
-            fontLibrary[font] = Math.ceil(f.actualBoundingBoxAscent + f.actualBoundingBoxDescent);
+            fontLibrary[font] = _ceil(f.actualBoundingBoxAscent + f.actualBoundingBoxDescent);
         }
         else {
 
@@ -1192,7 +1252,7 @@ P.calculateTextPositions = function (mytext) {
     });
     engine.restore();
 
-    maxHeight = Math.max(...Object.values(fontLibrary));
+    maxHeight = _max(..._values(fontLibrary));
 
     // 6. Calculate glyph `width` values
     // + This is the tricky bit as, ideally, we need to take into account font kerning values
@@ -1239,7 +1299,7 @@ P.calculateTextPositions = function (mytext) {
         glyphWidth = singles[i] + textGlyphWidths[i];
         textGlyphWidths[i] = glyphWidth;
 
-        if (treatWordAsGlyph || glyph === ' ') ends = i;
+        if (treatWordAsGlyph || glyph == SPACE) ends = i;
 
         lineLen += glyphWidth;
         totalLen += glyphWidth;
@@ -1248,9 +1308,9 @@ P.calculateTextPositions = function (mytext) {
         // + This should make sure we pick up individual words that are longer than the Phrase entity's width
         if (lineLen >= width && starts < ends) {
 
-            fragment = textGlyphs.slice(starts, ends).join('');
+            fragment = textGlyphs.slice(starts, ends).join(ZERO_STR);
             textLines.push(fragment);
-            len = (treatWordAsGlyph) ? fragment.split(' ').length - 1 : fragment.split(' ').length;
+            len = (treatWordAsGlyph) ? fragment.split(SPACE).length - 1 : fragment.split(SPACE).length;
             textLineWords.push(len);
 
             len = textGlyphWidths.slice(starts, ends).reduce((a, v) => a + v, 0);
@@ -1269,16 +1329,16 @@ P.calculateTextPositions = function (mytext) {
                 fragment = mytext;
 
                 textLines.push(fragment);
-                textLineWords.push((treatWordAsGlyph) ? fragment.split(' ').length - 1 : fragment.split(' ').length);
+                textLineWords.push((treatWordAsGlyph) ? fragment.split(SPACE).length - 1 : fragment.split(SPACE).length);
                 textLineWidths.push(totalLen);
             }
 
             // Final line of multiline text
             else {
 
-                fragment = textGlyphs.slice(starts).join('');
+                fragment = textGlyphs.slice(starts).join(ZERO_STR);
                 textLines.push(fragment);
-                len = (treatWordAsGlyph) ? fragment.split(' ').length - 1 : fragment.split(' ').length;
+                len = (treatWordAsGlyph) ? fragment.split(SPACE).length - 1 : fragment.split(SPACE).length;
                 textLineWords.push(len);
 
                 len = textGlyphWidths.slice(starts).reduce((a, v) => a + v, 0);
@@ -1299,7 +1359,7 @@ P.calculateTextPositions = function (mytext) {
     // 7. Calculate `localHeight`
     if (scale <= 0) scale = 1;
 
-    dims[1] = Math.ceil((maxHeight * textLines.length * lineHeight) / scale);
+    dims[1] = _ceil((maxHeight * textLines.length * lineHeight) / scale);
 
     this.cleanHandle();
     this.dirtyHandle = false;
@@ -1315,7 +1375,7 @@ P.calculateTextPositions = function (mytext) {
         // + We have 2 non-path scenarios: full-justified text; and regular text
 
         // Scenario 1: `justify === 'full'`
-        if (justify === 'full') {
+        if (justify == FULL) {
 
             cursor = 0;
             height = handleY;
@@ -1331,10 +1391,10 @@ P.calculateTextPositions = function (mytext) {
 
                     item = textPositions[cursor];
 
-                    if (item[6] === ' ') textGlyphWidths[cursor] += space;
+                    if (item[6] == SPACE) textGlyphWidths[cursor] += space;
 
-                    item[7] = Math.floor(len);
-                    item[8] = Math.floor(height);
+                    item[7] = _floor(len);
+                    item[8] = _floor(height);
                     item[9] = textGlyphWidths[cursor];
 
                     len += textGlyphWidths[cursor];
@@ -1355,8 +1415,8 @@ P.calculateTextPositions = function (mytext) {
 
             for (i = 0, iz = textLineWidths.length; i < iz; i++) {
 
-                if (justify === 'right') len = (width - textLineWidths[i]) + handleX;
-                else if (justify === 'center') len = ((width - textLineWidths[i]) / 2) + handleX;
+                if (justify == RIGHT) len = (width - textLineWidths[i]) + handleX;
+                else if (justify == CENTER) len = ((width - textLineWidths[i]) / 2) + handleX;
                 else len = handleX;
 
                 for (j = 0, jz = textLines[i].length; j < jz; j++) {
@@ -1367,8 +1427,8 @@ P.calculateTextPositions = function (mytext) {
                     // + Question: do we only care about treating word as glyph when it references a path? Probably no - we need to care about attempts to add space between letters (glyphs) as that may have an unwanted effect on heavily kerned fonts, or fonts with a lot of ligatures between various glyphs.
                     if (item) {
 
-                        item[7] = Math.floor(len);
-                        item[8] = Math.floor(height);
+                        item[7] = _floor(len);
+                        item[8] = _floor(height);
                         item[9] = textGlyphWidths[cursor];
                     }
                     len += textGlyphWidths[cursor];
@@ -1411,11 +1471,11 @@ P.regularStamp = function () {
 
         engine = dest.engine;
 
-        if (this.method === 'none') this.performRotation(engine);
+        if (this.method == NONE) this.performRotation(engine);
 
         // Scrawl-canvas clips canvases to the Phrase's hit area
         // + To 'clip' to the text, use stamp order and globalCompositeOperation instead
-        else if (this.method === 'clip') {
+        else if (this.method == CLIP) {
 
             this.performRotation(engine);
             engine.clip(this.pathObject, this.winding);
@@ -1426,8 +1486,8 @@ P.regularStamp = function () {
             if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
             // __Needs investigating:__ for some reason when applying a filter to a phrase entity the pool cell gets its baseline reset to default, which displaces the filter effect upwards. These lines fix the immediate issue, but don't solve the deeper mystery.
-            engine.textBaseline = 'top';
-            engine.textAlign = 'left';
+            engine.textBaseline = TOP;
+            engine.textAlign = LEFT;
 
             this.getTextPath();
             this.calculateGlyphPathPositions();
@@ -1471,8 +1531,8 @@ P.regularStamp = function () {
             if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
             // ... See above
-            engine.textBaseline = 'top';
-            engine.textAlign = 'left';
+            engine.textBaseline = TOP;
+            engine.textAlign = LEFT;
 
             pos = this.textPositions || [];
 
@@ -1493,7 +1553,7 @@ P.calculateGlyphPathPositions = function () {
         len = path.length,
         textPos = this.textPositions,
         widths = this.textGlyphWidths,
-        direction = (this.textPathDirection === 'ltr') ? true : false,
+        direction = (this.textPathDirection == LTR) ? true : false,
         pathPos = this.textPathPosition,
         distance, posArray, i, iz, width,
         justify = this.justify,
@@ -1520,12 +1580,12 @@ P.calculateGlyphPathPositions = function () {
 
         switch (justify) {
 
-            case 'center' :
+            case CENTER :
                 localPathPos = pathPos + ((width / 2) / len);
                 posArray[7] = -width / 2;
                 break;
 
-            case 'right' :
+            case RIGHT :
                 localPathPos = pathPos + (width / len);
                 posArray[7] = -width;
                 break;
@@ -1660,7 +1720,7 @@ P.stamper = {
     clear: function (engine, entity, data) { 
 
         let gco = engine.globalCompositeOperation;
-        engine.globalCompositeOperation = 'destination-out';
+        engine.globalCompositeOperation = DESTINATION_OUT;
         engine.fillText(...data);
         engine.globalCompositeOperation = gco;
     },    
@@ -1672,7 +1732,7 @@ P.drawBoundingBox = function (engine) {
     engine.save();
     engine.strokeStyle = this.boundingBoxColor;
     engine.lineWidth = 1;
-    engine.globalCompositeOperation = 'source-over';
+    engine.globalCompositeOperation = SOURCE_OVER;
     engine.globalAlpha = 1;
     engine.shadowOffsetX = 0;
     engine.shadowOffsetY = 0;

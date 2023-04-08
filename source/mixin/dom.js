@@ -426,7 +426,7 @@ export default function (P = Ωempty) {
                 
             if (items && items.host) {
 
-                const host = items.host;
+                host = items.host;
 
                 if (host.substring && artefact[host]) host = artefact[host];
             }

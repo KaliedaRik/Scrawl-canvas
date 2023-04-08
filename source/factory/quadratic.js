@@ -39,14 +39,37 @@
 
 
 // #### Imports
-import { constructors, artefact } from '../core/library.js';
-import { mergeOver, addStrings, pushUnique, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    constructors, 
+} from '../core/library.js';
+
+import { 
+    addStrings, 
+    doCreate,
+    mergeOver, 
+    pushUnique, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 import curveMix from '../mixin/shapeCurve.js';
+
+
+// Local constants
+const CONTROL = 'control',
+    CONTROL_PARTICLE = 'controlParticle',
+    CONTROL_PATH = 'controlPath',
+    CONTROL_PIVOT = 'controlPivot',
+    ENTITY = 'entity',
+    PATH = 'path',
+    QUADRATIC = 'quadratic',
+    T_QUADRATIC = 'Quadratic',
+    ZERO_PATH = 'M0,0',
+    ZERO_STR = '';
 
 
 // #### Quadratic constructor
@@ -66,9 +89,9 @@ const Quadratic = function (items = Ωempty) {
 
 
 // #### Quadratic prototype
-const P = Quadratic.prototype = Object.create(Object.prototype);
-P.type = 'Quadratic';
-P.lib = 'entity';
+const P = Quadratic.prototype = doCreate();
+P.type = T_QUADRATIC;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -102,26 +125,26 @@ const defaultAttributes = {
 
 // __controlPivot__, __controlPivotCorner__, __addControlPivotHandle__, __addControlPivotOffset__
 // + Like the `start` coordinate, the `control` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes. 
-    controlPivot: '',
-    controlPivotCorner: '',
+    controlPivot: ZERO_STR,
+    controlPivotCorner: ZERO_STR,
     addControlPivotHandle: false,
     addControlPivotOffset: false,
 
 // __controlPath__, __controlPathPosition__, __addControlPathHandle__, __addControlPathOffset__
 // + Like the `start` coordinate, the `control` coordinate can be __pathed__ to another artefact. These attributes are used in the same way as the `path`, 'pathPosition', `addPathHandle` and `addPathOffset` attributes.
-    controlPath: '',
+    controlPath: ZERO_STR,
     controlPathPosition: 0,
     addControlPathHandle: false,
     addControlPathOffset: true,
 
 // __controlParticle__ - attribute to store any particle the artefact mey be using for its position reference
-    controlParticle: '',
+    controlParticle: ZERO_STR,
 
 // __controlLockTo__
 // + Like the `start` coordinate, the `control` coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: `coord` (default, for absolute positioning), `pivot`, `path`, `mouse`.
 // + The control coordinate does not support 'mimic' relative positioning.
 // + The control lock does not support setting the `x` and `y` coordinates separately - its value is a string argument, not an `[x, y]` array!
-    controlLockTo: '',
+    controlLockTo: ZERO_STR,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -150,7 +173,7 @@ const G = P.getters,
 // __controlPivot__
 S.controlPivot = function (item) {
 
-    this.setControlHelper(item, 'controlPivot', 'control');
+    this.setControlHelper(item, CONTROL_PIVOT, CONTROL);
     this.updateDirty();
     this.dirtyControl = true;
 };
@@ -158,7 +181,7 @@ S.controlPivot = function (item) {
 // __controlParticle__
 S.controlParticle = function (item) {
 
-    this.setControlHelper(item, 'controlParticle', 'control');
+    this.setControlHelper(item, CONTROL_PARTICLE, CONTROL);
     this.updateDirty();
     this.dirtyControl = true;
 };
@@ -166,7 +189,7 @@ S.controlParticle = function (item) {
 // __controlPath__
 S.controlPath = function (item) {
 
-    this.setControlHelper(item, 'controlPath', 'control');
+    this.setControlHelper(item, CONTROL_PATH, CONTROL);
     this.updateDirty();
     this.dirtyControl = true;
     this.currentControlPathData = false;
@@ -225,14 +248,14 @@ S.controlY = function (coord) {
 };
 S.control = function (x, y) {
 
-    this.setCoordinateHelper('control', x, y);
+    this.setCoordinateHelper(CONTROL, x, y);
     this.updateDirty();
     this.dirtyControl = true;
     this.currentControlPathData = false;
 };
 D.controlX = function (coord) {
 
-    let c = this.control;
+    const c = this.control;
     c[0] = addStrings(c[0], coord);
     this.updateDirty();
     this.dirtyControl = true;
@@ -240,7 +263,7 @@ D.controlX = function (coord) {
 };
 D.controlY = function (coord) {
 
-    let c = this.control;
+    const c = this.control;
     c[1] = addStrings(c[1], coord);
     this.updateDirty();
     this.dirtyControl = true;
@@ -248,7 +271,7 @@ D.controlY = function (coord) {
 };
 D.control = function (x, y) {
 
-    this.setDeltaCoordinateHelper('control', x, y);
+    this.setDeltaCoordinateHelper(CONTROL, x, y);
     this.updateDirty();
     this.dirtyControl = true;
     this.currentControlPathData = false;
@@ -271,7 +294,7 @@ P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
 
-    let p = 'M0,0';
+    let p = ZERO_PATH;
 
     p = this.makeQuadraticPath();
     
@@ -290,7 +313,7 @@ P.makeQuadraticPath = function () {
         ex = (endX - startX).toFixed(2),
         ey = (endY - startY).toFixed(2);
 
-    return `m0,0q${cx},${cy} ${ex},${ey}`;
+    return `${ZERO_PATH}q${cx},${cy} ${ex},${ey}`;
 };
 
 // `cleanDimensions` - internal helper function called by `prepareStamp` 
@@ -323,13 +346,13 @@ P.preparePinsForStamp = function () {
         if ((cPivot && cPivot.name === name) || (cPath && cPath.name == name)) {
 
             this.dirtyControl = true;
-            if (this.controlLockTo.includes('path')) this.currentControlPathData = false;
+            if (this.controlLockTo.includes(PATH)) this.currentControlPathData = false;
         }
 
         if ((ePivot && ePivot.name === name) || (ePath && ePath.name == name)) {
 
             this.dirtyEnd = true;
-            if (this.endLockTo.includes('path')) this.currentEndPathData = false;
+            if (this.endLockTo.includes(PATH)) this.currentEndPathData = false;
         }
     };
     dirtyPins.length = 0;
@@ -372,7 +395,7 @@ P.preparePinsForStamp = function () {
 export const makeQuadratic = function (items = Ωempty) {
 
     if (!items) return false;
-    items.species = 'quadratic';
+    items.species = QUADRATIC;
     return new Quadratic(items);
 };
 

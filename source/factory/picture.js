@@ -38,19 +38,57 @@
 
 
 // #### Imports
-import { constructors, asset, artefact } from '../core/library.js';
+import { 
+    artefact, 
+    asset, 
+    constructors, 
+} from '../core/library.js';
 
-import { mergeOver, xta, addStrings, pushUnique, removeItem, isa_obj, Ωempty } from '../core/utilities.js';
+import { 
+    addStrings, 
+    doCreate,
+    isa_obj, 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    xta, 
+    Ωempty, 
+} from '../core/utilities.js';
 
-import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
-import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
-import { stateKeys } from './state.js';
+import { 
+    gettableVideoAssetAtributes, 
+    settableVideoAssetAtributes, 
+} from './videoAsset.js';
+
+import { 
+    gettableImageAssetAtributes, 
+    settableImageAssetAtributes, 
+} from './imageAsset.js';
 
 import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import assetConsumerMix from '../mixin/assetConsumer.js';
+
+import { 
+    _keys,
+    STATE_KEYS,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const $IMAGE = 'image_',
+    $VIDEO = 'video_',
+    COPY_DIMENSIONS = 'copyDimensions',
+    COPY_START = 'copyStart',
+    ENTITY = 'entity',
+    MOUSE = 'mouse',
+    NAME = 'name',
+    PARTICLE = 'particle',
+    T_PICTURE = 'Picture',
+    T_SPRITE = 'Sprite',
+    UNDEFINED = 'undefined';
 
 
 // #### Picture constructor
@@ -90,9 +128,9 @@ const Picture = function (items = Ωempty) {
 
 
 // #### Picture prototype
-const P = Picture.prototype = Object.create(Object.prototype);
-P.type = 'Picture';
-P.lib = 'entity';
+const P = Picture.prototype = doCreate();
+P.type = T_PICTURE;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -147,7 +185,7 @@ P.packetObjects = pushUnique(P.packetObjects, ['asset']);
 // #### Kill management
 P.factoryKill = function (killAsset = false) {
 
-    let { asset, removeAssetOnKill } = this;
+    const { asset, removeAssetOnKill } = this;
 
     if (isa_obj(asset)) {
 
@@ -199,7 +237,7 @@ S.copyStartY = function (coord) {
 };
 S.copyStart = function (x, y) {
 
-    this.setCoordinateHelper('copyStart', x, y);
+    this.setCoordinateHelper(COPY_START, x, y);
     this.dirtyCopyStart = true;
     this.dirtyImageSubscribers = true;
     this.dirtyFilterIdentifier = true;
@@ -221,7 +259,7 @@ D.copyStartY = function (coord) {
 };
 D.copyStart = function (x, y) {
 
-    this.setDeltaCoordinateHelper('copyStart', x, y);
+    this.setDeltaCoordinateHelper(COPY_START, x, y);
     this.dirtyCopyStart = true;
     this.dirtyImageSubscribers = true;
     this.dirtyFilterIdentifier = true;
@@ -263,7 +301,7 @@ S.copyHeight = function (val) {
 };
 S.copyDimensions = function (w, h) {
 
-    this.setCoordinateHelper('copyDimensions', w, h);
+    this.setCoordinateHelper(COPY_DIMENSIONS, w, h);
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
     this.dirtyFilterIdentifier = true;
@@ -286,7 +324,7 @@ D.copyHeight = function (val) {
 };
 D.copyDimensions = function (w, h) {
 
-    this.setDeltaCoordinateHelper('copyDimensions', w, h);
+    this.setDeltaCoordinateHelper(COPY_DIMENSIONS, w, h);
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
     this.dirtyFilterIdentifier = true;
@@ -306,7 +344,7 @@ P.get = function (item) {
 
     let source = this.source;
 
-    if ((item.indexOf('video_') === 0 || item.indexOf('image_') === 0) && source) {
+    if ((item.indexOf($VIDEO) == 0 || item.indexOf($IMAGE) == 0) && source) {
 
         if (gettableVideoAssetAtributes.includes(item)) return source[item.substring(6)];
         else if (gettableImageAssetAtributes.includes(item)) return source[item.substring(6)];
@@ -324,18 +362,18 @@ P.get = function (item) {
                 state = this.state,
                 val;
 
-            if (typeof def != 'undefined') {
+            if (typeof def != UNDEFINED) {
 
                 val = this[item];
-                return (typeof val != 'undefined') ? val : def;
+                return (typeof val != UNDEFINED) ? val : def;
             }
 
             def = state.defs[item];
 
-            if (typeof def != 'undefined') {
+            if (typeof def != UNDEFINED) {
 
                 val = state[item];
-                return (typeof val != 'undefined') ? val : def;
+                return (typeof val != UNDEFINED) ? val : def;
             }
             return undef;
         }
@@ -345,7 +383,7 @@ P.get = function (item) {
 // `set`
 P.set = function (items = Ωempty) {
 
-    const keys = Object.keys(items),
+    const keys = _keys(items),
         keysLen = keys.length;
 
     if (keysLen) {
@@ -365,27 +403,27 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if ((key.indexOf('video_') === 0 || key.indexOf('image_') === 0) && source) {
+            if ((key.indexOf($VIDEO) == 0 || key.indexOf($IMAGE) == 0) && source) {
 
                 if (settableVideoAssetAtributes.includes(key)) source[key.substring(6)] = value
                 else if (settableImageAssetAtributes.includes(key)) source[key.substring(6)] = value
             }
 
-            else if (key && key !== 'name' && value != null) {
+            else if (key && key != NAME && value != null) {
 
-                if (!stateKeys.includes(key)) {
+                if (!STATE_KEYS.includes(key)) {
 
                     predefined = setters[key];
 
                     if (predefined) predefined.call(this, value);
-                    else if (typeof defs[key] != 'undefined') this[key] = value;
+                    else if (typeof defs[key] != UNDEFINED) this[key] = value;
                 }
                 else {
 
                     predefined = stateSetters[key];
 
                     if (predefined) predefined.call(state, value);
-                    else if (typeof stateDefs[key] != 'undefined') state[key] = value;
+                    else if (typeof stateDefs[key] != UNDEFINED) state[key] = value;
                 }
             }
         }
@@ -489,14 +527,14 @@ P.cleanCopyStart = function () {
 // `cleanCopyDimensions`
 P.cleanCopyDimensions = function () {
 
-    let natWidth = this.sourceNaturalWidth,
+    const natWidth = this.sourceNaturalWidth,
         natHeight = this.sourceNaturalHeight;
 
     if (xta(natWidth, natHeight) && natWidth > 0 && natHeight > 0) {
 
         this.dirtyCopyDimensions = false;
 
-        let dims = this.copyDimensions,
+        const dims = this.copyDimensions,
             currentDims = this.currentCopyDimensions,
             width = dims[0], 
             height = dims[1];
@@ -507,7 +545,7 @@ P.cleanCopyDimensions = function () {
         if (height.substring) currentDims[1] = (parseFloat(height) / 100) * natHeight;
         else currentDims[1] = height;
 
-        let currentWidth = currentDims[0],
+        const currentWidth = currentDims[0],
             currentHeight = currentDims[1];
 
         if (currentWidth <= 0 || currentWidth > natWidth) {
@@ -535,7 +573,7 @@ P.prepareStamp = function() {
     // Not content with the dirty flag, the entity now interrogates its asset via its `checkSource` to trigger it to directly rewrite key information if it has changed - particularly dimensional data
     if (this.asset) {
 
-        if (this.asset.type === 'Sprite') this.checkSpriteFrame(this);
+        if (this.asset.type == T_SPRITE) this.checkSpriteFrame(this);
         else {
 
             if (this.asset.checkSource) this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
@@ -556,7 +594,7 @@ P.prepareStamp = function() {
     if (this.dirtyHandle) this.cleanHandle();
     if (this.dirtyRotation) this.cleanRotation();
 
-    if (this.isBeingDragged || this.lockTo.includes('mouse') || this.lockTo.includes('particle')) {
+    if (this.isBeingDragged || this.lockTo.includes(MOUSE) || this.lockTo.includes(PARTICLE)) {
 
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
@@ -585,16 +623,16 @@ P.preparePasteObject = function () {
 
     this.dirtyPaste = false;
 
-    let handle = this.currentStampHandlePosition,
+    const handle = this.currentStampHandlePosition,
         dims = this.currentDimensions,
         scale = this.currentScale;
 
-    let x = -handle[0] * scale,
+    const x = -handle[0] * scale,
         y = -handle[1] * scale,
         w = dims[0] * scale,
         h = dims[1] * scale;
 
-    let pasteArray = this.pasteArray;
+    const pasteArray = this.pasteArray;
 
     pasteArray.length = 0;
     pasteArray.push(x, y, w, h);
@@ -633,14 +671,14 @@ P.draw = function (engine) {
 // `fill`
 P.fill = function (engine) {
 
-    let [x, y, w, h] = this.copyArray;
+    const [x, y, w, h] = this.copyArray;
     if (this.source && w && h) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 };
 
 // `drawAndFill`
 P.drawAndFill = function (engine) {
 
-    let [x, y, w, h] = this.copyArray;
+    const [x, y, w, h] = this.copyArray;
     if (this.source && w && h) {
 
         engine.stroke(this.pathObject);
@@ -656,7 +694,7 @@ P.drawAndFill = function (engine) {
 // `fillAndDraw`
 P.fillAndDraw = function (engine) {
 
-    let [x, y, w, h] = this.copyArray;
+    const [x, y, w, h] = this.copyArray;
     if (this.source && w && h) {
 
         engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
@@ -674,7 +712,7 @@ P.fillAndDraw = function (engine) {
 // `drawThenFill`
 P.drawThenFill = function (engine) {
 
-    let [x, y, w, h] = this.copyArray;
+    const [x, y, w, h] = this.copyArray;
     if (this.source && w && h) {
 
         engine.stroke(this.pathObject);
@@ -685,7 +723,7 @@ P.drawThenFill = function (engine) {
 // `fillThenDraw`
 P.fillThenDraw = function (engine) {
 
-    let [x, y, w, h] = this.copyArray;
+    const [x, y, w, h] = this.copyArray;
     if (this.source && w && h) {
 
         engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
@@ -698,16 +736,16 @@ P.checkHitReturn = function (x, y, cell) {
 
     if (this.checkHitIgnoreTransparency && cell && cell.engine) {
 
-        let [copyX, copyY, copyWidth, copyHeight] = this.copyArray;
-        let [pasteX, pasteY, pasteWidth, pasteHeight] = this.pasteArray;
-        let [stampX, stampY] = this.currentStampPosition;
+        const [copyX, copyY, copyWidth, copyHeight] = this.copyArray;
+        const [pasteX, pasteY, pasteWidth, pasteHeight] = this.pasteArray;
+        const [stampX, stampY] = this.currentStampPosition;
 
-        let img = cell.engine.getImageData(copyX, copyY, copyWidth, copyHeight);
+        const img = cell.engine.getImageData(copyX, copyY, copyWidth, copyHeight);
 
-        let myX = x - stampX,
+        const myX = x - stampX,
             myY = y - stampY;
 
-        let index = (((myY * pasteWidth) + myX) * 4) + 3;
+        const index = (((myY * pasteWidth) + myX) * 4) + 3;
 
         if (img.data[index]) {
 

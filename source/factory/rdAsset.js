@@ -9,17 +9,50 @@
 
 
 // #### Imports
-import { constructors, entity } from '../core/library.js';
+import { 
+    constructors,
+    entity, 
+} from '../core/library.js';
+
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
-import { mergeOver, λnull, λthis, λfirstArg, removeItem, Ωempty } from '../core/utilities.js';
+
+import { 
+    constrain,
+    doCreate,
+    mergeOver, 
+    removeItem, 
+    λfirstArg, 
+    λnull, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { makeColor } from './color.js';
-import { requestCell, releaseCell } from './cell-fragment.js';
+
+import { 
+    releaseCell, 
+    requestCell, 
+} from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 import assetAdvancedMix from '../mixin/assetAdvancedFunctionality.js';
 import patternMix from '../mixin/pattern.js';
+
+import { 
+    _floor,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const ASSET = 'asset',
+    DEFAULT_SEED = 'any_random_string_will_do',
+    ENTITY = 'entity',
+    RANDOM = 'random',
+    RD_SETTINGS_PREF_VALS = ['random', 'entity'],
+    T_RD_ASSET = 'RdAsset',
+    WHITE = 'rgb(255 255 255 / 1)',
+    ZERO_STR = '';
 
 
 // #### RdAsset constructor
@@ -48,9 +81,9 @@ const RdAsset = function (items = Ωempty) {
 
 
 // #### RdAsset prototype
-const P = RdAsset.prototype = Object.create(Object.prototype);
-P.type = 'RdAsset';
-P.lib = 'asset';
+const P = RdAsset.prototype = doCreate();
+P.type = T_RD_ASSET;
+P.lib = ASSET;
 P.isArtefact = false;
 P.isAsset = true;
 
@@ -89,10 +122,10 @@ const defaultAttributes = {
     // + Demo [Canvas-053](../../demo/canvas-053.html) includes Block, Wheel and Spiral entitys which can be used for this purpose
     //
     // __initialSettingPreference__ - String - either 'random' (default) or 'entity'
-    initialSettingPreference: 'random',
+    initialSettingPreference: RANDOM,
 
     // __randomEngineSeed__ - String acting as the random engine's seed value. different String values will create different scene outputs, all other attributes not changing.
-    randomEngineSeed: 'some-random-string-or-other',
+    randomEngineSeed: DEFAULT_SEED,
 
     // __initialRandomSeedLevel__ - Number between 0.0 and 1.0 representing the density of reagent A across the scene's dimensions
     initialRandomSeedLevel: 0.0045,
@@ -224,10 +257,9 @@ S.maxGenerations = function (item) {
     }
 };
 
-P.initialSettingPreferenceValues = ['random', 'entity'];
 S.initialSettingPreference = function (item) {
 
-    if (item.substring && this.initialSettingPreferenceValues.includes(item)) {
+    if (item.substring && RD_SETTINGS_PREF_VALS.includes(item)) {
 
         this.initialSettingPreference = item;
         this.dirtyScene = true;
@@ -247,7 +279,7 @@ S.initialSettingEntity = function (item) {
 
     if (item) {
 
-        if (!item.substring) item = item.name || '';
+        if (!item.substring) item = item.name || ZERO_STR;
 
         if (item) {
 
@@ -530,8 +562,8 @@ P.cleanOutput = function (iterations = 0) {
                     da = a + diffusionRateA * this.calculateLaplacian(c, sourceA) - a * b * b + feedRate * (1 - a);
                     db = b + diffusionRateB * this.calculateLaplacian(c, sourceB) + a * b * b - (killRate + feedRate) * b;
 
-                    destA[c] = this.constrain(da, 0, 1);
-                    destB[c] = this.constrain(db, 0, 1);
+                    destA[c] = constrain(da, 0, 1);
+                    destB[c] = constrain(db, 0, 1);
                 }
 
                 this.currentSource = (currentSource) ? 0 : 1;
@@ -578,7 +610,7 @@ P.cleanScene = function () {
             destB.fill(0);
 
             // The scene can be set up to include either random values, or we can use Scrawl-canvas entitys to supply the initial state for the second reagent
-            if ('entity' === initialSettingPreference && entity[initialSettingEntity]) {
+            if (ENTITY == initialSettingPreference && entity[initialSettingEntity]) {
 
                 const ent = entity[initialSettingEntity],
                     cell = requestCell();
@@ -589,8 +621,8 @@ P.cleanScene = function () {
                 cellElement.height = height;
 
                 ent.simpleStamp(cell, {
-                    fillStyle: 'white',
-                    strokeStyle: 'white',
+                    fillStyle: WHITE,
+                    strokeStyle: WHITE,
                 });
 
                 const initImg = cellEngine.getImageData(0, 0, width, height),
@@ -623,20 +655,13 @@ P.cleanScene = function () {
     }
 };
 
-// `constrain`, `calculateLaplacian` - additional internal functions invoked by the `cleanOutput` function
-P.constrain = function (val, min, max) {
-
-    if (val < min) return min;
-    if (val > max) return max;
-    return val;
-};
-
+// `calculateLaplacian` - additional internal function invoked by the `cleanOutput` function
 P.calculateLaplacian = function (index, src) {
 
     const w = this.width;
 
     let res = 0,
-        row = Math.floor(index / w), 
+        row = _floor(index / w), 
         rowAbove = this.checkRow(row - 1) * w,
         rowBelow = this.checkRow(row + 1) * w,
         rowHere = row * w,

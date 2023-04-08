@@ -13,13 +13,56 @@
 
 
 // #### Imports
-import { constructors, entity, styles } from '../core/library.js';
-import { isa_obj, xt, xtGet, Ωempty } from '../core/utilities.js';
+import { 
+    constructors, 
+    entity, 
+    styles, 
+} from '../core/library.js';
+
+import { 
+    doCreate,
+    isa_obj, 
+    xt, 
+    xtGet, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import { makeColor } from './color.js';
+import { 
+    _freeze,
+    _keys,
+    STATE_MAIN_KEYS,
+    STATE_LINE_KEYS,
+    STATE_STYLE_KEYS,
+    STATE_ALL_KEYS,
+} from '../core/shared-vars.js';
 
+
+// Local constants
+const BLACK = 'rgb(0 0 0 / 1)',
+    BUTT = 'butt',
+    DEFAULT_FONT = '12px sans-serif',
+    HASH = '#',
+    HIGH = 'high',
+    HSL = 'hsl',
+    LEFT = 'left',
+    LINE_DASH = 'lineDash',
+    LINE_WIDTH = 'lineWidth',
+    MITER = 'miter',
+    NAME = 'name',
+    NONE = 'none',
+    RGB = 'rgb',
+    SOURCE_OVER = 'source-over',
+    STYLES = 'styles',
+    T_STATE = 'State',
+    T_COLOR = 'Color',
+    T_PHRASE = 'Phrase',
+    TOP = 'top',
+    UNDEFINED = 'undefined';
+
+
+import { makeColor } from './color.js';
 const colorChecker = makeColor({
     name: 'SC-system-state-do-not-remove',
 });
@@ -34,8 +77,8 @@ const State = function (items = Ωempty) {
 
 
 // #### State prototype
-const P = State.prototype = Object.create(Object.prototype);
-P.type = 'State';
+const P = State.prototype = doCreate();
+P.type = T_STATE;
 
 
 // #### Mixins
@@ -53,8 +96,8 @@ P.defs = {
 // + GRADIENTNAME String
 // + RADIALGRADIENTNAME String
 // + PATTERNNAME String
-    fillStyle: 'rgba(0 0 0 / 1)',
-    strokeStyle: 'rgba(0 0 0 / 1)',
+    fillStyle: BLACK,
+    strokeStyle: BLACK,
 
 
 // ##### Miscellaneous engine settings
@@ -76,7 +119,7 @@ P.defs = {
 // + 'copy'
 // + 'xor'
 // + any other permitted value - be aware that different browsers may render these operations in different ways, and some options are not supported by all browsers.
-    globalCompositeOperation: 'source-over',
+    globalCompositeOperation: SOURCE_OVER,
 
 
 // ##### Stroke line styling
@@ -88,14 +131,14 @@ P.defs = {
 // + 'butt'
 // + 'round'
 // + 'square'
-    lineCap: 'butt',
+    lineCap: BUTT,
 
 
 // __lineJoin__ - how line joints will display. Permitted values include:
 // + 'miter'
 // + 'round'
 // + 'bevel'
-    lineJoin: 'miter',
+    lineJoin: MITER,
 
 
 // __lineDash__ - an array of integer Numbers representing line and gap values (in pixels), for example [5,2,2,2] for a long-short dash pattern
@@ -129,27 +172,27 @@ P.defs = {
 // __shadowColor__ - the color used for an entity's shadow effect. Can be:
 // + CSS format color String - `#fff`, `#ffffff`, `rgb(255 255 255)`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
 // + COLORNAME String
-    shadowColor: 'rgba(0 0 0 / 0)',
+    shadowColor: BLACK,
 
 
 // ##### Font styling
 // __font__, __textAlign__, __textBaseline__ - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.
-    font: '12px sans-serif',
-    textAlign: 'left',
-    textBaseline: 'top',
+    font: DEFAULT_FONT,
+    textAlign: LEFT,
+    textBaseline: TOP,
 
 
 // ##### CSS/SVG filters
 // __filter__ - the Canvas 2D engine supports the [filter attribute](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) on an experimental basis, thus it is not guaranteed to work in all browsers and devices. The filter attribute takes a String value (default: 'none') defining one or more filter functions to be applied to the entity as it is stamped on the canvas.
 // + Be aware that entitys can also take a `filters` Array - this represents an array of Scrawl-canvas filters to be applied to the entity (or group or Cell). The two filter systems are completely separate - combine their effects at your own risk!
-    filter: 'none',
+    filter: NONE,
 
 // ##### Image smoothing
 // __imageSmoothingEnabled__ - switch image smoothing on or off, on a per-entity basis
     imageSmoothingEnabled: true,
 
 // __imageSmoothingQuality__ - when image smoothing is enabled, determine the quality of image smoothing to apply to the entity.
-    imageSmoothingQuality: 'high',
+    imageSmoothingQuality: HIGH,
 };
 
 
@@ -160,11 +203,11 @@ P.processPacketOut = function (key, value, incs) {
 
     switch (key) {
 
-        case 'lineDash' : 
+        case LINE_DASH : 
 
             if (!value.length) {
 
-                result = (incs.includes('lineDash')) ? true : false;
+                result = (incs.includes(LINE_DASH)) ? true : false;
             }
             break;
 
@@ -198,18 +241,19 @@ P.finalizePacketOut = function (copy, items) {
 // #### Get, Set, deltaSet
 P.set = function (items = Ωempty) {
 
-    let keys = Object.keys(items),
-        keysLen = keys.length,
-        key, i,
+    const keys = _keys(items),
+        keysLen = keys.length;
+    
+    let key, i,
         d = this.defs;
 
     for (i = 0; i < keysLen; i++) {
 
         key = keys[i];
 
-        if (key != 'name') {
+        if (key != NAME) {
 
-            if (typeof d[key] != 'undefined') {
+            if (typeof d[key] != UNDEFINED) {
 
                 this[key] = items[key];
                 this.dirtyFilterIdentifier = true;
@@ -242,13 +286,13 @@ S.fillStyle = function (item) {
 
     let temp;
 
-    if (isa_obj(item) && item.lib === 'styles') this.fillStyle = item;
+    if (isa_obj(item) && item.lib == STYLES) this.fillStyle = item;
     else{
 
         temp = styles[item];
 
         if (temp) this.fillStyle = temp;
-        else if (item.includes('rgb') || item.includes('hsl') || item.includes('#')) this.fillStyle = item;
+        else if (item.includes(RGB) || item.includes(HSL) || item.includes(HASH)) this.fillStyle = item;
         else this.fillStyle = colorChecker.checkColor(item);
     }
 };
@@ -257,54 +301,44 @@ S.strokeStyle = function (item) {
 
     let temp;
 
-    if (isa_obj(item) && item.lib === 'styles') this.strokeStyle = item;
+    if (isa_obj(item) && item.lib == STYLES) this.strokeStyle = item;
     else{
 
         temp = styles[item];
 
         if (temp) this.strokeStyle = temp;
-        else if (item.includes('rgb') || item.includes('hsl') || item.includes('#')) this.strokeStyle = item;
+        else if (item.includes(RGB) || item.includes(HSL) || item.includes(HASH)) this.strokeStyle = item;
         else this.strokeStyle = colorChecker.checkColor(item);
     }
 };
 
 S.shadowColor = function (item) {
 
-    if (item.includes('rgb') || item.includes('hsl') || item.includes('#')) this.shadowColor = item;
+    if (item.includes(RGB) || item.includes(HSL) || item.includes(HASH)) this.shadowColor = item;
     else this.shadowColor = colorChecker.checkColor(item);
 };
 
 
 // #### Prototype functions
-// Internal arrays used by a number of Style functions
-P.allKeys = Object.keys(P.defs);
-P.mainKeys = ['filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'shadowBlur', 'shadowOffsetX', 'shadowOffsetY'];
-P.lineKeys = ['lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit'];
-P.styleKeys = ['fillStyle', 'shadowColor', 'strokeStyle'];
-P.textKeys = ['font'];
 
 // `getChanges` is the key function performed by State objects. This is where the entity's state is compared to a Cell engine's current state, to identify which engine attributes need to change to bring it into alignment with the entity object's requirements
 P.getChanges = function (ent, engineState) {
 
-    let mainKeys = this.mainKeys,
-        lineKeys = this.lineKeys,
-        styleKeys = this.styleKeys,
-        textKeys = this.textKeys,
-        k, style, scaled, i, iz, j, jz,
+    let k, style, scaled, i, iz, j, jz,
         linedashFlag, desired, current,
         defs = this.defs,
         result = {};
 
     let getItem = function (source, key) {
-        return (typeof source[key] != 'undefined') ? source[key] : defs[key];
+        return (typeof source[key] != UNDEFINED) ? source[key] : defs[key];
     };
 
     if (ent.substring) ent = entity[ent];
 
     // 'filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'shadowBlur', 'shadowOffsetX', 'shadowOffsetY'
-    for (i = 0, iz = mainKeys.length; i < iz; i++) {
+    for (i = 0, iz = STATE_MAIN_KEYS.length; i < iz; i++) {
 
-        k = mainKeys[i];
+        k = STATE_MAIN_KEYS[i];
         desired = getItem(this, k);
         current = getItem(engineState, k);
 
@@ -314,13 +348,13 @@ P.getChanges = function (ent, engineState) {
     // 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit'
     if (this.lineWidth || engineState.lineWidth) {
 
-        for (i = 0, iz = lineKeys.length; i < iz; i++) {
+        for (i = 0, iz = STATE_LINE_KEYS.length; i < iz; i++) {
 
-            k = lineKeys[i];
+            k = STATE_LINE_KEYS[i];
             desired = getItem(this, k);
             current = getItem(engineState, k);
 
-            if (k == 'lineDash') {
+            if (k == LINE_DASH) {
 
                 if (desired.length || current.length) {
 
@@ -342,7 +376,7 @@ P.getChanges = function (ent, engineState) {
                 }
             }
 
-            else if (k == 'lineWidth') {
+            else if (k == LINE_WIDTH) {
 
                 if (ent.scaleOutline) {
 
@@ -361,9 +395,9 @@ P.getChanges = function (ent, engineState) {
     }
 
     // 'fillStyle', 'shadowColor', 'strokeStyle'
-    for (i = 0, iz = styleKeys.length; i < iz; i++) {
+    for (i = 0, iz = STATE_STYLE_KEYS.length; i < iz; i++) {
 
-        k = styleKeys[i];
+        k = STATE_STYLE_KEYS[i];
         current = getItem(engineState, k);
         desired = getItem(this, k);
 
@@ -371,7 +405,7 @@ P.getChanges = function (ent, engineState) {
         if (desired.substring && current !== desired) result[k] = desired;
 
         // Color object colors need to be extracted before they can be compared and, if necessary, updated
-        else if (desired.type === 'Color') {
+        else if (desired.type == T_COLOR) {
 
             desired = desired.getData();
 
@@ -383,7 +417,7 @@ P.getChanges = function (ent, engineState) {
     }
 
     // 'font'
-    if (ent.type === 'Phrase') {
+    if (ent.type == T_PHRASE) {
 
         for (i = 0, iz = textKeys.length; i < iz; i++) {
 
@@ -400,19 +434,18 @@ P.getChanges = function (ent, engineState) {
 // The `setStateFromEngine` function takes a CanvasRenderingContext2D engine object and updates its own attributes to match the engine's current state.
 P.setStateFromEngine = function (engine) {
 
-    let keys = this.allKeys,
-        key;
+    let key;
 
-    for (let i = 0, iz = keys.length; i < iz; i++) {
+    for (let i = 0, iz = STATE_ALL_KEYS.length; i < iz; i++) {
 
-        key = keys[i];
+        key = STATE_ALL_KEYS[i];
         this[key] = engine[key];
     }
 
     this.lineDash = (xt(engine.lineDash)) ? engine.lineDash : [];
     this.lineDashOffset = xtGet(engine.lineDashOffset, 0);
-    engine.textAlign = this.textAlign = 'left';
-    engine.textBaseline = this.textBaseline = 'top';
+    engine.textAlign = this.textAlign = LEFT;
+    engine.textBaseline = this.textBaseline = TOP;
 
     return this;
 };
@@ -425,9 +458,5 @@ export const makeState = function (items) {
     if (!items) return false;
     return new State(items);
 };
-
-// Note: does NOT include 'font', textAlign or textBaseline because we set them in the fontAttributes object and Phrase entity, not the state object
-export const stateKeys = ['fillStyle', 'filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle'];
-
 
 constructors.State = State;

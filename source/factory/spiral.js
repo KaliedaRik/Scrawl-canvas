@@ -40,10 +40,48 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, Ωempty } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    mergeOver, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
+
+import { 
+    _floor,
+    _freeze,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const T_SPIRAL = 'Spiral';
+const SPIRAL = 'spiral';
+const ENTITY = 'entity';
+const ZERO_PATH = 'M0,0';
+
+const FIRST_TURN = _freeze([
+    _freeze([0.043, 0, 0.082, -0.035, 0.088, -0.088]),
+    _freeze([0.007, -0.057, -0.024, -0.121, -0.088, -0.162]),
+    _freeze([-0.07, -0.045, -0.169, -0.054, -0.265, -0.015]),
+    _freeze([-0.106, 0.043, -0.194, 0.138, -0.235, 0.265]),
+    _freeze([-0.044, 0.139, -0.026, 0.3, 0.058, 0.442]),
+    _freeze([0.091, 0.153, 0.25, 0.267, 0.442, 0.308]),
+    _freeze([0.206, 0.044, 0.431, -0.001, 0.619, -0.131]),
+    _freeze([0.2, -0.139, 0.34, -0.361, 0.381, -0.619])
+]);
+const SUBSEQUENT_TURNS = _freeze([
+    _freeze([0, -0.27, -0.11, -0.52, -0.29, -0.71]),
+    _freeze([-0.19, -0.19, -0.44, -0.29, -0.71, -0.29]),
+    _freeze([-0.27, 0, -0.52, 0.11, -0.71, 0.29]),
+    _freeze([-0.19, 0.19, -0.29, 0.44, -0.29, 0.71]),
+    _freeze([0, 0.27, 0.11, 0.52, 0.29, 0.71]),
+    _freeze([0.19, 0.19, 0.44, 0.29, 0.71, 0.29]),
+    _freeze([0.27, 0, 0.52, -0.11, 0.71, -0.29]),
+    _freeze([0.19, -0.19, 0.29, -0.44, 0.29, -0.71])
+]);
 
 
 // #### Spiral constructor
@@ -55,9 +93,9 @@ const Spiral = function (items = Ωempty) {
 
 
 // #### Spiral prototype
-const P = Spiral.prototype = Object.create(Object.prototype);
-P.type = 'Spiral';
-P.lib = 'entity';
+const P = Spiral.prototype = doCreate();
+P.type = T_SPIRAL;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -132,12 +170,12 @@ D.loopIncrement = function (item) {
 // __drawFromLoop__
 S.drawFromLoop = function (item) {
 
-    this.drawFromLoop = Math.floor(item);
+    this.drawFromLoop = _floor(item);
     this.updateDirty();
 };
 D.drawFromLoop = function (item) {
 
-    this.drawFromLoop = Math.floor(this.drawFromLoop + item);
+    this.drawFromLoop = _floor(this.drawFromLoop + item);
     this.updateDirty();
 };
 
@@ -149,67 +187,40 @@ P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
 
-    let p = 'M0,0';
+    let p = ZERO_PATH;
     p = this.makeSpiralPath();
 
     this.pathDefinition = p;
 };
 
-
-// Magic numbers!
-// + These numbers produce an Archimedian spiral
-// + The first loop has effective dimensions of 2px by 2px
-// + Each additional loop increases the dimensions by 2px
-P.firstTurn = [
-    [0.043, 0, 0.082, -0.035, 0.088, -0.088],
-    [0.007, -0.057, -0.024, -0.121, -0.088, -0.162],
-    [-0.07, -0.045, -0.169, -0.054, -0.265, -0.015],
-    [-0.106, 0.043, -0.194, 0.138, -0.235, 0.265],
-    [-0.044, 0.139, -0.026, 0.3, 0.058, 0.442],
-    [0.091, 0.153, 0.25, 0.267, 0.442, 0.308],
-    [0.206, 0.044, 0.431, -0.001, 0.619, -0.131],
-    [0.2, -0.139, 0.34, -0.361, 0.381, -0.619]
-];
-P.subsequentTurns = [
-    [0, -0.27, -0.11, -0.52, -0.29, -0.71],
-    [-0.19, -0.19, -0.44, -0.29, -0.71, -0.29],
-    [-0.27, 0, -0.52, 0.11, -0.71, 0.29],
-    [-0.19, 0.19, -0.29, 0.44, -0.29, 0.71],
-    [0, 0.27, 0.11, 0.52, 0.29, 0.71],
-    [0.19, 0.19, 0.44, 0.29, 0.71, 0.29],
-    [0.27, 0, 0.52, -0.11, 0.71, -0.29],
-    [0.19, -0.19, 0.29, -0.44, 0.29, -0.71]
-];
-
 // `makeSpiralPath` - internal helper function - called by `cleanSpecies`
 P.makeSpiralPath = function () {
 
-    let loops = Math.floor(this.loops),
+    const loops = _floor(this.loops),
         loopIncrement = this.loopIncrement,
-        drawFromLoop = Math.floor(this.drawFromLoop),
-        x1, y1, x2, y2, x3, y3,
-        sx1, sy1, sx2, sy2, sx3, sy3,
-        firstTurn = this.firstTurn,
-        subsequentTurns = this.subsequentTurns,
+        drawFromLoop = _floor(this.drawFromLoop),
         currentTurn = [];
 
-    for (let i = 0; i < firstTurn.length; i++) {
+    let x1, y1, x2, y2, x3, y3,
+        sx1, sy1, sx2, sy2, sx3, sy3;
 
-        [x1, y1, x2, y2, x3, y3] = firstTurn[i];
+    for (let i = 0, iz = FIRST_TURN.length; i < iz; i++) {
+
+        [x1, y1, x2, y2, x3, y3] = FIRST_TURN[i];
         currentTurn.push([x1 * loopIncrement, y1 * loopIncrement, x2 * loopIncrement, y2 * loopIncrement, x3 * loopIncrement, y3 * loopIncrement]);
     }
 
-    let path = 'm0,0';
+    let path = ZERO_PATH;
 
     for (let j = 0; j < loops; j++) {
 
-        for (let i = 0; i < currentTurn.length; i++) {
+        for (let i = 0, iz = currentTurn.length; i < iz; i++) {
 
             [x1, y1, x2, y2, x3, y3] = currentTurn[i];
 
             if (j >= drawFromLoop) path += `c${x1},${y1} ${x2},${y2} ${x3},${y3}`;
 
-            [sx1, sy1, sx2, sy2, sx3, sy3] = subsequentTurns[i];
+            [sx1, sy1, sx2, sy2, sx3, sy3] = SUBSEQUENT_TURNS[i];
             currentTurn[i] = [x1 + (sx1 * loopIncrement), y1 + (sy1 * loopIncrement), x2 + (sx2 * loopIncrement), y2 + (sy2 * loopIncrement), x3 + (sx3 * loopIncrement), y3 + (sy3 * loopIncrement)];
         }
     }
@@ -221,7 +232,7 @@ P.calculateLocalPathAdditionalActions = function () {
     let [x, y, w, h] = this.localBox,
         scale = this.scale;
 
-    this.pathDefinition = this.pathDefinition.replace('m0,0', `m${-x / scale},${-y / scale}`);
+    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x / scale},${-y / scale}`);
 
     this.pathCalculatedOnce = false;
 
@@ -258,7 +269,7 @@ P.calculateLocalPathAdditionalActions = function () {
 export const makeSpiral = function (items) {
 
     if (!items) return false;
-    items.species = 'spiral';
+    items.species = SPIRAL;
     return new Spiral(items);
 };
 

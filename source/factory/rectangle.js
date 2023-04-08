@@ -40,10 +40,50 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, addStrings, Ωempty } from '../core/utilities.js';
+
+import { 
+    addStrings, 
+    doCreate,
+    mergeOver, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
+
+
+// Local constants
+const ENTITY = 'entity',
+    RADIUS_ARRAY_ALL = ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX', 'radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY'],
+    RADIUS_ARRAY_BOTTOM = ['radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY'],
+    RADIUS_ARRAY_BOTTOM_LEFT = ['radiusBLX', 'radiusBLY'],
+    RADIUS_ARRAY_BOTTOM_LEFT_X = ['radiusBLX'],
+    RADIUS_ARRAY_BOTTOM_LEFT_Y = ['radiusBLY'],
+    RADIUS_ARRAY_BOTTOM_RIGHT = ['radiusBRX', 'radiusBRY'],
+    RADIUS_ARRAY_BOTTOM_RIGHT_X = ['radiusBRX'],
+    RADIUS_ARRAY_BOTTOM_RIGHT_Y = ['radiusBRY'],
+    RADIUS_ARRAY_BOTTOM_X = ['radiusBRX', 'radiusBLX'],
+    RADIUS_ARRAY_BOTTOM_Y = ['radiusBRY', 'radiusBLY'],
+    RADIUS_ARRAY_LEFT = ['radiusTLX', 'radiusTLY', 'radiusBLX', 'radiusBLY'],
+    RADIUS_ARRAY_LEFT_X = ['radiusTLX', 'radiusBLX'],
+    RADIUS_ARRAY_LEFT_Y = ['radiusTLY', 'radiusBLY'],
+    RADIUS_ARRAY_RIGHT = ['radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY'],
+    RADIUS_ARRAY_RIGHT_X = ['radiusTRX', 'radiusBRX'],
+    RADIUS_ARRAY_RIGHT_Y = ['radiusTRY', 'radiusBRY'],
+    RADIUS_ARRAY_TOP = ['radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY'],
+    RADIUS_ARRAY_TOP_LEFT = ['radiusTLX', 'radiusTLY'],
+    RADIUS_ARRAY_TOP_LEFT_X = ['radiusTLX'],
+    RADIUS_ARRAY_TOP_LEFT_Y = ['radiusTLY'],
+    RADIUS_ARRAY_TOP_RIGHT = ['radiusTRX', 'radiusTRY'],
+    RADIUS_ARRAY_TOP_RIGHT_X = ['radiusTRX'],
+    RADIUS_ARRAY_TOP_RIGHT_Y = ['radiusTRY'],
+    RADIUS_ARRAY_TOP_X = ['radiusTLX', 'radiusTRX'],
+    RADIUS_ARRAY_TOP_Y = ['radiusTLY', 'radiusTRY'],
+    RADIUS_ARRAY_X = ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX'],
+    RADIUS_ARRAY_Y = ['radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY'],
+    RECTANGLE = 'rectangle',
+    T_RECTANGLE = 'Rectangle',
+    ZERO_PATH = 'M0,0';
 
 
 // #### Rectangle constructor
@@ -59,9 +99,9 @@ const Rectangle = function (items = Ωempty) {
 
 
 // #### Rectangle prototype
-const P = Rectangle.prototype = Object.create(Object.prototype);
-P.type = 'Rectangle';
-P.lib = 'entity';
+const P = Rectangle.prototype = doCreate();
+P.type = T_RECTANGLE;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -120,219 +160,219 @@ const S = P.setters,
 
 S.radius = function (item) {
 
-    this.setRectHelper(item, ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX', 'radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY']);
+    this.setRectHelper(item, RADIUS_ARRAY_ALL);
 };
 S.radiusX = function (item) {
 
-    this.setRectHelper(item, ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX']);
+    this.setRectHelper(item, RADIUS_ARRAY_X);
 };
 S.radiusY = function (item) {
 
-    this.setRectHelper(item, ['radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY']);
+    this.setRectHelper(item, RADIUS_ARRAY_Y);
 };
 S.radiusT = function (item) {
 
-    this.setRectHelper(item, ['radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY']);
+    this.setRectHelper(item, RADIUS_ARRAY_TOP);
 };
 S.radiusB = function (item) {
 
-    this.setRectHelper(item, ['radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY']);
+    this.setRectHelper(item, RADIUS_ARRAY_BOTTOM);
 };
 S.radiusL = function (item) {
 
-    this.setRectHelper(item, ['radiusTLX', 'radiusTLY', 'radiusBLX', 'radiusBLY']);
+    this.setRectHelper(item, RADIUS_ARRAY_LEFT);
 };
 S.radiusR = function (item) {
 
-    this.setRectHelper(item, ['radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY']);
+    this.setRectHelper(item, RADIUS_ARRAY_RIGHT);
 };
 S.radiusTX = function (item) {
 
-    this.setRectHelper(item, ['radiusTLX', 'radiusTRX']);
+    this.setRectHelper(item, RADIUS_ARRAY_TOP_X);
 };
 S.radiusBX = function (item) {
 
-    this.setRectHelper(item, ['radiusBRX', 'radiusBLX']);
+    this.setRectHelper(item, RADIUS_ARRAY_BOTTOM_X);
 };
 S.radiusLX = function (item) {
 
-    this.setRectHelper(item, ['radiusTLX', 'radiusBLX']);
+    this.setRectHelper(item, RADIUS_ARRAY_LEFT_X);
 };
 S.radiusRX = function (item) {
 
-    this.setRectHelper(item, ['radiusTRX', 'radiusBRX']);
+    this.setRectHelper(item, RADIUS_ARRAY_RIGHT_X);
 };
 S.radiusTY = function (item) {
 
-    this.setRectHelper(item, ['radiusTLY', 'radiusTRY']);
+    this.setRectHelper(item, RADIUS_ARRAY_TOP_Y);
 };
 S.radiusBY = function (item) {
 
-    this.setRectHelper(item, ['radiusBRY', 'radiusBLY']);
+    this.setRectHelper(item, RADIUS_ARRAY_BOTTOM_Y);
 };
 S.radiusLY = function (item) {
 
-    this.setRectHelper(item, ['radiusTLY', 'radiusBLY']);
+    this.setRectHelper(item, RADIUS_ARRAY_LEFT_Y);
 };
 S.radiusRY = function (item) {
 
-    this.setRectHelper(item, ['radiusTRY', 'radiusBRY']);
+    this.setRectHelper(item, RADIUS_ARRAY_RIGHT_Y);
 };
 S.radiusTL = function (item) {
 
-    this.setRectHelper(item, ['radiusTLX', 'radiusTLY']);
+    this.setRectHelper(item, RADIUS_ARRAY_TOP_LEFT);
 };
 S.radiusTR = function (item) {
 
-    this.setRectHelper(item, ['radiusTRX', 'radiusTRY']);
+    this.setRectHelper(item, RADIUS_ARRAY_TOP_RIGHT);
 };
 S.radiusBL = function (item) {
 
-    this.setRectHelper(item, ['radiusBLX', 'radiusBLY']);
+    this.setRectHelper(item, RADIUS_ARRAY_BOTTOM_LEFT);
 };
 S.radiusBR = function (item) {
 
-    this.setRectHelper(item, ['radiusBRX', 'radiusBRY']);
+    this.setRectHelper(item, RADIUS_ARRAY_BOTTOM_RIGHT);
 };
 S.radiusTLX = function (item) {
 
-    this.setRectHelper(item, ['radiusTLX']);
+    this.setRectHelper(item, RADIUS_ARRAY_TOP_LEFT_X);
 };
 S.radiusTLY = function (item) {
 
-    this.setRectHelper(item, ['radiusTLY']);
+    this.setRectHelper(item, RADIUS_ARRAY_TOP_LEFT_Y);
 };
 S.radiusTRX = function (item) {
 
-    this.setRectHelper(item, ['radiusTRX']);
+    this.setRectHelper(item, RADIUS_ARRAY_TOP_RIGHT_X);
 };
 S.radiusTRY = function (item) {
 
-    this.setRectHelper(item, ['radiusTRY']);
+    this.setRectHelper(item, RADIUS_ARRAY_TOP_RIGHT_Y);
 };
 S.radiusBRX = function (item) {
 
-    this.setRectHelper(item, ['radiusBRX']);
+    this.setRectHelper(item, RADIUS_ARRAY_BOTTOM_RIGHT_X);
 };
 S.radiusBRY = function (item) {
 
-    this.setRectHelper(item, ['radiusBRY']);
+    this.setRectHelper(item, RADIUS_ARRAY_BOTTOM_RIGHT_Y);
 };
 S.radiusBLX = function (item) {
 
-    this.setRectHelper(item, ['radiusBLX']);
+    this.setRectHelper(item, RADIUS_ARRAY_BOTTOM_LEFT_X);
 };
 S.radiusBLY = function (item) {
 
-    this.setRectHelper(item, ['radiusBLY']);
+    this.setRectHelper(item, RADIUS_ARRAY_BOTTOM_LEFT_Y);
 };
 D.radius = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX', 'radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_ALL);
 };
 D.radiusX = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_X);
 };
 D.radiusY = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_Y);
 };
 D.radiusT = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_TOP);
 };
 D.radiusB = function (item) {
 
-    this.deltaRectHelper(item, ['radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_BOTTOM);
 };
 D.radiusL = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTLX', 'radiusTLY', 'radiusBLX', 'radiusBLY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_LEFT);
 };
 D.radiusR = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_RIGHT);
 };
 D.radiusTX = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTLX', 'radiusTRX']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_TOP_X);
 };
 D.radiusBX = function (item) {
 
-    this.deltaRectHelper(item, ['radiusBRX', 'radiusBLX']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_BOTTOM_X);
 };
 D.radiusLX = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTLX', 'radiusBLX']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_LEFT_X);
 };
 D.radiusRX = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTRX', 'radiusBRX']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_RIGHT_X);
 };
 D.radiusTY = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTLY', 'radiusTRY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_TOP_Y);
 };
 D.radiusBY = function (item) {
 
-    this.deltaRectHelper(item, ['radiusBRY', 'radiusBLY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_BOTTOM_Y);
 };
 D.radiusLY = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTLY', 'radiusBLY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_LEFT_Y);
 };
 D.radiusRY = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTRY', 'radiusBRY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_RIGHT_Y);
 };
 D.radiusTL = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTLX', 'radiusTLY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_TOP_LEFT);
 };
 D.radiusTR = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTRX', 'radiusTRY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_TOP_RIGHT);
 };
 D.radiusBL = function (item) {
 
-    this.deltaRectHelper(item, ['radiusBLX', 'radiusBLY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_BOTTOM_LEFT);
 };
 D.radiusBR = function (item) {
 
-    this.deltaRectHelper(item, ['radiusBRX', 'radiusBRY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_BOTTOM_RIGHT);
 };
 D.radiusTLX = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTLX']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_TOP_LEFT_X);
 };
 D.radiusTLY = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTLY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_TOP_LEFT_Y);
 };
 D.radiusTRX = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTRX']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_TOP_RIGHT_X);
 };
 D.radiusTRY = function (item) {
 
-    this.deltaRectHelper(item, ['radiusTRY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_TOP_RIGHT_Y);
 };
 D.radiusBRX = function (item) {
 
-    this.deltaRectHelper(item, ['radiusBRX']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_BOTTOM_RIGHT_X);
 };
 D.radiusBRY = function (item) {
 
-    this.deltaRectHelper(item, ['radiusBRY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_BOTTOM_RIGHT_Y);
 };
 D.radiusBLX = function (item) {
 
-    this.deltaRectHelper(item, ['radiusBLX']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_BOTTOM_LEFT_X);
 };
 D.radiusBLY = function (item) {
 
-    this.deltaRectHelper(item, ['radiusBLY']);
+    this.deltaRectHelper(item, RADIUS_ARRAY_BOTTOM_LEFT_Y);
 };
 
 S.offshootA = function (item) {
@@ -423,7 +463,7 @@ P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
 
-    let p = 'M0,0';
+    let p = ZERO_PATH;
     p = this.makeRectanglePath();
 
     this.pathDefinition = p;
@@ -435,23 +475,24 @@ P.cleanDimensions = function () {
 
     this.dirtyDimensions = false;
 
-    let host = this.getHost();
+    const host = this.getHost();
 
     if (host) {
 
-        let hostDims = (host.currentDimensions) ? host.currentDimensions : [host.w, host.h];
-
-        let w = this.rectangleWidth,
-            h = this.rectangleHeight,
+        const hostDims = (host.currentDimensions) ? host.currentDimensions : [host.w, host.h],
             oldW = this.currentRectangleWidth || 1,
             oldH = this.currentRectangleHeight || 1;
+
+        let w = this.rectangleWidth,
+            h = this.rectangleHeight;
 
         if (w.substring) w = (parseFloat(w) / 100) * hostDims[0];
 
         if (h.substring) h = (parseFloat(h) / 100) * hostDims[1];
 
-        let mimic = this.mimic,
-            mimicDims;
+        const mimic = this.mimic;
+        
+        let mimicDims;
 
         if (mimic && mimic.name && this.useMimicDimensions) mimicDims = mimic.currentDimensions;
 
@@ -486,10 +527,10 @@ P.makeRectanglePath = function () {
 
     if (this.dirtyDimensions) this.cleanDimensions()
 
-    let width = this.currentRectangleWidth,
+    const width = this.currentRectangleWidth,
         height = this.currentRectangleHeight;
 
-    let A = this.offshootA,
+    const A = this.offshootA,
         B = this.offshootB;
 
     let _tlx = this.radiusTLX,
@@ -513,7 +554,7 @@ P.makeRectanglePath = function () {
         _bly = (_bly.substring) ? (parseFloat(_bly) / 100) * height : _bly;
     }
 
-    let myData = 'm0,0';
+    let myData = ZERO_PATH;
 
     if (width - _tlx - _trx !== 0) myData += `h${width - _tlx - _trx}`;
 
@@ -540,7 +581,7 @@ P.calculateLocalPathAdditionalActions = function () {
 
     let [x, y, w, h] = this.localBox;
 
-    this.pathDefinition = this.pathDefinition.replace('m0,0', `m${-x},${-y}`);
+    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x},${-y}`);
 
     this.pathCalculatedOnce = false;
 
@@ -611,7 +652,7 @@ P.calculateLocalPathAdditionalActions = function () {
 export const makeRectangle = function (items) {
 
     if (!items) return false;
-    items.species = 'rectangle';
+    items.species = RECTANGLE;
     return new Rectangle(items);
 };
 

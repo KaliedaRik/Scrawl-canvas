@@ -40,12 +40,34 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, Ωempty } from '../core/utilities.js';
 
-import { requestVector, releaseVector } from './vector.js';
+import { 
+    doCreate,
+    mergeOver, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    releaseVector, 
+    requestVector, 
+} from './vector.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
+
+import { 
+    _max,
+    _min,
+    _abs,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const ENTITY = 'entity',
+    POLYGON = 'polygon',
+    T_POLYGON = 'Polygon',
+    ZERO_PATH = 'M0,0',
+    ZERO_STR = '';
 
 
 // #### Polygon constructor
@@ -57,9 +79,9 @@ const Polygon = function (items = Ωempty) {
 
 
 // #### Polygon prototype
-const P = Polygon.prototype = Object.create(Object.prototype);
-P.type = 'Polygon';
-P.lib = 'entity';
+const P = Polygon.prototype = doCreate();
+P.type = T_POLYGON;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -153,7 +175,7 @@ P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
 
-    let p = 'M0,0';
+    let p = ZERO_PATH;
     p = this.makePolygonPath();
 
     this.pathDefinition = p;
@@ -164,15 +186,16 @@ P.cleanSpecies = function () {
 P.makePolygonPath = function () {
 
     // `radius` attribute is deprecated!
-    let sideLength = this.sideLength || this.radius,
+    const sideLength = this.sideLength || this.radius,
         sides = this.sides,
         turn = 360 / sides,
-        myPath = ``,
-        yPts = [],
-        currentY = 0,
+        yPts = [];
+
+    let currentY = 0,
+        myPath = ZERO_STR,
         myMax, myMin, myYoffset;
 
-    let v = requestVector({x: 0, y: -sideLength});
+    const v = requestVector({x: 0, y: -sideLength});
 
     for (let i = 0; i < sides; i++) {
 
@@ -184,9 +207,9 @@ P.makePolygonPath = function () {
 
     releaseVector(v);
 
-    myMin = Math.min(...yPts);
-    myMax = Math.max(...yPts);
-    myYoffset = (((Math.abs(myMin) + Math.abs(myMax)) - sideLength) / 2).toFixed(1);
+    myMin = _min(...yPts);
+    myMax = _max(...yPts);
+    myYoffset = (((_abs(myMin) + _abs(myMax)) - sideLength) / 2).toFixed(1);
 
     myPath = `m0,${myYoffset}l${myPath}z`;
 
@@ -219,7 +242,7 @@ P.makePolygonPath = function () {
 export const makePolygon = function (items) {
 
     if (!items) return false;
-    items.species = 'polygon';
+    items.species = POLYGON;
     return new Polygon(items);
 };
 

@@ -40,7 +40,6 @@ import {
 
 import { 
     makeState, 
-    stateKeys, 
 } from './state.js';
 
 import { 
@@ -68,6 +67,7 @@ import {
     _piHalf,
     _sin,
     _sqrt,
+    STATE_KEYS, 
 } from '../core/shared-vars.js';
 
 
@@ -358,7 +358,7 @@ P.set = function (items = Ωempty) {
 
             if (key && key != NAME && value != null) {
 
-                if (!stateKeys.includes(key)) {
+                if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 
@@ -406,7 +406,7 @@ P.setDelta = function (items = Ωempty) {
 
             if (key && key != NAME && value != null) {
 
-                if (!stateKeys.includes(key)) {
+                if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 

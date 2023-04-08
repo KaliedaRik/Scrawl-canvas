@@ -40,10 +40,20 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, Ωempty } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    mergeOver, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
+
+
+// Local constants
+const T_SHAPE = 'Shape',
+    ENTITY = 'entity';
 
 
 // #### Shape constructor
@@ -55,9 +65,9 @@ const Shape = function (items = Ωempty) {
 
 
 // #### Shape prototype
-const P = Shape.prototype = Object.create(Object.prototype);
-P.type = 'Shape';
-P.lib = 'entity';
+const P = Shape.prototype = doCreate();
+P.type = T_SHAPE;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -112,7 +122,7 @@ P.cleanSpecies = function () {
 
 P.cleanStampHandlePositionsAdditionalActions = function () {
 
-    let box = this.localBox,
+    const box = this.localBox,
     	stampHandle = this.currentStampHandlePosition;
 
     stampHandle[0] += box[0];

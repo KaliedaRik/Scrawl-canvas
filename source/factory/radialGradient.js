@@ -16,10 +16,29 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, addStrings, isa_number, pushUnique, Ωempty } from '../core/utilities.js';
+
+import { 
+    addStrings, 
+    doCreate,
+    isa_number, 
+    mergeOver, 
+    pushUnique, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
+
+
+// Local constants
+const BLANK = 'rgb(0 0 0 / 0)',
+    BOTTOM = 'bottom',
+    CENTER = 'center',
+    LEFT = 'left',
+    RIGHT = 'right',
+    STYLES = 'styles',
+    T_RADIAL_GRADIENT = 'RadialGradient',
+    TOP = 'top';
 
 
 // #### RadialGradient constructor
@@ -31,10 +50,9 @@ const RadialGradient = function (items = Ωempty) {
 
 
 // #### RadialGradient prototype
-const P = RadialGradient.prototype = Object.create(Object.prototype);
-
-P.type = 'RadialGradient';
-P.lib = 'styles';
+const P = RadialGradient.prototype = doCreate();
+P.type = T_RADIAL_GRADIENT;
+P.lib = STYLES;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -142,15 +160,15 @@ P.cleanRadius = function (width) {
 
             switch(val){
 
-                case 'top' :
-                case 'left' :
+                case TOP :
+                case LEFT :
                     return 0;
 
-                case 'bottom' :
-                case 'right' :
+                case BOTTOM :
+                case RIGHT :
                     return len;
 
-                case 'center' :
+                case CENTER :
                     return len / 2;
 
                 default :
@@ -181,25 +199,26 @@ P.buildStyle = function (cell) {
             return this.addStopsToGradient(gradient, this.paletteStart, this.paletteEnd, this.cyclePalette);
         }
     }
-    return 'rgb(0 0 0 / 0)';
+    return BLANK;
 };
 
 // `updateGradientArgs` - internal function
 P.updateGradientArgs = function (x, y) {
 
-    let gradientArgs = this.gradientArgs,
+    const gradientArgs = this.gradientArgs,
         currentStart = this.currentStart,
         currentEnd = this.currentEnd,
-        sr = this.currentStartRadius,
-        er = this.currentEndRadius;
+        sr = this.currentStartRadius;
+    
+    let er = this.currentEndRadius;
 
-    let sx = currentStart[0] + x,
+    const sx = currentStart[0] + x,
         sy = currentStart[1] + y,
         ex = currentEnd[0] + x,
         ey = currentEnd[1] + y;
 
     // check to correct situation where coordinates represent a '0 x 0' box - which will cause errors in some browsers
-    if (sx === ex && sy === ey && sr === er) er++;
+    if (sx == ex && sy == ey && sr == er) er++;
 
     gradientArgs.length = 0;
     gradientArgs.push(sx, sy, sr, ex, ey, er);

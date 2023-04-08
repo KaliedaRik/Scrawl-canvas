@@ -17,11 +17,34 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, Ωempty, λnull, λthis, xt, isa_fn } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    isa_fn, 
+    mergeOver, 
+    xt, 
+    λnull, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
+
+import { 
+    _entries,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const _2D = '2d',
+    ASSET = 'asset',
+    CANVAS = 'canvas',
+    T_COORDINATE = 'Coordinate',
+    T_QUATERNION = 'Quaternion',
+    T_RAW_ASSET = 'RawAsset',
+    T_VECTOR = 'Vector';
 
 
 // #### RawAsset constructor
@@ -36,7 +59,7 @@ const RawAsset = function (items = Ωempty) {
 
     this.updateSource = λnull;
 
-    let keytypes = items.keytypes || {};
+    const keytypes = items.keytypes || {};
 
     if (items.userAttributes) {
 
@@ -52,12 +75,12 @@ const RawAsset = function (items = Ωempty) {
 
     this.set(items);
 
-    let cell = document.createElement('canvas');
+    const cell = document.createElement(CANVAS);
     cell.width = 0;
     cell.height = 0;
 
     this.element = cell;
-    this.engine = cell.getContext('2d', {willReadFrequently: true});
+    this.engine = cell.getContext(_2D, {willReadFrequently: true});
 
     if (items.subscribe) this.subscribers.push(items.subscribe);
 
@@ -66,10 +89,9 @@ const RawAsset = function (items = Ωempty) {
 
 
 // #### RawAsset prototype
-const P = RawAsset.prototype = Object.create(Object.prototype);
-
-P.type = 'RawAsset';
-P.lib = 'asset';
+const P = RawAsset.prototype = doCreate();
+P.type = T_RAW_ASSET;
+P.lib = ASSET;
 P.isArtefact = false;
 P.isAsset = true;
 
@@ -120,7 +142,7 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
+const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
@@ -156,7 +178,7 @@ P.checkSource = function (width, height) {
 
     if (!this.source) this.source = this.element;
 
-    let source = this.source;
+    const source = this.source;
 
     if (source) {
 
@@ -171,7 +193,7 @@ P.checkSource = function (width, height) {
 
         this.sourceLoaded = true;
 
-        if (!this.sourceNaturalWidth || !this.sourceNaturalHeight || this.sourceNaturalWidth !== width || this.sourceNaturalHeight !== height) {
+        if (!this.sourceNaturalWidth || !this.sourceNaturalHeight || this.sourceNaturalWidth != width || this.sourceNaturalHeight != height) {
 
             this.sourceNaturalWidth = source.width;
             this.sourceNaturalHeight = source.height;
@@ -195,7 +217,7 @@ P.subscribeAction = function (sub = {}) {
 // `addAttribute`, `removeAttribute` - we can use these functions to add and remove other attributes to the RawAsset object.
 P.addAttribute = function (items = Ωempty) {
 
-    let {key, defaultValue, setter, deltaSetter, getter} = items;
+    const {key, defaultValue, setter, deltaSetter, getter} = items;
 
     if (key && key.substring) {
 
@@ -225,19 +247,19 @@ P.removeAttribute = function (key) {
 // `initializeAttributes` - internal function called by the constructor.
 P.initializeAttributes = function (types) {
 
-    for (let [key, value] of Object.entries(types)) {
+    for (let [key, value] of _entries(types)) {
 
         switch (value) {
 
-            case 'Quaternion' :
+            case T_QUATERNION :
                 this[key] = makeQuaternion();
                 break;
 
-            case 'Vector' :
+            case T_VECTOR :
                 this[key] = makeVector();
                 break;
 
-            case 'Coordinate' :
+            case T_COORDINATE :
                 this[key] = makeCoordinate();
                 break;
         }

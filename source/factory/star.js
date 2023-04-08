@@ -40,12 +40,33 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, Ωempty } from '../core/utilities.js';
 
-import { requestVector, releaseVector } from './vector.js';
+import { 
+    doCreate,
+    mergeOver, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    requestVector, 
+    releaseVector, 
+} from './vector.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
+
+import { 
+    _min,
+    _abs,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const ENTITY = 'entity',
+    STAR = 'star',
+    T_STAR = 'Star',
+    ZERO_PATH = 'M0,0',
+    ZERO_STR = '';
 
 
 // #### Star constructor
@@ -57,9 +78,9 @@ const Star = function (items = Ωempty) {
 
 
 // #### Star prototype
-const P = Star.prototype = Object.create(Object.prototype);
-P.type = 'Star';
-P.lib = 'entity';
+const P = Star.prototype = doCreate();
+P.type = T_STAR;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -162,7 +183,7 @@ P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
 
-    let p = 'M0,0';
+    let p = ZERO_PATH;
     p = this.makeStarPath();
 
     this.pathDefinition = p;
@@ -172,35 +193,31 @@ P.cleanSpecies = function () {
 // `makeStarPath` - internal helper function - called by `cleanSpecies`
 P.makeStarPath = function () {
 
-    let points = this.points,
+    const points = this.points,
         twist = this.twist,
         radius1 = this.radius1,
         radius2 = this.radius2,
         turn = 360 / points,
-        xPts = [],
-        currentX, currentY, x, y,
+        xPts = [];
+
+    let currentX, currentY, x, y,
         myMin, myXoffset, myYoffset, i,
-        myPath = '';
+        myPath = ZERO_STR;
 
     if (radius1.substring || radius2.substring) {
 
-        // let here = this.getHere();
-
-        // radius1 = (radius1.substring) ? (parseFloat(radius1) / 100) * here.w : radius1;
-        // radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * here.w : radius2;
-
-        let host = this.getHost();
+        const host = this.getHost();
 
         if (host) {
 
-            let [hW, hH] = host.currentDimensions;
+            const [hW, hH] = host.currentDimensions;
 
             radius1 = (radius1.substring) ? (parseFloat(radius1) / 100) * hW : radius1;
             radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * hW : radius2;
         } 
     }
 
-    let v1 = requestVector({x: 0, y: -radius1}),
+    const v1 = requestVector({x: 0, y: -radius1}),
         v2 = requestVector({x: 0, y: -radius2});
 
     currentX = v1.x;
@@ -240,8 +257,8 @@ P.makeStarPath = function () {
     releaseVector(v1);
     releaseVector(v2);
 
-    myMin = Math.min(...xPts);
-    myXoffset = Math.abs(myMin).toFixed(1);
+    myMin = _min(...xPts);
+    myXoffset = _abs(myMin).toFixed(1);
 
     myPath = `m${myXoffset},0l${myPath}z`;
 
@@ -280,7 +297,7 @@ P.makeStarPath = function () {
 export const makeStar = function (items) {
 
     if (!items) return false;
-    items.species = 'star';
+    items.species = STAR;
     return new Star(items);
 };
 

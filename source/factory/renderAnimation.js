@@ -23,14 +23,50 @@
 
 
 // #### Imports
-import { animation, artefact, constructors } from '../core/library.js';
-import { clear, compile, show } from '../core/display-cycle.js';
+import { 
+    animation, 
+    artefact, 
+    constructors, 
+} from '../core/library.js';
+
+import { 
+    clear, 
+    compile, 
+    show, 
+} from '../core/display-cycle.js';
+
 import { makeAnimationObserver } from '../core/events.js';
-import { mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty, isa_boolean } from '../core/utilities.js';
-import { animate, resortAnimations } from '../core/animationloop.js';
+
+import { 
+    doCreate,
+    isa_boolean, 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    xt, 
+    λnull, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
+
+import { 
+    animate, 
+    resortAnimations, 
+} from '../core/animationloop.js';
+
 import { forceUpdate } from '../core/system-flags.js';
 
 import baseMix from '../mixin/base.js';
+
+import { 
+    _isArray,
+    _assign,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const T_RENDER_ANIMATION = 'RenderAnimation',
+    ANIMATION = 'animation';
 
 
 // #### RenderAnimation constructor
@@ -49,13 +85,13 @@ const RenderAnimation = function (items = Ωempty) {
     };
 
     // Handle cases where we have multiple targets - each needs its own render animation
-    else if (Array.isArray(items.target)) {
+    else if (_isArray(items.target)) {
 
-        let multiReturn = []
+        const multiReturn = [];
 
         items.target.forEach(tempTarget => {
 
-            let tempItems = Object.assign({}, items);
+            let tempItems = _assign({}, items);
             tempItems.name = `${tempItems.name}_${tempTarget.name}`;
             tempItems.target = tempTarget;
             multiReturn.push(new RenderAnimation(tempItems));
@@ -148,10 +184,9 @@ const RenderAnimation = function (items = Ωempty) {
 
 
 // #### RenderAnimation prototype
-const P = RenderAnimation.prototype = Object.create(Object.prototype);
-
-P.type = 'RenderAnimation';
-P.lib = 'animation';
+const P = RenderAnimation.prototype = doCreate();
+P.type = T_RENDER_ANIMATION;
+P.lib = ANIMATION;
 P.isArtefact = false;
 P.isAsset = false;
 

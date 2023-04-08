@@ -35,11 +35,41 @@
 
 
 // #### Imports
-import { constructors, group, stack, element, artefact, canvas, purge } from '../core/library.js';
-import { mergeOver, pushUnique, isa_dom, isa_canvas, removeItem, xt, addStrings, λthis, λnull, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    canvas, 
+    constructors, 
+    element, 
+    group, 
+    purge, 
+    stack, 
+} from '../core/library.js';
+
+import { 
+    addStrings, 
+    doCreate,
+    isa_canvas, 
+    isa_dom, 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    xt, 
+    λnull, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
+
 import { domShow } from '../core/document.js';
-import { rootElements, setRootElementsSort } from "../core/document-rootElements.js";
-import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
+
+import { 
+    rootElements, 
+    setRootElementsSort, 
+} from "../core/document-rootElements.js";
+
+import { 
+    currentCorePosition, 
+    uiSubscribedElements, 
+} from '../core/userInteraction.js';
 
 import { makeGroup } from './group.js';
 import { makeElement } from './element.js';
@@ -49,6 +79,29 @@ import baseMix from '../mixin/base.js';
 import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/displayShape.js';
+
+import { 
+    _entries,
+    _isArray,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const $DATA_SCRAWL_STACK = '[data-scrawl-stack]',
+    $SCRIPT = 'SCRIPT',
+    ABSOLUTE = 'absolute',
+    BORDER_BOX = 'border-box',
+    DATA_SCRAWL_GROUP = 'data-scrawl-group',
+    DATA_SCRAWL_STACK = 'data-scrawl-stack',
+    DIV = 'div',
+    NAME = 'name',
+    PC50 = '50%',
+    RELATIVE = 'relative',
+    ROOT = 'root',
+    STACK = 'stack',
+    SUBSCRIBE = 'subscribe',
+    T_STACK = 'Stack',
+    ZERO_STR = '';
 
 
 // #### Stack constructor
@@ -69,8 +122,8 @@ const Stack = function (items = Ωempty) {
     this.here = {};
     this.perspective = {
 
-        x: '50%',
-        y: '50%',
+        x: PC50,
+        y: PC50,
         z: 0
     };
     this.dirtyPerspective = true;
@@ -102,7 +155,7 @@ const Stack = function (items = Ωempty) {
             this.isResponsive = true;
         }
 
-        if (el.getAttribute('data-scrawl-group') === 'root') {
+        if (el.getAttribute(DATA_SCRAWL_GROUP) == ROOT) {
 
             pushUnique(rootElements, this.name);
             setRootElementsSort();
@@ -113,9 +166,9 @@ const Stack = function (items = Ωempty) {
 
 
 // #### Stack prototype
-const P = Stack.prototype = Object.create(Object.prototype);
-P.type = 'Stack';
-P.lib = 'stack';
+const P = Stack.prototype = doCreate();
+P.type = T_STACK;
+P.lib = STACK;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -145,11 +198,11 @@ displayMix(P);
 const defaultAttributes = {
 
 // __position__, __perspective__ - while most of the Stack wrapper's DOM element's attributes are handled through CSS, Scrawl-canvas takes control of some positioning-related attributes. Most of these are defined in the [dom mixin](../mixin/dom.html) - but the position and perspective attributes are managed in this module
-    position: 'relative',
+    position: RELATIVE,
     perspective: null,
 
 // __trackHere__ 
-    trackHere: 'subscribe',
+    trackHere: SUBSCRIBE,
 
 // TODO: This is all about a mad idea we may have for making stacks 'responsive' to viewport changes. It needs a lot more thinking through. Search on 'isResponsive' to find the relevant function below
     isResponsive: false,
@@ -184,7 +237,7 @@ P.factoryKill = function () {
     // Groups
     if (group[myname]) group[myname].kill();
 
-    Object.entries(artefact).forEach(([name, art]) => {
+    _entries(artefact).forEach(([name, art]) => {
 
         if (art.host === myname) art.kill();
     });
@@ -411,7 +464,7 @@ P.addExistingDomElements = function (search) {
                     domElement: el,
                     group: this.name,
                     host: this.name,
-                    position: 'absolute',
+                    position: ABSOLUTE,
                     setInitialDimensions: true,
                 });
 
@@ -431,13 +484,13 @@ P.addNewElement = function (items) {
     if (items && items.tag) {
 
         items.domElement = document.createElement(items.tag);
-        items.domElement.setAttribute('data-scrawl-group', this.name);
+        items.domElement.setAttribute(DATA_SCRAWL_GROUP, this.name);
         if (!xt(items.group)) items.group = this.name;
         items.host = this.name;
 
-        if (!items.position) items.position = 'absolute';
+        if (!items.position) items.position = ABSOLUTE;
 
-        if (items.dimensions && Array.isArray(items.dimensions)) {
+        if (items.dimensions && _isArray(items.dimensions)) {
 
             items.width = items.dimensions[0] || 100;
             items.height = items.dimensions[1] || 100;
@@ -446,11 +499,11 @@ P.addNewElement = function (items) {
         if (!xt(items.width)) items.width = 100;
         if (!xt(items.height)) items.height = 100;
 
-        let myElement = makeElement(items);
+        const myElement = makeElement(items);
 
         if (myElement && myElement.domElement) {
 
-            if (!xt(items.boxSizing)) myElement.domElement.style.boxSizing = 'border-box';
+            if (!xt(items.boxSizing)) myElement.domElement.style.boxSizing = BORDER_BOX;
 
             this.domElement.appendChild(myElement.domElement);
         }
@@ -475,7 +528,7 @@ constructors.Stack = Stack;
 // `Exported function` (to modules). Parse the DOM, looking for all elements that have been given a __data-stack__ attribute; then create __Stack__ artefact wrappers for each of them. 
 //
 // This function will also create wrappers for all __direct child elements__ (one level down) within the stack, and create appropriate wrappers (Stack, Canvas, Element) for them.
-export const getStacks = function (query = '[data-scrawl-stack]') {
+export const getStacks = function (query = $DATA_SCRAWL_STACK) {
 
     document.querySelectorAll(query).forEach(el => addInitialStackElement(el));
 };
@@ -483,15 +536,15 @@ export const getStacks = function (query = '[data-scrawl-stack]') {
 // Create a __stack__ artefact wrapper for a given stack element.
 const addInitialStackElement = function (el) {
 
-    let mygroup = el.getAttribute('data-scrawl-group'),
-        myname = el.id || el.getAttribute('name'),
-        position = 'absolute';
+    let mygroup = el.getAttribute(DATA_SCRAWL_GROUP),
+        myname = el.id || el.getAttribute(NAME),
+        position = ABSOLUTE;
 
     if (!mygroup) {
 
-        el.setAttribute('data-scrawl-group', 'root');
-        mygroup = 'root';
-        position = 'relative';
+        el.setAttribute(DATA_SCRAWL_GROUP, ROOT);
+        mygroup = ROOT;
+        position = RELATIVE;
     }
 
     if (!myname) {
@@ -500,13 +553,13 @@ const addInitialStackElement = function (el) {
         el.id = myname;
     }
 
-    let mystack = makeStack({
+    const mystack = makeStack({
         name: myname,
         domElement: el,
         group: mygroup,
         host: mygroup,
         position: position,
-        setInitialDimensions: true
+        setInitialDimensions: true,
     });
 
     processNewStackChildren(el, myname);
@@ -523,7 +576,7 @@ const processNewStackChildren = function (el, name) {
     // Only go down one level of hierarchy here; stacks don't do hierarchies, only interested in knowing about immediate child elements
     Array.from(el.children).forEach(child => {
     
-        if (child.getAttribute('data-scrawl-stack') == null && !isa_canvas(child) && child.tagName !== 'SCRIPT') {
+        if (child.getAttribute(DATA_SCRAWL_STACK) == null && !isa_canvas(child) && child.tagName != $SCRIPT) {
 
             let dims = child.getBoundingClientRect(),
                 computed = window.getComputedStyle(child);
@@ -532,17 +585,17 @@ const processNewStackChildren = function (el, name) {
 
             y = (!y) ? dims.top - hostDims.top : y;
 
-            let args = {
-                name: child.id || child.getAttribute('name'),
+            const args = {
+                name: child.id || child.getAttribute(NAME),
                 domElement: child,
                 group: name,
                 host: name,
-                position: 'absolute',
+                position: ABSOLUTE,
                 width: dims.width,
                 height: dims.height,
                 startX: dims.left - hostDims.left,
                 startY: y,
-                classes: (child.className) ? child.className : '',
+                classes: (child.className) ? child.className : ZERO_STR,
             };
 
             y += yHeight + dims.height;
@@ -551,7 +604,7 @@ const processNewStackChildren = function (el, name) {
         }
 
         // No need to worry about processing child stacks - they'll already be in the list of stacks to be processed
-        else child.setAttribute('data-scrawl-group', name);
+        else child.setAttribute(DATA_SCRAWL_GROUP, name);
     });
 };
 
@@ -564,7 +617,7 @@ export const addStack = function (items = Ωempty) {
 
     // define variables
     let el, host, hostinscrawl, mystack, mygroup, name,
-        position = 'absolute',
+        position = ABSOLUTE,
         newElement = false;
 
     // get, or generate a new, stack-to-be element
@@ -573,7 +626,7 @@ export const addStack = function (items = Ωempty) {
     else {
 
         newElement = true;
-        el = document.createElement('div');
+        el = document.createElement(DIV);
     }
 
     // get element's host (parent-to-be) element
@@ -591,27 +644,27 @@ export const addStack = function (items = Ωempty) {
     if (xt(items.height)) el.style.height = (items.height.toFixed) ? `${items.height}px` : items.height;
 
     // make sure the stack-to-be element has an id attribute
-    name = items.name || el.id || el.getAttribute('name') || '';
+    name = items.name || el.id || el.getAttribute(NAME) || ZERO_STR;
     if (!name) name = generateUniqueString();
     el.id = name;
 
     // set the 'data-scrawl-stack' attribute on the stack-to-be element
-    el.setAttribute('data-scrawl-stack', 'data-scrawl-stack');
+    el.setAttribute(DATA_SCRAWL_STACK, DATA_SCRAWL_STACK);
 
     // determine whether the parent element is already known to Scrawl-canvas - affects the stack-to-be element's group 
-    if (host && host.getAttribute('data-scrawl-stack') != null) {
+    if (host && host.getAttribute(DATA_SCRAWL_STACK) != null) {
 
         hostinscrawl = artefact[host.id];
 
-        mygroup = (hostinscrawl) ? hostinscrawl.name : 'root';
+        mygroup = (hostinscrawl) ? hostinscrawl.name : ROOT;
     }
-    else mygroup = 'root';
+    else mygroup = ROOT;
 
     // set the 'data-scrawl-group' attribute on the stack-to-be element
-    el.setAttribute('data-scrawl-group', mygroup);
+    el.setAttribute(DATA_SCRAWL_GROUP, mygroup);
 
     // determine what the stack-to-be element's position style attribute will be
-    if (mygroup === 'root') position = 'relative';
+    if (mygroup == ROOT) position = RELATIVE;
 
     // add (or move) the stack-to-be element to/in the DOM
     if (!el.parentElement || host.id !== el.parentElement.id) host.appendChild(el);
@@ -650,7 +703,7 @@ export const addStack = function (items = Ωempty) {
 // `Exported function` (to modules and scrawl object). Parse the DOM, looking for a specific element; then create a __Stack__ artefact wrapper for it.
 export const getStack = function (search) {
 
-    let el = document.querySelector(`#${search}`);
+    const el = document.querySelector(`#${search}`);
 
     const s = stack[search];
 

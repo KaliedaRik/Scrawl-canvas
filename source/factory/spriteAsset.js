@@ -14,10 +14,33 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, isa_obj, λnull, λthis, Ωempty } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    isa_obj, 
+    mergeOver, 
+    λnull, 
+    λthis, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
+
+import { 
+    _isArray,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const $JSON = '.json',
+    ANONYMOUS = 'anonymous',
+    ASSET = 'asset',
+    BLOCK = 'block',
+    IMG = 'img',
+    NONE = 'none',
+    T_SPRITE = 'Sprite',
+    ZERO_STR = '';
 
 
 // #### SpriteAsset constructor
@@ -30,9 +53,9 @@ const SpriteAsset = function (items = Ωempty) {
 
 
 // #### SpriteAsset prototype
-const P = SpriteAsset.prototype = Object.create(Object.prototype);
-P.type = 'Sprite';
-P.lib = 'asset';
+const P = SpriteAsset.prototype = doCreate();
+P.type = T_SPRITE;
+P.lib = ASSET;
 P.isArtefact = false;
 P.isAsset = true;
 
@@ -86,11 +109,11 @@ S.source = function (items = []) {
 
         if (!this.sourceHold) this.sourceHold = {};
 
-        let hold = this.sourceHold;
+        const hold = this.sourceHold;
 
         items.forEach(item => {
 
-            let name = item.id || item.name;
+            const name = item.id || item.name;
 
             if (name) hold[name] = item;
         })
@@ -154,7 +177,7 @@ export const settableSpriteAssetAtributes = [];
 // Note also that the __default__ track is mandatory, and should consist of at least one frame.
 export const importSprite = function (...args) {
 
-    let reg = /.*\/(.*?)\./,
+    const reg = /.*\/(.*?)\./,
         fileTlas = /\.(jpeg|jpg|png|gif|webp|svg|JPEG|JPG|PNG|GIF|WEBP|SVG)/,
         results = [];
 
@@ -170,11 +193,11 @@ export const importSprite = function (...args) {
 
             let match = reg.exec(item);
 
-            name = (match && match[1]) ? match[1] : '';
+            name = (match && match[1]) ? match[1] : ZERO_STR;
             urls = [item];
-            className = '';
+            className = ZERO_STR;
             visibility = false;
-            manifest = item.replace(fileTlas, '.json');
+            manifest = item.replace(fileTlas, $JSON);
 
             flag = true;
         }
@@ -183,11 +206,11 @@ export const importSprite = function (...args) {
             if (!isa_obj(item) || !item.imageSrc || !item.manifestSrc) results.push(false);
             else {
 
-                name = item.name || '';
+                name = item.name || ZERO_STR;
 
-                urls = Array.isArray(item.imageSrc) ? item.imageSrc : [item.imageSrc];
+                urls = _isArray(item.imageSrc) ? item.imageSrc : [item.imageSrc];
                 manifest = item.manifestSrc;
-                className = item.className || '';
+                className = item.className || ZERO_STR;
                 visibility = item.visibility || false;
                 parent = document.querySelector(item.parent);
 
@@ -197,7 +220,7 @@ export const importSprite = function (...args) {
 
         if (flag) {
 
-            let image = makeSpriteAsset({
+            const image = makeSpriteAsset({
                 name: name,
             });
 
@@ -208,31 +231,32 @@ export const importSprite = function (...args) {
                 fetch(manifest)
                 .then(response => {
 
-                    if (response.status !== 200) throw new Error('Failed to load manifest');
+                    if (response.status != 200) throw new Error('Failed to load manifest');
                     return response.json();
                 })
                 .then(jsonString => image.manifest = jsonString)
                 .catch(err => console.log(err.message));
             }
 
-            let imgArray = [];
+            const imgArray = [];
 
             urls.forEach(url => {
 
-                let img = document.createElement('img'),
-                    filename, match;
+                const img = document.createElement(IMG);
+                
+                let filename, match;
 
                 if (fileTlas.test(url)) {
 
                     match = reg.exec(url);
-                    filename = (match && match[1]) ? match[1] : '';
+                    filename = (match && match[1]) ? match[1] : ZERO_STR;
                 }
 
                 img.name = filename || name;
                 img.className = className;
-                img.crossorigin = 'anonymous';
+                img.crossorigin = ANONYMOUS;
 
-                img.style.display = (visibility) ? 'block' : 'none';
+                img.style.display = (visibility) ? BLOCK : NONE;
 
                 if (parent) parent.appendChild(img);
                 
@@ -251,6 +275,7 @@ export const importSprite = function (...args) {
     });
     return results;
 };
+
 
 // TODO: Scrawl-canvas does not yet support importing spritesheets defined in the web page HTML code
 

@@ -33,13 +33,55 @@
 
 
 // #### Imports
-import { constructors, artefact, particle } from '../core/library.js';
-import { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem, correctForZero, Ωempty } from '../core/utilities.js';
+import { 
+    artefact, 
+    constructors, 
+    particle, 
+} from '../core/library.js';
+
+import { 
+    correctForZero, 
+    doCreate,
+    isa_boolean, 
+    isa_obj, 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    xt, 
+    xta, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
+
+import { 
+    _floor,
+    _isArray,
+    _keys,
+    _parse,
+    _pow,
+    _sqrt,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const BOTTOM = 'bottom',
+    CENTER = 'center',
+    ENTITY = 'entity',
+    LEFT = 'left',
+    MOUSE = 'mouse',
+    PARTICLE = 'particle',
+    PINS = 'pins',
+    PIVOT = 'pivot',
+    POLYLINE = 'polyline',
+    RIGHT = 'right',
+    START = 'start',
+    T_POLYLINE = 'Polyline',
+    TOP = 'top',
+    ZERO_PATH = 'M0,0';
 
 
 // #### Polyline constructor
@@ -56,9 +98,9 @@ const Polyline = function (items = Ωempty) {
 
 
 // #### Polyline prototype
-const P = Polyline.prototype = Object.create(Object.prototype);
-P.type = 'Polyline';
-P.lib = 'entity';
+const P = Polyline.prototype = doCreate();
+P.type = T_POLYLINE;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -116,21 +158,21 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 P.finalizePacketOut = function (copy, items) {
 
-    let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+    const stateCopy = _parse(this.state.saveAsPacket(items))[3];
     copy = mergeOver(copy, stateCopy);
 
     copy = this.handlePacketAnchor(copy, items);
 
-    Object.keys(copy).forEach(key => {
+    _keys(copy).forEach(key => {
 
-        if (key === 'pins') {
+        if (key == PINS) {
 
-            let temp = [];
+            const temp = [];
 
             copy.pins.forEach(pin => {
 
                 if (isa_obj(pin)) temp.push(pin.name);
-                else if (Array.isArray(pin)) temp.push([].concat(pin));
+                else if (_isArray(pin)) temp.push([].concat(pin));
                 else temp.push(pin);
             });
             copy.pins = temp;
@@ -164,7 +206,7 @@ S.pins = function (item) {
 
         let pins = this.pins;
 
-        if (Array.isArray(item)) {
+        if (_isArray(item)) {
 
             pins.forEach((item, index) => this.removePinAt(index));
 
@@ -176,7 +218,7 @@ S.pins = function (item) {
 
             let element = pins[item.index];
 
-            if (Array.isArray(element)) {
+            if (_isArray(element)) {
 
                 if (xt(item.x)) element[0] = item.x;
                 if (xt(item.y)) element[1] = item.y;
@@ -195,7 +237,7 @@ D.pins = function (item) {
 
             let element = pins[item.index];
 
-            if (Array.isArray(element)) {
+            if (_isArray(element)) {
 
                 if (xt(item.x)) element[0] = addStrings(element[0], item.x);
                 if (xt(item.y)) element[1] = addStrings(element[1], item.y);
@@ -262,21 +304,21 @@ S.pivot = function (item) {
 
         this.pivot = null;
 
-        if (this.lockTo[0] === 'pivot') this.lockTo[0] = 'start';
-        if (this.lockTo[1] === 'pivot') this.lockTo[1] = 'start';
+        if (this.lockTo[0] == PIVOT) this.lockTo[0] = START;
+        if (this.lockTo[1] == PIVOT) this.lockTo[1] = START;
 
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
     }
     else {
 
-        let oldPivot = this.pivot,
+        const oldPivot = this.pivot,
             newPivot = (item.substring) ? artefact[item] : item,
             name = this.name;
 
         if (newPivot && newPivot.name) {
 
-            if (oldPivot && oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
+            if (oldPivot && oldPivot.name != newPivot.name) removeItem(oldPivot.pivoted, name);
 
             pushUnique(newPivot.pivoted, name);
 
@@ -302,24 +344,24 @@ P.updateDirty = function () {
 // `getPinAt` - 
 P.getPinAt = function (index) {
 
-    let i = Math.floor(index);
+    const i = _floor(index);
 
     if (this.useAsPath) {
 
-        let pos = this.getPathPositionData(this.unitPartials[i]);
+        const pos = this.getPathPositionData(this.unitPartials[i]);
         return [pos.x, pos.y];
     }
     else {
 
-        let pins = this.currentPins,
+        const pins = this.currentPins,
             pin = pins[i];
 
-        let [x, y, w, h] = this.localBox;
+        const [x, y, w, h] = this.localBox;
 
-        let [px, py] = pin;
-        let [ox, oy] = pins[0];
-        let [lx, ly] = this.localOffset;
-        let [sx, sy] = this.currentStampPosition;
+        const [px, py] = pin;
+        const [ox, oy] = pins[0];
+        const [lx, ly] = this.localOffset;
+        const [sx, sy] = this.currentStampPosition;
         let dx, dy;
 
         if (this.mapToPins) {
@@ -340,13 +382,13 @@ P.updatePinAt = function (item, index) {
 
     if (xta(item, index)) {
 
-        index = Math.floor(index);
+        index = _floor(index);
 
-        let pins = this.pins;
+        const pins = this.pins;
 
         if (index < pins.length && index >= 0) {
 
-            let oldPin = pins[index];
+            const oldPin = pins[index];
 
             if (isa_obj(oldPin) && oldPin.pivoted) removeItem(oldPin.pivoted, this.name);
 
@@ -359,13 +401,13 @@ P.updatePinAt = function (item, index) {
 // `removePinAt` - 
 P.removePinAt = function (index) {
 
-    index = Math.floor(index);
+    index = _floor(index);
 
-    let pins = this.pins;
+    const pins = this.pins;
 
     if (index < pins.length && index >= 0) {
 
-        let oldPin = pins[index];
+        const oldPin = pins[index];
 
         if (isa_obj(oldPin) && oldPin.pivoted) removeItem(oldPin.pivoted, this.name);
 
@@ -390,7 +432,7 @@ P.prepareStamp = function() {
         if (this.dirtyScale || this.dirtySpecies)  this.pathCalculatedOnce = false;
     }
 
-    if (this.isBeingDragged || this.lockTo.includes('mouse') || this.lockTo.includes('particle')) this.dirtyStampPositions = true;
+    if (this.isBeingDragged || this.lockTo.includes(MOUSE) || this.lockTo.includes(PARTICLE)) this.dirtyStampPositions = true;
 
     if (this.dirtyScale) this.cleanScale();
 
@@ -417,7 +459,7 @@ P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
 
-    let p = 'M0,0';
+    let p = ZERO_PATH;
     p = this.makePolylinePath();
 
     this.pathDefinition = p;
@@ -426,11 +468,8 @@ P.cleanSpecies = function () {
 // `getPathParts` - internal helper function - called by `makePolylinePath`
 P.getPathParts = function (x0, y0, x1, y1, x2, y2, t) {
 
-    let squareroot = Math.sqrt,
-        power = Math.pow;
-
-    let d01 = squareroot(power(x1 - x0,2) + power(y1 - y0, 2)),
-        d12 = squareroot(power(x2 - x1,2) + power(y2 - y1, 2)),
+    const d01 = _sqrt(_pow(x1 - x0, 2) + _pow(y1 - y0, 2)),
+        d12 = _sqrt(_pow(x2 - x1, 2) + _pow(y2 - y1, 2)),
         fa = t * d01 / (d01 + d12),
         fb = t * d12 / (d01 + d12),
         p1x = x1 - fa * (x2 - x0),
@@ -444,7 +483,7 @@ P.getPathParts = function (x0, y0, x1, y1, x2, y2, t) {
 // `buildLine` - internal helper function - called by `makePolylinePath`
 P.buildLine = function (x, y, coords) {
 
-    let p = `m0,0l`;
+    let p = `${ZERO_PATH}l`;
 
     for (let i = 2; i < coords.length; i += 6) {
 
@@ -459,7 +498,7 @@ P.buildLine = function (x, y, coords) {
 // `buildCurve` - internal helper function - called by `makePolylinePath`
 P.buildCurve = function (x, y, coords) {
 
-    let p = `m0,0c`,
+    let p = `${ZERO_PATH}c`,
         counter = 0;
 
     for (let i = 0; i < coords.length; i += 2) {
@@ -482,9 +521,9 @@ P.buildCurve = function (x, y, coords) {
 P.cleanCoordinate = function (coord, dim) {
 
     if (coord.toFixed) return coord;
-    if (coord === 'left' || coord === 'top') return 0;
-    if (coord === 'right' || coord === 'bottom') return dim;
-    if (coord === 'center') return dim / 2;
+    if (coord == LEFT || coord == TOP) return 0;
+    if (coord == RIGHT || coord == BOTTOM) return dim;
+    if (coord == CENTER) return dim / 2;
     return (parseFloat(coord) / 100) * dim;
 };
 
@@ -493,7 +532,7 @@ P.cleanPinsArray = function () {
 
     this.dirtyPins = false;
 
-    let pins = this.pins,
+    const pins = this.pins,
         current = this.currentPins;
 
     current.length = 0;
@@ -511,7 +550,7 @@ P.cleanPinsArray = function () {
             }
             else temp = part;
 
-            let pos = (temp && temp.position) ? temp.position : false;
+            const pos = (temp && temp.position) ? temp.position : false;
 
             if (pos) current.push([pos.x, pos.y]);
         });
@@ -520,10 +559,11 @@ P.cleanPinsArray = function () {
     }
     else {
 
+        const host = this.getHost(),
+            clean = this.cleanCoordinate;
+
         let w = 1,
             h = 1,
-            host = this.getHost(),
-            clean = this.cleanCoordinate,
             x, y, dims;
 
         if (host) {
@@ -549,7 +589,7 @@ P.cleanPinsArray = function () {
 
             if (temp) {
 
-                if (Array.isArray(temp)) {
+                if (_isArray(temp)) {
 
                     [x, y] = temp;
 
@@ -588,7 +628,7 @@ P.cleanPinsArray = function () {
 // `makePolylinePath` - internal helper function - called by `cleanSpecies`
 P.makePolylinePath = function () {
 
-    let getPathParts = this.getPathParts,
+    const getPathParts = this.getPathParts,
         buildLine = this.buildLine,
         buildCurve = this.buildCurve,
         pins = this.pins,
@@ -602,17 +642,19 @@ P.makePolylinePath = function () {
     if (cPin.length) {
 
         // 2. build the line
-        let cLen = cPin.length,
+        const cLen = cPin.length,
             first = cPin[0],
-            last = cPin[cLen - 1],
-            calc = [],
-            result = 'm0,0';
+            last = cPin[cLen - 1];
+
+        let calc = [],
+            result = ZERO_PATH,
+            i;
 
         if (closed) {
 
-            let startPoint = [].concat(...getPathParts(...last, ...first, ...cPin[1], tension));
+            const startPoint = [].concat(...getPathParts(...last, ...first, ...cPin[1], tension));
 
-            for (let i = 0; i < cLen - 2; i++) {
+            for (i = 0; i < cLen - 2; i++) {
 
                 calc = calc.concat(...getPathParts(...cPin[i], ...cPin[i + 1], ...cPin[i + 2], tension));
             }
@@ -629,7 +671,7 @@ P.makePolylinePath = function () {
 
             calc.push(first[0], first[1]);
 
-            for (let i = 0; i < cLen - 2; i++) {
+            for (i = 0; i < cLen - 2; i++) {
 
                 calc = calc.concat(...getPathParts(...cPin[i], ...cPin[i + 1], ...cPin[i + 2], tension));
             }
@@ -640,12 +682,12 @@ P.makePolylinePath = function () {
         }
         return result;
     }
-    return 'm0,0';
+    return ZERO_PATH;
 };
 
 P.calculateLocalPathAdditionalActions = function () {
 
-    let [x, y, w, h] = this.localBox,
+    const [x, y, w, h] = this.localBox,
         def = this.pathDefinition;
 
     if (this.mapToPins) {
@@ -654,7 +696,7 @@ P.calculateLocalPathAdditionalActions = function () {
             start: this.currentPins[0],
         });
     }
-    else this.pathDefinition = def.replace('m0,0', `m${-x},${-y}`);
+    else this.pathDefinition = def.replace(ZERO_PATH, `m${-x},${-y}`);
 
     this.pathCalculatedOnce = false;
 
@@ -668,7 +710,7 @@ P.updatePathSubscribers = function () {
 
     this.pathed.forEach(name => {
 
-        let instance = artefact[name];
+        const instance = artefact[name];
 
         if (instance) instance.dirtyStart = true;
     });
@@ -706,7 +748,7 @@ P.updatePathSubscribers = function () {
 export const makePolyline = function (items) {
 
     if (!items) return false;
-    items.species = 'polyline';
+    items.species = POLYLINE;
     return new Polyline(items);
 };
 

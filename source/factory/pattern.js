@@ -27,8 +27,6 @@ import {
     Ωempty, 
 } from '../core/utilities.js';
 
-import { stateKeys } from './state.js';
-
 import { 
     gettableVideoAssetAtributes, 
     settableVideoAssetAtributes, 
@@ -48,6 +46,7 @@ import {
     _entries,
     _isArray,
     _keys,
+    STATE_KEYS,
 } from '../core/shared-vars.js';
 
 

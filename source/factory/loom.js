@@ -38,10 +38,7 @@ import {
     Ωempty, 
 } from '../core/utilities.js';
 
-import { 
-    makeState, 
-    stateKeys, 
-} from './state.js';
+import { makeState } from './state.js';
 
 import { 
     releaseCell, 
@@ -67,6 +64,7 @@ import {
     _parse,
     _piHalf,
     _sin,
+    STATE_KEYS, 
 } from '../core/shared-vars.js';
 
 
@@ -382,7 +380,7 @@ P.set = function (items = Ωempty) {
 
             if (key && key != NAME && value != null) {
 
-                if (!stateKeys.includes(key)) {
+                if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 
@@ -426,7 +424,7 @@ P.setDelta = function (items = Ωempty) {
 
             if (key && key != NAME && value != null) {
 
-                if (!stateKeys.includes(key)) {
+                if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 

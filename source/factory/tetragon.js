@@ -40,10 +40,25 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, Ωempty } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    mergeOver, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
+
+
+// Local constants
+const ENTITY = 'entity',
+    RADIUS_X = ['radiusX'],
+    RADIUS_XY = ['radiusX', 'radiusY'],
+    RADIUS_Y = ['radiusY'],
+    T_TETRAGON = 'Tetragon',
+    TETRAGON = 'tetragon',
+    ZERO_PATH = 'M0,0';
 
 
 // #### Tetragon constructor
@@ -55,9 +70,9 @@ const Tetragon = function (items = Ωempty) {
 
 
 // #### Tetragon prototype
-const P = Tetragon.prototype = Object.create(Object.prototype);
-P.type = 'Tetragon';
-P.lib = 'entity';
+const P = Tetragon.prototype = doCreate();
+P.type = T_TETRAGON;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -108,27 +123,27 @@ const S = P.setters,
 
 S.radius = function (item) {
 
-    this.setRectHelper(item, ['radiusX', 'radiusY']);
+    this.setRectHelper(item, RADIUS_XY);
 };
 S.radiusX = function (item) {
 
-    this.setRectHelper(item, ['radiusX']);
+    this.setRectHelper(item, RADIUS_X);
 };
 S.radiusY = function (item) {
 
-    this.setRectHelper(item, ['radiusY']);
+    this.setRectHelper(item, RADIUS_Y);
 };
 D.radius = function (item) {
 
-    this.deltaRectHelper(item, ['radiusX', 'radiusY']);
+    this.deltaRectHelper(item, RADIUS_XY);
 };
 D.radiusX = function (item) {
 
-    this.deltaRectHelper(item, ['radiusX']);
+    this.deltaRectHelper(item, RADIUS_X);
 };
 D.radiusY = function (item) {
 
-    this.deltaRectHelper(item, ['radiusY']);
+    this.deltaRectHelper(item, RADIUS_Y);
 };
 
 S.intersectA = function (item) {
@@ -189,7 +204,7 @@ P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
 
-    let p = 'M0,0';
+    let p = ZERO_PATH;
     p = this.makeTetragonPath();
 
     this.pathDefinition = p;
@@ -205,20 +220,13 @@ P.makeTetragonPath = function () {
 
     if (radiusX.substring || radiusY.substring) {
 
-        // let here = this.getHere(),
-        //     rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * here.w : radiusX,
-        //     ry = (radiusY.substring) ? (parseFloat(radiusY) / 100) * here.h : radiusY;
-
-        // width = rx * 2;
-        // height = ry * 2;
-
-        let host = this.getHost();
+        const host = this.getHost();
 
         if (host) {
 
-            let [hW, hH] = host.currentDimensions;
+            const [hW, hH] = host.currentDimensions;
 
-            let rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * hW : radiusX,
+            const rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * hW : radiusX,
                 ry = (radiusY.substring) ? (parseFloat(radiusY) / 100) * hH : radiusY;
 
             width = rx * 2;
@@ -231,12 +239,12 @@ P.makeTetragonPath = function () {
         height = radiusY * 2;
     }
 
-    let port = parseFloat((width * this.intersectX).toFixed(2)),
+    const port = parseFloat((width * this.intersectX).toFixed(2)),
         starboard = parseFloat((width - port).toFixed(2)),
         fore = parseFloat((height * this.intersectY).toFixed(2)),
         aft = parseFloat((height - fore).toFixed(2));
 
-    let myData = 'm0,0';
+    let myData = ZERO_PATH;
 
     myData += `l${starboard},${fore} ${-starboard},${aft} ${-port},${-aft} ${port},${-fore}z`;
 
@@ -245,9 +253,9 @@ P.makeTetragonPath = function () {
 
 P.calculateLocalPathAdditionalActions = function () {
 
-    let [x, y, w, h] = this.localBox;
+    const [x, y, w, h] = this.localBox;
 
-    this.pathDefinition = this.pathDefinition.replace('m0,0', `m${-x},${-y}`);
+    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x},${-y}`);
 
     this.pathCalculatedOnce = false;
 
@@ -285,7 +293,7 @@ P.calculateLocalPathAdditionalActions = function () {
 export const makeTetragon = function (items) {
 
     if (!items) return false;
-    items.species = 'tetragon';
+    items.species = TETRAGON;
     return new Tetragon(items);
 };
 

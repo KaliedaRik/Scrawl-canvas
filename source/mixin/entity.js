@@ -23,10 +23,7 @@ import {
 import { scrawlCanvasHold } from '../core/document.js';
 import { asset } from '../core/library.js';
 
-import { 
-    makeState, 
-    stateKeys, 
-} from '../factory/state.js';
+import { makeState } from '../factory/state.js';
 
 import { 
     releaseCell, 
@@ -49,6 +46,7 @@ import {
     _floor,
     _keys,
     _parse, 
+    STATE_KEYS, 
 } from '../core/shared-vars.js';
 
 
@@ -352,7 +350,7 @@ export default function (P = Ωempty) {
 
                 if (key && key != NAME && val != null) {
 
-                    if (!stateKeys.includes(key)) {
+                    if (!STATE_KEYS.includes(key)) {
 
                         fn = setters[key];
 
@@ -395,7 +393,7 @@ export default function (P = Ωempty) {
 
                 if (key && key != NAME && val != null) {
 
-                    if (!stateKeys.includes(key)) {
+                    if (!STATE_KEYS.includes(key)) {
 
                         fn = setters[key];
 

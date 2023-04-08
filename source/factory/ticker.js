@@ -51,12 +51,43 @@
 
 
 // #### Imports
-import { constructors, animationtickers, tween, animation } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, xt, xtGet, isa_obj, convertTime, Ωempty } from '../core/utilities.js';
+import { 
+    animation, 
+    animationtickers, 
+    constructors, 
+    tween, 
+} from '../core/library.js';
+
+import { 
+    convertTime, 
+    doCreate,
+    isa_obj, 
+    mergeOver, 
+    pushUnique, 
+    removeItem, 
+    xt, 
+    xtGet, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import { makeAnimation } from './animation.js';
 
 import baseMix from '../mixin/base.js';
+
+import { 
+    _floor,
+    _now,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const ANIMATIONTICKERS = 'animationtickers',
+    FUNCTION = 'function',
+    PC = '%',
+    T_RENDER_ANIMATION = 'RenderAnimation',
+    T_TICKER = 'Ticker',
+    T_TWEEN = 'Tween',
+    TICKERUPDATE = 'tickerupdate';
 
 
 // #### Ticker constructor
@@ -87,9 +118,9 @@ const Ticker = function (items = Ωempty) {
 
 
 // #### Ticker prototype
-const P = Ticker.prototype = Object.create(Object.prototype);
-P.type = 'Ticker';
-P.lib = 'animationtickers';
+const P = Ticker.prototype = doCreate();
+P.type = T_TICKER;
+P.lib = ANIMATIONTICKERS;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -249,7 +280,7 @@ S.duration = function (item) {
 
                 target.calculateEffectiveTime();
 
-                if (target.type === 'Tween') target.calculateEffectiveDuration();
+                if (target.type == T_TWEEN) target.calculateEffectiveDuration();
             }
         }
     }
@@ -261,8 +292,9 @@ S.duration = function (item) {
 // `subscribe` - accepts a Tween or Action name-String, or an Array of such Strings. 
 P.subscribe = function (items) {
 
-    let myItems = [].concat(items),
-        i, iz, item, name;
+    const myItems = [].concat(items);
+    
+    let i, iz, item, name;
 
     for (i = 0, iz = myItems.length; i < iz; i++) {
 
@@ -288,8 +320,9 @@ P.subscribe = function (items) {
 // `unsubscribe` - accepts a Tween or Action name-String, or an Array of such Strings.
 P.unsubscribe = function (items) {
 
-    var myItems = [].concat(items),
-        i, iz, item, name;
+    const myItems = [].concat(items);
+    
+    let i, iz, item, name;
 
     for (i = 0, iz = myItems.length; i < iz; i++) {
 
@@ -312,9 +345,10 @@ P.unsubscribe = function (items) {
 // `repopulateSubscriberObjects`
 P.repopulateSubscriberObjects = function () {
 
-    let arr = this.subscriberObjects,
-        subs = this.subscribers,
-        t;
+    const arr = this.subscriberObjects,
+        subs = this.subscribers;
+
+    let t;
 
     arr.length = 0;
 
@@ -337,17 +371,16 @@ P.getSubscriberObjects = function () {
 // `sortSubscribers` - internal Helper function called by `subscribe` and `unsubscribe`
 P.sortSubscribers = function () {
 
-    let mysubscribers = this.subscribers;
+    const mysubscribers = this.subscribers;
 
     if(mysubscribers.length > 1) {
 
-        let subs = [].concat(mysubscribers),
-            floor = Math.floor,
+        const subs = [].concat(mysubscribers),
             buckets = [];
 
         subs.forEach(obj => {
 
-            let effectiveTime = floor(obj.effectiveTime) || 0;
+            const effectiveTime = _floor(obj.effectiveTime) || 0;
 
             if (!buckets[effectiveTime]) buckets[effectiveTime] = [];
 
@@ -366,8 +399,9 @@ P.updateSubscribers = function(items, reversed) {
     
     reversed = (xt(reversed)) ? reversed : false;
 
-    let subs = this.getSubscriberObjects(),
-        i, iz;
+    const subs = this.getSubscriberObjects();
+    
+    let i, iz;
 
     if (reversed) {
 
@@ -389,7 +423,7 @@ P.updateSubscribers = function(items, reversed) {
 // `changeSubscriberDirection` - internal function - when invoked, Tween/Actions will be told to reverse their current direction.
 P.changeSubscriberDirection = function () {
 
-    let subs = this.getSubscriberObjects();
+    const subs = this.getSubscriberObjects();
 
     subs.forEach(sub => sub.reversed = !sub.reversed);
     
@@ -401,10 +435,10 @@ P.changeSubscriberDirection = function () {
 // `makeTickerUpdateEvent` - internal function - generates a new CustomEvent object.
 P.makeTickerUpdateEvent = function() {
 
-    return new CustomEvent('tickerupdate', {
+    return new CustomEvent(TICKERUPDATE, {
         detail: {
             name: this.name,
-            type: 'Ticker',
+            type: T_TICKER,
             tick: this.tick,
             reverseTick: this.effectiveDuration - this.tick
         },
@@ -451,7 +485,7 @@ P.setEffectiveDuration = function() {
         temp = convertTime(this.duration);
 
         // Cannot use %-String values for Ticker `duration` attribute
-        if (temp[0] === '%') {
+        if (temp[0] == PC) {
 
             this.duration = 0
             this.recalculateEffectiveDuration();
@@ -472,13 +506,13 @@ P.checkObserverRunningState = function () {
 
             const anim = animation[observer];
 
-            if (anim && anim.type === 'RenderAnimation') {
+            if (anim && anim.type == T_RENDER_ANIMATION) {
 
                 observer = this.observer = anim;
             }
             else return true;
         }
-        if (observer.type === 'RenderAnimation') {
+        if (observer.type == T_RENDER_ANIMATION) {
 
             return observer.isRunning();
         }
@@ -512,7 +546,7 @@ P.fn = function (reverseOrder) {
         // Process only if the Ticker's `cycles` attribute has been set to `0`, or if the Ticker has not yet completed all its cycles.
         if (!cycles || cycleCount < cycles) {
 
-            currentTime = this.currentTime = Date.now();
+            currentTime = this.currentTime = _now();
             tick = this.tick = currentTime - startTime;
 
             // Update the results object
@@ -585,7 +619,7 @@ P.fn = function (reverseOrder) {
             if (eventChoke) {
 
                 eTime = this.lastEvent + eventChoke;
-                now = Date.now();
+                now = _now();
 
                 if (eTime < now) {
 
@@ -616,7 +650,7 @@ P.run = function () {
 
     if (!this.active) {
 
-        this.startTime = this.currentTime = Date.now();
+        this.startTime = this.currentTime = _now();
         this.cycleCount = 0;
 
         this.updateSubscribers({
@@ -628,7 +662,7 @@ P.run = function () {
         pushUnique(tickerAnimations, this.name);
         tickerAnimationsFlag = true;
 
-        if (typeof this.onRun === 'function') this.onRun();
+        if (typeof this.onRun == FUNCTION) this.onRun();
     }
 
     return this;
@@ -649,7 +683,7 @@ P.reset = function () {
 
     if (this.active) this.halt();
 
-    this.startTime = this.currentTime = Date.now();
+    this.startTime = this.currentTime = _now();
     this.cycleCount = 0;
 
     this.updateSubscribers({
@@ -661,7 +695,7 @@ P.reset = function () {
     this.fn(true);
     this.active = false;
 
-    if (typeof this.onReset === 'function') this.onReset();
+    if (typeof this.onReset == FUNCTION) this.onReset();
 
     return this;
 };
@@ -675,7 +709,7 @@ P.complete = function () {
 
     if (this.active) this.halt();
 
-    this.startTime = this.currentTime = Date.now();
+    this.startTime = this.currentTime = _now();
     this.cycleCount = 0;
 
     this.updateSubscribers({
@@ -687,7 +721,7 @@ P.complete = function () {
     this.fn();
     this.active = false;
 
-    if (typeof this.onComplete === 'function') this.onComplete();
+    if (typeof this.onComplete == FUNCTION) this.onComplete();
 
     return this;
 };
@@ -716,7 +750,7 @@ P.reverse = function (resume = false) {
     this.fn();
     this.active = false;
     
-    if (typeof this.onReverse === 'function') this.onReverse();
+    if (typeof this.onReverse == FUNCTION) this.onReverse();
 
     if (resume) this.resume();
 
@@ -732,7 +766,7 @@ P.halt = function () {
     pushUnique(tickerAnimations, this.name);
     tickerAnimationsFlag = true;
 
-    if (typeof this.onHalt === 'function') this.onHalt();
+    if (typeof this.onHalt == FUNCTION) this.onHalt();
 
     return this;
 };
@@ -746,7 +780,7 @@ P.resume = function () {
 
     if (!this.active) {
 
-        now = Date.now(),
+        now = _now(),
         current = this.currentTime,
         start = this.startTime;
         this.startTime = now - (current - start);
@@ -755,7 +789,7 @@ P.resume = function () {
         pushUnique(tickerAnimations, this.name);
         tickerAnimationsFlag = true;
 
-        if (typeof this.onResume === 'function') this.onResume();
+        if (typeof this.onResume == FUNCTION) this.onResume();
 
     }
     return this;
@@ -780,14 +814,14 @@ P.seekTo = function (milliseconds, resume = false) {
 
     if (milliseconds < this.tick) backwards = true;
 
-    this.currentTime = Date.now();
+    this.currentTime = _now();
     this.startTime = this.currentTime - milliseconds;
     this.active = true;
 
     this.fn(backwards);
     this.active = false;
 
-    if (typeof this.onSeekTo === 'function') this.onSeekTo();
+    if (typeof this.onSeekTo == FUNCTION) this.onSeekTo();
 
     if (resume) this.resume();
 
@@ -805,7 +839,7 @@ P.seekFor = function (milliseconds, resume = false) {
 
     let backwards = false;
 
-    milliseconds = __xtGet(milliseconds, 0);
+    milliseconds = xtGet(milliseconds, 0);
 
     if (this.active) this.halt();
 
@@ -820,7 +854,7 @@ P.seekFor = function (milliseconds, resume = false) {
     this.fn(backwards);
     this.active = false;
 
-    if (typeof this.onSeekFor === 'function') this.onSeekFor();
+    if (typeof this.onSeekFor == FUNCTION) this.onSeekFor();
 
     if (resume) this.resume();
 
@@ -845,17 +879,16 @@ const coreTickersAnimation = makeAnimation({
 
             tickerAnimationsFlag = false;
 
-            let tans = [].concat(tickerAnimations),
-                floor = Math.floor,
+            const tans = [].concat(tickerAnimations),
                 buckets = [];
 
             tans.forEach(name => {
 
-                let obj = animationtickers[name];
+                const obj = animationtickers[name];
 
                 if (xt(obj)) {
 
-                    let order = floor(obj.order) || 0;
+                    const order = _floor(obj.order) || 0;
 
                     if (!buckets[order]) buckets[order] = [];
 
