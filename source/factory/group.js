@@ -22,58 +22,22 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    asset, 
-    cell, 
-    constructors, 
-    entity, 
-    group, 
-} from '../core/library.js';
+import { artefact, asset, cell, constructors, entity, group } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, removeItem, λnull, Ωempty } from '../core/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
 import { filterEngine } from './filterEngine.js';
 
-import { 
-    releaseCell, 
-    requestCell, 
-} from './cell-fragment.js';
+import { releaseCell, requestCell } from './cell-fragment.js';
 
 import { importDomImage } from './imageAsset.js';
 
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
 
-import { 
-    _isArray,
-    _entries,
-    _floor,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const ACCEPTED_OWNERS = ['Cell', 'Stack'],
-    ADD_CLASSES = 'addClasses',
-    ENTITY = 'entity',
-    GROUP = 'group',
-    REMOVE_CLASSES = 'removeClasses',
-    REVERSE_BY_DELTA = 'reverseByDelta',
-    SET = 'set',
-    SET_DELTA = 'setDelta',
-    SOURCE_IN = 'source-in',
-    SOURCE_OVER = 'source-over',
-    T_GROUP = 'Group',
-    UPDATE_BY_DELTA = 'updateByDelta';
+import { _isArray, _entries, _floor, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../core/shared-vars.js';
 
 
 // #### Group constructor

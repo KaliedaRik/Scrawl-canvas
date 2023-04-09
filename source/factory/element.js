@@ -33,21 +33,9 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    artefactnames, 
-    constructors, 
-    element, 
-    elementnames, 
-} from '../core/library.js';
+import { artefact, artefactnames, constructors, element, elementnames } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_dom, 
-    pushUnique, 
-    removeItem, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_dom, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
 
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
@@ -56,14 +44,7 @@ import { makeCanvas } from './canvas.js';
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 
-
-// Local constants
-const T_ELEMENT = 'Element',
-    ELEMENT = 'element',
-    CORNER_SELECTOR = '[data-scrawl-corner-div="sc"]',
-    CANVAS = 'canvas',
-    ABSOLUTE = 'absolute',
-    MIMIC = 'mimic';
+import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '../core/shared-vars.js';
 
 
 // #### Element constructor

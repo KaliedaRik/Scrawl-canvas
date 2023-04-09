@@ -5,27 +5,9 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    isa_number, 
-    xt, 
-} from '../core/utilities.js';
+import { isa_number, xt } from '../core/utilities.js';
 
-import { 
-    _atan2,
-    _cos,
-    _create, 
-    _hypot,
-    _isArray,
-    _seal,
-    _setPrototypeOf, 
-    _sin,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const T_COORDINATE = 'Coordinate';
-const T_QUATERNION = 'Quaternion';
-const T_VECTOR = 'Vector';
+import { _atan2, _cos, _create, _hypot, _isArray, _seal, _setPrototypeOf, _sin, T_COORDINATE, T_QUATERNION, T_VECTOR } from '../core/shared-vars.js';
 
 
 // #### Coordinate constructor

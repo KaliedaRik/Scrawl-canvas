@@ -41,52 +41,23 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    asset, 
-    canvas, 
-    cell, 
-    cellnames, 
-    constructors, 
-    group, 
-    styles, 
-    stylesnames, 
-    tween, 
-} from '../core/library.js';
+import { artefact, asset, canvas, cell, cellnames, constructors, group, styles, stylesnames, tween } from '../core/library.js';
 
-import { 
-    doCreate,
-    generateUniqueString, 
-    isa_canvas, 
-    mergeOver, 
-    λnull, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, generateUniqueString, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
-import { 
-    getIgnorePixelRatio, 
-    getPixelRatio, 
-} from "../core/events.js";
+import { getIgnorePixelRatio, getPixelRatio } from "../core/events.js";
 
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
 
-import { 
-    makeCoordinate, 
-    releaseCoordinate, 
-    requestCoordinate, 
-} from './coordinate.js';
+import { makeCoordinate, releaseCoordinate, requestCoordinate } from './coordinate.js';
 
 import { filterEngine } from './filterEngine.js';
 import { importDomImage } from './imageAsset.js';
 
-import { 
-    releaseCell, 
-    requestCell, 
-} from '../factory/cell-fragment.js';
+import { releaseCell, requestCell } from '../factory/cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';
@@ -101,36 +72,7 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { 
-    _entries,
-    _floor,
-    _round,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const _2D = '2d',
-    AUTO = 'auto',
-    CANVAS = 'canvas',
-    CELL = 'cell',
-    CONTAIN = 'contain',
-    COVER = 'cover',
-    DIMENSIONS = 'dimensions',
-    FILL = 'fill',
-    GRAYSCALE = 'grayscale',
-    HEIGHT = 'height',
-    IMG = 'img',
-    MOUSE = 'mouse',
-    MOZOSX_FONT_SMOOTHING = 'mozOsxFontSmoothing',
-    NEVER = 'never',
-    NONE = 'none',
-    SMOOTH_FONT = 'smoothFont',
-    SOURCE_OVER = 'source-over',
-    T_CELL = 'Cell',
-    TRANSPARENT_VALS = ['rgb(0 0 0 / 0)', 'rgba(0 0 0 / 0)', 'rgba(0,0,0,0)', 'rgba(0, 0, 0, 0)', 'transparent', '#00000000', '#0000'],
-    WEBKIT_FONT_SMOOTHING = 'webkitFontSmoothing',
-    WIDTH = 'width',
-    ZERO_STR = '';
+import { _entries, _floor, _round, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Cell constructor

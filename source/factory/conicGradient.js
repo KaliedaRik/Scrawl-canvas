@@ -21,27 +21,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    addStrings, 
-    doCreate,
-    isa_number, 
-    mergeOver, 
-    pushUnique, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { addStrings, doCreate, isa_number, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
-import { 
-    _radian, 
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const PALETTE = 'palette',
-    STYLES = 'styles',
-    T_CONIC_GRADIENT = 'ConicGradient';
+import { _radian, STYLES, T_CONIC_GRADIENT } from '../core/shared-vars.js';
 
 
 // #### ConicGradient constructor
@@ -54,7 +39,6 @@ const ConicGradient = function (items = Ωempty) {
 
 // #### ConicGradient prototype
 const P = ConicGradient.prototype = doCreate();
-
 P.type = T_CONIC_GRADIENT;
 P.lib = STYLES;
 P.isArtefact = false;
@@ -100,7 +84,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 // + `cyclic`
 
 // #### Packet management
-P.packetObjects = pushUnique(P.packetObjects, [PALETTE]);
+P.packetObjects = pushUnique(P.packetObjects, ['palette']);
 
 
 // #### Clone management

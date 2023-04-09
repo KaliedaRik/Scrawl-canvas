@@ -14,30 +14,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    pushUnique, 
-    xt, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
-import { 
-    _isArray,
-    _keys,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const FUNCTION = 'function',
-    NAME = 'name',
-    T_ACTION = 'Action',
-    TWEEN = 'tween',
-    UNDEF = 'undefined';
+import { _isArray, _keys, FUNCTION, NAME, T_ACTION, TWEEN, UNDEF } from '../core/shared-vars.js';
 
 
 // #### Action constructor
@@ -58,6 +40,7 @@ const Action = function (items = Ωempty) {
 
     return this;
 };
+
 
 // #### Action prototype
 const P = Action.prototype = doCreate();

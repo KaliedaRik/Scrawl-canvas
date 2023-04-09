@@ -25,48 +25,19 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    constructors, 
-    group, 
-    tween, 
-    world, 
-} from '../core/library.js';
+import { artefact, constructors, group, tween, world } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_fn, 
-    isa_obj, 
-    mergeOver, 
-    pushUnique, 
-    xt, 
-    xta, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../core/utilities.js';
 
 import { currentGroup } from './canvas.js';
 
-import { 
-    releaseParticle, 
-    requestParticle, 
-} from './particle.js';
+import { releaseParticle, requestParticle } from './particle.js';
 
-import { 
-    releaseCell, 
-    requestCell, 
-} from './cell-fragment.js';
+import { releaseCell,  requestCell } from './cell-fragment.js';
 
-import { 
-    makeVector, 
-    releaseVector, 
-    requestVector, 
-} from './vector.js';
+import { makeVector, releaseVector, requestVector } from './vector.js';
 
-import { 
-    requestCoordinate, 
-    releaseCoordinate, 
-} from './coordinate.js';
+import { releaseCoordinate, requestCoordinate } from './coordinate.js';
 
 import { makeColor } from './color.js';
 
@@ -75,25 +46,7 @@ import { filterEngine } from './filterEngine.js';
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { 
-    _now,
-    _floor,
-    _random,
-    _piDouble,
-    _abs,
-    _tick,
-    _isArray,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const T_EMITTER = 'Emitter',
-    T_WORLD = 'World',
-    ENTITY = 'entity',
-    EULER = 'euler',
-    BLACK = 'rgb(0 0 0 / 1)',
-    MOUSE = 'mouse',
-    PARTICLE = 'particle';
+import { _now, _floor, _random, _piDouble, _abs, _tick, _isArray, BLACK, ENTITY, EULER, MOUSE, PARTICLE, T_EMITTER, T_WORLD } from '../core/shared-vars.js';
 
 
 // #### Emitter constructor

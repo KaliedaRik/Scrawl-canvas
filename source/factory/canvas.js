@@ -37,27 +37,11 @@ import {
     purge, 
 } from '../core/library.js';
 
-import { 
-    domShow, 
-    scrawlCanvasHold, 
-} from '../core/document.js';
+import { domShow, scrawlCanvasHold } from '../core/document.js';
 
-import { 
-    rootElementsAdd, 
-    rootElementsRemove, 
-} from "../core/document-rootElements.js";
+import { rootElementsAdd, rootElementsRemove } from "../core/document-rootElements.js";
 
-import { 
-    doCreate,
-    isa_dom, 
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    xt, 
-    λnull, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
@@ -69,36 +53,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/displayShape.js';
 
-
-// Local constants
-const _2D = '2d',
-    ABSOLUTE = 'absolute',
-    ARIA_DESCRIBEDBY = 'aria-describedby',
-    ARIA_LABELLEDBY = 'aria-labelledby',
-    ARIA_LIVE = 'aria-live',
-    CANVAS = 'canvas',
-    CANVAS_QUERY = '[data-scrawl-canvas]',
-    DATA_SCRAWL_GROUP = 'data-scrawl-group',
-    DIV = 'div',
-    FIT_DEFS = ['fill', 'contain', 'cover'],
-    HIDDEN = 'hidden',
-    IMG = 'img',
-    NAME = 'name',
-    NAV = 'nav',
-    NONE = 'none',
-    PC0 = '0%',
-    PC100 = '100%',
-    PC50 = '50%',
-    POLITE = 'polite',
-    PX0 = '0px',
-    RELATIVE = 'relative',
-    ROLE = 'role',
-    ROOT = 'root',
-    SUBSCRIBE = 'subscribe',
-    T_CANVAS = 'Canvas',
-    T_STACK = 'Stack',
-    TITLE = 'title',
-    ZERO_STR = '';
+import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DIV, FIT_DEFS, HIDDEN, IMG, NAME, NAV, NONE, PC0, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Canvas constructor

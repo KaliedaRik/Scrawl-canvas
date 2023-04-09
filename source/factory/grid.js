@@ -19,52 +19,16 @@
 
 
 // #### Imports
-import { 
-    constructors, 
-    entity, 
-} from '../core/library.js';
+import { constructors, entity } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_number, 
-    isa_obj, 
-    mergeOver, 
-    pushUnique, 
-    xt, 
-    xta, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../core/utilities.js';
 
-import { 
-    releaseCell, 
-    requestCell, 
-} from './cell-fragment.js';
+import { releaseCell, requestCell } from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { 
-    _isArray,
-    _isInteger,
-    _parse,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BLACK = 'rgb(0 0 0 / 1)',
-    CELL_GRADIENT = 'cellGradient',
-    COLOR = 'color',
-    ENTITY = 'entity',
-    FILL = 'fill',
-    GRAY = 'rgb(127 127 127 / 1)',
-    GRID_GRADIENT = 'gridGradient',
-    GRID_PICTURE = 'gridPicture',
-    SOURCE_IN = 'source-in',
-    SOURCE_OVER = 'source-over',
-    T_GRID = 'Grid',
-    TILE_PICTURE = 'tilePicture',
-    WHITE = 'rgb(255 255 255 / 1)';
+import { _isArray, _isInteger, _parse, BLACK, CELL_GRADIENT, COLOR, ENTITY, FILL, GRAY, GRID_GRADIENT, GRID_PICTURE, SOURCE_IN, SOURCE_OVER, T_GRID, TILE_PICTURE, WHITE } from '../core/shared-vars.js';
 
 
 // #### Grid constructor

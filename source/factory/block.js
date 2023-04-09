@@ -19,20 +19,15 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { 
-    doCreate,
-    mergeOver, 
-    xt, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, xt, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-
-// Local constants
-const T_BLOCK = 'Block',
-    ENTITY = 'entity';
+import {
+    T_BLOCK,
+    ENTITY,
+} from '../core/shared-vars.js';
 
 
 // #### Block constructor

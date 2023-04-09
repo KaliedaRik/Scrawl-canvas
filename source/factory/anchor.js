@@ -20,40 +20,13 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    constructors, 
-} from '../core/library.js';
+import { artefact, constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_dom, 
-    isa_fn, 
-    mergeOver, 
-    pushUnique, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_dom, isa_fn, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-
-// Local constants
-const _A = 'a',
-    ANCHOR = 'anchor',
-    BLUR = 'blur',
-    CLICK = 'click',
-    DOWNLOAD = 'download',
-    FOCUS = 'focus',
-    HREF = 'href',
-    HREFLANG = 'hreflang',
-    ONCLICK = 'onclick',
-    PING = 'ping',
-    REFERRERPOLICY = 'referrerpolicy',
-    REL = 'rel',
-    T_ANCHOR = 'Anchor',
-    TARGET = 'target',
-    TYPE = 'type',
-    ZERO_STR = '';
+import { _A, ANCHOR, BLUR, CLICK, DOWNLOAD, FOCUS, HREF, HREFLANG, ONCLICK, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, TYPE, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Anchor constructor

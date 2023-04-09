@@ -32,39 +32,11 @@
 
 import * as library from "../core/library.js";
 
-import { 
-    xta, 
-    isa_fn, 
-    isa_boolean, 
-    isa_obj, 
-    λnull, 
-    Ωempty, 
-} from "../core/utilities.js";
+import { xta, isa_fn, isa_boolean, isa_obj, λnull, Ωempty } from "../core/utilities.js";
 
-import { 
-    addListener, 
-    removeListener, 
-} from "../core/events.js";
+import { addListener, removeListener } from "../core/events.js";
 
-import { 
-    _isArray, 
-} from "../core/shared-vars.js";
-
-
-// Local constants
-const $BODY = 'BODY',
-    ACCEPTED_WRAPPERS = ['Canvas', 'Stack'],
-    DOWN = 'down',
-    DROP = 'drop',
-    EXIT = 'exit',
-    MOVE = 'move',
-    T_CANVAS = 'Canvas',
-    T_GROUP = 'Group',
-    TOUCH_CANCEL = 'touchcancel',
-    TOUCH_END = 'touchend',
-    TOUCH_MOVE = 'touchmove',
-    TOUCH_START = 'touchstart',
-    UP = 'up';
+import { _isArray, $BODY, ACCEPTED_WRAPPERS, DOWN, DROP, EXIT, MOVE, T_CANVAS, T_GROUP, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START, UP } from "../core/shared-vars.js";
 
 
 // NOTE: drag-and-drop functionality using this factory function __is not guaranteed__ for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.

@@ -39,18 +39,9 @@
 
 
 // #### Imports
-import { 
-    constructors, 
-    artefact, 
-} from '../core/library.js';
+import { artefact, constructors } from '../core/library.js';
 
-import { 
-    addStrings, 
-    doCreate,
-    mergeOver, 
-    pushUnique, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
 
 import { makeCoordinate } from './coordinate.js';
 
@@ -58,23 +49,7 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 import curveMix from '../mixin/shapeCurve.js';
 
-
-// Local constants
-const BEZIER = 'bezier',
-    COORD = 'coord',
-    END_CONTROL = 'endControl',
-    END_CONTROL_PARTICLE = 'endControlParticle',
-    END_CONTROL_PATH = 'endControlPath',
-    END_CONTROL_PIVOT = 'endControlPivot',
-    ENTITY = 'entity',
-    PATH = 'path',
-    START_CONTROL = 'startControl',
-    START_CONTROL_PARTICLE = 'startControlParticle',
-    START_CONTROL_PATH = 'startControlPath',
-    START_CONTROL_PIVOT = 'startControlPivot',
-    T_BEZIER = 'Bezier',
-    ZERO_PATH = 'M0,0',
-    ZERO_STR = '';
+import { BEZIER, COORD, END_CONTROL, END_CONTROL_PARTICLE, END_CONTROL_PATH, END_CONTROL_PIVOT, ENTITY, PATH, START_CONTROL, START_CONTROL_PARTICLE, START_CONTROL_PATH, START_CONTROL_PIVOT, T_BEZIER, ZERO_PATH, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Bezier constructor

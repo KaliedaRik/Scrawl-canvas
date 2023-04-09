@@ -40,29 +40,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { 
-    doCreate,
-    mergeOver, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
-import { 
-    requestVector, 
-    releaseVector, 
-} from './vector.js';
+import { releaseVector, requestVector } from './vector.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
-
-// Local constants
-const BEZIER = 'bezier',
-    ENTITY = 'entity',
-    LINE = 'line',
-    PERMITTED_CURVES = ['line', 'quadratic', 'bezier'],
-    QUADRATIC = 'quadratic',
-    T_COG = 'Cog',
-    ZERO_PATH = 'M0,0';
+import { BEZIER, ENTITY, LINE, PERMITTED_CURVES, QUADRATIC, T_COG, ZERO_PATH } from '../core/shared-vars.js';
 
 
 // #### Cog constructor

@@ -21,37 +21,17 @@
 
 
 // #### Imports
-import { 
-    animation, 
-    constructors, 
-} from '../core/library.js';
+import { animation, constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    xt, 
-    λnull, 
-    λpromise, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, removeItem, xt, λnull, λpromise, λthis, Ωempty } from '../core/utilities.js';
 
 import { forceUpdate } from '../core/system-flags.js';
 
-import { 
-    animateAdd, 
-    animateIncludes,
-    animateRemove, 
-} from '../core/animationloop.js';
+import { animateAdd, animateIncludes, animateRemove } from '../core/animationloop.js';
 
 import baseMix from '../mixin/base.js';
 
-
-// Local constants
-const ANIMATION = 'animation',
-    T_ANIMATION = 'Animation';
+import { ANIMATION, T_ANIMATION } from '../core/shared-vars.js';
 
 
 // #### Animation constructor

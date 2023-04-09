@@ -16,38 +16,16 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_number, 
-    mergeOver, 
-    xt, 
-    xta, 
-    xto, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_number, mergeOver, xt, xta, xto, Ωempty } from '../core/utilities.js';
 
-import { 
-    releaseCoordinate, 
-    requestCoordinate, 
-} from './coordinate.js';
+import { releaseCoordinate, requestCoordinate } from './coordinate.js';
 
-import { 
-    releaseCell, 
-    requestCell, 
-} from './cell-fragment.js';
+import { releaseCell, requestCell } from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { 
-    _radian, 
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const T_CRESCENT = 'Crescent',
-    ENTITY = 'entity',
-    DESTINATION_OUT = 'destination-out';
+import { _radian, DESTINATION_OUT, ENTITY, T_CRESCENT } from '../core/shared-vars.js';
 
 
 // __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number

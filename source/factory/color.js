@@ -13,98 +13,16 @@
 
 
 // #### Imports
-import { 
-    constructors, 
-    entity, 
-} from '../core/library.js';
+import { constructors, entity } from '../core/library.js';
 
-import { 
-    correctAngle, 
-    doCreate,
-    easeEngines, 
-    interpolate, 
-    isa_fn, 
-    isa_obj, 
-    mergeOver, 
-    pushUnique, 
-    xt, 
-    xtGet, 
-    λfirstArg, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { correctAngle, doCreate, easeEngines, interpolate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xtGet, λfirstArg, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import { 
-    _abs,
-    _atan2,
-    _cbrt,
-    _cos,
-    _entries,
-    _floor,
-    _freeze,
-    _isArray,
-    _keys,
-    _max,
-    _min,
-    _pi,
-    _pow,
-    _radian, 
-    _random,
-    _round,
-    _sin,
-    _sqrt,
-} from '../core/shared-vars.js';
+import { _abs, _atan2, _cbrt, _cos, _entries, _floor, _freeze, _isArray, _keys, _max, _min, _pi, _pow, _radian,  _random, _round, _sin, _sqrt, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../core/shared-vars.js';
 
 
 // Local constants
-const _0 = '0',
-    _2D = '2d',
-    _HSL = 'hsl',
-    _HWB = 'hwb',
-    _LAB = 'lab',
-    _LCH = 'lch',
-    _MAX = '_max',
-    _MIN = '_min',
-    _OKLAB = 'oklab',
-    _OKLCH = 'oklch',
-    _RGB = 'rgb',
-    _XYZ = 'xyz',
-    BLACK = 'rgb(0 0 0 / 1)',
-    BLACK_HEX = '#000000',
-    BLANK = 'rgb(0 0 0 / 0)',
-    CANVAS = 'canvas',
-    DEG = 'deg',
-    FUNCTION = 'function',
-    GRAD = 'grad',
-    HSL = 'HSL',
-    HSL_HWB_ARRAY = ['HSL', 'HWB'],
-    HWB = 'HWB',
-    INT_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'],
-    LAB = 'LAB',
-    LCH = 'LCH',
-    LINEAR = 'linear',
-    MAX = 'max',
-    MIN = 'min',
-    NAME = 'name',
-    NONE = 'none',
-    OKLAB = 'OKLAB',
-    OKLCH = 'OKLCH',
-    PC = '%',
-    RAD = 'rad',
-    RANDOM = 'random',
-    RET_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'LAB', 'LCH', 'OKLAB', 'OKLCH'],
-    RGB = 'RGB',
-    SOURCE_OVER = 'source-over',
-    SPACE = ' ',
-    STYLES = 'styles',
-    T_COLOR = 'Color',
-    TURN = 'turn',
-    UNDEF = 'undefined',
-    WHITE = 'rgb(255 255 255 / 1)',
-    XYZ = 'XYZ',
-    ZERO_STR = '';
-
 const E = 216/24389;
 const K = 24389/27;
 const cbrt = (_cbrt != null) ? _cbrt : (val) => _pow(val, 1 / 3);

@@ -17,87 +17,14 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    pushUnique, 
-    xt, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, xt, Ωempty } from '../core/utilities.js';
 
-import { 
-    releaseCell, 
-    requestCell, 
-} from './cell-fragment.js';
+import { releaseCell, requestCell } from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 
-import { 
-    _isArray,
-    _max,
-    _min,
-} from '../core/shared-vars.js';
+import { _isArray, _max, _min, _PC, _Q, BOLD, BOLDER, CAP, CH, CM, CONDENSED, DEFAULT_SIZE, EM, EX, EXPANDED, EXTRA_CONDENSED, EXTRA_EXPANDED, FONT_ATTRIBUTE, IC, IN, ITALIC, LARGE, LARGER, LH, LIGHTER, MEDIUM, MM, NORMAL, OBLIQUE, PC, PT, PX, REM, RFS_ARRAY_1, RFS_ARRAY_2, RLH, SANS_SERIF, SEMI_CONDENSED, SEMI_EXPANDED, SIZE_SUFFIX, SMALL, SMALL_CAPS, SMALLER, SPACE, STOP, T_CELL, T_FONT_ATTRIBUTES, ULTRA_CONDENSED, ULTRA_EXPANDED, VB, VH, VI, VMAX, VMIN, VW, X_LARGE, X_SMALL, XX_LARGE, XX_SMALL, XXX_LARGE, ZERO_STR } from '../core/shared-vars.js';
 
-
-// Local constants
-const _PC = 'pc',
-    _Q = 'Q',
-    BOLD = 'bold',
-    BOLDER = 'bolder',
-    CAP = 'cap',
-    CH = 'ch',
-    CM = 'cm',
-    CONDENSED = 'condensed',
-    DEFAULT_SIZE = '12px',
-    EM = 'em',
-    EX = 'ex',
-    EXPANDED = 'expanded',
-    EXTRA_CONDENSED = 'extra-condensed',
-    EXTRA_EXPANDED = 'extra-expanded',
-    FONT_ATTRIBUTE = 'fontattribute',
-    IC = 'ic',
-    IN = 'in',
-    ITALIC = 'italic',
-    LARGE = 'large',
-    LARGER = 'larger',
-    LH = 'lh',
-    LIGHTER = 'lighter',
-    MEDIUM = 'medium',
-    MM = 'mm',
-    NORMAL = 'normal',
-    OBLIQUE = 'oblique',
-    PC = '%',
-    PT = 'pt',
-    PX = 'px',
-    REM = 'rem',
-    RLH = 'rlh',
-    SANS_SERIF = 'sans-serif',
-    SEMI_CONDENSED = 'semi-condensed',
-    SEMI_EXPANDED = 'semi-expanded',
-    SIZE_SUFFIX = ['in', 'cm', 'mm', 'Q', 'pc', 'pt', 'px'],
-    SMALL = 'small',
-    SMALL_CAPS = 'small-caps',
-    SMALLER = 'smaller',
-    SPACE = ' ',
-    STOP = '.',
-    T_CELL = 'Cell',
-    T_FONT_ATTRIBUTES = 'FontAttributes',
-    ULTRA_CONDENSED = 'ultra-condensed',
-    ULTRA_EXPANDED = 'ultra-expanded',
-    VB = 'vb',
-    VH = 'vh',
-    VI = 'vi',
-    VMAX = 'vmax',
-    VMIN = 'vmin',
-    VW = 'vw',
-    X_LARGE = 'x-large',
-    X_SMALL = 'x-small',
-    XX_LARGE = 'xx-large',
-    XX_SMALL = 'xx-small',
-    XXX_LARGE = 'xxx-large',
-    ZERO_STR = '',
-    RFS_ARRAY_1 = ['italic','oblique','small-caps','normal','bold','lighter','bolder','ultra-condensed','extra-condensed','semi-condensed','condensed','ultra-expanded','extra-expanded','semi-expanded','expanded','xx-small','x-small','small','medium','xxx-large','xx-large','x-large','large'],
-    RFS_ARRAY_2 = ['0','1','2','3','4','5','6','7','8','9'];
 
 
 // #### FontAttributes constructor
