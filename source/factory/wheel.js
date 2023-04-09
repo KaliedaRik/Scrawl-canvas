@@ -20,6 +20,7 @@
 import { constructors } from '../core/library.js';
 
 import { 
+    doCreate,
     isa_number, 
     mergeOver, 
     xt, 
@@ -33,6 +34,13 @@ import entityMix from '../mixin/entity.js';
 import { 
     _radian, 
 } from '../core/shared-vars.js';
+
+
+// Local constants
+const DIMENSIONS = 'dimensions';
+const ENTITY = 'entity';
+const PC = '%';
+const T_WHEEL = 'Wheel';
 
 
 // __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
@@ -59,9 +67,9 @@ const Wheel = function (items = Ωempty) {
 
 
 // #### Wheel prototype
-const P = Wheel.prototype = Object.create(Object.prototype);
-P.type = 'Wheel';
-P.lib = 'entity';
+const P = Wheel.prototype = doCreate();
+P.type = T_WHEEL;
+P.lib = ENTITY;
 P.isArtefact = true;
 P.isAsset = false;
 
@@ -129,7 +137,7 @@ S.width = function (val) {
 
     if (val != null) {
 
-        let dims = this.dimensions;
+        const dims = this.dimensions;
 
         dims[0] = dims[1] = val;
         this.dimensionsHelper();
@@ -137,7 +145,7 @@ S.width = function (val) {
 };
 D.width = function (val) {
 
-    let dims = this.dimensions;
+    const dims = this.dimensions;
 
     dims[0] = dims[1] = addStrings(dims[0], val);
     this.dimensionsHelper();
@@ -147,7 +155,7 @@ S.height = function (val) {
 
     if (val != null) {
 
-        let dims = this.dimensions;
+        const dims = this.dimensions;
 
         dims[0] = dims[1] = val;
         this.dimensionsHelper();
@@ -155,7 +163,7 @@ S.height = function (val) {
 };
 D.height = function (val) {
 
-    let dims = this.dimensions;
+    const dims = this.dimensions;
 
     dims[0] = dims[1] = addStrings(dims[0], val);
     this.dimensionsHelper();
@@ -163,12 +171,12 @@ D.height = function (val) {
 
 S.dimensions = function (w, h) {
 
-    this.setCoordinateHelper('dimensions', w, h);
+    this.setCoordinateHelper(DIMENSIONS, w, h);
     this.dimensionsHelper();
 };
 D.dimensions = function (w, h) {
 
-    this.setDeltaCoordinateHelper('dimensions', w, h);
+    this.setDeltaCoordinateHelper(DIMENSIONS, w, h);
     this.dimensionsHelper();
 }
 
@@ -246,7 +254,7 @@ S.clockwise = function (bool) {
 // Internal functions for reconciling dimensions and radius attribute values
 P.dimensionsHelper = function () {
 
-    let width = this.dimensions[0];
+    const width = this.dimensions[0];
 
     if (width.substring) this.radius = `${(parseFloat(width) / 2)}%`;
     else this.radius = (width / 2);
@@ -256,10 +264,10 @@ P.dimensionsHelper = function () {
 };
 P.radiusHelper = function () {
 
-    let radius = this.radius,
+    const radius = this.radius,
         dims = this.dimensions;
 
-    if (radius.substring) dims[0] = dims[1] = (parseFloat(radius) * 2) + '%';
+    if (radius.substring) dims[0] = dims[1] = (parseFloat(radius) * 2) + PC;
     else dims[0] = dims[1] = (radius * 2);
 
     this.dirtyDimensions = true;
@@ -269,7 +277,7 @@ P.radiusHelper = function () {
 // Dimensions calculations - overwrites mixin/position.js function
 P.cleanDimensionsAdditionalActions = function () {
 
-    let radius = this.radius,
+    const radius = this.radius,
         dims = this.currentDimensions,
         calculatedRadius = (radius.substring) ? (parseFloat(radius) / 100) * dims[0] : radius;
 
@@ -281,7 +289,6 @@ P.cleanDimensionsAdditionalActions = function () {
     else this.currentRadius = calculatedRadius;
 };
 
-
 // Calculate the Wheel entity's __Path2D object__
 P.cleanPathObject = function () {
 
@@ -289,9 +296,9 @@ P.cleanPathObject = function () {
 
     if (!this.noPathUpdates || !this.pathObject) {
 
-        let p = this.pathObject = new Path2D();
+        const p = this.pathObject = new Path2D();
 
-        let handle = this.currentStampHandlePosition,
+        const handle = this.currentStampHandlePosition,
             scale = this.currentScale,
             radius = this.currentRadius * scale,
             x = radius - (handle[0] * scale),

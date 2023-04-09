@@ -41,8 +41,9 @@ import {
 import { forceUpdate } from '../core/system-flags.js';
 
 import { 
-    animate, 
-    resortAnimations, 
+    animateAdd, 
+    animateIncludes,
+    animateRemove, 
 } from '../core/animationloop.js';
 
 import baseMix from '../mixin/base.js';
@@ -139,8 +140,7 @@ P.clone = λthis;
 P.run = function () {
 
     this.onRun();
-    pushUnique(animate, this.name);
-    resortAnimations();
+    animateAdd(this.name);
 
     setTimeout(() => forceUpdate(), 20);
     
@@ -151,7 +151,7 @@ P.run = function () {
 // `isRunning` - returns true if animation is running; false otherwise
 P.isRunning = function () {
 
-    return (animate.includes(this.name)) ? true : false;
+    return animateIncludes(this.name);
 };
 
 
@@ -159,8 +159,7 @@ P.isRunning = function () {
 P.halt = function () {
 
     this.onHalt();
-    removeItem(animate, this.name);
-    resortAnimations();
+    animateRemove(this.name);
     return this;
 };
 
@@ -169,7 +168,7 @@ P.halt = function () {
 P.kill = function () {
 
     this.onKill();
-    removeItem(animate, this.name);
+    animateRemove(this.name);
     resortAnimations();
 
     this.deregister();

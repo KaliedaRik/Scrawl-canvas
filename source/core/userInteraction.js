@@ -8,7 +8,9 @@
 
 // #### Imports
 import * as library from "./library.js";
+
 import { isa_obj } from "./utilities.js";
+
 import { addListener } from "./events.js";
 
 import { makeAnimation } from "../factory/animation.js";
@@ -33,6 +35,42 @@ import {
     forceUpdate,
 } from './system-flags.js';
 
+import {
+    _entries,
+    _floor,
+    _now,
+    _round,
+} from './shared-vars.js'
+
+
+// Local constants
+const ADD_EVENT_LISTENER = 'addEventListener',
+    CHANGE = 'change',
+    MOUSE = 'mouse',
+    MOUSE_DOWN = 'mousedown',
+    MOUSE_ENTER = 'mouseenter',
+    MOUSE_LEAVE = 'mouseleave',
+    MOUSE_MOVE = 'mousemove',
+    MOUSE_UP = 'mouseup',
+    MOVE = 'move',
+    POINTER = 'pointer',
+    POINTER_DOWN = 'pointerdown',
+    POINTER_ENTER = 'pointerenter',
+    POINTER_LEAVE = 'pointerleave',
+    POINTER_MOVE = 'pointermove',
+    POINTER_UP = 'pointerup',
+    REMOVE_EVENT_LISTENER = 'removeEventListener',
+    RESIZE = 'resize',
+    SCROLL = 'scroll',
+    T_CANVAS = 'Canvas',
+    T_PHRASE = 'Phrase',
+    TOUCH = 'touch',
+    TOUCH_CANCEL = 'touchcancel',
+    TOUCH_END = 'touchend',
+    TOUCH_MOVE = 'touchmove',
+    TOUCH_START = 'touchstart';
+
+
 // `Exported array` (to modules). DOM element wrappers subscribe for updates by adding themselves to the __uiSubscribedElements__ array. When an event fires, the updated data will be pushed to them automatically
 export const uiSubscribedElements = [];
 
@@ -45,7 +83,7 @@ export const currentCorePosition = {
     scrollY: 0,
     w: 0,
     h: 0,
-    type: 'mouse',
+    type: MOUSE,
     prefersReducedMotion: false,
     prefersDarkColorScheme: false,
     prefersReduceTransparency: false,
@@ -60,11 +98,11 @@ export const currentCorePosition = {
 // __contrastMediaQuery__ - real-time check on the `prefers-reduced-motion` user preference, as set for the device or OS
 const contrastMediaQuery = window.matchMedia("(prefers-contrast: more)");
 
-contrastMediaQuery.addEventListener('change', () => {
+contrastMediaQuery.addEventListener(CHANGE, () => {
 
-    let res = contrastMediaQuery.matches;
+    const res = contrastMediaQuery.matches;
 
-    if (currentCorePosition.prefersContrast !== res) {
+    if (currentCorePosition.prefersContrast != res) {
 
         currentCorePosition.prefersContrast = res;
         setPrefersContrastChanged(true);
@@ -75,11 +113,11 @@ currentCorePosition.prefersContrast = contrastMediaQuery.matches;
 // __reducedMotionMediaQuery__ - real-time check on the `prefers-reduced-motion` user preference, as set for the device or OS
 const reducedMotionMediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-reducedMotionMediaQuery.addEventListener('change', () => {
+reducedMotionMediaQuery.addEventListener(CHANGE, () => {
 
-    let res = reducedMotionMediaQuery.matches;
+    const res = reducedMotionMediaQuery.matches;
 
-    if (currentCorePosition.prefersReducedMotion !== res) {
+    if (currentCorePosition.prefersReducedMotion != res) {
 
         currentCorePosition.prefersReducedMotion = res;
         setPrefersReducedMotionChanged(true);
@@ -90,11 +128,11 @@ currentCorePosition.prefersReducedMotion = reducedMotionMediaQuery.matches;
 // __colorSchemeMediaQuery__ - real-time check on the `prefers-color-scheme` user preference, as set for the device or OS
 const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-colorSchemeMediaQuery.addEventListener('change', () => {
+colorSchemeMediaQuery.addEventListener(CHANGE, () => {
 
-    let res = colorSchemeMediaQuery.matches;
+    const res = colorSchemeMediaQuery.matches;
 
-    if (currentCorePosition.prefersDarkColorScheme !== res) {
+    if (currentCorePosition.prefersDarkColorScheme != res) {
 
         currentCorePosition.prefersDarkColorScheme = res;
         setPrefersDarkColorSchemeChanged(true);
@@ -105,11 +143,11 @@ currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;
 // __reducedTransparencyMediaQuery__ - real-time check on the `prefers-reduced-transparency` user preference, as set for the device or OS
 const reducedTransparencyMediaQuery = window.matchMedia("(prefers-reduced-transparency: reduce)");
 
-reducedTransparencyMediaQuery.addEventListener('change', () => {
+reducedTransparencyMediaQuery.addEventListener(CHANGE, () => {
 
-    let res = reducedTransparencyMediaQuery.matches;
+    const res = reducedTransparencyMediaQuery.matches;
 
-    if (currentCorePosition.prefersReduceTransparency !== res) {
+    if (currentCorePosition.prefersReduceTransparency != res) {
 
         currentCorePosition.prefersReduceTransparency = res;
         setPrefersReduceTransparencyChanged(true);
@@ -120,11 +158,11 @@ currentCorePosition.prefersReduceTransparency = reducedTransparencyMediaQuery.ma
 // __reducedDataMediaQuery__ - real-time check on the `prefers-reduced-data` user preference, as set for the device or OS
 const reducedDataMediaQuery = window.matchMedia("(prefers-reduced-data: reduce)");
 
-reducedDataMediaQuery.addEventListener('change', () => {
+reducedDataMediaQuery.addEventListener(CHANGE, () => {
 
-    let res = reducedDataMediaQuery.matches;
+    const res = reducedDataMediaQuery.matches;
 
-    if (currentCorePosition.prefersReduceData !== res) {
+    if (currentCorePosition.prefersReduceData != res) {
 
         currentCorePosition.prefersReduceData = res;
         setPrefersReduceDataChanged(true);
@@ -138,10 +176,10 @@ currentCorePosition.prefersReduceData = reducedDataMediaQuery.matches;
 // __resizeAction__ function - to check if a view resize has occurred; if yes, flag that currentCorePosition object needs to be updated
 const resizeAction = function (e) {
 
-    let w = document.documentElement.clientWidth,
+    const w = document.documentElement.clientWidth,
         h = document.documentElement.clientHeight;
 
-    if (currentCorePosition.w !== w || currentCorePosition.h !== h) {
+    if (currentCorePosition.w != w || currentCorePosition.h != h) {
 
         currentCorePosition.w = w;
         currentCorePosition.h = h;
@@ -156,10 +194,10 @@ const resizeAction = function (e) {
 // __scrollAction__ function - to check if a view scroll has occurred; if yes, flag that currentCorePosition object needs to be updated
 const scrollAction = function (e) {
 
-    let x = window.pageXOffset,
+    const x = window.pageXOffset,
         y = window.pageYOffset;
 
-    if (currentCorePosition.scrollX !== x || currentCorePosition.scrollY !== y) {
+    if (currentCorePosition.scrollX != x || currentCorePosition.scrollY != y) {
         currentCorePosition.x += (x - currentCorePosition.scrollX);
         currentCorePosition.y += (y - currentCorePosition.scrollY);
         currentCorePosition.scrollX = x;
@@ -175,11 +213,11 @@ const scrollAction = function (e) {
 // The events that trigger this function (pointermove, pointerup, pointerdown, pointerleave, pointerenter; or mousemove, mouseup, mousedown, mouseleave, mouseenter) are tied to the window object, not to any particular DOM element.
 const moveAction = function (e) {
 
-    let x = Math.round(e.pageX),
-        y = Math.round(e.pageY);
+    const x = _round(e.pageX),
+        y = _round(e.pageY);
 
-    if (currentCorePosition.x !== x || currentCorePosition.y !== y) {
-        currentCorePosition.type = (navigator.pointerEnabled) ? 'pointer' : 'mouse';
+    if (currentCorePosition.x != x || currentCorePosition.y != y) {
+        currentCorePosition.type = (navigator.pointerEnabled) ? POINTER : MOUSE;
         currentCorePosition.x = x;
         currentCorePosition.y = y;
         setMouseChanged(true);
@@ -216,19 +254,19 @@ const touchAction = function (e, resetCoordsToZeroOnTouchEnd = true) {
         currentCorePosition.rawTouches.push(...e.touches);
 
         const touch = e.touches[0],
-            x = Math.round(touch.pageX),
-            y = Math.round(touch.pageY);
+            x = _round(touch.pageX),
+            y = _round(touch.pageY);
 
         if (currentCorePosition.x !== x || currentCorePosition.y !== y) {
 
-            currentCorePosition.type = 'touch';
+            currentCorePosition.type = TOUCH;
             currentCorePosition.x = x;
             currentCorePosition.y = y;
         }
     }
     else {
 
-        currentCorePosition.type = 'touch';
+        currentCorePosition.type = TOUCH;
 
         if (resetCoordsToZeroOnTouchEnd) {
 
@@ -237,7 +275,7 @@ const touchAction = function (e, resetCoordsToZeroOnTouchEnd = true) {
         }
     }
 
-    const now = Date.now();
+    const now = _now();
 
     if (now > touchActionLastChecked + touchActionChoke) {
 
@@ -284,14 +322,14 @@ const updateUiSubscribedElement = function (art) {
         if (el) {
 
             const dims = el.getBoundingClientRect(),
-                dox = Math.round(dims.left + window.pageXOffset),
-                doy = Math.round(dims.top + window.pageYOffset),
+                dox = _round(dims.left + window.pageXOffset),
+                doy = _round(dims.top + window.pageYOffset),
                 dot = dims.top,
                 doh = dims.height,
                 wih = window.innerHeight;
 
-            here.w = Math.round(dims.width);
-            here.h = Math.round(doh);
+            here.w = _round(dims.width);
+            here.h = _round(doh);
 
             here.type = currentCorePosition.type;
 
@@ -310,8 +348,8 @@ const updateUiSubscribedElement = function (art) {
                 here.localListener = false;
                 here.active = true;
 
-                here.x = Math.round(currentCorePosition.x - dox);
-                here.y = Math.round(currentCorePosition.y - doy);
+                here.x = _round(currentCorePosition.x - dox);
+                here.y = _round(currentCorePosition.y - doy);
 
                 here.normX = (here.w) ? here.x / here.w : false;
                 here.normY = (here.h) ? here.y / here.h : false;
@@ -346,12 +384,12 @@ const updateUiSubscribedElement = function (art) {
 
                     const touch = touches[i];
 
-                    here.touches.push([Math.round(touch.pageX - dox), Math.round(touch.pageY - doy)]);
+                    here.touches.push([_round(touch.pageX - dox), _round(touch.pageY - doy)]);
                 }
             }
 
             // Canvas `fit` attribute adjustments
-            if (dom.type === 'Canvas') dom.updateBaseHere(here, dom.fit);
+            if (dom.type == T_CANVAS) dom.updateBaseHere(here, dom.fit);
 
             // Automatically check for element resize
             // + The artefact's `checkForResize` flag needs to be set
@@ -361,7 +399,7 @@ const updateUiSubscribedElement = function (art) {
 
                 let [w, h] = dom.currentDimensions;
 
-                if (dom.type === 'Canvas') {
+                if (dom.type == T_CANVAS) {
                     // Regardless of the setting of &lt;canvas> element's `boxSizing` style attribute:
                     // + It will include padding and borders in its `getBoundingClientRect` object (and its `getComputedStyle` width/height values), but these are specifically excluded from the element's `width` and `height` attributes
                     // + Which leads to the normal resize test - `if (w !== here.w || h !== here.h)` - triggering on every mouse/scroll/resize event, which in turn leads to the canvas dimensions increasing uncontrollably.
@@ -370,8 +408,8 @@ const updateUiSubscribedElement = function (art) {
                     if (!dom.computedStyles) dom.computedStyles = window.getComputedStyle(dom.domElement);
 
                     let s = dom.computedStyles,
-                        hw = Math.floor(here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth) - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight)),
-                        hh = Math.floor(here.h - parseFloat(s.borderTopWidth) - parseFloat(s.borderBottomWidth) - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom));
+                        hw = _floor(here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth) - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight)),
+                        hh = _floor(here.h - parseFloat(s.borderTopWidth) - parseFloat(s.borderBottomWidth) - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom));
 
                     if (w !== hw || h !== hh) {
 
@@ -400,9 +438,9 @@ const updateUiSubscribedElement = function (art) {
 
 const updatePhraseEntitys = function () {
 
-    for (const [name, ent] of Object.entries(library.entity)) {
+    for (const [name, ent] of _entries(library.entity)) {
 
-        if (ent.type === 'Phrase') {
+        if (ent.type == T_PHRASE) {
 
             ent.dirtyDimensions = true;
             ent.dirtyFont = true;
@@ -422,12 +460,12 @@ export const addLocalMouseMoveListener = function (wrapper) {
         wrapper.here.originalWidth = wrapper.currentDimensions[0];
         wrapper.here.originalHeight = wrapper.currentDimensions[1];
 
-        wrapper.localMouseListener = addListener('move', function (e) {
+        wrapper.localMouseListener = addListener(MOVE, function (e) {
 
             if (wrapper.here) {
 
-                wrapper.here.x = Math.round(parseFloat(e.offsetX));
-                wrapper.here.y = Math.round(parseFloat(e.offsetY));
+                wrapper.here.x = _round(parseFloat(e.offsetX));
+                wrapper.here.y = _round(parseFloat(e.offsetY));
             }
         }, wrapper.domElement);
     }
@@ -491,8 +529,8 @@ const coreListenersTracker = makeAnimation({
 // `Exported functions` (to modules and the scrawl object). Event listeners can be a drain on web page efficiency. If a web page contains only static canvas (and/or stack) displays, with no requirement for user interaction, we can minimize Scrawl-canvas's impact on those pages by switching off the core listeners (and also the core animation loop).
 export const startCoreListeners = function () {
 
-    actionCoreListeners('removeEventListener');
-    actionCoreListeners('addEventListener');
+    actionCoreListeners(REMOVE_EVENT_LISTENER);
+    actionCoreListeners(ADD_EVENT_LISTENER);
 
     setTrackMouse(true);
     setMouseChanged(true);
@@ -505,7 +543,7 @@ export const stopCoreListeners = function () {
     setMouseChanged(false);
     coreListenersTracker.halt();
 
-    actionCoreListeners('removeEventListener');
+    actionCoreListeners(REMOVE_EVENT_LISTENER);
 };
 
 // Helper function
@@ -513,28 +551,28 @@ const actionCoreListeners = function (action) {
 
     if (navigator.pointerEnabled || navigator.msPointerEnabled) {
 
-        window[action]('pointermove', moveAction, false);
-        window[action]('pointerup', moveAction, false);
-        window[action]('pointerdown', moveAction, false);
-        window[action]('pointerleave', moveAction, false);
-        window[action]('pointerenter', moveAction, false);
+        window[action](POINTER_MOVE, moveAction, false);
+        window[action](POINTER_UP, moveAction, false);
+        window[action](POINTER_DOWN, moveAction, false);
+        window[action](POINTER_LEAVE, moveAction, false);
+        window[action](POINTER_ENTER, moveAction, false);
     }
     else {
 
-        window[action]('mousemove', moveAction, false);
-        window[action]('mouseup', moveAction, false);
-        window[action]('mousedown', moveAction, false);
-        window[action]('mouseleave', moveAction, false);
-        window[action]('mouseenter', moveAction, false);
+        window[action](MOUSE_MOVE, moveAction, false);
+        window[action](MOUSE_UP, moveAction, false);
+        window[action](MOUSE_DOWN, moveAction, false);
+        window[action](MOUSE_LEAVE, moveAction, false);
+        window[action](MOUSE_ENTER, moveAction, false);
 
-        window[action]('touchmove', touchAction, {passive: true});
-        window[action]('touchstart', touchAction, {passive: true});
-        window[action]('touchend', touchAction, {passive: true});
-        window[action]('touchcancel', touchAction, {passive: true});
+        window[action](TOUCH_MOVE, touchAction, {passive: true});
+        window[action](TOUCH_START, touchAction, {passive: true});
+        window[action](TOUCH_END, touchAction, {passive: true});
+        window[action](TOUCH_CANCEL, touchAction, {passive: true});
     }
 
-    window[action]('scroll', scrollAction, {passive: true});
-    window[action]('resize', resizeAction, false);
+    window[action](SCROLL, scrollAction, {passive: true});
+    window[action](RESIZE, resizeAction, false);
 };
 
 // `Exported functions` (to modules). Invoke the resize and/or scroll event listeners once, outside the regular requestAnimationFrame tick.

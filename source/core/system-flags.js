@@ -33,6 +33,18 @@ let prefersReduceDataChanged = false;
 export const getPrefersReduceDataChanged = () => prefersReduceDataChanged;
 export const setPrefersReduceDataChanged = (val) => prefersReduceDataChanged = val;
 
+let resortBatchAnimations = true;
+export const getResortBatchAnimations = () => resortBatchAnimations;
+export const setResortBatchAnimations = (val) => resortBatchAnimations = val;
+
+let doAnimation = false;
+export const getDoAnimation = () => doAnimation;
+export const setDoAnimation = (val) => doAnimation = val;
+
+let rootElementsSort = true;
+export const getRootElementsSort = () => rootElementsSort;
+export const setRootElementsSort = (val) => rootElementsSort = val;
+
 
 export const forceUpdate = function () {
 

@@ -13,10 +13,92 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { generateUniqueString, xt, λthis, λnull, Ωempty } from '../core/utilities.js';
+
+import { 
+    doCreate,
+    generateUniqueString, 
+    xt, 
+    λthis, 
+    λnull, 
+    Ωempty, 
+} from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
+
+import { 
+    _freeze,
+    _isArray,
+    ASSET_IMPORT_REGEX,
+} from '../core/shared-vars.js';
+
+
+// Local constants
+const _VIDEO = 'VIDEO',
+    ANONYMOUS = 'anonymous',
+    ASSET = 'asset',
+    AUTO = 'auto',
+    BLOCK = 'block',
+    MAYBE = 'maybe',
+    NONE = 'none',
+    SOURCE = 'source',
+    T_VIDEO = 'Video',
+    VIDEO = 'video',
+    ZERO_STR = '';
+
+// `gettableVideoAssetAtributes`, `settableVideoAssetAtributes` - exported Arrays.
+// + TODO - I was planning to make the &lt;video> element's attributes accessible to Picture entitys and Pattern styles - need to check if work has been completed at their end.
+export const gettableVideoAssetAtributes = _freeze([
+    'video_audioTracks',
+    'video_autoPlay',
+    'video_buffered',
+    'video_controller',
+    'video_controls',
+    'video_controlsList',
+    'video_crossOrigin',
+    'video_currentSrc',
+    'video_currentTime',
+    'video_defaultMuted',
+    'video_defaultPlaybackRate',
+    'video_disableRemotePlayback',
+    'video_duration',
+    'video_ended',
+    'video_error',
+    'video_loop',
+    'video_mediaGroup',
+    'video_mediaKeys',
+    'video_muted',
+    'video_networkState',
+    'video_paused',
+    'video_playbackRate',
+    'video_readyState',
+    'video_seekable',
+    'video_seeking',
+    'video_sinkId',
+    'video_src',
+    'video_srcObject',
+    'video_textTracks',
+    'video_videoTracks',
+    'video_volume',
+]);
+
+export const settableVideoAssetAtributes = _freeze([
+    'video_autoPlay',
+    'video_controller',
+    'video_controls',
+    'video_crossOrigin',
+    'video_currentTime',
+    'video_defaultMuted',
+    'video_defaultPlaybackRate',
+    'video_disableRemotePlayback',
+    'video_loop',
+    'video_mediaGroup',
+    'video_muted',
+    'video_playbackRate',
+    'video_src',
+    'video_srcObject',
+    'video_volume',
+]);
 
 
 // #### VideoAsset constructor
@@ -27,9 +109,9 @@ const VideoAsset = function (items = Ωempty) {
 
 
 // #### VideoAsset prototype
-const P = VideoAsset.prototype = Object.create(Object.prototype);
-P.type = 'Video';
-P.lib = 'asset';
+const P = VideoAsset.prototype = doCreate();
+P.type = T_VIDEO;
+P.lib = ASSET;
 P.isArtefact = false;
 P.isAsset = true;
 
@@ -77,7 +159,7 @@ S.source = function (item) {
 
     if (item) {
 
-        if (item.tagName.toUpperCase() === 'VIDEO') {
+        if (item.tagName.toUpperCase() == _VIDEO) {
 
             this.source = item;
             this.sourceNaturalWidth = item.videoWidth || 0;
@@ -98,7 +180,7 @@ S.source = function (item) {
 // + TODO: there may be a more efficient way of doing this? If the first subscriber triggers a notify action, which propagates to all subscribers, then subsequent subscribers don't need to invoke this function for the remainder of this display cycle.
 P.checkSource = function (width, height) {
 
-    let source = this.source;
+    const source = this.source;
 
     if (source && source.readyState > 2) {
 
@@ -127,7 +209,7 @@ P.checkSource = function (width, height) {
 // `addTextTrack`
 P.addTextTrack = function (kind, label, language) {
 
-    let source = this.source;
+    const source = this.source;
 
     if (source && source.addTextTrack) source.addTextTrack(kind, label, language);
 };
@@ -135,7 +217,7 @@ P.addTextTrack = function (kind, label, language) {
 // `captureStream`
 P.captureStream = function () {
 
-    let source = this.source;
+    const source = this.source;
 
     if (source && source.captureStream) return source.captureStream();
     else return false;
@@ -144,16 +226,16 @@ P.captureStream = function () {
 // `canPlayType`
 P.canPlayType = function (mytype) {
 
-    let source = this.source;
+    const source = this.source;
 
     if (source) return source.canPlayType(mytype);
-    else return 'maybe';
+    else return MAYBE;
 };
 
 // `fastSeek`
 P.fastSeek = function (time) {
 
-    let source = this.source;
+    const source = this.source;
 
     if (source && source.fastSeek) source.fastSeek(time);
 };
@@ -161,7 +243,7 @@ P.fastSeek = function (time) {
 // `load`
 P.load = function () {
 
-    let source = this.source;
+    const source = this.source;
 
     if (source) source.load();
 };
@@ -169,7 +251,7 @@ P.load = function () {
 // `pause`
 P.pause = function () {
 
-    let source = this.source;
+    const source = this.source;
 
     if (source) source.pause();
 };
@@ -177,7 +259,7 @@ P.pause = function () {
 // `play`
 P.play = function () {
 
-    let source = this.source;
+    const source = this.source;
 
     if (source) return source.play().catch((e) => console.log(e.code, e.name, e.message));
     else return Promise.reject('Source not defined');
@@ -186,7 +268,7 @@ P.play = function () {
 // `setMediaKeys`
 P.setMediaKeys = function (keys) {
 
-    let source = this.source;
+    const source = this.source;
 
     if (source) {
 
@@ -199,7 +281,7 @@ P.setMediaKeys = function (keys) {
 // `setSinkId`
 P.setSinkId = function () {
 
-    let source = this.source;
+    const source = this.source;
 
     if (source) {
 
@@ -210,60 +292,6 @@ P.setSinkId = function () {
 };
 
 
-// `gettableVideoAssetAtributes`, `settableVideoAssetAtributes` - exported Arrays.
-// + TODO - I was planning to make the &lt;video> element's attributes accessible to Picture entitys and Pattern styles - need to check if work has been completed at their end.
-export const gettableVideoAssetAtributes = [
-    'video_audioTracks',
-    'video_autoPlay',
-    'video_buffered',
-    'video_controller',
-    'video_controls',
-    'video_controlsList',
-    'video_crossOrigin',
-    'video_currentSrc',
-    'video_currentTime',
-    'video_defaultMuted',
-    'video_defaultPlaybackRate',
-    'video_disableRemotePlayback',
-    'video_duration',
-    'video_ended',
-    'video_error',
-    'video_loop',
-    'video_mediaGroup',
-    'video_mediaKeys',
-    'video_muted',
-    'video_networkState',
-    'video_paused',
-    'video_playbackRate',
-    'video_readyState',
-    'video_seekable',
-    'video_seeking',
-    'video_sinkId',
-    'video_src',
-    'video_srcObject',
-    'video_textTracks',
-    'video_videoTracks',
-    'video_volume',
-];
-
-export const settableVideoAssetAtributes = [
-    'video_autoPlay',
-    'video_controller',
-    'video_controls',
-    'video_crossOrigin',
-    'video_currentTime',
-    'video_defaultMuted',
-    'video_defaultPlaybackRate',
-    'video_disableRemotePlayback',
-    'video_loop',
-    'video_mediaGroup',
-    'video_muted',
-    'video_playbackRate',
-    'video_src',
-    'video_srcObject',
-    'video_volume',
-];
-
 
 // #### Import videos
 
@@ -273,24 +301,22 @@ export const settableVideoAssetAtributes = [
 // + If &lt;video> elements should not appear, developers need to hide them in some way - for instance by positioning them (or their parent element) absolutely to the top or left of the display; or by giving their parent element zero width/height; or by setting their CSS: `display: none;`, `opacity: 0;`, etc.
 export const importDomVideo = function (query) {
 
-    let reg = /.*\/(.*?)\./;
-
-    let items = document.querySelectorAll(query);
+    const items = document.querySelectorAll(query);
 
     items.forEach(item => {
 
         let name;
 
-        if (item.tagName.toUpperCase() === 'VIDEO') {
+        if (item.tagName.toUpperCase() == _VIDEO) {
 
             if (item.id || item.name) name = item.id || item.name;
             else {
 
-                let match = reg.exec(item.src);
-                name = (match && match[1]) ? match[1] : '';
+                const match = ASSET_IMPORT_REGEX.exec(item.src);
+                name = (match && match[1]) ? match[1] : ZERO_STR;
             }
 
-            let vid = makeVideoAsset({
+            const vid = makeVideoAsset({
                 name: name,
                 source: item,
             });
@@ -339,7 +365,7 @@ export const importMediaStream = function (items = Ωempty) {
     // We need a video element to receive the media stream
     let name = items.name || generateUniqueString();
 
-    let el = document.createElement('video');
+    let el = document.createElement(VIDEO);
 
     let vid = makeVideoAsset({
         name: name,
@@ -356,7 +382,7 @@ export const importMediaStream = function (items = Ωempty) {
                 let actuals = mediaStream.getVideoTracks(),
                     data;
 
-                if (Array.isArray(actuals) && actuals[0]) data = actuals[0].getConstraints();
+                if (_isArray(actuals) && actuals[0]) data = actuals[0].getConstraints();
 
                 el.id = vid.name;
 
@@ -405,8 +431,7 @@ export const importMediaStream = function (items = Ωempty) {
 // + This advice does not apply to developers who want to include a 3rd Party video player DOM element in a Scrawl-canvas Stack environment. If that meets your requirements, go for it!
 export const importVideo = function (...args) {
 
-    let reg = /.*\/(.*?)\./,
-        result = '';
+    let result = ZERO_STR;
 
     if (args.length) {
 
@@ -414,20 +439,20 @@ export const importVideo = function (...args) {
 
         let flag = false;
 
-        let firstArg = args[0];
+        const firstArg = args[0];
 
         // one or more string urls has been passed to the function
         // - urls will be treated as &lt;source> elements assigned to a &lt;video> element
         if (firstArg.substring) {
 
-            let match = reg.exec(firstArg);
-            name = (match && match[1]) ? match[1] : '';
+            const match = ASSET_IMPORT_REGEX.exec(firstArg);
+            name = (match && match[1]) ? match[1] : ZERO_STR;
 
             sources = [...args];
-            className = '';
+            className = ZERO_STR;
             visibility = false;
             parent = null;
-            preload = 'auto';
+            preload = AUTO;
 
             flag = true;
         }
@@ -436,39 +461,38 @@ export const importVideo = function (...args) {
         // - only process if the object includes a src attribute
         else if (firstArg && firstArg.src) {
 
-            name = firstArg.name || '';
+            name = firstArg.name || ZERO_STR;
 
             sources = [...firstArg.src];
-            className = firstArg.className || '';
+            className = firstArg.className || ZERO_STR;
             visibility = firstArg.visibility || false;
             parent = document.querySelector(parent);
-            preload = firstArg.preload || 'auto';
+            preload = firstArg.preload || AUTO;
 
             flag = true;
         }
 
         // build the video element
-        let video = makeVideoAsset({
+        const video = makeVideoAsset({
             name: name,
         });
 
-
         if (flag) {
 
-            let vid = document.createElement('video');
+            const vid = document.createElement(VIDEO);
 
             vid.name = name;
             vid.className = className;
 
-            vid.style.display = (visibility) ? 'block' : 'none';
+            vid.style.display = (visibility) ? BLOCK : NONE;
 
-            vid.crossOrigin = 'anonymous';
+            vid.crossOrigin = ANONYMOUS;
 
             vid.preload = preload;
 
             sources.forEach(item => {
 
-                let el = document.createElement('source');
+                const el = document.createElement(SOURCE);
 
                 el.src = item;
 

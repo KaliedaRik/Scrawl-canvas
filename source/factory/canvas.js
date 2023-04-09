@@ -43,8 +43,8 @@ import {
 } from '../core/document.js';
 
 import { 
-    rootElements, 
-    setRootElementsSort, 
+    rootElementsAdd, 
+    rootElementsRemove, 
 } from "../core/document-rootElements.js";
 
 import { 
@@ -205,8 +205,7 @@ const Canvas = function (items = Ωempty) {
         this.base = this.buildCell(cellArgs);
 
         // even if it is a child of a stack element, it needs to be recorded as a 'rootElement'
-        pushUnique(rootElements, this.name);
-        setRootElementsSort();
+        rootElementsAdd(this.name);
 
         // ##### Accessibility
         // if (!el.getAttribute('role')) el.setAttribute('role', 'img');
@@ -360,13 +359,12 @@ P.factoryKill = function () {
         host = this.host;
 
     // rootElements and uiSubscribedElements arrays
-    removeItem(rootElements, name);
-    setRootElementsSort();
+    rootElementsRemove(name);
 
     removeItem(uiSubscribedElements, name);
 
     // Host and host Group
-    if (host && host !== ROOT) {
+    if (host && host != ROOT) {
 
         const h = (this.currentHost) ? this.currentHost : artefact[host];
 

@@ -29,6 +29,7 @@ import assetMix from '../mixin/asset.js';
 
 import { 
     _isArray,
+    ASSET_IMPORT_REGEX,
 } from '../core/shared-vars.js';
 
 
@@ -177,8 +178,7 @@ export const settableSpriteAssetAtributes = [];
 // Note also that the __default__ track is mandatory, and should consist of at least one frame.
 export const importSprite = function (...args) {
 
-    const reg = /.*\/(.*?)\./,
-        fileTlas = /\.(jpeg|jpg|png|gif|webp|svg|JPEG|JPG|PNG|GIF|WEBP|SVG)/,
+    const fileTlas = /\.(jpeg|jpg|png|gif|webp|svg|JPEG|JPG|PNG|GIF|WEBP|SVG)/,
         results = [];
 
     args.forEach(item => {
@@ -191,7 +191,7 @@ export const importSprite = function (...args) {
 
         if (item.substring) {
 
-            let match = reg.exec(item);
+            let match = ASSET_IMPORT_REGEX.exec(item);
 
             name = (match && match[1]) ? match[1] : ZERO_STR;
             urls = [item];

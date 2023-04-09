@@ -2,6 +2,38 @@
 // A ragtag collection of helper functions which other modules can import and use
 
 
+import {
+    _cos,
+    _create,
+    _entries,
+    _floor,
+    _isArray,
+    _pi,
+    _pow,
+    _random,
+    _sin,
+    _sqrt,
+} from './shared-vars.js';
+
+// Local constants
+const $CANVAS_ELEMENT = '[object HTMLCanvasElement]',
+    $OBJECT = '[object Object]',
+    BOOLEAN = 'boolean',
+    BOTTOM = 'bottom',
+    CENTER = 'center',
+    FUNCTION = 'function',
+    LEFT = 'left',
+    MS = 'ms',
+    PC = '%',
+    PC0 = '0%',
+    PC100 = '100%',
+    PC50 = '50%',
+    RIGHT = 'right',
+    T_QUATERNION = 'Quaternion',
+    TOP = 'top',
+    UNDEF = 'undefined';
+
+
 // #### Functions
 
 // __addStrings__ adds the two arguments together and returns a percentage string value if either of the values was a string; or a sum of the two numbers.
@@ -31,16 +63,16 @@ export const addStrings = (current, delta) => {
     if ((delta != null)) {
 
         // Correct for labels
-        if ('left' === current || 'top' === current) current = '0%';
-        else if ('right' === current || 'bottom' === current) current = '100%';
-        else if ('center' === current) current = '50%';
+        if (LEFT == current || TOP == current) current = PC0;
+        else if (RIGHT == current || BOTTOM == current) current = PC100;
+        else if (CENTER == current) current = PC50;
 
         let stringFlag = (current.substring || delta.substring) ? true : false;
 
         if (isa_number(current)) current += (isa_number(delta) ? delta : parseFloat(delta));
         else current = parseFloat(current) + (isa_number(delta) ? delta : parseFloat(delta));
 
-        return (stringFlag) ? current + '%' : current;
+        return (stringFlag) ? current + PC : current;
     }
     return current;
 };
@@ -77,12 +109,12 @@ export const convertTime = (item) => {
 
     if (!xt(item)) throw new Error(`core/utilities convertTime() error - no argument supplied`);
 
-    if (isa_number(item)) return ['ms', item];
+    if (isa_number(item)) return [MS, item];
 
     if (!item.substring) throw new Error(`core/utilities convertTime() error - invalid argument: ${item}`);
 
     a = item.match(/^\d+\.?\d*(\D*)/);
-    timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : 'ms';
+    timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : MS;
     
     timeValue = parseFloat(item);
 
@@ -98,7 +130,7 @@ export const convertTime = (item) => {
             break;
 
         default:
-            timeUnit = 'ms';
+            timeUnit = MS;
     }
     
     return [timeUnit, timeValue];
@@ -149,7 +181,7 @@ export const generateUuid = () => {
 
     function s4() {
 
-        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        return _floor((1 + _random()) * 0x10000).toString(16).substring(1);
     }
 
     return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
@@ -161,7 +193,7 @@ export const generateUuid = () => {
 // (imported 2020-11-22)
 export const generateUniqueString = () => {
 
-    return performance.now().toString(36) + Math.random().toString(36).substr(2);
+    return performance.now().toString(36) + _random().toString(36).substr(2);
 };
 
 // __interpolate__ clamp a value between a maximum and minimum value
@@ -171,11 +203,11 @@ export const interpolate = function (val, min, max) {
 };
 
 // __isa_boolean__ checks to make sure the argument is a boolean
-export const isa_boolean = item => (typeof item === 'boolean') ? true : false;
+export const isa_boolean = item => (typeof item == BOOLEAN) ? true : false;
 
 
 // __isa_canvas__ checks to make sure the argument is a DOM &lt;canvas> element
-export const isa_canvas = item => (Object.prototype.toString.call(item) === '[object HTMLCanvasElement]') ? true : false;
+export const isa_canvas = item => (Object.prototype.toString.call(item) == $CANVAS_ELEMENT) ? true : false;
 
 
 // __isa_dom__ checks to make sure the argument is a DOM element of some sort
@@ -183,7 +215,7 @@ export const isa_dom = item => (item && item.querySelector && item.dispatchEvent
 
 
 // __isa_fn__ checks to make sure the argument is a JavaScript function object
-export const isa_fn = item => (typeof item === 'function') ? true : false;
+export const isa_fn = item => (typeof item == FUNCTION) ? true : false;
 
 
 // __isa_number__ checks to make sure the argument is true number (excluding NaN)
@@ -191,11 +223,11 @@ export const isa_number = item => (item != null && item.toFixed && !Number.isNaN
 
 
 // __isa_obj__ checks to make sure the argument is a JavaScript Object
-export const isa_obj = item => (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
+export const isa_obj = item => (Object.prototype.toString.call(item) == $OBJECT) ? true : false;
 
 
 // __isa_quaternion__ checks to make sure the argument is a Scrawl-canvas Quaternion object
-export const isa_quaternion = item => (item && item.type && item.type === 'Quaternion') ? true : false;
+export const isa_quaternion = item => (item && item.type && item.type == T_QUATERNION) ? true : false;
 
 
 // __mergeInto__ takes two objects and merges the attributes of one into the other. This function mutates the 'original' object rather than generating a third, new onject
@@ -214,7 +246,7 @@ export const mergeInto = (original, additional) => {
 
     for (let key in additional) {
 
-        if (additional.hasOwnProperty(key) && typeof original[key] == 'undefined') original[key] = additional[key];
+        if (additional.hasOwnProperty(key) && typeof original[key] == UNDEF) original[key] = additional[key];
     }
     return original;
 };
@@ -256,7 +288,7 @@ export const mergeDiscard = (original, additional) => {
 
     if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeDiscard() error - insufficient arguments supplied ${original}, ${additional}`);
 
-    Object.entries(additional).forEach(([key, val]) => {
+    _entries(additional).forEach(([key, val]) => {
 
         if (val === null) delete original[key];
         else original[key] = additional[key];
@@ -280,17 +312,16 @@ export const pushUnique = (myArray, potentialMember) => {
 
     if (!xta(myArray, potentialMember)) throw new Error(`core/utilities pushUnique() error - insufficient arguments supplied ${myArray}, ${potentialMember}`);
 
-    if (!Array.isArray(myArray)) throw new Error(`core/utilities pushUnique() error - argument not an array ${myArray}`);
+    if (!_isArray(myArray)) throw new Error(`core/utilities pushUnique() error - argument not an array ${myArray}`);
 
-    if (Array.isArray(potentialMember)) {
+    if (_isArray(potentialMember)) {
 
         potentialMember.forEach(item => pushUnique(myArray, item));
     }
     else {
 
-        if (myArray.indexOf(potentialMember) < 0) myArray.push(potentialMember);
+        if (!myArray.includes(potentialMember)) myArray.push(potentialMember);
     }
-
     return myArray;
 };
 
@@ -310,7 +341,7 @@ export const removeItem = (myArray, unwantedMember) => {
 
     if (!xta(myArray, unwantedMember)) throw new Error(`core/utilities removeItem() error - insufficient arguments supplied ${myArray}, ${unwantedMember}`);
 
-    if (!Array.isArray(myArray)) throw new Error(`core/utilities removeItem() error - argument not an array ${myArray}`);
+    if (!_isArray(myArray)) throw new Error(`core/utilities removeItem() error - argument not an array ${myArray}`);
 
     let index = myArray.indexOf(unwantedMember);
 
@@ -321,19 +352,19 @@ export const removeItem = (myArray, unwantedMember) => {
 
 
 // __xt__ checks to see if argument exists (is not 'undefined')
-export const xt = item => (typeof item == 'undefined') ? false : true;
+export const xt = item => (typeof item == UNDEF) ? false : true;
 
 
 // __xta__ checks to make sure that all the arguments supplied to the function exist (none are 'undefined')
-export const xta = (...args) => args.every(item => typeof item != 'undefined');
+export const xta = (...args) => args.every(item => typeof item != UNDEF);
 
 
 // __xtGet__ returns the first existing (not 'undefined') argument supplied to the function
-export const xtGet = (...args) => args.find(item => typeof item != 'undefined');
+export const xtGet = (...args) => args.find(item => typeof item != UNDEF);
 
 
 // __xto__ checks to make sure that at least one of the arguments supplied to the function exists (is not 'undefined')
-export const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true : false;
+export const xto = (...args) => (args.find(item => typeof item != UNDEF)) ? true : false;
 
 
 // ##### Easing engines
@@ -341,8 +372,8 @@ export const xto = (...args) => (args.find(item => typeof item != 'undefined')) 
 export const easeEngines = {
 
 // Legacy easings
-    out: (t) => 1 - Math.cos((t * Math.PI) / 2),
-    in: (t) => Math.sin((t * Math.PI) / 2),
+    out: (t) => 1 - _cos((t * _pi) / 2),
+    in: (t) => _sin((t * _pi) / 2),
     easeIn: (t) => {
         
         let temp = 1 - t;
@@ -363,10 +394,10 @@ export const easeEngines = {
         let temp = 1 - t;
         return 1 - (temp * temp * temp * temp * temp);
     },
-    easeOutIn: (t) => (t < 0.5) ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
-    easeOutIn3: (t) => (t < 0.5) ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
-    easeOutIn4: (t) => (t < 0.5) ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2,
-    easeOutIn5: (t) => (t < 0.5) ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2,
+    easeOutIn: (t) => (t < 0.5) ? 2 * t * t : 1 - _pow(-2 * t + 2, 2) / 2,
+    easeOutIn3: (t) => (t < 0.5) ? 4 * t * t * t : 1 - _pow(-2 * t + 2, 3) / 2,
+    easeOutIn4: (t) => (t < 0.5) ? 8 * t * t * t * t : 1 - _pow(-2 * t + 2, 4) / 2,
+    easeOutIn5: (t) => (t < 0.5) ? 16 * t * t * t * t * t : 1 - _pow(-2 * t + 2, 5) / 2,
 
     easeInOut: (t) => {
 
@@ -374,7 +405,7 @@ export const easeEngines = {
             tout = t - 0.5;
 
         if (t < 0.5) return 0.5 + (-2 * tin * tin);
-        return 0.5 + Math.pow(2 * tout, 2) / 2;
+        return 0.5 + _pow(2 * tout, 2) / 2;
     },
     easeInOut3: (t) => {
 
@@ -382,7 +413,7 @@ export const easeEngines = {
             tout = t - 0.5;
 
         if (t < 0.5) return 0.5 + (-4 * tin * tin * tin);
-        return 0.5 + Math.pow(2 * tout, 3) / 2;
+        return 0.5 + _pow(2 * tout, 3) / 2;
     },
     easeInOut4: (t) => {
 
@@ -390,7 +421,7 @@ export const easeEngines = {
             tout = t - 0.5;
 
         if (t < 0.5) return 0.5 + (-8 * tin * tin * tin * tin);
-        return 0.5 + Math.pow(2 * tout, 4) / 2;
+        return 0.5 + _pow(2 * tout, 4) / 2;
     },
     easeInOut5: (t) => {
 
@@ -398,7 +429,7 @@ export const easeEngines = {
             tout = t - 0.5;
 
         if (t < 0.5) return 0.5 + (-16 * tin * tin * tin * tin * tin);
-        return 0.5 + Math.pow(2 * tout, 5) / 2;
+        return 0.5 + _pow(2 * tout, 5) / 2;
     },
 
     easeOut: (t) => t * t,
@@ -410,74 +441,74 @@ export const easeEngines = {
     linear: (val) => val,
 
     // Noise functionality easing engines
-    cosine: (t) => .5 * (1 + Math.cos((1 - t) * Math.PI)),
+    cosine: (t) => .5 * (1 + _cos((1 - t) * _pi)),
     hermite: (t) => t * t * (-t * 2 + 3),
     quintic: (t) => t * t * t * (t * (t * 6 - 15) + 10),
 
 // The following easing variations come from the [easings.net](https://easings.net/) web page
 // + Note: the naming convention for easing is different in Scrawl-canvas. Easing out implies a speeding up, while easing in implies a slowing down. Think of a train easing into a station, and then easing out of it again as it continues its journey. 
-    easeOutSine: (t) => 1 - Math.cos((t * Math.PI) / 2),
-    easeInSine: (t) => Math.sin((t * Math.PI) / 2),
-    easeOutInSine: (t) => -(Math.cos(Math.PI * t) - 1) / 2,
+    easeOutSine: (t) => 1 - _cos((t * _pi) / 2),
+    easeInSine: (t) => _sin((t * _pi) / 2),
+    easeOutInSine: (t) => -(_cos(_pi * t) - 1) / 2,
 
     easeOutQuad: (t) => t * t,
     easeInQuad: (t) => 1 - ((1 - t) * (1 - t)),
-    easeOutInQuad: (t) => (t < 0.5) ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+    easeOutInQuad: (t) => (t < 0.5) ? 2 * t * t : 1 - _pow(-2 * t + 2, 2) / 2,
 
     easeOutCubic: (t) => t * t * t,
-    easeInCubic: (t) => 1 - Math.pow(1 - t, 3),
-    easeOutInCubic: (t) => (t < 0.5) ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+    easeInCubic: (t) => 1 - _pow(1 - t, 3),
+    easeOutInCubic: (t) => (t < 0.5) ? 4 * t * t * t : 1 - _pow(-2 * t + 2, 3) / 2,
 
     easeOutQuart: (t) => t * t * t * t,
-    easeInQuart: (t) => 1 - Math.pow(1 - t, 4),
-    easeOutInQuart: (t) => (t < 0.5) ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2,
+    easeInQuart: (t) => 1 - _pow(1 - t, 4),
+    easeOutInQuart: (t) => (t < 0.5) ? 8 * t * t * t * t : 1 - _pow(-2 * t + 2, 4) / 2,
 
     easeOutQuint: (t) => t * t * t * t * t,
-    easeInQuint: (t) => 1 - Math.pow(1 - t, 5),
-    easeOutInQuint: (t) => (t < 0.5) ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2,
+    easeInQuint: (t) => 1 - _pow(1 - t, 5),
+    easeOutInQuint: (t) => (t < 0.5) ? 16 * t * t * t * t * t : 1 - _pow(-2 * t + 2, 5) / 2,
 
-    easeOutExpo: (t) => (t === 0) ? 0 : Math.pow(2, 10 * t - 10),
-    easeInExpo: (t) => (t === 1) ? 1 : 1 - Math.pow(2, -10 * t),
+    easeOutExpo: (t) => (t === 0) ? 0 : _pow(2, 10 * t - 10),
+    easeInExpo: (t) => (t === 1) ? 1 : 1 - _pow(2, -10 * t),
     easeOutInExpo: (t) => {
         if (t === 0 || t === 1) return t;
-        return t < 0.5 ? Math.pow(2, 20 * t - 10) / 2 : (2 - Math.pow(2, -20 * t + 10)) / 2;
+        return t < 0.5 ? _pow(2, 20 * t - 10) / 2 : (2 - _pow(2, -20 * t + 10)) / 2;
     },
 
-    easeOutCirc: (t) => 1 - Math.sqrt(1 - Math.pow(t, 2)),
-    easeInCirc: (t) => Math.sqrt(1 - Math.pow(t - 1, 2)),
+    easeOutCirc: (t) => 1 - _sqrt(1 - _pow(t, 2)),
+    easeInCirc: (t) => _sqrt(1 - _pow(t - 1, 2)),
     easeOutInCirc: (t) => { 
 
-        if (t < 0.5) return (1 - Math.sqrt(1 - Math.pow(2 * t, 2))) / 2;
-        return (Math.sqrt(1 - Math.pow(-2 * t + 2, 2)) + 1) / 2;
+        if (t < 0.5) return (1 - _sqrt(1 - _pow(2 * t, 2))) / 2;
+        return (_sqrt(1 - _pow(-2 * t + 2, 2)) + 1) / 2;
     },
 
     easeOutBack: (t) => (2.70158 * t * t * t) - (1.70158 * t * t),
-    easeInBack: (t) => 1 + (2.70158 * Math.pow(t - 1, 3)) + (1.70158 * Math.pow(t - 1, 2)),
+    easeInBack: (t) => 1 + (2.70158 * _pow(t - 1, 3)) + (1.70158 * _pow(t - 1, 2)),
     easeOutInBack: (t) => {
 
         const c1 = 1.70158, c2 = c1 * 1.525;
-        if (t < 0.5) return (Math.pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2;
-        return (Math.pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
+        if (t < 0.5) return (_pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2;
+        return (_pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
     },
 
     easeOutElastic: (t) => {
 
-        const c4 = (2 * Math.PI) / 3;
+        const c4 = (2 * _pi) / 3;
         if (t === 0 || t === 1) return t;
-        return -Math.pow(2, 10 * t - 10) * Math.sin((t * 10 - 10.75) * c4);
+        return -_pow(2, 10 * t - 10) * _sin((t * 10 - 10.75) * c4);
     },
     easeInElastic: (t) => {
 
-        const c4 = (2 * Math.PI) / 3;
+        const c4 = (2 * _pi) / 3;
         if (t === 0 || t === 1) return t;
-        return Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+        return _pow(2, -10 * t) * _sin((t * 10 - 0.75) * c4) + 1;
     },
     easeOutInElastic: (t) => {
 
-        const c5 = (2 * Math.PI) / 4.5;
+        const c5 = (2 * _pi) / 4.5;
         if (t === 0 || t === 1) return t;
-        if (t < 0.5) return -(Math.pow(2, 20 * t - 10) * Math.sin((20 * t - 11.125) * c5)) / 2;
-        return (Math.pow(2, -20 * t + 10) * Math.sin((20 * t - 11.125) * c5)) / 2 + 1;
+        if (t < 0.5) return -(_pow(2, 20 * t - 10) * _sin((20 * t - 11.125) * c5)) / 2;
+        return (_pow(2, -20 * t + 10) * _sin((20 * t - 11.125) * c5)) / 2 + 1;
     },
 
     easeOutBounce: (t) => {
@@ -539,23 +570,23 @@ export const detectBrowser = function () {
 
     let result = [];
 
-    if ((!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0) result.push('old-opera');
+    if ((!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.includes(' OPR/')) result.push('old-opera');
 
-    if (typeof InstallTrigger !== 'undefined') result.push('firefox');
+    if (typeof InstallTrigger != UNDEF) result.push('firefox');
 
-    else if (/constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification))) result.push('safari');
+    else if (/constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() == "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari != UNDEF && safari.pushNotification))) result.push('safari');
 
     if (/*@cc_on!@*/false || !!document.documentMode) result.push('internet-explorer');
 
-    if (result.indexOf('internet-explorer') < 0 && !!window.StyleMedia) result.push('edge');
+    if (!result.includes('internet-explorer') && !!window.StyleMedia) result.push('edge');
 
     if(!!window.chrome) result.push('chrome');
 
-    if((result.indexOf('chrome') >= 0 || result.indexOf('old-opera') >= 0) && !!window.CSS) result.push('blink');
+    if((result.includes('chrome') || result.includes('old-opera')) && !!window.CSS) result.push('blink');
 
     return result;
 };
 
 
 // Create an Object prototype
-export const doCreate = () => Object.create(Object.prototype);
+export const doCreate = () => _create(Object.prototype);

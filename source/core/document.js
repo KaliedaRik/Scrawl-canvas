@@ -5,10 +5,9 @@
 
 
 // #### Imports
-// import { pushUnique, css, xcss } from "./utilities.js";
-import { pushUnique } from "./utilities.js";
 import { artefact } from "./library.js";
-import { rootElements } from "./document-rootElements.js";
+
+import { pushUnique } from "./utilities.js";
 
 import { 
     getPixelRatio, 
@@ -17,8 +16,22 @@ import {
 
 import { 
     _css,
+    _keys,
     _xcss,
 } from './shared-vars.js';
+
+
+// Local constants
+const T_CANVAS = 'Canvas',
+    AUTO = 'auto',
+    BLOCK = 'block',
+    NONE = 'none',
+    GRAYSCALE = 'grayscale',
+    NEVER = 'never',
+    WEBKIT_FONT_SMOOTHING = 'webkitFontSmoothing',
+    MOZOSX_FONT_SMOOTHING = 'mozOsxFontSmoothing',
+    SMOOTH_FONT = 'smoothFont';
+
 
 // #### DOM element updates
 // Scrawl-canvas will batch process all DOM element updates, to minimize disruptive impacts on web page performance. We don't maintain a full/comprehensive 'shadow' or 'virtual' DOM, but Scrawl-canvas does maintain a record of element (absolute) position and dimension data, alongside details of scaling, perspective and any other CSS related data (including CSS classes) which we tell it about, on a per-element basis.
@@ -110,7 +123,7 @@ export const domShow = function (singleArtefact = '') {
                 w = dims[0];
                 h = dims[1];
 
-                if (art.type === 'Canvas') {
+                if (art.type == T_CANVAS) {
 
                     if (ignoreDpr) {
 
@@ -133,7 +146,7 @@ export const domShow = function (singleArtefact = '') {
                 else {
 
                     style.width = `${w}px`;
-                    style.height = (h) ? `${h}px` : 'auto';
+                    style.height = (h) ? `${h}px` : AUTO;
                 }
             }
 
@@ -155,7 +168,7 @@ export const domShow = function (singleArtefact = '') {
             if (art.dirtyVisibility) {
 
                 art.dirtyVisibility = false;
-                style.display = (art.visibility) ? 'block' : 'none';
+                style.display = (art.visibility) ? BLOCK : NONE;
             }
 
             // update visibility
@@ -164,14 +177,14 @@ export const domShow = function (singleArtefact = '') {
                 art.dirtySmoothFont = false;
 
                 if (art.smoothFont) {
-                    style['webkitFontSmoothing'] = 'auto';
-                    style['mozOsxFontSmoothing'] = 'auto';
-                    style['smoothFont'] = 'auto';
+                    style[WEBKIT_FONT_SMOOTHING] = AUTO;
+                    style[MOZOSX_FONT_SMOOTHING] = AUTO;
+                    style[SMOOTH_FONT] = AUTO;
                 }
                 else {
-                    style['webkitFontSmoothing'] = 'none';
-                    style['mozOsxFontSmoothing'] = 'grayscale';
-                    style['smoothFont'] = 'never';
+                    style[WEBKIT_FONT_SMOOTHING] = NONE;
+                    style[MOZOSX_FONT_SMOOTHING] = GRAYSCALE;
+                    style[SMOOTH_FONT] = NEVER;
                 }
             }
 
@@ -181,7 +194,7 @@ export const domShow = function (singleArtefact = '') {
                 art.dirtyCss = false;
 
                 items = art.css || {};
-                keys = Object.keys(items);
+                keys = _keys(items);
 
                 for (j = 0, jz = keys.length; j < jz; j++) {
 

@@ -38,6 +38,7 @@ import assetMix from '../mixin/asset.js';
 
 import { 
     _parse,
+    ASSET_IMPORT_REGEX,
 } from '../core/shared-vars.js';
 
 
@@ -243,8 +244,7 @@ export const settableImageAssetAtributes = [];
 // Note: strings and object arguments can be mixed - Scrawl-canvas will interrrogate each argument in turn and take appropriate action to load the assets.
 export const importImage = function (...args) {
 
-    let reg = /.*\/(.*?)\./,
-        results = [];
+    const results = [];
 
     args.forEach(item => {
 
@@ -255,11 +255,11 @@ export const importImage = function (...args) {
 
         if (item.substring) {
 
-            const match = reg.exec(item);
+            const match = ASSET_IMPORT_REGEX.exec(item);
 
             name = (match && match[1]) ? match[1] : ZERO_STR;
             url = item;
-            className = '';
+            className = ZERO_STR;
             visibility = false;
 
             flag = true;
@@ -324,8 +324,6 @@ export const importImage = function (...args) {
 // + If &lt;img> elements should not appear, developers need to hide them in some way - for instance by positioning them (or their parent element) absolutely to the top or left of the display; or by giving their parent element zero width/height; or by setting their CSS: `display: none;`, `opacity: 0;`, etc.
 export const importDomImage = function (query) {
 
-    const reg = /.*\/(.*?)\./;
-
     const items = document.querySelectorAll(query);
 
     items.forEach(item => {
@@ -337,8 +335,8 @@ export const importDomImage = function (query) {
             if (item.id || item.name) name = item.id || item.name;
             else {
 
-                const match = reg.exec(item.src);
-                name = (match && match[1]) ? match[1] : '';
+                const match = ASSET_IMPORT_REGEX.exec(item.src);
+                name = (match && match[1]) ? match[1] : ZERO_STR;
             }
 
             let intrinsics = item.dataset.dimensions || {};

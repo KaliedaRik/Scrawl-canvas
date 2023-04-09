@@ -6,13 +6,25 @@
 
 
 // ## Imports
-import { isa_dom, isa_boolean, isa_obj } from "./utilities.js";
-import { artefact, unstackedelement } from "./library.js";
+import { 
+    artefact, 
+    unstackedelement, 
+} from "./library.js";
+
+import { 
+    isa_boolean, 
+    isa_dom, 
+    isa_obj, 
+} from "./utilities.js";
+
 import { makeAnimationObserver } from './events.js';
 
 import { makeRender } from "../factory/renderAnimation.js";
 import { makeUnstackedElement } from "../factory/unstackedElement.js";
 
+
+// Local constants
+const NON_SNIPPET_ELEMENTS = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'];
 
 
 // TODO - documentation
@@ -70,9 +82,7 @@ const makeStackSnippet = function (domElement, canvasSpecs, animationHooks, obse
 // TODO - documentation
 const makeUnstackedSnippet = function (domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas) {
 
-    const unsupportedElements = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'];
-
-    if (!domElement || unsupportedElements.includes(domElement.tagName)) return {};
+    if (!domElement || NON_SNIPPET_ELEMENTS.includes(domElement.tagName)) return {};
 
     let myElement,
         id = domElement.id;

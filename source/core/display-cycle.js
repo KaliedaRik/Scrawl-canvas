@@ -10,17 +10,22 @@
 
 // #### Imports
 import { artefact } from "./library.js";
-import { rootElements_sorted, getRootElementsSort, sortRootElements } from "./document-rootElements.js";
+
+import { getSortedRootElements } from './document-rootElements.js';
+
+
+// Local constants
+const CLEAR = 'clear',
+    COMPILE = 'compile',
+    SHOW = 'show',
+    RENDER = 'render';
 
 
 // Helper functions coordinate the actions required to complete a display cycle
 const displayCycleHelper = function (items) {
 
     if (items.length) return items;
-    
-    if (getRootElementsSort()) sortRootElements();
-
-    return rootElements_sorted;
+    return getSortedRootElements();
 };
 
 const displayCycleBatchProcess = function (rootWrappers, method) {
@@ -45,7 +50,7 @@ const displayCycleBatchProcess = function (rootWrappers, method) {
 export const clear = function (...items) {
 
     const wrappers = displayCycleHelper(items);
-    displayCycleBatchProcess(wrappers, 'clear');
+    displayCycleBatchProcess(wrappers, CLEAR);
 };
 
 // ##### Compile
@@ -57,7 +62,7 @@ export const clear = function (...items) {
 export const compile = function (...items) {
 
     const wrappers = displayCycleHelper(items);
-    displayCycleBatchProcess(wrappers, 'compile');
+    displayCycleBatchProcess(wrappers, COMPILE);
 };
 
 // ##### Show
@@ -69,7 +74,7 @@ export const compile = function (...items) {
 export const show = function (...items) {
 
     const wrappers = displayCycleHelper(items);
-    displayCycleBatchProcess(wrappers, 'show');
+    displayCycleBatchProcess(wrappers, SHOW);
 };
 
 // ##### Render
@@ -80,5 +85,5 @@ export const show = function (...items) {
 export const render = function (...items) {
 
     const wrappers = displayCycleHelper(items);
-    displayCycleBatchProcess(wrappers, 'render');
+    displayCycleBatchProcess(wrappers, RENDER);
 };

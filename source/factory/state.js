@@ -46,14 +46,14 @@ const BLACK = 'rgb(0 0 0 / 1)',
     DEFAULT_FONT = '12px sans-serif',
     HASH = '#',
     HIGH = 'high',
-    HSL = 'hsl',
+    _HSL = 'hsl',
     LEFT = 'left',
     LINE_DASH = 'lineDash',
     LINE_WIDTH = 'lineWidth',
     MITER = 'miter',
     NAME = 'name',
     NONE = 'none',
-    RGB = 'rgb',
+    _RGB = 'rgb',
     SOURCE_OVER = 'source-over',
     STYLES = 'styles',
     T_STATE = 'State',
@@ -293,7 +293,7 @@ S.fillStyle = function (item) {
         temp = styles[item];
 
         if (temp) this.fillStyle = temp;
-        else if (item.includes(RGB) || item.includes(HSL) || item.includes(HASH)) this.fillStyle = item;
+        else if (item.includes(_RGB) || item.includes(_HSL) || item.includes(HASH)) this.fillStyle = item;
         else this.fillStyle = colorChecker.checkColor(item);
     }
 };
@@ -308,14 +308,14 @@ S.strokeStyle = function (item) {
         temp = styles[item];
 
         if (temp) this.strokeStyle = temp;
-        else if (item.includes(RGB) || item.includes(HSL) || item.includes(HASH)) this.strokeStyle = item;
+        else if (item.includes(_RGB) || item.includes(_HSL) || item.includes(HASH)) this.strokeStyle = item;
         else this.strokeStyle = colorChecker.checkColor(item);
     }
 };
 
 S.shadowColor = function (item) {
 
-    if (item.includes(RGB) || item.includes(HSL) || item.includes(HASH)) this.shadowColor = item;
+    if (item.includes(_RGB) || item.includes(_HSL) || item.includes(HASH)) this.shadowColor = item;
     else this.shadowColor = colorChecker.checkColor(item);
 };
 

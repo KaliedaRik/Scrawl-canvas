@@ -10,43 +10,71 @@
 // #### Imports
 import { artefact } from "./library.js";
 
+import {
+    getRootElementsSort,
+    setRootElementsSort,
+} from './system-flags.js';
+
+import {
+    _floor,
+} from './shared-vars.js';
+
+import {
+    pushUnique,
+    removeItem,
+} from './utilities.js';
+
+
+// Local constants 
 
 // Local variables
-export const rootElements_sorted = [];
-let rootElementsSort = true;
+const rootElements = [];
+const rootElements_sorted = [];
     
+export const rootElementsAdd = (val) => {
+    pushUnique(rootElements, val);
+    setRootElementsSort(true);
+};
+
+export const rootElementsRemove = (val) => {
+    removeItem(rootElements, val);
+    setRootElementsSort(true);
+};
+
+export const rootElementsIncludes = (val) => rootElements.includes(val);
+
+export const getSortedRootElements = () => {
+
+    if (getRootElementsSort()) sortRootElements();
+    return rootElements_sorted;
+};
+
 // The __rootElements__ array keeps track of all 'root' stack artefacts, and also includes all canvas artefacts, whether they're part of a stack or not. __setRootElementSort__ forces the root
-export const rootElements = [];
-export const setRootElementsSort = () => {rootElementsSort = true};
-export const getRootElementsSort = () => rootElementsSort;
+// export const setRootElementsSort = () => {rootElementsSort = true};
+// export const getRootElementsSort = () => rootElementsSort;
 
 // Scrawl-canvas rootElements sorter uses a 'bucket sort' algorithm
-export const sortRootElements = function () {
+const sortRootElements = function () {
 
-    const floor = Math.floor;
+    setRootElementsSort(false);
 
-    if (rootElementsSort) {
+    const buckets = [];
+    let art, order, i, iz, item;
 
-        rootElementsSort = false;
+    for (i = 0, iz = rootElements.length; i < iz; i++) {
 
-        const buckets = [];
-        let art, order, i, iz, item;
+        item = rootElements[i];
+        art = artefact[item];
 
-        for (i = 0, iz = rootElements.length; i < iz; i++) {
+        if (art) {
 
-            item = rootElements[i];
-            art = artefact[item];
+            order = _floor(art.order) || 0;
 
-            if (art) {
-
-                order = floor(art.order) || 0;
-
-                if (!buckets[order]) buckets[order] = [];
-                
-                buckets[order].push(art.name);
-            }
+            if (!buckets[order]) buckets[order] = [];
+            
+            buckets[order].push(art.name);
         }
-        rootElements_sorted.length = 0;
-        rootElements_sorted.push(...buckets.reduce((a, v) => a.concat(v), []));
     }
+    rootElements_sorted.length = 0;
+    rootElements_sorted.push(...buckets.reduce((a, v) => a.concat(v), []));
 };

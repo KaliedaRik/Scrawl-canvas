@@ -41,8 +41,6 @@ import {
     doCreate,
     isa_boolean, 
     mergeOver, 
-    pushUnique, 
-    removeItem, 
     xt, 
     λnull, 
     λthis, 
@@ -50,8 +48,11 @@ import {
 } from '../core/utilities.js';
 
 import { 
-    animate, 
-    resortAnimations, 
+    animateAdd, 
+    animateIncludes,
+    animateRemove, 
+    // animate, 
+    // resortAnimations, 
 } from '../core/animationloop.js';
 
 import { forceUpdate } from '../core/system-flags.js';
@@ -257,8 +258,7 @@ P.clone = λthis;
 P.kill = function () {
 
     this.onKill();
-    removeItem(animate, this.name);
-    resortAnimations();
+    animateRemove(this.name);
 
     this.deregister();
     
@@ -277,8 +277,7 @@ P.kill = function () {
 P.run = function () {
 
     this.onRun();
-    pushUnique(animate, this.name);
-    resortAnimations();
+    animateAdd(this.name);
 
     if (this.target) this.target.checkAccessibilityValues();
     
@@ -299,7 +298,7 @@ P.start = function () {
 // `isRunning` - returns Boolean true if animation is running; false otherwise
 P.isRunning = function () {
 
-    return (animate.includes(this.name)) ? true : false;
+    return animateIncludes(this.name);
 };
 
 
@@ -307,8 +306,7 @@ P.isRunning = function () {
 P.halt = function () {
 
     this.onHalt();
-    removeItem(animate, this.name);
-    resortAnimations();
+    animateRemove(this.name);
     return this;
 };
 

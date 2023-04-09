@@ -35,72 +35,88 @@
 // #### Imports
 import { animation } from "./library.js";
 
-// Local variables 
-let doAnimation = false,
-    resortBatchAnimations = true,
-    animate_sorted = [];
+import {
+    pushUnique,
+    removeItem,
+} from './utilities.js';
 
-// `Exported array` (to modules). The __animate__ array, which holds handles to all animation objects due to be run at the next RAF invocation, is exported to other modules so code can add/remove animation objects as required.
-export let animate = [];
+import {
+    getResortBatchAnimations,
+    setResortBatchAnimations,
+    getDoAnimation,
+    setDoAnimation,
+} from './system-flags.js';
 
-// `Exported function` (to modules). Force the animation objects to be sorted at the start of the next RAF invocation
-export const resortAnimations = function () {
-    resortBatchAnimations = true;
+import {
+    _floor,
+} from './shared-vars.js';
+
+
+// Local constants 
+let animate_sorted = [];
+const animate = [];
+
+export const animateAdd = (val) => {
+    pushUnique(animate, val);
+    setResortBatchAnimations(true);
 };
 
+export const animateRemove = (val) => {
+    removeItem(animate, val);
+    setResortBatchAnimations(true);
+};
+
+export const animateIncludes = (val) => animate.includes(val);
+
+
+// ### Functionality
+
 // Scrawl-canvas animation sorter uses a 'bucket sort' algorithm
-const sortAnimations = function () {
+const sortAnimations = () => {
 
-    if (resortBatchAnimations) {
+    let buckets = [],
+        obj, order, i, iz, name;
 
-        resortBatchAnimations = false;
+    for (i = 0, iz = animate.length; i < iz; i++) {
 
-        let floor = Math.floor,
-            buckets = [],
-            obj, order, i, iz, name;
+        name = animate[i];
+        obj = animation[name];
 
-        for (i = 0, iz = animate.length; i < iz; i++) {
+        if (obj) {
 
-            name = animate[i];
-            obj = animation[name];
+            order = _floor(obj.order) || 0;
 
-            if (obj) {
+            if (!buckets[order]) buckets[order] = [];
 
-                order = floor(obj.order) || 0;
-
-                if (!buckets[order]) buckets[order] = [];
-
-                buckets[order].push(obj);
-            }
+            buckets[order].push(obj);
         }
-        animate_sorted = buckets.reduce((a, v) => a.concat(v), []);
     }
+    animate_sorted = buckets.reduce((a, v) => a.concat(v), []);
 };
 
 // The __requestAnimationFrame__ function
-const animationLoop = function () {
+const animationLoop = () => {
 
-    if (resortBatchAnimations) sortAnimations();
+    if (getResortBatchAnimations()) {
 
-    let i, iz;
+        setResortBatchAnimations(false);
+        sortAnimations();
+    }
 
-    for (i = 0, iz = animate_sorted.length; i < iz; i++) {
+    for (let i = 0, iz = animate_sorted.length; i < iz; i++) {
 
         animate_sorted[i].fn();
     }
     
-    if (doAnimation) window.requestAnimationFrame(() => animationLoop());
+    if (getDoAnimation()) window.requestAnimationFrame(animationLoop);
 };
 
 // `Exported function` (modules and scrawl object). Start the RAF function running
-export const startCoreAnimationLoop = function () {
+export const startCoreAnimationLoop = () => {
 
-    doAnimation = true;
+    setDoAnimation(true);
     animationLoop();
 };
 
 // `Exported function` (modules and scrawl object). Halt the RAF function
-export const stopCoreAnimationLoop = function () {
-    
-    doAnimation = false;
-};
+export const stopCoreAnimationLoop = () => setDoAnimation(false);

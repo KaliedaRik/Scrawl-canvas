@@ -62,8 +62,9 @@ import {
 import { domShow } from '../core/document.js';
 
 import { 
-    rootElements, 
-    setRootElementsSort, 
+    rootElementsAdd, 
+    rootElementsIncludes,
+    rootElementsRemove, 
 } from "../core/document-rootElements.js";
 
 import { 
@@ -150,16 +151,9 @@ const Stack = function (items = Ωempty) {
 
         const ds = el.dataset;
 
-        if (ds.isResponsive) {
+        if (ds.isResponsive) this.isResponsive = true;
 
-            this.isResponsive = true;
-        }
-
-        if (el.getAttribute(DATA_SCRAWL_GROUP) == ROOT) {
-
-            pushUnique(rootElements, this.name);
-            setRootElementsSort();
-        }
+        if (el.getAttribute(DATA_SCRAWL_GROUP) == ROOT) rootElementsAdd(this.name);
     }
     return this;
 };
@@ -229,9 +223,7 @@ P.factoryKill = function () {
     let myname = this.name;
 
     // rootElements and uiSubscribedElements arrays
-    removeItem(rootElements, myname);
-    setRootElementsSort();
-
+    rootElementsRemove(myname);
     removeItem(uiSubscribedElements, myname);
 
     // Groups
@@ -684,7 +676,7 @@ export const addStack = function (items = Ωempty) {
     // in case any of the child elements were already a Scrawl-canvas stack, un-root them (if required)
     Array.from(el.childNodes).forEach(child => {
 
-        if (child.id && rootElements.includes(child.id)) removeItem(rootElements, child.id);
+        if (child.id && rootElementsIncludes(child.id)) rootElementsRemove(child.id);
     });
 
     // set the new Stack's remaining attributes, clearing out any attributes already handled
@@ -696,7 +688,7 @@ export const addStack = function (items = Ωempty) {
     mystack.set(items);
 
     // tidy up and complete
-    setRootElementsSort(true);
+    rootElementsSort(true);
     return mystack;
 };
 

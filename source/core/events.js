@@ -14,9 +14,56 @@
 
 
 // #### Imports
-import { isa_fn, isa_dom, λnull, Ωempty, detectBrowser } from "./utilities.js";
-import { canvas, cell, entity } from "./library.js";
+import { 
+    canvas, 
+    cell, 
+    entity, 
+} from "./library.js";
 
+import { 
+    isa_fn, 
+    isa_dom, 
+    λnull, 
+    Ωempty, 
+    detectBrowser, 
+} from "./utilities.js";
+
+import { 
+    _entries,
+    _isArray,
+} from './shared-vars.js';
+
+
+// Local constants
+const ADD_EVENT_LISTENER = 'addEventListener';
+const CHANGE = 'change';
+const DOWN = 'down';
+const ENTER = 'enter';
+const FUNCTION = 'function';
+const LEAVE = 'leave';
+const MOUSE_DOWN = 'mousedown';
+const MOUSE_ENTER = 'mouseenter';
+const MOUSE_LEAVE = 'mouseleave';
+const MOUSE_MOVE = 'mousemove';
+const MOUSE_UP = 'mouseup';
+const MOVE = 'move';
+const POINTER_DOWN = 'pointerdown';
+const POINTER_ENTER = 'pointerenter';
+const POINTER_LEAVE = 'pointerleave';
+const POINTER_MOVE = 'pointermove';
+const POINTER_UP = 'pointerup';
+const REMOVE_EVENT_LISTENER = 'removeEventListener';
+const SAFARI = 'safari';
+const TOUCH_END = 'touchend';
+const TOUCH_ENTER = 'touchenter';
+const TOUCH_FOLLOW = 'touchfollow';
+const TOUCH_LEAVE = 'touchleave';
+const TOUCH_MOVE = 'touchmove';
+const TOUCH_START = 'touchstart';
+const UP = 'up';
+
+
+// #### Functionality
 // `Exported function` (to modules and scrawl object) - __scrawl.makeAnimationObserver__ - function to create and start a [DOM IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) object.
 //
 // The function expects 3 arguments, in the following order:
@@ -27,7 +74,7 @@ import { canvas, cell, entity } from "./library.js";
 // The function returns a function which, when invoked, will disconnect the observer from the DOM.
 export const makeAnimationObserver = function (anim, wrapper, specs = Ωempty) {
 
-    if (typeof window.IntersectionObserver === 'function' && anim && anim.run) {
+    if (typeof window.IntersectionObserver == FUNCTION && anim && anim.run) {
 
         let observer = new IntersectionObserver((entries, observer) => {
 
@@ -59,8 +106,8 @@ export const addListener = function (evt, fn, targ) {
 
     if (!isa_fn(fn)) throw new Error(`core/document addListener() error - no function supplied: ${evt}, ${targ}`);
 
-    actionListener(evt, fn, targ, 'removeEventListener');
-    actionListener(evt, fn, targ, 'addEventListener');
+    actionListener(evt, fn, targ, REMOVE_EVENT_LISTENER);
+    actionListener(evt, fn, targ, ADD_EVENT_LISTENER);
 
     return function () {
 
@@ -73,7 +120,7 @@ export const removeListener = function (evt, fn, targ) {
 
     if (!isa_fn(fn)) throw new Error(`core/document removeListener() error - no function supplied: ${evt}, ${targ}`);
 
-    actionListener(evt, fn, targ, 'removeEventListener');
+    actionListener(evt, fn, targ, REMOVE_EVENT_LISTENER);
 };
 
 // Because devices and browsers differ in their approach to user interaction (mouse vs pointer vs touch), the actual functionality for adding and removing the event listeners associated with each approach is handled by dedicated actionXXXListener functions
@@ -85,7 +132,7 @@ const actionListener = function (evt, fn, targ, action) {
         targets;
     
     if (targ.substring) targets = document.body.querySelectorAll(targ);
-    else if (Array.isArray(targ)) targets = targ;
+    else if (_isArray(targ)) targets = targ;
     else targets = [targ];
 
     if (navigator.pointerEnabled || navigator.msPointerEnabled) actionPointerListener(events, fn, targets, action);
@@ -108,30 +155,30 @@ const actionMouseListener = function (events, fn, targets, action) {
                 
                 switch (myevent) {
                 
-                    case 'move':
-                        target[action]('mousemove', fn, false);
-                        target[action]('touchmove', fn, {passive: false});
-                        target[action]('touchfollow', fn, {passive: false});
+                    case MOVE:
+                        target[action](MOUSE_MOVE, fn, false);
+                        target[action](TOUCH_MOVE, fn, {passive: false});
+                        target[action](TOUCH_FOLLOW, fn, {passive: false});
                         break;
 
-                    case 'up':
-                        target[action]('mouseup', fn, false);
-                        target[action]('touchend', fn, {passive: false});
+                    case UP:
+                        target[action](MOUSE_UP, fn, false);
+                        target[action](TOUCH_END, fn, {passive: false});
                         break;
 
-                    case 'down':
-                        target[action]('mousedown', fn, false);
-                        target[action]('touchstart', fn, {passive: false});
+                    case DOWN:
+                        target[action](MOUSE_DOWN, fn, false);
+                        target[action](TOUCH_START, fn, {passive: false});
                         break;
 
-                    case 'leave':
-                        target[action]('mouseleave', fn, false);
-                        target[action]('touchleave', fn, {passive: false});
+                    case LEAVE:
+                        target[action](MOUSE_LEAVE, fn, false);
+                        target[action](TOUCH_LEAVE, fn, {passive: false});
                         break;
 
-                    case 'enter':
-                        target[action]('mouseenter', fn, false);
-                        target[action]('touchenter', fn, {passive: false});
+                    case ENTER:
+                        target[action](MOUSE_ENTER, fn, false);
+                        target[action](TOUCH_ENTER, fn, {passive: false});
                         break;
                 }
             }
@@ -156,24 +203,24 @@ const actionPointerListener = function (events, fn, targets, action) {
 
                 switch (myevent) {
                 
-                    case 'move':
-                        target[action]('pointermove', fn, false);
+                    case MOVE:
+                        target[action](POINTER_MOVE, fn, false);
                         break;
 
-                    case 'up':
-                        target[action]('pointerup', fn, false);
+                    case UP:
+                        target[action](POINTER_UP, fn, false);
                         break;
 
-                    case 'down':
-                        target[action]('pointerdown', fn, false);
+                    case DOWN:
+                        target[action](POINTER_DOWN, fn, false);
                         break;
 
-                    case 'leave':
-                        target[action]('pointerleave', fn, false);
+                    case LEAVE:
+                        target[action](POINTER_LEAVE, fn, false);
                         break;
 
-                    case 'enter':
-                        target[action]('pointerenter', fn, false);
+                    case ENTER:
+                        target[action](POINTER_ENTER, fn, false);
                         break;
                 }
             }
@@ -195,8 +242,8 @@ export const addNativeListener = function (evt, fn, targ) {
 
     if (!isa_fn(fn)) throw new Error(`core/document addNativeListener() error - no function supplied: ${evt}, ${targ}`);
 
-    actionNativeListener(evt, fn, targ, 'removeEventListener');
-    actionNativeListener(evt, fn, targ, 'addEventListener');
+    actionNativeListener(evt, fn, targ, REMOVE_EVENT_LISTENER);
+    actionNativeListener(evt, fn, targ, ADD_EVENT_LISTENER);
 
     return function () {
 
@@ -209,7 +256,7 @@ export const removeNativeListener = function (evt, fn, targ) {
 
     if (!isa_fn(fn)) throw new Error(`core/document removeNativeListener() error - no function supplied: ${evt}, ${targ}`);
 
-    actionNativeListener(evt, fn, targ, 'removeEventListener');
+    actionNativeListener(evt, fn, targ, REMOVE_EVENT_LISTENER);
 };
 
 const actionNativeListener = function (evt, fn, targ, action) {
@@ -218,7 +265,7 @@ const actionNativeListener = function (evt, fn, targ, action) {
         targets, i, iz, j, jz, myevent, target;
 
     if (targ.substring) targets = document.body.querySelectorAll(targ);
-    else if (Array.isArray(targ)) targets = targ;
+    else if (_isArray(targ)) targets = targ;
     else targets = [targ];
 
     for (i = 0, iz = events.length; i < iz; i++) {
@@ -255,17 +302,17 @@ const updatePixelRatio = () => {
 
     dpr = window.devicePixelRatio;
 
-    for (const [name, wrapper] of Object.entries(canvas)) {
+    for (const [name, wrapper] of _entries(canvas)) {
 
         wrapper.dirtyDimensions = true;
     }
 
-    for (const [name, wrapper] of Object.entries(cell)) {
+    for (const [name, wrapper] of _entries(cell)) {
 
         wrapper.dirtyDimensions = true;
     }
 
-    for (const [name, ent] of Object.entries(entity)) {
+    for (const [name, ent] of _entries(entity)) {
 
         ent.dirtyHost = true;
     }
@@ -275,9 +322,9 @@ const updatePixelRatio = () => {
     // __Note:__ I have no idea what Safari is doing - maybe device pixel ratio stuff is handled internally? 
     // + Whatever. Safari does not like, or respond to, this matchmedia query
     // + As long as the demos display as expected in Safari on both 1dppx and 2dppx (Retina) screens, and dragging the Safari browser between screens with different dppx values doesn't break the display or freeze the page, then I think we're okay
-    if (!browserIs.includes('safari')) {
+    if (!browserIs.includes(SAFARI)) {
 
-        matchMedia(`(resolution: ${dpr}dppx)`).addEventListener("change", updatePixelRatio, { once: true });
+        matchMedia(`(resolution: ${dpr}dppx)`).addEventListener(CHANGE, updatePixelRatio, { once: true });
     }
 };
 
