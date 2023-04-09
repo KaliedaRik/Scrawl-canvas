@@ -7,29 +7,12 @@
 // #### Imports
 import { canvas } from '../core/library.js';
 
-import { 
-    isa_obj, 
-    mergeOver, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { isa_obj, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { makeAnchor } from '../factory/anchor.js';
 import { scrawlNavigationHold } from '../core/document.js';
 
-
-// Local constants
-const DESCRIPTION = 'description',
-    DOWNLOAD = 'download',
-    HREF = 'href',
-    HREFLANG = 'hreflang',
-    PING = 'ping',
-    REFERRERPOLICY = 'referrerpolicy',
-    REL = 'rel',
-    T_CANVAS = 'Canvas',
-    T_CELL = 'Cell',
-    TARGET = 'target',
-    TYPE = 'type',
-    ZERO_STR = '';
+import { DESCRIPTION, DOWNLOAD, HREF, HREFLANG, PING, REFERRERPOLICY, REL, T_CANVAS, T_CELL, TARGET, TYPE, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Export function

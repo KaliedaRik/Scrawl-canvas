@@ -10,22 +10,12 @@
 // #### Imports
 import { artefact } from "./library.js";
 
-import {
-    getRootElementsSort,
-    setRootElementsSort,
-} from './system-flags.js';
+import { getRootElementsSort, setRootElementsSort } from './system-flags.js';
 
-import {
-    _floor,
-} from './shared-vars.js';
+import { pushUnique, removeItem } from './utilities.js';
 
-import {
-    pushUnique,
-    removeItem,
-} from './utilities.js';
+import { _floor } from './shared-vars.js';
 
-
-// Local constants 
 
 // Local variables
 const rootElements = [];

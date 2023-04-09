@@ -12,53 +12,17 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    constructors, 
-} from '../core/library.js';
+import { artefact, constructors } from '../core/library.js';
 
 import { setMouseChanged } from '../core/system-flags.js';
 
-import { 
-    correctAngle,
-    isa_dom, 
-    isa_fn, 
-    isa_obj, 
-    isa_quaternion, 
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    xt, 
-    xta, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { correctAngle, isa_dom, isa_fn, isa_obj, isa_quaternion, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../core/utilities.js';
 
-import { 
-    addLocalMouseMoveListener, 
-    applyCoreResizeListener, 
-    currentCorePosition, 
-    removeLocalMouseMoveListener, 
-    uiSubscribedElements, 
-} from '../core/userInteraction.js';
+import { addLocalMouseMoveListener, applyCoreResizeListener, currentCorePosition, removeLocalMouseMoveListener, uiSubscribedElements } from '../core/userInteraction.js';
 
-import { 
-    addDomShowElement, 
-    domShow, 
-    setDomShowRequired, 
-} from '../core/document.js';
+import { addDomShowElement, domShow, setDomShowRequired } from '../core/document.js';
 
-import { 
-    makeQuaternion, 
-    releaseQuaternion, 
-    requestQuaternion, 
-} from '../factory/quaternion.js';
-
-import {
-    _isArray,
-    _round,
-    _entries,
-} from '../core/shared-vars.js'
+import { makeQuaternion, releaseQuaternion, requestQuaternion } from '../factory/quaternion.js';
 
 import positionMix from './position.js';
 import deltaMix from './delta.js';
@@ -67,42 +31,8 @@ import mimicMix from './mimic.js';
 import pathMix from './path.js';
 import anchorMix from './anchor.js';
 
+import { _isArray, _round, _entries, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, BOTTOMLEFT, BOTTOMRIGHT, CLASS_REGEX, CORNER_ATTR, CORNER_ATTR_VAL, CORNER_LABELS, CORNER_SELECTOR, DIV, LOCAL, MIMIC, MOUSE, NO_CORNER_ELEMENTS, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TABINDEX, TOPLEFT, TOPRIGHT, TRUE, ZERO_STR } from '../core/shared-vars.js'
 
-// Local constants
-const ABSOLUTE = 'absolute',
-    ARIA_HIDDEN = 'aria-hidden',
-    BORDER_BOX = 'border-box',
-    BOTTOMLEFT = 'bottomLeft',
-    BOTTOMRIGHT = 'bottomRight',
-    CLASS_REGEX = /[\s\uFEFF\xA0]+/g,
-    CORNER_ATTR = 'data-scrawl-corner-div',
-    CORNER_ATTR_VAL = 'sc',
-    CORNER_LABELS = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
-    CORNER_SELECTOR = '[data-scrawl-corner-div="sc"]',
-    DIV = 'div',
-    LOCAL = 'local',
-    MIMIC = 'mimic',
-    MOUSE = 'mouse',
-    NO_CORNER_ELEMENTS = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS'],
-    PARTICLE = 'particle',
-    PATH = 'path',
-    PC0 = '0%',
-    PC100 = '100%',
-    PIVOT = 'pivot',
-    SPACE = ' ',
-    T_STACK = 'Stack',
-    TABINDEX = 'tabindex',
-    TOPLEFT = 'topLeft',
-    TOPRIGHT = 'topRight',
-    TRUE = 'true';
-const ON_ENTER = 'onEnter';
-const ON_LEAVE = 'onLeave';
-const ON_DOWN = 'onDown';
-const ON_UP = 'onUp';
-const DOM_ELEMENT = 'domElement';
-const PATH_CORNERS = 'pathCorners';
-const ROTATION = 'rotation';
-const ZERO_STR = '';
 
 // #### Export function
 export default function (P = Ωempty) {
@@ -194,8 +124,8 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
-    P.packetExclusions = pushUnique(P.packetExclusions, [DOM_ELEMENT, PATH_CORNERS, ROTATION]);
-    P.packetFunctions = pushUnique(P.packetFunctions, [ON_ENTER, ON_LEAVE, ON_DOWN, ON_UP]);
+    P.packetExclusions = pushUnique(P.packetExclusions, ['domElement', 'pathCorners', 'rotation']);
+    P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 
 // `processDOMPacketOut` - internal helper function
     P.processDOMPacketOut = function (key, value, incs) {

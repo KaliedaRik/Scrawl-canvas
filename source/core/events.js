@@ -14,53 +14,11 @@
 
 
 // #### Imports
-import { 
-    canvas, 
-    cell, 
-    entity, 
-} from "./library.js";
+import { canvas, cell, entity } from "./library.js";
 
-import { 
-    isa_fn, 
-    isa_dom, 
-    λnull, 
-    Ωempty, 
-    detectBrowser, 
-} from "./utilities.js";
+import { isa_fn, isa_dom, λnull, Ωempty, detectBrowser } from "./utilities.js";
 
-import { 
-    _entries,
-    _isArray,
-} from './shared-vars.js';
-
-
-// Local constants
-const ADD_EVENT_LISTENER = 'addEventListener';
-const CHANGE = 'change';
-const DOWN = 'down';
-const ENTER = 'enter';
-const FUNCTION = 'function';
-const LEAVE = 'leave';
-const MOUSE_DOWN = 'mousedown';
-const MOUSE_ENTER = 'mouseenter';
-const MOUSE_LEAVE = 'mouseleave';
-const MOUSE_MOVE = 'mousemove';
-const MOUSE_UP = 'mouseup';
-const MOVE = 'move';
-const POINTER_DOWN = 'pointerdown';
-const POINTER_ENTER = 'pointerenter';
-const POINTER_LEAVE = 'pointerleave';
-const POINTER_MOVE = 'pointermove';
-const POINTER_UP = 'pointerup';
-const REMOVE_EVENT_LISTENER = 'removeEventListener';
-const SAFARI = 'safari';
-const TOUCH_END = 'touchend';
-const TOUCH_ENTER = 'touchenter';
-const TOUCH_FOLLOW = 'touchfollow';
-const TOUCH_LEAVE = 'touchleave';
-const TOUCH_MOVE = 'touchmove';
-const TOUCH_START = 'touchstart';
-const UP = 'up';
+import { _entries, _isArray, ADD_EVENT_LISTENER, CHANGE, DOWN, ENTER, FUNCTION, LEAVE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, SAFARI, TOUCH_END, TOUCH_ENTER, TOUCH_FOLLOW, TOUCH_LEAVE, TOUCH_MOVE, TOUCH_START, UP } from './shared-vars.js';
 
 
 // #### Functionality

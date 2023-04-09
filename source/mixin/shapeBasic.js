@@ -5,51 +5,15 @@
 // #### Imports
 import { artefact } from '../core/library.js';
 
-import { 
-    mergeOver, 
-    pushUnique, 
-    xt, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
 
-import { 
-    releaseVector, 
-    requestVector, 
-} from '../factory/vector.js';
+import { releaseVector, requestVector } from '../factory/vector.js';
 
 import calculatePath from './shapePathCalculation.js';
 
 import entityMix from './entity.js';
 
-import { 
-    _atan2,
-    _ceil,
-    _floor,
-    _parse,
-    _piHalf,
-    _pow,
-    _radian, 
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BEZIER = 'bezier',
-    CLOSE = 'close',
-    DESTINATION_OUT = 'destination-out',
-    HALFTRANS = 'rgb(0 0 0 / 0.5)',
-    LINEAR = 'linear',
-    MOUSE = 'mouse',
-    MOVE = 'move',
-    PARTICLE = 'particle',
-    QUADRATIC = 'quadratic',
-    SOURCE_OVER = 'source-over',
-    T_BEZIER = 'Bezier',
-    T_LINE = 'Line',
-    T_POLYLINE = 'Polyline',
-    T_QUADRATIC = 'Quadratic',
-    UNKNOWN = 'unknown';
-const ZERO_STR = '';
+import { _atan2, _ceil, _floor, _parse, _piHalf, _pow, _radian, BEZIER, CLOSE, DESTINATION_OUT, HALFTRANS, LINEAR, MOUSE, MOVE, PARTICLE, QUADRATIC, SOURCE_OVER, T_BEZIER, T_LINE, T_POLYLINE, T_QUADRATIC, UNKNOWN, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Export function

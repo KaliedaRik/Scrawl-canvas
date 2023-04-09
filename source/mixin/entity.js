@@ -10,25 +10,14 @@
 
 
 // #### Imports
-import { 
-    addStrings, 
-    isa_obj, 
-    mergeOver, 
-    pushUnique, 
-    xt, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { addStrings, isa_obj, mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 import { asset } from '../core/library.js';
 
 import { makeState } from '../factory/state.js';
 
-import { 
-    releaseCell, 
-    requestCell, 
-} from '../factory/cell-fragment.js';
+import { releaseCell, requestCell } from '../factory/cell-fragment.js';
 
 import { filterEngine } from '../factory/filterEngine.js';
 import { importDomImage } from '../factory/imageAsset.js';
@@ -42,33 +31,7 @@ import pathMix from '../mixin/path.js';
 import anchorMix from '../mixin/anchor.js';
 import filterMix from '../mixin/filter.js';
 
-import { 
-    _floor,
-    _keys,
-    _parse, 
-    STATE_KEYS, 
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const 
-    FILL = 'fill',
-    GOOD_HOST = ['Cell', 'CellFragment'],
-    IMG = 'img',
-    MOUSE = 'mouse',
-    NAME = 'name',
-    NONZERO = 'nonzero',
-    PARTICLE = 'particle',
-    SOURCE_IN = 'source-in',
-    SOURCE_OVER = 'source-over',
-    UNDEF = 'undefined';
-const STATE = 'state';
-const ON_ENTER = 'onEnter';
-const ON_LEAVE = 'onLeave';
-const ON_DOWN = 'onDown';
-const ON_UP = 'onUp';
-const ZERO_STR = '';
-const DESTINATION_OUT = 'destination-out';
+import { _floor, _keys, _parse,  DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, NONZERO, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Export function
@@ -220,8 +183,8 @@ export default function (P = Ωempty) {
     P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet management
-    P.packetExclusions = pushUnique(P.packetExclusions, [STATE]);
-    P.packetFunctions = pushUnique(P.packetFunctions, [ON_ENTER, ON_LEAVE, ON_DOWN, ON_UP]);
+    P.packetExclusions = pushUnique(P.packetExclusions, ['state']);
+    P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 
     P.processEntityPacketOut = function (key, value, incs) {
 

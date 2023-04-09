@@ -5,23 +5,9 @@
 // #### Imports
 import { artefact } from '../core/library.js';
 
-import { 
-    isa_boolean, 
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    Ωempty,
-} from '../core/utilities.js';
+import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
 
-import { 
-    _abs,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const PATH = 'path',
-    START = 'start';
-const ZERO_STR = '';
+import { _abs, PATH, START, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Export function

@@ -5,25 +5,8 @@
 
 
 // #### Imports
-import { 
-    _atan2,
-    _cos,
-    _pow,
-    _sin,
-    _sqrt,
-} from '../core/shared-vars.js';
+import { _atan2, _cos, _pow, _sin, _sqrt, BEZIER, CLOSE, GET_BEZIER, GET_QUADRATIC, LINEAR, MOVE, QUADRATIC, UNKNOWN, ZERO_STR } from '../core/shared-vars.js';
 
-
-// Local constants
-const BEZIER = 'bezier',
-    CLOSE = 'close',
-    GET_BEZIER = 'getBezierXY',
-    GET_QUADRATIC = 'getQuadraticXY',
-    LINEAR = 'linear',
-    MOVE = 'move',
-    QUADRATIC = 'quadratic',
-    UNKNOWN = 'unknown';
-const ZERO_STR = '';
 
 // #### Export function
 export default function (d, scale, start, useAsPath, precision) {

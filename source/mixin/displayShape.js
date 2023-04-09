@@ -7,33 +7,9 @@
 
 
 // #### Imports
-import { 
-    isa_fn, 
-    isa_number, 
-    isa_obj, 
-    mergeOver, 
-    pushUnique, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { isa_fn, isa_number, isa_obj, mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
 
-import { 
-    _entries,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BANNER = 'banner',
-    LANDSCAPE = 'landscape',
-    LARGER = 'larger',
-    LARGEST = 'largest',
-    PORTRAIT = 'portrait',
-    RECTANGLE = 'rectangle',
-    REGULAR = 'regular',
-    SKYSCRAPER = 'skyscraper',
-    SMALLER = 'smaller',
-    SMALLEST = 'smallest',
-    ZERO_STR = '';
+import { _entries, BANNER, LANDSCAPE, LARGER, LARGEST, PORTRAIT, RECTANGLE, REGULAR, SKYSCRAPER, SMALLER, SMALLEST, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Export function

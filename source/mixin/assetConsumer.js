@@ -5,17 +5,11 @@
 
 
 // #### Imports
-import { 
-    mergeOver, 
-    xt, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { mergeOver, xt, Ωempty } from '../core/utilities.js';
 
 import { asset } from '../core/library.js';
 
-import { 
-    _now,
-} from '../core/shared-vars.js';
+import { _now } from '../core/shared-vars.js';
 
 import { importImage } from '../factory/imageAsset.js';
 import { importVideo } from '../factory/videoAsset.js';

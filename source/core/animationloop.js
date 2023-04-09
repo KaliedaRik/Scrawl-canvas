@@ -35,21 +35,11 @@
 // #### Imports
 import { animation } from "./library.js";
 
-import {
-    pushUnique,
-    removeItem,
-} from './utilities.js';
+import { pushUnique, removeItem } from './utilities.js';
 
-import {
-    getResortBatchAnimations,
-    setResortBatchAnimations,
-    getDoAnimation,
-    setDoAnimation,
-} from './system-flags.js';
+import { getDoAnimation, getResortBatchAnimations, setDoAnimation, setResortBatchAnimations } from './system-flags.js';
 
-import {
-    _floor,
-} from './shared-vars.js';
+import { _floor } from './shared-vars.js';
 
 
 // Local constants 

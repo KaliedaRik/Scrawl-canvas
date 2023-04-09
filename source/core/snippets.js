@@ -6,25 +6,16 @@
 
 
 // ## Imports
-import { 
-    artefact, 
-    unstackedelement, 
-} from "./library.js";
+import { artefact, unstackedelement } from "./library.js";
 
-import { 
-    isa_boolean, 
-    isa_dom, 
-    isa_obj, 
-} from "./utilities.js";
+import { isa_boolean, isa_dom, isa_obj } from "./utilities.js";
 
 import { makeAnimationObserver } from './events.js';
 
 import { makeRender } from "../factory/renderAnimation.js";
 import { makeUnstackedElement } from "../factory/unstackedElement.js";
 
-
-// Local constants
-const NON_SNIPPET_ELEMENTS = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'];
+import { NON_SNIPPET_ELEMENTS } from './shared-vars.js';
 
 
 // TODO - documentation

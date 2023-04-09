@@ -15,60 +15,9 @@ import { addListener } from "./events.js";
 
 import { makeAnimation } from "../factory/animation.js";
 
-import {
-    getTrackMouse,
-    setTrackMouse,
-    getMouseChanged,
-    setMouseChanged,
-    getViewportChanged,
-    setViewportChanged,
-    getPrefersContrastChanged,
-    setPrefersContrastChanged,
-    getPrefersReducedMotionChanged,
-    setPrefersReducedMotionChanged,
-    getPrefersDarkColorSchemeChanged,
-    setPrefersDarkColorSchemeChanged,
-    getPrefersReduceTransparencyChanged,
-    setPrefersReduceTransparencyChanged,
-    getPrefersReduceDataChanged,
-    setPrefersReduceDataChanged,
-    forceUpdate,
-} from './system-flags.js';
+import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged, forceUpdate } from './system-flags.js';
 
-import {
-    _entries,
-    _floor,
-    _now,
-    _round,
-} from './shared-vars.js'
-
-
-// Local constants
-const ADD_EVENT_LISTENER = 'addEventListener',
-    CHANGE = 'change',
-    MOUSE = 'mouse',
-    MOUSE_DOWN = 'mousedown',
-    MOUSE_ENTER = 'mouseenter',
-    MOUSE_LEAVE = 'mouseleave',
-    MOUSE_MOVE = 'mousemove',
-    MOUSE_UP = 'mouseup',
-    MOVE = 'move',
-    POINTER = 'pointer',
-    POINTER_DOWN = 'pointerdown',
-    POINTER_ENTER = 'pointerenter',
-    POINTER_LEAVE = 'pointerleave',
-    POINTER_MOVE = 'pointermove',
-    POINTER_UP = 'pointerup',
-    REMOVE_EVENT_LISTENER = 'removeEventListener',
-    RESIZE = 'resize',
-    SCROLL = 'scroll',
-    T_CANVAS = 'Canvas',
-    T_PHRASE = 'Phrase',
-    TOUCH = 'touch',
-    TOUCH_CANCEL = 'touchcancel',
-    TOUCH_END = 'touchend',
-    TOUCH_MOVE = 'touchmove',
-    TOUCH_START = 'touchstart';
+import { _entries, _floor, _now, _round, ADD_EVENT_LISTENER, CHANGE, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from './shared-vars.js'
 
 
 // `Exported array` (to modules). DOM element wrappers subscribe for updates by adding themselves to the __uiSubscribedElements__ array. When an event fires, the updated data will be pushed to them automatically

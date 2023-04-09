@@ -14,55 +14,16 @@
 
 
 // #### Imports
-import { 
-    entity, 
-    palette, 
-    styles, 
-    stylesnames, 
-} from '../core/library.js';
+import { entity, palette, styles, stylesnames } from '../core/library.js';
 
-import { 
-    addStrings, 
-    isa_obj, 
-    mergeDiscard, 
-    mergeOver, 
-    xt, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { addStrings, isa_obj, mergeDiscard, mergeOver, xt, λnull, Ωempty } from '../core/utilities.js';
 
 import { makeAnimation } from '../factory/animation.js';
 import { makeCoordinate } from '../factory/coordinate.js';
 
-import { 
-    makePalette, 
-    PALETTE_KEYS, 
-} from '../factory/palette.js';
+import { makePalette, PALETTE_KEYS } from '../factory/palette.js';
 
-import { 
-    _entries,
-    _isArray,
-    _keys,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BLACK = 'rgb(0 0 0 / 1)',
-    BLANK = 'rgb(0 0 0 / 0)',
-    BOTTOM = 'bottom',
-    CENTER = 'center',
-    COLORS = 'colors',
-    END = 'end',
-    LEFT = 'left',
-    LINEAR = 'linear',
-    NAME = 'name',
-    RGB = 'RGB',
-    RIGHT = 'right',
-    START = 'start',
-    T_PALETTE = 'Palette',
-    TOP = 'top',
-    UNDEF = 'undefined',
-    WHITE = 'rgb(255 255 255 / 1)';
+import { _entries, _isArray, _keys, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../core/shared-vars.js';
 
 
 // Create an animation to handle automated delta gradient animation

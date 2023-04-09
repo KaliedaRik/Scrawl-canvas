@@ -24,18 +24,9 @@
 
 
 // #### Imports
-import { 
-    mergeOver, 
-    pushUnique, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
 
-
-// Local constants
-const SOURCE = 'source',
-    SOURCE_LOADED = 'sourceLoaded',
-    SUBSCRIBERS = 'subscribers';
+import { SOURCE, SOURCE_LOADED, SUBSCRIBERS } from '../core/shared-vars.js';
 
 
 // #### Export function

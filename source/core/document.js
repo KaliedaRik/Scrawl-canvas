@@ -9,28 +9,9 @@ import { artefact } from "./library.js";
 
 import { pushUnique } from "./utilities.js";
 
-import { 
-    getPixelRatio, 
-    getIgnorePixelRatio, 
-} from "./events.js";
+import { getPixelRatio, getIgnorePixelRatio } from "./events.js";
 
-import { 
-    _css,
-    _keys,
-    _xcss,
-} from './shared-vars.js';
-
-
-// Local constants
-const T_CANVAS = 'Canvas',
-    AUTO = 'auto',
-    BLOCK = 'block',
-    NONE = 'none',
-    GRAYSCALE = 'grayscale',
-    NEVER = 'never',
-    WEBKIT_FONT_SMOOTHING = 'webkitFontSmoothing',
-    MOZOSX_FONT_SMOOTHING = 'mozOsxFontSmoothing',
-    SMOOTH_FONT = 'smoothFont';
+import { _css, _keys, _xcss, AUTO, BLOCK, GRAYSCALE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, T_CANVAS, WEBKIT_FONT_SMOOTHING } from './shared-vars.js';
 
 
 // #### DOM element updates

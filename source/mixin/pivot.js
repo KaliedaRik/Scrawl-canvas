@@ -3,30 +3,11 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    asset, 
-} from '../core/library.js';
+import { artefact, asset } from '../core/library.js';
 
-import { 
-    isa_boolean, 
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
 
-
-// Local constants
-const CORNER_LABELS = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'],
-    PIVOT = 'pivot',
-    START = 'start',
-    T_BEZIER = 'Bezier',
-    T_CELL = 'Cell',
-    T_LINE = 'Line',
-    T_POLYLINE = 'Polyline',
-    T_QUADRATIC = 'Quadratic';
-const ZERO_STR = '';
+import { CORNER_LABELS, PIVOT, START, T_BEZIER, T_CELL, T_LINE, T_POLYLINE, T_QUADRATIC, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Export function

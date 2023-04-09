@@ -3,33 +3,9 @@
 
 
 // #### Imports
-import { 
-    mergeDiscard,
-    mergeOver,
-    xt,
-    Ωempty,
-} from '../core/utilities.js';
+import { mergeDiscard, mergeOver, xt, Ωempty } from '../core/utilities.js';
 
-import {
-    _isArray,
-    _keys,
-} from '../core/shared-vars.js'
-
-
-// Local constants
-const ADD = 'add',
-    LONGCHECK = ['startX', 'startY', 'handleX', 'handleY', 'offsetX', 'offsetY', 'width', 'height'],
-    LOOP = 'loop',
-    MULTIPLY = 'multiply',
-    NEWNUMBER = 'newNumber',
-    NEWSTRING = 'newString',
-    PC = '%',
-    REMOVE = 'remove',
-    REVERSE = 'reverse',
-    SEPARATOR = ':',
-    SHORTCHECK = ['startY', 'handleY', 'offsetY', 'height'],
-    UPDATE = 'update',
-    ZERO_STR = '';
+import { _isArray, _keys, ADD, LONGCHECK, LOOP, MULTIPLY, NEWNUMBER, NEWSTRING, PC, REMOVE, REVERSE, SEPARATOR, SHORTCHECK, UPDATE, ZERO_STR } from '../core/shared-vars.js'
 
 
 // #### Export function

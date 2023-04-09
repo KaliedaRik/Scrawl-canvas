@@ -3,44 +3,13 @@
 
 
 // #### Imports
-import { 
-    mergeDiscard, 
-    mergeOver, 
-    xt, 
-    λnull, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { mergeDiscard, mergeOver, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
-import { 
-    cell, 
-    cellnames, 
-    styles, 
-    stylesnames, 
-} from '../core/library.js';
+import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 
-import { 
-    getIgnorePixelRatio, 
-    getPixelRatio, 
-} from "../core/events.js";
+import { getIgnorePixelRatio, getPixelRatio } from "../core/events.js";
 
-import { 
-    _cos,
-    _entries,
-    _isArray,
-    _keys,
-    _radian,
-    _sin,
-    STATE_ALL_KEYS,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BLANK = 'rgb(0 0 0 / 0)',
-    LEFT = 'left',
-    LINE_DASH = 'lineDash',
-    STYLES_ARR = ['Gradient', 'RadialGradient', 'Pattern'],
-    TOP = 'top';
+import { _cos, _entries, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../core/shared-vars.js';
 
 
 // #### Export function

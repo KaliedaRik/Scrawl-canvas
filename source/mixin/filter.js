@@ -8,44 +8,13 @@
 
 
 // #### Imports
-import { 
-    asset, 
-    filter, 
-    styles, 
-} from '../core/library.js';
+import { asset, filter, styles } from '../core/library.js';
 
-import { 
-    generateUuid, 
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
 
-import { 
-    _abs,
-    _floor,
-    _isArray, 
-} from '../core/shared-vars.js';
+import { releaseCell, requestCell } from '../factory/cell-fragment.js';
 
-import { 
-    releaseCell, 
-    requestCell, 
-} from '../factory/cell-fragment.js';
-
-
-// Local constants
-const PROCESS_IMAGE = 'process-image',
-    SOURCE_OVER = 'source-over',
-    T_CELL = 'Cell',
-    T_FILTER = 'Filter',
-    T_IMAGE = 'Image',
-    T_NOISE = 'Noise',
-    T_RAWASSET = 'RawAsset',
-    T_RDASSET = 'RdAsset',
-    T_SPRITE = 'Sprite',
-    T_VIDEO = 'Video';
-const ZERO_STR = '';
+import { _abs, _floor, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_CELL, T_FILTER, T_IMAGE, T_NOISE, T_RAWASSET, T_RDASSET, T_SPRITE, T_VIDEO, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Export function

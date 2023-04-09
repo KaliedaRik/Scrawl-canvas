@@ -6,6 +6,7 @@
 import { startCoreAnimationLoop } from './animationloop.js';
 import { getCanvases } from '../factory/canvas.js';
 import { getStacks } from '../factory/stack.js';
+
 import { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } from './userInteraction.js';
 
 

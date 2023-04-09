@@ -8,25 +8,9 @@ import * as library from '../core/library.js';
 
 import { animationtickers } from '../core/library.js';
 
-import { 
-    convertTime, 
-    isa_fn, 
-    isa_obj, 
-    mergeOver, 
-    xt, 
-    xtGet, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { convertTime, isa_fn, isa_obj, mergeOver, xt, xtGet, λnull, Ωempty } from '../core/utilities.js';
 
-
-// Local constants
-const FUNCTION = 'function',
-    PC = '%',
-    TARGET_SECTIONS = ['artefact', 'group', 'animation', 'animationtickers', 'world', 'tween', 'styles', 'filter'],
-    UNKNOWN = 'unknown',
-    UNNAMED = 'unnamed';
-const ZERO_STR = '';
+import { FUNCTION, PC, TARGET_SECTIONS, UNKNOWN, UNNAMED, ZERO_STR } from '../core/shared-vars.js';
 
 
 // Helper function

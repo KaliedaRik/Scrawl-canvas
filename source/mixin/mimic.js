@@ -3,25 +3,11 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    asset, 
-} from '../core/library.js';
+import { artefact, asset } from '../core/library.js';
 
-import { 
-    isa_boolean, 
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
 
-
-// Local constants
-const MIMIC = 'mimic',
-    START = 'start',
-    T_CELL = 'Cell';
-const ZERO_STR = '';
+import { MIMIC, START, T_CELL, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Export function

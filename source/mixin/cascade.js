@@ -9,26 +9,9 @@
 // #### Imports
 import { group } from '../core/library.js';
 
-import { 
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    xtGet, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xtGet, Ωempty } from '../core/utilities.js';
 
-import { 
-    _floor,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const ADD_ARTEFACT_CLASSES = 'addArtefactClasses',
-    REMOVE_ARTEFACT_CLASSES = 'removeArtefactClasses',
-    REVERSE_BY_DELTA = 'reverseByDelta',
-    SET_ARTEFACTS = 'setArtefacts',
-    UPDATE_ARTEFACTS = 'updateArtefacts',
-    UPDATE_BY_DELTA = 'updateByDelta';
+import { _floor, ADD_ARTEFACT_CLASSES, REMOVE_ARTEFACT_CLASSES, REVERSE_BY_DELTA, SET_ARTEFACTS, UPDATE_ARTEFACTS, UPDATE_BY_DELTA } from '../core/shared-vars.js';
 
 
 // #### Export function

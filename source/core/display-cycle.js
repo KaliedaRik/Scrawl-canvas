@@ -13,12 +13,7 @@ import { artefact } from "./library.js";
 
 import { getSortedRootElements } from './document-rootElements.js';
 
-
-// Local constants
-const CLEAR = 'clear',
-    COMPILE = 'compile',
-    SHOW = 'show',
-    RENDER = 'render';
+import { CLEAR, COMPILE, SHOW, RENDER } from './shared-vars.js';
 
 
 // Helper functions coordinate the actions required to complete a display cycle

@@ -3,25 +3,11 @@
 
 
 // #### Imports
-import { 
-    mergeOver, 
-    pushUnique, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
-
-import { 
-    _floor,
-    _now,
-} from '../core/shared-vars.js';
+import { mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
 
 import { makeGradient } from '../factory/gradient.js';
 
-
-// Local constants
-const _2D = '2d',
-    CANVAS = 'canvas',
-    PC100 = '100%';
+import { _floor, _now, _2D, CANVAS, PC100 } from '../core/shared-vars.js';
 
 
 // #### Export function

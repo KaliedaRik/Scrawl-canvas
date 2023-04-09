@@ -5,57 +5,18 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    particle, 
-} from '../core/library.js';
+import { artefact, particle } from '../core/library.js';
 
-import { 
-    addStrings, 
-    isa_boolean, 
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    xt, 
-    xta, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { addStrings, isa_boolean, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 
-import { 
-    _entries,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BEZIER = 'bezier',
-    CONTROL = 'control',
-    COORD = 'coord',
-    END = 'end',
-    END_CONTROL = 'endControl',
-    END_PARTICLE = 'endParticle',
-    END_PATH = 'endPath',
-    END_PIVOT = 'endPivot',
-    LINEAR = 'linear',
-    MOUSE = 'mouse',
-    PARTICLE = 'particle',
-    PATH = 'path',
-    PIVOT = 'pivot',
-    QUADRATIC = 'quadratic',
-    START_CONTROL = 'startControl',
-    T_BEZIER = 'Bezier',
-    T_LINE = 'Line',
-    T_PARTICLE = 'Particle',
-    T_PATH = 'Path',
-    T_PIVOT = 'Pivot',
-    T_QUADRATIC = 'Quadratic';
-const ZERO_STR = '';
+import { _entries, BEZIER, CONTROL, COORD, END, END_CONTROL, END_PARTICLE, END_PATH, END_PIVOT, LINEAR, MOUSE, PARTICLE, PATH, PIVOT, QUADRATIC, START_CONTROL, T_BEZIER, T_LINE, T_PARTICLE, T_PATH, T_PIVOT, T_QUADRATIC, ZERO_STR } from '../core/shared-vars.js';
 
 
 const capitalize = (s) => {
 
-    if (!s.substring) return '';
+    if (!s.substring) return ZERO_STR;
     return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
