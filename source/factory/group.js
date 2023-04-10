@@ -34,6 +34,8 @@ import { releaseCell, requestCell } from './cell-fragment.js';
 
 import { importDomImage } from './image-asset.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
 
@@ -328,34 +330,57 @@ P.sortArtefacts = function () {
 
         this.batchResort = false;
 
-        const buckets = [];
+        const calcBuckets = requestArray(),
+            stampBuckets = requestArray();
 
-        let obj, order;
+        const { artefacts, artefactCalculateBuckets, artefactStampBuckets } = this;
+
+        let obj, order, i, iz, name, arr;
         
-        // Sort for artefact calculateOrder
-        this.artefacts.forEach(name => {
+        for (i = 0, iz = artefacts.length; i < iz; i++) {
 
+            name = artefacts[i];
             obj = artefact[name];
-            order = _floor(obj.calculateOrder) || 0;
 
-            if (!buckets[order]) buckets[order] = [];
+            if (obj) {
 
-            buckets[order].push(obj);
-        });
-         this.artefactCalculateBuckets = buckets.reduce((a, v) => a.concat(v), []);
-        
-        // Sort for artefact stampOrder
-        buckets.length = 0;
-        this.artefacts.forEach(name => {
+                // Sort for artefact calculateOrder
+                order = _floor(obj.calculateOrder);
+                if (!calcBuckets[order]) calcBuckets[order] = requestArray();
+                calcBuckets[order].push(obj);
 
-            obj = artefact[name];
-            order = _floor(obj.stampOrder) || 0;
+                // Sort for artefact stampOrder
+                order = _floor(obj.stampOrder);
+                if (!stampBuckets[order]) stampBuckets[order] = requestArray();
+                stampBuckets[order].push(obj);
+            }
+        }
 
-            if (!buckets[order]) buckets[order] = [];
+        artefactCalculateBuckets.length = 0;
+        for (i = 0, iz = calcBuckets.length; i < iz; i++) {
 
-            buckets[order].push(obj);
-        });
-         this.artefactStampBuckets = buckets.reduce((a, v) => a.concat(v), []);
+            arr = calcBuckets[i];
+
+            if (arr) {
+
+                artefactCalculateBuckets.push(...arr);
+                releaseArray(arr);
+            }
+        };
+        releaseArray(calcBuckets);
+
+        artefactStampBuckets.length = 0;
+        for (i = 0, iz = stampBuckets.length; i < iz; i++) {
+
+            arr = stampBuckets[i];
+
+            if (arr) {
+
+                artefactStampBuckets.push(...arr);
+                releaseArray(arr);
+            }
+        };
+        releaseArray(stampBuckets);
     }
 };
 

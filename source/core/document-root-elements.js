@@ -14,10 +14,12 @@ import { getRootElementsSort, setRootElementsSort } from './system-flags.js';
 
 import { pushUnique, removeItem } from './utilities.js';
 
+import { releaseArray, requestArray } from '../factory/array-pool.js';
+
 import { _floor } from './shared-vars.js';
 
 
-// Local variables
+// #### Local variables
 const rootElements = [];
 const rootElements_sorted = [];
     
@@ -33,23 +35,22 @@ export const rootElementsRemove = (val) => {
 
 export const rootElementsIncludes = (val) => rootElements.includes(val);
 
+
+// #### Functionality
 export const getSortedRootElements = () => {
 
     if (getRootElementsSort()) sortRootElements();
     return rootElements_sorted;
 };
 
-// The __rootElements__ array keeps track of all 'root' stack artefacts, and also includes all canvas artefacts, whether they're part of a stack or not. __setRootElementSort__ forces the root
-// export const setRootElementsSort = () => {rootElementsSort = true};
-// export const getRootElementsSort = () => rootElementsSort;
-
-// Scrawl-canvas rootElements sorter uses a 'bucket sort' algorithm
 const sortRootElements = function () {
 
+    console.log('SORT ROOT ELEMENTS');
     setRootElementsSort(false);
 
-    const buckets = [];
-    let art, order, i, iz, item;
+    const buckets = requestArray();
+
+    let arr, art, order, i, iz, item;
 
     for (i = 0, iz = rootElements.length; i < iz; i++) {
 
@@ -60,11 +61,22 @@ const sortRootElements = function () {
 
             order = _floor(art.order) || 0;
 
-            if (!buckets[order]) buckets[order] = [];
-            
+            if (!buckets[order]) buckets[order] = requestArray();
+
             buckets[order].push(art.name);
         }
     }
     rootElements_sorted.length = 0;
-    rootElements_sorted.push(...buckets.reduce((a, v) => a.concat(v), []));
+
+    for (i = 0, iz = buckets.length; i < iz; i++) {
+
+        arr = buckets[i];
+
+        if (arr) {
+
+            rootElements_sorted.push(...arr);
+            releaseArray(arr);
+        }
+    };
+    releaseArray(buckets);
 };

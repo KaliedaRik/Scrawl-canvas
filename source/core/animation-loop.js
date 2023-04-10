@@ -39,11 +39,13 @@ import { pushUnique, removeItem } from './utilities.js';
 
 import { getDoAnimation, getResortBatchAnimations, setDoAnimation, setResortBatchAnimations } from './system-flags.js';
 
+import { releaseArray, requestArray } from '../factory/array-pool.js';
+
 import { _floor } from './shared-vars.js';
 
 
 // Local constants 
-let animate_sorted = [];
+const animate_sorted = [];
 const animate = [];
 
 export const animateAdd = (val) => {
@@ -64,8 +66,9 @@ export const animateIncludes = (val) => animate.includes(val);
 // Scrawl-canvas animation sorter uses a 'bucket sort' algorithm
 const sortAnimations = () => {
 
-    let buckets = [],
-        obj, order, i, iz, name;
+    const buckets = requestArray();
+
+    let arr, obj, order, i, iz, name;
 
     for (i = 0, iz = animate.length; i < iz; i++) {
 
@@ -76,12 +79,24 @@ const sortAnimations = () => {
 
             order = _floor(obj.order) || 0;
 
-            if (!buckets[order]) buckets[order] = [];
+            if (!buckets[order]) buckets[order] = requestArray();
 
             buckets[order].push(obj);
         }
     }
-    animate_sorted = buckets.reduce((a, v) => a.concat(v), []);
+    animate_sorted.length = 0;
+
+    for (i = 0, iz = buckets.length; i < iz; i++) {
+
+        arr = buckets[i];
+
+        if (arr) {
+
+            animate_sorted.push(...arr);
+            releaseArray(arr);
+        }
+    };
+    releaseArray(buckets);
 };
 
 // The __requestAnimationFrame__ function

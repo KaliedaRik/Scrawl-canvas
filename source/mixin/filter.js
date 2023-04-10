@@ -14,6 +14,8 @@ import { generateUuid, mergeOver, pushUnique, removeItem, Ωempty } from '../cor
 
 import { releaseCell, requestCell } from '../factory/cell-fragment.js';
 
+import { releaseArray, requestArray } from '../factory/array-pool.js';
+
 import { _abs, _floor, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_CELL, T_FILTER, T_IMAGE, T_NOISE, T_RAWASSET, T_RDASSET, T_SPRITE, T_VIDEO, ZERO_STR } from '../core/shared-vars.js';
 
 
@@ -117,26 +119,45 @@ export default function (P = Ωempty) {
         this.dirtyFiltersCache = true;
 
         if (!this.filters) this.filters = [];
+        if (!this.currentFilters) this.currentFilters = [];
 
-        let myfilters = this.filters,
-            buckets = [],
-            myobj, order;
+        const {filters, currentFilters} = this;
 
-        myfilters.forEach(name => {
+        if (filters.length) {
 
-            myobj = filter[name];
+            const buckets = requestArray();
 
-            if (myobj) {
+            let i, iz, obj, name, order, arr;
 
-                order = _floor(myobj.order) || 0;
+            for (i = 0, iz = filters.length; i < iz; i++) {
 
-                if (!buckets[order]) buckets[order] = [];
+                name = filters[i];
+                obj = filter[name];
 
-                buckets[order].push(myobj);
+                if (obj) {
+
+                    order = _floor(obj.order) || 0;
+
+                    if (!buckets[order]) buckets[order] = requestArray();
+
+                    buckets[order].push(obj);
+                }
             }
-        });
+            currentFilters.length = 0;
 
-        this.currentFilters = buckets.reduce((a, v) => a.concat(v), []);
+            for (i = 0, iz = buckets.length; i < iz; i++) {
+
+                arr = buckets[i];
+
+                if (arr) {
+
+                    currentFilters.push(...arr);
+                    releaseArray(arr);
+                }
+            };
+            releaseArray(buckets);
+        }
+        else currentFilters.length = 0;
     };
 
 

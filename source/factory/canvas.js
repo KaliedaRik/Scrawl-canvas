@@ -49,6 +49,8 @@ import { makeState } from './state.js';
 import { makeCell } from './cell.js';
 import { makeCoordinate } from './coordinate.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
@@ -722,13 +724,15 @@ P.cleanCells = function () {
 
     this.dirtyCells = false;
 
-    let tempClear = [],
-        tempCompile = [],
-        tempShow = [],
-        cells = this.cells,
-        order;
+    const tempClear = requestArray(),
+        tempCompile = requestArray(),
+        tempShow = requestArray();
 
-    for (let i = 0, iz = cells.length, mycell; i < iz; i++) {
+    const { cells, cellBatchesClear, cellBatchesCompile, cellBatchesShow } = this;
+    
+    let mycell, order, arr, i, iz;
+
+    for (i = 0, iz = cells.length; i < iz; i++) {
 
         mycell = cell[cells[i]];
 
@@ -740,7 +744,7 @@ P.cleanCells = function () {
 
                 order = mycell.compileOrder;
 
-                if (!tempCompile[order]) tempCompile[order] = [];
+                if (!tempCompile[order]) tempCompile[order] = requestArray();
 
                 tempCompile[order].push(mycell);
             }
@@ -749,15 +753,41 @@ P.cleanCells = function () {
 
                 order = mycell.showOrder;
 
-                if (!tempShow[order]) tempShow[order] = [];
+                if (!tempShow[order]) tempShow[order] = requestArray();
                 tempShow[order].push(mycell);
             }
         }
     };
 
-    this.cellBatchesClear = [].concat(tempClear);
-    this.cellBatchesCompile = tempCompile.reduce((a, v) => a.concat(v), []);
-    this.cellBatchesShow = tempShow.reduce((a, v) => a.concat(v), []);
+    cellBatchesClear.length = 0;
+    cellBatchesClear.push(...tempClear);
+    releaseArray(tempClear);
+
+    cellBatchesCompile.length = 0;
+    for (i = 0, iz = tempCompile.length; i < iz; i++) {
+
+        arr = tempCompile[i];
+
+        if (arr) {
+
+            cellBatchesCompile.push(...arr);
+            releaseArray(arr);
+        }
+    };
+    releaseArray(tempCompile);
+
+    cellBatchesShow.length = 0;
+    for (i = 0, iz = tempShow.length; i < iz; i++) {
+
+        arr = tempShow[i];
+
+        if (arr) {
+
+            cellBatchesShow.push(...arr);
+            releaseArray(arr);
+        }
+    };
+    releaseArray(tempShow);
 };
 
 

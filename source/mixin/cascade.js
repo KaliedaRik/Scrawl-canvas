@@ -11,6 +11,8 @@ import { group } from '../core/library.js';
 
 import { mergeOver, pushUnique, removeItem, xtGet, Ωempty } from '../core/utilities.js';
 
+import { releaseArray, requestArray } from '../factory/array-pool.js';
+
 import { _floor, ADD_ARTEFACT_CLASSES, REMOVE_ARTEFACT_CLASSES, REVERSE_BY_DELTA, SET_ARTEFACTS, UPDATE_ARTEFACTS, UPDATE_BY_DELTA } from '../core/shared-vars.js';
 
 
@@ -65,28 +67,44 @@ export default function (P = Ωempty) {
 // #### Prototype functions
 
 // `sortGroups` - internal function - Groups are sorted from the __groups__ Array into the __groupBuckets__ array using a bespoke bucket sort algorithm, based on each Group object's __order__ attribute
-    P.sortGroups = function (force = false) {
+    P.sortGroups = function () {
 
         if (this.batchResort) {
 
             this.batchResort = false;
 
-            const groupnames = this.groups,
-                buckets = [];
-            
-            let mygroup, order;
+            const {groups, groupBuckets} = this;
+            const buckets = requestArray();
 
-            groupnames.forEach(name => {
+            let i, iz, obj, name, order, arr;
 
-                mygroup = group[name];
-                order = (mygroup) ? _floor(mygroup.order) : 0;
+            for (i = 0, iz = groups.length; i < iz; i++) {
 
-                if (!buckets[order]) buckets[order] = [];
+                name = groups[i];
+                obj = group[name];
 
-                buckets[order].push(mygroup);
-            });
+                if (obj) {
 
-            this.groupBuckets = buckets.reduce((a, v) => a.concat(v), []);
+                    order = _floor(obj.order) || 0;
+
+                    if (!buckets[order]) buckets[order] = requestArray();
+
+                    buckets[order].push(obj);
+                }
+            }
+            groupBuckets.length = 0;
+
+            for (i = 0, iz = buckets.length; i < iz; i++) {
+
+                arr = buckets[i];
+
+                if (arr) {
+
+                    groupBuckets.push(...arr);
+                    releaseArray(arr);
+                }
+            };
+            releaseArray(buckets);
         }
     };
 

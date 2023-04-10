@@ -57,9 +57,11 @@ import { convertTime, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xt, 
 
 import { makeAnimation } from './animation.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import baseMix from '../mixin/base.js';
 
-import { _floor, _now, ANIMATIONTICKERS, FUNCTION, PC, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, TICKERUPDATE } from '../core/shared-vars.js';
+import { _floor, _now, _seal, ANIMATIONTICKERS, FUNCTION, PC, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, TICKERUPDATE } from '../core/shared-vars.js';
 
 
 // #### Ticker constructor
@@ -343,23 +345,39 @@ P.getSubscriberObjects = function () {
 // `sortSubscribers` - internal Helper function called by `subscribe` and `unsubscribe`
 P.sortSubscribers = function () {
 
-    const mysubscribers = this.subscribers;
+    const subs = this.subscribers,
+        len = subs.length;
 
-    if(mysubscribers.length > 1) {
+    if(len > 1) {
 
-        const subs = [].concat(mysubscribers),
-            buckets = [];
+        const buckets = requestArray();
 
-        subs.forEach(obj => {
+        let i, iz, obj, eTime;
 
-            const effectiveTime = _floor(obj.effectiveTime) || 0;
+        for (i = 0; i < len; i++) {
 
-            if (!buckets[effectiveTime]) buckets[effectiveTime] = [];
+            obj = subs[i];
 
-            buckets[effectiveTime].push(obj);
-        });
+            eTime = _floor(obj.effectiveTime) || 0;
 
-        this.subscribers = buckets.reduce((a, v) => a.concat(v), []);
+            if (!buckets[eTime]) buckets[eTime] = requestArray();
+
+            buckets[eTime].push(obj);
+        }
+
+        subs.length = 0;
+
+        for (i = 0, iz = buckets.length; i < iz; i++) {
+
+            obj = buckets[i];
+
+            if (obj) {
+
+                subs.push(...obj);
+                releaseArray(obj);
+            }
+        }
+        releaseArray(buckets);
     }
     this.repopulateSubscriberObjects();
 };
@@ -835,7 +853,7 @@ P.seekFor = function (milliseconds, resume = false) {
 
 
 // #### Ticker animation controller
-let tickerAnimations = [];
+const tickerAnimations = [];
 let tickerAnimationsFlag = true;
 
 // `coreTickersAnimation`
@@ -847,44 +865,58 @@ const coreTickersAnimation = makeAnimation({
 
         // We only sort active Ticker objects when absolutely necessary.
         // + Sorted using a bucket sort algorithm.
+        let arr, obj, order, i, iz, name;
+
         if (tickerAnimationsFlag) {
 
+            console.log('TICKER ANIMATIONS SORT')
             tickerAnimationsFlag = false;
 
-            const tans = [].concat(tickerAnimations),
-                buckets = [];
+            const buckets = requestArray();
 
-            tans.forEach(name => {
+            for (i = 0, iz = tickerAnimations.length; i < iz; i++) {
 
-                const obj = animationtickers[name];
+                obj = tickerAnimations[i];
 
-                if (xt(obj)) {
+                if (obj) {
 
-                    const order = _floor(obj.order) || 0;
+                    order = _floor(obj.order) || 0;
 
-                    if (!buckets[order]) buckets[order] = [];
+                    if (!buckets[order]) buckets[order] = requestArray();
 
-                    buckets[order].push(obj.name);
+                    buckets[order].push(obj);
                 }
-            });
-            tickerAnimations = buckets.reduce((a, v) => a.concat(v), []);
+            }
+            tickerAnimations.length = 0;
+
+            for (i = 0, iz = buckets.length; i < iz; i++) {
+
+                arr = buckets[i];
+
+                if (arr) {
+
+                    tickerAnimations.push(...arr);
+                    releaseArray(arr);
+                }
+            };
+            releaseArray(buckets);
         }
 
         // Invoke each Ticker's `fn` function.
         // + It's up to the Ticker object to decide whether it's active
-        for (let i = 0, iz = tickerAnimations.length, n, t; i < iz; i++) {
+        for (i = 0, iz = tickerAnimations.length; i < iz; i++) {
 
-            n = tickerAnimations[i];
-            t = animationtickers[n];
+            name = tickerAnimations[i];
+            obj= animationtickers[name];
 
-            if (t && t.fn && t.checkObserverRunningState()) t.fn();
+            if (obj && obj.fn && obj.checkObserverRunningState()) obj.fn();
         }
     }
 });
 
 
 // #### ResultObject pool
-// ... Because we generate so many of them.
+// TODO: do we need a pool for this?
 // + To use a pool result object, request it using `requestResultObject` function.
 // + It is imperative that requested result objects are released - `releaseResultObject` - once work with them completes.
 const resultObjectPool = [];
@@ -894,12 +926,12 @@ const requestResultObject = function () {
 
     if (!resultObjectPool.length) {
 
-        resultObjectPool.push({
+        resultObjectPool.push(_seal({
             tick: 0,
             reverseTick: 0,
             willLoop: false,
             next: false
-        });
+        }));
     }
 
     return resultObjectPool.shift();
