@@ -18,33 +18,13 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_fn, 
-    mergeOver, 
-    xt, 
-    λnull, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_fn, mergeOver, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { 
-    _entries,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const _2D = '2d',
-    ASSET = 'asset',
-    CANVAS = 'canvas',
-    T_COORDINATE = 'Coordinate',
-    T_QUATERNION = 'Quaternion',
-    T_RAW_ASSET = 'RawAsset',
-    T_VECTOR = 'Vector';
+import { _2D, _entries, ASSET, CANVAS, T_COORDINATE, T_QUATERNION, T_RAW_ASSET, T_VECTOR } from '../core/shared-vars.js';
 
 
 // #### RawAsset constructor

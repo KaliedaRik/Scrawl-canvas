@@ -41,49 +41,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    addStrings, 
-    doCreate,
-    mergeOver, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
-
-// Local constants
-const ENTITY = 'entity',
-    RADIUS_ARRAY_ALL = ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX', 'radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY'],
-    RADIUS_ARRAY_BOTTOM = ['radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY'],
-    RADIUS_ARRAY_BOTTOM_LEFT = ['radiusBLX', 'radiusBLY'],
-    RADIUS_ARRAY_BOTTOM_LEFT_X = ['radiusBLX'],
-    RADIUS_ARRAY_BOTTOM_LEFT_Y = ['radiusBLY'],
-    RADIUS_ARRAY_BOTTOM_RIGHT = ['radiusBRX', 'radiusBRY'],
-    RADIUS_ARRAY_BOTTOM_RIGHT_X = ['radiusBRX'],
-    RADIUS_ARRAY_BOTTOM_RIGHT_Y = ['radiusBRY'],
-    RADIUS_ARRAY_BOTTOM_X = ['radiusBRX', 'radiusBLX'],
-    RADIUS_ARRAY_BOTTOM_Y = ['radiusBRY', 'radiusBLY'],
-    RADIUS_ARRAY_LEFT = ['radiusTLX', 'radiusTLY', 'radiusBLX', 'radiusBLY'],
-    RADIUS_ARRAY_LEFT_X = ['radiusTLX', 'radiusBLX'],
-    RADIUS_ARRAY_LEFT_Y = ['radiusTLY', 'radiusBLY'],
-    RADIUS_ARRAY_RIGHT = ['radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY'],
-    RADIUS_ARRAY_RIGHT_X = ['radiusTRX', 'radiusBRX'],
-    RADIUS_ARRAY_RIGHT_Y = ['radiusTRY', 'radiusBRY'],
-    RADIUS_ARRAY_TOP = ['radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY'],
-    RADIUS_ARRAY_TOP_LEFT = ['radiusTLX', 'radiusTLY'],
-    RADIUS_ARRAY_TOP_LEFT_X = ['radiusTLX'],
-    RADIUS_ARRAY_TOP_LEFT_Y = ['radiusTLY'],
-    RADIUS_ARRAY_TOP_RIGHT = ['radiusTRX', 'radiusTRY'],
-    RADIUS_ARRAY_TOP_RIGHT_X = ['radiusTRX'],
-    RADIUS_ARRAY_TOP_RIGHT_Y = ['radiusTRY'],
-    RADIUS_ARRAY_TOP_X = ['radiusTLX', 'radiusTRX'],
-    RADIUS_ARRAY_TOP_Y = ['radiusTLY', 'radiusTRY'],
-    RADIUS_ARRAY_X = ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX'],
-    RADIUS_ARRAY_Y = ['radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY'],
-    RECTANGLE = 'rectangle',
-    T_RECTANGLE = 'Rectangle',
-    ZERO_PATH = 'M0,0';
+import { ENTITY, RADIUS_ARRAY_ALL, RADIUS_ARRAY_BOTTOM, RADIUS_ARRAY_BOTTOM_LEFT, RADIUS_ARRAY_BOTTOM_LEFT_X, RADIUS_ARRAY_BOTTOM_LEFT_Y, RADIUS_ARRAY_BOTTOM_RIGHT, RADIUS_ARRAY_BOTTOM_RIGHT_X, RADIUS_ARRAY_BOTTOM_RIGHT_Y, RADIUS_ARRAY_BOTTOM_X, RADIUS_ARRAY_BOTTOM_Y, RADIUS_ARRAY_LEFT, RADIUS_ARRAY_LEFT_X, RADIUS_ARRAY_LEFT_Y, RADIUS_ARRAY_RIGHT, RADIUS_ARRAY_RIGHT_X, RADIUS_ARRAY_RIGHT_Y, RADIUS_ARRAY_TOP, RADIUS_ARRAY_TOP_LEFT, RADIUS_ARRAY_TOP_LEFT_X, RADIUS_ARRAY_TOP_LEFT_Y, RADIUS_ARRAY_TOP_RIGHT, RADIUS_ARRAY_TOP_RIGHT_X, RADIUS_ARRAY_TOP_RIGHT_Y, RADIUS_ARRAY_TOP_X, RADIUS_ARRAY_TOP_Y, RADIUS_ARRAY_X, RADIUS_ARRAY_Y, RECTANGLE, T_RECTANGLE, ZERO_PATH } from '../core/shared-vars.js';
 
 
 // #### Rectangle constructor

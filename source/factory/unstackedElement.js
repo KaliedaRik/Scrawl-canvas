@@ -14,43 +14,15 @@
 
 
 // ## Imports
-import { 
-    constructors, 
-    unstackedelement, 
-} from '../core/library.js';
+import { constructors, unstackedelement } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    xt, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, xt, Ωempty } from '../core/utilities.js';
 
 import { makeCanvas } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
 
-import { 
-    _entries,
-    _floor,
-    _max,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const ABSOLUTE = 'absolute',
-    AUTO = 'auto',
-    CANVAS = 'canvas',
-    DATA_SCRAWL_NAME = 'data-scrawl-name',
-    HEIGHT = 'height',
-    RELATIVE = 'relative',
-    STATIC = 'static',
-    T_UNSTACKED_ELEMENT = 'UnstackedElement',
-    UE_INCLUDED_STYLES = ['width', 'height', 'zIndex', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'],
-    UE_MIMICKED_STYLES = ['borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'],
-    UNSTACKEDELEMENT = 'unstackedelement',
-    WIDTH = 'width',
-    Z_INDEX = 'zIndex';
+import { _entries, _floor, _max, ABSOLUTE, AUTO, CANVAS, DATA_SCRAWL_NAME, HEIGHT, RELATIVE, STATIC, T_UNSTACKED_ELEMENT, UE_INCLUDED_STYLES, UE_MIMICKED_STYLES, UNSTACKEDELEMENT, WIDTH, Z_INDEX } from '../core/shared-vars.js';
 
 
 // ## UnstackedElement constructor

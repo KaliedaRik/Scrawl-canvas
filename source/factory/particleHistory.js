@@ -34,15 +34,10 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
+
 import { λnull } from '../core/utilities.js';
-import { 
-    _create,
-    _setPrototypeOf, 
-} from '../core/shared-vars.js';
 
-
-// Local constants
-const T_PARTICLE_HISTORY = 'ParticleHistory';
+import { _create, _setPrototypeOf, T_PARTICLE_HISTORY } from '../core/shared-vars.js';
 
 
 // #### ParticleHistory constructor

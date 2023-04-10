@@ -39,45 +39,18 @@
 
 
 // #### Imports
-import { 
-    constructors, 
-    force, 
-    spring, 
-    springnames, 
-} from '../core/library.js';
+import { constructors, force, spring, springnames } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    pushUnique, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
 
-import { 
-    releaseParticleHistoryObject, 
-    requestParticleHistoryObject, 
-} from './particleHistory.js';
+import { releaseParticleHistoryObject, requestParticleHistoryObject } from './particleHistory.js';
 
-import { 
-    makeVector, 
-    releaseVector, 
-    requestVector, 
-} from './vector.js';
+import { makeVector, releaseVector, requestVector } from './vector.js';
 
 // The Particle object uses the base mixin, thus it supports all the normal Scrawl-canvas functionality such as `get`, `set`, `setDelta`, `clone`, `kill`, etc.
 import baseMix from '../mixin/base.js';
 
-import { 
-    _isArray,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BLACK = 'rgb(0 0 0 / 1)',
-    EULER = 'euler',
-    PARTICLE = 'particle',
-    T_PARTICLE = 'Particle';
+import { _isArray, BLACK, EULER, PARTICLE, T_PARTICLE } from '../core/shared-vars.js';
 
 
 // #### Particle constructor

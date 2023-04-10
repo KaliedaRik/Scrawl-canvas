@@ -20,69 +20,20 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    artefactnames, 
-    constructors, 
-    entity, 
-    particle, 
-    world, 
-} from '../core/library.js';
+import { artefact, artefactnames, constructors, entity, particle, world } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_fn, 
-    isa_obj, 
-    mergeOver, 
-    pushUnique, 
-    xt, 
-    xta, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../core/utilities.js';
 
 import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
 import { makeSpring } from './particleSpring.js';
 
-import { 
-    releaseVector, 
-    requestVector, 
-} from './vector.js';
+import { releaseVector, requestVector } from './vector.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { 
-    _floor,
-    _isArray,
-    _now,
-    _piDouble,
-    _tick,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BLACK = 'rgb(0 0 0 / 1)',
-    BLANK = 'rgb(0 0 0 / 0)',
-    ENTITY = 'entity',
-    EULER = 'euler',
-    FILL_STYLE = 'fillStyle',
-    HUB_ARTEFACTS_1 = ['Bezier', 'Line', 'Oval', 'Polygon', 'Polyline', 'Quadratic', 'Rectangle', 'Shape', 'Spiral', 'Star', 'Tetragon'],
-    HUB_ARTEFACTS_2 = ['Block', 'Cell', 'Element', 'Grid', 'Phrase', 'Picture', 'Stack'],
-    HUB_ARTEFACTS_3 = ['Wheel'],
-    HUB_SPOKE = 'hub-spoke',
-    POSITION = 'position',
-    SOURCE_OVER = 'source-over',
-    STROKE_STYLE = 'strokeStyle',
-    STRONG_NET = 'strong-net',
-    STRONG_SHAPE = 'strong-shape',
-    T_NET = 'Net',
-    T_PARTICLE = 'Particle',
-    T_POLYLINE = 'Polyline',
-    T_WORLD = 'World',
-    WEAK_NET = 'weak-net',
-    WEAK_SHAPE = 'weak-shape';
+import { _floor, _isArray, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, FILL_STYLE, HUB_ARTEFACTS_1, HUB_ARTEFACTS_2, HUB_ARTEFACTS_3, HUB_SPOKE, POSITION, SOURCE_OVER, STROKE_STYLE, STRONG_NET, STRONG_SHAPE, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD, WEAK_NET, WEAK_SHAPE } from '../core/shared-vars.js';
 
 
 // #### Net constructor

@@ -41,24 +41,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
-
-// Local constants
-const ENTITY = 'entity',
-    OVAL = 'oval',
-    RADIUS_X = ['radiusX'],
-    RADIUS_XY = ['radiusX', 'radiusY'],
-    RADIUS_Y = ['radiusY'],
-    T_OVAL = 'Oval',
-    ZERO_PATH = 'M0,0';
+import { ENTITY, OVAL, RADIUS_X, RADIUS_XY, RADIUS_Y, T_OVAL, ZERO_PATH } from '../core/shared-vars.js';
 
 
 // #### Oval constructor

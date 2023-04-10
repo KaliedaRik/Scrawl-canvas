@@ -19,29 +19,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_number, 
-    mergeOver, 
-    xt, 
-    xto, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_number, mergeOver, xt, xto, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { 
-    _radian, 
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const DIMENSIONS = 'dimensions';
-const ENTITY = 'entity';
-const PC = '%';
-const T_WHEEL = 'Wheel';
-
+import { _radian, DIMENSIONS, ENTITY, PC, T_WHEEL } from '../core/shared-vars.js';
 
 // __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
 const ensureFloat = (val, precision) => {

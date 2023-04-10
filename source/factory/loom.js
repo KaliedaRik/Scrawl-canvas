@@ -21,29 +21,13 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    constructors, 
-    group, 
-} from '../core/library.js';
+import { artefact, constructors, group } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeDiscard, 
-    mergeOver, 
-    pushUnique, 
-    xta, 
-    λnull, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeDiscard, mergeOver, pushUnique, xta, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import { makeState } from './state.js';
 
-import { 
-    releaseCell, 
-    requestCell, 
-} from './cell-fragment.js';
+import { releaseCell, requestCell } from './cell-fragment.js';
 
 import { currentGroup } from './canvas.js';
 
@@ -51,36 +35,7 @@ import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
 import anchorMix from '../mixin/anchor.js';
 
-import { 
-    _atan2,
-    _ceil,
-    _cos,
-    _floor,
-    _hypot,
-    _isArray,
-    _keys,
-    _max,
-    _min,
-    _parse,
-    _piHalf,
-    _sin,
-    STATE_KEYS, 
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BLACK = 'rgb(0 0 0 / 1)',
-    DESTINATION_OUT = 'destination-out',
-    ENTITY = 'entity',
-    FILL = 'fill',
-    GOOD_HOST = ['Cell', 'CellFragment'],
-    NAME = 'name',
-    SOURCE_OVER = 'source-over',
-    T_GROUP = 'Group',
-    T_LOOM = 'Loom',
-    T_PICTURE = 'Picture',
-    UNDEF = 'undefined',
-    ZERO_STR = '';
+import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_LOOM, T_PICTURE, UNDEF, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Loom constructor

@@ -21,9 +21,9 @@ import { addStrings, isa_obj, mergeDiscard, mergeOver, xt, λnull, Ωempty } fro
 import { makeAnimation } from '../factory/animation.js';
 import { makeCoordinate } from '../factory/coordinate.js';
 
-import { makePalette, PALETTE_KEYS } from '../factory/palette.js';
+import { makePalette } from '../factory/palette.js';
 
-import { _entries, _isArray, _keys, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../core/shared-vars.js';
+import { _entries, _isArray, _keys, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, PALETTE_KEYS, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../core/shared-vars.js';
 
 
 // Create an animation to handle automated delta gradient animation

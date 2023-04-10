@@ -37,46 +37,16 @@
 
 
 // #### Imports
-import { 
-    animationtickers, 
-    constructors, 
-} from '../core/library.js';
+import { animationtickers, constructors } from '../core/library.js';
 
-import { 
-    convertTime, 
-    doCreate,
-    easeEngines, 
-    mergeOver, 
-    pushUnique, 
-    xt, 
-    xtGet, 
-    xto, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { convertTime, doCreate, easeEngines, mergeOver, pushUnique, xt, xtGet, xto, λnull, Ωempty } from '../core/utilities.js';
 
 import { makeTicker } from './ticker.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
-import { 
-    _isArray,
-    _keys,
-    _round,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const FUNCTION = 'function',
-    LINEAR = 'linear',
-    NAME = 'name',
-    PC = '%',
-    T_GROUP = 'Group',
-    T_TWEEN = 'Tween',
-    TWEEN = 'tween',
-    UNDEF = 'undefined',
-    ZERO_STR = '';
+import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TWEEN, TWEEN, UNDEF, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Tween constructor

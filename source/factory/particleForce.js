@@ -39,27 +39,13 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_fn, 
-    mergeOver, 
-    pushUnique, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_fn, mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
 
-import { 
-    releaseVector, 
-    requestVector, 
-} from './vector.js';
+import { releaseVector, requestVector } from './vector.js';
 
 import baseMix from '../mixin/base.js';
 
-
-// Local constants
-const FORCE = 'force',
-    GRAVITY = 'gravity',
-    T_FORCE = 'Force';
+import { FORCE, GRAVITY, T_FORCE } from '../core/shared-vars.js';
 
 
 // #### Force constructor

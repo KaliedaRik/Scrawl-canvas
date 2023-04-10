@@ -13,54 +13,13 @@
 
 
 // #### Imports
-import { 
-    constructors, 
-    entity, 
-    styles, 
-} from '../core/library.js';
+import { constructors, entity, styles } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_obj, 
-    xt, 
-    xtGet, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_obj, xt, xtGet, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import { 
-    _freeze,
-    _keys,
-    STATE_MAIN_KEYS,
-    STATE_LINE_KEYS,
-    STATE_STYLE_KEYS,
-    STATE_TEXT_KEYS,
-    STATE_ALL_KEYS,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BLACK = 'rgb(0 0 0 / 1)',
-    BUTT = 'butt',
-    DEFAULT_FONT = '12px sans-serif',
-    HASH = '#',
-    HIGH = 'high',
-    _HSL = 'hsl',
-    LEFT = 'left',
-    LINE_DASH = 'lineDash',
-    LINE_WIDTH = 'lineWidth',
-    MITER = 'miter',
-    NAME = 'name',
-    NONE = 'none',
-    _RGB = 'rgb',
-    SOURCE_OVER = 'source-over',
-    STYLES = 'styles',
-    T_STATE = 'State',
-    T_COLOR = 'Color',
-    T_PHRASE = 'Phrase',
-    TOP = 'top',
-    UNDEF = 'undefined';
+import { _freeze, _HSL, _keys, _RGB, BLACK, BUTT, DEFAULT_FONT, HASH, HIGH, LEFT, LINE_DASH, LINE_WIDTH, MITER, NAME, NONE, SOURCE_OVER, STATE_ALL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, STATE_TEXT_KEYS, STYLES, T_COLOR, T_PHRASE, T_STATE, TOP, UNDEF } from '../core/shared-vars.js';
 
 
 import { makeColor } from './color.js';

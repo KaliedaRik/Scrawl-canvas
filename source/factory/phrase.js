@@ -71,94 +71,23 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    cell, 
-    cellnames, 
-    constructors, 
-    sectionClasses, 
-    styles, 
-    stylesnames, 
-} from '../core/library.js';
+import { artefact, cell, cellnames, constructors, sectionClasses, styles, stylesnames } from '../core/library.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
-import { 
-    doCreate,
-    isa_number, 
-    isa_obj, 
-    mergeOver, 
-    pushUnique, 
-    xt, 
-    xta, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, Ωempty } from '../core/utilities.js';
 
-import { 
-    releaseCell, 
-    requestCell, 
-} from './cell-fragment.js';
+import { releaseCell, requestCell } from './cell-fragment.js';
 
 import { makeFontAttributes } from './fontAttributes.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { 
-    _abs,
-    _parse,
-    _ceil,
-    _assign,
-    _max,
-    _values,
-    _floor,
-} from '../core/shared-vars.js';
+import { _abs, _parse, _ceil, _assign, _max, _values, _floor, ARIA_HIDDEN, ARIA_LIVE, AUTO, BLACK, BORDER_BOX, CENTER, CLASS_REGEX, CLIP, DEF_HIGHLIGHT, DEF_LINE_COLOR, DEF_SECTION_MARKERS, DEFAULT, DESTINATION_OUT, DIV, ENTITY, FAMILY, FULL, HALFTRANS, HANDLE, JUSTIFICATIONS, LEFT, LTR, NONE, POLITE, RIGHT, SIZE, SIZE_METRIC, SIZE_VALUE, SOURCE_OVER, SPACE, STRETCH, STYLE, T_CANVAS, T_CELL, T_PHRASE, T_SHAPE, TEXTAREA, TOP, TRUE, VARIANT, WEIGHT, ZERO_STR } from '../core/shared-vars.js';
 
 
 // Local constants
-const ARIA_HIDDEN = 'aria-hidden',
-    ARIA_LIVE = 'aria-live',
-    AUTO = 'auto',
-    BLACK = 'rgb(0 0 0 / 1)',
-    BORDER_BOX = 'border-box',
-    CENTER = 'center',
-    CLASS_REGEX = /[\s\uFEFF\xA0]+/g,
-    CLIP = 'clip',
-    DEF_HIGHLIGHT = 'rgb(250 218 94 / 0.4)',
-    DEF_LINE_COLOR = 'rgb(250 0 0 / 1)',
-    DEF_SECTION_MARKERS = '[§<>]',
-    DEFAULT = 'default',
-    DESTINATION_OUT = 'destination-out',
-    DIV = 'div',
-    ENTITY = 'entity',
-    FAMILY = 'family',
-    FULL = 'full',
-    HALFTRANS = 'rgb(0 0 0 / 0.5)',
-    HANDLE = 'handle',
-    JUSTIFICATIONS = ['left', 'right', 'center', 'full'],
-    LEFT = 'left',
-    LTR = 'ltr',
-    NONE = 'none',
-    POLITE = 'polite',
-    RIGHT = 'right',
-    SIZE = 'size',
-    SIZE_METRIC = 'sizeMetric',
-    SIZE_VALUE = 'sizeValue',
-    SOURCE_OVER = 'source-over',
-    SPACE = ' ',
-    STRETCH = 'stretch',
-    STYLE = 'style',
-    T_CANVAS = 'Canvas',
-    T_CELL = 'Cell',
-    T_PHRASE = 'Phrase',
-    T_SHAPE = 'Shape',
-    TEXTAREA = 'textarea',
-    TOP = 'top',
-    TRUE = 'true',
-    VARIANT = 'variant',
-    WEIGHT = 'weight',
-    ZERO_STR = '';
-
 const defaultTextForHeightMeasurements = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
 
 const fontHeightCalculator = document.createElement(DIV);

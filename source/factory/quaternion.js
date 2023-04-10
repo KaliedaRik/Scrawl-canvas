@@ -11,35 +11,13 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    correctForZero,
-    doCreate,
-    isa_number, 
-    isa_quaternion, 
-    xt, 
-    xto, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { correctForZero, doCreate, isa_number, isa_quaternion, xt, xto, Ωempty } from '../core/utilities.js';
 
-import { 
-    makeVector, 
-    releaseVector, 
-    requestVector, 
-} from './vector.js';
+import { makeVector, releaseVector, requestVector } from './vector.js';
 
 import { _radian } from '../core/shared-vars.js';
 
-import { 
-    _acos,
-    _cos,
-    _seal,
-    _sin,
-    _sqrt,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const T_QUATERNION = 'Quaternion';
+import { _acos, _cos, _seal, _sin, _sqrt, T_QUATERNION } from '../core/shared-vars.js';
 
 
 // #### Quaternion constructor

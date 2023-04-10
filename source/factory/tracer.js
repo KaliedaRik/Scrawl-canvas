@@ -18,45 +18,19 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    constructors, 
-    group, 
-    tween, 
-} from '../core/library.js';
+import { artefact, constructors, group, tween } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_fn, 
-    isa_obj, 
-    mergeOver, 
-    pushUnique, 
-    xta, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../core/utilities.js';
 
 import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
 
-import { 
-    releaseVector, 
-    requestVector, 
-} from './vector.js';
+import { releaseVector, requestVector } from './vector.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { 
-    _isArray,
-    _piDouble,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BLACK = 'rgb(0 0 0 / 1)',
-    ENTITY = 'entity',
-    T_TRACER = 'Tracer';
+import { _isArray, _piDouble, BLACK, ENTITY, T_TRACER } from '../core/shared-vars.js';
 
 
 // #### Tracer constructor

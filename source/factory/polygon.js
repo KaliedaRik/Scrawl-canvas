@@ -41,33 +41,14 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
-import { 
-    releaseVector, 
-    requestVector, 
-} from './vector.js';
+import { releaseVector, requestVector } from './vector.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
-import { 
-    _max,
-    _min,
-    _abs,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const ENTITY = 'entity',
-    POLYGON = 'polygon',
-    T_POLYGON = 'Polygon',
-    ZERO_PATH = 'M0,0',
-    ZERO_STR = '';
+import { _abs, _max, _min, ENTITY, POLYGON, T_POLYGON, ZERO_PATH, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Polygon constructor

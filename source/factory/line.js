@@ -40,22 +40,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { 
-    doCreate,
-    Ωempty, 
-} from '../core/utilities.js';
+
+import { doCreate, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 import curveMix from '../mixin/shapeCurve.js';
 
-
-// Local constants
-const T_LINE = 'Line',
-    LINE = 'line',
-    ENTITY = 'entity',
-    ZERO_PATH = 'M0,0',
-    PATH = 'path';
+import { ENTITY, LINE, PATH, T_LINE, ZERO_PATH } from '../core/shared-vars.js';
 
 
 // #### Line constructor

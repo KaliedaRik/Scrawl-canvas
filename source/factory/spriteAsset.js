@@ -15,33 +15,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_obj, 
-    mergeOver, 
-    λnull, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_obj, mergeOver, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { 
-    _isArray,
-    ASSET_IMPORT_REGEX,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const $JSON = '.json',
-    ANONYMOUS = 'anonymous',
-    ASSET = 'asset',
-    BLOCK = 'block',
-    IMG = 'img',
-    NONE = 'none',
-    T_SPRITE = 'Sprite',
-    ZERO_STR = '';
+import { $JSON, _isArray, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, IMG, NONE, T_SPRITE, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### SpriteAsset constructor

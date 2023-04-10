@@ -23,51 +23,21 @@
 
 
 // #### Imports
-import { 
-    animation, 
-    artefact, 
-    constructors, 
-} from '../core/library.js';
+import { animation, artefact, constructors } from '../core/library.js';
 
-import { 
-    clear, 
-    compile, 
-    show, 
-} from '../core/display-cycle.js';
+import { clear, compile, show } from '../core/display-cycle.js';
 
 import { makeAnimationObserver } from '../core/events.js';
 
-import { 
-    doCreate,
-    isa_boolean, 
-    mergeOver, 
-    xt, 
-    λnull, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_boolean, mergeOver, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
-import { 
-    animateAdd, 
-    animateIncludes,
-    animateRemove, 
-    // animate, 
-    // resortAnimations, 
-} from '../core/animationloop.js';
+import { animateAdd, animateIncludes, animateRemove } from '../core/animationloop.js';
 
 import { forceUpdate } from '../core/system-flags.js';
 
 import baseMix from '../mixin/base.js';
 
-import { 
-    _isArray,
-    _assign,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const T_RENDER_ANIMATION = 'RenderAnimation',
-    ANIMATION = 'animation';
+import { _assign, _isArray, ANIMATION, T_RENDER_ANIMATION } from '../core/shared-vars.js';
 
 
 // #### RenderAnimation constructor

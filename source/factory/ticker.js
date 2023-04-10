@@ -51,43 +51,15 @@
 
 
 // #### Imports
-import { 
-    animation, 
-    animationtickers, 
-    constructors, 
-    tween, 
-} from '../core/library.js';
+import { animation, animationtickers, constructors, tween } from '../core/library.js';
 
-import { 
-    convertTime, 
-    doCreate,
-    isa_obj, 
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    xt, 
-    xtGet, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { convertTime, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xt, xtGet, Ωempty } from '../core/utilities.js';
 
 import { makeAnimation } from './animation.js';
 
 import baseMix from '../mixin/base.js';
 
-import { 
-    _floor,
-    _now,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const ANIMATIONTICKERS = 'animationtickers',
-    FUNCTION = 'function',
-    PC = '%',
-    T_RENDER_ANIMATION = 'RenderAnimation',
-    T_TICKER = 'Ticker',
-    T_TWEEN = 'Tween',
-    TICKERUPDATE = 'tickerupdate';
+import { _floor, _now, ANIMATIONTICKERS, FUNCTION, PC, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, TICKERUPDATE } from '../core/shared-vars.js';
 
 
 // #### Ticker constructor

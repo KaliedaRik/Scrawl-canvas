@@ -13,50 +13,19 @@
 
 
 // #### Imports
-import { 
-    constructors, 
-    cell, 
-    entity, 
-} from '../core/library.js';
+import { constructors, cell, entity } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    pushUnique, 
-    isa_obj, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, isa_obj, Ωempty } from '../core/utilities.js';
 
-import { 
-    gettableVideoAssetAtributes, 
-    settableVideoAssetAtributes, 
-} from './videoAsset.js';
+import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
 
-import { 
-    gettableImageAssetAtributes, 
-    settableImageAssetAtributes, 
-} from './imageAsset.js';
-
+import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
 
 import baseMix from '../mixin/base.js';
 import patternMix from '../mixin/pattern.js';
 import assetConsumerMix from '../mixin/assetConsumer.js';
 
-import { 
-    _entries,
-    _isArray,
-    _keys,
-    STATE_KEYS,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const $IMAGE = 'image_',
-    $VIDEO = 'video_',
-    NAME = 'name',
-    STYLES = 'styles',
-    T_PATTERN = 'Pattern',
-    UNDEF = 'undefined';
+import { $IMAGE, $VIDEO, _entries, _isArray, _keys, NAME, STATE_KEYS, STYLES, T_PATTERN, UNDEF } from '../core/shared-vars.js';
 
 
 // #### Pattern constructor

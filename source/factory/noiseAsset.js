@@ -25,17 +25,7 @@
 import { constructors } from '../core/library.js';
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
 
-import { 
-    doCreate,
-    easeEngines, 
-    interpolate, 
-    mergeOver, 
-    removeItem, 
-    λfirstArg, 
-    λnull, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, easeEngines, interpolate, mergeOver, removeItem, λfirstArg, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
@@ -44,37 +34,7 @@ import assetMix from '../mixin/asset.js';
 import assetAdvancedMix from '../mixin/assetAdvancedFunctionality.js';
 import patternMix from '../mixin/pattern.js';
 
-import { 
-    _abs,
-    _floor,
-    _max,
-    _min,
-    _pow,
-    _random,
-    _sin,
-    _sqrt,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const $X = 'X',
-    ASSET = 'asset',
-    BESPOKE_NOISE_ENGINES = ['stripes', 'smoothed-stripes', 'worley-euclidean', 'worley-manhattan'],
-    DEFAULT_SEED = 'any_random_string_will_do',
-    EUCLIDEAN_DISTANCE = 'euclidian-distance',
-    IMPROVED_PERLIN = 'improved-perlin',
-    MANHATTAN_DISTANCE = 'manhattan-distance',
-    NONE = 'none',
-    PERLIN = 'perlin',
-    QUINTIC = 'quintic',
-    SIMPLEX = 'simplex',
-    SMOOTHED_STRIPES = 'smoothed-stripes',
-    STRIPES = 'stripes',
-    T_NOISE_ASSET = 'NoiseAsset',
-    VALUE = 'value',
-    WORLEY_EUCLIDEAN = 'worley-euclidean',
-    WORLEY_MANHATTAN = 'worley-manhattan',
-    WORLEY_OUTPUTS = ['X', 'Y', 'Z', 'XminusY', 'XminusZ', 'YminusX', 'YminusZ', 'ZminusX', 'ZminusY', 'XaddY', 'XaddZ', 'YaddZ', 'XaddYminusZ', 'XaddZminusY', 'YaddZminusX', 'XmultiplyY', 'XmultiplyZ', 'YmultiplyZ', 'XmultiplyYaddZ', 'XmultiplyZaddY', 'YmultiplyZaddX', 'XmultiplyYminusZ', 'XmultiplyZminusY', 'YmultiplyZminusX', 'sum'];
+import { $X, _abs, _floor, _max, _min, _pow, _random, _sin, _sqrt, ASSET, BESPOKE_NOISE_ENGINES, DEFAULT_SEED, EUCLIDEAN_DISTANCE, IMPROVED_PERLIN, MANHATTAN_DISTANCE, NONE, PERLIN, QUINTIC, SIMPLEX, SMOOTHED_STRIPES, STRIPES, T_NOISE_ASSET, VALUE, WORLEY_EUCLIDEAN, WORLEY_MANHATTAN, WORLEY_OUTPUTS } from '../core/shared-vars.js';
 
 
 // #### NoiseAsset constructor

@@ -9,50 +9,22 @@
 
 
 // #### Imports
-import { 
-    constructors,
-    entity, 
-} from '../core/library.js';
+import { constructors, entity } from '../core/library.js';
 
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
 
-import { 
-    constrain,
-    doCreate,
-    mergeOver, 
-    removeItem, 
-    λfirstArg, 
-    λnull, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { constrain, doCreate, mergeOver, removeItem, λfirstArg, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
-import { 
-    releaseCell, 
-    requestCell, 
-} from './cell-fragment.js';
+import { releaseCell, requestCell } from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 import assetAdvancedMix from '../mixin/assetAdvancedFunctionality.js';
 import patternMix from '../mixin/pattern.js';
 
-import { 
-    _floor,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const ASSET = 'asset',
-    DEFAULT_SEED = 'any_random_string_will_do',
-    ENTITY = 'entity',
-    RANDOM = 'random',
-    RD_SETTINGS_PREF_VALS = ['random', 'entity'],
-    T_RD_ASSET = 'RdAsset',
-    WHITE = 'rgb(255 255 255 / 1)',
-    ZERO_STR = '';
+import { _floor, ASSET, DEFAULT_SEED, ENTITY, RANDOM, RD_SETTINGS_PREF_VALS, T_RD_ASSET, WHITE, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### RdAsset constructor

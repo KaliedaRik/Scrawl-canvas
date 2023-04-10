@@ -41,27 +41,15 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
-import { 
-    _floor,
-    _freeze,
-} from '../core/shared-vars.js';
+import { _floor, _freeze, ENTITY, SPIRAL, T_SPIRAL, ZERO_PATH } from '../core/shared-vars.js';
 
 
 // Local constants
-const T_SPIRAL = 'Spiral';
-const SPIRAL = 'spiral';
-const ENTITY = 'entity';
-const ZERO_PATH = 'M0,0';
-
 const FIRST_TURN = _freeze([
     _freeze([0.043, 0, 0.082, -0.035, 0.088, -0.088]),
     _freeze([0.007, -0.057, -0.024, -0.121, -0.088, -0.162]),

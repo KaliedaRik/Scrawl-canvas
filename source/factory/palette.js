@@ -57,45 +57,13 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    easeEngines, 
-    isa_fn, 
-    isa_obj, 
-    mergeOver, 
-    pushUnique, 
-    xt, 
-    xta, 
-    λfirstArg, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, easeEngines, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λfirstArg, λnull, Ωempty } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
 
-import { 
-    _assign,
-    _entries,
-    _floor,
-    _isArray,
-    _keys,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BLACK = 'rgb(0 0 0 / 1)',
-    BLANK = 'rgb(0 0 0 / 0)',
-    FUNCTION = 'function',
-    INT_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'],
-    LINEAR = 'linear',
-    PALETTE = 'palette',
-    RGB = 'RGB',
-    SPACE = ' ',
-    T_PALETTE = 'Palette',
-    WHITE = 'rgb(255 255 255 / 1)';
-export const PALETTE_KEYS = ['colors', 'cyclic', 'stops'];
+import { _assign, _entries, _floor, _isArray, _keys, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, PALETTE, RGB, SPACE, T_PALETTE, WHITE } from '../core/shared-vars.js';
 
 
 // #### Palette constructor

@@ -7,31 +7,22 @@
 // Additional, optional, attributes in the argument object
 // + `'none', 'shiftOnly', 'altOnly', 'ctrlOnly', 'metaOnly', 'shiftAlt', 'shiftCtrl', 'shiftMeta', 'altCtrl', 'altMeta', 'ctrlMeta', 'shiftAltCtrl', 'shiftAltMeta', 'shiftCtrlMeta', 'altCtrlMeta', 'all'` - a set of objects containing `keyboard Key: function` attributes defining the group of actions to take when the user presses the associated key or key-combination.
 
-import { 
-    mergeDiscard, 
-    λnull, 
-    Ωempty, 
-} from "../core/utilities.js";
+import { mergeDiscard, λnull, Ωempty } from "../core/utilities.js";
 
-import { 
-    addNativeListener, 
-    removeNativeListener, 
-} from "../core/events.js";
+import { addNativeListener, removeNativeListener } from "../core/events.js";
 
-import { 
-    _keys,
-} from '../core/shared-vars.js';
+import { $BODY, _keys, ACCEPTED_WRAPPERS, KEY_DOWN, KEY_UP, keyGroupsArray, NONE, T_ESCAPE, T_TAB } from '../core/shared-vars.js';
 
 
-// Local constants
-const $BODY = 'BODY',
-    ACCEPTED_WRAPPERS = ['Canvas', 'Stack'],
-    KEY_DOWN = 'keydown',
-    KEY_UP = 'keyup',
-    keyGroupsArray = ['none', 'shiftOnly', 'altOnly', 'ctrlOnly', 'metaOnly', 'shiftAlt', 'shiftCtrl', 'shiftMeta', 'altCtrl', 'altMeta', 'ctrlMeta', 'shiftAltCtrl', 'shiftAltMeta', 'shiftCtrlMeta', 'altCtrlMeta', 'all'],
-    NONE = 'none',
-    T_ESCAPE = 'Escape',
-    T_TAB = 'Tab';
+// // Local constants
+// const $BODY = 'BODY',
+//     ACCEPTED_WRAPPERS = ['Canvas', 'Stack'],
+//     KEY_DOWN = 'keydown',
+//     KEY_UP = 'keyup',
+//     keyGroupsArray = ['none', 'shiftOnly', 'altOnly', 'ctrlOnly', 'metaOnly', 'shiftAlt', 'shiftCtrl', 'shiftMeta', 'altCtrl', 'altMeta', 'ctrlMeta', 'shiftAltCtrl', 'shiftAltMeta', 'shiftCtrlMeta', 'altCtrlMeta', 'all'],
+//     NONE = 'none',
+//     T_ESCAPE = 'Escape',
+//     T_TAB = 'Tab';
 
 
 const keyboardZones = {};

@@ -38,32 +38,13 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    asset, 
-    constructors, 
-} from '../core/library.js';
+import { artefact, asset, constructors } from '../core/library.js';
 
-import { 
-    addStrings, 
-    doCreate,
-    isa_obj, 
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    xta, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { addStrings, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, Ωempty } from '../core/utilities.js';
 
-import { 
-    gettableVideoAssetAtributes, 
-    settableVideoAssetAtributes, 
-} from './videoAsset.js';
+import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
 
-import { 
-    gettableImageAssetAtributes, 
-    settableImageAssetAtributes, 
-} from './imageAsset.js';
+import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
 
 import { makeCoordinate } from './coordinate.js';
 
@@ -71,24 +52,7 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 import assetConsumerMix from '../mixin/assetConsumer.js';
 
-import { 
-    _keys,
-    STATE_KEYS,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const $IMAGE = 'image_',
-    $VIDEO = 'video_',
-    COPY_DIMENSIONS = 'copyDimensions',
-    COPY_START = 'copyStart',
-    ENTITY = 'entity',
-    MOUSE = 'mouse',
-    NAME = 'name',
-    PARTICLE = 'particle',
-    T_PICTURE = 'Picture',
-    T_SPRITE = 'Sprite',
-    UNDEF = 'undefined';
+import { $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../core/shared-vars.js';
 
 
 // #### Picture constructor

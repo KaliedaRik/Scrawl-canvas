@@ -35,42 +35,15 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    canvas, 
-    constructors, 
-    element, 
-    group, 
-    purge, 
-    stack, 
-} from '../core/library.js';
+import { artefact, canvas, constructors, element, group, purge, stack } from '../core/library.js';
 
-import { 
-    addStrings, 
-    doCreate,
-    isa_canvas, 
-    isa_dom, 
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    xt, 
-    λnull, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { addStrings, doCreate, isa_canvas, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import { domShow } from '../core/document.js';
 
-import { 
-    rootElementsAdd, 
-    rootElementsIncludes,
-    rootElementsRemove, 
-} from "../core/document-rootElements.js";
+import { rootElementsAdd, rootElementsIncludes, rootElementsRemove } from "../core/document-rootElements.js";
 
-import { 
-    currentCorePosition, 
-    uiSubscribedElements, 
-} from '../core/userInteraction.js';
+import { currentCorePosition, uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeGroup } from './group.js';
 import { makeElement } from './element.js';
@@ -81,28 +54,7 @@ import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/displayShape.js';
 
-import { 
-    _entries,
-    _isArray,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const $DATA_SCRAWL_STACK = '[data-scrawl-stack]',
-    $SCRIPT = 'SCRIPT',
-    ABSOLUTE = 'absolute',
-    BORDER_BOX = 'border-box',
-    DATA_SCRAWL_GROUP = 'data-scrawl-group',
-    DATA_SCRAWL_STACK = 'data-scrawl-stack',
-    DIV = 'div',
-    NAME = 'name',
-    PC50 = '50%',
-    RELATIVE = 'relative',
-    ROOT = 'root',
-    STACK = 'stack',
-    SUBSCRIBE = 'subscribe',
-    T_STACK = 'Stack',
-    ZERO_STR = '';
+import { $DATA_SCRAWL_STACK, $SCRIPT, _entries, _isArray, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DATA_SCRAWL_STACK, DIV, NAME, PC50, RELATIVE, ROOT, STACK, SUBSCRIBE, T_STACK, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Stack constructor

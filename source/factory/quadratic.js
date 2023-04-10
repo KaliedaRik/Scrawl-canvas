@@ -39,18 +39,9 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    constructors, 
-} from '../core/library.js';
+import { artefact, constructors } from '../core/library.js';
 
-import { 
-    addStrings, 
-    doCreate,
-    mergeOver, 
-    pushUnique, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
 
 import { makeCoordinate } from './coordinate.js';
 
@@ -58,18 +49,7 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 import curveMix from '../mixin/shapeCurve.js';
 
-
-// Local constants
-const CONTROL = 'control',
-    CONTROL_PARTICLE = 'controlParticle',
-    CONTROL_PATH = 'controlPath',
-    CONTROL_PIVOT = 'controlPivot',
-    ENTITY = 'entity',
-    PATH = 'path',
-    QUADRATIC = 'quadratic',
-    T_QUADRATIC = 'Quadratic',
-    ZERO_PATH = 'M0,0',
-    ZERO_STR = '';
+import { CONTROL, CONTROL_PARTICLE, CONTROL_PATH, CONTROL_PIVOT, ENTITY, PATH, QUADRATIC, T_QUADRATIC, ZERO_PATH, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Quadratic constructor

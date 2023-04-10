@@ -14,37 +14,15 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    generateUniqueString, 
-    xt, 
-    λthis, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, generateUniqueString, xt, λthis, λnull, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { 
-    _freeze,
-    _isArray,
-    ASSET_IMPORT_REGEX,
-} from '../core/shared-vars.js';
+import { _freeze, _isArray, _VIDEO, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, AUTO, BLOCK, MAYBE, NONE, SOURCE, T_VIDEO, VIDEO, ZERO_STR } from '../core/shared-vars.js';
 
 
 // Local constants
-const _VIDEO = 'VIDEO',
-    ANONYMOUS = 'anonymous',
-    ASSET = 'asset',
-    AUTO = 'auto',
-    BLOCK = 'block',
-    MAYBE = 'maybe',
-    NONE = 'none',
-    SOURCE = 'source',
-    T_VIDEO = 'Video',
-    VIDEO = 'video',
-    ZERO_STR = '';
 
 // `gettableVideoAssetAtributes`, `settableVideoAssetAtributes` - exported Arrays.
 // + TODO - I was planning to make the &lt;video> element's attributes accessible to Picture entitys and Pattern styles - need to check if work has been completed at their end.

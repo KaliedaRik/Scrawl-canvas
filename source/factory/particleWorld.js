@@ -30,13 +30,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_fn, 
-    mergeOver, 
-    xt, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_fn, mergeOver, xt, Ωempty } from '../core/utilities.js';
 
 import { makeQuaternion } from './quaternion.js';
 import { makeVector } from './vector.js';
@@ -44,17 +38,7 @@ import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 
-import { 
-    _entries,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const T_COORDINATE = 'Coordinate',
-    T_QUATERNION = 'Quaternion',
-    T_VECTOR = 'Vector',
-    T_WORLD = 'World',
-    WORLD = 'world';
+import { _entries, T_COORDINATE, T_QUATERNION, T_VECTOR, T_WORLD, WORLD } from '../core/shared-vars.js';
 
 
 // #### World constructor

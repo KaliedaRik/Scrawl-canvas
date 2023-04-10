@@ -28,31 +28,15 @@
 
 
 // #### Imports
-import { 
-    constructors, 
-    particle, 
-} from '../core/library.js';
+import { constructors, particle } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    pushUnique, 
-    λnull, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
 
-import { 
-    requestVector, 
-    releaseVector, 
-} from './vector.js';
+import { releaseVector, requestVector } from './vector.js';
 
 import baseMix from '../mixin/base.js';
 
-
-// Local constants
-const T_SPRING = 'Spring',
-    SPRING = 'spring',
-    T_PARTICLE = 'Particle';
+import { SPRING, T_PARTICLE, T_SPRING } from '../core/shared-vars.js';
 
 
 // #### Spring constructor

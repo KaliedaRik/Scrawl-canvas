@@ -33,55 +33,16 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    constructors, 
-    particle, 
-} from '../core/library.js';
+import { artefact, constructors, particle } from '../core/library.js';
 
-import { 
-    correctForZero, 
-    doCreate,
-    isa_boolean, 
-    isa_obj, 
-    mergeOver, 
-    pushUnique, 
-    removeItem, 
-    xt, 
-    xta, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
-import { 
-    _floor,
-    _isArray,
-    _keys,
-    _parse,
-    _pow,
-    _sqrt,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const BOTTOM = 'bottom',
-    CENTER = 'center',
-    ENTITY = 'entity',
-    LEFT = 'left',
-    MOUSE = 'mouse',
-    PARTICLE = 'particle',
-    PINS = 'pins',
-    PIVOT = 'pivot',
-    POLYLINE = 'polyline',
-    RIGHT = 'right',
-    START = 'start',
-    T_POLYLINE = 'Polyline',
-    TOP = 'top',
-    ZERO_PATH = 'M0,0';
+import { _floor, _isArray, _keys, _parse, _pow, _sqrt, BOTTOM, CENTER, ENTITY, LEFT, MOUSE, PARTICLE, PINS, PIVOT, POLYLINE, RIGHT, START, T_POLYLINE, TOP, ZERO_PATH } from '../core/shared-vars.js';
 
 
 // #### Polyline constructor

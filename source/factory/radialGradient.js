@@ -17,28 +17,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    addStrings, 
-    doCreate,
-    isa_number, 
-    mergeOver, 
-    pushUnique, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { addStrings, doCreate, isa_number, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
-
-// Local constants
-const BLANK = 'rgb(0 0 0 / 0)',
-    BOTTOM = 'bottom',
-    CENTER = 'center',
-    LEFT = 'left',
-    RIGHT = 'right',
-    STYLES = 'styles',
-    T_RADIAL_GRADIENT = 'RadialGradient',
-    TOP = 'top';
+import { BLANK, BOTTOM, CENTER, LEFT, RIGHT, STYLES, T_RADIAL_GRADIENT, TOP } from '../core/shared-vars.js';
 
 
 // #### RadialGradient constructor

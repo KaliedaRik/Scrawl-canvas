@@ -16,48 +16,14 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    canvas, 
-    cell, 
-    constructors, 
-    group, 
-} from '../core/library.js';
+import { artefact, canvas, cell, constructors, group } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_obj, 
-    mergeOver, 
-    λnull, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_obj, mergeOver, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-import { 
-    _parse,
-    ASSET_IMPORT_REGEX,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const ANONYMOUS = 'anonymous',
-    ASSET = 'asset',
-    BLOCK = 'block',
-    ELEMENT = 'element',
-    IMAGE_ELEMENTS = ['IMG', 'PICTURE'],
-    IMG = 'img',
-    INTRINSIC = 'intrinsic',
-    NONE = 'none',
-    SLASH = '/',
-    T_CANVAS = 'Canvas',
-    T_CELL = 'Cell',
-    T_GROUP = 'Group',
-    T_IMAGE = 'Image',
-    ZERO = 'zero',
-    ZERO_STR = '';
+import { _parse, ANONYMOUS, ASSET, ASSET_IMPORT_REGEX, BLOCK, ELEMENT, IMAGE_ELEMENTS, IMG, INTRINSIC, NONE, SLASH, T_CANVAS, T_CELL, T_GROUP, T_IMAGE, ZERO, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### ImageAsset constructor

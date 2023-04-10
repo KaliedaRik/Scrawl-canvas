@@ -41,26 +41,14 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
-import { 
-    releaseCoordinate, 
-    requestCoordinate, 
-} from './coordinate.js';
+import { releaseCoordinate, requestCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
-
-// Local constants
-const T_LINE_SPIRAL = 'LineSpiral',
-    ENTITY = 'entity',
-    ZERO_PATH = 'M0,0',
-    LINE_SPIRAL = 'linespiral';
+import { ENTITY, LINE_SPIRAL, T_LINE_SPIRAL, ZERO_PATH } from '../core/shared-vars.js';
 
 
 // #### LineSpiral constructor

@@ -22,30 +22,13 @@
 
 
 // #### Imports
-import { 
-    artefact, 
-    constructors, 
-} from '../core/library.js';
+import { artefact, constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeDiscard, 
-    mergeOver, 
-    pushUnique, 
-    xta, 
-    λnull, 
-    λthis, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeDiscard, mergeOver, pushUnique, xta, λnull, λthis, Ωempty } from '../core/utilities.js';
 
-import { 
-    makeState, 
-} from './state.js';
+import { makeState } from './state.js';
 
-import { 
-    releaseCell, 
-    requestCell, 
-} from './cell-fragment.js';
+import { releaseCell, requestCell } from './cell-fragment.js';
 
 import { currentGroup } from './canvas.js';
 
@@ -53,37 +36,7 @@ import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
 import anchorMix from '../mixin/anchor.js';
 
-import { 
-    _atan2,
-    _ceil,
-    _cos,
-    _floor,
-    _hypot,
-    _isArray,
-    _keys,
-    _max,
-    _min,
-    _parse,
-    _piHalf,
-    _sin,
-    _sqrt,
-    STATE_KEYS, 
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const ARG_SPLITTER = ',',
-    DESTINATION_OUT = 'destination-out',
-    ENTITY = 'entity',
-    FILL = 'fill',
-    NAME = 'name',
-    T_CELL = 'Cell',
-    T_GROUP = 'Group',
-    T_MESH = 'Mesh',
-    T_NET = 'Net',
-    T_PICTURE = 'Picture',
-    UNDEF = 'undefined',
-    ZERO_STR = '';
+import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _keys, _max, _min, _parse, _piHalf, _sin, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Mesh constructor

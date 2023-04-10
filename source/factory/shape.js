@@ -41,19 +41,12 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    mergeOver, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
-
-// Local constants
-const T_SHAPE = 'Shape',
-    ENTITY = 'entity';
+import { T_SHAPE, ENTITY } from '../core/shared-vars.js';
 
 
 // #### Shape constructor

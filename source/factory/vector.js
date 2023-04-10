@@ -5,27 +5,9 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { 
-    doCreate,
-    isa_number, 
-    isa_obj, 
-    xt, 
-    xta, 
-    Ωempty, 
-} from '../core/utilities.js';
+import { doCreate, isa_number, isa_obj, xt, xta, Ωempty } from '../core/utilities.js';
 
-import { 
-    _isArray,
-    _stringify,
-    _cos,
-    _sin,
-    _sqrt,
-    _atan2,
-} from '../core/shared-vars.js';
-
-
-// Local constants
-const T_VECTOR = 'Vector';
+import { _atan2, _cos, _isArray, _sin, _sqrt, _stringify, T_VECTOR } from '../core/shared-vars.js';
 
 
 // #### Vector constructor
