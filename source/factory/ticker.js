@@ -869,7 +869,6 @@ const coreTickersAnimation = makeAnimation({
 
         if (tickerAnimationsFlag) {
 
-            console.log('TICKER ANIMATIONS SORT')
             tickerAnimationsFlag = false;
 
             const buckets = requestArray();
