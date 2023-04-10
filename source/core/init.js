@@ -3,11 +3,11 @@
 
 
 // #### Imports
-import { startCoreAnimationLoop } from './animationloop.js';
+import { startCoreAnimationLoop } from './animation-loop.js';
 import { getCanvases } from '../factory/canvas.js';
 import { getStacks } from '../factory/stack.js';
 
-import { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } from './userInteraction.js';
+import { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } from './user-interaction.js';
 
 
 export const init = function () {

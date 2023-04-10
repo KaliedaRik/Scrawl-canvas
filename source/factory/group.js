@@ -28,11 +28,11 @@ import { doCreate, mergeOver, pushUnique, removeItem, λnull, Ωempty } from '..
 
 import { scrawlCanvasHold } from '../core/document.js';
 
-import { filterEngine } from './filterEngine.js';
+import { filterEngine } from './filter-engine.js';
 
 import { releaseCell, requestCell } from './cell-fragment.js';
 
-import { importDomImage } from './imageAsset.js';
+import { importDomImage } from './image-asset.js';
 
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';

@@ -44,8 +44,8 @@ import { constructors } from '../core/library.js';
 import { doCreate, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
-import shapeMix from '../mixin/shapeBasic.js';
-import curveMix from '../mixin/shapeCurve.js';
+import shapeMix from '../mixin/shape-basic.js';
+import curveMix from '../mixin/shape-curve.js';
 
 import { ENTITY, LINE, PATH, T_LINE, ZERO_PATH } from '../core/shared-vars.js';
 

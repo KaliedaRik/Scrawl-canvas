@@ -46,8 +46,8 @@ import { addStrings, doCreate, mergeOver, pushUnique, Ωempty } from '../core/ut
 import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
-import shapeMix from '../mixin/shapeBasic.js';
-import curveMix from '../mixin/shapeCurve.js';
+import shapeMix from '../mixin/shape-basic.js';
+import curveMix from '../mixin/shape-curve.js';
 
 import { CONTROL, CONTROL_PARTICLE, CONTROL_PATH, CONTROL_PIVOT, ENTITY, PATH, QUADRATIC, T_QUADRATIC, ZERO_PATH, ZERO_STR } from '../core/shared-vars.js';
 

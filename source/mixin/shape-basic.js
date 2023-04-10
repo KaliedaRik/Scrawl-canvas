@@ -9,7 +9,7 @@ import { mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js
 
 import { releaseVector, requestVector } from '../factory/vector.js';
 
-import calculatePath from './shapePathCalculation.js';
+import calculatePath from './shape-path-calculation.js';
 
 import entityMix from './entity.js';
 

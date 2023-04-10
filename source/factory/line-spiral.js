@@ -46,7 +46,7 @@ import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 import { releaseCoordinate, requestCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
-import shapeMix from '../mixin/shapeBasic.js';
+import shapeMix from '../mixin/shape-basic.js';
 
 import { ENTITY, LINE_SPIRAL, T_LINE_SPIRAL, ZERO_PATH } from '../core/shared-vars.js';
 

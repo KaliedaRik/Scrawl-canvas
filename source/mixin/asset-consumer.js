@@ -11,9 +11,9 @@ import { asset } from '../core/library.js';
 
 import { _now } from '../core/shared-vars.js';
 
-import { importImage } from '../factory/imageAsset.js';
-import { importVideo } from '../factory/videoAsset.js';
-import { importSprite } from '../factory/spriteAsset.js';
+import { importImage } from '../factory/image-asset.js';
+import { importVideo } from '../factory/video-asset.js';
+import { importSprite } from '../factory/sprite-asset.js';
 
 
 // Local constants

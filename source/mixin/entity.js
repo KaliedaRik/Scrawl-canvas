@@ -19,8 +19,8 @@ import { makeState } from '../factory/state.js';
 
 import { releaseCell, requestCell } from '../factory/cell-fragment.js';
 
-import { filterEngine } from '../factory/filterEngine.js';
-import { importDomImage } from '../factory/imageAsset.js';
+import { filterEngine } from '../factory/filter-engine.js';
+import { importDomImage } from '../factory/image-asset.js';
 import { currentGroup } from '../factory/canvas.js';
 
 import positionMix from '../mixin/position.js';

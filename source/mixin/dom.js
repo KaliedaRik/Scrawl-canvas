@@ -18,7 +18,7 @@ import { setMouseChanged } from '../core/system-flags.js';
 
 import { correctAngle, isa_dom, isa_fn, isa_obj, isa_quaternion, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../core/utilities.js';
 
-import { addLocalMouseMoveListener, applyCoreResizeListener, currentCorePosition, removeLocalMouseMoveListener, uiSubscribedElements } from '../core/userInteraction.js';
+import { addLocalMouseMoveListener, applyCoreResizeListener, currentCorePosition, removeLocalMouseMoveListener, uiSubscribedElements } from '../core/user-interaction.js';
 
 import { addDomShowElement, domShow, setDomShowRequired } from '../core/document.js';
 

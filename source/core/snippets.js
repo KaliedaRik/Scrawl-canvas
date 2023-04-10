@@ -12,8 +12,8 @@ import { isa_boolean, isa_dom, isa_obj } from "./utilities.js";
 
 import { makeAnimationObserver } from './events.js';
 
-import { makeRender } from "../factory/renderAnimation.js";
-import { makeUnstackedElement } from "../factory/unstackedElement.js";
+import { makeRender } from "../factory/render-animation.js";
+import { makeUnstackedElement } from "../factory/unstacked-element.js";
 
 import { NON_SNIPPET_ELEMENTS } from './shared-vars.js';
 

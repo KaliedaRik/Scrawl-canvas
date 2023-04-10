@@ -43,7 +43,7 @@ import { constructors, force, spring, springnames } from '../core/library.js';
 
 import { doCreate, mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
 
-import { releaseParticleHistoryObject, requestParticleHistoryObject } from './particleHistory.js';
+import { releaseParticleHistoryObject, requestParticleHistoryObject } from './particle-history.js';
 
 import { makeVector, releaseVector, requestVector } from './vector.js';
 

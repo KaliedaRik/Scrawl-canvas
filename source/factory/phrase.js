@@ -79,7 +79,7 @@ import { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, Ωempty 
 
 import { releaseCell, requestCell } from './cell-fragment.js';
 
-import { makeFontAttributes } from './fontAttributes.js';
+import { makeFontAttributes } from './font-attributes.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';

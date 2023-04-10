@@ -11,7 +11,7 @@
 // #### Imports
 import { artefact } from "./library.js";
 
-import { getSortedRootElements } from './document-rootElements.js';
+import { getSortedRootElements } from './document-root-elements.js';
 
 import { CLEAR, COMPILE, SHOW, RENDER } from './shared-vars.js';
 

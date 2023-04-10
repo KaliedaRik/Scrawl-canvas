@@ -17,13 +17,13 @@ import { constructors, cell, entity } from '../core/library.js';
 
 import { doCreate, mergeOver, pushUnique, isa_obj, Ωempty } from '../core/utilities.js';
 
-import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
+import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './video-asset.js';
 
-import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
+import { gettableImageAssetAtributes, settableImageAssetAtributes } from './image-asset.js';
 
 import baseMix from '../mixin/base.js';
 import patternMix from '../mixin/pattern.js';
-import assetConsumerMix from '../mixin/assetConsumer.js';
+import assetConsumerMix from '../mixin/asset-consumer.js';
 
 import { $IMAGE, $VIDEO, _entries, _isArray, _keys, NAME, STATE_KEYS, STYLES, T_PATTERN, UNDEF } from '../core/shared-vars.js';
 

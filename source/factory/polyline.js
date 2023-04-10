@@ -40,7 +40,7 @@ import { correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, 
 import { makeCoordinate } from '../factory/coordinate.js';
 
 import baseMix from '../mixin/base.js';
-import shapeMix from '../mixin/shapeBasic.js';
+import shapeMix from '../mixin/shape-basic.js';
 
 import { _floor, _isArray, _keys, _parse, _pow, _sqrt, BOTTOM, CENTER, ENTITY, LEFT, MOUSE, PARTICLE, PINS, PIVOT, POLYLINE, RIGHT, START, T_POLYLINE, TOP, ZERO_PATH } from '../core/shared-vars.js';
 

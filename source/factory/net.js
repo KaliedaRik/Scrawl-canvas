@@ -26,7 +26,7 @@ import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωem
 
 import { currentGroup } from './canvas.js';
 import { makeParticle } from './particle.js';
-import { makeSpring } from './particleSpring.js';
+import { makeSpring } from './particle-spring.js';
 
 import { releaseVector, requestVector } from './vector.js';
 

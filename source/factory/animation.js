@@ -27,7 +27,7 @@ import { doCreate, mergeOver, pushUnique, removeItem, xt, λnull, λpromise, λt
 
 import { forceUpdate } from '../core/system-flags.js';
 
-import { animateAdd, animateIncludes, animateRemove } from '../core/animationloop.js';
+import { animateAdd, animateIncludes, animateRemove } from '../core/animation-loop.js';
 
 import baseMix from '../mixin/base.js';
 

@@ -133,7 +133,7 @@ import { constructors, cell, group, entity, asset, styles } from '../core/librar
 import { mergeOver, removeItem, λnull, Ωempty } from '../core/utilities.js';
 
 import { makeGradient } from './gradient.js';
-import { colorEngine } from './filterEngine.js';
+import { colorEngine } from './filter-engine.js';
 
 import baseMix from '../mixin/base.js';
 

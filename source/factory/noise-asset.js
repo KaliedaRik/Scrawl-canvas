@@ -31,7 +31,7 @@ import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
-import assetAdvancedMix from '../mixin/assetAdvancedFunctionality.js';
+import assetAdvancedMix from '../mixin/asset-advanced-functionality.js';
 import patternMix from '../mixin/pattern.js';
 
 import { $X, _abs, _floor, _max, _min, _pow, _random, _sin, _sqrt, ASSET, BESPOKE_NOISE_ENGINES, DEFAULT_SEED, EUCLIDEAN_DISTANCE, IMPROVED_PERLIN, MANHATTAN_DISTANCE, NONE, PERLIN, QUINTIC, SIMPLEX, SMOOTHED_STRIPES, STRIPES, T_NOISE_ASSET, VALUE, WORLEY_EUCLIDEAN, WORLEY_MANHATTAN, WORLEY_OUTPUTS } from '../core/shared-vars.js';

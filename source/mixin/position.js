@@ -128,7 +128,7 @@ import { artefact, group, particle, tween } from '../core/library.js';
 
 import { addStrings, isa_boolean, isa_obj, mergeOver, pushUnique, xt, xta, xtGet, xto, λnull, Ωempty } from '../core/utilities.js';
 
-import { currentCorePosition } from '../core/userInteraction.js';
+import { currentCorePosition } from '../core/user-interaction.js';
 
 import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../factory/coordinate.js';
 

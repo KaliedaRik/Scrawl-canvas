@@ -21,7 +21,7 @@ import { releaseCell, requestCell } from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
-import assetAdvancedMix from '../mixin/assetAdvancedFunctionality.js';
+import assetAdvancedMix from '../mixin/asset-advanced-functionality.js';
 import patternMix from '../mixin/pattern.js';
 
 import { _floor, ASSET, DEFAULT_SEED, ENTITY, RANDOM, RD_SETTINGS_PREF_VALS, T_RD_ASSET, WHITE, ZERO_STR } from '../core/shared-vars.js';

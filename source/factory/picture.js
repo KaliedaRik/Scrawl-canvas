@@ -42,15 +42,15 @@ import { artefact, asset, constructors } from '../core/library.js';
 
 import { addStrings, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, Ωempty } from '../core/utilities.js';
 
-import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
+import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './video-asset.js';
 
-import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
+import { gettableImageAssetAtributes, settableImageAssetAtributes } from './image-asset.js';
 
 import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
-import assetConsumerMix from '../mixin/assetConsumer.js';
+import assetConsumerMix from '../mixin/asset-consumer.js';
 
 import { $IMAGE, $VIDEO, _keys, COPY_DIMENSIONS, COPY_START, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../core/shared-vars.js';
 

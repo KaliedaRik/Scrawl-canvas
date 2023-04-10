@@ -35,7 +35,7 @@ if (typeof window !== 'undefined') _init();
 export { 
     startCoreAnimationLoop, 
     stopCoreAnimationLoop,
-} from './core/animationloop.js';
+} from './core/animation-loop.js';
 export { 
     clear,
     compile,
@@ -62,7 +62,7 @@ export {
     stopCoreListeners, 
     getTouchActionChoke,
     setTouchActionChoke,
-} from './core/userInteraction.js';
+} from './core/user-interaction.js';
 export { forceUpdate } from './core/system-flags.js';
 export { makeAction } from './factory/action.js';
 export { makeAnimation } from './factory/animation.js';
@@ -75,18 +75,18 @@ export {
 } from './factory/canvas.js';
 export { makeCog } from './factory/cog.js';
 export { makeColor } from './factory/color.js';
-export { makeConicGradient } from './factory/conicGradient.js';
+export { makeConicGradient } from './factory/conic-gradient.js';
 export { 
     requestCoordinate,
     releaseCoordinate,
 } from './factory/coordinate.js';
 export { makeCrescent } from './factory/crescent.js';
-export { makeDragZone } from './factory/dragZone.js';
+export { makeDragZone } from './factory/drag-zone.js';
 export { makeElement } from './factory/element.js';
 export { makeEmitter } from './factory/emitter.js';
 export { makeFilter } from './factory/filter.js';
-export { setFilterMemoizationChoke } from './factory/filterEngine.js';
-export { makeForce } from './factory/particleForce.js';
+export { setFilterMemoizationChoke } from './factory/filter-engine.js';
+export { makeForce } from './factory/particle-force.js';
 export { makeGradient } from './factory/gradient.js';
 export { makeGrid } from './factory/grid.js';
 export { makeGroup } from './factory/group.js';
@@ -96,21 +96,21 @@ export {
     createImageFromCell,
     createImageFromGroup,
     createImageFromEntity,
-} from './factory/imageAsset.js';
-export { makeKeyboardZone } from './factory/keyboardZone.js';
+} from './factory/image-asset.js';
+export { makeKeyboardZone } from './factory/keyboard-zone.js';
 export { makeLine } from './factory/line.js';
-export { makeLineSpiral } from './factory/lineSpiral.js';
+export { makeLineSpiral } from './factory/line-spiral.js';
 export { makeLoom } from './factory/loom.js';
 export { makeMesh } from './factory/mesh.js';
 export { makeNet } from './factory/net.js';
 export { 
     makeNoise,
     makeNoiseAsset,
-} from './factory/noiseAsset.js';
+} from './factory/noise-asset.js';
 export { 
     observeAndUpdate,
     makeUpdater
-} from './factory/observeUpdate.js';
+} from './factory/observe-update.js';
 export { makeOval } from './factory/oval.js';
 export { makePattern } from './factory/pattern.js';
 export { makePhrase } from './factory/phrase.js';
@@ -122,15 +122,15 @@ export {
     requestQuaternion,
     releaseQuaternion,
 } from './factory/quaternion.js';
-export { makeRadialGradient } from './factory/radialGradient.js';
-export { makeRawAsset } from './factory/rawAsset.js';
-export { makeReactionDiffusionAsset } from './factory/rdAsset.js';
+export { makeRadialGradient } from './factory/radial-gradient.js';
+export { makeRawAsset } from './factory/raw-asset.js';
+export { makeReactionDiffusionAsset } from './factory/reaction-diffusion-asset.js';
 export { makeRectangle } from './factory/rectangle.js';
-export { makeRender } from './factory/renderAnimation.js';
+export { makeRender } from './factory/render-animation.js';
 export { makeShape } from './factory/shape.js';
 export { makeSpiral } from './factory/spiral.js';
-export { importSprite } from './factory/spriteAsset.js';
-export { makeSpring } from './factory/particleSpring.js';
+export { importSprite } from './factory/sprite-asset.js';
+export { makeSpring } from './factory/particle-spring.js';
 export { 
     addStack,
     getStack,
@@ -148,6 +148,6 @@ export {
     importDomVideo,
     importVideo,
     importMediaStream,
-} from './factory/videoAsset.js';
+} from './factory/video-asset.js';
 export { makeWheel } from './factory/wheel.js';
-export { makeWorld } from './factory/particleWorld.js';
+export { makeWorld } from './factory/particle-world.js';

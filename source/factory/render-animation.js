@@ -31,7 +31,7 @@ import { makeAnimationObserver } from '../core/events.js';
 
 import { doCreate, isa_boolean, mergeOver, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
-import { animateAdd, animateIncludes, animateRemove } from '../core/animationloop.js';
+import { animateAdd, animateIncludes, animateRemove } from '../core/animation-loop.js';
 
 import { forceUpdate } from '../core/system-flags.js';
 

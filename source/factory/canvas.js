@@ -39,11 +39,11 @@ import {
 
 import { domShow, scrawlCanvasHold } from '../core/document.js';
 
-import { rootElementsAdd, rootElementsRemove } from "../core/document-rootElements.js";
+import { rootElementsAdd, rootElementsRemove } from "../core/document-root-elements.js";
 
 import { doCreate, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
-import { uiSubscribedElements } from '../core/userInteraction.js';
+import { uiSubscribedElements } from '../core/user-interaction.js';
 
 import { makeState } from './state.js';
 import { makeCell } from './cell.js';
@@ -51,7 +51,7 @@ import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
-import displayMix from '../mixin/displayShape.js';
+import displayMix from '../mixin/display-shape.js';
 
 import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DIV, FIT_DEFS, HIDDEN, IMG, NAME, NAV, NONE, PC0, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, ZERO_STR } from '../core/shared-vars.js';
 

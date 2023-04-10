@@ -41,9 +41,9 @@ import { addStrings, doCreate, isa_canvas, isa_dom, mergeOver, pushUnique, remov
 
 import { domShow } from '../core/document.js';
 
-import { rootElementsAdd, rootElementsIncludes, rootElementsRemove } from "../core/document-rootElements.js";
+import { rootElementsAdd, rootElementsIncludes, rootElementsRemove } from "../core/document-root-elements.js";
 
-import { currentCorePosition, uiSubscribedElements } from '../core/userInteraction.js';
+import { currentCorePosition, uiSubscribedElements } from '../core/user-interaction.js';
 
 import { makeGroup } from './group.js';
 import { makeElement } from './element.js';
@@ -52,7 +52,7 @@ import { makeCoordinate } from './coordinate.js';
 import baseMix from '../mixin/base.js';
 import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
-import displayMix from '../mixin/displayShape.js';
+import displayMix from '../mixin/display-shape.js';
 
 import { $DATA_SCRAWL_STACK, $SCRIPT, _entries, _isArray, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DATA_SCRAWL_STACK, DIV, NAME, PC50, RELATIVE, ROOT, STACK, SUBSCRIBE, T_STACK, ZERO_STR } from '../core/shared-vars.js';
 

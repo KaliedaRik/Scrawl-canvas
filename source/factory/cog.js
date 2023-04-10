@@ -45,7 +45,7 @@ import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 import { releaseVector, requestVector } from './vector.js';
 
 import baseMix from '../mixin/base.js';
-import shapeMix from '../mixin/shapeBasic.js';
+import shapeMix from '../mixin/shape-basic.js';
 
 import { BEZIER, ENTITY, LINE, PERMITTED_CURVES, QUADRATIC, T_COG, ZERO_PATH } from '../core/shared-vars.js';
 

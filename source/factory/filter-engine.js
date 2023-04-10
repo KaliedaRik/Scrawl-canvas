@@ -12,7 +12,7 @@ import { requestCell, releaseCell } from './cell-fragment.js';
 import { requestCoordinate, releaseCoordinate } from './coordinate.js';
 import { makeColor } from './color.js';
 
-import { bluenoise } from './filterEngine-bluenoiseData.js';
+import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 
 // The filter Color object - used by various filters

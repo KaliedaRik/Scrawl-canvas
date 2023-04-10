@@ -41,7 +41,7 @@ import { releaseCoordinate, requestCoordinate } from './coordinate.js';
 
 import { makeColor } from './color.js';
 
-import { filterEngine } from './filterEngine.js';
+import { filterEngine } from './filter-engine.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';

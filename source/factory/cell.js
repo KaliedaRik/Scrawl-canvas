@@ -54,8 +54,8 @@ import { makeState } from './state.js';
 
 import { makeCoordinate, releaseCoordinate, requestCoordinate } from './coordinate.js';
 
-import { filterEngine } from './filterEngine.js';
-import { importDomImage } from './imageAsset.js';
+import { filterEngine } from './filter-engine.js';
+import { importDomImage } from './image-asset.js';
 
 import { releaseCell, requestCell } from '../factory/cell-fragment.js';
 

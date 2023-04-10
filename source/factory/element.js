@@ -37,7 +37,7 @@ import { artefact, artefactnames, constructors, element, elementnames } from '..
 
 import { doCreate, isa_dom, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
 
-import { uiSubscribedElements } from '../core/userInteraction.js';
+import { uiSubscribedElements } from '../core/user-interaction.js';
 
 import { makeCanvas } from './canvas.js';
 
