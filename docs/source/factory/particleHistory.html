@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -590,7 +595,10 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
+
+<span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _create, _setPrototypeOf, <span class="hljs-variable constant_">T_PARTICLE_HISTORY</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -609,7 +617,7 @@
 
     <span class="hljs-keyword">let</span> history = [];
 
-    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">setPrototypeOf</span>(history, <span class="hljs-title class_">ParticleHistory</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+    <span class="hljs-title function_">_setPrototypeOf</span>(history, <span class="hljs-title class_">ParticleHistory</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
 
     <span class="hljs-keyword">if</span> (items) history.<span class="hljs-title function_">set</span>(items);
 
@@ -629,9 +637,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">ParticleHistory</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">ParticleHistory</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">_create</span>(<span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
 P.<span class="hljs-property">constructor</span> = <span class="hljs-title class_">ParticleHistory</span>;
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;ParticleHistory&#x27;</span>;</pre></div></div>
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_PARTICLE_HISTORY</span>;</pre></div></div>
             
         </li>
         
@@ -718,13 +726,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Part
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> requestParticleHistoryObject = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestParticleHistoryObject = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) {
 
     <span class="hljs-keyword">if</span> (!particleHistoryPool.<span class="hljs-property">length</span>) particleHistoryPool.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ParticleHistory</span>());
 
-    <span class="hljs-keyword">let</span> c = particleHistoryPool.<span class="hljs-title function_">shift</span>();
-
-    <span class="hljs-keyword">return</span> c
+    <span class="hljs-keyword">return</span> particleHistoryPool.<span class="hljs-title function_">shift</span>();
 };</pre></div></div>
             
         </li>
@@ -740,9 +746,9 @@ P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Part
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> releaseParticleHistoryObject = <span class="hljs-keyword">function</span> (<span class="hljs-params">h</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> releaseParticleHistoryObject = <span class="hljs-keyword">function</span> (<span class="hljs-params">h</span>) {
 
-    <span class="hljs-keyword">if</span> (h &amp;&amp; h.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;ParticleHistory&#x27;</span>) {
+    <span class="hljs-keyword">if</span> (h &amp;&amp; h.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_PARTICLE_HISTORY</span>) {
 
         h.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
         particleHistoryPool.<span class="hljs-title function_">push</span>(h);</pre></div></div>
@@ -777,32 +783,13 @@ P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Part
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeParticleHistory = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeParticleHistory = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ParticleHistory</span>(items);
 };
 
 constructors.<span class="hljs-property">ParticleHistory</span> = <span class="hljs-title class_">ParticleHistory</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeParticleHistory,
-    requestParticleHistoryObject,
-    releaseParticleHistoryObject,
-};</pre></div></div>
             
         </li>
         

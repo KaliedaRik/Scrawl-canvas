@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -529,7 +534,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              
+              <h1 id="unstackedelement-factory">UnstackedElement factory</h1>
+
             </div>
             
         </li>
@@ -541,7 +547,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <h1 id="unstackedelement-factory">UnstackedElement factory</h1>
+              <p><em><strong>To be aware - this artefact factory is HIGHLY EXPERIMENTAL; its API will be subject to short-notice breaking changes as we amend and inprove the artefact’s functionality</strong></em></p>
 
             </div>
             
@@ -554,7 +560,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p><em><strong>To be aware - this artefact factory is HIGHLY EXPERIMENTAL; its API will be subject to short-notice breaking changes as we amend and inprove the artefact’s functionality</strong></em></p>
+              <p>TODO - documentation</p>
 
             </div>
             
@@ -567,7 +573,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
 
             </div>
             
@@ -580,7 +586,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
+              <h4 id="library-storage">Library storage</h4>
 
             </div>
             
@@ -593,7 +599,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="library-storage">Library storage</h4>
+              <h4 id="clone-functionality">Clone functionality</h4>
 
             </div>
             
@@ -606,7 +612,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
+              <h4 id="kill-functionality">Kill functionality</h4>
 
             </div>
             
@@ -619,9 +625,19 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
+              <h2 id="imports">Imports</h2>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, unstackedelement } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { doCreate, mergeOver, xt, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { makeCanvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./canvas.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _entries, _floor, _max, <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">DATA_SCRAWL_NAME</span>, <span class="hljs-variable constant_">HEIGHT</span>, <span class="hljs-variable constant_">RELATIVE</span>, <span class="hljs-variable constant_">STATIC</span>, <span class="hljs-variable constant_">T_UNSTACKED_ELEMENT</span>, <span class="hljs-variable constant_">UE_INCLUDED_STYLES</span>, <span class="hljs-variable constant_">UE_MIMICKED_STYLES</span>, <span class="hljs-variable constant_">UNSTACKEDELEMENT</span>, <span class="hljs-variable constant_">WIDTH</span>, <span class="hljs-variable constant_">Z_INDEX</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -631,26 +647,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { unstackedelement, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { xt, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { makeCanvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./canvas.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h2 id="unstackedelement-constructor">UnstackedElement constructor</h2>
 
@@ -663,7 +659,7 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(name);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
 
-    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-name&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_NAME</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> = el;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">elementComputedStyles</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(el);
@@ -681,21 +677,36 @@
         </li>
         
         
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <h2 id="unstackedelement-object-prototype-setup">UnstackedElement object prototype setup</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">UnstackedElement</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_UNSTACKED_ELEMENT</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">UNSTACKEDELEMENT</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <h2 id="unstackedelement-object-prototype-setup">UnstackedElement object prototype setup</h2>
+              <p>Apply mixins to prototype object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">UnstackedElement</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;UnstackedElement&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;unstackedelement&#x27;</span>;
-P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
-P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -706,11 +717,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h2 id="define-default-attributes">Define default attributes</h2>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -720,21 +731,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -748,13 +744,26 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <h2 id="packet-management">Packet management</h2>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <p>TODO</p>
 
             </div>
             
@@ -767,9 +776,13 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p>TODO</p>
+              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -780,13 +793,9 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h2 id="define-prototype-functions">Define prototype functions</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
-    S = P.<span class="hljs-property">setters</span>,
-    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -797,7 +806,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <p>TODO - documentation</p>
 
             </div>
             
@@ -809,19 +818,6 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>This is going to be rewritten as part of the “kill” review/recode work</p>
 
@@ -835,11 +831,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Adds a canvas element to sit behind the element, or in front of it, depending on the setting of the <strong>canvasOnTop</strong> attribute</p>
 
@@ -849,11 +845,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>) {
 
-        <span class="hljs-keyword">let</span> canvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>),
+        <span class="hljs-keyword">let</span> canvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">CANVAS</span>),
             el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>,
             style = el.<span class="hljs-property">style</span>;
 
-        <span class="hljs-keyword">if</span> (style.<span class="hljs-property">position</span> === <span class="hljs-string">&#x27;static&#x27;</span>) style.<span class="hljs-property">position</span> = <span class="hljs-string">&#x27;relative&#x27;</span>;
+        <span class="hljs-keyword">if</span> (style.<span class="hljs-property">position</span> == <span class="hljs-variable constant_">STATIC</span>) style.<span class="hljs-property">position</span> = <span class="hljs-variable constant_">RELATIVE</span>;
 
         canvas.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-canvas`</span>;
         
@@ -863,7 +859,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-canvas`</span>,
             <span class="hljs-attr">domElement</span>: canvas,
 
-            <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;absolute&#x27;</span>,
+            <span class="hljs-attr">position</span>: <span class="hljs-variable constant_">ABSOLUTE</span>,
         });
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span> = art;
@@ -879,56 +875,14 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <p>DOM element styles that we need to observe for changes, to keep the canvas in step with its element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">includedStyles</span> = [<span class="hljs-string">&#x27;width&#x27;</span>, <span class="hljs-string">&#x27;height&#x27;</span>, <span class="hljs-string">&#x27;zIndex&#x27;</span>, <span class="hljs-string">&#x27;borderBottomLeftRadius&#x27;</span>, <span class="hljs-string">&#x27;borderBottomRightRadius&#x27;</span>, <span class="hljs-string">&#x27;borderTopLeftRadius&#x27;</span>, <span class="hljs-string">&#x27;borderTopRightRadius&#x27;</span>];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <p>Included styles that we can transfer directly from DOM element to canvas with no further processing</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">mimickedStyles</span> = [<span class="hljs-string">&#x27;borderBottomLeftRadius&#x27;</span>, <span class="hljs-string">&#x27;borderBottomRightRadius&#x27;</span>, <span class="hljs-string">&#x27;borderTopLeftRadius&#x27;</span>, <span class="hljs-string">&#x27;borderTopRightRadius&#x27;</span>];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Observer function - runs on every RAF loop (when the DOM element is viewable); aim is to:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
-              <ul>
+<ul>
 <li>keep canvas dimensions exactly matched with its DOM element’s dimensions (including border/padding)</li>
 <li>position the canvas correctly over/under the DOM element (taking into account border/padding)</li>
 <li>maintain parity between other DOM element CSS values and those values on the canvas (eg border radius)</li>
@@ -938,61 +892,60 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkElementStyleValues</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> results = {};
+    <span class="hljs-keyword">const</span> results = {};
 
-    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>,
+    <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>,
         wrapper = <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>;
 
     <span class="hljs-keyword">if</span> (el &amp;&amp; wrapper &amp;&amp; wrapper.<span class="hljs-property">domElement</span>) {
 
-        <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">hostStyles</span>,
+        <span class="hljs-keyword">const</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">hostStyles</span>,
             style = <span class="hljs-variable language_">this</span>.<span class="hljs-property">elementComputedStyles</span>,
-            canvas = wrapper.<span class="hljs-property">domElement</span>,
-            includedStyles = <span class="hljs-variable language_">this</span>.<span class="hljs-property">includedStyles</span>;
+            canvas = wrapper.<span class="hljs-property">domElement</span>;
 
         <span class="hljs-keyword">let</span> {<span class="hljs-attr">x</span>: elX, <span class="hljs-attr">y</span>: elY, <span class="hljs-attr">width</span>: elW, <span class="hljs-attr">height</span>: elH} = el.<span class="hljs-title function_">getBoundingClientRect</span>();
         <span class="hljs-keyword">let</span> {<span class="hljs-attr">x</span>: canvasX, <span class="hljs-attr">y</span>: canvasY} = canvas.<span class="hljs-title function_">getBoundingClientRect</span>();
         <span class="hljs-keyword">let</span> {<span class="hljs-attr">zIndex</span>: styleZ, <span class="hljs-attr">width</span>: styleW, <span class="hljs-attr">height</span>: styleH} = style;
 
-        elX = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(elX);
-        elY = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(elY);
-        canvasX = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(canvasX);
-        canvasY = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(canvasY);
-        elW = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(elW);
-        elH = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(elH);
-        styleW = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-built_in">parseFloat</span>(styleW));
-        styleH = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-built_in">parseFloat</span>(styleH));
+        elX = <span class="hljs-title function_">_floor</span>(elX);
+        elY = <span class="hljs-title function_">_floor</span>(elY);
+        canvasX = <span class="hljs-title function_">_floor</span>(canvasX);
+        canvasY = <span class="hljs-title function_">_floor</span>(canvasY);
+        elW = <span class="hljs-title function_">_floor</span>(elW);
+        elH = <span class="hljs-title function_">_floor</span>(elH);
+        styleW = <span class="hljs-title function_">_floor</span>(<span class="hljs-built_in">parseFloat</span>(styleW));
+        styleH = <span class="hljs-title function_">_floor</span>(<span class="hljs-built_in">parseFloat</span>(styleH));
 
-        includedStyles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+        <span class="hljs-variable constant_">UE_INCLUDED_STYLES</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
             <span class="hljs-keyword">switch</span> (item) {
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;width&#x27;</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">WIDTH</span> :
 
-                    <span class="hljs-keyword">let</span> w = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(styleW, elW);
-                    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> !== w) {
+                    <span class="hljs-keyword">const</span> w = <span class="hljs-title function_">_max</span>(styleW, elW);
+                    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> != w) {
 
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> = w;
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;height&#x27;</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">HEIGHT</span> :
 
-                    <span class="hljs-keyword">let</span> h = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(styleH, elH);
-                    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> !== h) {
+                    <span class="hljs-keyword">const</span> h = <span class="hljs-title function_">_max</span>(styleH, elH);
+                    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> != h) {
 
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> = h;
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;zIndex&#x27;</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">Z_INDEX</span> :
 
-                    <span class="hljs-keyword">let</span> z = (styleZ === <span class="hljs-string">&#x27;auto&#x27;</span>) ? <span class="hljs-number">0</span> : <span class="hljs-built_in">parseInt</span>(styleZ, <span class="hljs-number">10</span>);
+                    <span class="hljs-keyword">let</span> z = (styleZ == <span class="hljs-variable constant_">AUTO</span>) ? <span class="hljs-number">0</span> : <span class="hljs-built_in">parseInt</span>(styleZ, <span class="hljs-number">10</span>);
                     z = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasOnTop</span>) ? z + <span class="hljs-number">1</span> : z - <span class="hljs-number">1</span>;
 
-                    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasZIndex</span> !== z) {
+                    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasZIndex</span> != z) {
 
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasZIndex</span> = z;
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyZIndex</span> = <span class="hljs-literal">true</span>;
@@ -1001,10 +954,10 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
                 <span class="hljs-keyword">default</span> :
 
-                    <span class="hljs-keyword">let</span> hi = host[item],
+                    <span class="hljs-keyword">const</span> hi = host[item],
                         si = style[item];
 
-                    <span class="hljs-keyword">if</span>(!<span class="hljs-title function_">xt</span>(hi) || hi !== si) {
+                    <span class="hljs-keyword">if</span>(!<span class="hljs-title function_">xt</span>(hi) || hi != si) {
                 
                         host[item] = si;
                         results[item] = si;
@@ -1012,7 +965,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
             }
         });
 
-        <span class="hljs-keyword">let</span> dx = elX - canvasX,
+        <span class="hljs-keyword">const</span> dx = elX - canvasX,
             dy = elY - canvasY;
 
         <span class="hljs-keyword">if</span> (dx || dy) {
@@ -1029,11 +982,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-26">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Perform any updates reported by the observer function</p>
 
@@ -1042,11 +995,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-27">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>UnstackedElement canvases keep their display and base canvases in dimensional sync - which means that <strong>relatively positioned and dimensioned</strong> entitys in the canvas (those set with appropriate ‘val%’ string values) will update in line with changes in the DOM element’s width, height, padding and margin values</p>
 
@@ -1056,14 +1009,13 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">domElement</span>) {
 
-        <span class="hljs-keyword">let</span> canvas = <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>,
+        <span class="hljs-keyword">const</span> canvas = <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>,
             style = canvas.<span class="hljs-property">domElement</span>.<span class="hljs-property">style</span>,
-            mimics = <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimickedStyles</span>,
             updates = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkElementStyleValues</span>();
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(updates)) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title function_">_entries</span>(updates)) {
 
-            <span class="hljs-keyword">if</span> (mimics.<span class="hljs-title function_">indexOf</span>(key) &gt;= <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">UE_MIMICKED_STYLES</span>.<span class="hljs-title function_">includes</span>(key)) {
 
                 style[key] = value;
             }
@@ -1083,7 +1035,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">let</span> w = <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span>,
+            <span class="hljs-keyword">const</span> w = <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span>,
                 h = <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span>;
 
             canvas.<span class="hljs-title function_">set</span>({
@@ -1113,27 +1065,23 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-28">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeUnstackedElement = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeUnstackedElement = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
     
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnstackedElement</span>(items);
 };
 
-constructors.<span class="hljs-property">UnstackedElement</span> = <span class="hljs-title class_">UnstackedElement</span>;
-
-<span class="hljs-keyword">export</span> {
-    makeUnstackedElement,
-};</pre></div></div>
+constructors.<span class="hljs-property">UnstackedElement</span> = <span class="hljs-title class_">UnstackedElement</span>;</pre></div></div>
             
         </li>
         

@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -583,7 +588,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">SOURCE</span>, <span class="hljs-variable constant_">SOURCE_LOADED</span>, <span class="hljs-variable constant_">SUBSCRIBERS</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -692,7 +699,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;sourceLoaded&#x27;</span>, <span class="hljs-string">&#x27;source&#x27;</span>, <span class="hljs-string">&#x27;subscribers&#x27;</span>]);
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-variable constant_">SOURCE_LOADED</span>, <span class="hljs-variable constant_">SOURCE</span>, <span class="hljs-variable constant_">SUBSCRIBERS</span>]);
 
 
     P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
@@ -959,22 +966,7 @@
         sub.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
         sub.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
         sub.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <p>Return the prototype</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> P;
+    };
 };</pre></div></div>
             
         </li>

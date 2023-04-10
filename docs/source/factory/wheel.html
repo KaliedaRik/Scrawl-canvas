@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -577,10 +582,13 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, radian, xt, xto, isa_number, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { doCreate, isa_number, mergeOver, xt, xto, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _radian, <span class="hljs-variable constant_">DIMENSIONS</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">T_WHEEL</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -640,9 +648,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Wheel</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Wheel&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Wheel</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_WHEEL</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">ENTITY</span>;
 P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
 P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -663,8 +671,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
-P = <span class="hljs-title function_">entityMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);
+<span class="hljs-title function_">entityMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -690,7 +698,7 @@ P = <span class="hljs-title function_">entityMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -825,7 +833,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
     S = P.<span class="hljs-property">setters</span>,
     D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
@@ -859,7 +867,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
     <span class="hljs-keyword">if</span> (val != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-keyword">let</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
+        <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
 
         dims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">1</span>] = val;
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dimensionsHelper</span>();
@@ -867,7 +875,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 };
 D.<span class="hljs-property">width</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
-    <span class="hljs-keyword">let</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
+    <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
 
     dims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(dims[<span class="hljs-number">0</span>], val);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dimensionsHelper</span>();
@@ -877,7 +885,7 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
 
     <span class="hljs-keyword">if</span> (val != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-keyword">let</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
+        <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
 
         dims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">1</span>] = val;
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dimensionsHelper</span>();
@@ -885,7 +893,7 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
 };
 D.<span class="hljs-property">height</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
-    <span class="hljs-keyword">let</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
+    <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
 
     dims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(dims[<span class="hljs-number">0</span>], val);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dimensionsHelper</span>();
@@ -893,12 +901,12 @@ D.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
 
 S.<span class="hljs-property">dimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setCoordinateHelper</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>, w, h);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setCoordinateHelper</span>(<span class="hljs-variable constant_">DIMENSIONS</span>, w, h);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dimensionsHelper</span>();
 };
 D.<span class="hljs-property">dimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDeltaCoordinateHelper</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>, w, h);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDeltaCoordinateHelper</span>(<span class="hljs-variable constant_">DIMENSIONS</span>, w, h);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dimensionsHelper</span>();
 }</pre></div></div>
             
@@ -1010,7 +1018,7 @@ S.<span class="hljs-property">clockwise</span> = <span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">dimensionsHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> width = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">const</span> width = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>[<span class="hljs-number">0</span>];
 
     <span class="hljs-keyword">if</span> (width.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius</span> = <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-built_in">parseFloat</span>(width) / <span class="hljs-number">2</span>)}</span>%`</span>;
     <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius</span> = (width / <span class="hljs-number">2</span>);
@@ -1020,10 +1028,10 @@ S.<span class="hljs-property">clockwise</span> = <span class="hljs-keyword">func
 };
 P.<span class="hljs-property">radiusHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> radius = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius</span>,
+    <span class="hljs-keyword">const</span> radius = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius</span>,
         dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
 
-    <span class="hljs-keyword">if</span> (radius.<span class="hljs-property">substring</span>) dims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">1</span>] = (<span class="hljs-built_in">parseFloat</span>(radius) * <span class="hljs-number">2</span>) + <span class="hljs-string">&#x27;%&#x27;</span>;
+    <span class="hljs-keyword">if</span> (radius.<span class="hljs-property">substring</span>) dims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">1</span>] = (<span class="hljs-built_in">parseFloat</span>(radius) * <span class="hljs-number">2</span>) + <span class="hljs-variable constant_">PC</span>;
     <span class="hljs-keyword">else</span> dims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">1</span>] = (radius * <span class="hljs-number">2</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
@@ -1045,7 +1053,7 @@ P.<span class="hljs-property">radiusHelper</span> = <span class="hljs-keyword">f
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanDimensionsAdditionalActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> radius = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius</span>,
+    <span class="hljs-keyword">const</span> radius = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius</span>,
         dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>,
         calculatedRadius = (radius.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(radius) / <span class="hljs-number">100</span>) * dims[<span class="hljs-number">0</span>] : radius;
 
@@ -1076,15 +1084,15 @@ P.<span class="hljs-property">radiusHelper</span> = <span class="hljs-keyword">f
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noPathUpdates</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>) {
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
 
-        <span class="hljs-keyword">let</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
+        <span class="hljs-keyword">const</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
             scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>,
             radius = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRadius</span> * scale,
             x = radius - (handle[<span class="hljs-number">0</span>] * scale),
             y = radius - (handle[<span class="hljs-number">1</span>] * scale),
-            starts = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startAngle</span> * radian,
-            ends = <span class="hljs-variable language_">this</span>.<span class="hljs-property">endAngle</span> * radian;
+            starts = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startAngle</span> * _radian,
+            ends = <span class="hljs-variable language_">this</span>.<span class="hljs-property">endAngle</span> * _radian;
 
         p.<span class="hljs-title function_">arc</span>(x, y, radius, starts, ends, !<span class="hljs-variable language_">this</span>.<span class="hljs-property">clockwise</span>);
 

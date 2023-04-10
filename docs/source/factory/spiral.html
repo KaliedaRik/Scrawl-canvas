@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -608,10 +613,13 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { doCreate, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _floor, _freeze, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">SPIRAL</span>, <span class="hljs-variable constant_">T_SPIRAL</span>, <span class="hljs-variable constant_">ZERO_PATH</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -621,6 +629,40 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">FIRST_TURN</span> = <span class="hljs-title function_">_freeze</span>([
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.043</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.082</span>, -<span class="hljs-number">0.035</span>, <span class="hljs-number">0.088</span>, -<span class="hljs-number">0.088</span>]),
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.007</span>, -<span class="hljs-number">0.057</span>, -<span class="hljs-number">0.024</span>, -<span class="hljs-number">0.121</span>, -<span class="hljs-number">0.088</span>, -<span class="hljs-number">0.162</span>]),
+    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">0.07</span>, -<span class="hljs-number">0.045</span>, -<span class="hljs-number">0.169</span>, -<span class="hljs-number">0.054</span>, -<span class="hljs-number">0.265</span>, -<span class="hljs-number">0.015</span>]),
+    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">0.106</span>, <span class="hljs-number">0.043</span>, -<span class="hljs-number">0.194</span>, <span class="hljs-number">0.138</span>, -<span class="hljs-number">0.235</span>, <span class="hljs-number">0.265</span>]),
+    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">0.044</span>, <span class="hljs-number">0.139</span>, -<span class="hljs-number">0.026</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.058</span>, <span class="hljs-number">0.442</span>]),
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.091</span>, <span class="hljs-number">0.153</span>, <span class="hljs-number">0.25</span>, <span class="hljs-number">0.267</span>, <span class="hljs-number">0.442</span>, <span class="hljs-number">0.308</span>]),
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.206</span>, <span class="hljs-number">0.044</span>, <span class="hljs-number">0.431</span>, -<span class="hljs-number">0.001</span>, <span class="hljs-number">0.619</span>, -<span class="hljs-number">0.131</span>]),
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.2</span>, -<span class="hljs-number">0.139</span>, <span class="hljs-number">0.34</span>, -<span class="hljs-number">0.361</span>, <span class="hljs-number">0.381</span>, -<span class="hljs-number">0.619</span>])
+]);
+<span class="hljs-keyword">const</span> <span class="hljs-variable constant_">SUBSEQUENT_TURNS</span> = <span class="hljs-title function_">_freeze</span>([
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0</span>, -<span class="hljs-number">0.27</span>, -<span class="hljs-number">0.11</span>, -<span class="hljs-number">0.52</span>, -<span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>]),
+    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.44</span>, -<span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>, -<span class="hljs-number">0.29</span>]),
+    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">0.27</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">0.52</span>, <span class="hljs-number">0.11</span>, -<span class="hljs-number">0.71</span>, <span class="hljs-number">0.29</span>]),
+    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">0.19</span>, <span class="hljs-number">0.19</span>, -<span class="hljs-number">0.29</span>, <span class="hljs-number">0.44</span>, -<span class="hljs-number">0.29</span>, <span class="hljs-number">0.71</span>]),
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0</span>, <span class="hljs-number">0.27</span>, <span class="hljs-number">0.11</span>, <span class="hljs-number">0.52</span>, <span class="hljs-number">0.29</span>, <span class="hljs-number">0.71</span>]),
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.19</span>, <span class="hljs-number">0.19</span>, <span class="hljs-number">0.44</span>, <span class="hljs-number">0.29</span>, <span class="hljs-number">0.71</span>, <span class="hljs-number">0.29</span>]),
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.27</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.52</span>, -<span class="hljs-number">0.11</span>, <span class="hljs-number">0.71</span>, -<span class="hljs-number">0.29</span>]),
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.19</span>, <span class="hljs-number">0.29</span>, -<span class="hljs-number">0.44</span>, <span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>])
+]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="spiral-constructor">Spiral constructor</h4>
 
@@ -635,41 +677,21 @@
         </li>
         
         
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <h4 id="spiral-prototype">Spiral prototype</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Spiral</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Spiral&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
-P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="mixins">Mixins</h4>
-<ul>
-<li><a href="../mixin/base.html">base</a></li>
-<li><a href="../mixin/shapeBasic.html">shapeBasic</a></li>
-</ul>
+              <h4 id="spiral-prototype">Spiral prototype</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
-P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Spiral</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_SPIRAL</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">ENTITY</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -679,6 +701,26 @@ P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/shapeBasic.html">shapeBasic</a></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);
+<span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="spiral-attributes">Spiral attributes</h4>
 <ul>
@@ -696,7 +738,7 @@ P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {
 
     <span class="hljs-attr">loops</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">1</span>,
@@ -707,28 +749,14 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
 
             </div>
             
@@ -741,8 +769,8 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
             
@@ -755,12 +783,10 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>,
-    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -770,6 +796,22 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>loops</strong></p>
 
@@ -789,11 +831,11 @@ D.<span class="hljs-property">loops</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>loopIncrement</strong></p>
 
@@ -813,11 +855,11 @@ D.<span class="hljs-property">loopIncrement</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>drawFromLoop</strong></p>
 
@@ -825,27 +867,14 @@ D.<span class="hljs-property">loopIncrement</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(item);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-title function_">_floor</span>(item);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
 D.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span> + item);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-title function_">_floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span> + item);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
-
-            </div>
             
         </li>
         
@@ -856,19 +885,9 @@ D.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
-    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeSpiralPath</span>();
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
-};</pre></div></div>
             
         </li>
         
@@ -879,35 +898,19 @@ D.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p>Magic numbers!</p>
-<ul>
-<li>These numbers produce an Archimedian spiral</li>
-<li>The first loop has effective dimensions of 2px by 2px</li>
-<li>Each additional loop increases the dimensions by 2px</li>
-</ul>
+              <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">firstTurn</span> = [
-    [<span class="hljs-number">0.043</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.082</span>, -<span class="hljs-number">0.035</span>, <span class="hljs-number">0.088</span>, -<span class="hljs-number">0.088</span>],
-    [<span class="hljs-number">0.007</span>, -<span class="hljs-number">0.057</span>, -<span class="hljs-number">0.024</span>, -<span class="hljs-number">0.121</span>, -<span class="hljs-number">0.088</span>, -<span class="hljs-number">0.162</span>],
-    [-<span class="hljs-number">0.07</span>, -<span class="hljs-number">0.045</span>, -<span class="hljs-number">0.169</span>, -<span class="hljs-number">0.054</span>, -<span class="hljs-number">0.265</span>, -<span class="hljs-number">0.015</span>],
-    [-<span class="hljs-number">0.106</span>, <span class="hljs-number">0.043</span>, -<span class="hljs-number">0.194</span>, <span class="hljs-number">0.138</span>, -<span class="hljs-number">0.235</span>, <span class="hljs-number">0.265</span>],
-    [-<span class="hljs-number">0.044</span>, <span class="hljs-number">0.139</span>, -<span class="hljs-number">0.026</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.058</span>, <span class="hljs-number">0.442</span>],
-    [<span class="hljs-number">0.091</span>, <span class="hljs-number">0.153</span>, <span class="hljs-number">0.25</span>, <span class="hljs-number">0.267</span>, <span class="hljs-number">0.442</span>, <span class="hljs-number">0.308</span>],
-    [<span class="hljs-number">0.206</span>, <span class="hljs-number">0.044</span>, <span class="hljs-number">0.431</span>, -<span class="hljs-number">0.001</span>, <span class="hljs-number">0.619</span>, -<span class="hljs-number">0.131</span>],
-    [<span class="hljs-number">0.2</span>, -<span class="hljs-number">0.139</span>, <span class="hljs-number">0.34</span>, -<span class="hljs-number">0.361</span>, <span class="hljs-number">0.381</span>, -<span class="hljs-number">0.619</span>]
-];
-P.<span class="hljs-property">subsequentTurns</span> = [
-    [<span class="hljs-number">0</span>, -<span class="hljs-number">0.27</span>, -<span class="hljs-number">0.11</span>, -<span class="hljs-number">0.52</span>, -<span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>],
-    [-<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.44</span>, -<span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>, -<span class="hljs-number">0.29</span>],
-    [-<span class="hljs-number">0.27</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">0.52</span>, <span class="hljs-number">0.11</span>, -<span class="hljs-number">0.71</span>, <span class="hljs-number">0.29</span>],
-    [-<span class="hljs-number">0.19</span>, <span class="hljs-number">0.19</span>, -<span class="hljs-number">0.29</span>, <span class="hljs-number">0.44</span>, -<span class="hljs-number">0.29</span>, <span class="hljs-number">0.71</span>],
-    [<span class="hljs-number">0</span>, <span class="hljs-number">0.27</span>, <span class="hljs-number">0.11</span>, <span class="hljs-number">0.52</span>, <span class="hljs-number">0.29</span>, <span class="hljs-number">0.71</span>],
-    [<span class="hljs-number">0.19</span>, <span class="hljs-number">0.19</span>, <span class="hljs-number">0.44</span>, <span class="hljs-number">0.29</span>, <span class="hljs-number">0.71</span>, <span class="hljs-number">0.29</span>],
-    [<span class="hljs-number">0.27</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.52</span>, -<span class="hljs-number">0.11</span>, <span class="hljs-number">0.71</span>, -<span class="hljs-number">0.29</span>],
-    [<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.19</span>, <span class="hljs-number">0.29</span>, -<span class="hljs-number">0.44</span>, <span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>]
-];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-variable constant_">ZERO_PATH</span>;
+    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeSpiralPath</span>();
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
+};</pre></div></div>
             
         </li>
         
@@ -924,32 +927,31 @@ P.<span class="hljs-property">subsequentTurns</span> = [
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeSpiralPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> loops = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">loops</span>),
+    <span class="hljs-keyword">const</span> loops = <span class="hljs-title function_">_floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">loops</span>),
         loopIncrement = <span class="hljs-variable language_">this</span>.<span class="hljs-property">loopIncrement</span>,
-        drawFromLoop = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span>),
-        x1, y1, x2, y2, x3, y3,
-        sx1, sy1, sx2, sy2, sx3, sy3,
-        firstTurn = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstTurn</span>,
-        subsequentTurns = <span class="hljs-variable language_">this</span>.<span class="hljs-property">subsequentTurns</span>,
+        drawFromLoop = <span class="hljs-title function_">_floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span>),
         currentTurn = [];
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; firstTurn.<span class="hljs-property">length</span>; i++) {
+    <span class="hljs-keyword">let</span> x1, y1, x2, y2, x3, y3,
+        sx1, sy1, sx2, sy2, sx3, sy3;
 
-        [x1, y1, x2, y2, x3, y3] = firstTurn[i];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = <span class="hljs-variable constant_">FIRST_TURN</span>.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+        [x1, y1, x2, y2, x3, y3] = <span class="hljs-variable constant_">FIRST_TURN</span>[i];
         currentTurn.<span class="hljs-title function_">push</span>([x1 * loopIncrement, y1 * loopIncrement, x2 * loopIncrement, y2 * loopIncrement, x3 * loopIncrement, y3 * loopIncrement]);
     }
 
-    <span class="hljs-keyword">let</span> path = <span class="hljs-string">&#x27;m0,0&#x27;</span>;
+    <span class="hljs-keyword">let</span> path = <span class="hljs-variable constant_">ZERO_PATH</span>;
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; loops; j++) {
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; currentTurn.<span class="hljs-property">length</span>; i++) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = currentTurn.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
             [x1, y1, x2, y2, x3, y3] = currentTurn[i];
 
             <span class="hljs-keyword">if</span> (j &gt;= drawFromLoop) path += <span class="hljs-string">`c<span class="hljs-subst">${x1}</span>,<span class="hljs-subst">${y1}</span> <span class="hljs-subst">${x2}</span>,<span class="hljs-subst">${y2}</span> <span class="hljs-subst">${x3}</span>,<span class="hljs-subst">${y3}</span>`</span>;
 
-            [sx1, sy1, sx2, sy2, sx3, sy3] = subsequentTurns[i];
+            [sx1, sy1, sx2, sy2, sx3, sy3] = <span class="hljs-variable constant_">SUBSEQUENT_TURNS</span>[i];
             currentTurn[i] = [x1 + (sx1 * loopIncrement), y1 + (sy1 * loopIncrement), x2 + (sx2 * loopIncrement), y2 + (sy2 * loopIncrement), x3 + (sx3 * loopIncrement), y3 + (sy3 * loopIncrement)];
         }
     }
@@ -961,7 +963,7 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
     <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>,
         scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">scale</span>;
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;m0,0&#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x / scale}</span>,<span class="hljs-subst">${-y / scale}</span>`</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-variable constant_">ZERO_PATH</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x / scale}</span>,<span class="hljs-subst">${-y / scale}</span>`</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCalculatedOnce</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -1031,31 +1033,14 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeSpiral = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeSpiral = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;spiral&#x27;</span>;
+    items.<span class="hljs-property">species</span> = <span class="hljs-variable constant_">SPIRAL</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Spiral</span>(items);
 };
 
 constructors.<span class="hljs-property">Spiral</span> = <span class="hljs-title class_">Spiral</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeSpiral,
-};</pre></div></div>
             
         </li>
         

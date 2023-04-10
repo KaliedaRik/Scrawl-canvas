@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -566,6 +571,18 @@
 <span class="hljs-keyword">let</span> prefersReduceDataChanged = <span class="hljs-literal">false</span>;
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getPrefersReduceDataChanged</span> = (<span class="hljs-params"></span>) =&gt; prefersReduceDataChanged;
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setPrefersReduceDataChanged</span> = (<span class="hljs-params">val</span>) =&gt; prefersReduceDataChanged = val;
+
+<span class="hljs-keyword">let</span> resortBatchAnimations = <span class="hljs-literal">true</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getResortBatchAnimations</span> = (<span class="hljs-params"></span>) =&gt; resortBatchAnimations;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setResortBatchAnimations</span> = (<span class="hljs-params">val</span>) =&gt; resortBatchAnimations = val;
+
+<span class="hljs-keyword">let</span> doAnimation = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getDoAnimation</span> = (<span class="hljs-params"></span>) =&gt; doAnimation;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setDoAnimation</span> = (<span class="hljs-params">val</span>) =&gt; doAnimation = val;
+
+<span class="hljs-keyword">let</span> rootElementsSort = <span class="hljs-literal">true</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getRootElementsSort</span> = (<span class="hljs-params"></span>) =&gt; rootElementsSort;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">setRootElementsSort</span> = (<span class="hljs-params">val</span>) =&gt; rootElementsSort = val;
 
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> forceUpdate = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {

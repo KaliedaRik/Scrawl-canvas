@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -548,7 +553,10 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { xt, xta, isa_obj, isa_number, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
+
+<span class="hljs-keyword">import</span> { doCreate, isa_number, isa_obj, xt, xta, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _atan2, _cos, _isArray, _sin, _sqrt, _stringify, <span class="hljs-variable constant_">T_VECTOR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -587,8 +595,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Vector</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Vector&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Vector</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_VECTOR</span>;</pre></div></div>
             
         </li>
         
@@ -727,7 +735,7 @@ P.<span class="hljs-property">setXY</span> = <span class="hljs-keyword">function
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(x)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromVector</span>(x);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(x)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromArray</span>(x);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(x)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromArray</span>(x);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(x, y)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromArray</span>([x, y, z]);
 
@@ -736,9 +744,9 @@ P.<span class="hljs-property">setXY</span> = <span class="hljs-keyword">function
 
 P.<span class="hljs-property">setFromArray</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">args</span>) {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(args)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> Vector error - setFromArray() arguments error: <span class="hljs-subst">${args}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isArray</span>(args)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> Vector error - setFromArray() arguments error: <span class="hljs-subst">${args}</span>`</span>);
 
-    <span class="hljs-keyword">let</span> [x, y, z] = args;
+    <span class="hljs-keyword">const</span> [x, y, z] = args;
     
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> = x;
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(y)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> = y;
@@ -749,9 +757,9 @@ P.<span class="hljs-property">setFromArray</span> = <span class="hljs-keyword">f
 
 P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> Vector error - setFromVector() arguments error: <span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.stringify(item)}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> Vector error - setFromVector() arguments error: <span class="hljs-subst">${_stringify(item)}</span>`</span>);
     
-    <span class="hljs-keyword">let</span> {x, y, z} = item;
+    <span class="hljs-keyword">const</span> {x, y, z} = item;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> = x;
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(y)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> = y;
@@ -810,9 +818,9 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">vectorAdd</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item = Ωempty</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">vectorAddArray</span>(item);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">vectorAddArray</span>(item);
 
-    <span class="hljs-keyword">let</span> {x, y, z} = item;
+    <span class="hljs-keyword">const</span> {x, y, z} = item;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> += x;
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(y)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> += y;
@@ -823,7 +831,7 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
 
 P.<span class="hljs-property">vectorAddArray</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item = []</span>) {
 
-    <span class="hljs-keyword">let</span> [x, y, z] = item;
+    <span class="hljs-keyword">const</span> [x, y, z] = item;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> += x;
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(y)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> += y;
@@ -847,9 +855,9 @@ P.<span class="hljs-property">vectorAddArray</span> = <span class="hljs-keyword"
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">vectorSubtract</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item = Ωempty</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">vectorSubtractArray</span>(item);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">vectorSubtractArray</span>(item);
 
-    <span class="hljs-keyword">let</span> {x, y, z} = item;
+    <span class="hljs-keyword">const</span> {x, y, z} = item;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> -= x;
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(y)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> -= y;
@@ -860,7 +868,7 @@ P.<span class="hljs-property">vectorAddArray</span> = <span class="hljs-keyword"
 
 P.<span class="hljs-property">vectorSubtractArray</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> [x, y, z] = item;
+    <span class="hljs-keyword">const</span> [x, y, z] = item;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> -= x;
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(y)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> -= y;
@@ -895,9 +903,9 @@ P.<span class="hljs-property">vectorSubtractArray</span> = <span class="hljs-key
 
 P.<span class="hljs-property">vectorMultiply</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item = Ωempty</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">vectorMultiplyArray</span>(item);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">vectorMultiplyArray</span>(item);
 
-    <span class="hljs-keyword">let</span> {x, y, z} = item;
+    <span class="hljs-keyword">const</span> {x, y, z} = item;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> *= x;
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(y)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> *= y;
@@ -908,7 +916,7 @@ P.<span class="hljs-property">vectorMultiply</span> = <span class="hljs-keyword"
 
 P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> [x, y, z] = item;
+    <span class="hljs-keyword">const</span> [x, y, z] = item;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> *= x;
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(y)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> *= y;
@@ -957,7 +965,7 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getMagnitude</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>((<span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> * <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span>) + (<span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> * <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span>) + (<span class="hljs-variable language_">this</span>.<span class="hljs-property">z</span> * <span class="hljs-variable language_">this</span>.<span class="hljs-property">z</span>));
+    <span class="hljs-keyword">return</span> <span class="hljs-title function_">_sqrt</span>((<span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> * <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span>) + (<span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> * <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span>) + (<span class="hljs-variable language_">this</span>.<span class="hljs-property">z</span> * <span class="hljs-variable language_">this</span>.<span class="hljs-property">z</span>));
 };</pre></div></div>
             
         </li>
@@ -977,13 +985,13 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_number</span>(angle)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> Vector error - rotate() argument not a number: <span class="hljs-subst">${angle}</span>`</span>);
 
-    <span class="hljs-keyword">let</span> arg = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">atan2</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span>);
+    <span class="hljs-keyword">let</span> arg = <span class="hljs-title function_">_atan2</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span>);
     arg += (angle * <span class="hljs-number">0.01745329251</span>);
     
-    <span class="hljs-keyword">let</span> mag = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMagnitude</span>();
+    <span class="hljs-keyword">const</span> mag = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMagnitude</span>();
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> = mag * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>(arg);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> = mag * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>(arg);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> = mag * <span class="hljs-title function_">_cos</span>(arg);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> = mag * <span class="hljs-title function_">_sin</span>(arg);
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -1025,7 +1033,7 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">normalize</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
     
-    <span class="hljs-keyword">let</span> val = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMagnitude</span>();
+    <span class="hljs-keyword">const</span> val = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMagnitude</span>();
     
     <span class="hljs-keyword">if</span> (val &gt; <span class="hljs-number">0</span>) {
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> /= val;
@@ -1064,11 +1072,11 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> requestVector = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestVector = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
 
     <span class="hljs-keyword">if</span> (!vectorPool.<span class="hljs-property">length</span>) vectorPool.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Vector</span>());
 
-    <span class="hljs-keyword">let</span> v = vectorPool.<span class="hljs-title function_">shift</span>();
+    <span class="hljs-keyword">const</span> v = vectorPool.<span class="hljs-title function_">shift</span>();
 
     v.<span class="hljs-title function_">set</span>(x, y, z);
 
@@ -1088,9 +1096,9 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> releaseVector = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> releaseVector = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Vector&#x27;</span>) vectorPool.<span class="hljs-title function_">push</span>(item.<span class="hljs-title function_">zero</span>());
+    <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_VECTOR</span>) vectorPool.<span class="hljs-title function_">push</span>(item.<span class="hljs-title function_">zero</span>());
 };</pre></div></div>
             
         </li>
@@ -1106,31 +1114,12 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeVector = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeVector = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
     
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Vector</span>(x, y, z);
 };
 
 constructors.<span class="hljs-property">Vector</span> = <span class="hljs-title class_">Vector</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeVector,
-    requestVector,
-    releaseVector,
-};</pre></div></div>
             
         </li>
         

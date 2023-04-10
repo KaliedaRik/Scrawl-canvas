@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -565,16 +570,21 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/random-seed.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, λfirstArg, removeItem, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { constrain, doCreate, mergeOver, removeItem, λfirstArg, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./color.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell-fragment.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell-fragment.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> assetMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset.js&#x27;</span>;
 <span class="hljs-keyword">import</span> assetAdvancedMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/assetAdvancedFunctionality.js&#x27;</span>;
-<span class="hljs-keyword">import</span> patternMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/pattern.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> patternMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/pattern.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _floor, <span class="hljs-variable constant_">ASSET</span>, <span class="hljs-variable constant_">DEFAULT_SEED</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">RD_SETTINGS_PREF_VALS</span>, <span class="hljs-variable constant_">T_RD_ASSET</span>, <span class="hljs-variable constant_">WHITE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -625,9 +635,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">RdAsset</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;RdAsset&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;asset&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">RdAsset</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_RD_ASSET</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">ASSET</span>;
 P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
 P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</span>;</pre></div></div>
             
@@ -650,10 +660,10 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
-P = <span class="hljs-title function_">assetMix</span>(P);
-P = <span class="hljs-title function_">assetAdvancedMix</span>(P);
-P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);
+<span class="hljs-title function_">assetMix</span>(P);
+<span class="hljs-title function_">assetAdvancedMix</span>(P);
+<span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -674,7 +684,7 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -731,7 +741,7 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">initialSettingPreference</span>: <span class="hljs-string">&#x27;random&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">initialSettingPreference</span>: <span class="hljs-variable constant_">RANDOM</span>,</pre></div></div>
             
         </li>
         
@@ -746,7 +756,7 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">randomEngineSeed</span>: <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">randomEngineSeed</span>: <span class="hljs-variable constant_">DEFAULT_SEED</span>,</pre></div></div>
             
         </li>
         
@@ -881,7 +891,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
     S = P.<span class="hljs-property">setters</span>,
     D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
@@ -996,10 +1006,9 @@ S.<span class="hljs-property">maxGenerations</span> = <span class="hljs-keyword"
     }
 };
 
-P.<span class="hljs-property">initialSettingPreferenceValues</span> = [<span class="hljs-string">&#x27;random&#x27;</span>, <span class="hljs-string">&#x27;entity&#x27;</span>];
 S.<span class="hljs-property">initialSettingPreference</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">initialSettingPreferenceValues</span>.<span class="hljs-title function_">indexOf</span>(item) &gt;= <span class="hljs-number">0</span>) {
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span> &amp;&amp; <span class="hljs-variable constant_">RD_SETTINGS_PREF_VALS</span>.<span class="hljs-title function_">includes</span>(item)) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">initialSettingPreference</span> = item;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScene</span> = <span class="hljs-literal">true</span>;
@@ -1019,7 +1028,7 @@ S.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-ke
 
     <span class="hljs-keyword">if</span> (item) {
 
-        <span class="hljs-keyword">if</span> (!item.<span class="hljs-property">substring</span>) item = item.<span class="hljs-property">name</span> || <span class="hljs-string">&#x27;&#x27;</span>;
+        <span class="hljs-keyword">if</span> (!item.<span class="hljs-property">substring</span>) item = item.<span class="hljs-property">name</span> || <span class="hljs-variable constant_">ZERO_STR</span>;
 
         <span class="hljs-keyword">if</span> (item) {
 
@@ -1343,8 +1352,8 @@ S.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-ke
                     da = a + diffusionRateA * <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">calculateLaplacian</span>(c, sourceA) - a * b * b + feedRate * (<span class="hljs-number">1</span> - a);
                     db = b + diffusionRateB * <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">calculateLaplacian</span>(c, sourceB) + a * b * b - (killRate + feedRate) * b;
 
-                    destA[c] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">constrain</span>(da, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
-                    destB[c] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">constrain</span>(db, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+                    destA[c] = <span class="hljs-title function_">constrain</span>(da, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+                    destB[c] = <span class="hljs-title function_">constrain</span>(db, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
                 }
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentSource</span> = (currentSource) ? <span class="hljs-number">0</span> : <span class="hljs-number">1</span>;
@@ -1429,7 +1438,7 @@ S.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-ke
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;entity&#x27;</span> === initialSettingPreference &amp;&amp; entity[initialSettingEntity]) {
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">ENTITY</span> == initialSettingPreference &amp;&amp; entity[initialSettingEntity]) {
 
                 <span class="hljs-keyword">const</span> ent = entity[initialSettingEntity],
                     cell = <span class="hljs-title function_">requestCell</span>();
@@ -1440,8 +1449,8 @@ S.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-ke
                 cellElement.<span class="hljs-property">height</span> = height;
 
                 ent.<span class="hljs-title function_">simpleStamp</span>(cell, {
-                    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
-                    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+                    <span class="hljs-attr">fillStyle</span>: <span class="hljs-variable constant_">WHITE</span>,
+                    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-variable constant_">WHITE</span>,
                 });
 
                 <span class="hljs-keyword">const</span> initImg = cellEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height),
@@ -1509,23 +1518,16 @@ S.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-ke
               <div class="sswrap ">
                 <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
-              <p><code>constrain</code>, <code>calculateLaplacian</code> - additional internal functions invoked by the <code>cleanOutput</code> function</p>
+              <p><code>calculateLaplacian</code> - additional internal function invoked by the <code>cleanOutput</code> function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">constrain</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, min, max</span>) {
-
-    <span class="hljs-keyword">if</span> (val &lt; min) <span class="hljs-keyword">return</span> min;
-    <span class="hljs-keyword">if</span> (val &gt; max) <span class="hljs-keyword">return</span> max;
-    <span class="hljs-keyword">return</span> val;
-};
-
-P.<span class="hljs-property">calculateLaplacian</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index, src</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">calculateLaplacian</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index, src</span>) {
 
     <span class="hljs-keyword">const</span> w = <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span>;
 
     <span class="hljs-keyword">let</span> res = <span class="hljs-number">0</span>,
-        row = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(index / w), 
+        row = <span class="hljs-title function_">_floor</span>(index / w), 
         rowAbove = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkRow</span>(row - <span class="hljs-number">1</span>) * w,
         rowBelow = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkRow</span>(row + <span class="hljs-number">1</span>) * w,
         rowHere = row * w,
@@ -1765,30 +1767,13 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeReactionDiffusionAsset = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeReactionDiffusionAsset = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RdAsset</span>(items);
 };
 
 constructors.<span class="hljs-property">RdAsset</span> = <span class="hljs-title class_">RdAsset</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeReactionDiffusionAsset,
-};</pre></div></div>
             
         </li>
         

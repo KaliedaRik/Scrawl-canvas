@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -551,8 +556,12 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> { animationtickers } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, isa_fn, isa_obj, xt, xtGet, convertTime, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
+
+<span class="hljs-keyword">import</span> { convertTime, isa_fn, isa_obj, mergeOver, xt, xtGet, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">TARGET_SECTIONS</span>, <span class="hljs-variable constant_">UNKNOWN</span>, <span class="hljs-variable constant_">UNNAMED</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -563,18 +572,17 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p><strong>locateTarget</strong> - a private function and attribute to help retrieve data from the scrawl-canvas library</p>
+              <p>Helper function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> locateTargetSections = [<span class="hljs-string">&#x27;artefact&#x27;</span>, <span class="hljs-string">&#x27;group&#x27;</span>, <span class="hljs-string">&#x27;animation&#x27;</span>, <span class="hljs-string">&#x27;animationtickers&#x27;</span>, <span class="hljs-string">&#x27;world&#x27;</span>, <span class="hljs-string">&#x27;tween&#x27;</span>, <span class="hljs-string">&#x27;styles&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>];
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">locateTarget</span> = (<span class="hljs-params">item</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">locateTarget</span> = (<span class="hljs-params">item</span>) =&gt; {
 
     <span class="hljs-keyword">if</span>(item &amp;&amp; item.<span class="hljs-property">substring</span>){
 
         <span class="hljs-keyword">let</span> result;
 
-        <span class="hljs-keyword">return</span> (locateTargetSections.<span class="hljs-title function_">some</span>(<span class="hljs-function"><span class="hljs-params">section</span> =&gt;</span> {
+        <span class="hljs-keyword">return</span> (<span class="hljs-variable constant_">TARGET_SECTIONS</span>.<span class="hljs-title function_">some</span>(<span class="hljs-function"><span class="hljs-params">section</span> =&gt;</span> {
             
             result = library[section][item];
             <span class="hljs-keyword">return</span> result;
@@ -612,7 +620,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -645,7 +653,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">ticker</span>: <span class="hljs-variable constant_">ZERO_STR</span>,</pre></div></div>
             
         </li>
         
@@ -802,7 +810,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
         S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
@@ -848,7 +856,7 @@
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span> = item;
         
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span> !== <span class="hljs-string">&#x27;function&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span> != <span class="hljs-variable constant_">FUNCTION</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span> = λ<span class="hljs-literal">null</span>;
     };</pre></div></div>
             
         </li>
@@ -889,7 +897,7 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveTime</span> = <span class="hljs-number">0</span>;
 
-        <span class="hljs-keyword">if</span> (cType === <span class="hljs-string">&#x27;%&#x27;</span> &amp;&amp; cTime &lt;= <span class="hljs-number">100</span>) {
+        <span class="hljs-keyword">if</span> (cType == <span class="hljs-variable constant_">PC</span> &amp;&amp; cTime &lt;= <span class="hljs-number">100</span>) {
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">ticker</span>) {
 
@@ -1030,9 +1038,9 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
 
         items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;function&#x27;</span>) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> item == <span class="hljs-variable constant_">FUNCTION</span>) {
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> item.<span class="hljs-property">set</span> === <span class="hljs-string">&#x27;function&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">push</span>(item);
+                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> item.<span class="hljs-property">set</span> == <span class="hljs-variable constant_">FUNCTION</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>.<span class="hljs-title function_">push</span>(item);
             }
             <span class="hljs-keyword">else</span> {
 
@@ -1067,25 +1075,25 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
 
         newTargets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> type = target.<span class="hljs-property">type</span> || <span class="hljs-string">&#x27;unknown&#x27;</span>,
-                name = target.<span class="hljs-property">name</span> || <span class="hljs-string">&#x27;unnamed&#x27;</span>;
+            <span class="hljs-keyword">let</span> type = target.<span class="hljs-property">type</span> || <span class="hljs-variable constant_">UNKNOWN</span>,
+                name = target.<span class="hljs-property">name</span> || <span class="hljs-variable constant_">UNNAMED</span>;
 
-            <span class="hljs-keyword">if</span> (type !== <span class="hljs-string">&#x27;unknown&#x27;</span> &amp;&amp; name !== <span class="hljs-string">&#x27;unnamed&#x27;</span>) identifiers.<span class="hljs-title function_">push</span>(<span class="hljs-string">`<span class="hljs-subst">${type}</span>_<span class="hljs-subst">${name}</span>`</span>);
+            <span class="hljs-keyword">if</span> (type != <span class="hljs-variable constant_">UNKNOWN</span> &amp;&amp; name != <span class="hljs-variable constant_">UNNAMED</span>) identifiers.<span class="hljs-title function_">push</span>(<span class="hljs-string">`<span class="hljs-subst">${type}</span>_<span class="hljs-subst">${name}</span>`</span>);
         });
 
         items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
             <span class="hljs-keyword">let</span> myObj;
             
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;function&#x27;</span>) myObj = item;
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> item == <span class="hljs-variable constant_">FUNCTION</span>) myObj = item;
             <span class="hljs-keyword">else</span> myObj = <span class="hljs-title function_">locateTarget</span>(item);
 
             <span class="hljs-keyword">if</span> (myObj) {
 
-                <span class="hljs-keyword">let</span> type = myObj.<span class="hljs-property">type</span> || <span class="hljs-string">&#x27;unknown&#x27;</span>,
-                    name = myObj.<span class="hljs-property">name</span> || <span class="hljs-string">&#x27;unnamed&#x27;</span>;
+                <span class="hljs-keyword">let</span> type = myObj.<span class="hljs-property">type</span> || <span class="hljs-variable constant_">UNKNOWN</span>,
+                    name = myObj.<span class="hljs-property">name</span> || <span class="hljs-variable constant_">UNNAMED</span>;
 
-                <span class="hljs-keyword">if</span> (type !== <span class="hljs-string">&#x27;unknown&#x27;</span> &amp;&amp; name !== <span class="hljs-string">&#x27;unnamed&#x27;</span>) {
+                <span class="hljs-keyword">if</span> (type != <span class="hljs-variable constant_">UNKNOWN</span> &amp;&amp; name != <span class="hljs-variable constant_">UNNAMED</span>) {
 
                     <span class="hljs-keyword">let</span> objName = <span class="hljs-string">`<span class="hljs-subst">${type}</span>_<span class="hljs-subst">${name}</span>`</span>,
                         doRemove = identifiers.<span class="hljs-title function_">indexOf</span>(objName);
@@ -1131,22 +1139,7 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
     P.<span class="hljs-property">reverse</span> = λ<span class="hljs-literal">null</span>;
     P.<span class="hljs-property">resume</span> = λ<span class="hljs-literal">null</span>;
     P.<span class="hljs-property">seekTo</span> = λ<span class="hljs-literal">null</span>;
-    P.<span class="hljs-property">seekFor</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
-              </div>
-              <p>Return the prototype</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> P;
+    P.<span class="hljs-property">seekFor</span> = λ<span class="hljs-literal">null</span>;
 };</pre></div></div>
             
         </li>

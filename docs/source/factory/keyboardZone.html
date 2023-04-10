@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -530,23 +535,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="keyboard-zones">Keyboard zones.</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span>, Ωempty, mergeDiscard } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/utilities.js&quot;</span>;
-<span class="hljs-keyword">import</span> { addNativeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-2">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-2">&#x00a7;</a>
-              </div>
-              <p><strong>makeKeyboardZone</strong> is an attempt to make setting up keyboard listeners (for accessibility) within a Scrawl-canvas stack or canvas as simple as possible. Similar to the drag zone functionality, SC tries to limit the number of keyboard event listeners attached to a particular DOM element to the bare minimum</p>
+<p><strong>makeKeyboardZone</strong> is an attempt to make setting up keyboard listeners (for accessibility) within a Scrawl-canvas stack or canvas as simple as possible. Similar to the drag zone functionality, SC tries to limit the number of keyboard event listeners attached to a particular DOM element to the bare minimum</p>
 <p>Required attribute of the argument object:</p>
 <ul>
 <li><strong>.zone</strong> - either the String name of the Stack or Canvas artefact which will host the zone, or the Stack or Canvas artefact itself</li>
@@ -558,13 +547,41 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> keyboardZones = {};
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">import</span> { mergeDiscard, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/utilities.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { addNativeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { $BODY, _keys, <span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>, <span class="hljs-variable constant_">KEY_DOWN</span>, <span class="hljs-variable constant_">KEY_UP</span>, keyGroupsArray, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">T_ESCAPE</span>, <span class="hljs-variable constant_">T_TAB</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
+              </div>
+              <p>// Local constants
+const $BODY = ‘BODY’,
+    ACCEPTED_WRAPPERS = [‘Canvas’, ‘Stack’],
+    KEY_DOWN = ‘keydown’,
+    KEY_UP = ‘keyup’,
+    keyGroupsArray = [‘none’, ‘shiftOnly’, ‘altOnly’, ‘ctrlOnly’, ‘metaOnly’, ‘shiftAlt’, ‘shiftCtrl’, ‘shiftMeta’, ‘altCtrl’, ‘altMeta’, ‘ctrlMeta’, ‘shiftAltCtrl’, ‘shiftAltMeta’, ‘shiftCtrlMeta’, ‘altCtrlMeta’, ‘all’],
+    NONE = ‘none’,
+    T_ESCAPE = ‘Escape’,
+    T_TAB = ‘Tab’;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+
+<span class="hljs-keyword">const</span> keyboardZones = {};
 
 <span class="hljs-keyword">const</span> processKeyboardZoneData = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty, doAddListeners, doRemoveListeners</span>) {
 
-    <span class="hljs-keyword">let</span> {
-        zone, 
-    } = items;</pre></div></div>
+    <span class="hljs-keyword">let</span> zone = items.<span class="hljs-property">zone</span>;</pre></div></div>
             
         </li>
         
@@ -586,9 +603,9 @@
 
     <span class="hljs-keyword">if</span> (zone.<span class="hljs-property">substring</span>) zone = artefact[zone];
 
-    <span class="hljs-keyword">if</span> (!zone || [<span class="hljs-string">&#x27;Canvas&#x27;</span>, <span class="hljs-string">&#x27;Stack&#x27;</span>].<span class="hljs-title function_">indexOf</span>(zone.<span class="hljs-property">type</span>) &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;keyboardZone constructor - zone object is not a Stack or Canvas wrapper&#x27;</span>);
+    <span class="hljs-keyword">if</span> (!zone || !<span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>.<span class="hljs-title function_">includes</span>(zone.<span class="hljs-property">type</span>)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;keyboardZone constructor - zone object is not a Stack or Canvas wrapper&#x27;</span>);
 
-    <span class="hljs-keyword">let</span> target = zone.<span class="hljs-property">domElement</span>;
+    <span class="hljs-keyword">const</span> target = zone.<span class="hljs-property">domElement</span>;
 
     <span class="hljs-keyword">if</span> (!target) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;keyboardZone constructor - zone does not contain a target DOM element&#x27;</span>);
 
@@ -610,25 +627,6 @@
             <span class="hljs-title class_">Meta</span>: <span class="hljs-literal">false</span>,
         };
     }
-
-    <span class="hljs-keyword">const</span> keyGroupsArray = [
-        <span class="hljs-string">&#x27;none&#x27;</span>,
-        <span class="hljs-string">&#x27;shiftOnly&#x27;</span>,
-        <span class="hljs-string">&#x27;altOnly&#x27;</span>,
-        <span class="hljs-string">&#x27;ctrlOnly&#x27;</span>,
-        <span class="hljs-string">&#x27;metaOnly&#x27;</span>,
-        <span class="hljs-string">&#x27;shiftAlt&#x27;</span>,
-        <span class="hljs-string">&#x27;shiftCtrl&#x27;</span>,
-        <span class="hljs-string">&#x27;shiftMeta&#x27;</span>,
-        <span class="hljs-string">&#x27;altCtrl&#x27;</span>,
-        <span class="hljs-string">&#x27;altMeta&#x27;</span>,
-        <span class="hljs-string">&#x27;ctrlMeta&#x27;</span>,
-        <span class="hljs-string">&#x27;shiftAltCtrl&#x27;</span>,
-        <span class="hljs-string">&#x27;shiftAltMeta&#x27;</span>,
-        <span class="hljs-string">&#x27;shiftCtrlMeta&#x27;</span>,
-        <span class="hljs-string">&#x27;altCtrlMeta&#x27;</span>,
-        <span class="hljs-string">&#x27;all&#x27;</span>,
-    ];
 
     <span class="hljs-keyword">if</span> (!zoneItem.<span class="hljs-property">keyGroups</span>) {
 
@@ -669,7 +667,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;Tab&#x27;</span> === key || <span class="hljs-string">&#x27;Escape&#x27;</span> === key) {
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">T_TAB</span> == key || <span class="hljs-variable constant_">T_ESCAPE</span> == key) {
 
                     target.<span class="hljs-title function_">blur</span>();
                     <span class="hljs-keyword">return</span>;
@@ -744,8 +742,8 @@
 
                 e.<span class="hljs-title function_">preventDefault</span>();
 
-                <span class="hljs-keyword">const</span> { extraKeys } = zoneItem;
-                <span class="hljs-keyword">const</span> { key } = e;
+                <span class="hljs-keyword">const</span> extraKeys = zoneItem.<span class="hljs-property">extraKeys</span>;
+                <span class="hljs-keyword">const</span> key = e.<span class="hljs-property">key</span>;
 
                 <span class="hljs-keyword">if</span> (extraKeys[key] != <span class="hljs-literal">null</span>) extraKeys[key] = <span class="hljs-literal">false</span>;
             }
@@ -790,11 +788,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">getMappedKeys</span> = (<span class="hljs-params">keyGroup = <span class="hljs-string">&#x27;none&#x27;</span></span>) =&gt; {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">getMappedKeys</span> = (<span class="hljs-params">keyGroup = NONE</span>) =&gt; {
 
         <span class="hljs-keyword">if</span> (zoneItem.<span class="hljs-property">keyGroups</span>[keyGroup] != <span class="hljs-literal">null</span>) {
 
-            <span class="hljs-keyword">return</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(zoneItem.<span class="hljs-property">keyGroups</span>[keyGroup]);
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">_keys</span>(zoneItem.<span class="hljs-property">keyGroups</span>[keyGroup]);
         }
         <span class="hljs-keyword">return</span> [];
     }</pre></div></div>
@@ -856,7 +854,7 @@
             <span class="hljs-keyword">while</span> (!name) {
 
                 <span class="hljs-keyword">if</span> (keyboardZones[myTarget.<span class="hljs-property">id</span>]) name = myTarget.<span class="hljs-property">id</span>;
-                <span class="hljs-keyword">if</span> (myTarget.<span class="hljs-property">tagName</span> === <span class="hljs-string">&#x27;BODY&#x27;</span>) <span class="hljs-keyword">break</span>;
+                <span class="hljs-keyword">if</span> (myTarget.<span class="hljs-property">tagName</span> == $BODY) <span class="hljs-keyword">break</span>;
                 myTarget = myTarget.<span class="hljs-property">parentElement</span>;
             }
 
@@ -905,8 +903,8 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">doAddListeners</span> = (<span class="hljs-params">target</span>) =&gt; {
 
-        <span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;keydown&#x27;</span>, actionKeyDown, target);
-        <span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;keyup&#x27;</span>, actionKeyUp, target);
+        <span class="hljs-title function_">addNativeListener</span>(<span class="hljs-variable constant_">KEY_DOWN</span>, actionKeyDown, target);
+        <span class="hljs-title function_">addNativeListener</span>(<span class="hljs-variable constant_">KEY_UP</span>, actionKeyUp, target);
     };</pre></div></div>
             
         </li>
@@ -924,8 +922,8 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">doRemoveListeners</span> = (<span class="hljs-params">target</span>) =&gt; {
 
-        <span class="hljs-title function_">removeNativeListener</span>(<span class="hljs-string">&#x27;keydown&#x27;</span>, actionKeyDown, target);
-        <span class="hljs-title function_">removeNativeListener</span>(<span class="hljs-string">&#x27;keyup&#x27;</span>, actionKeyUp, target);
+        <span class="hljs-title function_">removeNativeListener</span>(<span class="hljs-variable constant_">KEY_DOWN</span>, actionKeyDown, target);
+        <span class="hljs-title function_">removeNativeListener</span>(<span class="hljs-variable constant_">KEY_UP</span>, actionKeyUp, target);
     };</pre></div></div>
             
         </li>

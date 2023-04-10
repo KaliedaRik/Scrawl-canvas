@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -578,11 +583,16 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animation, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, xt, λ<span class="hljs-literal">null</span>, λpromise, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { forceUpdate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/system-flags.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { animate, resortAnimations } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/animationloop.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { doCreate, mergeOver, pushUnique, removeItem, xt, λ<span class="hljs-literal">null</span>, λpromise, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { forceUpdate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/system-flags.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { animateAdd, animateIncludes, animateRemove } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/animationloop.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ANIMATION</span>, <span class="hljs-variable constant_">T_ANIMATION</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -626,10 +636,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Animation</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Animation</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
 
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Animation&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;animation&#x27;</span>;
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_ANIMATION</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">ANIMATION</span>;
 P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
 P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -646,7 +656,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -664,7 +674,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -833,8 +843,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">run</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">onRun</span>();
-    <span class="hljs-title function_">pushUnique</span>(animate, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
-    <span class="hljs-title function_">resortAnimations</span>();
+    <span class="hljs-title function_">animateAdd</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
     <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">forceUpdate</span>(), <span class="hljs-number">20</span>);
     
@@ -856,7 +865,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">isRunning</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> (animate.<span class="hljs-title function_">indexOf</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-title function_">animateIncludes</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 };</pre></div></div>
             
         </li>
@@ -875,8 +884,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">halt</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">onHalt</span>();
-    <span class="hljs-title function_">removeItem</span>(animate, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
-    <span class="hljs-title function_">resortAnimations</span>();
+    <span class="hljs-title function_">animateRemove</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
@@ -896,7 +904,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">onKill</span>();
-    <span class="hljs-title function_">removeItem</span>(animate, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+    <span class="hljs-title function_">animateRemove</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
     <span class="hljs-title function_">resortAnimations</span>();
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
@@ -934,30 +942,13 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimation = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeAnimation = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
     
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Animation</span>(items);
 };
 
 constructors.<span class="hljs-property">Animation</span> = <span class="hljs-title class_">Animation</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeAnimation,
-};</pre></div></div>
             
         </li>
         

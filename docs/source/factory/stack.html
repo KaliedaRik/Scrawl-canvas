@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -590,11 +595,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, group, stack, element, artefact, canvas, purge } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_dom, isa_canvas, removeItem, xt, addStrings, λ<span class="hljs-variable language_">this</span>, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, canvas, constructors, element, group, purge, stack } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { addStrings, doCreate, isa_canvas, isa_dom, mergeOver, pushUnique, removeItem, xt, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> { domShow } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { rootElements, setRootElementsSort } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/document-rootElements.js&quot;</span>;
-<span class="hljs-keyword">import</span> { uiSubscribedElements, currentCorePosition } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { rootElementsAdd, rootElementsIncludes, rootElementsRemove } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/document-rootElements.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { currentCorePosition, uiSubscribedElements } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./group.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { makeElement } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./element.js&#x27;</span>;
@@ -603,7 +612,9 @@
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> cascadeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/cascade.js&#x27;</span>;
 <span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/dom.js&#x27;</span>;
-<span class="hljs-keyword">import</span> displayMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/displayShape.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> displayMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/displayShape.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { $DATA_SCRAWL_STACK, $SCRIPT, _entries, _isArray, <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">BORDER_BOX</span>, <span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>, <span class="hljs-variable constant_">DATA_SCRAWL_STACK</span>, <span class="hljs-variable constant_">DIV</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-title class_">PC50</span>, <span class="hljs-variable constant_">RELATIVE</span>, <span class="hljs-variable constant_">ROOT</span>, <span class="hljs-variable constant_">STACK</span>, <span class="hljs-variable constant_">SUBSCRIBE</span>, <span class="hljs-variable constant_">T_STACK</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -635,8 +646,8 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span> = {};
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">perspective</span> = {
 
-        <span class="hljs-attr">x</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-        <span class="hljs-attr">y</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+        <span class="hljs-attr">x</span>: <span class="hljs-title class_">PC50</span>,
+        <span class="hljs-attr">y</span>: <span class="hljs-title class_">PC50</span>,
         <span class="hljs-attr">z</span>: <span class="hljs-number">0</span>
     };
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPerspective</span> = <span class="hljs-literal">true</span>;
@@ -663,16 +674,9 @@
 
         <span class="hljs-keyword">const</span> ds = el.<span class="hljs-property">dataset</span>;
 
-        <span class="hljs-keyword">if</span> (ds.<span class="hljs-property">isResponsive</span>) {
+        <span class="hljs-keyword">if</span> (ds.<span class="hljs-property">isResponsive</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">isResponsive</span> = <span class="hljs-literal">true</span>;
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">isResponsive</span> = <span class="hljs-literal">true</span>;
-        }
-
-        <span class="hljs-keyword">if</span> (el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>) === <span class="hljs-string">&#x27;root&#x27;</span>) {
-
-            <span class="hljs-title function_">pushUnique</span>(rootElements, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
-            <span class="hljs-title function_">setRootElementsSort</span>();
-        }
+        <span class="hljs-keyword">if</span> (el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>) == <span class="hljs-variable constant_">ROOT</span>) <span class="hljs-title function_">rootElementsAdd</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
     }
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -690,9 +694,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Stack</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Stack&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;stack&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Stack</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_STACK</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">STACK</span>;
 P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
 P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -715,10 +719,10 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
-P = <span class="hljs-title function_">cascadeMix</span>(P);
-P = <span class="hljs-title function_">domMix</span>(P);
-P = <span class="hljs-title function_">displayMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);
+<span class="hljs-title function_">cascadeMix</span>(P);
+<span class="hljs-title function_">domMix</span>(P);
+<span class="hljs-title function_">displayMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -745,7 +749,7 @@ P = <span class="hljs-title function_">displayMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -760,7 +764,7 @@ P = <span class="hljs-title function_">displayMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;relative&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">position</span>: <span class="hljs-variable constant_">RELATIVE</span>,
     <span class="hljs-attr">perspective</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
@@ -776,7 +780,7 @@ P = <span class="hljs-title function_">displayMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">trackHere</span>: <span class="hljs-string">&#x27;subscribe&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">trackHere</span>: <span class="hljs-variable constant_">SUBSCRIBE</span>,</pre></div></div>
             
         </li>
         
@@ -849,9 +853,7 @@ P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable langua
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">removeItem</span>(rootElements, myname);
-    <span class="hljs-title function_">setRootElementsSort</span>();
-
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">rootElementsRemove</span>(myname);
     <span class="hljs-title function_">removeItem</span>(uiSubscribedElements, myname);</pre></div></div>
             
         </li>
@@ -869,7 +871,7 @@ P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable langua
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (group[myname]) group[myname].<span class="hljs-title function_">kill</span>();
 
-    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(artefact).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, art]</span>) =&gt;</span> {
+    <span class="hljs-title function_">_entries</span>(artefact).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, art]</span>) =&gt;</span> {
 
         <span class="hljs-keyword">if</span> (art.<span class="hljs-property">host</span> === myname) art.<span class="hljs-title function_">kill</span>();
     });</pre></div></div>
@@ -903,7 +905,7 @@ P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable langua
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
     S = P.<span class="hljs-property">setters</span>,
     D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
@@ -1309,7 +1311,7 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
                     <span class="hljs-attr">domElement</span>: el,
                     <span class="hljs-attr">group</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
                     <span class="hljs-attr">host</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
-                    <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;absolute&#x27;</span>,
+                    <span class="hljs-attr">position</span>: <span class="hljs-variable constant_">ABSOLUTE</span>,
                     <span class="hljs-attr">setInitialDimensions</span>: <span class="hljs-literal">true</span>,
                 });
 
@@ -1343,13 +1345,13 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
     <span class="hljs-keyword">if</span> (items &amp;&amp; items.<span class="hljs-property">tag</span>) {
 
         items.<span class="hljs-property">domElement</span> = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(items.<span class="hljs-property">tag</span>);
-        items.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+        items.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">group</span>)) items.<span class="hljs-property">group</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
         items.<span class="hljs-property">host</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
-        <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">position</span>) items.<span class="hljs-property">position</span> = <span class="hljs-string">&#x27;absolute&#x27;</span>;
+        <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">position</span>) items.<span class="hljs-property">position</span> = <span class="hljs-variable constant_">ABSOLUTE</span>;
 
-        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">dimensions</span> &amp;&amp; <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(items.<span class="hljs-property">dimensions</span>)) {
+        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">dimensions</span> &amp;&amp; <span class="hljs-title function_">_isArray</span>(items.<span class="hljs-property">dimensions</span>)) {
 
             items.<span class="hljs-property">width</span> = items.<span class="hljs-property">dimensions</span>[<span class="hljs-number">0</span>] || <span class="hljs-number">100</span>;
             items.<span class="hljs-property">height</span> = items.<span class="hljs-property">dimensions</span>[<span class="hljs-number">1</span>] || <span class="hljs-number">100</span>;
@@ -1358,11 +1360,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">width</span>)) items.<span class="hljs-property">width</span> = <span class="hljs-number">100</span>;
         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">height</span>)) items.<span class="hljs-property">height</span> = <span class="hljs-number">100</span>;
 
-        <span class="hljs-keyword">let</span> myElement = <span class="hljs-title function_">makeElement</span>(items);
+        <span class="hljs-keyword">const</span> myElement = <span class="hljs-title function_">makeElement</span>(items);
 
         <span class="hljs-keyword">if</span> (myElement &amp;&amp; myElement.<span class="hljs-property">domElement</span>) {
 
-            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">boxSizing</span>)) myElement.<span class="hljs-property">domElement</span>.<span class="hljs-property">style</span>.<span class="hljs-property">boxSizing</span> = <span class="hljs-string">&#x27;border-box&#x27;</span>;
+            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">boxSizing</span>)) myElement.<span class="hljs-property">domElement</span>.<span class="hljs-property">style</span>.<span class="hljs-property">boxSizing</span> = <span class="hljs-variable constant_">BORDER_BOX</span>;
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">appendChild</span>(myElement.<span class="hljs-property">domElement</span>);
         }
@@ -1408,7 +1410,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getStacks = <span class="hljs-keyword">function</span> (<span class="hljs-params">query = <span class="hljs-string">&#x27;[data-scrawl-stack]&#x27;</span></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getStacks = <span class="hljs-keyword">function</span> (<span class="hljs-params">query = $DATA_SCRAWL_STACK</span>) {
 
     <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(query).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">addInitialStackElement</span>(el));
 };</pre></div></div>
@@ -1428,15 +1430,15 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addInitialStackElement = <span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) {
 
-    <span class="hljs-keyword">let</span> mygroup = el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>),
-        myname = el.<span class="hljs-property">id</span> || el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;name&#x27;</span>),
-        position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
+    <span class="hljs-keyword">let</span> mygroup = el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>),
+        myname = el.<span class="hljs-property">id</span> || el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">NAME</span>),
+        position = <span class="hljs-variable constant_">ABSOLUTE</span>;
 
     <span class="hljs-keyword">if</span> (!mygroup) {
 
-        el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, <span class="hljs-string">&#x27;root&#x27;</span>);
-        mygroup = <span class="hljs-string">&#x27;root&#x27;</span>;
-        position = <span class="hljs-string">&#x27;relative&#x27;</span>;
+        el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>, <span class="hljs-variable constant_">ROOT</span>);
+        mygroup = <span class="hljs-variable constant_">ROOT</span>;
+        position = <span class="hljs-variable constant_">RELATIVE</span>;
     }
 
     <span class="hljs-keyword">if</span> (!myname) {
@@ -1445,13 +1447,13 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         el.<span class="hljs-property">id</span> = myname;
     }
 
-    <span class="hljs-keyword">let</span> mystack = <span class="hljs-title function_">makeStack</span>({
+    <span class="hljs-keyword">const</span> mystack = <span class="hljs-title function_">makeStack</span>({
         <span class="hljs-attr">name</span>: myname,
         <span class="hljs-attr">domElement</span>: el,
         <span class="hljs-attr">group</span>: mygroup,
         <span class="hljs-attr">host</span>: mygroup,
         <span class="hljs-attr">position</span>: position,
-        <span class="hljs-attr">setInitialDimensions</span>: <span class="hljs-literal">true</span>
+        <span class="hljs-attr">setInitialDimensions</span>: <span class="hljs-literal">true</span>,
     });
 
     <span class="hljs-title function_">processNewStackChildren</span>(el, myname);
@@ -1492,7 +1494,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(el.<span class="hljs-property">children</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">child</span> =&gt;</span> {
     
-        <span class="hljs-keyword">if</span> (child.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-stack&#x27;</span>) == <span class="hljs-literal">null</span> &amp;&amp; !<span class="hljs-title function_">isa_canvas</span>(child) &amp;&amp; child.<span class="hljs-property">tagName</span> !== <span class="hljs-string">&#x27;SCRIPT&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (child.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_STACK</span>) == <span class="hljs-literal">null</span> &amp;&amp; !<span class="hljs-title function_">isa_canvas</span>(child) &amp;&amp; child.<span class="hljs-property">tagName</span> != $SCRIPT) {
 
             <span class="hljs-keyword">let</span> dims = child.<span class="hljs-title function_">getBoundingClientRect</span>(),
                 computed = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(child);
@@ -1501,17 +1503,17 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
 
             y = (!y) ? dims.<span class="hljs-property">top</span> - hostDims.<span class="hljs-property">top</span> : y;
 
-            <span class="hljs-keyword">let</span> args = {
-                <span class="hljs-attr">name</span>: child.<span class="hljs-property">id</span> || child.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;name&#x27;</span>),
+            <span class="hljs-keyword">const</span> args = {
+                <span class="hljs-attr">name</span>: child.<span class="hljs-property">id</span> || child.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">NAME</span>),
                 <span class="hljs-attr">domElement</span>: child,
                 <span class="hljs-attr">group</span>: name,
                 <span class="hljs-attr">host</span>: name,
-                <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;absolute&#x27;</span>,
+                <span class="hljs-attr">position</span>: <span class="hljs-variable constant_">ABSOLUTE</span>,
                 <span class="hljs-attr">width</span>: dims.<span class="hljs-property">width</span>,
                 <span class="hljs-attr">height</span>: dims.<span class="hljs-property">height</span>,
                 <span class="hljs-attr">startX</span>: dims.<span class="hljs-property">left</span> - hostDims.<span class="hljs-property">left</span>,
                 <span class="hljs-attr">startY</span>: y,
-                <span class="hljs-attr">classes</span>: (child.<span class="hljs-property">className</span>) ? child.<span class="hljs-property">className</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+                <span class="hljs-attr">classes</span>: (child.<span class="hljs-property">className</span>) ? child.<span class="hljs-property">className</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             };
 
             y += yHeight + dims.<span class="hljs-property">height</span>;
@@ -1532,7 +1534,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> child.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, name);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> child.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>, name);
     });
 };</pre></div></div>
             
@@ -1571,7 +1573,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> el, host, hostinscrawl, mystack, mygroup, name,
-        position = <span class="hljs-string">&#x27;absolute&#x27;</span>,
+        position = <span class="hljs-variable constant_">ABSOLUTE</span>,
         newElement = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
@@ -1592,7 +1594,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
     <span class="hljs-keyword">else</span> {
 
         newElement = <span class="hljs-literal">true</span>;
-        el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;div&#x27;</span>);
+        el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">DIV</span>);
     }</pre></div></div>
             
         </li>
@@ -1646,7 +1648,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    name = items.<span class="hljs-property">name</span> || el.<span class="hljs-property">id</span> || el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;name&#x27;</span>) || <span class="hljs-string">&#x27;&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>    name = items.<span class="hljs-property">name</span> || el.<span class="hljs-property">id</span> || el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">NAME</span>) || <span class="hljs-variable constant_">ZERO_STR</span>;
     <span class="hljs-keyword">if</span> (!name) name = <span class="hljs-title function_">generateUniqueString</span>();
     el.<span class="hljs-property">id</span> = name;</pre></div></div>
             
@@ -1663,7 +1665,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-stack&#x27;</span>, <span class="hljs-string">&#x27;data-scrawl-stack&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_STACK</span>, <span class="hljs-variable constant_">DATA_SCRAWL_STACK</span>);</pre></div></div>
             
         </li>
         
@@ -1678,13 +1680,13 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-stack&#x27;</span>) != <span class="hljs-literal">null</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_STACK</span>) != <span class="hljs-literal">null</span>) {
 
         hostinscrawl = artefact[host.<span class="hljs-property">id</span>];
 
-        mygroup = (hostinscrawl) ? hostinscrawl.<span class="hljs-property">name</span> : <span class="hljs-string">&#x27;root&#x27;</span>;
+        mygroup = (hostinscrawl) ? hostinscrawl.<span class="hljs-property">name</span> : <span class="hljs-variable constant_">ROOT</span>;
     }
-    <span class="hljs-keyword">else</span> mygroup = <span class="hljs-string">&#x27;root&#x27;</span>;</pre></div></div>
+    <span class="hljs-keyword">else</span> mygroup = <span class="hljs-variable constant_">ROOT</span>;</pre></div></div>
             
         </li>
         
@@ -1699,7 +1701,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;data-scrawl-group&#x27;</span>, mygroup);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>, mygroup);</pre></div></div>
             
         </li>
         
@@ -1714,7 +1716,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (mygroup === <span class="hljs-string">&#x27;root&#x27;</span>) position = <span class="hljs-string">&#x27;relative&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (mygroup == <span class="hljs-variable constant_">ROOT</span>) position = <span class="hljs-variable constant_">RELATIVE</span>;</pre></div></div>
             
         </li>
         
@@ -1770,7 +1772,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(el.<span class="hljs-property">childNodes</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">child</span> =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (child.<span class="hljs-property">id</span> &amp;&amp; rootElements.<span class="hljs-title function_">indexOf</span>(child.<span class="hljs-property">id</span>) &gt;= <span class="hljs-number">0</span>) <span class="hljs-title function_">removeItem</span>(rootElements, child.<span class="hljs-property">id</span>);
+        <span class="hljs-keyword">if</span> (child.<span class="hljs-property">id</span> &amp;&amp; <span class="hljs-title function_">rootElementsIncludes</span>(child.<span class="hljs-property">id</span>)) <span class="hljs-title function_">rootElementsRemove</span>(child.<span class="hljs-property">id</span>);
     });</pre></div></div>
             
         </li>
@@ -1806,7 +1808,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">setRootElementsSort</span>(<span class="hljs-literal">true</span>);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">rootElementsSort</span>(<span class="hljs-literal">true</span>);
     <span class="hljs-keyword">return</span> mystack;
 };</pre></div></div>
             
@@ -1825,7 +1827,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getStack = <span class="hljs-keyword">function</span> (<span class="hljs-params">search</span>) {
 
-    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${search}</span>`</span>);
+    <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${search}</span>`</span>);
 
     <span class="hljs-keyword">const</span> s = stack[search];
 

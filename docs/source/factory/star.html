@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -608,12 +613,15 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { requestVector, releaseVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { releaseVector, requestVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _abs, _min, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">STAR</span>, <span class="hljs-variable constant_">T_STAR</span>, <span class="hljs-variable constant_">ZERO_PATH</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -647,9 +655,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Star</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Star&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Star</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_STAR</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">ENTITY</span>;
 P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
 P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -670,8 +678,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
-P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);
+<span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -698,7 +706,7 @@ P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {
 
     <span class="hljs-attr">radius1</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">radius2</span>: <span class="hljs-number">0</span>,
@@ -762,7 +770,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>,
     D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
@@ -877,7 +885,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-variable constant_">ZERO_PATH</span>;
     p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeStarPath</span>();
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
@@ -898,58 +906,31 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeStarPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> points = <span class="hljs-variable language_">this</span>.<span class="hljs-property">points</span>,
+    <span class="hljs-keyword">const</span> points = <span class="hljs-variable language_">this</span>.<span class="hljs-property">points</span>,
         twist = <span class="hljs-variable language_">this</span>.<span class="hljs-property">twist</span>,
         radius1 = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius1</span>,
         radius2 = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius2</span>,
         turn = <span class="hljs-number">360</span> / points,
-        xPts = [],
-        currentX, currentY, x, y,
+        xPts = [];
+
+    <span class="hljs-keyword">let</span> currentX, currentY, x, y,
         myMin, myXoffset, myYoffset, i,
-        myPath = <span class="hljs-string">&#x27;&#x27;</span>;
+        myPath = <span class="hljs-variable constant_">ZERO_STR</span>;
 
-    <span class="hljs-keyword">if</span> (radius1.<span class="hljs-property">substring</span> || radius2.<span class="hljs-property">substring</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>let here = this.getHere();</p>
+    <span class="hljs-keyword">if</span> (radius1.<span class="hljs-property">substring</span> || radius2.<span class="hljs-property">substring</span>) {
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>radius1 = (radius1.substring) ? (parseFloat(radius1) / 100) * here.w : radius1;
-radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * here.w : radius2;</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-        <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>();
+        <span class="hljs-keyword">const</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>();
 
         <span class="hljs-keyword">if</span> (host) {
 
-            <span class="hljs-keyword">let</span> [hW, hH] = host.<span class="hljs-property">currentDimensions</span>;
+            <span class="hljs-keyword">const</span> [hW, hH] = host.<span class="hljs-property">currentDimensions</span>;
 
             radius1 = (radius1.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(radius1) / <span class="hljs-number">100</span>) * hW : radius1;
             radius2 = (radius2.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(radius2) / <span class="hljs-number">100</span>) * hW : radius2;
         } 
     }
 
-    <span class="hljs-keyword">let</span> v1 = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -radius1}),
+    <span class="hljs-keyword">const</span> v1 = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -radius1}),
         v2 = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -radius2});
 
     currentX = v1.<span class="hljs-property">x</span>;
@@ -989,8 +970,8 @@ radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * here.w : radius2;<
     <span class="hljs-title function_">releaseVector</span>(v1);
     <span class="hljs-title function_">releaseVector</span>(v2);
 
-    myMin = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(...xPts);
-    myXoffset = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(myMin).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
+    myMin = <span class="hljs-title function_">_min</span>(...xPts);
+    myXoffset = <span class="hljs-title function_">_abs</span>(myMin).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
 
     myPath = <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0l<span class="hljs-subst">${myPath}</span>z`</span>;
 
@@ -1000,11 +981,11 @@ radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * here.w : radius2;<
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="factories">Factories</h4>
 
@@ -1013,11 +994,11 @@ radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * here.w : radius2;<
         </li>
         
         
-        <li id="section-22">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h5 id="makestar">makeStar</h5>
 <p>Accepts argument with attributes:</p>
@@ -1048,31 +1029,14 @@ radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * here.w : radius2;<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeStar = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeStar = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;star&#x27;</span>;
+    items.<span class="hljs-property">species</span> = <span class="hljs-variable constant_">STAR</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Star</span>(items);
 };
 
 constructors.<span class="hljs-property">Star</span> = <span class="hljs-title class_">Star</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeStar,
-};</pre></div></div>
             
         </li>
         

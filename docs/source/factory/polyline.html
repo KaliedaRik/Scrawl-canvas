@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -600,13 +605,16 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact, particle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem, correctForZero, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, constructors, particle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/coordinate.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _floor, _isArray, _keys, _parse, _pow, _sqrt, <span class="hljs-variable constant_">BOTTOM</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">PINS</span>, <span class="hljs-variable constant_">PIVOT</span>, <span class="hljs-variable constant_">POLYLINE</span>, <span class="hljs-variable constant_">RIGHT</span>, <span class="hljs-variable constant_">START</span>, <span class="hljs-variable constant_">T_POLYLINE</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">ZERO_PATH</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -645,9 +653,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Polyline</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Polyline&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Polyline</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_POLYLINE</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">ENTITY</span>;
 P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
 P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -668,8 +676,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
-P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);
+<span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -696,7 +704,7 @@ P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -794,21 +802,21 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
 
 P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
 
-    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
+    <span class="hljs-keyword">const</span> stateCopy = <span class="hljs-title function_">_parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
     copy = <span class="hljs-title function_">mergeOver</span>(copy, stateCopy);
 
     copy = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handlePacketAnchor</span>(copy, items);
 
-    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(copy).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
+    <span class="hljs-title function_">_keys</span>(copy).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (key === <span class="hljs-string">&#x27;pins&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (key == <span class="hljs-variable constant_">PINS</span>) {
 
-            <span class="hljs-keyword">let</span> temp = [];
+            <span class="hljs-keyword">const</span> temp = [];
 
             copy.<span class="hljs-property">pins</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">pin</span> =&gt;</span> {
 
                 <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(pin)) temp.<span class="hljs-title function_">push</span>(pin.<span class="hljs-property">name</span>);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(pin)) temp.<span class="hljs-title function_">push</span>([].<span class="hljs-title function_">concat</span>(pin));
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(pin)) temp.<span class="hljs-title function_">push</span>([].<span class="hljs-title function_">concat</span>(pin));
                 <span class="hljs-keyword">else</span> temp.<span class="hljs-title function_">push</span>(pin);
             });
             copy.<span class="hljs-property">pins</span> = temp;
@@ -858,7 +866,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
     S = P.<span class="hljs-property">setters</span>,
     D = P.<span class="hljs-property">deltaSetters</span>;
 
@@ -873,7 +881,7 @@ S.<span class="hljs-property">pins</span> = <span class="hljs-keyword">function<
 
         <span class="hljs-keyword">let</span> pins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pins</span>;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item)) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item)) {
 
             pins.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removePinAt</span>(index));
 
@@ -885,7 +893,7 @@ S.<span class="hljs-property">pins</span> = <span class="hljs-keyword">function<
 
             <span class="hljs-keyword">let</span> element = pins[item.<span class="hljs-property">index</span>];
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(element)) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(element)) {
 
                 <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item.<span class="hljs-property">x</span>)) element[<span class="hljs-number">0</span>] = item.<span class="hljs-property">x</span>;
                 <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item.<span class="hljs-property">y</span>)) element[<span class="hljs-number">1</span>] = item.<span class="hljs-property">y</span>;
@@ -904,7 +912,7 @@ D.<span class="hljs-property">pins</span> = <span class="hljs-keyword">function<
 
             <span class="hljs-keyword">let</span> element = pins[item.<span class="hljs-property">index</span>];
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(element)) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(element)) {
 
                 <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item.<span class="hljs-property">x</span>)) element[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(element[<span class="hljs-number">0</span>], item.<span class="hljs-property">x</span>);
                 <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item.<span class="hljs-property">y</span>)) element[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(element[<span class="hljs-number">1</span>], item.<span class="hljs-property">y</span>);
@@ -1019,21 +1027,21 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span> = <span class="hljs-literal">null</span>;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;pivot&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] === <span class="hljs-string">&#x27;pivot&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] == <span class="hljs-variable constant_">PIVOT</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] = <span class="hljs-variable constant_">START</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] == <span class="hljs-variable constant_">PIVOT</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] = <span class="hljs-variable constant_">START</span>;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
     }
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">let</span> oldPivot = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span>,
+        <span class="hljs-keyword">const</span> oldPivot = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span>,
             newPivot = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item,
             name = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
         <span class="hljs-keyword">if</span> (newPivot &amp;&amp; newPivot.<span class="hljs-property">name</span>) {
 
-            <span class="hljs-keyword">if</span> (oldPivot &amp;&amp; oldPivot.<span class="hljs-property">name</span> !== newPivot.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(oldPivot.<span class="hljs-property">pivoted</span>, name);
+            <span class="hljs-keyword">if</span> (oldPivot &amp;&amp; oldPivot.<span class="hljs-property">name</span> != newPivot.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(oldPivot.<span class="hljs-property">pivoted</span>, name);
 
             <span class="hljs-title function_">pushUnique</span>(newPivot.<span class="hljs-property">pivoted</span>, name);
 
@@ -1093,24 +1101,24 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getPinAt</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) {
 
-    <span class="hljs-keyword">let</span> i = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(index);
+    <span class="hljs-keyword">const</span> i = <span class="hljs-title function_">_floor</span>(index);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useAsPath</span>) {
 
-        <span class="hljs-keyword">let</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPartials</span>[i]);
+        <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPartials</span>[i]);
         <span class="hljs-keyword">return</span> [pos.<span class="hljs-property">x</span>, pos.<span class="hljs-property">y</span>];
     }
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">let</span> pins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPins</span>,
+        <span class="hljs-keyword">const</span> pins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPins</span>,
             pin = pins[i];
 
-        <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>;
+        <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>;
 
-        <span class="hljs-keyword">let</span> [px, py] = pin;
-        <span class="hljs-keyword">let</span> [ox, oy] = pins[<span class="hljs-number">0</span>];
-        <span class="hljs-keyword">let</span> [lx, ly] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localOffset</span>;
-        <span class="hljs-keyword">let</span> [sx, sy] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
+        <span class="hljs-keyword">const</span> [px, py] = pin;
+        <span class="hljs-keyword">const</span> [ox, oy] = pins[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">const</span> [lx, ly] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localOffset</span>;
+        <span class="hljs-keyword">const</span> [sx, sy] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
         <span class="hljs-keyword">let</span> dx, dy;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mapToPins</span>) {
@@ -1143,13 +1151,13 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(item, index)) {
 
-        index = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(index);
+        index = <span class="hljs-title function_">_floor</span>(index);
 
-        <span class="hljs-keyword">let</span> pins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pins</span>;
+        <span class="hljs-keyword">const</span> pins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pins</span>;
 
         <span class="hljs-keyword">if</span> (index &lt; pins.<span class="hljs-property">length</span> &amp;&amp; index &gt;= <span class="hljs-number">0</span>) {
 
-            <span class="hljs-keyword">let</span> oldPin = pins[index];
+            <span class="hljs-keyword">const</span> oldPin = pins[index];
 
             <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(oldPin) &amp;&amp; oldPin.<span class="hljs-property">pivoted</span>) <span class="hljs-title function_">removeItem</span>(oldPin.<span class="hljs-property">pivoted</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
@@ -1174,13 +1182,13 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">removePinAt</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) {
 
-    index = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(index);
+    index = <span class="hljs-title function_">_floor</span>(index);
 
-    <span class="hljs-keyword">let</span> pins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pins</span>;
+    <span class="hljs-keyword">const</span> pins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pins</span>;
 
     <span class="hljs-keyword">if</span> (index &lt; pins.<span class="hljs-property">length</span> &amp;&amp; index &gt;= <span class="hljs-number">0</span>) {
 
-        <span class="hljs-keyword">let</span> oldPin = pins[index];
+        <span class="hljs-keyword">const</span> oldPin = pins[index];
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(oldPin) &amp;&amp; oldPin.<span class="hljs-property">pivoted</span>) <span class="hljs-title function_">removeItem</span>(oldPin.<span class="hljs-property">pivoted</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
@@ -1217,7 +1225,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span>)  <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCalculatedOnce</span> = <span class="hljs-literal">false</span>;
     }
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isBeingDragged</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;mouse&#x27;</span>) &gt;= <span class="hljs-number">0</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;particle&#x27;</span>) &gt;= <span class="hljs-number">0</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isBeingDragged</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">MOUSE</span>) || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">PARTICLE</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanScale</span>();
 
@@ -1256,7 +1264,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-variable constant_">ZERO_PATH</span>;
     p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makePolylinePath</span>();
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
@@ -1277,11 +1285,8 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getPathParts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x0, y0, x1, y1, x2, y2, t</span>) {
 
-    <span class="hljs-keyword">let</span> squareroot = <span class="hljs-title class_">Math</span>.<span class="hljs-property">sqrt</span>,
-        power = <span class="hljs-title class_">Math</span>.<span class="hljs-property">pow</span>;
-
-    <span class="hljs-keyword">let</span> d01 = <span class="hljs-title function_">squareroot</span>(<span class="hljs-title function_">power</span>(x1 - x0,<span class="hljs-number">2</span>) + <span class="hljs-title function_">power</span>(y1 - y0, <span class="hljs-number">2</span>)),
-        d12 = <span class="hljs-title function_">squareroot</span>(<span class="hljs-title function_">power</span>(x2 - x1,<span class="hljs-number">2</span>) + <span class="hljs-title function_">power</span>(y2 - y1, <span class="hljs-number">2</span>)),
+    <span class="hljs-keyword">const</span> d01 = <span class="hljs-title function_">_sqrt</span>(<span class="hljs-title function_">_pow</span>(x1 - x0, <span class="hljs-number">2</span>) + <span class="hljs-title function_">_pow</span>(y1 - y0, <span class="hljs-number">2</span>)),
+        d12 = <span class="hljs-title function_">_sqrt</span>(<span class="hljs-title function_">_pow</span>(x2 - x1, <span class="hljs-number">2</span>) + <span class="hljs-title function_">_pow</span>(y2 - y1, <span class="hljs-number">2</span>)),
         fa = t * d01 / (d01 + d12),
         fb = t * d12 / (d01 + d12),
         p1x = x1 - fa * (x2 - x0),
@@ -1307,7 +1312,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">buildLine</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, coords</span>) {
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">`m0,0l`</span>;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-string">`<span class="hljs-subst">${ZERO_PATH}</span>l`</span>;
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">2</span>; i &lt; coords.<span class="hljs-property">length</span>; i += <span class="hljs-number">6</span>) {
 
@@ -1334,7 +1339,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">buildCurve</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, coords</span>) {
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">`m0,0c`</span>,
+    <span class="hljs-keyword">let</span> p = <span class="hljs-string">`<span class="hljs-subst">${ZERO_PATH}</span>c`</span>,
         counter = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; coords.<span class="hljs-property">length</span>; i += <span class="hljs-number">2</span>) {
@@ -1369,9 +1374,9 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanCoordinate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord, dim</span>) {
 
     <span class="hljs-keyword">if</span> (coord.<span class="hljs-property">toFixed</span>) <span class="hljs-keyword">return</span> coord;
-    <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">&#x27;left&#x27;</span> || coord === <span class="hljs-string">&#x27;top&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">&#x27;right&#x27;</span> || coord === <span class="hljs-string">&#x27;bottom&#x27;</span>) <span class="hljs-keyword">return</span> dim;
-    <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">&#x27;center&#x27;</span>) <span class="hljs-keyword">return</span> dim / <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">if</span> (coord == <span class="hljs-variable constant_">LEFT</span> || coord == <span class="hljs-variable constant_">TOP</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (coord == <span class="hljs-variable constant_">RIGHT</span> || coord == <span class="hljs-variable constant_">BOTTOM</span>) <span class="hljs-keyword">return</span> dim;
+    <span class="hljs-keyword">if</span> (coord == <span class="hljs-variable constant_">CENTER</span>) <span class="hljs-keyword">return</span> dim / <span class="hljs-number">2</span>;
     <span class="hljs-keyword">return</span> (<span class="hljs-built_in">parseFloat</span>(coord) / <span class="hljs-number">100</span>) * dim;
 };</pre></div></div>
             
@@ -1392,7 +1397,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPins</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> pins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pins</span>,
+    <span class="hljs-keyword">const</span> pins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pins</span>,
         current = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPins</span>;
 
     current.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
@@ -1410,7 +1415,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
             }
             <span class="hljs-keyword">else</span> temp = part;
 
-            <span class="hljs-keyword">let</span> pos = (temp &amp;&amp; temp.<span class="hljs-property">position</span>) ? temp.<span class="hljs-property">position</span> : <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">const</span> pos = (temp &amp;&amp; temp.<span class="hljs-property">position</span>) ? temp.<span class="hljs-property">position</span> : <span class="hljs-literal">false</span>;
 
             <span class="hljs-keyword">if</span> (pos) current.<span class="hljs-title function_">push</span>([pos.<span class="hljs-property">x</span>, pos.<span class="hljs-property">y</span>]);
         });
@@ -1419,10 +1424,11 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
     }
     <span class="hljs-keyword">else</span> {
 
+        <span class="hljs-keyword">const</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>(),
+            clean = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cleanCoordinate</span>;
+
         <span class="hljs-keyword">let</span> w = <span class="hljs-number">1</span>,
             h = <span class="hljs-number">1</span>,
-            host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>(),
-            clean = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cleanCoordinate</span>,
             x, y, dims;
 
         <span class="hljs-keyword">if</span> (host) {
@@ -1448,7 +1454,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
 
             <span class="hljs-keyword">if</span> (temp) {
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(temp)) {
+                <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(temp)) {
 
                     [x, y] = temp;
 
@@ -1458,7 +1464,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
 
                     <span class="hljs-keyword">let</span> name = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
-                    <span class="hljs-keyword">if</span> (temp.<span class="hljs-property">pivoted</span>.<span class="hljs-title function_">indexOf</span>(name) &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">pushUnique</span>(temp.<span class="hljs-property">pivoted</span>, name);
+                    <span class="hljs-keyword">if</span> (!temp.<span class="hljs-property">pivoted</span>.<span class="hljs-title function_">includes</span>(name)) <span class="hljs-title function_">pushUnique</span>(temp.<span class="hljs-property">pivoted</span>, name);
 
                     current.<span class="hljs-title function_">push</span>([...temp.<span class="hljs-property">currentStampPosition</span>]);
                 }
@@ -1510,7 +1516,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makePolylinePath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> getPathParts = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getPathParts</span>,
+    <span class="hljs-keyword">const</span> getPathParts = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getPathParts</span>,
         buildLine = <span class="hljs-variable language_">this</span>.<span class="hljs-property">buildLine</span>,
         buildCurve = <span class="hljs-variable language_">this</span>.<span class="hljs-property">buildCurve</span>,
         pins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pins</span>,
@@ -1552,17 +1558,19 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> cLen = cPin.<span class="hljs-property">length</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> cLen = cPin.<span class="hljs-property">length</span>,
             first = cPin[<span class="hljs-number">0</span>],
-            last = cPin[cLen - <span class="hljs-number">1</span>],
-            calc = [],
-            result = <span class="hljs-string">&#x27;m0,0&#x27;</span>;
+            last = cPin[cLen - <span class="hljs-number">1</span>];
+
+        <span class="hljs-keyword">let</span> calc = [],
+            result = <span class="hljs-variable constant_">ZERO_PATH</span>,
+            i;
 
         <span class="hljs-keyword">if</span> (closed) {
 
-            <span class="hljs-keyword">let</span> startPoint = [].<span class="hljs-title function_">concat</span>(...<span class="hljs-title function_">getPathParts</span>(...last, ...first, ...cPin[<span class="hljs-number">1</span>], tension));
+            <span class="hljs-keyword">const</span> startPoint = [].<span class="hljs-title function_">concat</span>(...<span class="hljs-title function_">getPathParts</span>(...last, ...first, ...cPin[<span class="hljs-number">1</span>], tension));
 
-            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; cLen - <span class="hljs-number">2</span>; i++) {
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; cLen - <span class="hljs-number">2</span>; i++) {
 
                 calc = calc.<span class="hljs-title function_">concat</span>(...<span class="hljs-title function_">getPathParts</span>(...cPin[i], ...cPin[i + <span class="hljs-number">1</span>], ...cPin[i + <span class="hljs-number">2</span>], tension));
             }
@@ -1579,7 +1587,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
 
             calc.<span class="hljs-title function_">push</span>(first[<span class="hljs-number">0</span>], first[<span class="hljs-number">1</span>]);
 
-            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; cLen - <span class="hljs-number">2</span>; i++) {
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; cLen - <span class="hljs-number">2</span>; i++) {
 
                 calc = calc.<span class="hljs-title function_">concat</span>(...<span class="hljs-title function_">getPathParts</span>(...cPin[i], ...cPin[i + <span class="hljs-number">1</span>], ...cPin[i + <span class="hljs-number">2</span>], tension));
             }
@@ -1590,12 +1598,12 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         }
         <span class="hljs-keyword">return</span> result;
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;m0,0&#x27;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">ZERO_PATH</span>;
 };
 
 P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>,
+    <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>,
         def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mapToPins</span>) {
@@ -1604,7 +1612,7 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
             <span class="hljs-attr">start</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPins</span>[<span class="hljs-number">0</span>],
         });
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = def.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;m0,0&#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x}</span>,<span class="hljs-subst">${-y}</span>`</span>);
+    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = def.<span class="hljs-title function_">replace</span>(<span class="hljs-variable constant_">ZERO_PATH</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x}</span>,<span class="hljs-subst">${-y}</span>`</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCalculatedOnce</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -1644,7 +1652,7 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathed</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> instance = artefact[name];
+        <span class="hljs-keyword">const</span> instance = artefact[name];
 
         <span class="hljs-keyword">if</span> (instance) instance.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
     });
@@ -1702,31 +1710,14 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePolyline = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makePolyline = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;polyline&#x27;</span>;
+    items.<span class="hljs-property">species</span> = <span class="hljs-variable constant_">POLYLINE</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Polyline</span>(items);
 };
 
 constructors.<span class="hljs-property">Polyline</span> = <span class="hljs-title class_">Polyline</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makePolyline,
-};</pre></div></div>
             
         </li>
         

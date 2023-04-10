@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -548,7 +553,10 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { makeGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/gradient.js&#x27;</span>;</pre></div></div>
+
+<span class="hljs-keyword">import</span> { makeGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/gradient.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _floor, _now, _2D, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-title class_">PC100</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -819,10 +827,10 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">installElement</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) {
 
-        <span class="hljs-keyword">const</span> element = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>);
+        <span class="hljs-keyword">const</span> element = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">CANVAS</span>);
         element.<span class="hljs-property">id</span> = name;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span> = element;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span>.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&#x27;2d&#x27;</span>, {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span>.<span class="hljs-title function_">getContext</span>(_2D, {
             <span class="hljs-attr">willReadFrequently</span>: <span class="hljs-literal">true</span>,
         });</pre></div></div>
             
@@ -839,18 +847,18 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> color = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> color = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">CANVAS</span>);
         color.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${name}</span>-color`</span>;
         color.<span class="hljs-property">width</span> = <span class="hljs-number">256</span>;
         color.<span class="hljs-property">height</span> = <span class="hljs-number">1</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorElement</span> = color;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorEngine</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorElement</span>.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&#x27;2d&#x27;</span>, {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorEngine</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorElement</span>.<span class="hljs-title function_">getContext</span>(_2D, {
             <span class="hljs-attr">willReadFrequently</span>: <span class="hljs-literal">true</span>,
         });
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">gradient</span> = <span class="hljs-title function_">makeGradient</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradient`</span>,
-            <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+            <span class="hljs-attr">endX</span>: <span class="hljs-title class_">PC100</span>,
             <span class="hljs-attr">delta</span>: {
                 <span class="hljs-attr">paletteStart</span>: <span class="hljs-number">0</span>,
                 <span class="hljs-attr">paletteEnd</span>: <span class="hljs-number">0</span>,
@@ -1005,7 +1013,7 @@
                 
                 <span class="hljs-keyword">let</span> i, v, c;
 
-                <span class="hljs-keyword">const</span> now = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
+                <span class="hljs-keyword">const</span> now = <span class="hljs-title function_">_now</span>();
 
                 <span class="hljs-keyword">if</span> (gradientLastUpdated + choke &lt; now) {
 
@@ -1015,18 +1023,18 @@
 
                 <span class="hljs-keyword">if</span> (palette.<span class="hljs-property">dirtyPalette</span>) palette.<span class="hljs-title function_">recalculate</span>();
 
-                <span class="hljs-keyword">const</span> G = colorEngine.<span class="hljs-title function_">createLinearGradient</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>);
+                <span class="hljs-keyword">const</span> lg = colorEngine.<span class="hljs-title function_">createLinearGradient</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>);
 
-                gradient.<span class="hljs-title function_">addStopsToGradient</span>(G, gradient.<span class="hljs-property">paletteStart</span>, gradient.<span class="hljs-property">paletteEnd</span>, gradient.<span class="hljs-property">cyclePalette</span>);
+                gradient.<span class="hljs-title function_">addStopsToGradient</span>(lg, gradient.<span class="hljs-property">paletteStart</span>, gradient.<span class="hljs-property">paletteEnd</span>, gradient.<span class="hljs-property">cyclePalette</span>);
 
-                colorEngine.<span class="hljs-property">fillStyle</span> = G;
+                colorEngine.<span class="hljs-property">fillStyle</span> = lg;
                 colorEngine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">256</span>, <span class="hljs-number">1</span>);
 
                 <span class="hljs-keyword">const</span> gData = colorEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">256</span>, <span class="hljs-number">1</span>).<span class="hljs-property">data</span>;
 
                 <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) {
 
-                    v = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getOutputValue</span>(i, width) * <span class="hljs-number">255</span>) * <span class="hljs-number">4</span>;
+                    v = <span class="hljs-title function_">_floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getOutputValue</span>(i, width) * <span class="hljs-number">255</span>) * <span class="hljs-number">4</span>;
                     
                     c = i * <span class="hljs-number">4</span>;
 
@@ -1038,22 +1046,7 @@
                 engine.<span class="hljs-title function_">putImageData</span>(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
             }
         }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <p>Return the prototype</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> P;
+    };
 };</pre></div></div>
             
         </li>

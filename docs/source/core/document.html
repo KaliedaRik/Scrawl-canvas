@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -548,11 +553,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { pushUnique, css, xcss } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;
-<span class="hljs-keyword">import</span> { artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { rootElements } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./document-rootElements.js&quot;</span>;
-<span class="hljs-keyword">import</span> { getPixelRatio, getIgnorePixelRatio } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./events.js&quot;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { pushUnique } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { getPixelRatio, getIgnorePixelRatio } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./events.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { _css, _keys, _xcss, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">BLOCK</span>, <span class="hljs-variable constant_">GRAYSCALE</span>, <span class="hljs-variable constant_">MOZOSX_FONT_SMOOTHING</span>, <span class="hljs-variable constant_">NEVER</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">SMOOTH_FONT</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">WEBKIT_FONT_SMOOTHING</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -736,7 +743,7 @@
                 w = dims[<span class="hljs-number">0</span>];
                 h = dims[<span class="hljs-number">1</span>];
 
-                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Canvas&#x27;</span>) {
+                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_CANVAS</span>) {
 
                     <span class="hljs-keyword">if</span> (ignoreDpr) {
 
@@ -759,7 +766,7 @@
                 <span class="hljs-keyword">else</span> {
 
                     style.<span class="hljs-property">width</span> = <span class="hljs-string">`<span class="hljs-subst">${w}</span>px`</span>;
-                    style.<span class="hljs-property">height</span> = (h) ? <span class="hljs-string">`<span class="hljs-subst">${h}</span>px`</span> : <span class="hljs-string">&#x27;auto&#x27;</span>;
+                    style.<span class="hljs-property">height</span> = (h) ? <span class="hljs-string">`<span class="hljs-subst">${h}</span>px`</span> : <span class="hljs-variable constant_">AUTO</span>;
                 }
             }</pre></div></div>
             
@@ -817,7 +824,7 @@
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">dirtyVisibility</span>) {
 
                 art.<span class="hljs-property">dirtyVisibility</span> = <span class="hljs-literal">false</span>;
-                style.<span class="hljs-property">display</span> = (art.<span class="hljs-property">visibility</span>) ? <span class="hljs-string">&#x27;block&#x27;</span> : <span class="hljs-string">&#x27;none&#x27;</span>;
+                style.<span class="hljs-property">display</span> = (art.<span class="hljs-property">visibility</span>) ? <span class="hljs-variable constant_">BLOCK</span> : <span class="hljs-variable constant_">NONE</span>;
             }</pre></div></div>
             
         </li>
@@ -838,14 +845,14 @@
                 art.<span class="hljs-property">dirtySmoothFont</span> = <span class="hljs-literal">false</span>;
 
                 <span class="hljs-keyword">if</span> (art.<span class="hljs-property">smoothFont</span>) {
-                    style[<span class="hljs-string">&#x27;webkitFontSmoothing&#x27;</span>] = <span class="hljs-string">&#x27;auto&#x27;</span>;
-                    style[<span class="hljs-string">&#x27;mozOsxFontSmoothing&#x27;</span>] = <span class="hljs-string">&#x27;auto&#x27;</span>;
-                    style[<span class="hljs-string">&#x27;smoothFont&#x27;</span>] = <span class="hljs-string">&#x27;auto&#x27;</span>;
+                    style[<span class="hljs-variable constant_">WEBKIT_FONT_SMOOTHING</span>] = <span class="hljs-variable constant_">AUTO</span>;
+                    style[<span class="hljs-variable constant_">MOZOSX_FONT_SMOOTHING</span>] = <span class="hljs-variable constant_">AUTO</span>;
+                    style[<span class="hljs-variable constant_">SMOOTH_FONT</span>] = <span class="hljs-variable constant_">AUTO</span>;
                 }
                 <span class="hljs-keyword">else</span> {
-                    style[<span class="hljs-string">&#x27;webkitFontSmoothing&#x27;</span>] = <span class="hljs-string">&#x27;none&#x27;</span>;
-                    style[<span class="hljs-string">&#x27;mozOsxFontSmoothing&#x27;</span>] = <span class="hljs-string">&#x27;grayscale&#x27;</span>;
-                    style[<span class="hljs-string">&#x27;smoothFont&#x27;</span>] = <span class="hljs-string">&#x27;never&#x27;</span>;
+                    style[<span class="hljs-variable constant_">WEBKIT_FONT_SMOOTHING</span>] = <span class="hljs-variable constant_">NONE</span>;
+                    style[<span class="hljs-variable constant_">MOZOSX_FONT_SMOOTHING</span>] = <span class="hljs-variable constant_">GRAYSCALE</span>;
+                    style[<span class="hljs-variable constant_">SMOOTH_FONT</span>] = <span class="hljs-variable constant_">NEVER</span>;
                 }
             }</pre></div></div>
             
@@ -867,14 +874,14 @@
                 art.<span class="hljs-property">dirtyCss</span> = <span class="hljs-literal">false</span>;
 
                 items = art.<span class="hljs-property">css</span> || {};
-                keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(items);
+                keys = <span class="hljs-title function_">_keys</span>(items);
 
                 <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = keys.<span class="hljs-property">length</span>; j &lt; jz; j++) {
 
                     key = keys[j];
                     value = items[key];
 
-                    <span class="hljs-keyword">if</span> (xcss.<span class="hljs-title function_">has</span>(key)) {
+                    <span class="hljs-keyword">if</span> (_xcss.<span class="hljs-title function_">has</span>(key)) {
 
                         keyName = <span class="hljs-string">`<span class="hljs-subst">${key[<span class="hljs-number">0</span>].toUpperCase}</span><span class="hljs-subst">${key.substr(<span class="hljs-number">1</span>)}</span>`</span>;
 
@@ -884,7 +891,7 @@
                         style[<span class="hljs-string">`o<span class="hljs-subst">${keyName}</span>`</span>] = value;
                         style[key] = value;
                     }
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (css.<span class="hljs-title function_">has</span>(key)) style[key] = value;
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (_css.<span class="hljs-title function_">has</span>(key)) style[key] = value;
                 }
             }</pre></div></div>
             

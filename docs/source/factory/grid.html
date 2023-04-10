@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -578,12 +583,15 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_number, isa_obj, λ<span class="hljs-literal">null</span>, xt, xta, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell-fragment.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell-fragment.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _isArray, _isInteger, _parse, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">CELL_GRADIENT</span>, <span class="hljs-variable constant_">COLOR</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GRAY</span>, <span class="hljs-variable constant_">GRID_GRADIENT</span>, <span class="hljs-variable constant_">GRID_PICTURE</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">T_GRID</span>, <span class="hljs-variable constant_">TILE_PICTURE</span>, <span class="hljs-variable constant_">WHITE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -609,13 +617,13 @@
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileSources</span> = [].<span class="hljs-title function_">concat</span>([{
 
-            <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;color&#x27;</span>,
-            <span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>,
+            <span class="hljs-attr">type</span>: <span class="hljs-variable constant_">COLOR</span>,
+            <span class="hljs-attr">source</span>: <span class="hljs-variable constant_">BLACK</span>,
         },
         {
 
-            <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;color&#x27;</span>,
-            <span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;#ffffff&#x27;</span>,
+            <span class="hljs-attr">type</span>: <span class="hljs-variable constant_">COLOR</span>,
+            <span class="hljs-attr">source</span>: <span class="hljs-variable constant_">WHITE</span>,
         }]);
     }
 
@@ -624,7 +632,7 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>.<span class="hljs-property">length</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">columns</span> * <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>.<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>);
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(items.<span class="hljs-property">tileFill</span>) &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>.<span class="hljs-property">length</span> === items.<span class="hljs-property">tileFill</span>.<span class="hljs-property">length</span>) {
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(items.<span class="hljs-property">tileFill</span>) &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>.<span class="hljs-property">length</span> === items.<span class="hljs-property">tileFill</span>.<span class="hljs-property">length</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span> = items.<span class="hljs-property">tileFill</span>;
     }
@@ -655,9 +663,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Grid</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Grid&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Grid</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_GRID</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">ENTITY</span>;
 P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
 P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -678,8 +686,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
-P = <span class="hljs-title function_">entityMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);
+<span class="hljs-title function_">entityMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -705,7 +713,7 @@ P = <span class="hljs-title function_">entityMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -796,7 +804,7 @@ P = <span class="hljs-title function_">entityMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">gutterColor</span>: <span class="hljs-string">&#x27;#808080&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">gutterColor</span>: <span class="hljs-variable constant_">GRAY</span>,
 };
 P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
@@ -817,7 +825,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
 P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
 
-    <span class="hljs-keyword">let</span> cSources = copy.<span class="hljs-property">tileSources</span> = [],
+    <span class="hljs-keyword">const</span> cSources = copy.<span class="hljs-property">tileSources</span> = [],
         tSources = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileSources</span>;
 
     tSources.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
@@ -830,7 +838,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(copy.<span class="hljs-property">gutterColor</span>)) copy.<span class="hljs-property">gutterColor</span> = copy.<span class="hljs-property">gutterColor</span>.<span class="hljs-property">name</span>;
 
-    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
+    <span class="hljs-keyword">const</span> stateCopy = <span class="hljs-title function_">_parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
     copy = <span class="hljs-title function_">mergeOver</span>(copy, stateCopy);
 
     copy = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handlePacketAnchor</span>(copy, items);
@@ -879,7 +887,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
     S = P.<span class="hljs-property">setters</span>,
     D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
@@ -900,7 +908,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(item)) {
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Number</span>.<span class="hljs-title function_">isInteger</span>(item)) item = <span class="hljs-built_in">parseInt</span>(item, <span class="hljs-number">10</span>);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isInteger</span>(item)) item = <span class="hljs-built_in">parseInt</span>(item, <span class="hljs-number">10</span>);
 
         <span class="hljs-keyword">if</span> (item !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">columns</span>) {
 
@@ -944,7 +952,7 @@ D.<span class="hljs-property">columns</span> = λ<span class="hljs-literal">null
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(item)) {
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Number</span>.<span class="hljs-title function_">isInteger</span>(item)) item = <span class="hljs-built_in">parseInt</span>(item, <span class="hljs-number">10</span>);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isInteger</span>(item)) item = <span class="hljs-built_in">parseInt</span>(item, <span class="hljs-number">10</span>);
 
         <span class="hljs-keyword">if</span> (item !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span>) {
 
@@ -995,7 +1003,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(val)) {
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Number</span>.<span class="hljs-title function_">isInteger</span>(val)) val = <span class="hljs-built_in">parseInt</span>(val, <span class="hljs-number">10</span>);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isInteger</span>(val)) val = <span class="hljs-built_in">parseInt</span>(val, <span class="hljs-number">10</span>);
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>.<span class="hljs-title function_">fill</span>(val);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
@@ -1023,7 +1031,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
     <span class="hljs-keyword">const</span> { columns, rows } = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item) &amp;&amp; item.<span class="hljs-property">length</span> === columns * rows) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item) &amp;&amp; item.<span class="hljs-property">length</span> === columns * rows) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span> = item;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
@@ -1050,14 +1058,14 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setTilesTo</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">tiles, val</span>) {
 
-    <span class="hljs-keyword">let</span> tileFill = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>;
+    <span class="hljs-keyword">const</span> tileFill = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(tiles) &amp;&amp; <span class="hljs-title function_">isa_number</span>(val)) {
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Number</span>.<span class="hljs-title function_">isInteger</span>(val)) val = <span class="hljs-built_in">parseInt</span>(val, <span class="hljs-number">10</span>);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isInteger</span>(val)) val = <span class="hljs-built_in">parseInt</span>(val, <span class="hljs-number">10</span>);
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(tiles)) tileFill[tiles] = val;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(tiles)) {
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(tiles)) {
 
             tiles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">tile</span> =&gt;</span> {
 
@@ -1164,7 +1172,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getTilesUsingSource</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">key</span>) {
 
-    <span class="hljs-keyword">let</span> res = [];
+    <span class="hljs-keyword">const</span> res = [];
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(key)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">val, index</span>) =&gt;</span> val == key &amp;&amp; res.<span class="hljs-title function_">push</span>(index));
 
@@ -1190,36 +1198,37 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noPathUpdates</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>) {
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D(),
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D(),
             rowLines = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D(),
             colLines = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
         
-        <span class="hljs-keyword">let</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
+        <span class="hljs-keyword">const</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
             scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>,
             dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
 
-        <span class="hljs-keyword">let</span> x = -handle[<span class="hljs-number">0</span>] * scale,
+        <span class="hljs-keyword">const</span> x = -handle[<span class="hljs-number">0</span>] * scale,
             y = -handle[<span class="hljs-number">1</span>] * scale,
             w = dims[<span class="hljs-number">0</span>] * scale,
             h = dims[<span class="hljs-number">1</span>] * scale;
 
         p.<span class="hljs-title function_">rect</span>(x, y, w, h);
 
-        <span class="hljs-keyword">let</span> cols = <span class="hljs-variable language_">this</span>.<span class="hljs-property">columns</span>,
+        <span class="hljs-keyword">const</span> cols = <span class="hljs-variable language_">this</span>.<span class="hljs-property">columns</span>,
             rows = <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span>,
             colWidth = w / cols,
             rowHeight = h / rows,
             paths = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tilePaths</span>,
             real = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileRealCoordinates</span>,
-            virtual = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileVirtualCoordinates</span>,
-            i, j, cx, cy;
+            virtual = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileVirtualCoordinates</span>;
+        
+        <span class="hljs-keyword">let</span> i, j, cx, cy;
 
         rowLines.<span class="hljs-title function_">moveTo</span>(x, y);
         rowLines.<span class="hljs-title function_">lineTo</span>(x + w, y);
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">1</span>; i &lt;= rows; i++) {
 
-            <span class="hljs-keyword">let</span> ry = y + (i * rowHeight);
+            <span class="hljs-keyword">const</span> ry = y + (i * rowHeight);
 
             rowLines.<span class="hljs-title function_">moveTo</span>(x, ry);
             rowLines.<span class="hljs-title function_">lineTo</span>(x + w, ry);
@@ -1231,7 +1240,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
         <span class="hljs-keyword">for</span> (j = <span class="hljs-number">1</span>; j &lt;= cols; j++) {
 
-            <span class="hljs-keyword">let</span> cx = x + (j * colWidth);
+            cx = x + (j * colWidth);
 
             colLines.<span class="hljs-title function_">moveTo</span>(cx, y);
             colLines.<span class="hljs-title function_">lineTo</span>(cx, y + h);
@@ -1246,7 +1255,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
             <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; cols; j++) {
 
-                <span class="hljs-keyword">let</span> path = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
+                <span class="hljs-keyword">const</span> path = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
 
                 cx = j * colWidth;
                 cy = i * rowHeight;
@@ -1310,11 +1319,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
             
             <div class="content"><div class='highlight'><pre>    engine.<span class="hljs-title function_">save</span>();
 
-    <span class="hljs-keyword">let</span> composer = <span class="hljs-title function_">requestCell</span>(),
+    <span class="hljs-keyword">const</span> composer = <span class="hljs-title function_">requestCell</span>(),
         compEngine = composer.<span class="hljs-property">engine</span>,
         compCanvas = composer.<span class="hljs-property">element</span>;
 
-    <span class="hljs-keyword">let</span> tileSources = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileSources</span>,
+    <span class="hljs-keyword">const</span> tileSources = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileSources</span>,
         tileFill = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>,
         tilePaths = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tilePaths</span>,
         tileRealCoords = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileRealCoordinates</span>,
@@ -1324,7 +1333,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         tileHeight = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTileHeight</span>,
         scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">scale</span>;
 
-    <span class="hljs-keyword">let</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
+    <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
 
     <span class="hljs-keyword">let</span> currentPicture;</pre></div></div>
             
@@ -1360,18 +1369,18 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
             <span class="hljs-keyword">switch</span> (obj.<span class="hljs-property">type</span>) {
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;color&#x27;</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">COLOR</span> :
 
                     engine.<span class="hljs-property">fillStyle</span> = obj.<span class="hljs-property">source</span>;
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;cellGradient&#x27;</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">CELL_GRADIENT</span> :
 
                     <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = <span class="hljs-literal">false</span>;
                     engine.<span class="hljs-property">fillStyle</span> = obj.<span class="hljs-property">source</span>.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>);
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;gridGradient&#x27;</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">GRID_GRADIENT</span> :
 
                     <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = <span class="hljs-literal">true</span>;
                     engine.<span class="hljs-property">fillStyle</span> = obj.<span class="hljs-property">source</span>.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>);
@@ -1411,7 +1420,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;gridPicture&#x27;</span> :
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">GRID_PICTURE</span> :
 
                     currentPicture = (obj.<span class="hljs-property">source</span>.<span class="hljs-property">substring</span>) ? entity[obj.<span class="hljs-property">source</span>] : obj.<span class="hljs-property">source</span>;
 
@@ -1419,29 +1428,29 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
                         compCanvas.<span class="hljs-property">width</span> = dims[<span class="hljs-number">0</span>] * scale;
                         compCanvas.<span class="hljs-property">height</span> = dims[<span class="hljs-number">1</span>] * scale;
-                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-over&#x27;</span>;
-                        compEngine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;#000000&#x27;</span>;
+                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+                        compEngine.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
 
                         validTiles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">tile, pos</span>) =&gt;</span> {
 
                             <span class="hljs-keyword">if</span> (tile) compEngine.<span class="hljs-title function_">fillRect</span>(tileVirtualCoords[pos][<span class="hljs-number">0</span>], tileVirtualCoords[pos][<span class="hljs-number">1</span>], tileWidth, tileHeight);
                         });
 
-                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-in&#x27;</span>;
+                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_IN</span>;
 
                         currentPicture.<span class="hljs-title function_">simpleStamp</span>(composer, {
                             <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
                             <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
                             <span class="hljs-attr">width</span>: dims[<span class="hljs-number">0</span>] * scale,
                             <span class="hljs-attr">height</span>: dims[<span class="hljs-number">1</span>] * scale,
-                            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>
+                            <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">FILL</span>,
                         });
 
                         engine.<span class="hljs-title function_">drawImage</span>(compCanvas, tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;tilePicture&#x27;</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">TILE_PICTURE</span> :
 
                     currentPicture = (obj.<span class="hljs-property">source</span>.<span class="hljs-property">substring</span>) ? entity[obj.<span class="hljs-property">source</span>] : obj.<span class="hljs-property">source</span>;
 
@@ -1449,14 +1458,14 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
                         compCanvas.<span class="hljs-property">width</span> = tileWidth;
                         compCanvas.<span class="hljs-property">height</span> = tileHeight;
-                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
 
                         currentPicture.<span class="hljs-title function_">simpleStamp</span>(composer, {
                             <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
                             <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
                             <span class="hljs-attr">width</span>: tileWidth,
                             <span class="hljs-attr">height</span>: tileHeight,
-                            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>
+                            <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">FILL</span>,
                         });
 
                         validTiles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">tile, pos</span>) =&gt;</span> tile &amp;&amp; engine.<span class="hljs-title function_">drawImage</span>(compCanvas, tileRealCoords[pos][<span class="hljs-number">0</span>], tileRealCoords[pos][<span class="hljs-number">1</span>]));
@@ -1493,7 +1502,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (gColor.<span class="hljs-property">substring</span>) {
 
             gObject = {
-                <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;color&#x27;</span>,
+                <span class="hljs-attr">type</span>: <span class="hljs-variable constant_">COLOR</span>,
                 <span class="hljs-attr">source</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">gutterColor</span>
             };
         }
@@ -1515,19 +1524,19 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">switch</span> (gObject.<span class="hljs-property">type</span>) {
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;cellGradient&#x27;</span> :
+            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">CELL_GRADIENT</span> :
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = <span class="hljs-literal">false</span>;
                 engine.<span class="hljs-property">strokeStyle</span> = gObject.<span class="hljs-property">source</span>.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>);
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;gridGradient&#x27;</span> :
+            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">GRID_GRADIENT</span> :
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = <span class="hljs-literal">true</span>;
                 engine.<span class="hljs-property">strokeStyle</span> = gObject.<span class="hljs-property">source</span>.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>);
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;color&#x27;</span> :
+            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">COLOR</span> :
 
                 engine.<span class="hljs-property">strokeStyle</span> = gObject.<span class="hljs-property">source</span>;
                 <span class="hljs-keyword">break</span>;
@@ -1551,8 +1560,8 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;gridPicture&#x27;</span> :
-            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;tilePicture&#x27;</span> :
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">GRID_PICTURE</span> :
+            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">TILE_PICTURE</span> :
 
                 <span class="hljs-keyword">if</span>(gRow || gCol) {
 
@@ -1567,8 +1576,8 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
                             
                         compCanvas.<span class="hljs-property">width</span> = dims[<span class="hljs-number">0</span>] * scale;
                         compCanvas.<span class="hljs-property">height</span> = dims[<span class="hljs-number">1</span>] * scale;
-                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-over&#x27;</span>;
-                        compEngine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">&#x27;#000000&#x27;</span>;
+                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+                        compEngine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
                         compEngine.<span class="hljs-title function_">translate</span>(x, y);
 
                         <span class="hljs-keyword">if</span> (gRow) {
@@ -1583,14 +1592,14 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
                             compEngine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">columnLines</span>);
                         }
 
-                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-in&#x27;</span>;
+                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_IN</span>;
 
                         currentPicture.<span class="hljs-title function_">simpleStamp</span>(composer, {
                             <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
                             <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
                             <span class="hljs-attr">width</span>: dims[<span class="hljs-number">0</span>] * scale,
                             <span class="hljs-attr">height</span>: dims[<span class="hljs-number">1</span>] * scale,
-                            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>
+                            <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">FILL</span>,
                         });
 
                         engine.<span class="hljs-title function_">drawImage</span>(compCanvas, tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
@@ -1666,7 +1675,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawAndFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+    <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
 
     engine.<span class="hljs-title function_">stroke</span>(p);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
@@ -1688,7 +1697,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fillAndDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+    <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
 
     engine.<span class="hljs-title function_">stroke</span>(p);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
@@ -1711,7 +1720,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawThenFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+    <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
 
     engine.<span class="hljs-title function_">stroke</span>(p);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">performFill</span>(engine);
@@ -1732,7 +1741,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fillThenDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+    <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">performFill</span>(engine);
     engine.<span class="hljs-title function_">stroke</span>(p);
@@ -1763,8 +1772,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-P.<span class="hljs-property">checkHit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = [], mycell</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkHit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = [], mycell</span>) {
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">noUserInteraction</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
@@ -1773,8 +1781,9 @@ P.<span class="hljs-property">checkHit</span> = <span class="hljs-keyword">funct
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanPathObject</span>();
     }
 
-    <span class="hljs-keyword">let</span> tests = (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(items)) ?  [items] : items,
-        poolCellFlag = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">const</span> tests = (!<span class="hljs-title function_">_isArray</span>(items)) ?  [items] : items;
+
+    <span class="hljs-keyword">let</span> poolCellFlag = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">if</span> (!mycell) {
 
@@ -1782,19 +1791,20 @@ P.<span class="hljs-property">checkHit</span> = <span class="hljs-keyword">funct
         poolCellFlag = <span class="hljs-literal">true</span>;
     }
 
-    <span class="hljs-keyword">let</span> engine = mycell.<span class="hljs-property">engine</span>,
+    <span class="hljs-keyword">const</span> engine = mycell.<span class="hljs-property">engine</span>,
         stamp = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>,
         x = stamp[<span class="hljs-number">0</span>],
         y = stamp[<span class="hljs-number">1</span>],
-        isGood, tx, ty,
         tiles = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>(),
         tilePaths = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tilePaths</span>;
+
+    <span class="hljs-keyword">let</span> isGood, tx, ty;
 
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">getCoords</span> = (<span class="hljs-params">coords</span>) =&gt; {
 
         <span class="hljs-keyword">let</span> x, y;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(coords)) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(coords)) {
 
             x = coords[<span class="hljs-number">0</span>];
             y = coords[<span class="hljs-number">1</span>];
@@ -1895,30 +1905,13 @@ P.<span class="hljs-property">checkHit</span> = <span class="hljs-keyword">funct
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeGrid = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeGrid = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Grid</span>(items);
 };
 
 constructors.<span class="hljs-property">Grid</span> = <span class="hljs-title class_">Grid</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-46">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeGrid,
-};</pre></div></div>
             
         </li>
         

@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -530,24 +535,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="observe-and-update">Observe and update</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/library.js&quot;</span>;
-<span class="hljs-keyword">import</span> { xt, xta, isa_fn, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/utilities.js&quot;</span>;
-<span class="hljs-keyword">import</span> { addListener, addNativeListener, removeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-2">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-2">&#x00a7;</a>
-              </div>
-              <p>Okay, so I got very bored of writing boilerplate to react to various form elements user interactions across the demos. So I wrote some functions to setup (and take down) batches of DOM event listeners to make my life easier. These are:</p>
+<p>Okay, so I got very bored of writing boilerplate to react to various form elements user interactions across the demos. So I wrote some functions to setup (and take down) batches of DOM event listeners to make my life easier. These are:</p>
 <ul>
 <li>scrawl.addNativeListener()</li>
 <li>scrawl.removeNativeListener()</li>
@@ -566,11 +554,11 @@
         </li>
         
         
-        <li id="section-3">
+        <li id="section-2">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (to modules and the scrawl object). Capture changes in a form and apply them to a target Scrawl-canvas artefact, asset, style, group, etc object</p>
 <p><strong>observeAndUpdate - example</strong></p>
@@ -617,14 +605,24 @@
 
             </div>
             
+            <div class="content"><div class='highlight'><pre>
+
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/library.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { isa_fn, xt, xta, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/utilities.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { addListener, addNativeListener, removeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { _ceil, _floor, _round, <span class="hljs-variable constant_">FALSE</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">TRUE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+            
         </li>
         
         
-        <li id="section-4">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <p><strong>observeAndUpdate</strong> - exported function</p>
 
@@ -687,11 +685,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Supplied value converted to float Number</p>
 
@@ -704,11 +702,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Supplied value converted to integer Number</p>
 
@@ -721,18 +719,35 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Supplied value rounded up or down to nearest integer Number</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;round&#x27;</span> :
-                        val = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(targetVal);
+                        val = <span class="hljs-title function_">_round</span>(targetVal);
+                        <span class="hljs-keyword">break</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Supplied value rounded down to nearest integer Number</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;roundDown&#x27;</span> :
+                        val = <span class="hljs-title function_">_floor</span>(targetVal);
                         <span class="hljs-keyword">break</span>;</pre></div></div>
             
         </li>
@@ -744,12 +759,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Supplied value rounded down to nearest integer Number</p>
+              <p>Supplied value rounded up to nearest integer Number</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;roundDown&#x27;</span> :
-                        val = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(targetVal);
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;roundUp&#x27;</span> :
+                        val = <span class="hljs-title function_">_ceil</span>(targetVal);
                         <span class="hljs-keyword">break</span>;</pre></div></div>
             
         </li>
@@ -760,23 +775,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>Supplied value rounded up to nearest integer Number</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;roundUp&#x27;</span> :
-                        val = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(targetVal);
-                        <span class="hljs-keyword">break</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Supplied value not modified in any way</p>
 
@@ -789,11 +787,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Supplied value converted to String</p>
 
@@ -806,11 +804,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Supplied value converted to Boolean</p>
 
@@ -821,8 +819,8 @@
 
                             <span class="hljs-keyword">if</span> (targetVal.<span class="hljs-property">substring</span>) {
 
-                                <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;true&#x27;</span> === targetVal.<span class="hljs-title function_">toLowerCase</span>()) val = <span class="hljs-literal">true</span>;
-                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;false&#x27;</span> === targetVal.<span class="hljs-title function_">toLowerCase</span>()) val = <span class="hljs-literal">false</span>;
+                                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">TRUE</span> == targetVal.<span class="hljs-title function_">toLowerCase</span>()) val = <span class="hljs-literal">true</span>;
+                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">FALSE</span> == targetVal.<span class="hljs-title function_">toLowerCase</span>()) val = <span class="hljs-literal">false</span>;
                                 <span class="hljs-keyword">else</span> val = (<span class="hljs-built_in">parseFloat</span>(targetVal)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
                             }
                             <span class="hljs-keyword">else</span> val = (targetVal) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
@@ -833,11 +831,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Supplied value converted to float number, then action value (eg: ‘%’) added to result to output a String</p>
 
@@ -851,11 +849,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Update - we can apply updates to a Group of artefacts, or to a single artefact</p>
 
@@ -863,7 +861,7 @@
             
             <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (actionFlag) {
 
-                    <span class="hljs-keyword">if</span> (target.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Group&#x27;</span>) {
+                    <span class="hljs-keyword">if</span> (target.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_GROUP</span>) {
 
                         target.<span class="hljs-title function_">setArtefacts</span>({
                             [actionAttribute]: val
@@ -879,11 +877,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Invoke any supplied callback function</p>
 

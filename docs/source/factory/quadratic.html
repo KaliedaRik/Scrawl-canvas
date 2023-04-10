@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -607,14 +612,17 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, addStrings, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { addStrings, doCreate, mergeOver, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;
-<span class="hljs-keyword">import</span> curveMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeCurve.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> curveMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeCurve.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">CONTROL</span>, <span class="hljs-variable constant_">CONTROL_PARTICLE</span>, <span class="hljs-variable constant_">CONTROL_PATH</span>, <span class="hljs-variable constant_">CONTROL_PIVOT</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">PATH</span>, <span class="hljs-variable constant_">QUADRATIC</span>, <span class="hljs-variable constant_">T_QUADRATIC</span>, <span class="hljs-variable constant_">ZERO_PATH</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -656,9 +664,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Quadratic</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Quadratic&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Quadratic</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_QUADRATIC</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">ENTITY</span>;
 P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
 P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -680,9 +688,9 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
-P = <span class="hljs-title function_">shapeMix</span>(P);
-P = <span class="hljs-title function_">curveMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);
+<span class="hljs-title function_">shapeMix</span>(P);
+<span class="hljs-title function_">curveMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -710,7 +718,7 @@ P = <span class="hljs-title function_">curveMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -746,8 +754,8 @@ P = <span class="hljs-title function_">curveMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">controlPivot</span>: <span class="hljs-string">&#x27;&#x27;</span>,
-    <span class="hljs-attr">controlPivotCorner</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">controlPivot</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
+    <span class="hljs-attr">controlPivotCorner</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
     <span class="hljs-attr">addControlPivotHandle</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">addControlPivotOffset</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
@@ -767,7 +775,7 @@ P = <span class="hljs-title function_">curveMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">controlPath</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">controlPath</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
     <span class="hljs-attr">controlPathPosition</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">addControlPathHandle</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">addControlPathOffset</span>: <span class="hljs-literal">true</span>,</pre></div></div>
@@ -785,7 +793,7 @@ P = <span class="hljs-title function_">curveMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">controlParticle</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">controlParticle</span>: <span class="hljs-variable constant_">ZERO_STR</span>,</pre></div></div>
             
         </li>
         
@@ -805,7 +813,7 @@ P = <span class="hljs-title function_">curveMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">controlLockTo</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">controlLockTo</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
 };
 P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
@@ -869,7 +877,7 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
     S = P.<span class="hljs-property">setters</span>,
     D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
@@ -888,7 +896,7 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
             
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">controlPivot</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setControlHelper</span>(item, <span class="hljs-string">&#x27;controlPivot&#x27;</span>, <span class="hljs-string">&#x27;control&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setControlHelper</span>(item, <span class="hljs-variable constant_">CONTROL_PIVOT</span>, <span class="hljs-variable constant_">CONTROL</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
@@ -908,7 +916,7 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
             
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">controlParticle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setControlHelper</span>(item, <span class="hljs-string">&#x27;controlParticle&#x27;</span>, <span class="hljs-string">&#x27;control&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setControlHelper</span>(item, <span class="hljs-variable constant_">CONTROL_PARTICLE</span>, <span class="hljs-variable constant_">CONTROL</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
@@ -928,7 +936,7 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
             
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">controlPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setControlHelper</span>(item, <span class="hljs-string">&#x27;controlPath&#x27;</span>, <span class="hljs-string">&#x27;control&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setControlHelper</span>(item, <span class="hljs-variable constant_">CONTROL_PATH</span>, <span class="hljs-variable constant_">CONTROL</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentControlPathData</span> = <span class="hljs-literal">false</span>;
@@ -1013,14 +1021,14 @@ S.<span class="hljs-property">controlY</span> = <span class="hljs-keyword">funct
 };
 S.<span class="hljs-property">control</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setCoordinateHelper</span>(<span class="hljs-string">&#x27;control&#x27;</span>, x, y);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setCoordinateHelper</span>(<span class="hljs-variable constant_">CONTROL</span>, x, y);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentControlPathData</span> = <span class="hljs-literal">false</span>;
 };
 D.<span class="hljs-property">controlX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">control</span>;
+    <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">control</span>;
     c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], coord);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
@@ -1028,7 +1036,7 @@ D.<span class="hljs-property">controlX</span> = <span class="hljs-keyword">funct
 };
 D.<span class="hljs-property">controlY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">control</span>;
+    <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">control</span>;
     c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], coord);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
@@ -1036,7 +1044,7 @@ D.<span class="hljs-property">controlY</span> = <span class="hljs-keyword">funct
 };
 D.<span class="hljs-property">control</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDeltaCoordinateHelper</span>(<span class="hljs-string">&#x27;control&#x27;</span>, x, y);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDeltaCoordinateHelper</span>(<span class="hljs-variable constant_">CONTROL</span>, x, y);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentControlPathData</span> = <span class="hljs-literal">false</span>;
@@ -1093,7 +1101,7 @@ D.<span class="hljs-property">control</span> = <span class="hljs-keyword">functi
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-variable constant_">ZERO_PATH</span>;
 
     p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeQuadraticPath</span>();
     
@@ -1124,7 +1132,7 @@ D.<span class="hljs-property">control</span> = <span class="hljs-keyword">functi
         ex = (endX - startX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>),
         ey = (endY - startY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`m0,0q<span class="hljs-subst">${cx}</span>,<span class="hljs-subst">${cy}</span> <span class="hljs-subst">${ex}</span>,<span class="hljs-subst">${ey}</span>`</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${ZERO_PATH}</span>q<span class="hljs-subst">${cx}</span>,<span class="hljs-subst">${cy}</span> <span class="hljs-subst">${ex}</span>,<span class="hljs-subst">${ey}</span>`</span>;
 };</pre></div></div>
             
         </li>
@@ -1171,13 +1179,13 @@ P.<span class="hljs-property">preparePinsForStamp</span> = <span class="hljs-key
         <span class="hljs-keyword">if</span> ((cPivot &amp;&amp; cPivot.<span class="hljs-property">name</span> === name) || (cPath &amp;&amp; cPath.<span class="hljs-property">name</span> == name)) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">controlLockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentControlPathData</span> = <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">controlLockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">PATH</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentControlPathData</span> = <span class="hljs-literal">false</span>;
         }
 
         <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.<span class="hljs-property">name</span> === name) || (ePath &amp;&amp; ePath.<span class="hljs-property">name</span> == name)) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">endLockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndPathData</span> = <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">endLockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">PATH</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndPathData</span> = <span class="hljs-literal">false</span>;
         }
     };
     dirtyPins.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
@@ -1240,31 +1248,14 @@ P.<span class="hljs-property">preparePinsForStamp</span> = <span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeQuadratic = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeQuadratic = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;quadratic&#x27;</span>;
+    items.<span class="hljs-property">species</span> = <span class="hljs-variable constant_">QUADRATIC</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Quadratic</span>(items);
 };
 
 constructors.<span class="hljs-property">Quadratic</span> = <span class="hljs-title class_">Quadratic</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeQuadratic,
-};</pre></div></div>
             
         </li>
         

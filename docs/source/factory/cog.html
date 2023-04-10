@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -608,12 +613,14 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { requestVector, releaseVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { releaseVector, requestVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">BEZIER</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">LINE</span>, <span class="hljs-variable constant_">PERMITTED_CURVES</span>, <span class="hljs-variable constant_">QUADRATIC</span>, <span class="hljs-variable constant_">T_COG</span>, <span class="hljs-variable constant_">ZERO_PATH</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -647,9 +654,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Cog</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Cog&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Cog</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_COG</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">ENTITY</span>;
 P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
 P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -670,8 +677,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
-P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);
+<span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -698,7 +705,7 @@ P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {
 
     <span class="hljs-attr">outerRadius</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">0</span>,
@@ -708,7 +715,7 @@ P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
     <span class="hljs-attr">innerControlsOffset</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">points</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">twist</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">curve</span>: <span class="hljs-string">&#x27;bezier&#x27;</span>,
+    <span class="hljs-attr">curve</span>: <span class="hljs-variable constant_">BEZIER</span>,
 };
 P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
@@ -767,7 +774,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>,
     D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
@@ -935,16 +942,10 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">curve</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item &amp;&amp; [<span class="hljs-string">&#x27;line&#x27;</span>, <span class="hljs-string">&#x27;quadratic&#x27;</span>, <span class="hljs-string">&#x27;bezier&#x27;</span>].<span class="hljs-title function_">indexOf</span>(item) &gt;= <span class="hljs-number">0</span>) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">curve</span> = item;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
-    }
-    <span class="hljs-keyword">else</span> {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">curve</span> = <span class="hljs-string">&#x27;bezier&#x27;</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
-    }
+    <span class="hljs-keyword">if</span> (item &amp;&amp; <span class="hljs-variable constant_">PERMITTED_CURVES</span>.<span class="hljs-title function_">includes</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">curve</span> = item;
+    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">curve</span> = <span class="hljs-variable constant_">BEZIER</span>;
+    
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
         </li>
@@ -977,7 +978,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-variable constant_">ZERO_PATH</span>;
     p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeCogPath</span>();
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
@@ -998,18 +999,19 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeCogPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> {points, twist, outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset, curve} = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">const</span> {points, twist, outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset, curve} = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">let</span> turn = <span class="hljs-number">360</span> / points,
-        xPts = [],
-        currentTrailX, currentTrailY, currentPointX, currentPointY, currentLeadX, currentLeadY, 
+    <span class="hljs-keyword">const</span> turn = <span class="hljs-number">360</span> / points,
+        xPts = [];
+
+    <span class="hljs-keyword">let</span> currentTrailX, currentTrailY, currentPointX, currentPointY, currentLeadX, currentLeadY, 
         controlStartX, controlStartY, deltaX, deltaY, controlEndX, controlEndY,
         myMin, myXoffset, myYoffset, i,
         myPath = <span class="hljs-string">&#x27;&#x27;</span>;
 
     <span class="hljs-keyword">if</span> (outerRadius.<span class="hljs-property">substring</span> || innerRadius.<span class="hljs-property">substring</span> || outerControlsDistance.<span class="hljs-property">substring</span> || innerControlsDistance.<span class="hljs-property">substring</span> || outerControlsOffset.<span class="hljs-property">substring</span> || innerControlsOffset.<span class="hljs-property">substring</span>) {
 
-        <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>();
+        <span class="hljs-keyword">const</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>();
 
         <span class="hljs-keyword">if</span> (host) {
 
@@ -1024,7 +1026,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
         } 
     }
 
-    <span class="hljs-keyword">let</span> outerPoint = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -outerRadius}),
+    <span class="hljs-keyword">const</span> outerPoint = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -outerRadius}),
         innerPoint = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -innerRadius}),
         outerPointLead = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: outerControlsDistance + outerControlsOffset, <span class="hljs-attr">y</span>: -outerRadius}),
         innerPointTrail = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: -innerControlsDistance + innerControlsOffset, <span class="hljs-attr">y</span>: -innerRadius}),
@@ -1043,7 +1045,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 
     xPts.<span class="hljs-title function_">push</span>(currentPointX);
 
-    <span class="hljs-keyword">if</span> (curve == <span class="hljs-string">&#x27;bezier&#x27;</span>) {
+    <span class="hljs-keyword">if</span> (curve == <span class="hljs-variable constant_">BEZIER</span>) {
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; points; i++) {
 
@@ -1086,7 +1088,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
         }
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (curve == <span class="hljs-string">&#x27;quadratic&#x27;</span>) {
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (curve == <span class="hljs-variable constant_">QUADRATIC</span>) {
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; points; i++) {
 
@@ -1179,8 +1181,8 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
     myMin = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(...xPts);
     myXoffset = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(myMin).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
 
-    <span class="hljs-keyword">if</span> (curve == <span class="hljs-string">&#x27;bezier&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0c<span class="hljs-subst">${myPath}</span>z`</span>;
-    <span class="hljs-keyword">if</span> (curve == <span class="hljs-string">&#x27;quadratic&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0q<span class="hljs-subst">${myPath}</span>z`</span>;
+    <span class="hljs-keyword">if</span> (curve == <span class="hljs-variable constant_">BEZIER</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0c<span class="hljs-subst">${myPath}</span>z`</span>;
+    <span class="hljs-keyword">if</span> (curve == <span class="hljs-variable constant_">QUADRATIC</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0q<span class="hljs-subst">${myPath}</span>z`</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0l<span class="hljs-subst">${myPath}</span>z`</span>;
 };</pre></div></div>
             
@@ -1237,7 +1239,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeCog = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeCog = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;cog&#x27;</span>;
@@ -1245,23 +1247,6 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 };
 
 constructors.<span class="hljs-property">Cog</span> = <span class="hljs-title class_">Cog</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeCog,
-};</pre></div></div>
             
         </li>
         

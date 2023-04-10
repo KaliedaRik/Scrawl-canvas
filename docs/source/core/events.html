@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -560,8 +565,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_fn, isa_dom, λ<span class="hljs-literal">null</span>, Ωempty, detectBrowser } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;
-<span class="hljs-keyword">import</span> { canvas, cell, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { canvas, cell, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { isa_fn, isa_dom, λ<span class="hljs-literal">null</span>, Ωempty, detectBrowser } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { _entries, _isArray, <span class="hljs-variable constant_">ADD_EVENT_LISTENER</span>, <span class="hljs-variable constant_">CHANGE</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">ENTER</span>, <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">LEAVE</span>, <span class="hljs-variable constant_">MOUSE_DOWN</span>, <span class="hljs-variable constant_">MOUSE_ENTER</span>, <span class="hljs-variable constant_">MOUSE_LEAVE</span>, <span class="hljs-variable constant_">MOUSE_MOVE</span>, <span class="hljs-variable constant_">MOUSE_UP</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">POINTER_DOWN</span>, <span class="hljs-variable constant_">POINTER_ENTER</span>, <span class="hljs-variable constant_">POINTER_LEAVE</span>, <span class="hljs-variable constant_">POINTER_MOVE</span>, <span class="hljs-variable constant_">POINTER_UP</span>, <span class="hljs-variable constant_">REMOVE_EVENT_LISTENER</span>, <span class="hljs-variable constant_">SAFARI</span>, <span class="hljs-variable constant_">TOUCH_END</span>, <span class="hljs-variable constant_">TOUCH_ENTER</span>, <span class="hljs-variable constant_">TOUCH_FOLLOW</span>, <span class="hljs-variable constant_">TOUCH_LEAVE</span>, <span class="hljs-variable constant_">TOUCH_MOVE</span>, <span class="hljs-variable constant_">TOUCH_START</span>, <span class="hljs-variable constant_">UP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -572,7 +580,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p><code>Exported function</code> (to modules and scrawl object) - <strong>scrawl.makeAnimationObserver</strong> - function to create and start a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">DOM IntersectionObserver</a> object.</p>
+              <h4 id="functionality">Functionality</h4>
+<p><code>Exported function</code> (to modules and scrawl object) - <strong>scrawl.makeAnimationObserver</strong> - function to create and start a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">DOM IntersectionObserver</a> object.</p>
 <p>The function expects 3 arguments, in the following order:</p>
 <ul>
 <li>a Scrawl-canvas animation object (required) - either <a href="../factory/Animation.html">Animation</a> or <a href="../factory/RenderAnimation.html">RenderAnimation</a></li>
@@ -585,7 +594,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeAnimationObserver = <span class="hljs-keyword">function</span> (<span class="hljs-params">anim, wrapper, specs = Ωempty</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">window</span>.<span class="hljs-property">IntersectionObserver</span> === <span class="hljs-string">&#x27;function&#x27;</span> &amp;&amp; anim &amp;&amp; anim.<span class="hljs-property">run</span>) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">window</span>.<span class="hljs-property">IntersectionObserver</span> == <span class="hljs-variable constant_">FUNCTION</span> &amp;&amp; anim &amp;&amp; anim.<span class="hljs-property">run</span>) {
 
         <span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">IntersectionObserver</span>(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
 
@@ -629,8 +638,8 @@
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_fn</span>(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/document addListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
 
-    <span class="hljs-title function_">actionListener</span>(evt, fn, targ, <span class="hljs-string">&#x27;removeEventListener&#x27;</span>);
-    <span class="hljs-title function_">actionListener</span>(evt, fn, targ, <span class="hljs-string">&#x27;addEventListener&#x27;</span>);
+    <span class="hljs-title function_">actionListener</span>(evt, fn, targ, <span class="hljs-variable constant_">REMOVE_EVENT_LISTENER</span>);
+    <span class="hljs-title function_">actionListener</span>(evt, fn, targ, <span class="hljs-variable constant_">ADD_EVENT_LISTENER</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -655,7 +664,7 @@
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_fn</span>(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/document removeListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
 
-    <span class="hljs-title function_">actionListener</span>(evt, fn, targ, <span class="hljs-string">&#x27;removeEventListener&#x27;</span>);
+    <span class="hljs-title function_">actionListener</span>(evt, fn, targ, <span class="hljs-variable constant_">REMOVE_EVENT_LISTENER</span>);
 };</pre></div></div>
             
         </li>
@@ -690,7 +699,7 @@
         targets;
     
     <span class="hljs-keyword">if</span> (targ.<span class="hljs-property">substring</span>) targets = <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">querySelectorAll</span>(targ);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(targ)) targets = targ;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(targ)) targets = targ;
     <span class="hljs-keyword">else</span> targets = [targ];
 
     <span class="hljs-keyword">if</span> (navigator.<span class="hljs-property">pointerEnabled</span> || navigator.<span class="hljs-property">msPointerEnabled</span>) <span class="hljs-title function_">actionPointerListener</span>(events, fn, targets, action);
@@ -713,30 +722,30 @@
                 
                 <span class="hljs-keyword">switch</span> (myevent) {
                 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;move&#x27;</span>:
-                        target[action](<span class="hljs-string">&#x27;mousemove&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                        target[action](<span class="hljs-string">&#x27;touchmove&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
-                        target[action](<span class="hljs-string">&#x27;touchfollow&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
+                    <span class="hljs-keyword">case</span> <span class="hljs-attr">MOVE</span>:
+                        target[action](<span class="hljs-variable constant_">MOUSE_MOVE</span>, fn, <span class="hljs-literal">false</span>);
+                        target[action](<span class="hljs-variable constant_">TOUCH_MOVE</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
+                        target[action](<span class="hljs-variable constant_">TOUCH_FOLLOW</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span>:
-                        target[action](<span class="hljs-string">&#x27;mouseup&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                        target[action](<span class="hljs-string">&#x27;touchend&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
+                    <span class="hljs-keyword">case</span> <span class="hljs-attr">UP</span>:
+                        target[action](<span class="hljs-variable constant_">MOUSE_UP</span>, fn, <span class="hljs-literal">false</span>);
+                        target[action](<span class="hljs-variable constant_">TOUCH_END</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span>:
-                        target[action](<span class="hljs-string">&#x27;mousedown&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                        target[action](<span class="hljs-string">&#x27;touchstart&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
+                    <span class="hljs-keyword">case</span> <span class="hljs-attr">DOWN</span>:
+                        target[action](<span class="hljs-variable constant_">MOUSE_DOWN</span>, fn, <span class="hljs-literal">false</span>);
+                        target[action](<span class="hljs-variable constant_">TOUCH_START</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;leave&#x27;</span>:
-                        target[action](<span class="hljs-string">&#x27;mouseleave&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                        target[action](<span class="hljs-string">&#x27;touchleave&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
+                    <span class="hljs-keyword">case</span> <span class="hljs-attr">LEAVE</span>:
+                        target[action](<span class="hljs-variable constant_">MOUSE_LEAVE</span>, fn, <span class="hljs-literal">false</span>);
+                        target[action](<span class="hljs-variable constant_">TOUCH_LEAVE</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enter&#x27;</span>:
-                        target[action](<span class="hljs-string">&#x27;mouseenter&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                        target[action](<span class="hljs-string">&#x27;touchenter&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
+                    <span class="hljs-keyword">case</span> <span class="hljs-attr">ENTER</span>:
+                        target[action](<span class="hljs-variable constant_">MOUSE_ENTER</span>, fn, <span class="hljs-literal">false</span>);
+                        target[action](<span class="hljs-variable constant_">TOUCH_ENTER</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
                         <span class="hljs-keyword">break</span>;
                 }
             }
@@ -761,24 +770,24 @@
 
                 <span class="hljs-keyword">switch</span> (myevent) {
                 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;move&#x27;</span>:
-                        target[action](<span class="hljs-string">&#x27;pointermove&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">case</span> <span class="hljs-attr">MOVE</span>:
+                        target[action](<span class="hljs-variable constant_">POINTER_MOVE</span>, fn, <span class="hljs-literal">false</span>);
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span>:
-                        target[action](<span class="hljs-string">&#x27;pointerup&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">case</span> <span class="hljs-attr">UP</span>:
+                        target[action](<span class="hljs-variable constant_">POINTER_UP</span>, fn, <span class="hljs-literal">false</span>);
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span>:
-                        target[action](<span class="hljs-string">&#x27;pointerdown&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">case</span> <span class="hljs-attr">DOWN</span>:
+                        target[action](<span class="hljs-variable constant_">POINTER_DOWN</span>, fn, <span class="hljs-literal">false</span>);
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;leave&#x27;</span>:
-                        target[action](<span class="hljs-string">&#x27;pointerleave&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">case</span> <span class="hljs-attr">LEAVE</span>:
+                        target[action](<span class="hljs-variable constant_">POINTER_LEAVE</span>, fn, <span class="hljs-literal">false</span>);
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enter&#x27;</span>:
-                        target[action](<span class="hljs-string">&#x27;pointerenter&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">case</span> <span class="hljs-attr">ENTER</span>:
+                        target[action](<span class="hljs-variable constant_">POINTER_ENTER</span>, fn, <span class="hljs-literal">false</span>);
                         <span class="hljs-keyword">break</span>;
                 }
             }
@@ -823,8 +832,8 @@
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_fn</span>(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/document addNativeListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
 
-    <span class="hljs-title function_">actionNativeListener</span>(evt, fn, targ, <span class="hljs-string">&#x27;removeEventListener&#x27;</span>);
-    <span class="hljs-title function_">actionNativeListener</span>(evt, fn, targ, <span class="hljs-string">&#x27;addEventListener&#x27;</span>);
+    <span class="hljs-title function_">actionNativeListener</span>(evt, fn, targ, <span class="hljs-variable constant_">REMOVE_EVENT_LISTENER</span>);
+    <span class="hljs-title function_">actionNativeListener</span>(evt, fn, targ, <span class="hljs-variable constant_">ADD_EVENT_LISTENER</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -849,7 +858,7 @@
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_fn</span>(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/document removeNativeListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
 
-    <span class="hljs-title function_">actionNativeListener</span>(evt, fn, targ, <span class="hljs-string">&#x27;removeEventListener&#x27;</span>);
+    <span class="hljs-title function_">actionNativeListener</span>(evt, fn, targ, <span class="hljs-variable constant_">REMOVE_EVENT_LISTENER</span>);
 };
 
 <span class="hljs-keyword">const</span> actionNativeListener = <span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ, action</span>) {
@@ -858,7 +867,7 @@
         targets, i, iz, j, jz, myevent, target;
 
     <span class="hljs-keyword">if</span> (targ.<span class="hljs-property">substring</span>) targets = <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">querySelectorAll</span>(targ);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(targ)) targets = targ;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(targ)) targets = targ;
     <span class="hljs-keyword">else</span> targets = [targ];
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = events.<span class="hljs-property">length</span>; i &lt; iz; i++) {
@@ -908,17 +917,17 @@
 
     dpr = <span class="hljs-variable language_">window</span>.<span class="hljs-property">devicePixelRatio</span>;
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, wrapper] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(canvas)) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, wrapper] <span class="hljs-keyword">of</span> <span class="hljs-title function_">_entries</span>(canvas)) {
 
         wrapper.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
     }
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, wrapper] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(cell)) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, wrapper] <span class="hljs-keyword">of</span> <span class="hljs-title function_">_entries</span>(cell)) {
 
         wrapper.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
     }
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, ent] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(entity)) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, ent] <span class="hljs-keyword">of</span> <span class="hljs-title function_">_entries</span>(entity)) {
 
         ent.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">true</span>;
     }
@@ -942,9 +951,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (browserIs.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;safari&#x27;</span>) &lt; <span class="hljs-number">0</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!browserIs.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">SAFARI</span>)) {
 
-        <span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">`(resolution: <span class="hljs-subst">${dpr}</span>dppx)`</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;change&quot;</span>, updatePixelRatio, { <span class="hljs-attr">once</span>: <span class="hljs-literal">true</span> });
+        <span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">`(resolution: <span class="hljs-subst">${dpr}</span>dppx)`</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-variable constant_">CHANGE</span>, updatePixelRatio, { <span class="hljs-attr">once</span>: <span class="hljs-literal">true</span> });
     }
 };
 

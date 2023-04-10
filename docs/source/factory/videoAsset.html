@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -567,10 +572,13 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { generateUniqueString, xt, λ<span class="hljs-variable language_">this</span>, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { doCreate, generateUniqueString, xt, λ<span class="hljs-variable language_">this</span>, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> assetMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> assetMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _freeze, _isArray, _VIDEO, <span class="hljs-variable constant_">ANONYMOUS</span>, <span class="hljs-variable constant_">ASSET</span>, <span class="hljs-variable constant_">ASSET_IMPORT_REGEX</span>, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">BLOCK</span>, <span class="hljs-variable constant_">MAYBE</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">SOURCE</span>, <span class="hljs-variable constant_">T_VIDEO</span>, <span class="hljs-variable constant_">VIDEO</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -581,14 +589,9 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <h4 id="videoasset-constructor">VideoAsset constructor</h4>
+              <p>Local constants</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">VideoAsset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">assetConstructor</span>(items);
-};</pre></div></div>
             
         </li>
         
@@ -599,420 +602,6 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <h4 id="videoasset-prototype">VideoAsset prototype</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">VideoAsset</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Video&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;asset&#x27;</span>;
-P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
-P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <h4 id="mixins">Mixins</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
-P = <span class="hljs-title function_">assetMix</span>(P);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <h4 id="videoasset-attributes">VideoAsset attributes</h4>
-<ul>
-<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/asset.html">asset mixin</a>: <strong>source, subscribers</strong>.</li>
-</ul>
-<p>No additional attributes required beyond those supplied by the mixins</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>Assets do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">return</span> [<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">lib</span>, {}];
-};
-P.<span class="hljs-property">stringifyFunction</span> = λ<span class="hljs-literal">null</span>;
-P.<span class="hljs-property">processPacketOut</span> = λ<span class="hljs-literal">null</span>;
-P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <h4 id="clone-management">Clone management</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable language_">this</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
-    S = P.<span class="hljs-property">setters</span>,
-    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p><strong>source</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">source</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">if</span> (item) {
-
-        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">tagName</span>.<span class="hljs-title function_">toUpperCase</span>() === <span class="hljs-string">&#x27;VIDEO&#x27;</span>) {
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> = item;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = item.<span class="hljs-property">videoWidth</span> || <span class="hljs-number">0</span>;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = item.<span class="hljs-property">videoHeight</span> || <span class="hljs-number">0</span>;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = (item.<span class="hljs-property">readyState</span> &gt; <span class="hljs-number">2</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
-        }
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p><code>checkSource</code></p>
-<ul>
-<li>Gets invoked by subscribers (who have a handle to the asset instance object) as part of the display cycle.</li>
-<li>If any of the source &lt;video&gt; element’s relevant attributes have changed, the asset wrapper will immediately notify/update ALL of its subscribers by changing attributes on their objects.</li>
-<li>TODO: there may be a more efficient way of doing this? If the first subscriber triggers a notify action, which propagates to all subscribers, then subsequent subscribers don’t need to invoke this function for the remainder of this display cycle.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkSource</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">width, height</span>) {
-
-    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
-
-    <span class="hljs-keyword">if</span> (source &amp;&amp; source.<span class="hljs-property">readyState</span> &gt; <span class="hljs-number">2</span>) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = <span class="hljs-literal">true</span>;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== source.<span class="hljs-property">videoWidth</span> || 
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== source.<span class="hljs-property">videoHeight</span> || 
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== width ||
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== height) {
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = source.<span class="hljs-property">videoWidth</span>;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = source.<span class="hljs-property">videoHeight</span>;
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
-        }
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = <span class="hljs-literal">false</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <h4 id="managing-video-sources">Managing video sources</h4>
-<p>The following functions invoke their <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement">namesake functions on the source &lt;video&gt; element</a>. </p>
-<ul>
-<li>Note that some of the functions are defined as being asynchronous; for these functions, we wrap the invocations in Promises which cascade back to the original invocation (probably in user code).</li>
-<li>All of these functions are also mapped onto the factories which consume the videoAsset - Picture entitys and Pattern styles - so they can be invoked on those objects instead on the videoAsset instance.</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p><code>addTextTrack</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">addTextTrack</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">kind, label, language</span>) {
-
-    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
-
-    <span class="hljs-keyword">if</span> (source &amp;&amp; source.<span class="hljs-property">addTextTrack</span>) source.<span class="hljs-title function_">addTextTrack</span>(kind, label, language);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p><code>captureStream</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">captureStream</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
-
-    <span class="hljs-keyword">if</span> (source &amp;&amp; source.<span class="hljs-property">captureStream</span>) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">captureStream</span>();
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p><code>canPlayType</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">canPlayType</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">mytype</span>) {
-
-    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
-
-    <span class="hljs-keyword">if</span> (source) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">canPlayType</span>(mytype);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;maybe&#x27;</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p><code>fastSeek</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fastSeek</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">time</span>) {
-
-    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
-
-    <span class="hljs-keyword">if</span> (source &amp;&amp; source.<span class="hljs-property">fastSeek</span>) source.<span class="hljs-title function_">fastSeek</span>(time);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p><code>load</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">load</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
-
-    <span class="hljs-keyword">if</span> (source) source.<span class="hljs-title function_">load</span>();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p><code>pause</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">pause</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
-
-    <span class="hljs-keyword">if</span> (source) source.<span class="hljs-title function_">pause</span>();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <p><code>play</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">play</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
-
-    <span class="hljs-keyword">if</span> (source) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">play</span>().<span class="hljs-title function_">catch</span>(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e.<span class="hljs-property">code</span>, e.<span class="hljs-property">name</span>, e.<span class="hljs-property">message</span>));
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;Source not defined&#x27;</span>);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <p><code>setMediaKeys</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setMediaKeys</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">keys</span>) {
-
-    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
-
-    <span class="hljs-keyword">if</span> (source) {
-
-        <span class="hljs-keyword">if</span> (source.<span class="hljs-property">setMediaKeys</span>) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">setMediaKeys</span>(keys);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;setMediaKeys not supported&#x27;</span>);
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;Source not defined&#x27;</span>);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <p><code>setSinkId</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setSinkId</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
-
-    <span class="hljs-keyword">if</span> (source) {
-
-        <span class="hljs-keyword">if</span> (source.<span class="hljs-property">setSinkId</span>) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">setSinkId</span>();
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;setSinkId not supported&#x27;</span>);
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;Source not defined&#x27;</span>);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
               <p><code>gettableVideoAssetAtributes</code>, <code>settableVideoAssetAtributes</code> - exported Arrays.</p>
 <ul>
 <li>TODO - I was planning to make the &lt;video&gt; element’s attributes accessible to Picture entitys and Pattern styles - need to check if work has been completed at their end.</li>
@@ -1020,7 +609,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> gettableVideoAssetAtributes = [
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> gettableVideoAssetAtributes = <span class="hljs-title function_">_freeze</span>([
     <span class="hljs-string">&#x27;video_audioTracks&#x27;</span>,
     <span class="hljs-string">&#x27;video_autoPlay&#x27;</span>,
     <span class="hljs-string">&#x27;video_buffered&#x27;</span>,
@@ -1052,9 +641,9 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
     <span class="hljs-string">&#x27;video_textTracks&#x27;</span>,
     <span class="hljs-string">&#x27;video_videoTracks&#x27;</span>,
     <span class="hljs-string">&#x27;video_volume&#x27;</span>,
-];
+]);
 
-<span class="hljs-keyword">const</span> settableVideoAssetAtributes = [
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> settableVideoAssetAtributes = <span class="hljs-title function_">_freeze</span>([
     <span class="hljs-string">&#x27;video_autoPlay&#x27;</span>,
     <span class="hljs-string">&#x27;video_controller&#x27;</span>,
     <span class="hljs-string">&#x27;video_controls&#x27;</span>,
@@ -1070,7 +659,414 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
     <span class="hljs-string">&#x27;video_src&#x27;</span>,
     <span class="hljs-string">&#x27;video_srcObject&#x27;</span>,
     <span class="hljs-string">&#x27;video_volume&#x27;</span>,
-];</pre></div></div>
+]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <h4 id="videoasset-constructor">VideoAsset constructor</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">VideoAsset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">assetConstructor</span>(items);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <h4 id="videoasset-prototype">VideoAsset prototype</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">VideoAsset</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_VIDEO</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">ASSET</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <h4 id="mixins">Mixins</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);
+<span class="hljs-title function_">assetMix</span>(P);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <h4 id="videoasset-attributes">VideoAsset attributes</h4>
+<ul>
+<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/asset.html">asset mixin</a>: <strong>source, subscribers</strong>.</li>
+</ul>
+<p>No additional attributes required beyond those supplied by the mixins</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <h4 id="packet-management">Packet management</h4>
+<p>Assets do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> [<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">lib</span>, {}];
+};
+P.<span class="hljs-property">stringifyFunction</span> = λ<span class="hljs-literal">null</span>;
+P.<span class="hljs-property">processPacketOut</span> = λ<span class="hljs-literal">null</span>;
+P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <h4 id="clone-management">Clone management</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable language_">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p><strong>source</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">source</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (item) {
+
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">tagName</span>.<span class="hljs-title function_">toUpperCase</span>() == _VIDEO) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = item.<span class="hljs-property">videoWidth</span> || <span class="hljs-number">0</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = item.<span class="hljs-property">videoHeight</span> || <span class="hljs-number">0</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = (item.<span class="hljs-property">readyState</span> &gt; <span class="hljs-number">2</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p><code>checkSource</code></p>
+<ul>
+<li>Gets invoked by subscribers (who have a handle to the asset instance object) as part of the display cycle.</li>
+<li>If any of the source &lt;video&gt; element’s relevant attributes have changed, the asset wrapper will immediately notify/update ALL of its subscribers by changing attributes on their objects.</li>
+<li>TODO: there may be a more efficient way of doing this? If the first subscriber triggers a notify action, which propagates to all subscribers, then subsequent subscribers don’t need to invoke this function for the remainder of this display cycle.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkSource</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">width, height</span>) {
+
+    <span class="hljs-keyword">const</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+
+    <span class="hljs-keyword">if</span> (source &amp;&amp; source.<span class="hljs-property">readyState</span> &gt; <span class="hljs-number">2</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== source.<span class="hljs-property">videoWidth</span> || 
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== source.<span class="hljs-property">videoHeight</span> || 
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== width ||
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== height) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = source.<span class="hljs-property">videoWidth</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = source.<span class="hljs-property">videoHeight</span>;
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
+        }
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = <span class="hljs-literal">false</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <h4 id="managing-video-sources">Managing video sources</h4>
+<p>The following functions invoke their <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement">namesake functions on the source &lt;video&gt; element</a>. </p>
+<ul>
+<li>Note that some of the functions are defined as being asynchronous; for these functions, we wrap the invocations in Promises which cascade back to the original invocation (probably in user code).</li>
+<li>All of these functions are also mapped onto the factories which consume the videoAsset - Picture entitys and Pattern styles - so they can be invoked on those objects instead on the videoAsset instance.</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p><code>addTextTrack</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">addTextTrack</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">kind, label, language</span>) {
+
+    <span class="hljs-keyword">const</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+
+    <span class="hljs-keyword">if</span> (source &amp;&amp; source.<span class="hljs-property">addTextTrack</span>) source.<span class="hljs-title function_">addTextTrack</span>(kind, label, language);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p><code>captureStream</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">captureStream</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">const</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+
+    <span class="hljs-keyword">if</span> (source &amp;&amp; source.<span class="hljs-property">captureStream</span>) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">captureStream</span>();
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p><code>canPlayType</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">canPlayType</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">mytype</span>) {
+
+    <span class="hljs-keyword">const</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+
+    <span class="hljs-keyword">if</span> (source) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">canPlayType</span>(mytype);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">MAYBE</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p><code>fastSeek</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fastSeek</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">time</span>) {
+
+    <span class="hljs-keyword">const</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+
+    <span class="hljs-keyword">if</span> (source &amp;&amp; source.<span class="hljs-property">fastSeek</span>) source.<span class="hljs-title function_">fastSeek</span>(time);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p><code>load</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">load</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">const</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+
+    <span class="hljs-keyword">if</span> (source) source.<span class="hljs-title function_">load</span>();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p><code>pause</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">pause</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">const</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+
+    <span class="hljs-keyword">if</span> (source) source.<span class="hljs-title function_">pause</span>();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p><code>play</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">play</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">const</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+
+    <span class="hljs-keyword">if</span> (source) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">play</span>().<span class="hljs-title function_">catch</span>(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e.<span class="hljs-property">code</span>, e.<span class="hljs-property">name</span>, e.<span class="hljs-property">message</span>));
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;Source not defined&#x27;</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p><code>setMediaKeys</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setMediaKeys</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">keys</span>) {
+
+    <span class="hljs-keyword">const</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+
+    <span class="hljs-keyword">if</span> (source) {
+
+        <span class="hljs-keyword">if</span> (source.<span class="hljs-property">setMediaKeys</span>) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">setMediaKeys</span>(keys);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;setMediaKeys not supported&#x27;</span>);
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;Source not defined&#x27;</span>);
+};</pre></div></div>
             
         </li>
         
@@ -1081,9 +1077,21 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <h4 id="import-videos">Import videos</h4>
+              <p><code>setSinkId</code></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setSinkId</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">const</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+
+    <span class="hljs-keyword">if</span> (source) {
+
+        <span class="hljs-keyword">if</span> (source.<span class="hljs-property">setSinkId</span>) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">setSinkId</span>();
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;setSinkId not supported&#x27;</span>);
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;Source not defined&#x27;</span>);
+};</pre></div></div>
             
         </li>
         
@@ -1094,6 +1102,19 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
+              <h4 id="import-videos">Import videos</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
               <p><code>importDomVideo</code> - import videos defined in the web page HTML code</p>
 <ul>
 <li>Required argument is a query string used to search the dom for matching elements</li>
@@ -1103,26 +1124,24 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importDomVideo = <span class="hljs-keyword">function</span> (<span class="hljs-params">query</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> importDomVideo = <span class="hljs-keyword">function</span> (<span class="hljs-params">query</span>) {
 
-    <span class="hljs-keyword">let</span> reg = <span class="hljs-regexp">/.*\/(.*?)\./</span>;
-
-    <span class="hljs-keyword">let</span> items = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(query);
+    <span class="hljs-keyword">const</span> items = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(query);
 
     items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> name;
 
-        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">tagName</span>.<span class="hljs-title function_">toUpperCase</span>() === <span class="hljs-string">&#x27;VIDEO&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">tagName</span>.<span class="hljs-title function_">toUpperCase</span>() == _VIDEO) {
 
             <span class="hljs-keyword">if</span> (item.<span class="hljs-property">id</span> || item.<span class="hljs-property">name</span>) name = item.<span class="hljs-property">id</span> || item.<span class="hljs-property">name</span>;
             <span class="hljs-keyword">else</span> {
 
-                <span class="hljs-keyword">let</span> match = reg.<span class="hljs-title function_">exec</span>(item.<span class="hljs-property">src</span>);
-                name = (match &amp;&amp; match[<span class="hljs-number">1</span>]) ? match[<span class="hljs-number">1</span>] : <span class="hljs-string">&#x27;&#x27;</span>;
+                <span class="hljs-keyword">const</span> match = <span class="hljs-variable constant_">ASSET_IMPORT_REGEX</span>.<span class="hljs-title function_">exec</span>(item.<span class="hljs-property">src</span>);
+                name = (match &amp;&amp; match[<span class="hljs-number">1</span>]) ? match[<span class="hljs-number">1</span>] : <span class="hljs-variable constant_">ZERO_STR</span>;
             }
 
-            <span class="hljs-keyword">let</span> vid = <span class="hljs-title function_">makeVideoAsset</span>({
+            <span class="hljs-keyword">const</span> vid = <span class="hljs-title function_">makeVideoAsset</span>({
                 <span class="hljs-attr">name</span>: name,
                 <span class="hljs-attr">source</span>: item,
             });
@@ -1143,11 +1162,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>importMediaStream</code> - <strong>Warning: experimental!</strong></p>
 <ul>
@@ -1157,22 +1176,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importMediaStream = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p>Setup the constraints object with user-supplied data in the items argument</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> constraints = {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> importMediaStream = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {</pre></div></div>
             
         </li>
         
@@ -1183,11 +1187,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
               <div class="sswrap ">
                 <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
-              <p>For proof-of-concept, only interested in wheter to include or exclude audio in the capture</p>
+              <p>Setup the constraints object with user-supplied data in the items argument</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    constraints.<span class="hljs-property">audio</span> = (<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">audio</span>)) ? items.<span class="hljs-property">audio</span> : <span class="hljs-literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> constraints = {};</pre></div></div>
             
         </li>
         
@@ -1197,6 +1201,21 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
               
               <div class="sswrap ">
                 <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p>For proof-of-concept, only interested in wheter to include or exclude audio in the capture</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    constraints.<span class="hljs-property">audio</span> = (<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">audio</span>)) ? items.<span class="hljs-property">audio</span> : <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>For video, limiting functionality to accepting user values for video width and height (as minDIMENSION, maxDIMENSION and the ideal DIMENSION, and a preference for which camera to use - where applicable</p>
 
@@ -1217,11 +1236,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>For mobile devices etc - values can be ‘user’ or ‘environment’</p>
 
@@ -1232,11 +1251,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>We need a video element to receive the media stream</p>
 
@@ -1244,7 +1263,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> name = items.<span class="hljs-property">name</span> || <span class="hljs-title function_">generateUniqueString</span>();
 
-    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;video&#x27;</span>);
+    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">VIDEO</span>);
 
     <span class="hljs-keyword">let</span> vid = <span class="hljs-title function_">makeVideoAsset</span>({
         <span class="hljs-attr">name</span>: name,
@@ -1261,7 +1280,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
                 <span class="hljs-keyword">let</span> actuals = mediaStream.<span class="hljs-title function_">getVideoTracks</span>(),
                     data;
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(actuals) &amp;&amp; actuals[<span class="hljs-number">0</span>]) data = actuals[<span class="hljs-number">0</span>].<span class="hljs-title function_">getConstraints</span>();
+                <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(actuals) &amp;&amp; actuals[<span class="hljs-number">0</span>]) data = actuals[<span class="hljs-number">0</span>].<span class="hljs-title function_">getConstraints</span>();
 
                 el.<span class="hljs-property">id</span> = vid.<span class="hljs-property">name</span>;
 
@@ -1293,11 +1312,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><code>importVideo</code> - load videos from a remote server and create assets from them</p>
 <p>Arguments can be a comma-separated list of String urls. For example, for a video link at server url <code>http://www.example.com/path/to/image/flower.mp4</code>:</p>
@@ -1321,10 +1340,9 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importVideo = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> importVideo = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
 
-    <span class="hljs-keyword">let</span> reg = <span class="hljs-regexp">/.*\/(.*?)\./</span>,
-        result = <span class="hljs-string">&#x27;&#x27;</span>;
+    <span class="hljs-keyword">let</span> result = <span class="hljs-variable constant_">ZERO_STR</span>;
 
     <span class="hljs-keyword">if</span> (args.<span class="hljs-property">length</span>) {
 
@@ -1332,37 +1350,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
 
         <span class="hljs-keyword">let</span> flag = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> firstArg = args[<span class="hljs-number">0</span>];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
-              </div>
-              <p>one or more string urls has been passed to the function</p>
-<ul>
-<li>urls will be treated as &lt;source&gt; elements assigned to a &lt;video&gt; element</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (firstArg.<span class="hljs-property">substring</span>) {
-
-            <span class="hljs-keyword">let</span> match = reg.<span class="hljs-title function_">exec</span>(firstArg);
-            name = (match &amp;&amp; match[<span class="hljs-number">1</span>]) ? match[<span class="hljs-number">1</span>] : <span class="hljs-string">&#x27;&#x27;</span>;
-
-            sources = [...args];
-            className = <span class="hljs-string">&#x27;&#x27;</span>;
-            visibility = <span class="hljs-literal">false</span>;
-            parent = <span class="hljs-literal">null</span>;
-            preload = <span class="hljs-string">&#x27;auto&#x27;</span>;
-
-            flag = <span class="hljs-literal">true</span>;
-        }</pre></div></div>
+        <span class="hljs-keyword">const</span> firstArg = args[<span class="hljs-number">0</span>];</pre></div></div>
             
         </li>
         
@@ -1373,22 +1361,23 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
               <div class="sswrap ">
                 <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
-              <p>a single object has been passed to the function</p>
+              <p>one or more string urls has been passed to the function</p>
 <ul>
-<li>only process if the object includes a src attribute</li>
+<li>urls will be treated as &lt;source&gt; elements assigned to a &lt;video&gt; element</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (firstArg &amp;&amp; firstArg.<span class="hljs-property">src</span>) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (firstArg.<span class="hljs-property">substring</span>) {
 
-            name = firstArg.<span class="hljs-property">name</span> || <span class="hljs-string">&#x27;&#x27;</span>;
+            <span class="hljs-keyword">const</span> match = <span class="hljs-variable constant_">ASSET_IMPORT_REGEX</span>.<span class="hljs-title function_">exec</span>(firstArg);
+            name = (match &amp;&amp; match[<span class="hljs-number">1</span>]) ? match[<span class="hljs-number">1</span>] : <span class="hljs-variable constant_">ZERO_STR</span>;
 
-            sources = [...firstArg.<span class="hljs-property">src</span>];
-            className = firstArg.<span class="hljs-property">className</span> || <span class="hljs-string">&#x27;&#x27;</span>;
-            visibility = firstArg.<span class="hljs-property">visibility</span> || <span class="hljs-literal">false</span>;
-            parent = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(parent);
-            preload = firstArg.<span class="hljs-property">preload</span> || <span class="hljs-string">&#x27;auto&#x27;</span>;
+            sources = [...args];
+            className = <span class="hljs-variable constant_">ZERO_STR</span>;
+            visibility = <span class="hljs-literal">false</span>;
+            parent = <span class="hljs-literal">null</span>;
+            preload = <span class="hljs-variable constant_">AUTO</span>;
 
             flag = <span class="hljs-literal">true</span>;
         }</pre></div></div>
@@ -1402,31 +1391,59 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
               <div class="sswrap ">
                 <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
+              <p>a single object has been passed to the function</p>
+<ul>
+<li>only process if the object includes a src attribute</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (firstArg &amp;&amp; firstArg.<span class="hljs-property">src</span>) {
+
+            name = firstArg.<span class="hljs-property">name</span> || <span class="hljs-variable constant_">ZERO_STR</span>;
+
+            sources = [...firstArg.<span class="hljs-property">src</span>];
+            className = firstArg.<span class="hljs-property">className</span> || <span class="hljs-variable constant_">ZERO_STR</span>;
+            visibility = firstArg.<span class="hljs-property">visibility</span> || <span class="hljs-literal">false</span>;
+            parent = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(parent);
+            preload = firstArg.<span class="hljs-property">preload</span> || <span class="hljs-variable constant_">AUTO</span>;
+
+            flag = <span class="hljs-literal">true</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
+              </div>
               <p>build the video element</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> video = <span class="hljs-title function_">makeVideoAsset</span>({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> video = <span class="hljs-title function_">makeVideoAsset</span>({
             <span class="hljs-attr">name</span>: name,
         });
 
-
         <span class="hljs-keyword">if</span> (flag) {
 
-            <span class="hljs-keyword">let</span> vid = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;video&#x27;</span>);
+            <span class="hljs-keyword">const</span> vid = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">VIDEO</span>);
 
             vid.<span class="hljs-property">name</span> = name;
             vid.<span class="hljs-property">className</span> = className;
 
-            vid.<span class="hljs-property">style</span>.<span class="hljs-property">display</span> = (visibility) ? <span class="hljs-string">&#x27;block&#x27;</span> : <span class="hljs-string">&#x27;none&#x27;</span>;
+            vid.<span class="hljs-property">style</span>.<span class="hljs-property">display</span> = (visibility) ? <span class="hljs-variable constant_">BLOCK</span> : <span class="hljs-variable constant_">NONE</span>;
 
-            vid.<span class="hljs-property">crossOrigin</span> = <span class="hljs-string">&#x27;anonymous&#x27;</span>;
+            vid.<span class="hljs-property">crossOrigin</span> = <span class="hljs-variable constant_">ANONYMOUS</span>;
 
             vid.<span class="hljs-property">preload</span> = preload;
 
             sources.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
-                <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;source&#x27;</span>);
+                <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">SOURCE</span>);
 
                 el.<span class="hljs-property">src</span> = item;
 
@@ -1456,48 +1473,23 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
         </li>
         
         
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
-              </div>
-              <h4 id="factory">Factory</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeVideoAsset = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
-
-    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">VideoAsset</span>(items);
-};
-
-constructors.<span class="hljs-property">VideoAsset</span> = <span class="hljs-title class_">VideoAsset</span>;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
-              <h4 id="exports">Exports</h4>
+              <h4 id="factory">Factory</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeVideoAsset,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeVideoAsset = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    gettableVideoAssetAtributes,
-    settableVideoAssetAtributes,
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">VideoAsset</span>(items);
+};
 
-    importDomVideo,
-    importVideo,
-
-    importMediaStream,
-};</pre></div></div>
+constructors.<span class="hljs-property">VideoAsset</span> = <span class="hljs-title class_">VideoAsset</span>;</pre></div></div>
             
         </li>
         

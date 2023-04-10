@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -573,10 +578,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_fn, isa_dom, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { doCreate, isa_dom, isa_fn, mergeOver, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _A, <span class="hljs-variable constant_">ANCHOR</span>, <span class="hljs-variable constant_">BLUR</span>, <span class="hljs-variable constant_">CLICK</span>, <span class="hljs-variable constant_">DOWNLOAD</span>, <span class="hljs-variable constant_">FOCUS</span>, <span class="hljs-variable constant_">HREF</span>, <span class="hljs-variable constant_">HREFLANG</span>, <span class="hljs-variable constant_">ONCLICK</span>, <span class="hljs-variable constant_">PING</span>, <span class="hljs-variable constant_">REFERRERPOLICY</span>, <span class="hljs-variable constant_">REL</span>, <span class="hljs-variable constant_">T_ANCHOR</span>, <span class="hljs-variable constant_">TARGET</span>, <span class="hljs-variable constant_">TYPE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -617,9 +625,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Anchor</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Anchor&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;anchor&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Anchor</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_ANCHOR</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">ANCHOR</span>;
 P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
 P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -636,7 +644,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -654,7 +662,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -684,7 +692,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">description</span>: <span class="hljs-variable constant_">ZERO_STR</span>,</pre></div></div>
             
         </li>
         
@@ -704,14 +712,14 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">download</span>: <span class="hljs-string">&#x27;&#x27;</span>,
-    <span class="hljs-attr">href</span>: <span class="hljs-string">&#x27;&#x27;</span>,
-    <span class="hljs-attr">hreflang</span>: <span class="hljs-string">&#x27;&#x27;</span>,
-    <span class="hljs-attr">ping</span>: <span class="hljs-string">&#x27;&#x27;</span>,
-    <span class="hljs-attr">referrerpolicy</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">download</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
+    <span class="hljs-attr">href</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
+    <span class="hljs-attr">hreflang</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
+    <span class="hljs-attr">ping</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
+    <span class="hljs-attr">referrerpolicy</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
     <span class="hljs-attr">rel</span>: <span class="hljs-string">&#x27;noreferrer&#x27;</span>,
     <span class="hljs-attr">target</span>: <span class="hljs-string">&#x27;_blank&#x27;</span>,
-    <span class="hljs-attr">anchorType</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+    <span class="hljs-attr">anchorType</span>: <span class="hljs-variable constant_">ZERO_STR</span>,</pre></div></div>
             
         </li>
         
@@ -841,7 +849,7 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -931,49 +939,49 @@ anchor.<span class="hljs-property">download</span>        ~~&gt; artefact.<span 
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">download</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">download</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-string">&#x27;download&#x27;</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">DOWNLOAD</span>);
 };
 
 S.<span class="hljs-property">href</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">href</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-string">&#x27;href&#x27;</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">HREF</span>);
 };
 
 S.<span class="hljs-property">hreflang</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">hreflang</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-string">&#x27;hreflang&#x27;</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">HREFLANG</span>);
 };
 
 S.<span class="hljs-property">ping</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">ping</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-string">&#x27;ping&#x27;</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">PING</span>);
 };
 
 S.<span class="hljs-property">referrerpolicy</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">referrerpolicy</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-string">&#x27;referrerpolicy&#x27;</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">REFERRERPOLICY</span>);
 };
 
 S.<span class="hljs-property">rel</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">rel</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-string">&#x27;rel&#x27;</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">REL</span>);
 };
 
 S.<span class="hljs-property">target</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-string">&#x27;target&#x27;</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">TARGET</span>);
 };
 
 S.<span class="hljs-property">anchorType</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchorType</span> = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-string">&#x27;type&#x27;</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">update</span>(<span class="hljs-variable constant_">TYPE</span>);
 };</pre></div></div>
             
         </li>
@@ -1004,7 +1012,7 @@ S.<span class="hljs-property">clickAction</span> = <span class="hljs-keyword">fu
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">clickAction</span> = item;
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;onclick&#x27;</span>, <span class="hljs-title function_">item</span>());
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">ONCLICK</span>, <span class="hljs-title function_">item</span>());
     }
 };</pre></div></div>
             
@@ -1028,25 +1036,25 @@ S.<span class="hljs-property">clickAction</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>.<span class="hljs-title function_">removeChild</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>);
 
-    <span class="hljs-keyword">let</span> link = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;a&#x27;</span>);
+    <span class="hljs-keyword">let</span> link = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(_A);
 
     link.<span class="hljs-property">id</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">download</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;download&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">download</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">href</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;href&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">href</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">hreflang</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;hreflang&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">hreflang</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">ping</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;ping&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">ping</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">referrerpolicy</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;referrerpolicy&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">referrerpolicy</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">rel</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;rel&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">rel</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;target&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchorType</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;type&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchorType</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">download</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">DOWNLOAD</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">download</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">href</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">HREF</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">href</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">hreflang</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">HREFLANG</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">hreflang</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">ping</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">PING</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">ping</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">referrerpolicy</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">REFERRERPOLICY</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">referrerpolicy</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">rel</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">REL</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">rel</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">TARGET</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchorType</span>) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">TYPE</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchorType</span>);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">clickAction</span> &amp;&amp; <span class="hljs-title function_">isa_fn</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">clickAction</span>)) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;onclick&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAction</span>());
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">clickAction</span> &amp;&amp; <span class="hljs-title function_">isa_fn</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">clickAction</span>)) link.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">ONCLICK</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAction</span>());
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">description</span>) link.<span class="hljs-property">textContent</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">description</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">focusAction</span>) link.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;focus&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>.<span class="hljs-title function_">onEnter</span>(), <span class="hljs-literal">false</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">blurAction</span>) link.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;blur&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>.<span class="hljs-title function_">onLeave</span>(), <span class="hljs-literal">false</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">focusAction</span>) link.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-variable constant_">FOCUS</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>.<span class="hljs-title function_">onEnter</span>(), <span class="hljs-literal">false</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">blurAction</span>) link.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-variable constant_">BLUR</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>.<span class="hljs-title function_">onLeave</span>(), <span class="hljs-literal">false</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> = link;
 
@@ -1088,7 +1096,7 @@ S.<span class="hljs-property">clickAction</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">hasBeenRecentlyClicked</span>) {
 
-        <span class="hljs-keyword">let</span> e = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MouseEvent</span>(<span class="hljs-string">&#x27;click&#x27;</span>, {
+        <span class="hljs-keyword">let</span> e = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MouseEvent</span>(<span class="hljs-variable constant_">CLICK</span>, {
             <span class="hljs-attr">view</span>: <span class="hljs-variable language_">window</span>,
             <span class="hljs-attr">bubbles</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">cancelable</span>: <span class="hljs-literal">true</span>
@@ -1165,30 +1173,13 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnchor = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeAnchor = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
     
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Anchor</span>(items);
 };
 
 constructors.<span class="hljs-property">Anchor</span> = <span class="hljs-title class_">Anchor</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeAnchor,
-};</pre></div></div>
             
         </li>
         

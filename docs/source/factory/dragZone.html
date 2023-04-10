@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -530,24 +535,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="drag-and-drop-zones">Drag-and-drop zones.</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/library.js&quot;</span>;
-<span class="hljs-keyword">import</span> { xta, isa_fn, isa_boolean, isa_obj, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/utilities.js&quot;</span>;
-<span class="hljs-keyword">import</span> { addListener, removeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-2">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-2">&#x00a7;</a>
-              </div>
-              <p><strong>makeDragZone</strong> is an attempt to make setting up drag-and-drop functionality within a Scrawl-canvas stack or canvas as simple as possible. The functionality has been designed to allow multiple drag zones to be set on a canvas or stack element, while limiting the number of event listeners that need to be applied to the element to make the magic happen.</p>
+<p><strong>makeDragZone</strong> is an attempt to make setting up drag-and-drop functionality within a Scrawl-canvas stack or canvas as simple as possible. The functionality has been designed to allow multiple drag zones to be set on a canvas or stack element, while limiting the number of event listeners that need to be applied to the element to make the magic happen.</p>
 <p>Required attribute of the argument object:</p>
 <ul>
 <li><strong>.zone</strong> - either the String name of the Stack or Canvas artefact which will host the zone, or the Stack or Canvas artefact itself</li>
@@ -581,7 +569,28 @@
 <li>null, undefined, any other falsy argument - return the collision data object</li>
 </ul>
 <p>If the <code>exposeCurrentArtefact</code> attribute is false, or omitted, the function returns a kill function that can be invoked (with no arguments) to remove the event listeners from the Stack or Canvas zone’s DOM element.</p>
-<p>NOTE: drag-and-drop functionality using this factory function <strong>is not guaranteed</strong> for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/library.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { xta, isa_fn, isa_boolean, isa_obj, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/utilities.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { addListener, removeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { _isArray, $BODY, <span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">DROP</span>, <span class="hljs-variable constant_">EXIT</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">TOUCH_CANCEL</span>, <span class="hljs-variable constant_">TOUCH_END</span>, <span class="hljs-variable constant_">TOUCH_MOVE</span>, <span class="hljs-variable constant_">TOUCH_START</span>, <span class="hljs-variable constant_">UP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/shared-vars.js&quot;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
+              </div>
+              <p>NOTE: drag-and-drop functionality using this factory function <strong>is not guaranteed</strong> for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.</p>
 
             </div>
             
@@ -641,7 +650,7 @@
 
     <span class="hljs-keyword">if</span> (zone.<span class="hljs-property">substring</span>) zone = artefact[zone];
 
-    <span class="hljs-keyword">if</span> (!zone || [<span class="hljs-string">&#x27;Canvas&#x27;</span>, <span class="hljs-string">&#x27;Stack&#x27;</span>].<span class="hljs-title function_">indexOf</span>(zone.<span class="hljs-property">type</span>) &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - zone object is not a Stack or Canvas wrapper&#x27;</span>);
+    <span class="hljs-keyword">if</span> (!zone || !<span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>.<span class="hljs-title function_">includes</span>(zone.<span class="hljs-property">type</span>)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - zone object is not a Stack or Canvas wrapper&#x27;</span>);
 
     <span class="hljs-keyword">let</span> target = zone.<span class="hljs-property">domElement</span>;
 
@@ -665,12 +674,12 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!collisionGroup) {
 
-        <span class="hljs-keyword">if</span> (zone.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Canvas&#x27;</span>) collisionGroup = library.<span class="hljs-property">group</span>[zone.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>];
+        <span class="hljs-keyword">if</span> (zone.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_CANVAS</span>) collisionGroup = library.<span class="hljs-property">group</span>[zone.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>];
         <span class="hljs-keyword">else</span> collisionGroup = library.<span class="hljs-property">group</span>[zone.<span class="hljs-property">name</span>];
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (collisionGroup.<span class="hljs-property">substring</span>) collisionGroup = library.<span class="hljs-property">group</span>[collisionGroup];
 
-    <span class="hljs-keyword">if</span> (!collisionGroup || collisionGroup.<span class="hljs-property">type</span> !== <span class="hljs-string">&#x27;Group&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - unable to recover collisionGroup group&#x27;</span>);</pre></div></div>
+    <span class="hljs-keyword">if</span> (!collisionGroup || collisionGroup.<span class="hljs-property">type</span> != <span class="hljs-variable constant_">T_GROUP</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - unable to recover collisionGroup group&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -695,7 +704,7 @@
     }
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">if</span> (zone.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Canvas&#x27;</span>) coordinateSource = zone.<span class="hljs-property">base</span>.<span class="hljs-property">here</span>;
+        <span class="hljs-keyword">if</span> (zone.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_CANVAS</span>) coordinateSource = zone.<span class="hljs-property">base</span>.<span class="hljs-property">here</span>;
         <span class="hljs-keyword">else</span> coordinateSource = zone.<span class="hljs-property">here</span>;
     }
 
@@ -714,8 +723,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(startOn)) startOn = [<span class="hljs-string">&#x27;down&#x27;</span>];
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(endOn)) endOn = [<span class="hljs-string">&#x27;up&#x27;</span>];
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isArray</span>(startOn)) startOn = [<span class="hljs-variable constant_">DOWN</span>];
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isArray</span>(endOn)) endOn = [<span class="hljs-variable constant_">UP</span>];
 
     <span class="hljs-keyword">if</span> (exposeCurrentArtefact == <span class="hljs-literal">null</span>) exposeCurrentArtefact = <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">if</span> (preventTouchDefaultWhenDragging == <span class="hljs-literal">null</span>) preventTouchDefaultWhenDragging = <span class="hljs-literal">false</span>;
@@ -831,7 +840,7 @@
         <span class="hljs-title function_">checkE</span>(e);
 
         <span class="hljs-keyword">let</span> type = e.<span class="hljs-property">type</span>;
-        <span class="hljs-keyword">if</span> (type === <span class="hljs-string">&#x27;touchstart&#x27;</span> || type === <span class="hljs-string">&#x27;touchcancel&#x27;</span>) <span class="hljs-title function_">touchAction</span>(e, resetCoordsToZeroOnTouchEnd);
+        <span class="hljs-keyword">if</span> (type == <span class="hljs-variable constant_">TOUCH_START</span> || type == <span class="hljs-variable constant_">TOUCH_CANCEL</span>) <span class="hljs-title function_">touchAction</span>(e, resetCoordsToZeroOnTouchEnd);
 
         current = collisionGroup.<span class="hljs-title function_">getArtefactAt</span>(coordinateSource);
 
@@ -855,7 +864,7 @@
             <span class="hljs-title function_">checkE</span>(e);
 
             <span class="hljs-keyword">let</span> type = e.<span class="hljs-property">type</span>;
-            <span class="hljs-keyword">if</span> (type === <span class="hljs-string">&#x27;touchmove&#x27;</span>) <span class="hljs-title function_">touchAction</span>(e);
+            <span class="hljs-keyword">if</span> (type == <span class="hljs-variable constant_">TOUCH_MOVE</span>) <span class="hljs-title function_">touchAction</span>(e);
 
             <span class="hljs-keyword">if</span> (e.<span class="hljs-property">shiftKey</span>) <span class="hljs-title function_">updateWhileShiftMoving</span>(e);
             <span class="hljs-keyword">else</span> <span class="hljs-title function_">updateWhileMoving</span>(e);
@@ -869,7 +878,7 @@
             <span class="hljs-title function_">checkE</span>(e);
 
             <span class="hljs-keyword">let</span> type = e.<span class="hljs-property">type</span>;
-            <span class="hljs-keyword">if</span> (type === <span class="hljs-string">&#x27;touchend&#x27;</span>) {
+            <span class="hljs-keyword">if</span> (type == <span class="hljs-variable constant_">TOUCH_END</span>) {
 
                 <span class="hljs-title function_">touchAction</span>(e, resetCoordsToZeroOnTouchEnd);
             }
@@ -903,7 +912,7 @@
 
         <span class="hljs-keyword">if</span> (actionKill) {
 
-            <span class="hljs-keyword">if</span> (actionKill === <span class="hljs-string">&#x27;exit&#x27;</span> || actionKill === <span class="hljs-string">&#x27;drop&#x27;</span>) {
+            <span class="hljs-keyword">if</span> (actionKill == <span class="hljs-variable constant_">EXIT</span> || actionKill == <span class="hljs-variable constant_">DROP</span>) {
 
                 <span class="hljs-title function_">drop</span>();
                 <span class="hljs-title function_">updateOnPrematureExit</span>();
@@ -975,7 +984,7 @@
             <span class="hljs-keyword">while</span> (!name) {
 
                 <span class="hljs-keyword">if</span> (dragZones[myTarget.<span class="hljs-property">id</span>]) name = myTarget.<span class="hljs-property">id</span>;
-                <span class="hljs-keyword">if</span> (myTarget.<span class="hljs-property">tagName</span> === <span class="hljs-string">&#x27;BODY&#x27;</span>) <span class="hljs-keyword">break</span>;
+                <span class="hljs-keyword">if</span> (myTarget.<span class="hljs-property">tagName</span> == $BODY) <span class="hljs-keyword">break</span>;
                 myTarget = myTarget.<span class="hljs-property">parentElement</span>;
             }
 
@@ -1043,7 +1052,7 @@
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">doAddListeners</span> = (<span class="hljs-params">startOn, endOn, target</span>) =&gt; {
 
         <span class="hljs-title function_">addListener</span>(startOn, pickup, target);
-        <span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, move, target);
+        <span class="hljs-title function_">addListener</span>(<span class="hljs-variable constant_">MOVE</span>, move, target);
         <span class="hljs-title function_">addListener</span>(endOn, drop, target);
     };</pre></div></div>
             
@@ -1063,7 +1072,7 @@
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">doRemoveListeners</span> = (<span class="hljs-params">startOn, endOn, target</span>) =&gt; {
 
         <span class="hljs-title function_">removeListener</span>(startOn, pickup, target);
-        <span class="hljs-title function_">removeListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, move, target);
+        <span class="hljs-title function_">removeListener</span>(<span class="hljs-variable constant_">MOVE</span>, move, target);
         <span class="hljs-title function_">removeListener</span>(endOn, drop, target);
     };
 

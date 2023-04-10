@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -608,12 +613,15 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { requestCoordinate, releaseCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { releaseCoordinate, requestCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">LINE_SPIRAL</span>, <span class="hljs-variable constant_">T_LINE_SPIRAL</span>, <span class="hljs-variable constant_">ZERO_PATH</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -647,9 +655,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">LineSpiral</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;LineSpiral&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">LineSpiral</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_LINE_SPIRAL</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">ENTITY</span>;
 P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
 P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -670,8 +678,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
-P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">baseMix</span>(P);
+<span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -698,7 +706,7 @@ P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultAttributes = {
 
     <span class="hljs-attr">startRadius</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">radiusIncrement</span>: <span class="hljs-number">0.1</span>,
@@ -767,7 +775,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>,
     D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
@@ -968,7 +976,7 @@ D.<span class="hljs-property">stepLimit</span> = <span class="hljs-keyword">func
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;m0,0&#x27;</span>;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-variable constant_">ZERO_PATH</span>;
     p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeLineSpiralPath</span>();
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
@@ -989,7 +997,7 @@ D.<span class="hljs-property">stepLimit</span> = <span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeLineSpiralPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> path = <span class="hljs-string">&#x27;m0,0 m&#x27;</span>;
+    <span class="hljs-keyword">let</span> path = <span class="hljs-string">`<span class="hljs-subst">${ZERO_PATH}</span> m`</span>;
 
     <span class="hljs-keyword">let</span> {startRadius, radiusIncrement, radiusIncrementAdjust, startAngle, angleIncrement, angleIncrementAdjust, stepLimit} = <span class="hljs-variable language_">this</span>;
 
@@ -1028,7 +1036,7 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
     <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>,
         scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">scale</span>;
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;m0,0 &#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x / scale}</span>,<span class="hljs-subst">${-y / scale}</span>`</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-string">`<span class="hljs-subst">${ZERO_PATH}</span> `</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x / scale}</span>,<span class="hljs-subst">${-y / scale}</span>`</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCalculatedOnce</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -1098,31 +1106,14 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeLineSpiral = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeLineSpiral = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;linespiral&#x27;</span>;
+    items.<span class="hljs-property">species</span> = <span class="hljs-variable constant_">LINE_SPIRAL</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">LineSpiral</span>(items);
 };
 
 constructors.<span class="hljs-property">LineSpiral</span> = <span class="hljs-title class_">LineSpiral</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeLineSpiral,
-};</pre></div></div>
             
         </li>
         

@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/shared-vars.html">
+                  ./source/core/shared-vars.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -548,7 +553,10 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, isa_boolean, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
+
+<span class="hljs-keyword">import</span> { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _abs, <span class="hljs-variable constant_">PATH</span>, <span class="hljs-variable constant_">START</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -578,7 +586,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -593,7 +601,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">path</span>: <span class="hljs-variable constant_">ZERO_STR</span>,</pre></div></div>
             
         </li>
         
@@ -658,7 +666,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;path&#x27;</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-variable constant_">PATH</span>]);</pre></div></div>
             
         </li>
         
@@ -701,7 +709,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>,
         D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
@@ -736,8 +744,8 @@
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span> = <span class="hljs-literal">null</span>;
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;path&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] === <span class="hljs-string">&#x27;path&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] === <span class="hljs-variable constant_">PATH</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] = <span class="hljs-variable constant_">START</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] === <span class="hljs-variable constant_">PATH</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] = <span class="hljs-variable constant_">START</span>;
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
@@ -779,7 +787,7 @@
             
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">pathPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(item);
+        <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item = <span class="hljs-title function_">_abs</span>(item);
         <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">1</span>) item = item % <span class="hljs-number">1</span>;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span> = <span class="hljs-built_in">parseFloat</span>(item.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">6</span>));
@@ -859,9 +867,8 @@
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span>;
 
-        <span class="hljs-keyword">let</span> pathPos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span>,
-            path = <span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span>,
-            currentPathData;
+        <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span>,
+            path = <span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span>;
 
         <span class="hljs-keyword">if</span> (path) {</pre></div></div>
             
@@ -878,33 +885,17 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> speed = <span class="hljs-variable language_">this</span>.<span class="hljs-property">constantSpeedAlongPath</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">constantPathSpeed</span> || <span class="hljs-literal">false</span>;
-
-            currentPathData = path.<span class="hljs-title function_">getPathPositionData</span>(pathPos, speed);
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> speed = <span class="hljs-variable language_">this</span>.<span class="hljs-property">constantSpeedAlongPath</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">constantPathSpeed</span> || <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">const</span> val = path.<span class="hljs-title function_">getPathPositionData</span>(pos, speed);
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">addPathRotation</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span> = currentPathData;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span> = val;
 
-            <span class="hljs-keyword">return</span> currentPathData;
+            <span class="hljs-keyword">return</span> val;
         }
         <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>Return the prototype</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> P;
+    };
 };</pre></div></div>
             
         </li>
