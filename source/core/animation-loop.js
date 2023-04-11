@@ -68,12 +68,11 @@ const sortAnimations = () => {
 
     const buckets = requestArray();
 
-    let arr, obj, order, i, iz, name;
+    let obj, order, i, iz;
 
     for (i = 0, iz = animate.length; i < iz; i++) {
 
-        name = animate[i];
-        obj = animation[name];
+        obj = animation[animate[i]];
 
         if (obj) {
 
@@ -88,12 +87,12 @@ const sortAnimations = () => {
 
     for (i = 0, iz = buckets.length; i < iz; i++) {
 
-        arr = buckets[i];
+        obj = buckets[i];
 
-        if (arr) {
+        if (obj) {
 
-            animate_sorted.push(...arr);
-            releaseArray(arr);
+            animate_sorted.push(...obj);
+            releaseArray(obj);
         }
     };
     releaseArray(buckets);

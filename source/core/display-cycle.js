@@ -25,12 +25,11 @@ const displayCycleHelper = function (items) {
 
 const displayCycleBatchProcess = function (rootWrappers, method) {
 
-    let i, iz, name, item;
+    let i, iz, item;
 
     for (i = 0, iz = rootWrappers.length; i < iz; i++) {
 
-        name = rootWrappers[i];
-        item = artefact[name];
+        item = artefact[rootWrappers[i]];
 
         if (item && item[method]) item[method]();
     }

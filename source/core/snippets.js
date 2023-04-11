@@ -19,102 +19,96 @@ import { NON_SNIPPET_ELEMENTS } from './shared-vars.js';
 
 
 // TODO - documentation
-const makeSnippet = function (items) {
+export const makeSnippet = function (items) {
 
-    let domElement = (isa_dom(items.domElement)) ? items.domElement : false,
-        animationHooks = (isa_obj(items.animationHooks)) ? items.animationHooks : {},
-        canvasSpecs = (isa_obj(items.canvasSpecs)) ? items.canvasSpecs : {},
-        observerSpecs = (isa_obj(items.observerSpecs)) ? items.observerSpecs : {},
-        includeCanvas = (isa_boolean(items.includeCanvas)) ? items.includeCanvas : true;
+    const el = (isa_dom(items.domElement)) ? items.domElement : false,
+        hooks = (isa_obj(items.animationHooks)) ? items.animationHooks : {},
+        cSpec = (isa_obj(items.canvasSpecs)) ? items.canvasSpecs : {},
+        oSpec = (isa_obj(items.observerSpecs)) ? items.observerSpecs : {},
+        c = (isa_boolean(items.includeCanvas)) ? items.includeCanvas : true;
 
-    if (domElement && domElement.id && artefact[domElement.id]) {
+    if (el && el.id && artefact[el.id]) {
 
-        return makeStackSnippet(domElement, canvasSpecs, animationHooks, observerSpecs);
+        return makeStackSnippet(el, cSpec, hooks, oSpec);
     }
-    return makeUnstackedSnippet(domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas);
+    return makeUnstackedSnippet(el, cSpec, hooks, oSpec, c);
 };
 
 // TODO - documentation
-const makeStackSnippet = function (domElement, canvasSpecs, animationHooks, observerSpecs) {
+const makeStackSnippet = function (el, cSpec, hooks, oSpec) {
 
-    let myElement = artefact[domElement.id];
+    const element = artefact[el.id];
 
-    if (!myElement) return false;
+    if (!element) return false;
 
-    canvasSpecs.baseMatchesCanvasDimensions = true;
-    canvasSpecs.ignoreCanvasCssDimensions = true;
-    canvasSpecs.checkForResize = true;
+    cSpec.baseMatchesCanvasDimensions = true;
+    cSpec.ignoreCanvasCssDimensions = true;
+    cSpec.checkForResize = true;
 
-    let myCanvas = myElement.addCanvas(canvasSpecs);
-    myElement.elementComputedStyles = window.getComputedStyle(domElement);
+    const canvas = element.addCanvas(cSpec);
+    element.elementComputedStyles = window.getComputedStyle(el);
 
-    animationHooks.name = `${myElement.name}-animation`;
-    animationHooks.target = myCanvas;
+    hooks.name = `${element.name}-animation`;
+    hooks.target = canvas;
 
-    let myAnimation = makeRender(animationHooks);
+    const animation = makeRender(hooks);
 
-    let myObserver = makeAnimationObserver(myAnimation, myElement, observerSpecs);
+    const observer = makeAnimationObserver(animation, element, oSpec);
 
-    let destroy = () => {
-        myObserver();
-        myAnimation.kill();
-        myCanvas.demolish();
-        myElement.demolish(true);
+    const demolish = () => {
+        observer();
+        animation.kill();
+        canvas.demolish();
+        element.demolish(true);
     };
 
     return {
-        element: myElement,
-        canvas: myCanvas,
-        animation: myAnimation,
-        demolish: destroy,
+        element,
+        canvas,
+        animation,
+        demolish,
     };
 };
 
 // TODO - documentation
-const makeUnstackedSnippet = function (domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas) {
+const makeUnstackedSnippet = function (el, cSpec, hooks, oSpec, c) {
 
-    if (!domElement || NON_SNIPPET_ELEMENTS.includes(domElement.tagName)) return {};
+    if (!el || NON_SNIPPET_ELEMENTS.includes(el.tagName)) return {};
 
-    let myElement,
-        id = domElement.id;
+    const id = el.id;
+    let element;
 
-    if (id && unstackedelement[id]) myElement = unstackedelement[id];
-    else myElement = makeUnstackedElement(domElement);
+    if (id && unstackedelement[id]) element = unstackedelement[id];
+    else element = makeUnstackedElement(el);
 
-    canvasSpecs.baseMatchesCanvasDimensions = true;
-    canvasSpecs.checkForResize = true;
+    cSpec.baseMatchesCanvasDimensions = true;
+    cSpec.checkForResize = true;
 
-    let myCanvas = (includeCanvas) ? myElement.addCanvas(canvasSpecs) : false;
+    const canvas = (c) ? element.addCanvas(cSpec) : false;
 
-    animationHooks.name = `${myElement.name}-animation`;
-    if (myCanvas) {
+    hooks.name = `${element.name}-animation`;
+    if (canvas) {
 
-        if (!animationHooks.afterClear) animationHooks.afterClear = () => myElement.updateCanvas();
-        animationHooks.target = myCanvas;
+        if (!hooks.afterClear) hooks.afterClear = () => element.updateCanvas();
+        hooks.target = canvas;
     }
-    else animationHooks.noTarget = true;
+    else hooks.noTarget = true;
 
-    let myAnimation = makeRender(animationHooks);
+    const animation = makeRender(hooks);
 
-    let myObserver = makeAnimationObserver(myAnimation, myElement, observerSpecs);
+    const observer = makeAnimationObserver(animation, element, oSpec);
 
-    let destroy = () => {
-        myObserver();
-        myAnimation.kill();
-        if (myCanvas) myCanvas.demolish();
-        myElement.demolish(true);
+    const demolish = () => {
+        observer();
+        animation.kill();
+        if (canvas) canvas.demolish();
+        element.demolish(true);
     };
 
     return {
-        element: myElement,
-        canvas: myCanvas,
-        animation: myAnimation,
-        demolish: destroy,
+        element,
+        canvas,
+        animation,
+        demolish,
     };
-};
-
-
-// TODO - documentation
-export {
-    makeSnippet,
 };

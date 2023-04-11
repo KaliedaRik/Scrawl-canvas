@@ -29,8 +29,6 @@ import { _cos, _create, _entries, _floor, _isArray, _pi, _pow, _random, _sin, _s
 
 export const addStrings = (current, delta) => {
 
-    if (!xt(delta)) throw new Error(`core/utilities addStrings() error - no delta argument supplied ${current}, ${delta}`);
-
     if ((delta != null)) {
 
         // Correct for labels
@@ -38,7 +36,7 @@ export const addStrings = (current, delta) => {
         else if (RIGHT == current || BOTTOM == current) current = PC100;
         else if (CENTER == current) current = PC50;
 
-        let stringFlag = (current.substring || delta.substring) ? true : false;
+        const stringFlag = (current.substring || delta.substring) ? true : false;
 
         if (isa_number(current)) current += (isa_number(delta) ? delta : parseFloat(delta));
         else current = parseFloat(current) + (isa_number(delta) ? delta : parseFloat(delta));
@@ -76,52 +74,46 @@ export const constrain = function (val, min, max) {
 // ```
 export const convertTime = (item) => {
 
-    let a, timeUnit, timeValue;
-
-    if (!xt(item)) throw new Error(`core/utilities convertTime() error - no argument supplied`);
-
     if (isa_number(item)) return [MS, item];
 
-    if (!item.substring) throw new Error(`core/utilities convertTime() error - invalid argument: ${item}`);
+    if (item.substring) {
 
-    a = item.match(/^\d+\.?\d*(\D*)/);
-    timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : MS;
-    
-    timeValue = parseFloat(item);
+        const a = item.match(/^\d+\.?\d*(\D*)/);
+        const timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : MS;
+        
+        const timeValue = parseFloat(item);
 
-    if (!isa_number(timeValue)) throw new Error(`core/base error - convertTime() argument converts to NaN: ${item}`);
+        if (!isNaN(timeValue)) {
 
-    switch (timeUnit) {
+            switch (timeUnit) {
 
-        case 's':
-            timeValue *= 1000;
-            break;
+                case 's':
+                    timeValue *= 1000;
+                    break;
 
-        case '%':
-            break;
+                case '%':
+                    break;
 
-        default:
-            timeUnit = MS;
+                default:
+                    timeUnit = MS;
+            }
+            
+            return [timeUnit, timeValue];
+        }
+        return [MS, 0];
     }
-    
-    return [timeUnit, timeValue];
 };
 
 
 // __correctAngle__ makes sure any degree-based angle is in the range `0-360`
 export const correctAngle = (item) => {
 
-    if (!item.toFixed || isNaN(item)) {
-
-        console.log(`${item} is not a valid number`);
-        return item;
-    }
+    if (!item.toFixed || isNaN(item)) return 0;
 
     item = item % 360;
 
-    if (item < 0) {
-        item += 360;
-    }
+    if (item < 0) item += 360;
+
     return item;
 };
 
@@ -130,6 +122,7 @@ export const correctAngle = (item) => {
 export const correctForZero = (item) => {
 
     if (item.toFixed && !isNaN(item)) {
+
         if (item < -0.000001) return item;
         if (item > 0.000001) return item;
     }
@@ -213,11 +206,15 @@ export const isa_quaternion = item => (item && item.type && item.type == T_QUATE
 // ```
 export const mergeInto = (original, additional) => {
 
-    if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeInto() error - insufficient arguments supplied ${original}, ${additional}`);
+    if (isa_obj(original) && isa_obj(additional)) {
 
-    for (let key in additional) {
+        for (let key in additional) {
 
-        if (additional.hasOwnProperty(key) && typeof original[key] == UNDEF) original[key] = additional[key];
+            if (additional.hasOwnProperty(key) && typeof original[key] == UNDEF) {
+
+                original[key] = additional[key];
+            }
+        }
     }
     return original;
 };
@@ -235,11 +232,12 @@ export const mergeInto = (original, additional) => {
 // ```
 export const mergeOver = (original, additional) => {
 
-    if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeOver() error - insufficient arguments supplied ${original}, ${additional}`);
+    if (isa_obj(original) && isa_obj(additional)) {
 
-    for (let key in additional) {
+        for (let key in additional) {
 
-        if (additional.hasOwnProperty(key)) original[key] = additional[key];
+            if (additional.hasOwnProperty(key)) original[key] = additional[key];
+        }
     }
     return original;
 };
@@ -257,13 +255,14 @@ export const mergeOver = (original, additional) => {
 // ```
 export const mergeDiscard = (original, additional) => {
 
-    if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeDiscard() error - insufficient arguments supplied ${original}, ${additional}`);
+    if (isa_obj(original) && isa_obj(additional)) {
 
-    _entries(additional).forEach(([key, val]) => {
+        _entries(additional).forEach(([key, val]) => {
 
-        if (val === null) delete original[key];
-        else original[key] = additional[key];
-    });
+            if (val === null) delete original[key];
+            else original[key] = additional[key];
+        });
+    }
     return original;
 };
 
@@ -281,17 +280,16 @@ export const mergeDiscard = (original, additional) => {
 // ```
 export const pushUnique = (myArray, potentialMember) => {
 
-    if (!xta(myArray, potentialMember)) throw new Error(`core/utilities pushUnique() error - insufficient arguments supplied ${myArray}, ${potentialMember}`);
+    if (_isArray(myArray)) {
 
-    if (!_isArray(myArray)) throw new Error(`core/utilities pushUnique() error - argument not an array ${myArray}`);
+        if (_isArray(potentialMember)) {
 
-    if (_isArray(potentialMember)) {
+            potentialMember.forEach(item => pushUnique(myArray, item));
+        }
+        else {
 
-        potentialMember.forEach(item => pushUnique(myArray, item));
-    }
-    else {
-
-        if (!myArray.includes(potentialMember)) myArray.push(potentialMember);
+            if (!myArray.includes(potentialMember)) myArray.push(potentialMember);
+        }
     }
     return myArray;
 };
@@ -310,14 +308,13 @@ export const pushUnique = (myArray, potentialMember) => {
 // ```
 export const removeItem = (myArray, unwantedMember) => {
 
-    if (!xta(myArray, unwantedMember)) throw new Error(`core/utilities removeItem() error - insufficient arguments supplied ${myArray}, ${unwantedMember}`);
+    if (_isArray(myArray)) {
 
-    if (!_isArray(myArray)) throw new Error(`core/utilities removeItem() error - argument not an array ${myArray}`);
+        const index = myArray.indexOf(unwantedMember);
 
-    let index = myArray.indexOf(unwantedMember);
+        if (index >= 0) myArray.splice(index, 1);
 
-    if (index >= 0) myArray.splice(index, 1);
-
+    }
     return myArray;
 };
 

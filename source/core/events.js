@@ -16,9 +16,11 @@
 // #### Imports
 import { canvas, cell, entity } from "./library.js";
 
-import { isa_fn, isa_dom, λnull, Ωempty, detectBrowser } from "./utilities.js";
+import { detectBrowser, isa_fn, isa_dom, λnull, Ωempty } from "./utilities.js";
 
-import { _entries, _isArray, ADD_EVENT_LISTENER, CHANGE, DOWN, ENTER, FUNCTION, LEAVE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, SAFARI, TOUCH_END, TOUCH_ENTER, TOUCH_FOLLOW, TOUCH_LEAVE, TOUCH_MOVE, TOUCH_START, UP } from './shared-vars.js';
+import { releaseArray, requestArray } from '../factory/array-pool.js';
+
+import { _isArray, _values, ADD_EVENT_LISTENER, CHANGE, DOWN, ENTER, FUNCTION, LEAVE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, SAFARI, TOUCH_END, TOUCH_ENTER, TOUCH_FOLLOW, TOUCH_LEAVE, TOUCH_MOVE, TOUCH_START, UP } from './shared-vars.js';
 
 
 // #### Functionality
@@ -34,15 +36,15 @@ export const makeAnimationObserver = function (anim, wrapper, specs = Ωempty) {
 
     if (typeof window.IntersectionObserver == FUNCTION && anim && anim.run) {
 
-        let observer = new IntersectionObserver((entries, observer) => {
+        const observer = new IntersectionObserver((entries, observer) => {
 
             let i, iz, entry;
 
             for (i = 0, iz = entries.length; i < iz; i++) {
 
                 entry = entries[i];
-                if (entry.isIntersecting) !anim.isRunning() && anim.run();
-                else if (!entry.isIntersecting) anim.isRunning() && anim.halt();
+                if (entry.isIntersecting && !anim.isRunning()) anim.run();
+                else if (!entry.isIntersecting && anim.isRunning()) anim.halt();
             }
         }, specs);
 
@@ -56,29 +58,29 @@ export const makeAnimationObserver = function (anim, wrapper, specs = Ωempty) {
             observer.disconnect();
         }
     }
-    else return λnull;
+    return λnull;
 }
 
 // `Exported function` (to modules and scrawl object) - __scrawl.addListener__. Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.
 export const addListener = function (evt, fn, targ) {
 
-    if (!isa_fn(fn)) throw new Error(`core/document addListener() error - no function supplied: ${evt}, ${targ}`);
+    if (evt && isa_fn(fn) && targ) {
 
-    actionListener(evt, fn, targ, REMOVE_EVENT_LISTENER);
-    actionListener(evt, fn, targ, ADD_EVENT_LISTENER);
+        actionListener(evt, fn, targ, REMOVE_EVENT_LISTENER);
+        actionListener(evt, fn, targ, ADD_EVENT_LISTENER);
 
-    return function () {
+        return function () {
 
-        removeListener(evt, fn, targ);
-    };
+            removeListener(evt, fn, targ);
+        };
+    }
+    return λnull;
 };
 
 // `Exported function` (to modules and scrawl object) - __scrawl.removeListener__. The counterpart to 'addListener' is __removeListener__ which removes Scrawl-canvas event listeners from DOM elements in a similar way
 export const removeListener = function (evt, fn, targ) {
 
-    if (!isa_fn(fn)) throw new Error(`core/document removeListener() error - no function supplied: ${evt}, ${targ}`);
-
-    actionListener(evt, fn, targ, REMOVE_EVENT_LISTENER);
+    if (evt && isa_fn(fn) && targ) actionListener(evt, fn, targ, REMOVE_EVENT_LISTENER);
 };
 
 // Because devices and browsers differ in their approach to user interaction (mouse vs pointer vs touch), the actual functionality for adding and removing the event listeners associated with each approach is handled by dedicated actionXXXListener functions
@@ -86,99 +88,104 @@ export const removeListener = function (evt, fn, targ) {
 // TODO: code up the functionality to manage touch events
 const actionListener = function (evt, fn, targ, action) {
 
-    let events = [].concat(evt),
-        targets;
-    
-    if (targ.substring) targets = document.body.querySelectorAll(targ);
-    else if (_isArray(targ)) targets = targ;
-    else targets = [targ];
+    const events = requestArray(),
+        targets = requestArray();
+
+    if (_isArray(evt)) events.push(...evt);
+    else events.push(evt);
+
+    if (targ.substring) targets.push(...document.body.querySelectorAll(targ));
+    else if (_isArray(targ)) targets.push(...targ);
+    else targets.push(targ);
 
     if (navigator.pointerEnabled || navigator.msPointerEnabled) actionPointerListener(events, fn, targets, action);
     else actionMouseListener(events, fn, targets, action);
+
+    releaseArray(targets);
+    releaseArray(events);
 };
 
 const actionMouseListener = function (events, fn, targets, action) {
 
-    let i, iz, j, jz, myevent, target;
+    let i, iz, j, jz, e, t;
 
     for (i = 0, iz = events.length; i < iz; i++) {
 
-        myevent = events[i]; 
+        e = events[i]; 
 
         for (j = 0, jz = targets.length; j < jz; j++) {
 
-            target = targets[j];
+            t = targets[j];
 
-            if (isa_dom(target) || target.document || target.characterSet) {
+            if (isa_dom(t) || t.document || t.characterSet) {
                 
-                switch (myevent) {
+                switch (e) {
                 
                     case MOVE:
-                        target[action](MOUSE_MOVE, fn, false);
-                        target[action](TOUCH_MOVE, fn, {passive: false});
-                        target[action](TOUCH_FOLLOW, fn, {passive: false});
+                        t[action](MOUSE_MOVE, fn, false);
+                        t[action](TOUCH_MOVE, fn, {passive: false});
+                        t[action](TOUCH_FOLLOW, fn, {passive: false});
                         break;
 
                     case UP:
-                        target[action](MOUSE_UP, fn, false);
-                        target[action](TOUCH_END, fn, {passive: false});
+                        t[action](MOUSE_UP, fn, false);
+                        t[action](TOUCH_END, fn, {passive: false});
                         break;
 
                     case DOWN:
-                        target[action](MOUSE_DOWN, fn, false);
-                        target[action](TOUCH_START, fn, {passive: false});
+                        t[action](MOUSE_DOWN, fn, false);
+                        t[action](TOUCH_START, fn, {passive: false});
                         break;
 
                     case LEAVE:
-                        target[action](MOUSE_LEAVE, fn, false);
-                        target[action](TOUCH_LEAVE, fn, {passive: false});
+                        t[action](MOUSE_LEAVE, fn, false);
+                        t[action](TOUCH_LEAVE, fn, {passive: false});
                         break;
 
                     case ENTER:
-                        target[action](MOUSE_ENTER, fn, false);
-                        target[action](TOUCH_ENTER, fn, {passive: false});
+                        t[action](MOUSE_ENTER, fn, false);
+                        t[action](TOUCH_ENTER, fn, {passive: false});
                         break;
                 }
             }
-            else throw new Error(`core/document actionMouseListener() error - bad target: ${myevent}, ${target}`);
         }
     }
 };
 
 const actionPointerListener = function (events, fn, targets, action) {
 
-    let i, iz, j, jz, myevent, target;
+    let i, iz, j, jz, e, t;
 
     for (i = 0, iz = events.length; i < iz; i++) {
 
-        myevent = events[i]; 
+        e = events[i]; 
 
         for (j = 0, jz = targets.length; j < jz; j++) {
 
-            target = targets[j];
+            t = targets[j];
 
-            if (isa_dom(target) || target.document || target.characterSet) {
+            if (isa_dom(t) || t.document || t.characterSet) {
 
-                switch (myevent) {
+                switch (e) {
                 
                     case MOVE:
-                        target[action](POINTER_MOVE, fn, false);
+                        t[action](POINTER_MOVE, fn, false);
                         break;
 
                     case UP:
-                        target[action](POINTER_UP, fn, false);
+                        t[action](POINTER_UP, fn, false);
                         break;
 
                     case DOWN:
-                        target[action](POINTER_DOWN, fn, false);
+                        t[action](POINTER_DOWN, fn, false);
                         break;
 
                     case LEAVE:
-                        target[action](POINTER_LEAVE, fn, false);
+                        t[action](POINTER_LEAVE, fn, false);
                         break;
 
                     case ENTER:
-                        target[action](POINTER_ENTER, fn, false);
+                        t[action](POINTER_ENTER, fn, false);
                         break;
                 }
             }
@@ -198,45 +205,52 @@ const actionPointerListener = function (events, fn, targets, action) {
 // `Exported function` (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.
 export const addNativeListener = function (evt, fn, targ) {
 
-    if (!isa_fn(fn)) throw new Error(`core/document addNativeListener() error - no function supplied: ${evt}, ${targ}`);
+    if (evt && isa_fn(fn) && targ) {
 
-    actionNativeListener(evt, fn, targ, REMOVE_EVENT_LISTENER);
-    actionNativeListener(evt, fn, targ, ADD_EVENT_LISTENER);
+        actionNativeListener(evt, fn, targ, REMOVE_EVENT_LISTENER);
+        actionNativeListener(evt, fn, targ, ADD_EVENT_LISTENER);
 
-    return function () {
+        return function () {
 
-        removeNativeListener(evt, fn, targ);
-    };
+            removeNativeListener(evt, fn, targ);
+        };
+    }
+    return λnull;
 };
 
 // `Exported function` (to modules and scrawl object). The counterpart to 'addNativeListener' is __scrawl.removeNativeListener__ which removes event listeners from DOM elements in a similar way
 export const removeNativeListener = function (evt, fn, targ) {
 
-    if (!isa_fn(fn)) throw new Error(`core/document removeNativeListener() error - no function supplied: ${evt}, ${targ}`);
-
-    actionNativeListener(evt, fn, targ, REMOVE_EVENT_LISTENER);
+    if (evt && isa_fn(fn) && targ) actionNativeListener(evt, fn, targ, REMOVE_EVENT_LISTENER);
 };
 
 const actionNativeListener = function (evt, fn, targ, action) {
 
-    let events = [].concat(evt),
-        targets, i, iz, j, jz, myevent, target;
+    const events = requestArray(),
+        targets = requestArray();
 
-    if (targ.substring) targets = document.body.querySelectorAll(targ);
-    else if (_isArray(targ)) targets = targ;
-    else targets = [targ];
+    let i, iz, j, jz, e, t;
+
+    if (_isArray(evt)) events.push(...evt);
+    else events.push(evt);
+
+    if (targ.substring) targets.push(...document.body.querySelectorAll(targ));
+    else if (_isArray(targ)) targets.push(...targ);
+    else targets.push(targ);
 
     for (i = 0, iz = events.length; i < iz; i++) {
 
-        myevent = events[i];
+        e = events[i];
 
         for (j = 0, jz = targets.length; j < jz; j++) {
 
-            target = targets[j];
-            if (isa_dom(target) || target.document || target.characterSet) target[action](myevent, fn, false);
-            else throw new Error(`core/document actionNativeListener() error - bad target: ${myevent}, ${target}`);
+            t = targets[j];
+
+            if (isa_dom(t) || t.document || t.characterSet) t[action](e, fn, false);
         }
     }
+    releaseArray(targets);
+    releaseArray(events);
 };
 
 
@@ -260,20 +274,9 @@ const updatePixelRatio = () => {
 
     dpr = window.devicePixelRatio;
 
-    for (const [name, wrapper] of _entries(canvas)) {
-
-        wrapper.dirtyDimensions = true;
-    }
-
-    for (const [name, wrapper] of _entries(cell)) {
-
-        wrapper.dirtyDimensions = true;
-    }
-
-    for (const [name, ent] of _entries(entity)) {
-
-        ent.dirtyHost = true;
-    }
+    _values(canvas).forEach(v => v.dirtyDimensions = true);
+    _values(cell).forEach(v => v.dirtyDimensions = true);
+    _values(entity).forEach(v => v.dirtyHost = true);
 
     if (!ignorePixelRatio) dpr_changeAction();
 

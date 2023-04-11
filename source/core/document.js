@@ -7,11 +7,13 @@
 // #### Imports
 import { artefact } from "./library.js";
 
-import { pushUnique } from "./utilities.js";
+import { pushUnique, Ωempty } from "./utilities.js";
 
 import { getPixelRatio, getIgnorePixelRatio } from "./events.js";
 
-import { _css, _keys, _xcss, AUTO, BLOCK, GRAYSCALE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, T_CANVAS, WEBKIT_FONT_SMOOTHING } from './shared-vars.js';
+import { releaseArray, requestArray } from '../factory/array-pool.js';
+
+import { _css, _keys, _xcss, AUTO, BLOCK, GRAYSCALE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, T_CANVAS, WEBKIT_FONT_SMOOTHING, ZERO_STR } from './shared-vars.js';
 
 
 // #### DOM element updates
@@ -25,184 +27,186 @@ import { _css, _keys, _xcss, AUTO, BLOCK, GRAYSCALE, MOZOSX_FONT_SMOOTHING, NEVE
 
 // Local variable
 const domShowElements = [];
+let domShowRequired = false;
 
 // `Exported function` (to modules). 
-export const addDomShowElement = function (item = '') {
-
-    if (!item) throw new Error(`core/document addDomShowElement() error - false argument supplied: ${item}`);
-    if (!item.substring) throw new Error(`core/document addDomShowElement() error - argument not a string: ${item}`);
-
-    pushUnique(domShowElements, item);
-};
-
-export let domShowRequired = false;
+export const setDomShowRequired = (val = true) => domShowRequired = val;
 
 // `Exported function` (to modules). 
-export const setDomShowRequired = function (val = true) {
+export const addDomShowElement = function (item = ZERO_STR) {
 
-    domShowRequired = val;
+    if (item && item.substring) {
+
+        pushUnique(domShowElements, item);
+    }
 };
 
 // `Exported function` (to modules). This is the __main DOM manipulation function__ which will be triggered once during each Display cycle.
-export const domShow = function (singleArtefact = '') {
+export const domShow = function (singleArtefact = ZERO_STR) {
 
     if (domShowRequired || singleArtefact) {
 
-        let myartefacts;
+        const myartefacts = requestArray();
 
-        if (singleArtefact) myartefacts = [singleArtefact];
+        if (singleArtefact && singleArtefact.substring) myartefacts.push(singleArtefact);
         else {
 
             domShowRequired = false;
-            myartefacts = [].concat(domShowElements);
+            myartefacts.push(...domShowElements);
             domShowElements.length = 0;
         }
 
-        let i, iz, name, art, el, style,
+        let i, iz, art, el, style,
             p, dims, w, h,
             j, jz, items, keys, key, keyName, value;
 
-        let ignoreDpr = getIgnorePixelRatio();
-        let dpr = getPixelRatio();
+        const ignoreDpr = getIgnorePixelRatio();
+        const dpr = getPixelRatio();
 
         for (i = 0, iz = myartefacts.length; i < iz; i++) {
 
-            name = myartefacts[i];
+            art = artefact[myartefacts[i]];
 
-            art = artefact[name];
-            if (!art) throw new Error(`core/document domShow() error - artefact missing: ${name}`);
+            if (art) {
 
-            el = art.domElement;
-            if (!el) throw new Error(`core/document domShow() error - DOM element missing: ${name}`);
+                el = art.domElement;
 
-            style = el.style;
+                if (el) {
 
-            // update perspective
-            if (art.dirtyPerspective) {
+                    style = el.style;
 
-                art.dirtyPerspective = false;
+                    if (style) {
 
-                p = art.perspective;
+                        // update perspective
+                        if (art.dirtyPerspective) {
 
-                style.perspectiveOrigin = `${p.x} ${p.y}`;
-                style.perspective = `${p.z}px`;
-            }
+                            art.dirtyPerspective = false;
 
-            // update position
-            if (art.dirtyPosition) {
+                            p = art.perspective;
 
-                art.dirtyPosition = false;
-                style.position = art.position;
-            }
-
-            // update dimensions
-            if (art.dirtyDomDimensions) {
-
-                art.dirtyDomDimensions = false;
-
-                dims = art.currentDimensions;
-                w = dims[0];
-                h = dims[1];
-
-                if (art.type == T_CANVAS) {
-
-                    if (ignoreDpr) {
-
-                        el.width = w;
-                        el.height = h;
-                    }
-                    else {
-
-                        if (!art.ignoreCanvasCssDimensions) {
-
-                            style.width = `${w}px`;
-                            style.height = `${h}px`;
+                            style.perspectiveOrigin = `${p.x} ${p.y}`;
+                            style.perspective = `${p.z}px`;
                         }
 
-                        el.width = w * dpr;
-                        el.height = h * dpr;
+                        // update position
+                        if (art.dirtyPosition) {
+
+                            art.dirtyPosition = false;
+                            style.position = art.position;
+                        }
+
+                        // update dimensions
+                        if (art.dirtyDomDimensions) {
+
+                            art.dirtyDomDimensions = false;
+
+                            dims = art.currentDimensions;
+                            w = dims[0];
+                            h = dims[1];
+
+                            if (art.type == T_CANVAS) {
+
+                                if (ignoreDpr) {
+
+                                    el.width = w;
+                                    el.height = h;
+                                }
+                                else {
+
+                                    if (!art.ignoreCanvasCssDimensions) {
+
+                                        style.width = `${w}px`;
+                                        style.height = `${h}px`;
+                                    }
+
+                                    el.width = w * dpr;
+                                    el.height = h * dpr;
+                                }
+                                if (art.renderOnResize) art.render();
+                            }
+                            else {
+
+                                style.width = `${w}px`;
+                                style.height = (h) ? `${h}px` : AUTO;
+                            }
+                        }
+
+                        // update handle/transformOrigin
+                        if (art.dirtyTransformOrigin) {
+
+                            art.dirtyTransformOrigin = false;
+                            style.transformOrigin = art.currentTransformOriginString;
+                        }
+
+                        // update transform
+                        if (art.dirtyTransform) {
+
+                            art.dirtyTransform = false;
+                            style.transform = art.currentTransformString;
+                        }
+
+                        // update visibility
+                        if (art.dirtyVisibility) {
+
+                            art.dirtyVisibility = false;
+                            style.display = (art.visibility) ? BLOCK : NONE;
+                        }
+
+                        // update visibility
+                        if (art.dirtySmoothFont) {
+
+                            art.dirtySmoothFont = false;
+
+                            if (art.smoothFont) {
+                                style[WEBKIT_FONT_SMOOTHING] = AUTO;
+                                style[MOZOSX_FONT_SMOOTHING] = AUTO;
+                                style[SMOOTH_FONT] = AUTO;
+                            }
+                            else {
+                                style[WEBKIT_FONT_SMOOTHING] = NONE;
+                                style[MOZOSX_FONT_SMOOTHING] = GRAYSCALE;
+                                style[SMOOTH_FONT] = NEVER;
+                            }
+                        }
+
+                        // update other CSS changes
+                        if (art.dirtyCss) {
+
+                            art.dirtyCss = false;
+
+                            items = art.css || Ωempty;
+                            keys = _keys(items);
+
+                            for (j = 0, jz = keys.length; j < jz; j++) {
+
+                                key = keys[j];
+                                value = items[key];
+
+                                if (_xcss.has(key)) {
+
+                                    keyName = `${key[0].toUpperCase}${key.substr(1)}`;
+
+                                    style[`webkit${keyName}`] = value;
+                                    style[`moz${keyName}`] = value;
+                                    style[`ms${keyName}`] = value;
+                                    style[`o${keyName}`] = value;
+                                    style[key] = value;
+                                }
+                                else if (_css.has(key)) style[key] = value;
+                            }
+                        }
+
+                        // update element classes
+                        if (art.dirtyClasses) {
+
+                            art.dirtyClasses = false;
+                            if (el.className.substring) el.className = art.classes;
+                        }
                     }
-                    if (art.renderOnResize) art.render();
                 }
-                else {
-
-                    style.width = `${w}px`;
-                    style.height = (h) ? `${h}px` : AUTO;
-                }
-            }
-
-            // update handle/transformOrigin
-            if (art.dirtyTransformOrigin) {
-
-                art.dirtyTransformOrigin = false;
-                style.transformOrigin = art.currentTransformOriginString;
-            }
-
-            // update transform
-            if (art.dirtyTransform) {
-
-                art.dirtyTransform = false;
-                style.transform = art.currentTransformString;
-            }
-
-            // update visibility
-            if (art.dirtyVisibility) {
-
-                art.dirtyVisibility = false;
-                style.display = (art.visibility) ? BLOCK : NONE;
-            }
-
-            // update visibility
-            if (art.dirtySmoothFont) {
-
-                art.dirtySmoothFont = false;
-
-                if (art.smoothFont) {
-                    style[WEBKIT_FONT_SMOOTHING] = AUTO;
-                    style[MOZOSX_FONT_SMOOTHING] = AUTO;
-                    style[SMOOTH_FONT] = AUTO;
-                }
-                else {
-                    style[WEBKIT_FONT_SMOOTHING] = NONE;
-                    style[MOZOSX_FONT_SMOOTHING] = GRAYSCALE;
-                    style[SMOOTH_FONT] = NEVER;
-                }
-            }
-
-            // update other CSS changes
-            if (art.dirtyCss) {
-
-                art.dirtyCss = false;
-
-                items = art.css || {};
-                keys = _keys(items);
-
-                for (j = 0, jz = keys.length; j < jz; j++) {
-
-                    key = keys[j];
-                    value = items[key];
-
-                    if (_xcss.has(key)) {
-
-                        keyName = `${key[0].toUpperCase}${key.substr(1)}`;
-
-                        style[`webkit${keyName}`] = value;
-                        style[`moz${keyName}`] = value;
-                        style[`ms${keyName}`] = value;
-                        style[`o${keyName}`] = value;
-                        style[key] = value;
-                    }
-                    else if (_css.has(key)) style[key] = value;
-                }
-            }
-
-            // update element classes
-            if (art.dirtyClasses) {
-
-                art.dirtyClasses = false;
-                if (el.className.substring) el.className = art.classes;
             }
         }
+        releaseArray(myartefacts);
     }
 };
 
@@ -222,7 +226,7 @@ scrawlCanvasHold.style.left = '-5000px';
 scrawlCanvasHold.id = 'Scrawl-ARIA-default-hold';
 document.body.appendChild(scrawlCanvasHold);
 
-// Navigation area - canvas anchor links. Canvases create their own (hidden) &lt;nav> elements that directly follow them in the DOM. These are used to store &lt;a> links for clickable entitys in the canvas display, making them accessible to non-visual users (for example: screen readers)
+// Navigation area - canvas anchor links. Canvases create their own (hidden) &lt;nav> elements that get embedded in the Canvas Shadow DOM. These are used to store &lt;a> links for clickable entitys in the canvas display, making them accessible to non-visual users (for example: screen readers). Should that &lt;nav> element fail to be created, then those &lt;a> links will be added to this element.
 export const scrawlNavigationHold = document.createElement('nav');
 scrawlNavigationHold.style.position = 'absolute';
 scrawlNavigationHold.style.top = '-5000px';

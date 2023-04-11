@@ -45,37 +45,35 @@ export const getSortedRootElements = () => {
 
 const sortRootElements = function () {
 
-    console.log('SORT ROOT ELEMENTS');
     setRootElementsSort(false);
 
     const buckets = requestArray();
 
-    let arr, art, order, i, iz, item;
+    let obj, order, i, iz;
 
     for (i = 0, iz = rootElements.length; i < iz; i++) {
 
-        item = rootElements[i];
-        art = artefact[item];
+        obj = artefact[rootElements[i]];
 
-        if (art) {
+        if (obj) {
 
-            order = _floor(art.order) || 0;
+            order = _floor(obj.order) || 0;
 
             if (!buckets[order]) buckets[order] = requestArray();
 
-            buckets[order].push(art.name);
+            buckets[order].push(obj.name);
         }
     }
     rootElements_sorted.length = 0;
 
     for (i = 0, iz = buckets.length; i < iz; i++) {
 
-        arr = buckets[i];
+        obj = buckets[i];
 
-        if (arr) {
+        if (obj) {
 
-            rootElements_sorted.push(...arr);
-            releaseArray(arr);
+            rootElements_sorted.push(...obj);
+            releaseArray(obj);
         }
     };
     releaseArray(buckets);

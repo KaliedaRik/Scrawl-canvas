@@ -17,7 +17,7 @@ import { makeAnimation } from "../factory/animation.js";
 
 import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged, forceUpdate } from './system-flags.js';
 
-import { _entries, _floor, _now, _round, ADD_EVENT_LISTENER, CHANGE, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from './shared-vars.js'
+import { _entries, _floor, _now, _round, _seal, ADD_EVENT_LISTENER, CHANGE, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from './shared-vars.js'
 
 
 // `Exported array` (to modules). DOM element wrappers subscribe for updates by adding themselves to the __uiSubscribedElements__ array. When an event fires, the updated data will be pushed to them automatically
@@ -25,7 +25,7 @@ export const uiSubscribedElements = [];
 
 
 // `Exported object` (to modules and the scrawl object). The __currentCorePosition__ object holds the __global__ mouse cursor position, alongside browser view dimensions and scroll position
-export const currentCorePosition = {
+export const currentCorePosition = _seal({
     x: 0,
     y: 0,
     scrollX: 0,
@@ -39,7 +39,7 @@ export const currentCorePosition = {
     prefersContrast: false,
     prefersReduceData: false,
     rawTouches: [],
-};
+});
 
 
 // ### Accessibility preferences
