@@ -129,13 +129,16 @@
 
 
 // #### Imports
-import { constructors, cell, group, entity, asset, styles } from '../core/library.js';
-import { mergeOver, removeItem, λnull, Ωempty } from '../core/utilities.js';
+import { asset, cell, constructors, entity, group, styles } from '../core/library.js';
+
+import { doCreate, mergeOver, removeItem, λnull, Ωempty } from '../core/utilities.js';
 
 import { makeGradient } from './gradient.js';
 import { colorEngine } from './filter-engine.js';
 
 import baseMix from '../mixin/base.js';
+
+import { _entries, _keys, _round, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, EMBOSS_WORK, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, NAME, NEWSPRINT, NOISE_VALUES, NORMAL, OFFSET, PC30, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Filter constructor
@@ -152,9 +155,9 @@ const Filter = function (items = Ωempty) {
 
 
 // #### Filter prototype
-const P = Filter.prototype = Object.create(Object.prototype);
-P.type = 'Filter';
-P.lib = 'filter';
+const P = Filter.prototype = doCreate();
+P.type = T_FILTER;
+P.lib = FILTER;
 P.isArtefact = false;
 P.isAsset = false;
 
@@ -176,7 +179,7 @@ const defaultAttributes = {
     // + Filter factory invocations which include the `method` attribute in their argument object do not need to include an `actions` attribute; the factory will build the action objects for us.
     // + When using the `method` attribute, other attributes can be included alongside it. The filter factory will automatically transpose these attributes to the action object.
     // + The following Strings are valid methods: `'alphaToChannels', 'areaAlpha', 'binary', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'corrode', 'curveWeights', 'cyan', 'displace', 'edgeDetect',  'emboss', 'flood', 'gaussianBlur', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'mapToGradient', 'matrix', 'matrix5', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'randomNoise', 'red', 'reducePalette', 'saturation', 'sepia', 'sharpen', 'swirl', 'threshold', 'tint', 'userDefined', 'yellow'`.
-    method: '',
+    method: ZERO_STR,
 
     // ##### How filters process data
     // The Scrawl-canvas filter engine can use ___multiple pathways___ to process a filter's Array of action objects. In essence, a filter action can store the results of its work in a named cache, which can then be used by other filter actions further down the line.
@@ -191,9 +194,9 @@ const defaultAttributes = {
     // + When processing completes, the updated data held in the work object is returned by the filter engine, which Scrawl-canvas then uses to stamp the entity/Group/Cell into the display canvas.
     // + If the entity, Group or Cell has requested that the filters applied to it be memoized, the final result will be stored in a key:value cache; the next time the entity/Group/Cell requests the filters, and it supplies a key matching one in the cache, the cached result is returned instantly
     // + memoized results are time limited and expire, by default, after 1 second.
-    lineIn: '',
-    lineMix: '',
-    lineOut: '',
+    lineIn: ZERO_STR,
+    lineMix: ZERO_STR,
+    lineOut: ZERO_STR,
 
     // Every action includes an __opacity__ attribute which defines how much of the incoming image data (`lineIn`) and how much of the processed results gets included in the output data (`lineOut`)
     // + When set to `0`, the output consists entirely of input data
@@ -234,23 +237,23 @@ const defaultAttributes = {
     alpha: 255,
     angle: 0,
     areaAlphaLevels: null,
-    asset: '',
-    blend: 'normal',
+    asset: ZERO_STR,
+    blend: NORMAL,
     blue: 0,
     blueInBlue: 0,
-    blueColor: 'rgba(0 0 0 / 1)',
+    blueColor: BLACK,
     blueInGreen: 0,
     blueInRed: 0,
-    channelX: 'red',
-    channelY: 'green',
+    channelX: RED,
+    channelY: GREEN,
     clamp: 0,
-    compose: 'source-over',
+    compose: SOURCE_OVER,
     copyHeight: 1,
     copyWidth: 1,
     copyX: 0,
     copyY: 0,
     concurrent: false,
-    easing: 'linear',
+    easing: LINEAR,
     excludeAlpha: true, 
     excludeBlue: false,
     excludeGreen: false,
@@ -259,7 +262,7 @@ const defaultAttributes = {
     gradient: null,
     green: 0,
     greenInBlue: 0,
-    greenColor: 'rgba(0 0 0 / 1)',
+    greenColor: BLACK,
     greenInGreen: 0,
     greenInRed: 0,
     gutterHeight: 1,
@@ -267,7 +270,7 @@ const defaultAttributes = {
     height: 1,
     highAlpha: 255,
     highBlue: 255,
-    highColor: 'rgba(255 255 255 / 1)',
+    highColor: WHITE,
     highGreen: 255,
     highRed: 255,
     includeAlpha: false, 
@@ -279,11 +282,11 @@ const defaultAttributes = {
     level: 0,
     lowAlpha: 0,
     lowBlue: 0,
-    lowColor: 'rgba(0 0 0 / 1)',
+    lowColor: BLACK,
     lowGreen: 0,
     lowRed: 0,
     minimumColorDistance: 1000,
-    noiseType: 'random',
+    noiseType: RANDOM,
     noWrap: false,
     offsetAlphaX: 0,
     offsetAlphaY: 0,
@@ -306,9 +309,9 @@ const defaultAttributes = {
     offsetMin: 0,
     offsetMax: 0,
     opaqueAt: 1,
-    operation: 'mean',
-    outerRadius: '30%',
-    palette: 'black-white', 
+    operation: MEAN,
+    outerRadius: PC30,
+    palette: BLACK_WHITE, 
     passes: 1,
     points: null,
     postProcessResults: true,
@@ -318,16 +321,16 @@ const defaultAttributes = {
     ranges: null,
     red: 0,
     redInBlue: 0,
-    redColor: 'rgba(0 0 0 / 1)',
+    redColor: BLACK,
     redInGreen: 0,
     redInRed: 0,
-    reference: 'black',
+    reference: BLACK,
     scaleX: 1,
     scaleY: 1,
-    seed: 'some-random-string-or-other',
+    seed: DEFAULT_SEED,
     smoothing: 0,
-    startX: '50%',
-    startY: '50%',
+    startX: PC50,
+    startY: PC50,
     step: 1,
     strength: 1,
     staticSwirls: null,
@@ -362,21 +365,21 @@ P.kill = function () {
     let myname = this.name;
 
     // Remove filter from all entity filters attribute
-    Object.entries(entity).forEach(([name, ent]) => {
+    _entries(entity).forEach(([name, ent]) => {
 
         let f = ent.filters;
         if (f && f.includes(myname)) removeItem(f, myname);
     });
     
     // Remove filter from all group filters attribute
-    Object.entries(group).forEach(([name, grp]) => {
+    _entries(group).forEach(([name, grp]) => {
 
         let f = grp.filters;
         if (f && f.includes(myname)) removeItem(f, myname);
     });
     
     // Remove filter from all cell filters attribute
-    Object.entries(cell).forEach(([name, c]) => {
+    _entries(cell).forEach(([name, c]) => {
 
         let f = c.filters;
         if (f && f.includes(myname)) removeItem(f, myname);
@@ -396,7 +399,7 @@ const S = P.setters,
 
 P.set = function (items = Ωempty) {
 
-    const keys = Object.keys(items),
+    const keys = _keys(items),
         keysLen = keys.length;
 
     if (keysLen) {
@@ -411,12 +414,12 @@ P.set = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key !== 'name' && value != null) {
+            if (key && key != NAME && value != null) {
 
                 predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
-                else if (typeof defs[key] !== 'undefined') this[key] = value;
+                else if (typeof defs[key] != UNDEF) this[key] = value;
             }
         }
     }
@@ -430,7 +433,7 @@ P.set = function (items = Ωempty) {
 
 P.setDelta = function (items = Ωempty) {
 
-    const keys = Object.keys(items),
+    const keys = _keys(items),
         keysLen = keys.length;
 
     if (keysLen) {
@@ -445,12 +448,12 @@ P.setDelta = function (items = Ωempty) {
             key = keys[i];
             value = items[key];
 
-            if (key && key !== 'name' && value != null) {
+            if (key && key != NAME && value != null) {
 
                 predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
-                else if (typeof defs[key] !== 'undefined') this[key] = addStrings(this[key], value);
+                else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], value);
             }
         }
     }
@@ -499,9 +502,9 @@ const setActionsArray = {
 // __alphaToChannels__ (new in v8.4.0) - copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel's value unchanged. Setting the appropriate `includeChannel` flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate `excludeChannel` flag will set that channel's value to zero.
     alphaToChannels: function (f) {
         f.actions = [{
-            action: 'alpha-to-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: ALPHA_TO_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             includeRed: (f.includeRed != null) ? f.includeRed : true,
             includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
@@ -511,12 +514,13 @@ const setActionsArray = {
             excludeBlue: (f.excludeBlue != null) ? f.excludeBlue : true,
         }];
     },
+
 // __areaAlpha__ (new in v8.4.0) - places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
     areaAlpha: function (f) {
         f.actions = [{
-            action: 'area-alpha',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: AREA_ALPHA,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,
             tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,
@@ -544,9 +548,9 @@ const setActionsArray = {
             high = (f.high != null) ? f.high : [highRed, highGreen, highBlue, highAlpha];
 
         f.actions = [{
-            action: 'threshold',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: THRESHOLD,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             level: (f.level != null) ? f.level : 128,
             red: (f.red != null) ? f.red : 128,
@@ -566,11 +570,11 @@ const setActionsArray = {
 // __blend__ (new in v8.4.0) - perform a blend operation on two images; available blend options include: `'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'` - see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#blending)
     blend: function (f) {
         f.actions = [{
-            action: 'blend',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
-            lineMix: (f.lineMix != null) ? f.lineMix : '',
-            blend: (f.blend != null) ? f.blend : 'normal',
+            action: BLEND,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            lineMix: (f.lineMix != null) ? f.lineMix : ZERO_STR,
+            blend: (f.blend != null) ? f.blend : NORMAL,
             offsetX: (f.offsetX != null) ? f.offsetX : 0,
             offsetY: (f.offsetY != null) ? f.offsetY : 0,
             opacity: (f.opacity != null) ? f.opacity : 1,
@@ -580,9 +584,9 @@ const setActionsArray = {
 // __blue__ - removes red and green channel color from the image
     blue: function (f) {
         f.actions = [{
-            action: 'average-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: AVERAGE_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             excludeRed: true,
             excludeGreen: true,
@@ -594,9 +598,9 @@ const setActionsArray = {
 // + Use the gaussian blur filter for a smoother result.
     blur: function (f) {
         f.actions = [{
-            action: 'blur',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: BLUR,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             includeRed: (f.includeRed != null) ? f.includeRed : true,
             includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
@@ -616,9 +620,9 @@ const setActionsArray = {
         let level = (f.level != null) ? f.level : 1;
 
         f.actions = [{
-            action: 'modulate-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: MODULATE_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             red: level,
             green: level,
@@ -630,9 +634,9 @@ const setActionsArray = {
 // + TODO - add in a `reference` attribute, which will be a valid CSS color string. Use these colors to generate the red, green and blue Arrays. 
     channelLevels: function (f) {
         f.actions = [{
-            action: 'lock-channels-to-levels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: LOCK_CHANNELS_TO_LEVELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             red: (f.red != null) ? f.red : [0],
             green: (f.green != null) ? f.green : [0],
@@ -644,9 +648,9 @@ const setActionsArray = {
 // __channels__ - adjust the value of each channel by a specified multiplier
     channels: function (f) {
         f.actions = [{
-            action: 'modulate-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: MODULATE_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             red: (f.red != null) ? f.red : 1,
             green: (f.green != null) ? f.green : 1,
@@ -658,14 +662,14 @@ const setActionsArray = {
 // __channelstep__ - restrict the number of color values that each channel can set by imposing regular bands on each channel
     channelstep: function (f) {
 
-        let clamp = (f.clamp != null) ? f.clamp : 'down'
+        let clamp = (f.clamp != null) ? f.clamp : DOWN
 
-        if (!['down', 'round', 'up'].includes(clamp)) clamp = 'down';
+        if (!CLAMP_VALUES.includes(clamp)) clamp = DOWN;
 
         f.actions = [{
-            action: 'step-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: STEP_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             clamp,
             red: (f.red != null) ? f.red : 1,
@@ -677,9 +681,9 @@ const setActionsArray = {
 // __channelsToAlpha__ (new in v8.4.0) - calculates an average value from each pixel's included channels and applies that value to the alpha channel.
     channelsToAlpha: function (f) {
         f.actions = [{
-            action: 'channels-to-alpha',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: CHANNELS_TO_ALPHA,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             includeRed: (f.includeRed != null) ? f.includeRed : true,
             includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
@@ -717,9 +721,9 @@ const setActionsArray = {
         }
 
         f.actions = [{
-            action: 'chroma',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: CHROMA,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             ranges: processedRanges,
         }];
@@ -745,9 +749,9 @@ const setActionsArray = {
         }
 
         f.actions = [{
-            action: 'colors-to-alpha',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: COLORS_TO_ALPHA,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             red,
             green,
@@ -791,9 +795,9 @@ const setActionsArray = {
         }
 
         f.actions = [{
-            action: 'clamp-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: CLAMP_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             lowRed,
             lowGreen,
@@ -807,11 +811,11 @@ const setActionsArray = {
 // __compose__ (new in v8.4.0) - perform a composite operation on two images; available `compose` options include: `'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', and 'xor'` - see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators)
     compose: function (f) {
         f.actions = [{
-            action: 'compose',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
-            lineMix: (f.lineMix != null) ? f.lineMix : '',
-            compose: (f.compose != null) ? f.compose : 'source-over',
+            action: COMPOSE,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            lineMix: (f.lineMix != null) ? f.lineMix : ZERO_STR,
+            compose: (f.compose != null) ? f.compose : SOURCE_OVER,
             offsetX: (f.offsetX != null) ? f.offsetX : 0,
             offsetY: (f.offsetY != null) ? f.offsetY : 0,
             opacity: (f.opacity != null) ? f.opacity : 1,
@@ -825,9 +829,9 @@ const setActionsArray = {
 // + Channels can be selected by setting the `includeRed`, `includeGreen`, `includeBlue` (all false by default) and `includeAlpha` (default: true) flags.
     corrode: function (f) {
         f.actions = [{
-            action: 'corrode',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: CORRODE,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             width: (f.width != null) ? f.width : 3,
             height: (f.height != null) ? f.height : 3,
             offsetX: (f.offsetX != null) ? f.offsetX : 1,
@@ -836,7 +840,7 @@ const setActionsArray = {
             includeGreen: (f.includeGreen != null) ? f.includeGreen : false,
             includeBlue: (f.includeBlue != null) ? f.includeBlue : false,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
-            operation: (f.operation != null) ? f.operation : 'mean',
+            operation: (f.operation != null) ? f.operation : MEAN,
             opacity: (f.opacity != null) ? f.opacity : 1,
         }];
     },
@@ -844,9 +848,9 @@ const setActionsArray = {
 // __curveWeights__ (new in v8.6.1) - curves filter (for image processing tonality). The weights array must by 1024 elements long, with each element defaulting to a value of 1.0
     curveWeights: function (f) {
         f.actions = [{
-            action: 'vary-channels-by-weights',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: VARY_CHANNELS_BY_WEIGHTS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             weights: (f.weights != null) ? f.weights : false,
             useMixedChannel: (f.useMixedChannel != null) ? f.useMixedChannel : true,
@@ -856,9 +860,9 @@ const setActionsArray = {
 // __cyan__ - removes red channel color from the image, and averages the remaining channel colors
     cyan: function (f) {
         f.actions = [{
-            action: 'average-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: AVERAGE_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             includeGreen: true,
             includeBlue: true,
@@ -869,13 +873,13 @@ const setActionsArray = {
 // __displace__ (new in v8.4.0) - moves pixels around the image, based on the color channel values supplied by a displacement map image
     displace: function (f) {
         f.actions = [{
-            action: 'displace',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
-            lineMix: (f.lineMix != null) ? f.lineMix : '',
+            action: DISPLACE,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            lineMix: (f.lineMix != null) ? f.lineMix : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
-            channelX: (f.channelX != null) ? f.channelX : 'red',
-            channelY: (f.channelY != null) ? f.channelY : 'green',
+            channelX: (f.channelX != null) ? f.channelX : RED,
+            channelY: (f.channelY != null) ? f.channelY : GREEN,
             offsetX: (f.offsetX != null) ? f.offsetX : 0,
             offsetY: (f.offsetY != null) ? f.offsetY : 0,
             scaleX: (f.scaleX != null) ? f.scaleX : 1,
@@ -887,9 +891,9 @@ const setActionsArray = {
 // __edgeDetect__ (new in v8.4.0) - applies a preset 3x3 edge-detect matrix to the image
     edgeDetect: function (f) {
         f.actions = [{
-            action: 'matrix',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: MATRIX,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             width: 3,
             height: 3,
@@ -908,16 +912,16 @@ const setActionsArray = {
         const actions = [];
         if (f.useNaturalGrayscale) {
             actions.push({
-                action: 'grayscale',
-                lineIn: (f.lineIn != null) ? f.lineIn : '',
-                lineOut: 'emboss-work',
+                action: GRAYSCALE,
+                lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+                lineOut: EMBOSS_WORK,
             });
         }
         else {
             actions.push({
-                action: 'average-channels',
-                lineIn: (f.lineIn != null) ? f.lineIn : '',
-                lineOut: 'emboss-work',
+                action: AVERAGE_CHANNELS,
+                lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+                lineOut: EMBOSS_WORK,
                 includeRed: true,
                 includeGreen: true,
                 includeBlue: true,
@@ -925,9 +929,9 @@ const setActionsArray = {
         }
         if (f.clamp) {
             actions.push({
-                action: 'clamp-channels',
-                lineIn: 'emboss-work',
-                lineOut: 'emboss-work',
+                action: CLAMP_CHANNELS,
+                lineIn: EMBOSS_WORK,
+                lineOut: EMBOSS_WORK,
                 lowRed: 0 + f.clamp, 
                 lowGreen: 0 + f.clamp, 
                 lowBlue: 0 + f.clamp, 
@@ -938,16 +942,16 @@ const setActionsArray = {
         }
         if (f.smoothing) {
             actions.push({
-                action: 'gaussian-blur',
-                lineIn: 'emboss-work',
-                lineOut: 'emboss-work',
+                action: GAUSSIAN_BLUR,
+                lineIn: EMBOSS_WORK,
+                lineOut: EMBOSS_WORK,
                 radius: f.smoothing,
             });
         }
         actions.push({
-            action: 'emboss',
-            lineIn: 'emboss-work',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: EMBOSS,
+            lineIn: EMBOSS_WORK,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             angle: (f.angle != null) ? f.angle : 0,
             strength: (f.strength != null) ? f.strength : 1,
@@ -973,7 +977,7 @@ const setActionsArray = {
 
             [red, green, blue, alpha] = colorEngine.extractRGBfromColor(f.reference);
 
-            alpha = Math.round(alpha * 255);
+            alpha = _round(alpha * 255);
 
             f.red = red;
             f.green = green;
@@ -984,9 +988,9 @@ const setActionsArray = {
         }
 
         f.actions = [{
-            action: 'flood',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: FLOOD,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             red,
             green,
@@ -999,9 +1003,9 @@ const setActionsArray = {
 // __gaussianBlur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
     gaussianBlur: function (f) {
         f.actions = [{
-            action: 'gaussian-blur',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: GAUSSIAN_BLUR,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             radius: (f.radius != null) ? f.radius : 1,
         }];
@@ -1010,12 +1014,12 @@ const setActionsArray = {
 // __glitch__ - semi-randomly shift rows left/right
     glitch: function (f) {
         f.actions = [{
-            action: 'glitch',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: GLITCH,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             useMixedChannel: (f.useMixedChannel != null) ? f.useMixedChannel : true,
-            seed: (f.seed != null) ? f.seed : 'some-random-string-or-other',
+            seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
             step: (f.step != null) ? f.step : 1,
             offsetMin: (f.offsetMin != null) ? f.offsetMin : 0,
             offsetMax: (f.offsetMax != null) ? f.offsetMax : 0,
@@ -1035,9 +1039,9 @@ const setActionsArray = {
 // __gray__ (new in v8.4.0) - averages the three color channel colors
     gray: function (f) {
         f.actions = [{
-            action: 'average-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: AVERAGE_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             includeRed: true,
             includeGreen: true,
@@ -1048,9 +1052,9 @@ const setActionsArray = {
 // __grayscale__ - produces a more realistic black-and-white photograph effect
     grayscale: function (f) {
         f.actions = [{
-            action: 'grayscale',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: GRAYSCALE,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
         }];
     },
@@ -1058,9 +1062,9 @@ const setActionsArray = {
 // __green__ - removes red and blue channel color from the image
     green: function (f) {
         f.actions = [{
-            action: 'average-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: AVERAGE_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             excludeRed: true,
             excludeBlue: true,
@@ -1071,9 +1075,9 @@ const setActionsArray = {
     image: function (f) {
 
         f.actions = [{
-            action: 'process-image',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
-            asset: (f.asset != null) ? f.asset : '',
+            action: PROCESS_IMAGE,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            asset: (f.asset != null) ? f.asset : ZERO_STR,
             width: (f.width != null) ? f.width : 1,
             height: (f.height != null) ? f.height : 1,
             copyWidth: (f.copyWidth != null) ? f.copyWidth : 1,
@@ -1086,9 +1090,9 @@ const setActionsArray = {
 // __invert__ - inverts the colors in the image, producing an effect similar to a photograph negative
     invert: function (f) {
         f.actions = [{
-            action: 'invert-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: INVERT_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             includeRed: true,
             includeGreen: true,
@@ -1099,9 +1103,9 @@ const setActionsArray = {
 // __magenta__ - removes green channel color from the image, and averages the remaining channel colors
     magenta: function (f) {
         f.actions = [{
-            action: 'average-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: AVERAGE_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             includeRed: true,
             includeBlue: true,
@@ -1115,9 +1119,9 @@ const setActionsArray = {
         if (f.gradient && f.gradient.substring) f.gradient = styles[f.gradient];
 
         f.actions = [{
-            action: 'map-to-gradient',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: MAP_TO_GRADIENT,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             useNaturalGrayscale: (f.useNaturalGrayscale != null) ? f.useNaturalGrayscale : false,
             gradient: f.gradient || makeGradient(),
@@ -1127,9 +1131,9 @@ const setActionsArray = {
 // __matrix__ - applies a 3x3 convolution matrix, kernel or mask operation to the image
     matrix: function (f) {
         f.actions = [{
-            action: 'matrix',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: MATRIX,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             width: 3,
             height: 3,
@@ -1146,9 +1150,9 @@ const setActionsArray = {
 // __matrix5__ - applies a 5x5 convolution matrix, kernel or mask operation to the image
     matrix5: function (f) {
         f.actions = [{
-            action: 'matrix',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: MATRIX,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             width: 5,
             height: 5,
@@ -1165,9 +1169,9 @@ const setActionsArray = {
 // __newsprint__ - removes red and green channel color from the image
     newsprint: function (f) {
         f.actions = [{
-            action: 'newsprint',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: NEWSPRINT,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             width: (f.width != null) ? f.width : 1,
         }];
@@ -1176,9 +1180,9 @@ const setActionsArray = {
 // __notblue__ - zeroes the blue channel values (not the same effect as the yellow filter)
     notblue: function (f) {
         f.actions = [{
-            action: 'set-channel-to-level',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: SET_CHANNEL_TO_LEVEL,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             includeBlue: true,
             level: 0,
@@ -1188,9 +1192,9 @@ const setActionsArray = {
 // __notgreen__ - zeroes the green channel values (not the same effect as the magenta filter)
     notgreen: function (f) {
         f.actions = [{
-            action: 'set-channel-to-level',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: SET_CHANNEL_TO_LEVEL,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             includeGreen: true,
             level: 0,
@@ -1200,9 +1204,9 @@ const setActionsArray = {
 // __notred__ - zeroes the red channel values (not the same effect as the cyan filter)
     notred: function (f) {
         f.actions = [{
-            action: 'set-channel-to-level',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: SET_CHANNEL_TO_LEVEL,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             includeRed: true,
             level: 0,
@@ -1212,9 +1216,9 @@ const setActionsArray = {
 // __offset__ (new in v8.4.0) - moves the image in its entirety by the given offset
     offset: function (f) {
         f.actions = [{
-            action: 'offset',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: OFFSET,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             offsetRedX: (f.offsetX != null) ? f.offsetX : 0,
             offsetRedY: (f.offsetY != null) ? f.offsetY : 0,
@@ -1230,9 +1234,9 @@ const setActionsArray = {
 // __offsetChannels__ (new in v8.4.0) - moves each channel  by an offset set for that channel. Can create a crude stereoscopic output
     offsetChannels: function (f) {
         f.actions = [{
-            action: 'offset',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: OFFSET,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             offsetRedX: (f.offsetRedX != null) ? f.offsetRedX : 0,
             offsetRedY: (f.offsetRedY != null) ? f.offsetRedY : 0,
@@ -1248,9 +1252,9 @@ const setActionsArray = {
 // __pixelate__ - averages the colors in a block to produce a series of obscuring tiles. This is a simplified version of the `tiles` filter
     pixelate: function (f) {
         f.actions = [{
-            action: 'pixelate',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: PIXELATE,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,
             tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,
@@ -1266,16 +1270,16 @@ const setActionsArray = {
 // __randomNoise__ (new in v8.6.0) - creates a stippling effect across the image
     randomNoise: function (f) {
 
-        const noiseType = (['random', 'ordered', 'bluenoise'].includes(f.noiseType)) ? f.noiseType : 'random';
+        const noiseType = (NOISE_VALUES.includes(f.noiseType)) ? f.noiseType : RANDOM;
 
         f.actions = [{
-            action: 'random-noise',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: RANDOM_NOISE,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             width: (f.width != null) ? f.width : 1,
             height: (f.height != null) ? f.height : 1,
-            seed: (f.seed != null) ? f.seed : 'some-random-string-or-other',
+            seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
             noiseType,
             level: (f.level != null) ? f.level : 0,
             noWrap: (f.noWrap != null) ? f.noWrap : false,
@@ -1290,9 +1294,9 @@ const setActionsArray = {
 // __red__ - removes blue and green channel color from the image
     red: function (f) {
         f.actions = [{
-            action: 'average-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: AVERAGE_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             excludeGreen: true,
             excludeBlue: true,
@@ -1302,29 +1306,29 @@ const setActionsArray = {
 // __reducePalette__ - reduce the number of colors in its palette
     reducePalette: function (f) {
         
-        let palette = (f.palette != null) ? f.palette : 'black-white';
+        let palette = (f.palette != null) ? f.palette : BLACK_WHITE;
 
         f.actions = [];
 
         if (palette.substring) {
 
-            if (palette.includes(',')) {
+            if (palette.includes(ARG_SPLITTER)) {
 
-                palette = palette.split(',');
+                palette = palette.split(ARG_SPLITTER);
                 palette.forEach(p => p.trim());
             }
         }
 
         // `useBluenoise` is deprecated
         // + use `noiseType: 'bluenoise'` instead
-        let noiseType = (f.useBluenoise) ? 'bluenoise' : f.noiseType || 'random';
-        if (!['random', 'ordered', 'bluenoise'].includes(noiseType)) noiseType = 'random';
+        let noiseType = (f.useBluenoise) ? BLUENOISE : f.noiseType || RANDOM;
+        if (!NOISE_VALUES.includes(noiseType)) noiseType = RANDOM;
 
         f.actions.push({
-            action: 'reduce-palette',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
-            seed: (f.seed != null) ? f.seed : 'some-random-string-or-other',
+            action: REDUCE_PALETTE,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
             minimumColorDistance: (f.minimumColorDistance != null) ? f.minimumColorDistance : 1000,
             useLabForPaletteDistance: (f.useLabForPaletteDistance != null) ? f.useLabForPaletteDistance : false,
             palette,
@@ -1338,9 +1342,9 @@ const setActionsArray = {
         let level = (f.level != null) ? f.level : 1;
 
         f.actions = [{
-            action: 'modulate-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: MODULATE_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             red: level,
             green: level,
@@ -1352,9 +1356,9 @@ const setActionsArray = {
 // __sepia__ - recalculates the values of each color channel (a tint action) to create a more 'antique' version of the image
     sepia: function (f) {
         f.actions = [{
-            action: 'tint-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: TINT_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             redInRed: 0.393,
             redInGreen: 0.349,
@@ -1371,9 +1375,9 @@ const setActionsArray = {
 // __sharpen__ (new in v8.4.0) - applies a preset 3x3 sharpen matrix to the image
     sharpen: function (f) {
         f.actions = [{
-            action: 'matrix',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: MATRIX,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             width: 3,
             height: 3,
@@ -1390,21 +1394,21 @@ const setActionsArray = {
 // __swirl__ - for each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
 // + This filter can handle multiple swirls in a single pass
     swirl: function (f) {
-        let startX = (f.startX != null) ? f.startX : '50%',
-            startY = (f.startY != null) ? f.startY : '50%',
+        let startX = (f.startX != null) ? f.startX : PC50,
+            startY = (f.startY != null) ? f.startY : PC50,
             innerRadius = (f.innerRadius != null) ? f.innerRadius : 0,
-            outerRadius = (f.outerRadius != null) ? f.outerRadius : '30%',
+            outerRadius = (f.outerRadius != null) ? f.outerRadius : PC30,
             angle = (f.angle != null) ? f.angle : 0,
-            easing = (f.easing != null) ? f.easing : 'linear',
+            easing = (f.easing != null) ? f.easing : LINEAR,
             staticSwirls = (f.staticSwirls != null) ? f.staticSwirls : [];
 
         const swirls = [...staticSwirls];
         swirls.push([startX, startY, innerRadius, outerRadius, angle, easing]);
 
         f.actions = [{
-            action: 'swirl',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: SWIRL,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             swirls, 
         }];
@@ -1426,7 +1430,7 @@ const setActionsArray = {
 
             [lowRed, lowGreen, lowBlue, lowAlpha] = colorEngine.extractRGBfromColor(f.lowColor);
 
-            lowAlpha = Math.round(lowAlpha * 255);
+            lowAlpha = _round(lowAlpha * 255);
 
             f.lowRed = lowRed;
             f.lowGreen = lowGreen;
@@ -1442,7 +1446,7 @@ const setActionsArray = {
             
             [highRed, highGreen, highBlue, highAlpha] = colorEngine.extractRGBfromColor(f.highColor);
 
-            highAlpha = Math.round(highAlpha * 255);
+            highAlpha = _round(highAlpha * 255);
 
             f.highRed = highRed;
             f.highGreen = highGreen;
@@ -1458,9 +1462,9 @@ const setActionsArray = {
             high = (f.high != null) ? f.high : [highRed, highGreen, highBlue, highAlpha];
 
         f.actions = [{
-            action: 'threshold',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: THRESHOLD,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             level: (f.level != null) ? f.level : 128,
             red: (f.red != null) ? f.red : 128,
@@ -1480,9 +1484,9 @@ const setActionsArray = {
 // __tiles__ - averages the colors in a group of pixels to produce a series of obscuring tiles. This is a more complex version of the `pixelate` filter
     tiles: function (f) {
         f.actions = [{
-            action: 'tiles',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: TILES,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,
             tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,
@@ -1490,8 +1494,8 @@ const setActionsArray = {
             offsetX: (f.offsetX != null) ? f.offsetX : 0,
             offsetY: (f.offsetY != null) ? f.offsetY : 0,
             angle: (f.angle != null) ? f.angle : 0,
-            points: (f.points != null) ? f.points : 'rect-grid',
-            seed: (f.seed != null) ? f.seed : 'some-random-string-or-other',
+            points: (f.points != null) ? f.points : RECT_GRID,
+            seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
             includeRed: (f.includeRed != null) ? f.includeRed : true,
             includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
@@ -1558,9 +1562,9 @@ const setActionsArray = {
         }
 
         f.actions = [{
-            action: 'tint-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: TINT_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             redInRed,
             redInGreen,
@@ -1577,9 +1581,9 @@ const setActionsArray = {
 // __userDefined__ - DEPRECATED - this filter method no longer has any effect, returning an unchanged image
     userDefined: function (f) {
         f.actions = [{
-            action: 'user-defined-legacy',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: USER_DEFINED_LEGACY,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
         }];
     },
@@ -1587,9 +1591,9 @@ const setActionsArray = {
 // __yellow__ - removes blue channel color from the image, and averages the remaining channel colors
     yellow: function (f) {
         f.actions = [{
-            action: 'average-channels',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            action: AVERAGE_CHANNELS,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             includeRed: true,
             includeGreen: true,

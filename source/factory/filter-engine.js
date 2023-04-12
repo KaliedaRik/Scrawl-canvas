@@ -4,20 +4,50 @@
 
 
 import { constructors, filter, filternames, styles, stylesnames } from '../core/library.js';
+
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
-import { easeEngines, isa_fn } from '../core/utilities.js';
+
+import { doCreate, easeEngines, isa_fn } from '../core/utilities.js';
 
 import { makeAnimation } from './animation.js';
-import { requestCell, releaseCell } from './cell-fragment.js';
-import { requestCoordinate, releaseCoordinate } from './coordinate.js';
+
+import { releaseCell, requestCell } from './cell-fragment.js';
+
+import { releaseCoordinate, requestCoordinate } from './coordinate.js';
+
 import { makeColor } from './color.js';
 
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
+import { _abs, _ceil, _entries, _exp, _floor, _freeze, _isArray, _keys, _max, _min, _now, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUE, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLOR_BURN, COLOR_DODGE, COLORS_TO_ALPHA, COMPOSE, CORRODE, CURRENT, DARKEN, DEFAULT_SEED, DESTINATION_ATOP, DESTINATION_IN, DESTINATION_ONLY, DESTINATION_OUT, DESTINATION_OVER, DIFFERENCE, DISPLACE, DOWN, EMBOSS, EXCLUSION, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAY_PALETTES, GRAYSCALE, GREEN, HARD_LIGHT, HEX_GRID, HUE, INVERT_CHANNELS, LIGHTEN, LIGHTER, LOCK_CHANNELS_TO_LEVELS, LUMINOSITY, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, MONOCHROME_16, MONOCHROME_4, MONOCHROME_8, MULTIPLY, NEWSPRINT, OFFSET, ORDERED, OVERLAY, PIXELATE, POINTS_ARRAY, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RANDOM_POINTS, RECT_GRID, RED, REDUCE_PALETTE, ROUND, SATURATION, SCREEN, SET_CHANNEL_TO_LEVEL, SOFT_LIGHT, SOURCE, SOURCE_ALPHA, SOURCE_ATOP, SOURCE_IN, SOURCE_ONLY, SOURCE_OUT, STEP_CHANNELS, SWIRL, T_FILTER_ENGINE, THRESHOLD, TILES, TINT_CHANNELS, UNSET, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, XOR, ZERO_STR } from '../core/shared-vars.js';
+
+
+// Local constants
+const orderedNoise = _freeze([0.00,0.50,0.13,0.63,0.03,0.53,0.16,0.66,0.75,0.25,0.88,0.38,0.78,0.28,0.91,0.41,0.19,0.69,0.06,0.56,0.22,0.72,0.09,0.59,0.94,0.44,0.81,0.31,0.97,0.47,0.84,0.34,0.05,0.55,0.17,0.67,0.02,0.52,0.14,0.64,0.80,0.30,0.92,0.42,0.77,0.27,0.89,0.39,0.23,0.73,0.11,0.61,0.20,0.70,0.08,0.58,0.98,0.48,0.86,0.36,0.95,0.45,0.83,0.33]);
+
+const newspaperPatterns = _freeze([
+    _freeze([0, 0, 0, 0]), 
+    _freeze([0, 0, 0, 180]), 
+    _freeze([180, 0, 0, 0]), 
+    _freeze([180, 0, 0, 180]), 
+    _freeze([0, 180, 180, 180]),
+    _freeze([180, 180, 180, 0]), 
+    _freeze([180, 180, 180, 180]), 
+    _freeze([180, 180, 180, 255]), 
+    _freeze([255, 180, 180, 180]), 
+    _freeze([255, 180, 180, 255]), 
+    _freeze([180, 255, 255, 255]), 
+    _freeze([255, 255, 255, 180]), 
+    _freeze([255, 255, 255, 255])
+]);
+
+const LOW_ARRAY = _freeze([0, 255, 0]);
+const HIGH_ARRAY = _freeze([0, 255, 255]);
+
 
 // The filter Color object - used by various filters
 export const colorEngine = makeColor({
-    name: `SC-system-filter-do-not-remove`,
+    name: 'SC-system-filter-do-not-remove',
 });
 
 
@@ -37,8 +67,8 @@ const FilterEngine = function () {
 
 
 // #### FilterEngine prototype
-const P = FilterEngine.prototype = Object.create(Object.prototype);
-P.type = 'FilterEngine';
+const P = FilterEngine.prototype = doCreate();
+P.type = T_FILTER_ENGINE;
 
 let choke = 1000;
 export const setFilterMemoizationChoke = function (val) {
@@ -52,8 +82,8 @@ P.action = function (packet) {
 
     let { workstoreLastAccessed, workstore, actions, theBigActionsObject } = this;
 
-    let workstoreKeys = Object.keys(workstore), 
-        workstoreChoke = Date.now() - choke;
+    let workstoreKeys = _keys(workstore), 
+        workstoreChoke = _now() - choke;
 
     for (let k = 0, kz = workstoreKeys.length, s; k < kz; k++) {
 
@@ -68,7 +98,7 @@ P.action = function (packet) {
 
     if (identifier && workstore[identifier]) {
 
-        workstoreLastAccessed[identifier] = Date.now();
+        workstoreLastAccessed[identifier] = _now();
         return workstore[identifier];
     }
 
@@ -96,7 +126,7 @@ P.action = function (packet) {
         if (identifier) {
 
             workstore[identifier] = this.cache.work;
-            workstoreLastAccessed[identifier] = Date.now();
+            workstoreLastAccessed[identifier] = _now();
         }
 
         return this.cache.work;
@@ -123,8 +153,6 @@ P.colorSpaceIndices = function () {
         this.indicesLen = this.tfx3 * 3;
 
         this.labIndicesMultiplier = 512;
-
-
 
         this.rgbIndices = new Uint8ClampedArray(this.indicesLen);
         this.labIndices = new Float32Array(this.indicesLen);
@@ -185,7 +213,7 @@ P.buildImageGrid = function (image) {
 
         let name = `grid-${width}-${height}`;
         if (workstore[name]) {
-            workstoreLastAccessed[name] = Date.now();
+            workstoreLastAccessed[name] = _now();
             return workstore[name];
         }
 
@@ -204,7 +232,7 @@ P.buildImageGrid = function (image) {
             grid.push(row);
         }
         workstore[name] = grid;
-        workstoreLastAccessed[name] = Date.now();
+        workstoreLastAccessed[name] = _now();
         return grid;
     }
     return false;
@@ -216,22 +244,22 @@ P.getOrAddWorkstore = function (name) {
     const { workstore, workstoreLastAccessed } = this;
 
     if (workstore[name]) {
-        workstoreLastAccessed[name] = Date.now();
+        workstoreLastAccessed[name] = _now();
         return workstore[name];
     }
 
     workstore[name] = [];
-    workstoreLastAccessed[name] = Date.now();
+    workstoreLastAccessed[name] = _now();
     return workstore[name];
 };
 
 P.getRandomNumbers = function (items = {}) {
 
     let {
-        seed = 'some-random-string-or-other', 
+        seed = DEFAULT_SEED, 
         length = 0, 
         imgWidth = 0, 
-        type = 'random'
+        type = RANDOM
     } = items;
 
     const name = `random-${seed}-${length}-${type}`;
@@ -239,16 +267,16 @@ P.getRandomNumbers = function (items = {}) {
     const { workstore, workstoreLastAccessed } = this;
 
     if (workstore[name]) {
-        workstoreLastAccessed[name] = Date.now();
+        workstoreLastAccessed[name] = _now();
         return workstore[name];
     }
 
     const vals = [];
 
-    if (type === 'bluenoise' && imgWidth) {
+    if (type == BLUENOISE && imgWidth) {
 
         const bLen = bluenoise.length,
-            blueDims = Math.sqrt(bLen),
+            blueDims = _sqrt(bLen),
             imgHeight = length / imgWidth,
             bLines = [];
 
@@ -272,12 +300,10 @@ P.getRandomNumbers = function (items = {}) {
             }
         }
     }
-    else if (type === 'ordered' && imgWidth) {
-
-        const orderedNoise = [0.00,0.50,0.13,0.63,0.03,0.53,0.16,0.66,0.75,0.25,0.88,0.38,0.78,0.28,0.91,0.41,0.19,0.69,0.06,0.56,0.22,0.72,0.09,0.59,0.94,0.44,0.81,0.31,0.97,0.47,0.84,0.34,0.05,0.55,0.17,0.67,0.02,0.52,0.14,0.64,0.80,0.30,0.92,0.42,0.77,0.27,0.89,0.39,0.23,0.73,0.11,0.61,0.20,0.70,0.08,0.58,0.98,0.48,0.86,0.36,0.95,0.45,0.83,0.33];
+    else if (type == ORDERED && imgWidth) {
 
         const oLen = orderedNoise.length,
-            oDims = Math.sqrt(oLen),
+            oDims = _sqrt(oLen),
             imgHeight = length / imgWidth,
             oLines = [];
 
@@ -312,7 +338,7 @@ P.getRandomNumbers = function (items = {}) {
     }
 
     workstore[name] = vals;
-    workstoreLastAccessed[name] = Date.now();
+    workstoreLastAccessed[name] = _now();
 
     return workstore[name];
 };
@@ -330,7 +356,7 @@ P.buildImageCoordinateLookup = function (image) {
         const name = `coords-lookup-${width}-${height}`;
 
         if (workstore[name]) {
-            workstoreLastAccessed[name] = Date.now();
+            workstoreLastAccessed[name] = _now();
             return workstore[name];
         }
 
@@ -344,7 +370,7 @@ P.buildImageCoordinateLookup = function (image) {
             }
         }
         workstore[name] = lookup;
-        workstoreLastAccessed[name] = Date.now();
+        workstoreLastAccessed[name] = _now();
         return lookup;
     }
     return false;
@@ -389,7 +415,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
         const name = `alphatileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${gutterWidth}-${gutterHeight}-${offsetX}-${offsetY}`;
 
         if (workstore[name]) {
-            workstoreLastAccessed[name] = Date.now();
+            workstoreLastAccessed[name] = _now();
             return workstore[name];
         }
 
@@ -442,7 +468,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
             }
         }
         workstore[name] = tiles;
-        workstoreLastAccessed[name] = Date.now();
+        workstoreLastAccessed[name] = _now();
         return tiles;
     }
     return false;
@@ -476,7 +502,7 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
         const name = `simple-tileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`;
 
         if (workstore[name]) {
-            workstoreLastAccessed[name] = Date.now();
+            workstoreLastAccessed[name] = _now();
             return workstore[name];
         }
 
@@ -502,7 +528,7 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
             }
         }
         workstore[name] = tiles;
-        workstoreLastAccessed[name] = Date.now();
+        workstoreLastAccessed[name] = _now();
         return tiles;
     }
     return false;
@@ -525,7 +551,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
             offX = 0, 
             offY = 0,
             ang = 0,
-            req = 'unset';
+            req = UNSET;
 
         // The `pointVals` data can be supplied in a number of different formats:
         // + As a String: `'rect-grid'` - the function will calculate a set of suitable points based on the source image's dimensions, and the user-defined `tileWidth`, `tileHeight`, `offsetX`, `offsetY` and `angle` arguments. This results in a rectangular grid of tiles (at most dimensions) which can be rotated to the required angle.
@@ -533,31 +559,31 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         // + As a positive integer Number - this is a request by the user for the function to semi-randomly generate a set of points to the given value, constrained to an area determined by the `tileRadius`, `offsetX`, `offsetY` and `angle` arguments. Unlike other versions, this version will only include pixels within the bounds of circle of the given radius centered on the supplied offset coordinate values. To vary the randomness of point generation, the user can supply a `seed` argument, used when initializing the pseudo-random number generator.
         // + As an Array of Numbers, which represent user-defined points across the image. Pixel selection for each point is constrained by the supplied `tileRadius`, `offsetX` and `offsetY` arguments.
         if (pointVals.substring) req = pointVals;
-        else if (Array.isArray(pointVals)) req = 'points-array';
-        else if (pointVals.toFixed && !isNaN(pointVals)) req = 'random-points';
+        else if (_isArray(pointVals)) req = POINTS_ARRAY;
+        else if (pointVals.toFixed && !isNaN(pointVals)) req = RANDOM_POINTS;
 
-        if (req === 'unset') return [];
+        if (req == UNSET) return [];
 
         // The `tileWidth`, `tileHeight`, `tileRadius`, `offsetX` and `offsetY` arguments can be supplied as absolute Number values (in px), or as a String % value relative to the source image dimensions.
         // + `tileRadius` is relative to the source image's width
-        if (tileWidth.substring) tileW = Math.round((parseFloat(tileWidth) / 100) * iWidth);
+        if (tileWidth.substring) tileW = _round((parseFloat(tileWidth) / 100) * iWidth);
         else if (tileWidth.toFixed && !isNaN(tileWidth)) tileW = tileWidth;
         if (tileW < 1) tileW = 1;
 
-        if (tileHeight.substring) tileH = Math.round((parseFloat(tileHeight) / 100) * iHeight);
+        if (tileHeight.substring) tileH = _round((parseFloat(tileHeight) / 100) * iHeight);
         else if (tileHeight.toFixed && !isNaN(tileHeight)) tileH = tileHeight;
         if (tileH < 1) tileH = 1;
 
-        if (tileRadius.substring) tileR = Math.round((parseFloat(tileRadius) / 100) * iWidth);
+        if (tileRadius.substring) tileR = _round((parseFloat(tileRadius) / 100) * iWidth);
         else if (tileRadius.toFixed && !isNaN(tileRadius)) tileR = tileRadius;
         if (tileR < 1) tileR = 1;
 
-        if (offsetX.substring) offX = Math.round((parseFloat(offsetX) / 100) * iWidth);
+        if (offsetX.substring) offX = _round((parseFloat(offsetX) / 100) * iWidth);
         else if (offsetX.toFixed && !isNaN(offsetX)) offX = offsetX;
         if (offX < 0) offX = 0;
         else if (offX >= iWidth) offX = iWidth - 1;
 
-        if (offsetY.substring) offY = Math.round((parseFloat(offsetY) / 100) * iHeight);
+        if (offsetY.substring) offY = _round((parseFloat(offsetY) / 100) * iHeight);
         else if (offsetY.toFixed && !isNaN(offsetY)) offY = offsetY;
         if (offY < 0) offY = 0;
         else if (offY >= iHeight) offY = iHeight - 1;
@@ -566,21 +592,21 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         if (angle.toFixed && !isNaN(angle)) ang = angle;
 
         let name = `${req}-tileset-${iWidth}-${iHeight}-${tileW}-${tileH}-${tileR}-${offX}-${offY}-${ang}`;
-        if (req === 'points-array') name += `-${pointVals.join(',')}`;
-        else if (req === 'random-points') name += `-${pointVals}-${seed}`;
+        if (req == POINTS_ARRAY) name += `-${pointVals.join(ARG_SPLITTER)}`;
+        else if (req == RANDOM_POINTS) name += `-${pointVals}-${seed}`;
 
         // To save time, previous invocations of the function store their end result - an Array of Arrays containing the index position of each pixel in the source image, assigned to each tile.
         if (workstore[name]) {
 
-            workstoreLastAccessed[name] = Date.now();
+            workstoreLastAccessed[name] = _now();
             return workstore[name];
         }
 
         // Returning an empty array to the tile filter results in the filter taking no action beyond copying the input image data into the output image data.
-        if (req === 'rect-grid' && tileW === 1 && tileH === 1) {
+        if (req == RECT_GRID && tileW === 1 && tileH === 1) {
 
             workstore[name] = [];
-            workstoreLastAccessed[name] = Date.now();
+            workstoreLastAccessed[name] = _now();
             return [];
         }
 
@@ -594,28 +620,28 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
             neighbourPoints = [];
 
         let h, hz, w, wz, x, xz, y, yz,
-            pointsName = ''; 
+            pointsName = ZERO_STR; 
 
         // Check to stop the hex grid breaking when user supplies an inappropriately low `tileHeight` argument value, compared to the value supplied in the `tileRadius` argument.
-        if (req === 'hex-grid' && tileH / tileR < 1.05) tileH = tileR * 1.05;
+        if (req == HEX_GRID && tileH / tileR < 1.05) tileH = tileR * 1.05;
 
         let i, iz, cursor, ref, 
             counter = 0,
-            halfW = Math.floor(tileW / 2),
-            halfH = Math.floor(tileH / 2),
+            halfW = _floor(tileW / 2),
+            halfH = _floor(tileH / 2),
             doubleR = tileR * 2,
-            hexDown = Math.round((tileH / tileR) * tileR),
+            hexDown = _round((tileH / tileR) * tileR),
             hexOffset = 0;
 
         switch (req) {
 
-            case 'rect-grid' :
+            case RECT_GRID :
 
                 pointsName = `rect-grid-points-${iWidth}-${iHeight}-${tileW}-${tileH}-${offX}-${offY}`;
 
                 if (workstore[pointsName]) {
 
-                    workstoreLastAccessed[pointsName] = Date.now();
+                    workstoreLastAccessed[pointsName] = _now();
                     points = workstore[pointsName];
                 }
                 else {
@@ -628,18 +654,18 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                             points.push(x, y);
                         }
                     }
-                    workstoreLastAccessed[pointsName] = Date.now();
+                    workstoreLastAccessed[pointsName] = _now();
                     workstore[pointsName] = points;
                 }
                 break;
 
-            case 'hex-grid' :
+            case HEX_GRID :
 
                 pointsName = `hex-grid-points-${iWidth}-${iHeight}-${tileR}-${offX}-${offY}`;
 
                 if (workstore[pointsName]) {
 
-                    workstoreLastAccessed[pointsName] = Date.now();
+                    workstoreLastAccessed[pointsName] = _now();
                     points = workstore[pointsName];
                 }
                 else {
@@ -656,20 +682,20 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                         }
                         counter++;
                     }
-                    workstoreLastAccessed[pointsName] = Date.now();
+                    workstoreLastAccessed[pointsName] = _now();
                     workstore[pointsName] = points;
                 }
                 tileW = doubleR * 2;
                 tileH = hexDown * 2;
                 break;
 
-            case 'random-points' :
+            case RANDOM_POINTS :
 
                 pointsName = `random-points-${iWidth}-${iHeight}-${tileR}-${offX}-${offY}-${points}-${seed}`;
 
                 if (workstore[pointsName]) {
 
-                    workstoreLastAccessed[pointsName] = Date.now();
+                    workstoreLastAccessed[pointsName] = _now();
                     points = workstore[pointsName];
                 }
                 else {
@@ -686,20 +712,20 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                         coord.zero().add([rnd[++rndCursor], rnd[++rndCursor]]).rotate(rnd[++rndCursor] * 360).rotate(ang).scalarMultiply(tileR);
 
                         [x, y] = coord;
-                        points.push(Math.round(x), Math.round(y));
+                        points.push(_round(x), _round(y));
                     }
                 }
                 tileW = tileR;
                 tileH = tileR;
                 break;
 
-            case 'points-array' :
+            case POINTS_ARRAY :
 
                 pointsName = `defined-points-${iWidth}-${iHeight}-${tileR}-${pointVals}`;
 
                 if (workstore[pointsName]) {
 
-                    workstoreLastAccessed[pointsName] = Date.now();
+                    workstoreLastAccessed[pointsName] = _now();
                     points = workstore[pointsName];
                 }
                 // User-generated points are not pre-processed. Note that the positioning of these points is relative to the offset coordinate values; users, when generating the point values, need to take this into account otherwise the end result may unexpectedly move towards (or beyond) the bottom-right part of the final image.
@@ -721,12 +747,12 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
             coord.zero().add(test).rotate(ang).add(origin);
 
             [x, y] = coord;
-            x = Math.round(x);
-            y = Math.round(y);
+            x = _round(x);
+            y = _round(y);
 
             if ((x > -tileW) && (x < iWidth + tileW) && (y > -tileH) && (y < iHeight + tileH)) {
 
-                cursor = ((iWidth * 2) * (iHeight * 2)) + ((y + Math.floor(iHeight / 2)) * iWidth) + (x + Math.floor(iWidth / 2));
+                cursor = ((iWidth * 2) * (iHeight * 2)) + ((y + _floor(iHeight / 2)) * iWidth) + (x + _floor(iWidth / 2));
 
                 referencePoints[counter] = [x, y, cursor];
                 tiles[cursor] = [];
@@ -737,7 +763,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
 
                         if (w >= 0 && w < iWidth && h >= 0 && h < iHeight) {
 
-                            if (req === 'random-points') {
+                            if (req == RANDOM_POINTS) {
 
                                 if (coord.zero().subtract(origin).add([w, h]).getMagnitude() > tileR) continue;
                             }
@@ -796,7 +822,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         tiles = tiles.filter(t => t != null);
 
         workstore[name] = tiles;
-        workstoreLastAccessed[name] = Date.now();
+        workstoreLastAccessed[name] = _now();
         return tiles;
     }
     return [];
@@ -815,7 +841,7 @@ P.buildHorizontalBlur = function (grid, radius) {
     const name = `blur-h-${gridWidth}-${gridHeight}-${radius}`;
 
     if (workstore[name]) {
-        workstoreLastAccessed[name] = Date.now();
+        workstoreLastAccessed[name] = _now();
         return workstore[name];
     }
 
@@ -836,7 +862,7 @@ P.buildHorizontalBlur = function (grid, radius) {
         }
     }
     workstore[name] = horizontalBlur;
-    workstoreLastAccessed[name] = Date.now();
+    workstoreLastAccessed[name] = _now();
     return horizontalBlur;
 };
 
@@ -853,7 +879,7 @@ P.buildVerticalBlur = function (grid, radius) {
     const name = `blur-v-${gridWidth}-${gridHeight}-${radius}`;
 
     if (workstore[name]) {
-        workstoreLastAccessed[name] = Date.now();
+        workstoreLastAccessed[name] = _now();
         return workstore[name];
     }
 
@@ -874,7 +900,7 @@ P.buildVerticalBlur = function (grid, radius) {
         }
     }
     workstore[name] = verticalBlur;
-    workstoreLastAccessed[name] = Date.now();
+    workstoreLastAccessed[name] = _now();
     return verticalBlur;
 };
 
@@ -899,7 +925,7 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
     const name = `matrix-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
 
     if (workstore[name]) {
-        workstoreLastAccessed[name] = Date.now();
+        workstoreLastAccessed[name] = _now();
         return workstore[name];
     }
 
@@ -936,7 +962,7 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
         }
     }
     workstore[name] = grid;
-    workstoreLastAccessed[name] = Date.now();
+    workstoreLastAccessed[name] = _now();
     return grid;
 };
 
@@ -946,20 +972,20 @@ P.checkChannelLevelsParameters = function (f) {
     const doCheck = function (v, isHigh = false) {
 
         if (v.toFixed) {
-            if (v < 0) return [[0, 255, 0]];
-            if (v > 255) return [[0, 255, 255]];
-            if (isNaN(v)) return (isHigh) ? [[0, 255, 255]] : [[0, 255, 0]];
+            if (v < 0) return [LOW_ARRAY];
+            if (v > 255) return [HIGH_ARRAY];
+            if (isNaN(v)) return (isHigh) ? [HIGH_ARRAY] : [LOW_ARRAY];
             return [[0, 255, v]];
         }
 
         if (v.substring) {
-            v = v.split(',');
+            v = v.split(ARG_SPLITTER);
         }
 
-        if (Array.isArray(v)) {
+        if (_isArray(v)) {
 
             if (!v.length) return v;
-            if (Array.isArray(v[0])) return v;
+            if (_isArray(v[0])) return v;
 
             v = v.map(s => parseInt(s, 10));
             v.sort((a, b) => a - b);
@@ -973,14 +999,14 @@ P.checkChannelLevelsParameters = function (f) {
 
                 starts = 0;
                 ends = 255;
-                if (i != 0) starts = Math.ceil(v[i - 1] + ((v[i] - v[i - 1]) / 2));
-                if (i != iz - 1) ends = Math.floor(v[i] + ((v[i + 1] - v[i]) / 2));
+                if (i != 0) starts = _ceil(v[i - 1] + ((v[i] - v[i - 1]) / 2));
+                if (i != iz - 1) ends = _floor(v[i] + ((v[i + 1] - v[i]) / 2));
 
                 res.push([starts, ends, v[i]]);
             }
             return res;
         }
-        return (isHigh) ? [[0, 255, 255]] : [[0, 255, 0]];
+        return (isHigh) ? [HIGH_ARRAY] : [LOW_ARRAY];
     }
     f.red = doCheck(f.red);
     f.green = doCheck(f.green);
@@ -1004,20 +1030,20 @@ P.getInputAndOutputLines = function (requirements) {
         sourceData = cache.source,
         alphaData = false;
 
-    if (requirements.lineIn === 'source-alpha' || requirements.lineMix === 'source-alpha') alphaData = this.getAlphaData(sourceData);
+    if (requirements.lineIn == SOURCE_ALPHA || requirements.lineMix == SOURCE_ALPHA) alphaData = this.getAlphaData(sourceData);
 
     if (requirements.lineIn) {
 
-        if (requirements.lineIn === 'source') lineIn = sourceData;
-        else if (requirements.lineIn == 'source-alpha') lineIn = alphaData;
+        if (requirements.lineIn == SOURCE) lineIn = sourceData;
+        else if (requirements.lineIn == SOURCE_ALPHA) lineIn = alphaData;
         else if (cache[requirements.lineIn]) lineIn = cache[requirements.lineIn];
     }
 
     if (requirements.lineMix) {
 
-        if (requirements.lineMix == 'source') lineMix = sourceData;
-        else if (requirements.lineMix == 'source-alpha') lineMix = alphaData;
-        else if (requirements.lineMix == 'current') lineMix = cache.work;
+        if (requirements.lineMix == SOURCE) lineMix = sourceData;
+        else if (requirements.lineMix == SOURCE_ALPHA) lineMix = alphaData;
+        else if (requirements.lineMix == CURRENT) lineMix = cache.work;
         else if (cache[requirements.lineMix]) lineMix = cache[requirements.lineMix];
     }
 
@@ -1036,7 +1062,7 @@ P.getInputAndOutputLines = function (requirements) {
 // `getGrayscaleValue` - put here because this calculation is used in several different filters
 P.getGrayscaleValue = function (r, g, b) {
 
-    return Math.floor((0.2126 * r) + (0.7152 * g) + (0.0722 * b));
+    return _floor((0.2126 * r) + (0.7152 * g) + (0.0722 * b));
 };
 
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
@@ -1096,7 +1122,7 @@ P.getGradientData = function (gradient) {
     }
 
     if (workstore[name]) {
-        workstoreLastAccessed[name] = Date.now();
+        workstoreLastAccessed[name] = _now();
         return workstore[name];
     }
     return [];
@@ -1120,28 +1146,13 @@ P.transferDataUnchanged = function (oData, iData, len) {
     }
 };
 
-P.newspaperPatterns = [
-    [0, 0, 0, 0], 
-    [0, 0, 0, 180], 
-    [180, 0, 0, 0], 
-    [180, 0, 0, 180], 
-    [0, 180, 180, 180],
-    [180, 180, 180, 0], 
-    [180, 180, 180, 180], 
-    [180, 180, 180, 255], 
-    [255, 180, 180, 180], 
-    [255, 180, 180, 255], 
-    [180, 255, 255, 255], 
-    [255, 255, 255, 180], 
-    [255, 255, 255, 255]
-];
 
 // ## Filter action functions
 // Each function is held in the `theBigActionsObject` object, for convenience
 P.theBigActionsObject = {
 
 // __alpha-to-channels__ - Copies the alpha channel value over to the selected value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
-    'alpha-to-channels': function (requirements) {
+    [ALPHA_TO_CHANNELS]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -1182,7 +1193,7 @@ P.theBigActionsObject = {
     },
 
 // __area-alpha__ - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
-    'area-alpha': function (requirements) {
+    [AREA_ALPHA]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -1223,7 +1234,7 @@ P.theBigActionsObject = {
     },
 
 // __average-channels__ - Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0.
-    'average-channels': function (requirements) {
+    [AVERAGE_CHANNELS]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -1264,7 +1275,7 @@ P.theBigActionsObject = {
                     if (includeGreen) avg += iData[g];
                     if (includeBlue) avg += iData[b];
 
-                    avg = Math.floor(avg / divisor);
+                    avg = _floor(avg / divisor);
 
                     oData[r] = (excludeRed) ? 0 : avg;
                     oData[g] = (excludeGreen) ? 0 : avg;
@@ -1297,7 +1308,7 @@ P.theBigActionsObject = {
 // __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations. 
 // + The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'. 
 // + Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
-    'blend': function (requirements) {
+    [BLEND]: function (requirements) {
 
         const copyPixel = function (fr, tr, data) {
 
@@ -1364,7 +1375,7 @@ P.theBigActionsObject = {
         let {opacity, blend, offsetX, offsetY, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
-        if (null == blend) blend = '';
+        if (null == blend) blend = ZERO_STR;
         if (null == offsetX) offsetX = 0;
         if (null == offsetY) offsetY = 0;
 
@@ -1372,12 +1383,12 @@ P.theBigActionsObject = {
 
         switch (blend) {
 
-            case 'color-burn' :
+            case COLOR_BURN :
 
                 const colorburnCalc = (din, dmix) => {
                     if (dmix == 1) return 255;
                     else if (din == 0) return 0;
-                    return (1 - Math.min(1, ((1 - dmix) / din ))) * 255;
+                    return (1 - _min(1, ((1 - dmix) / din ))) * 255;
                 };
 
                 for (y = 0; y < iHeight; y++) {
@@ -1410,12 +1421,12 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'color-dodge' :
+            case COLOR_DODGE :
 
                 const colordodgeCalc = (din, dmix) => {
                     if (dmix == 0) return 0;
                     else if (din == 1) return 255;
-                    return Math.min(1, (dmix / (1 - din))) * 255;
+                    return _min(1, (dmix / (1 - din))) * 255;
                 };
 
                 for (y = 0; y < iHeight; y++) {
@@ -1448,7 +1459,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'darken' :
+            case DARKEN :
 
                 const darkenCalc = (din, dmix) => (din < dmix) ? din : dmix;
 
@@ -1482,9 +1493,9 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'difference' :
+            case DIFFERENCE :
 
-                const differenceCalc = (din, dmix) => Math.abs(din - dmix) * 255;
+                const differenceCalc = (din, dmix) => _abs(din - dmix) * 255;
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -1514,7 +1525,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'exclusion' :
+            case EXCLUSION :
 
                 const exclusionCalc = (din, dmix) => (din + dmix - (2 * dmix * din)) * 255;
 
@@ -1546,7 +1557,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'hard-light' :
+            case HARD_LIGHT :
 
                 const hardlightCalc = (din, dmix) => (din <= 0.5) ? (din * dmix) * 255 : (dmix + (din - (dmix * din))) * 255;
 
@@ -1578,7 +1589,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'lighten' :
+            case LIGHTEN :
 
                 const lightenCalc = (din, dmix) => (din > dmix) ? din : dmix;
 
@@ -1611,7 +1622,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'lighter' :
+            case LIGHTER :
 
                 const lighterCalc = (din, dmix) => (din + dmix) * 255;
 
@@ -1643,7 +1654,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'multiply' :
+            case MULTIPLY :
 
                 const multiplyCalc = (din, dmix) => din * dmix * 255;
 
@@ -1677,7 +1688,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'overlay' :
+            case OVERLAY :
 
                 const overlayCalc = (din, dmix) => (din >= 0.5) ? (din * dmix) * 255 : (dmix + (din - (dmix * din))) * 255;
 
@@ -1709,7 +1720,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'screen' :
+            case SCREEN :
 
                 const screenCalc = (din, dmix) => (dmix + (din - (dmix * din))) * 255;
 
@@ -1741,13 +1752,13 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'soft-light' :
+            case SOFT_LIGHT :
 
                 const softlightCalc = (din, dmix) => {
 
                     let d = (dmix <= 0.25) ?
                         ((((16 * dmix) - 12) * dmix) + 4) * dmix :
-                        Math.sqrt(dmix);
+                        _sqrt(dmix);
 
                     if (din <= 0.5) return (dmix - ((1 - (2 * din)) * dmix * (1 - dmix))) * 255;
                     return (dmix + (((2 * din) - 1) * (d - dmix))) * 255;
@@ -1783,7 +1794,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'color' :
+            case COLOR :
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -1816,7 +1827,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'hue' :
+            case HUE :
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -1849,7 +1860,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'luminosity' :
+            case LUMINOSITY :
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -1882,7 +1893,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'saturation' :
+            case SATURATION :
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -1956,7 +1967,7 @@ P.theBigActionsObject = {
 
 // __blur__ - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect. 
 // Note that this filter is expensive, thus much slower to complete compared to other filter effects. Where possible, memoize the results this filter produces.
-    'blur': function (requirements) {
+    [BLUR]: function (requirements) {
 
         const getUncheckedValue = function (flag, gridStore, pos, data, offset) {
 
@@ -2021,7 +2032,7 @@ P.theBigActionsObject = {
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            pixelLen = Math.floor(len / 4),
+            pixelLen = _floor(len / 4),
             counter, r, g, b, a, pass;
 
         let {width, height} = input;
@@ -2106,7 +2117,7 @@ P.theBigActionsObject = {
     },
 
 // __channels-to-alpha__ - Calculates an average value from each pixel's included channels and applies that value to the alpha channel.
-    'channels-to-alpha': function (requirements) {
+    [CHANNELS_TO_ALPHA]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -2150,7 +2161,7 @@ P.theBigActionsObject = {
                 if (includeGreen) sum += vg;
                 if (includeBlue) sum += vb;
 
-                oData[a] = Math.floor(sum / divisor);
+                oData[a] = _floor(sum / divisor);
             }
             else oData[a] = iData[a];
         }
@@ -2160,7 +2171,7 @@ P.theBigActionsObject = {
     },
 
 // __chroma__ - Using an array of 'range' arrays, determine whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. Each 'range' array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.
-    'chroma': function (requirements) {
+    [CHROMA]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -2208,14 +2219,14 @@ P.theBigActionsObject = {
     },
 
 // __clamp-channels__ - Clamp each color channel to a range set by lowColor and highColor values
-    'clamp-channels': function (requirements) {
+    [CLAMP_CHANNELS]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            floor = Math.floor,
+            floor = _floor,
             r, g, b, a, vr, vg, vb, va, i;
 
         let {opacity, lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue, lineOut} = requirements;
@@ -2267,11 +2278,11 @@ P.theBigActionsObject = {
     },
 
 // __colors-to-alpha__ - Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the "red", "green" and "blue" arguments. The sensitivity of the effect can be manipulated using the "transparentAt" and "opaqueAt" values, both of which lie in the range 0-1.
-    'colors-to-alpha': function (requirements) {
+    [COLORS_TO_ALPHA]: function (requirements) {
 
         const getCTAValue = function (dr, dg, db) {
 
-            let diff = (Math.abs(red - dr) + Math.abs(green - dg) + Math.abs(blue - db)) / 3;
+            let diff = (_abs(red - dr) + _abs(green - dg) + _abs(blue - db)) / 3;
 
             if (diff < transparent) return 0;
             if (diff > opaque) return 255;
@@ -2294,7 +2305,7 @@ P.theBigActionsObject = {
         if (null == opaqueAt) opaqueAt = 1;
         if (null == transparentAt) transparentAt = 0;
 
-        let maxDiff = Math.max(((red + green + blue) / 3), (((255 - red) + (255 - green) + (255 - blue)) / 3)),
+        let maxDiff = _max(((red + green + blue) / 3), (((255 - red) + (255 - green) + (255 - blue)) / 3)),
             transparent = transparentAt * maxDiff,
             opaque = opaqueAt * maxDiff,
             range = opaque - transparent;
@@ -2324,7 +2335,7 @@ P.theBigActionsObject = {
     },
 
 // __compose__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the "compose" argument; permitted values are: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', 'xor', or 'lighter'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
-    'compose': function (requirements) {
+    [COMPOSE]: function (requirements) {
 
         const copyPixel = function (fr, tr, data) {
 
@@ -2368,7 +2379,7 @@ P.theBigActionsObject = {
         let {opacity, compose, offsetX, offsetY, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
-        if (null == compose) compose = '';
+        if (null == compose) compose = ZERO_STR;
         if (null == offsetX) offsetX = 0;
         if (null == offsetY) offsetY = 0;
 
@@ -2376,11 +2387,11 @@ P.theBigActionsObject = {
 
         switch (compose) {
 
-            case 'source-only' :
+            case SOURCE_ONLY :
                 output.data.set(iData);
                 break;
 
-            case 'source-atop' :
+            case SOURCE_ATOP :
                 const sAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * mAlpha) + (mAlpha * mColor * (1 - iAlpha));
 
                 for (y = 0; y < iHeight; y++) {
@@ -2409,7 +2420,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'source-in' :
+            case SOURCE_IN :
                 const sInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
 
                 for (y = 0; y < iHeight; y++) {
@@ -2436,7 +2447,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'source-out' :
+            case SOURCE_OUT :
                 const sOutCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * (1 - mAlpha);
 
                 for (y = 0; y < iHeight; y++) {
@@ -2464,7 +2475,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'destination-only' :
+            case DESTINATION_ONLY :
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
 
@@ -2475,7 +2486,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'destination-atop' :
+            case DESTINATION_ATOP :
                 const dAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * iAlpha);
 
                 for (y = 0; y < iHeight; y++) {
@@ -2505,7 +2516,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'destination-over' :
+            case DESTINATION_OVER :
                 const dOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor);
 
                 for (y = 0; y < iHeight; y++) {
@@ -2535,7 +2546,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'destination-in' :
+            case DESTINATION_IN :
                 const dInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
 
                 for (y = 0; y < iHeight; y++) {
@@ -2564,7 +2575,7 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'destination-out' :
+            case DESTINATION_OUT :
                 const dOutCalc = (mColor, iAlpha, mAlpha) => mAlpha * mColor * (1 - iAlpha);
 
                 for (y = 0; y < iHeight; y++) {
@@ -2593,10 +2604,10 @@ P.theBigActionsObject = {
                 }
                 break;
 
-            case 'clear' :
+            case CLEAR :
                 break;
 
-            case 'xor' :
+            case XOR :
                 const xorCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * (1 - iAlpha));
 
                 for (y = 0; y < iHeight; y++) {
@@ -2661,7 +2672,7 @@ P.theBigActionsObject = {
     },
 
 // __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute. Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
-    'corrode': function (requirements) {
+    [CORRODE]: function (requirements) {
 
         const doCalculations = function (data, matrix, offset) {
 
@@ -2687,7 +2698,7 @@ P.theBigActionsObject = {
                     return max;
                 
                 default :
-                    return mathFloor(min + ((max - min) / 2));
+                    return _floor(min + ((max - min) / 2));
             }
         };
 
@@ -2695,8 +2706,8 @@ P.theBigActionsObject = {
 
         let iData = input.data,
             oData = output.data,
-            len = iData.length,
-            mathFloor = Math.floor;
+            len = iData.length;
+            // mathFloor = Math.floor;
 
         let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation, lineOut} = requirements;
 
@@ -2709,11 +2720,11 @@ P.theBigActionsObject = {
         if (null == height || height < 1) height = 3;
         if (null == offsetX) offsetX = 1;
         if (null == offsetY) offsetY = 1;
-        if (null == operation) operation = 'mean';
+        if (null == operation) operation = MEAN;
 
         let grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
 
-        let m = mathFloor(len / 4),
+        let m = _floor(len / 4),
             r, g, b, a, i;
 
         for (i = 0; i < m; i++) {
@@ -2734,7 +2745,7 @@ P.theBigActionsObject = {
     },
 
 // __displace__ - Shift pixels around the image, based on the values supplied in a displacement image
-    'displace': function (requirements) {
+    [DISPLACE]: function (requirements) {
 
         const copyPixel = function (fromPos, toPos, data) {
 
@@ -2781,8 +2792,8 @@ P.theBigActionsObject = {
         let {opacity, channelX, channelY, scaleX, scaleY, offsetX, offsetY, transparentEdges, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
-        if (null == channelX) channelX = 'red';
-        if (null == channelY) channelY = 'green';
+        if (null == channelX) channelX = RED;
+        if (null == channelY) channelY = GREEN;
         if (null == scaleX) scaleX = 1;
         if (null == scaleY) scaleY = 1;
         if (null == offsetX) offsetX = 0;
@@ -2790,14 +2801,14 @@ P.theBigActionsObject = {
         if (null == transparentEdges) transparentEdges = false;
 
         let offsetForChannelX = 3;
-        if (channelX == 'red') offsetForChannelX = 0;
-        else if (channelX == 'green') offsetForChannelX = 1;
-        else if (channelX == 'blue') offsetForChannelX = 2;
+        if (channelX == RED) offsetForChannelX = 0;
+        else if (channelX == GREEN) offsetForChannelX = 1;
+        else if (channelX == BLUE) offsetForChannelX = 2;
 
         let offsetForChannelY = 3;
-        if (channelY == 'red') offsetForChannelY = 0;
-        else if (channelY == 'green') offsetForChannelY = 1;
-        else if (channelY == 'blue') offsetForChannelY = 2;
+        if (channelY == RED) offsetForChannelY = 0;
+        else if (channelY == GREEN) offsetForChannelY = 1;
+        else if (channelY == BLUE) offsetForChannelY = 2;
 
         let x, y, dx, dy, dPos, iPos, mPos;
 
@@ -2807,8 +2818,8 @@ P.theBigActionsObject = {
                 [iPos, mPos] = getLinePositions(x, y);
                 if (mPos >= 0) {
 
-                    dx = Math.floor(x + ((127 - mData[mPos + offsetForChannelX]) / 127) * scaleX);
-                    dy = Math.floor(y + ((127 - mData[mPos + offsetForChannelY]) / 127) * scaleY);
+                    dx = _floor(x + ((127 - mData[mPos + offsetForChannelX]) / 127) * scaleX);
+                    dy = _floor(y + ((127 - mData[mPos + offsetForChannelY]) / 127) * scaleY);
 
                     if (!transparentEdges) {
 
@@ -2836,7 +2847,7 @@ P.theBigActionsObject = {
     },
 
 // __emboss__ - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action
-    'emboss': function (requirements) {
+    [EMBOSS]: function (requirements) {
 
         const doCalculations = function (data, matrix, offset) {
 
@@ -2864,7 +2875,7 @@ P.theBigActionsObject = {
         if (null == keepOnlyChangedAreas) keepOnlyChangedAreas = false;
         if (null == postProcessResults) postProcessResults = false;
 
-        strength = Math.abs(strength);
+        strength = _abs(strength);
 
         while (angle < 0) {
             angle += 360;
@@ -2872,7 +2883,7 @@ P.theBigActionsObject = {
 
         angle = angle % 360;
 
-        let slices = Math.floor(angle / 45),
+        let slices = _floor(angle / 45),
             remains = ((angle % 45) / 45) * strength,
             weights = new Array(9);
 
@@ -2946,7 +2957,7 @@ P.theBigActionsObject = {
 
             if (iA) {
 
-                m = Math.floor(i / 4);
+                m = _floor(i / 4);
 
                 oData[r] = doCalculations(iData, grid[m], 0);
                 oData[g] = doCalculations(iData, grid[m], 1);
@@ -2980,7 +2991,7 @@ P.theBigActionsObject = {
     },
 
 // __flood__ - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments
-    'flood': function (requirements) {
+    [FLOOD]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -3023,7 +3034,7 @@ P.theBigActionsObject = {
     },
 
 // __gaussian-blur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
-    'gaussian-blur': function (requirements) {
+    [GAUSSIAN_BLUR]: function (requirements) {
 
         let a0, a1, a2, a3, b1, b2, left_corner, right_corner;
 
@@ -3031,9 +3042,9 @@ P.theBigActionsObject = {
 
             if (sigma < 0.5) sigma = 0.5;
 
-            let a = Math.exp(0.726 * 0.726) / sigma,
-                g1 = Math.exp(-a),
-                g2 = Math.exp(-2 * a),
+            let a = _exp(0.726 * 0.726) / sigma,
+                g1 = _exp(-a),
+                g2 = _exp(-2 * a),
                 k = (1 - g1) * (1 - g1) / (1 + 2 * a * g1 - g2);
 
             a0 = k;
@@ -3217,7 +3228,7 @@ P.theBigActionsObject = {
         const src32 = new Uint32Array(hold.buffer);
 
         const out = new Uint32Array(src32.length),
-            tmp_line = new Float32Array(Math.max(width, height) * 4);
+            tmp_line = new Float32Array(_max(width, height) * 4);
 
         const coeff = gaussCoef(radius);
 
@@ -3231,7 +3242,7 @@ P.theBigActionsObject = {
     },
 
 // __glitch__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
-    'glitch': function (requirements) {
+    [GLITCH]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -3248,7 +3259,7 @@ P.theBigActionsObject = {
 
         if (null == opacity) opacity = 1;
         if (null == useMixedChannel) useMixedChannel = true;
-        if (null == seed) seed = 'some-random-string-or-other';
+        if (null == seed) seed = DEFAULT_SEED;
         if (null == level) level = 0;
         if (null == step) step = 1;
         if (null == offsetMin) offsetMin = 0;
@@ -3278,7 +3289,7 @@ P.theBigActionsObject = {
 
         const rows = [];
 
-        step = Math.floor(step);
+        step = _floor(step);
         if (step < 1) step = 1;
 
         for (i = 0; i < iHeight; i += step) {
@@ -3289,7 +3300,7 @@ P.theBigActionsObject = {
 
                 if (useMixedChannel) {
 
-                    shift = (offsetMin + Math.floor(rnd[++rndCursor] * range)) * 4;
+                    shift = (offsetMin + _floor(rnd[++rndCursor] * range)) * 4;
 
                     for (j = 0; j < step; j++) {
 
@@ -3298,10 +3309,10 @@ P.theBigActionsObject = {
                 }
                 else {
 
-                    shiftR = (offsetRedMin + Math.floor(rnd[++rndCursor] * redRange)) * 4;
-                    shiftG = (offsetGreenMin + Math.floor(rnd[++rndCursor] * greenRange)) * 4;
-                    shiftB= (offsetBlueMin + Math.floor(rnd[++rndCursor] * blueRange)) * 4;
-                    shiftA= (offsetAlphaMin + Math.floor(rnd[++rndCursor] * alphaRange)) * 4;
+                    shiftR = (offsetRedMin + _floor(rnd[++rndCursor] * redRange)) * 4;
+                    shiftG = (offsetGreenMin + _floor(rnd[++rndCursor] * greenRange)) * 4;
+                    shiftB= (offsetBlueMin + _floor(rnd[++rndCursor] * blueRange)) * 4;
+                    shiftA= (offsetAlphaMin + _floor(rnd[++rndCursor] * alphaRange)) * 4;
                     
                     for (j = 0; j < step; j++) {
 
@@ -3326,7 +3337,7 @@ P.theBigActionsObject = {
             a = b + 1;
 
             w = iWidth * 4;
-            currentRow = Math.floor(i / w);
+            currentRow = _floor(i / w);
             cursor = currentRow * 4;
 
             dr = rows[cursor];
@@ -3358,7 +3369,7 @@ P.theBigActionsObject = {
     },
 
 // __grayscale__ - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.
-    'grayscale': function (requirements) {
+    [GRAYSCALE]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -3393,7 +3404,7 @@ P.theBigActionsObject = {
     },
 
 // __invert-channels__ - For each pixel, subtracts its current channel values - when included - from 255.
-    'invert-channels': function (requirements) {
+    [INVERT_CHANNELS]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -3428,7 +3439,7 @@ P.theBigActionsObject = {
     },
 
 // __lock-channels-to-levels__ - Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value.
-    'lock-channels-to-levels': function (requirements) {
+    [LOCK_CHANNELS_TO_LEVELS]: function (requirements) {
 
         const getLCTLValue = function (val, levels) {
 
@@ -3476,7 +3487,7 @@ P.theBigActionsObject = {
     },
 
 // __map-to-gradient__ - maps the colors in the supplied (complex) gradient to a grayscaled input.
-    'map-to-gradient': function (requirements) {
+    [MAP_TO_GRADIENT]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -3509,7 +3520,7 @@ P.theBigActionsObject = {
                     if (iData[a]) {
 
                         if (useNaturalGrayscale) avg = gVal(iData[r], iData[g], iData[b]);
-                        else avg = Math.floor((0.3333 * iData[r]) + (0.3333 * iData[g]) + (0.3333 * iData[b]));
+                        else avg = _floor((0.3333 * iData[r]) + (0.3333 * iData[g]) + (0.3333 * iData[b]));
 
                         v = avg * 4;
 
@@ -3532,7 +3543,7 @@ P.theBigActionsObject = {
     },
 
 // __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights.
-    'matrix': function (requirements) {
+    [MATRIX]: function (requirements) {
 
         const doCalculations = function (data, matrix, offset) {
 
@@ -3571,12 +3582,12 @@ P.theBigActionsObject = {
         if (null == offsetY) offsetY = 1;
         if (null == weights) {
             weights = [].fill(0, 0, (width * height) - 1);
-            weights[Math.floor(weights.length / 2) + 1] = 1;
+            weights[_floor(weights.length / 2) + 1] = 1;
         }
 
         let grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
 
-        pixels = Math.floor(len / 4);
+        pixels = _floor(len / 4);
 
         for (i = 0; i < pixels; i++) {
 
@@ -3599,7 +3610,7 @@ P.theBigActionsObject = {
     },
 
 // __modulate-channels__ - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at that pixel's grayscale values. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.
-    'modulate-channels': function (requirements) {
+    [MODULATE_CHANNELS]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -3661,7 +3672,7 @@ P.theBigActionsObject = {
     },
 
 // __newsprint__ - TODO documentation
-    'newsprint': function (requirements) {
+    [NEWSPRINT]: function (requirements) {
 
         const doCalculations = function (inChannel, outChannel, tile) {
 
@@ -3688,7 +3699,7 @@ P.theBigActionsObject = {
             }
             avg /= l;
 
-            pattern = patterns[Math.floor((avg / 255) * 13)];
+            pattern = patterns[_floor((avg / 255) * 13)];
 
             if (width === 1) grays.push(...pattern);
             else {
@@ -3754,7 +3765,7 @@ P.theBigActionsObject = {
         const tiles = this.buildImageTileSets(tileDimensions, tileDimensions, 0, 0);
 
         const gVal = this.getGrayscaleValue;
-        const patterns = this.newspaperPatterns;
+        const patterns = newspaperPatterns;
         const grays = [],
             calcGrays = [];
 
@@ -3765,7 +3776,7 @@ P.theBigActionsObject = {
     },
 
 // __offset__ - Offset the input image in the output image.
-    'offset': function (requirements) {
+    [OFFSET]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -3859,13 +3870,13 @@ P.theBigActionsObject = {
     },
 
 // __pixelate__ - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the "tileWidth", "tileHeight", "offsetX" and "offsetY" arguments.
-    'pixelate': function (requirements) {
+    [PIXELATE]: function (requirements) {
 
         const doCalculations = function (inChannel, outChannel, tile, offset) {
 
             let avg = tile.reduce((a, v) => a + inChannel[v + offset], 0);
 
-            avg = Math.floor(avg / tile.length);
+            avg = _floor(avg / tile.length);
 
             for (let i = 0, iz = tile.length; i < iz; i++) {
 
@@ -3931,7 +3942,7 @@ P.theBigActionsObject = {
 // + `lineOut` - required. The image will be stored in the filter engine's cache using this name. Be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset's data.
 // + Assets are loaded into the filter engine each time the filter runs and are not persisted when the filter completes.
 // + Adding assets to a filter chain will very often disable filter memoization functionality!
-    'process-image': function (requirements) {
+    [PROCESS_IMAGE]: function (requirements) {
 
         const {assetData, lineOut} = requirements;
 
@@ -3985,7 +3996,7 @@ P.theBigActionsObject = {
     },
 
 // __random-noise__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
-    'random-noise': function (requirements) {
+    [RANDOM_NOISE]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -4001,8 +4012,8 @@ P.theBigActionsObject = {
         if (null == width) width = 1;
         if (null == height) height = 1;
         if (null == level) level = 0.5;
-        if (null == seed) seed = 'some-random-string-or-other';
-        if (null == noiseType) noiseType = 'random';
+        if (null == seed) seed = DEFAULT_SEED;
+        if (null == noiseType) noiseType = RANDOM;
         if (null == noWrap) noWrap = false;
         if (null == includeRed) includeRed = true;
         if (null == includeGreen) includeGreen = true;
@@ -4012,7 +4023,7 @@ P.theBigActionsObject = {
 
         const rnd = this.getRandomNumbers({
             seed, 
-            length: Math.ceil((len / 4) * 3),
+            length: _ceil((len / 4) * 3),
             imgWidth: iWidth,
             type: noiseType,
         });
@@ -4031,7 +4042,7 @@ P.theBigActionsObject = {
             b = g + 1;
             a = b + 1;
 
-            if (noiseType === 'random') {
+            if (noiseType == RANDOM) {
                 
                 rndLevel = rnd[++rndCursor];
                 rndWidth = rnd[++rndCursor];
@@ -4047,8 +4058,8 @@ P.theBigActionsObject = {
 
             if (rndLevel < level) {
 
-                dw = Math.floor((rndWidth * width) - halfWidth);
-                dh = Math.floor((rndHeight * height) - halfHeight);
+                dw = _floor((rndWidth * width) - halfWidth);
+                dh = _floor((rndHeight * height) - halfHeight);
 
                 source = i + ((dh * iWidth) + dw) * 4;
 
@@ -4096,13 +4107,13 @@ P.theBigActionsObject = {
     },
 
 // __reducePalette__ - Reduce the number of colors in its palette. The `palette` attribute can be: a Number (for the commonest colors);  an Array of CSS color Strings to use as the palette; or  the String name of a pre-defined palette - default: 'black-white'
-    'reduce-palette': function (requirements, identifier) {
+    [REDUCE_PALETTE]: function (requirements, identifier) {
 
         // Check to see if external objects have been set up by a previous run
         // + If they are missing, create them
         if (!this.predefinedPalette) this.predefinedPalette = {};
 
-        const grayPalettes = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'];
+        const grayPalettes = GRAY_PALETTES;
 
         // Check to see if colorSpaceIndices have been created; if not, create them.
         this.colorSpaceIndices();
@@ -4116,7 +4127,7 @@ P.theBigActionsObject = {
         // Internal function - create and memoize a palette
         const createPalette = (name, colors) => {
 
-            if (!name) name = colors.join(',');
+            if (!name) name = colors.join(ARG_SPLITTER);
 
             if (name && predefinedPalette[name]) return predefinedPalette[name];
 
@@ -4154,12 +4165,12 @@ P.theBigActionsObject = {
         };
 
         // Setup predefined palettes if not done so by a previous run
-        if (!predefinedPalette['black-white']) {
+        if (!predefinedPalette[BLACK_WHITE]) {
 
-            createPalette('black-white', ['#000', '#fff']);
-            createPalette('monochrome-4', ['#222', '#777', '#bbb', '#fff']);
-            createPalette('monochrome-8', ['#000', '#333', '#555', '#777', '#999', '#bbb', '#ddd', '#fff']);
-            createPalette('monochrome-16', ['#000', '#111', '#222', '#333', '#444', '#555', '#666', '#777', '#888', '#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee', '#fff']);
+            createPalette(BLACK_WHITE, ['#000', '#fff']);
+            createPalette(MONOCHROME_4, ['#222', '#777', '#bbb', '#fff']);
+            createPalette(MONOCHROME_8, ['#000', '#333', '#555', '#777', '#999', '#bbb', '#ddd', '#fff']);
+            createPalette(MONOCHROME_16, ['#000', '#111', '#222', '#333', '#444', '#555', '#666', '#777', '#888', '#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee', '#fff']);
         }
 
         // Perform test to discover pixel's closest palette gray, after dithering
@@ -4183,7 +4194,7 @@ P.theBigActionsObject = {
 
                 diff = pixelRef - palRef;
 
-                distance.push([pItem, Math.sqrt(diff * diff * 3)]);
+                distance.push([pItem, _sqrt(diff * diff * 3)]);
             }
 
             distance.sort((a, b) => a[1] - b[1]);
@@ -4209,7 +4220,7 @@ P.theBigActionsObject = {
                 k, kz, kIndex, kr, kg, kb,
                 dr, dg, db, dFlag;
 
-            for (const [key, value] of Object.entries(data)) {
+            for (const [key, value] of _entries(data)) {
 
                 if (value) candidates.push([key, value]);
             }
@@ -4378,16 +4389,16 @@ P.theBigActionsObject = {
         let {opacity, palette, seed, noiseType, useBluenoise, minimumColorDistance, useLabForPaletteDistance, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
-        if (null == seed) seed = 'some-random-string-or-other';
-        if (null == noiseType) noiseType = 'random';
+        if (null == seed) seed = DEFAULT_SEED;
+        if (null == noiseType) noiseType = RANDOM;
         if (null == useBluenoise) useBluenoise = false;
         if (null == useLabForPaletteDistance) useLabForPaletteDistance = false;
-        if (null == palette) palette = 'black-white';
+        if (null == palette) palette = BLACK_WHITE;
         if (null == minimumColorDistance) minimumColorDistance = 1000;
 
         // `useBluenoise` is deprecated
         // + use `noiseType: 'bluenoise'` instead
-        if (useBluenoise) noiseType = 'bluenoise';
+        if (useBluenoise) noiseType = BLUENOISE;
 
         // Noise - used for dithering the output
         const rnd = this.getRandomNumbers({
@@ -4485,11 +4496,11 @@ P.theBigActionsObject = {
         // Get the appropriate array of palette colors
         // + For commonest colors, we have to calculate a new best-fit palette for this image
         if (palette.substring) selectedPalette = predefinedPalette[palette] || [];
-        else if (Array.isArray(palette)) selectedPalette = createPalette('', palette);
+        else if (_isArray(palette)) selectedPalette = createPalette(ZERO_STR, palette);
         else if (palette.toFixed) selectedPalette = createCommonestColorsPalette(detectedColors, minimumColorDistance, palette);
         else selectedPalette = [];
 
-        if (!selectedPalette.length) selectedPalette = predefinedPalette['black-white'];
+        if (!selectedPalette.length) selectedPalette = predefinedPalette[BLACK_WHITE];
 
         // Calculate output
         // + Grayscale palettes and non-grayscale palettes follow different paths
@@ -4535,7 +4546,7 @@ P.theBigActionsObject = {
     },
 
 // __set-channel-to-level__ - Sets the value of each pixel's included channel to the value supplied in the "level" argument.
-    'set-channel-to-level': function (requirements) {
+    [SET_CHANNEL_TO_LEVEL]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -4576,16 +4587,16 @@ P.theBigActionsObject = {
 // + `down` (default) - uses `Math.floor()` for the calculation
 // + `up` (default) - uses `Math.ceil()` for the calculation
 // + `round` (default) - uses `Math.round()` for the calculation
-    'step-channels': function (requirements) {
+    [STEP_CHANNELS]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            floor = Math.floor,
-            ceil = Math.ceil,
-            round = Math.round,
+            floor = _floor,
+            ceil = _ceil,
+            round = _round,
             r, g, b, a, i;
 
         let {opacity, red, green, blue, clamp, lineOut} = requirements;
@@ -4594,7 +4605,7 @@ P.theBigActionsObject = {
         if (null == red) red = 1;
         if (null == green) green = 1;
         if (null == blue) blue = 1;
-        if (null == clamp) clamp = 'down';
+        if (null == clamp) clamp = DOWN;
 
         for (i = 0; i < len; i += 4) {
 
@@ -4605,13 +4616,13 @@ P.theBigActionsObject = {
 
             switch (clamp) {
 
-                case 'up' :
+                case UP :
                     oData[r] = ceil(iData[r] / red) * red;
                     oData[g] = ceil(iData[g] / green) * green;
                     oData[b] = ceil(iData[b] / blue) * blue;
                     break;
 
-                case 'round' :
+                case ROUND :
                     oData[r] = round(iData[r] / red) * red;
                     oData[g] = round(iData[g] / green) * green;
                     oData[b] = round(iData[b] / blue) * blue;
@@ -4632,11 +4643,11 @@ P.theBigActionsObject = {
 
 // __swirl__ - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
 // + This filter can handle multiple swirls in a single pass
-    'swirl': function (requirements) {
+    [SWIRL]: function (requirements) {
 
         const getValue = function (val, dim) {
 
-            return (val.substring) ? floor((parseFloat(val) / 100) * dim) : val;
+            return (val.substring) ? _floor((parseFloat(val) / 100) * dim) : val;
         };
 
         let [input, output] = this.getInputAndOutputLines(requirements);
@@ -4646,7 +4657,7 @@ P.theBigActionsObject = {
             len = iData.length,
             iWidth = input.width,
             iHeight = input.height,
-            floor = Math.floor,
+            // floor = _floor,
             r, g, b, a, s, sz, counter, pos, x, y, xz, yz, i, j, 
             distance, dr, dg, db, da, dx, dy, dLen;
 
@@ -4679,7 +4690,7 @@ P.theBigActionsObject = {
             oData[a] = iData[a];
         }
 
-        if (Array.isArray(swirls) && swirls.length) {
+        if (_isArray(swirls) && swirls.length) {
 
             let grid = this.buildImageGrid(input);
 
@@ -4833,7 +4844,7 @@ P.theBigActionsObject = {
 // + The convenience function will accept the pseudo-attributes `highRed`, `lowRed` etc in place of the "high" and "low" Arrays.
 // + When the `useMixedChannel` flag is set to `false` then the filter will perform the threshold check on each channel in turn; the threshold levels for these per-channel checks are set in the `red`, `green`, `blue` and `alpha` arguments
 // + Channels can be excluded from the filter action by setting the `includeRed` etc flags to false
-    'threshold': function (requirements) {
+    [THRESHOLD]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -4928,13 +4939,13 @@ P.theBigActionsObject = {
 // + `points=50` - generate a pseudo-random set of points based on `offsetX`, `offsetY` and `tileRadius` arguments
 // + `points=[100, 100, 100, 300, 300, 100, 300, 300]` - action the points as described in the array
 // + More documentation can be found with the `buildGeneralTileSets` code, near the top of this file.
-    'tiles': function (requirements) {
+    [TILES]: function (requirements) {
 
         const doCalculations = function (inChannel, outChannel, tile, offset) {
 
             let avg = tile.reduce((a, v) => a + inChannel[(v * 4) + offset], 0);
 
-            avg = Math.floor(avg / tile.length);
+            avg = _floor(avg / tile.length);
 
             for (let i = 0, iz = tile.length; i < iz; i++) {
 
@@ -4972,8 +4983,8 @@ P.theBigActionsObject = {
         if (null == offsetX) offsetX = 0;
         if (null == offsetY) offsetY = 0;
         if (null == angle) angle = 0;
-        if (null == points) points = 'rect-grid';
-        if (null == seed) seed = 'some-random-string-or-other';
+        if (null == points) points = RECT_GRID;
+        if (null == seed) seed = DEFAULT_SEED;
 
         const tiles = this.buildGeneralTileSets(points, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, seed);
 
@@ -5001,7 +5012,7 @@ P.theBigActionsObject = {
     },
 
 // __tint-channels__ - Has similarities to the SVG &lt;feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The 'sepia' convenience filter presets these values to create a sepia effect.
-    'tint-channels': function (requirements) {
+    [TINT_CHANNELS]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -5034,9 +5045,9 @@ P.theBigActionsObject = {
             vg = iData[g];
             vb = iData[b];
 
-            oData[r] = Math.floor((vr * redInRed) + (vg * greenInRed) + (vb * blueInRed));
-            oData[g] = Math.floor((vr * redInGreen) + (vg * greenInGreen) + (vb * blueInGreen));
-            oData[b] = Math.floor((vr * redInBlue) + (vg * greenInBlue) + (vb * blueInBlue));
+            oData[r] = _floor((vr * redInRed) + (vg * greenInRed) + (vb * blueInRed));
+            oData[g] = _floor((vr * redInGreen) + (vg * greenInGreen) + (vb * blueInGreen));
+            oData[b] = _floor((vr * redInBlue) + (vg * greenInBlue) + (vb * blueInBlue));
             oData[a] = iData[a];
         }
 
@@ -5046,7 +5057,7 @@ P.theBigActionsObject = {
 
 // __user-defined-legacy__ - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter engine, which the engine would then run against the source input image as-and-when required. This functionality has been removed from the new filter functionality. All such filters will now return the input image unchanged.
 
-    'user-defined-legacy': function (requirements) {
+    [USER_DEFINED_LEGACY]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputChannels(requirements);
 
@@ -5065,7 +5076,7 @@ P.theBigActionsObject = {
 // + The default weighting for all elements is `0`. Weights are added to a pixel channel's value, thus weighting values need to be integer Numbers, either positive or negative
 // + The `useMixedChannel` flag uses a different calculation, where a pixel's channel values are combined to give their grayscale value, then that weighting (stored as the `allweight` weighting value) is added to each channel value, pro-rata in line with the grayscale channel weightings. (Note: this produces a different result compared to tools supplied in various other graphic manipulation software)
 // + Using this method, we can perform a __curve__ (image tonality) filter
-    'vary-channels-by-weights': function (requirements) {
+    [VARY_CHANNELS_BY_WEIGHTS]: function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 

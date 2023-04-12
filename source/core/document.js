@@ -182,7 +182,7 @@ export const domShow = function (singleArtefact = ZERO_STR) {
                                 key = keys[j];
                                 value = items[key];
 
-                                if (_xcss.has(key)) {
+                                if (_xcss.includes(key)) {
 
                                     keyName = `${key[0].toUpperCase}${key.substr(1)}`;
 
@@ -192,7 +192,7 @@ export const domShow = function (singleArtefact = ZERO_STR) {
                                     style[`o${keyName}`] = value;
                                     style[key] = value;
                                 }
-                                else if (_css.has(key)) style[key] = value;
+                                else if (_css.includes(key)) style[key] = value;
                             }
                         }
 
