@@ -238,7 +238,7 @@ export default function (P = Ωempty) {
 // `getAnchorHold` - internal function. Locate the current DOM hold element allocated for hosting &lt;a> elements.
     P.getAnchorHold = function () {
 
-        let entityHost = this.currentHost;
+        const entityHost = this.currentHost;
 
         if (entityHost) {
 
@@ -246,7 +246,7 @@ export default function (P = Ωempty) {
 
             if (entityHost.type === T_CELL) {
 
-                let cellHost = (entityHost.currentHost) ? entityHost.currentHost : canvas[entityHost.host];
+                const cellHost = (entityHost.currentHost) ? entityHost.currentHost : canvas[entityHost.host];
 
                 if (cellHost && cellHost.type === T_CANVAS) return cellHost.navigation;
             }

@@ -155,7 +155,7 @@ export default function (P = Ωempty) {
     // `checkSource`
     // + Gets invoked by subscribers (who have a handle to the asset instance object) as part of the display cycle.
     // + Assets will automatically pass this call onto `notifySubscribers`, where dirty flags get checked and rectified
-    P.checkSource = function (width, height) {
+    P.checkSource = function () {
 
         this.notifySubscribers();
     };

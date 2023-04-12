@@ -170,7 +170,7 @@ export const importSprite = function (...args) {
 
         if (item.substring) {
 
-            let match = ASSET_IMPORT_REGEX.exec(item);
+            const match = ASSET_IMPORT_REGEX.exec(item);
 
             name = (match && match[1]) ? match[1] : ZERO_STR;
             urls = [item];
@@ -227,7 +227,7 @@ export const importSprite = function (...args) {
 
                 if (fileTlas.test(url)) {
 
-                    match = reg.exec(url);
+                    match = ASSET_IMPORT_REGEX.exec(url);
                     filename = (match && match[1]) ? match[1] : ZERO_STR;
                 }
 

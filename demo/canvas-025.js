@@ -10,24 +10,6 @@ import { reportSpeed } from './utilities.js';
 // Import image from DOM, and add data to it
 scrawl.importDomImage('.myimage');
 
-let myRiver = scrawl.library.asset.river;
-
-myRiver.set({
-    intrinsicDimensions: {
-        "river-300.jpg": [300, 225], 
-        "river-600.jpg": [600, 450], 
-        "river-900.jpg": [900, 675], 
-        "river-1200.jpg": [1200, 900], 
-        "river-1600.jpg": [1600, 1200], 
-        "river-2000.jpg": [2000, 1500], 
-        "river-2400.jpg": [2400, 1800], 
-        "river-2800.jpg": [2800, 2100], 
-        "river-3200.jpg": [3200, 2400], 
-        "river-3600.jpg": [3600, 2700], 
-        "river-4000.jpg": [4000, 3000]
-    },
-});
-
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
