@@ -79,9 +79,9 @@ export const convertTime = (item) => {
     if (item.substring) {
 
         const a = item.match(/^\d+\.?\d*(\D*)/);
-        const timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : MS;
+        let timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : MS;
         
-        const timeValue = parseFloat(item);
+        let timeValue = parseFloat(item);
 
         if (!isNaN(timeValue)) {
 

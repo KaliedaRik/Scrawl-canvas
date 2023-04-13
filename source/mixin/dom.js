@@ -313,23 +313,23 @@ export default function (P = Ωempty) {
 // `updateDomAttributes` - DOM wrapper objects do not keep track of their DOM element attribute values; this function is a convenience function to make updating those attributes a bit easier. Function arguments can be one of:
 // + `(attribute-String, value)`
 // + `({attribute-String: value, attribute-String: value, etc})`
-    P.updateDomAttributes = function (attr, value) {
+    P.updateDomAttributes = function (key, val) {
 
         const el = this.domElement;
 
         if (el) {
 
-            if (attr.substring && xt(value)) {
+            if (key.substring && xt(val)) {
 
-                if (value) el.setAttribute(attr, value);
-                else el.removeAttribute(attr);
+                if (xt(val)) el.setAttribute(key, val);
+                else el.removeAttribute(key);
             }
-            else if (isa_obj(attr)) {
+            else if (isa_obj(key)) {
 
-                _entries(attr).forEach(([key, val]) => {
+                _entries(key).forEach(([k, v]) => {
 
-                    if (val) el.setAttribute(key, val);
-                    else el.removeAttribute(key);
+                    if (xt(v)) el.setAttribute(k, v);
+                    else el.removeAttribute(k);
                 });
             }
         }
@@ -341,81 +341,82 @@ export default function (P = Ωempty) {
 // + TODO - there's a lot of improvements we can do here - the aim should be to create the wrapper object and update the objects DOM element's style and dimensions attributes - specifically shifting `position` from "static" to "absolute" - in a way that does not disturb the page view in any way whatsoever (pixel-perfect!) so website visitors are completely unaware that the work has taken place
     P.initializeDomLayout = function (items) {
 
-        const el = items.domElement,
-            style = el.style;
+        const el = items.domElement;
 
-        style.boxSizing = BORDER_BOX;
+        if (el) {
+            
+            const style = el.style;
 
-        if (el && items.setInitialDimensions) {
+            style.boxSizing = BORDER_BOX;
 
-            const dims = el.getBoundingClientRect();
-            let host = false;
+            if (items.setInitialDimensions) {
 
-            const trans = style.transform,
-                transOrigin = style.transformOrigin;
-                
-            if (items && items.host) {
+                const dims = el.getBoundingClientRect();
 
-                host = items.host;
+                // TODO - discover scale
 
-                if (host.substring && artefact[host]) host = artefact[host];
-            }
+                // discover dimensions (width, height)
+                this.currentDimensions[0] = dims.width;
+                this.currentDimensions[1] = dims.height;
+                items.width = dims.width;
+                items.height = dims.height;
 
-            // TODO - discover scale
+                // recover classes already assigned to the element
+                if (el.className) items.classes = el.className;
 
-            // discover dimensions (width, height)
-            this.currentDimensions[0] = dims.width;
-            this.currentDimensions[1] = dims.height;
-            items.width = dims.width;
-            items.height = dims.height;
+                // go with lock defaults - no work required
 
-            // recover classes already assigned to the element
-            if (el.className) items.classes = el.className;
+                // discover start (boundingClientRect - will be the difference between this object and its host (parent) object 'top' and 'left' values)
+                let host = false;
 
-            // go with lock defaults - no work required
+                if (items && items.host) {
 
-            // discover start (boundingClientRect - will be the difference between this object and its host (parent) object 'top' and 'left' values)
-            if (host && host.domElement) {
+                    host = items.host;
 
-                const hostDims = host.domElement.getBoundingClientRect();
-
-                if (hostDims) {
-
-                    items.startX = dims.left - hostDims.left;
-                    items.startY = dims.top - hostDims.top;
-                }
-            }
-
-
-            // TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?
-
-            // TODO discover handle (transform, transformOrigin)
-
-            // TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
-
-            // for Stack artefacts only, discover perspective and perspective-origin values
-            if (this.type == T_STACK) {
-
-                // TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values
-                if (!xt(items.perspective) && !xt(items.perspectiveZ)) {
-
-                    // TODO - this isn't working! see Demo DOM 003 where attempting to set the perspective in CSS causes the demo to fail
-                    // + Workaround is to explicitly set the stack's perspectiveZ value in Javascript
-                    items.perspectiveZ = (xt(style.perspective) && style.perspective) ? parseFloat(style.perspective) : 0;
+                    if (host.substring && artefact[host]) host = artefact[host];
                 }
 
-                let perspectiveOrigin = style.perspectiveOrigin;
+                if (host && host.domElement) {
 
-                if (perspectiveOrigin.length) {
+                    const hostDims = host.domElement.getBoundingClientRect();
 
-                    perspectiveOrigin = perspectiveOrigin.split(SPACE);
+                    if (hostDims) {
 
-                    if (perspectiveOrigin.length > 0 && !xt(items.perspective) && !xt(items.perspectiveX)) items.perspectiveX = perspectiveOrigin[0];
+                        items.startX = dims.left - hostDims.left;
+                        items.startY = dims.top - hostDims.top;
+                    }
+                }
 
-                    if (!xt(items.perspective) && !xt(items.perspectiveY)) {
 
-                        if (perspectiveOrigin.length > 1) items.perspectiveY = perspectiveOrigin[1];
-                        else items.perspectiveY = perspectiveOrigin[0];
+                // TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?
+
+                // TODO discover handle (transform, transformOrigin)
+                const { transform, transformOrigin } = style;
+                    
+                // TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
+
+                // for Stack artefacts only, discover perspective and perspective-origin values
+                if (this.type == T_STACK) {
+
+                    const pStyle = parseFloat(style.perspective);
+                    const {perspective, perspectiveX, perspectiveY, perspectiveZ} = items;
+
+                    // TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values
+                    if (!xta(perspective, perspectiveZ)) {
+
+                        // TODO - this isn't working! see Demo DOM 003 where attempting to set the perspective in CSS causes the demo to fail
+                        // + Workaround is to explicitly set the stack's perspectiveZ value in Javascript
+                        items.perspectiveZ = (!isNaN(pStyle)) ? pStyle : 0;
+                    }
+
+                    const pOrigin = style.perspectiveOrigin;
+
+                    if (pOrigin.length) {
+
+                        const [pX, pY] = pOrigin.split(SPACE);
+
+                        if (!xta(perspective, perspectiveX)) items.perspectiveX = pX;
+                        if (!xta(perspective, perspectiveY)) items.perspectiveY = pY;
                     }
                 }
             }
@@ -430,11 +431,7 @@ export default function (P = Ωempty) {
 
         if (item.substring) {
 
-            let classes = this.classes;
-
-            classes += ` ${item}`;
-            classes = classes.trim();
-            classes = classes.replace(CLASS_REGEX, SPACE);
+            const classes = `${this.classes}  ${item}`.trim().replace(CLASS_REGEX, SPACE);
 
             if (classes !== this.classes) {
 
@@ -539,7 +536,7 @@ export default function (P = Ωempty) {
 
         const pathCorners = this.pathCorners;
 
-        if (pathCorners.length === 4) {
+        if (pathCorners.length == 4) {
 
             const here = this.getHere(),
                 x = currentCorePosition.scrollX - (here.offsetX || 0),

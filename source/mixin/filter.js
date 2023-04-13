@@ -167,10 +167,10 @@ export default function (P = Ωempty) {
 
         if (!_isArray(this.filters)) this.filters = [];
 
-        args.forEach(item => {
+        args.forEach(f => {
 
-            if (item && item.type === T_FILTER) item = item.name;
-            pushUnique(this.filters, item);
+            if (f && f.type === T_FILTER) f = f.name;
+            pushUnique(this.filters, f);
 
         }, this);
 
@@ -185,10 +185,10 @@ export default function (P = Ωempty) {
 
         if (!_isArray(this.filters)) this.filters = [];
 
-        args.forEach(item => {
+        args.forEach(f => {
 
-            if (item && item.type === T_FILTER) item = item.name;
-            removeItem(this.filters, item);
+            if (f && f.type === T_FILTER) f = f.name;
+            removeItem(this.filters, f);
 
         }, this);
 
@@ -216,19 +216,21 @@ export default function (P = Ωempty) {
 // `preprocessFilters` - internal function called as part of the Display cycle. The __process-image__ filter action loads a Scrawl-canvas asset into the filters engine, where it can be used as a lineIn or lineMix argument for other filter actions.
     P.preprocessFilters = function (filters) {
 
-        for (let i = 0, iz = filters.length, filter; i < iz; i++) {
+        let i, iz, j, jz, flag, img, width, height, snd, cnd, filter, obj, copyX, copyY, copyWidth, copyHeight, destWidth, destHeight;
+
+        for (i = 0, iz = filters.length; i < iz; i++) {
 
             filter = filters[i];
 
-            for (let j = 0, jz = filter.actions.length, obj; j < jz; j++) {
+            for (let j = 0, jz = filter.actions.length; j < jz; j++) {
 
                 obj = filter.actions[j];
 
                 if (obj.action == PROCESS_IMAGE) {
 
-                    let flag = true;
+                    flag = true;
 
-                    let img = asset[obj.asset];
+                    img = asset[obj.asset];
 
                     if (img) {
 
@@ -243,10 +245,10 @@ export default function (P = Ωempty) {
                             img.checkSource();
                         }
 
-                        let width = img.sourceNaturalWidth,
-                            height = img.sourceNaturalHeight,
-                            snd = img.sourceNaturalDimensions,
-                            cnd = img.currentDimensions;
+                        width = img.sourceNaturalWidth;
+                        height = img.sourceNaturalHeight;
+                        snd = img.sourceNaturalDimensions;
+                        cnd = img.currentDimensions;
 
                         if (!width || !height) {
 
@@ -267,12 +269,12 @@ export default function (P = Ωempty) {
 
                             flag = false;
 
-                            let copyX = obj.copyX || 0,
-                                copyY = obj.copyY || 0,
-                                copyWidth = obj.copyWidth || 1,
-                                copyHeight = obj.copyHeight || 1,
-                                destWidth = obj.width || 1,
-                                destHeight = obj.height || 1;
+                            copyX = obj.copyX || 0;
+                            copyY = obj.copyY || 0;
+                            copyWidth = obj.copyWidth || 1;
+                            copyHeight = obj.copyHeight || 1;
+                            destWidth = obj.width || 1;
+                            destHeight = obj.height || 1;
 
                             if (copyX.substring) copyX = (parseFloat(copyX) / 100) * width;
                             if (copyY.substring) copyY = (parseFloat(copyY) / 100) * height;

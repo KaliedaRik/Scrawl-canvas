@@ -162,7 +162,7 @@ export default function (P = Ωempty) {
                         fMin = parseFloat(min);
                         fMax = parseFloat(max);
                         fVal = parseFloat(val);
-                        act = '';
+                        act = ZERO_STR;
 
                         if (fVal < fMin) {
 

@@ -44,7 +44,7 @@ import { makeCanvas } from './canvas.js';
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 
-import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '../core/shared-vars.js';
+import { _computed, ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '../core/shared-vars.js';
 
 
 // #### Element constructor
@@ -199,7 +199,7 @@ P.addCanvas = function (items = Ωempty) {
         canvas.id = `${this.name}-canvas`;
         
         const rect = el.getBoundingClientRect(),
-            style = window.getComputedStyle(el);
+            style = _computed(el);
 
         el.parentNode.insertBefore(canvas, this.domElement);
 

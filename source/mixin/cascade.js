@@ -59,7 +59,7 @@ export default function (P = Ωempty) {
 
     S.groups = function (item) {
 
-        this.groups = [];
+        this.groups.length = 0;
         this.addGroups(item);
     };
 
@@ -123,10 +123,12 @@ export default function (P = Ωempty) {
 // `addGroups`
     P.addGroups = function (...args) {
 
+        const groups = this.groups;
+
         args.forEach(item => {
 
-            if (item && item.substring) pushUnique(this.groups, item);
-            else if (group[item]) pushUnique(this.groups, item.name);
+            if (item.substring) pushUnique(groups, item);
+            else if (group[item]) pushUnique(groups, item.name);
 
         }, this);
 
@@ -137,10 +139,12 @@ export default function (P = Ωempty) {
 // `removeGroups`
     P.removeGroups = function (...args) {
 
+        const groups = this.groups;
+
         args.forEach( item => {
 
-            if (item && item.substring) removeItem(this.groups, item);
-            else if (group[item]) removeItem(this.groups, item.name);
+            if (item.substring) removeItem(groups, item);
+            else if (group[item]) removeItem(groups, item.name);
 
         }, this);
 
@@ -152,13 +156,13 @@ export default function (P = Ωempty) {
 // `cascadeAction` - internal helper function used by the functions below
     P.cascadeAction = function (items, action) {
 
-        let grp;
+        let g;
 
-        this.groups.forEach( groupname => {
+        this.groups.forEach(name => {
 
-            grp = group[groupname];
+            g = group[name];
 
-            if (grp) grp[action](items);
+            if (g) g[action](items);
 
         }, this);
 
@@ -220,17 +224,17 @@ export default function (P = Ωempty) {
 
         if (items) {
 
-            let grp, result;
+            let g, res;
 
             for (let i = this.groups.length - 1; i >= 0; i--) {
 
-                grp = group[this.groups[i]];
+                g = group[this.groups[i]];
 
-                if (grp) {
+                if (g) {
 
-                    result = grp.getArtefactAt(items);
+                    res = g.getArtefactAt(items);
 
-                    if (result) return result;
+                    if (res) return res;
                 }
             }
         }
@@ -249,17 +253,17 @@ export default function (P = Ωempty) {
 
         if (items) {
 
-            let grp, result;
+            let g, res;
             
             for (let i = this.groups.length - 1; i >= 0; i--) {
 
-                grp = group[this.groups[i]];
+                g = group[this.groups[i]];
 
-                if (grp) {
+                if (g) {
 
-                    result = grp.getAllArtefactsAt(items);
+                    res = g.getAllArtefactsAt(items);
 
-                    if (result) results.push(...result);
+                    if (res) results.push(...res);
                 }
             }
         }

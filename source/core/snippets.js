@@ -15,7 +15,7 @@ import { makeAnimationObserver } from './events.js';
 import { makeRender } from "../factory/render-animation.js";
 import { makeUnstackedElement } from "../factory/unstacked-element.js";
 
-import { NON_SNIPPET_ELEMENTS } from './shared-vars.js';
+import { _computed, NON_SNIPPET_ELEMENTS } from './shared-vars.js';
 
 
 // TODO - documentation
@@ -46,7 +46,7 @@ const makeStackSnippet = function (el, cSpec, hooks, oSpec) {
     cSpec.checkForResize = true;
 
     const canvas = element.addCanvas(cSpec);
-    element.elementComputedStyles = window.getComputedStyle(el);
+    element.elementComputedStyles = _computed(el);
 
     hooks.name = `${element.name}-animation`;
     hooks.target = canvas;

@@ -22,7 +22,7 @@ import { makeCanvas } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _entries, _floor, _max, ABSOLUTE, AUTO, CANVAS, DATA_SCRAWL_NAME, HEIGHT, RELATIVE, STATIC, T_UNSTACKED_ELEMENT, UE_INCLUDED_STYLES, UE_MIMICKED_STYLES, UNSTACKEDELEMENT, WIDTH, Z_INDEX } from '../core/shared-vars.js';
+import { _computed, _entries, _floor, _max, ABSOLUTE, AUTO, CANVAS, DATA_SCRAWL_NAME, HEIGHT, RELATIVE, STATIC, T_UNSTACKED_ELEMENT, UE_INCLUDED_STYLES, UE_MIMICKED_STYLES, UNSTACKEDELEMENT, WIDTH, Z_INDEX } from '../core/shared-vars.js';
 
 
 // ## UnstackedElement constructor
@@ -36,7 +36,7 @@ const UnstackedElement = function (el) {
     el.setAttribute(DATA_SCRAWL_NAME, this.name);
     this.domElement = el;
 
-    this.elementComputedStyles = window.getComputedStyle(el);
+    this.elementComputedStyles = _computed(el);
     this.hostStyles = Ωempty;
 
     this.canvasStartX = 0;

@@ -9,7 +9,9 @@ import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 
 import { getIgnorePixelRatio, getPixelRatio } from "../core/events.js";
 
-import { _cos, _entries, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../core/shared-vars.js';
+import { releaseArray, requestArray } from '../factory/array-pool.js';
+
+import { _computed, _cos, _entries, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../core/shared-vars.js';
 
 
 // #### Export function
@@ -52,7 +54,7 @@ export default function (P = Ωempty) {
             state = this.state,
             engine = this.engine;
 
-        _entries(items).forEach(([key, value]) => {
+        _entries(items).forEach(([key, val]) => {
 
             if (key === LINE_DASH) {
 
@@ -64,8 +66,8 @@ export default function (P = Ωempty) {
             }
             else {
 
-                engine[key] = value;
-                state[key] = value;
+                engine[key] = val;
+                state[key] = val;
             }
         });
 
@@ -215,12 +217,12 @@ export default function (P = Ωempty) {
     // `clearShadow`
     P.clearShadow = function () {
 
-        this.engine.shadowOffsetX = 0.0;
-        this.engine.shadowOffsetY = 0.0;
-        this.engine.shadowBlur = 0.0;
-        this.state.shadowOffsetX = 0.0;
-        this.state.shadowOffsetY = 0.0;
-        this.state.shadowBlur = 0.0;
+        this.engine.shadowOffsetX = 0;
+        this.engine.shadowOffsetY = 0;
+        this.engine.shadowBlur = 0;
+        this.state.shadowOffsetX = 0;
+        this.state.shadowOffsetY = 0;
+        this.state.shadowBlur = 0;
 
         return this;
     };
@@ -228,7 +230,7 @@ export default function (P = Ωempty) {
     // `restoreShadow`
     P.restoreShadow = function (entity) {
 
-        let state = entity.state;
+        const state = entity.state;
 
         this.engine.shadowOffsetX = state.shadowOffsetX;
         this.engine.shadowOffsetY = state.shadowOffsetY;
@@ -273,8 +275,8 @@ export default function (P = Ωempty) {
 
         if (host && host.domElement) {
 
-            const em = window.getComputedStyle(host.domElement),
-                rem = window.getComputedStyle(document.documentElement);
+            const em = _computed(host.domElement),
+                rem = _computed(document.documentElement);
 
             return [parseFloat(em.fontSize), parseFloat(rem.fontSize), window.innerWidth, window.innerHeight];
         }
@@ -286,32 +288,34 @@ export default function (P = Ωempty) {
     P.getEntityHits = function () {
 
         const response = [],
-            resultNames = [];
-
-        let results = [];
+            res = requestArray(),
+            names = requestArray();
 
         if (this.groupBuckets) {
 
-            this.groupBuckets.forEach(grp => {
-                if (grp.visibility) results.push(grp.getAllArtefactsAt(this.here));
+            this.groupBuckets.forEach(g => {
+
+                if (g.visibility) {
+
+                    res.push(...g.getAllArtefactsAt(this.here));
+                }
             }, this);
         }
 
-        if (results.length) {
+        res.forEach(item => {
 
-            results = results.reduce((a, v) => a.concat(v), []);
+            const art = item.artefact;
 
-            results.forEach(item => {
+            if (art.visibility && !names.includes(art.name)) {
 
-                const art = item.artefact;
+                names.push(art.name);
+                response.push(art);
+            }
+        });
 
-                if (art.visibility && !resultNames.includes(art.name)) {
+        releaseArray(names);
+        releaseArray(res);
 
-                    resultNames.push(art.name);
-                    response.push(art);
-                }
-            })
-        }
         return response;
     };
 

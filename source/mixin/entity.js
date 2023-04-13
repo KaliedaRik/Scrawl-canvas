@@ -195,7 +195,7 @@ export default function (P = Ωempty) {
 
         let result = true;
 
-        if(!incs.indexOf(key) && value === this.defs[key]) result = false;
+        if(!incs.indexOf(key) && value == this.defs[key]) result = false;
 
         return result;
     };
@@ -505,13 +505,13 @@ export default function (P = Ωempty) {
 
             this.prepareStamp();
 
-            if (filterTest) return this.filteredStamp();
+            if (filterTest) return this.filteredStamp(filterTest);
             else return this.regularStamp();
         }
 
         if (this.visibility) {
 
-            if (this.stashOutput || filterTest) return this.filteredStamp();
+            if (this.stashOutput || filterTest) return this.filteredStamp(filterTest);
             else return this.regularStamp();
         }
     };
@@ -545,7 +545,7 @@ export default function (P = Ωempty) {
     };
 
 // `filteredStamp` - handles stamping functionality for all __entitys that have filter functions__ associated with them.
-    P.filteredStamp = function() {
+    P.filteredStamp = function(hasFilters = false) {
 
         const { dirtyFilters, currentHost, state } = this;
 
@@ -584,7 +584,7 @@ export default function (P = Ωempty) {
             // Stamp the entity onto the pool Cell
             this.regularStamp();
 
-            if (!this.noFilters && this.filters && this.filters.length) {
+            if (hasFilters) {
 
                 const filters = this.currentFilters;
 
@@ -678,17 +678,18 @@ export default function (P = Ωempty) {
 // `getCellCoverage` - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the `scrawl.createImageFromEntity` function is invoked.
     P.getCellCoverage = function (img) {
 
-        let width = img.width,
+        const width = img.width,
             height = img.height,
-            data = img.data,
-            maxX = 0,
+            data = img.data;
+
+        let maxX = 0,
             maxY = 0,
             minX = width,
             minY = height,
             counter = 3,
-            x, y;
+            x, y, i, iz;
 
-        for (let i = 0, iz = width * height; i < iz; i++) {
+        for (i = 0, iz = width * height; i < iz; i++) {
 
             if (data[counter]) {
 
@@ -709,13 +710,13 @@ export default function (P = Ωempty) {
 // `simpleStamp` - an alternative to the `stamp` function, to get an entity to stamp its output onto a Cell.
 // + Note that this is a synchronous action, thus cannot be included in a Display cycle cascade.
 // + Will ignore any filters assigned to the entity
-    P.simpleStamp = function (host, changes = Ωempty) {
+    P.simpleStamp = function (host, changes) {
 
         if (host && GOOD_HOST.includes(host.type)) {
 
             this.currentHost = host;
             
-            this.set(changes);
+            if (changes) this.set(changes);
             this.prepareStamp();
 
             this.regularStamp();

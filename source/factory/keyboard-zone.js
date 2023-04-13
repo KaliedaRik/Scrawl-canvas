@@ -11,20 +11,10 @@ import { mergeDiscard, λnull, Ωempty } from "../core/utilities.js";
 
 import { addNativeListener, removeNativeListener } from "../core/events.js";
 
-import { $BODY, _keys, ACCEPTED_WRAPPERS, KEY_DOWN, KEY_UP, keyGroupsArray, NONE, T_ESCAPE, T_TAB } from '../core/shared-vars.js';
+import { $BODY, _keys, ACCEPTED_WRAPPERS, KEY_DOWN, KEY_UP, KEYBOARD_GROUPS, NONE, T_ESCAPE, T_TAB } from '../core/shared-vars.js';
 
 
-// // Local constants
-// const $BODY = 'BODY',
-//     ACCEPTED_WRAPPERS = ['Canvas', 'Stack'],
-//     KEY_DOWN = 'keydown',
-//     KEY_UP = 'keyup',
-//     keyGroupsArray = ['none', 'shiftOnly', 'altOnly', 'ctrlOnly', 'metaOnly', 'shiftAlt', 'shiftCtrl', 'shiftMeta', 'altCtrl', 'altMeta', 'ctrlMeta', 'shiftAltCtrl', 'shiftAltMeta', 'shiftCtrlMeta', 'altCtrlMeta', 'all'],
-//     NONE = 'none',
-//     T_ESCAPE = 'Escape',
-//     T_TAB = 'Tab';
-
-
+// Local constants
 const keyboardZones = {};
 
 const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRemoveListeners) {
@@ -65,13 +55,13 @@ const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRem
     if (!zoneItem.keyGroups) {
 
         const groups = {};
-        keyGroupsArray.forEach(g => groups[g] = {});
+        KEYBOARD_GROUPS.forEach(g => groups[g] = {});
         zoneItem.keyGroups = groups;
     }
 
     const KG = zoneItem.keyGroups;
 
-    keyGroupsArray.forEach(g => {
+    KEYBOARD_GROUPS.forEach(g => {
 
         const keymap = items[g];
         if (keymap != null) mergeDiscard(KG[g], keymap);

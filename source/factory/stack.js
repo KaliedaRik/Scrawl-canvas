@@ -54,7 +54,7 @@ import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { $DATA_SCRAWL_STACK, $SCRIPT, _entries, _isArray, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DATA_SCRAWL_STACK, DIV, NAME, PC50, RELATIVE, ROOT, STACK, SUBSCRIBE, T_STACK, ZERO_STR } from '../core/shared-vars.js';
+import { $DATA_SCRAWL_STACK, $SCRIPT, _computed, _entries, _isArray, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DATA_SCRAWL_STACK, DIV, NAME, PC50, RELATIVE, ROOT, STACK, SUBSCRIBE, T_STACK, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Stack constructor
@@ -523,7 +523,7 @@ const processNewStackChildren = function (el, name) {
         if (child.getAttribute(DATA_SCRAWL_STACK) == null && !isa_canvas(child) && child.tagName != $SCRIPT) {
 
             let dims = child.getBoundingClientRect(),
-                computed = window.getComputedStyle(child);
+                computed = _computed(child);
 
             let yHeight = parseFloat(computed.marginTop) + parseFloat(computed.borderTopWidth) + parseFloat(computed.paddingTop) + parseFloat(computed.paddingBottom) + parseFloat(computed.borderBottomWidth) + parseFloat(computed.marginBottom);
 

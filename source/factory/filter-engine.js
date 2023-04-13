@@ -4594,9 +4594,6 @@ P.theBigActionsObject = {
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            floor = _floor,
-            ceil = _ceil,
-            round = _round,
             r, g, b, a, i;
 
         let {opacity, red, green, blue, clamp, lineOut} = requirements;
@@ -4617,21 +4614,21 @@ P.theBigActionsObject = {
             switch (clamp) {
 
                 case UP :
-                    oData[r] = ceil(iData[r] / red) * red;
-                    oData[g] = ceil(iData[g] / green) * green;
-                    oData[b] = ceil(iData[b] / blue) * blue;
+                    oData[r] = _ceil(iData[r] / red) * red;
+                    oData[g] = _ceil(iData[g] / green) * green;
+                    oData[b] = _ceil(iData[b] / blue) * blue;
                     break;
 
                 case ROUND :
-                    oData[r] = round(iData[r] / red) * red;
-                    oData[g] = round(iData[g] / green) * green;
-                    oData[b] = round(iData[b] / blue) * blue;
+                    oData[r] = _round(iData[r] / red) * red;
+                    oData[g] = _round(iData[g] / green) * green;
+                    oData[b] = _round(iData[b] / blue) * blue;
                     break;
 
                 default :
-                    oData[r] = floor(iData[r] / red) * red;
-                    oData[g] = floor(iData[g] / green) * green;
-                    oData[b] = floor(iData[b] / blue) * blue;
+                    oData[r] = _floor(iData[r] / red) * red;
+                    oData[g] = _floor(iData[g] / green) * green;
+                    oData[b] = _floor(iData[b] / blue) * blue;
                     break;
             }
             oData[a] = iData[a];
@@ -4657,7 +4654,6 @@ P.theBigActionsObject = {
             len = iData.length,
             iWidth = input.width,
             iHeight = input.height,
-            // floor = _floor,
             r, g, b, a, s, sz, counter, pos, x, y, xz, yz, i, j, 
             distance, dr, dg, db, da, dx, dy, dLen;
 
@@ -4758,8 +4754,8 @@ P.theBigActionsObject = {
 
                                     coord.rotate(angle).add(start);
 
-                                    dx = floor(coord[0]);
-                                    dy = floor(coord[1]);
+                                    dx = _floor(coord[0]);
+                                    dy = _floor(coord[1]);
 
                                     if (dx < 0) dx += iWidth;
                                     else if (dx >= iWidth) dx -= iWidth;
@@ -4777,8 +4773,8 @@ P.theBigActionsObject = {
 
                                     coord.rotate(angle * dLen).add(start);
 
-                                    dx = floor(coord[0]);
-                                    dy = floor(coord[1]);
+                                    dx = _floor(coord[0]);
+                                    dy = _floor(coord[1]);
 
                                     if (dx < 0) dx += iWidth;
                                     else if (dx >= iWidth) dx -= iWidth;
