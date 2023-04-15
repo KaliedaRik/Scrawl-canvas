@@ -63,10 +63,8 @@ export default function (P = Ωempty) {
 
 // #### Packet management
     P.packetExclusions = pushUnique(P.packetExclusions, ['controlledLineOffset']);
-    P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
     P.packetCoordinates = pushUnique(P.packetCoordinates, ['end']);
     P.packetObjects = pushUnique(P.packetObjects, ['endPivot', 'endPath']);
-    P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 
 // #### Clone management

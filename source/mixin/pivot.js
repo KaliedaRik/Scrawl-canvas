@@ -36,7 +36,7 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
-    P.packetObjects = pushUnique(P.packetObjects, [PIVOT]);
+    P.packetObjects = pushUnique(P.packetObjects, ['pivot']);
 
 
 // #### Clone management

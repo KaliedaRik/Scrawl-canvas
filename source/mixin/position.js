@@ -304,7 +304,6 @@ export default function (P = Ωempty) {
     P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)', 'Subscriber$']);
     P.packetCoordinates = pushUnique(P.packetCoordinates, ['start', 'handle', 'offset']);
     P.packetObjects = pushUnique(P.packetObjects, ['group']);
-    P.packetFunctions = pushUnique(P.packetFunctions, []);
 
     P.processPacketOut = function (key, value, inc) {
 

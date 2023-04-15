@@ -179,8 +179,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['forces', 'springs', 'particleStore']);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
 P.packetObjects = pushUnique(P.packetObjects, ['world', 'artefact', 'shapeTemplate']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['generate', 'postGenerate', 'stampAction']);
 

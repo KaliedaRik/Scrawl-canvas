@@ -158,11 +158,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
-P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
 P.packetCoordinates = pushUnique(P.packetCoordinates, ['startControl', 'endControl']);
 P.packetObjects = pushUnique(P.packetObjects, ['startControlPivot', 'startControlParticle', 'startControlPath', 'endControlPivot', 'endControlParticle', 'endControlPath']);
-P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 
 // #### Clone management

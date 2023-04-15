@@ -112,10 +112,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['controlledLineOffset']);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
-P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 P.finalizePacketOut = function (copy, items) {
 

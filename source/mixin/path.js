@@ -36,7 +36,7 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
-    P.packetObjects = pushUnique(P.packetObjects, [PATH]);
+    P.packetObjects = pushUnique(P.packetObjects, ['path']);
 
 
 // #### Clone management

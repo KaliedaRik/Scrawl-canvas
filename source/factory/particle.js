@@ -119,11 +119,8 @@ const defaultAttributes = {
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet management
-P.packetExclusions = pushUnique(P.packetExclusions, []);
 P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)']);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
 P.packetObjects = pushUnique(P.packetObjects, ['position', 'velocity', 'acceleration']);
-P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 
 // #### Clone management

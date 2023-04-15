@@ -42,7 +42,7 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
-    P.packetObjects = pushUnique(P.packetObjects, [MIMIC]);
+    P.packetObjects = pushUnique(P.packetObjects, ['mimic']);
 
 
 // #### Clone management

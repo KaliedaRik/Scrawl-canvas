@@ -232,7 +232,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 // #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['pathObject', 'state']);
 P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)', 'Subscriber$']);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
 P.packetObjects = pushUnique(P.packetObjects, ['group', 'fromPath', 'toPath', 'source']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 
