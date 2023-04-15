@@ -17,9 +17,11 @@ import { constructors, entity } from '../core/library.js';
 
 import { correctAngle, doCreate, easeEngines, interpolate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xtGet, λfirstArg, Ωempty } from '../core/utilities.js';
 
+import { releaseArray, requestArray } from '../factory/array-pool.js';
+
 import baseMix from '../mixin/base.js';
 
-import { _abs, _atan2, _cbrt, _cos, _entries, _floor, _freeze, _isArray, _keys, _max, _min, _pi, _pow, _radian,  _random, _round, _sin, _sqrt, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _atan2, _cbrt, _cos, _entries, _floor, _freeze, _inverseRadian, _isArray, _keys, _max, _min, _pi, _pow, _radian,  _random, _round, _sin, _sqrt, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../core/shared-vars.js';
 
 
 // Local constants
@@ -549,7 +551,7 @@ P.returnColorFromValues = function (b, c, d, a) {
 
     const { colorSpace, returnColorAs } = this;
 
-    let col = this.buildColorString(b, c, d, a, colorSpace);
+    const col = this.buildColorString(b, c, d, a, colorSpace);
 
     let flag = false;
     if (XYZ == colorSpace) flag = true;
@@ -1311,15 +1313,30 @@ P.lin_sRGB = function (myRgb) {
 }
 P.convertRGBtoXYZ = function (r, g, b) {
 
-    const sRGB = [r / 255, g / 255, b / 255];
-    const lRGB = this.lin_sRGB(sRGB)
+    const sRGB = requestArray();
+    sRGB.push(r / 255, g / 255, b / 255);
 
-    return this.multiplyMatrices([...convertRGBtoXYZ_matrix], [...lRGB]);
+    const lRGB = requestArray();
+    lRGB.push(...this.lin_sRGB(sRGB));
+
+    const A = requestArray();
+    A.push(...convertRGBtoXYZ_matrix);
+
+    const res = this.multiplyMatrices(A, lRGB);
+
+    releaseArray(sRGB);
+    releaseArray(lRGB);
+    releaseArray(A);
+
+    return res;
 };
 
 P.convertRGBtoOKLAB = function (r, g, b) {
 
-    const [_r, _g, _b] = this.lin_sRGB([r / 255, g / 255, b / 255])
+    const sRGB = requestArray();
+    sRGB.push(r / 255, g / 255, b / 255);
+
+    const [_r, _g, _b] = this.lin_sRGB(sRGB);
 
     const l = 0.4122214708 * _r + 0.5363325363 * _g + 0.0514459929 * _b;
     const m = 0.2119034982 * _r + 0.6806995451 * _g + 0.1073969566 * _b;
@@ -1328,6 +1345,8 @@ P.convertRGBtoOKLAB = function (r, g, b) {
     const _l = cbrt(l);
     const _m = cbrt(m);
     const _s = cbrt(s);
+
+    releaseArray(sRGB);
 
     return [
         0.2104542553 * _l + 0.7936177850 * _m - 0.0040720468 * _s,
@@ -1350,8 +1369,17 @@ P.gam_sRGB = function (myRgb) {
 }
 P.convertXYZtoRGB = function (x, y, z) {
 
-    const lRGB = this.multiplyMatrices([...convertXYZtoRGB_matrix], [x, y, z]);
+    const A = requestArray();
+    A.push(...convertXYZtoRGB_matrix);
+
+    const B = requestArray();
+    B.push(x, y, z);
+
+    const lRGB = this.multiplyMatrices(A, B);
     const sRGB = this.gam_sRGB(lRGB);
+
+    releaseArray(A);
+    releaseArray(B);
 
     return [
         _round(sRGB[0] * 255),
@@ -1363,9 +1391,18 @@ P.convertXYZtoRGB = function (x, y, z) {
 // `convertXYZtoLAB` - internal helper function
 P.convertXYZtoLAB = function (x, y, z) {
 
-    const toD50 = this.multiplyMatrices([...D65_to_D50_matrix], [x, y, z]);
+    const A = requestArray();
+    A.push(...D65_to_D50_matrix);
+
+    const B = requestArray();
+    B.push(x, y, z);
+
+    const toD50 = this.multiplyMatrices(A, B);
     const xyz = toD50.map((val, i) => val / D50[i]);
     const f = xyz.map(val => val > E ? cbrt(val) : (K * val + 16) / 116);
+
+    releaseArray(A);
+    releaseArray(B);
 
     return [
         (116 * f[1]) - 16,
@@ -1377,27 +1414,36 @@ P.convertXYZtoLAB = function (x, y, z) {
 // `convertLABtoXYZ` - internal helper function
 P.convertLABtoXYZ = function (l, a, b) {
 
-    const f = [];
+    const f1 = (l + 16) / 116,
+        f0 = a / 500 + f1,
+        f2 = f1 - b / 200;
 
-    f[1] = (l + 16) / 116;
-    f[0] = a / 500 + f[1];
-    f[2] = f[1] - b / 200;
-
-    const xyz = [
-        (_pow(f[0], 3) > E) ? _pow(f[0], 3) : (116 * f[0] - 16) / K,
+    const xyz = requestArray();
+    xyz.push(
+        (_pow(f0, 3) > E) ? _pow(f0, 3) : (116 * f0 - 16) / K,
         (l > K * E) ? _pow((l + 16) / 116, 3) : l / K,
-        (_pow(f[2], 3) > E) ? _pow(f[2], 3) : (116 * f[2] - 16) / K,
-    ];
+        (_pow(f2, 3) > E) ? _pow(f2, 3) : (116 * f2 - 16) / K,
+    );
 
-    const toD50 = xyz.map((val, i) => val * D50[i]);
+    const A = requestArray();
+    A.push(...D50_to_D65_matrix);
 
-    return this.multiplyMatrices([...D50_to_D65_matrix], [...toD50]);
+    const toD50 = requestArray();
+    toD50.push(...xyz.map((val, i) => val * D50[i]));
+
+    const res = this.multiplyMatrices(A, toD50);
+
+    releaseArray(xyz);
+    releaseArray(A);
+    releaseArray(toD50);
+
+    return res;
 };
 
 // `convertLABtoLCH` - internal helper function
 P.convertLABtoLCH = function (l, a, b) {
 
-    const hue = _atan2(b, a) * 180 / _pi;
+    const hue = _atan2(b, a) * _inverseRadian;
 
     return [
         l,
@@ -1411,29 +1457,61 @@ P.convertLCHtoLAB = function (l, c, h) {
 
     return [
         l,
-        c * _cos(h * _pi / 180),
-        c * _sin(h * _pi / 180),
+        c * _cos(h * _radian),
+        c * _sin(h * _radian),
     ];
 };
 
 // `convertXYZtoOKLAB` - internal helper function
 P.convertXYZtoOKLAB = function (x, y, z) {
 
-    const LMS = this.multiplyMatrices([...XYZtoLMS], [x, y, z]);
-    return this.multiplyMatrices([...LMStoOKLab], LMS.map(c => cbrt(c)));
+    const A = requestArray();
+    A.push(...XYZtoLMS);
+
+    const B = requestArray();
+    B.push(x, y, z);
+
+    const C = requestArray();
+    C.push(...LMStoOKLab);
+
+    const LMS = this.multiplyMatrices(A, B);
+
+    const res = this.multiplyMatrices(C, LMS.map(c => cbrt(c)));
+
+    releaseArray(A);
+    releaseArray(B);
+    releaseArray(C);
+
+    return res;
 };
 
 // `convertOKLABtoXYZ` - internal helper function
 P.convertOKLABtoXYZ = function (l, a, b) {
 
-    const LMSnl = this.multiplyMatrices([...OKLabtoLMS], [l, a, b]);
-    return this.multiplyMatrices([...LMStoXYZ], LMSnl.map(c => c ** 3));
+    const A = requestArray();
+    A.push(...OKLabtoLMS);
+
+    const B = requestArray();
+    B.push(l, a, b);
+
+    const C = requestArray();
+    C.push(...LMStoXYZ);
+
+    const LMSnl = this.multiplyMatrices(A, B);
+
+    const res = this.multiplyMatrices(C, LMSnl.map(c => c ** 3));
+
+    releaseArray(A);
+    releaseArray(B);
+    releaseArray(C);
+
+    return res;
 };
 
 // `convertOKLABtoOKLCH` - internal helper function
 P.convertOKLABtoOKLCH = function (l, a, b) {
 
-    const hue = _atan2(b, a) * 180 / _pi;
+    const hue = _atan2(b, a) * _inverseRadian;
 
     return [
         l,
@@ -1447,8 +1525,8 @@ P.convertOKLCHtoOKLAB = function (l, c, h) {
 
     return [
         l,
-        c * _cos(h * _pi / 180),
-        c * _sin(h * _pi / 180),
+        c * _cos(h * _radian),
+        c * _sin(h * _radian),
     ];
 };
 

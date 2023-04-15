@@ -13,6 +13,7 @@ export const _exp = Math.exp;
 export const _floor = Math.floor;
 export const _freeze = Object.freeze;
 export const _hypot = Math.hypot;
+export const _inverseRadian = 180 / Math.PI;
 export const _isArray = Array.isArray;
 export const _isInteger = Number.isInteger;
 export const _keys = Object.keys;

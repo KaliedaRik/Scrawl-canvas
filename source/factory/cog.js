@@ -44,10 +44,12 @@ import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { releaseVector, requestVector } from './vector.js';
 
+import { releaseArray, requestArray } from '../factory/array-pool.js';
+
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { BEZIER, ENTITY, LINE, PERMITTED_CURVES, QUADRATIC, T_COG, ZERO_PATH } from '../core/shared-vars.js';
+import { _abs, _min, BEZIER, ENTITY, LINE, PERMITTED_CURVES, QUADRATIC, T_COG, ZERO_PATH } from '../core/shared-vars.js';
 
 
 // #### Cog constructor
@@ -220,11 +222,7 @@ S.curve = function (item) {
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
-
-    let p = ZERO_PATH;
-    p = this.makeCogPath();
-
-    this.pathDefinition = p;
+    this.pathDefinition = this.makeCogPath();
 };
 
 
@@ -236,7 +234,7 @@ P.makeCogPath = function () {
     let { outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset } = this;
 
     const turn = 360 / points,
-        xPts = [];
+        xPts = requestArray();
 
     let currentTrailX, currentTrailY, currentPointX, currentPointY, currentLeadX, currentLeadY, 
         controlStartX, controlStartY, deltaX, deltaY, controlEndX, controlEndY,
@@ -249,7 +247,7 @@ P.makeCogPath = function () {
 
         if (host) {
 
-            let [hW, hH] = host.currentDimensions;
+            const [hW, hH] = host.currentDimensions;
 
             outerRadius = (outerRadius.substring) ? (parseFloat(outerRadius) / 100) * hW : outerRadius;
             innerRadius = (innerRadius.substring) ? (parseFloat(innerRadius) / 100) * hW : innerRadius;
@@ -412,8 +410,10 @@ P.makeCogPath = function () {
     }
     releaseVector(outerPoint, outerPointLead, outerPointTrail, innerPoint, innerPointLead, innerPointTrail);
 
-    myMin = Math.min(...xPts);
-    myXoffset = Math.abs(myMin).toFixed(1);
+    myMin = _min(...xPts);
+    myXoffset = _abs(myMin).toFixed(1);
+
+    releaseArray(xPts);
 
     if (curve == BEZIER) return `m${myXoffset},0c${myPath}z`;
     if (curve == QUADRATIC) return `m${myXoffset},0q${myPath}z`;

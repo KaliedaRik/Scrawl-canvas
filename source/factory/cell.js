@@ -87,9 +87,8 @@ const Cell = function (items = Ωempty) {
 
     if (!isa_canvas(items.element)) {
 
-        let mycanvas = document.createElement(CANVAS);
+        const mycanvas = document.createElement(CANVAS);
         mycanvas.id = this.name;
-
         mycanvas.width = 300;
         mycanvas.height = 150;
         items.element = mycanvas;
@@ -381,7 +380,7 @@ S.element = function (item) {
 S.backgroundColor = function (item) {
 
     // If we try to clear the cell with a transparent color, it will not clear. Setting it to an empty string fixes this issue
-    if (TRANSPARENT_VALS.includes(item)) item = '';
+    if (TRANSPARENT_VALS.includes(item)) item = ZERO_STR;
     this.backgroundColor = item;
 };
 
@@ -563,7 +562,7 @@ G.group = function () {
 // `checkSource` - internal function
 P.checkSource = function (width, height) {
 
-    if (this.currentDimensions[0] !== width || this.currentDimensions[1] !== height) this.notifySubscribers();
+    if (this.currentDimensions[0] != width || this.currentDimensions[1] != height) this.notifySubscribers();
 };
 
 // `getData` - internal function, invoked when a Cell wrapper is used as an entity's pattern style
@@ -608,9 +607,9 @@ P.updateArtefacts = function (items = Ωempty) {
 // + Tells all associated artefacts that the Cell's dimensions have changed
 P.cleanDimensionsAdditionalActions = function() {
 
-    let element = this.element;
+    const el = this.element;
 
-    if (element) {
+    if (el) {
 
         const control = this.controller,
             current = this.currentDimensions,
@@ -638,8 +637,8 @@ P.cleanDimensionsAdditionalActions = function() {
 
                 [w, h] = current;
 
-                element.width = w;
-                element.height = h;
+                el.width = w;
+                el.height = h;
             }
             else {
 
@@ -656,13 +655,13 @@ P.cleanDimensionsAdditionalActions = function() {
 
                 if (ignoreDpr) {
 
-                    element.width = w;
-                    element.height = h;
+                    el.width = w;
+                    el.height = h;
                 }
                 else {
 
-                    element.width = w * dpr;
-                    element.height = h * dpr;
+                    el.width = w * dpr;
+                    el.height = h * dpr;
                 }
             }
 
@@ -803,8 +802,6 @@ P.clear = function () {
 // `compile`
 P.compile = function(){
 
-    let mystash = this.stashOutput;
-
     this.sortGroups();
 
     if (!this.cleared) this.prepareStamp();
@@ -830,7 +827,7 @@ P.compile = function(){
 P.show = function () {
 
     // get the destination cell's canvas context
-    let host = this.getHost(),
+    const host = this.getHost(),
         engine = (host && host.engine) ? host.engine : false;
 
     if (engine) {
@@ -1103,7 +1100,7 @@ P.updateBaseHere = function (controllerHere, fit) {
         const controllerWidth = (controllerHere.localListener) ? controllerHere.originalWidth : controllerHere.w;
         const controllerHeight = (controllerHere.localListener) ? controllerHere.originalHeight : controllerHere.h;
 
-        if (dims[0] !== controllerWidth || dims[1] !== controllerHeight) {
+        if (dims[0] != controllerWidth || dims[1] != controllerHeight) {
 
             if (!this.basePaste) this.basePaste = [];
 

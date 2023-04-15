@@ -122,7 +122,7 @@ P.set = function (items = Ωempty) {
         const setters = this.setters,
             defs = this.defs;
         
-        let predefined, i, iz, key, value;
+        let fn, i, iz, key, value;
 
         for (i = 0; i < keysLen; i++) {
 
@@ -131,9 +131,9 @@ P.set = function (items = Ωempty) {
 
             if (key && key != NAME && value != null) {
 
-                predefined = setters[key];
+                fn = setters[key];
 
-                if (predefined) predefined.call(this, value);
+                if (fn) fn.call(this, value);
                 else if (typeof defs[key] != UNDEF) this[key] = value;
             }
         }
@@ -163,14 +163,8 @@ P.getEndTime = function () {
 // TODO: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. All other %times appear to work as expected.
 P.update = function (items) {
 
-    let reversed = this.reversed,
-        effectiveTime = this.effectiveTime,
-        triggered = this.triggered,
-        reverseOnCycleEnd = this.reverseOnCycleEnd,
-        tick = items.tick,
-        reverseTick = items.reverseTick,
-        willLoop = items.willLoop,
-        next = items.next;
+    const { tick, reverseTick, willLoop } = items;
+    const { reversed, effectiveTime, triggered } = this;
 
     if (reversed) {
 

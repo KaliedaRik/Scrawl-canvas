@@ -164,11 +164,7 @@ D.twist = function (item) {
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
-
-    let p = ZERO_PATH;
-    p = this.makeStarPath();
-
-    this.pathDefinition = p;
+    this.pathDefinition = this.makeStarPath();
 };
 
 

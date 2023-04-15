@@ -133,7 +133,7 @@ P.multiply = function (item) {
 // Array division - argument is a `[Number, Number]` Array
 P.divide = function (item) {
 
-    let [x, y] = item;
+    const [x, y] = item;
 
     if (x && y) {
 
@@ -169,19 +169,18 @@ P.scalarDivide = function (item) {
 // Get the Array's __magnitude__ value (treating the Coordinate as if it was a 2D vector)
 P.getMagnitude = function () {
 
-    return _hypot(this[0], this[1]);
+    return _hypot(...this);
 };
 
 // Rotate the Coordinate by the argument number (treating the Coordinate as if it was a 2D vector) - the argument represents degrees, not radians
 P.rotate = function (angle) {
 
-    let x = this[0],
-        y = this[1],
-        r0, r1;
+    const [x, y] = this;
 
-    r0 = _atan2(y, x);
+    let r0 = _atan2(y, x);
     r0 += (angle * 0.01745329251);
-    r1 = _hypot(x, y);
+    
+    const r1 = _hypot(x, y);
 
     this[0] = r1 * _cos(r0);
     this[1] = r1 * _sin(r0);
@@ -207,7 +206,7 @@ P.getDotProduct = function (coord) {
 // __Normalize__ the Array's members (treating the Coordinate as if it was a 2D vector)
 P.normalize = function() {
     
-    let val = this.getMagnitude();
+    const val = this.getMagnitude();
     
     if (val > 0) {
         this[0] /= val;
@@ -226,7 +225,7 @@ export const requestCoordinate = function (items, y) {
 
     if (!coordinatePool.length) coordinatePool.push(new Coordinate());
 
-    let c = coordinatePool.shift();
+    const c = coordinatePool.shift();
     c.set(items, y);
     return c
 };

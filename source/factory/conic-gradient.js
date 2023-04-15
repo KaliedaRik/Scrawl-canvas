@@ -26,7 +26,7 @@ import { addStrings, doCreate, isa_number, mergeOver, pushUnique, Ωempty } from
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
-import { _radian, STYLES, T_CONIC_GRADIENT } from '../core/shared-vars.js';
+import { _radian, BLANK, STYLES, T_CONIC_GRADIENT } from '../core/shared-vars.js';
 
 
 // #### ConicGradient constructor
@@ -110,14 +110,14 @@ P.buildStyle = function (cell) {
 
         if (engine) {
 
-            if (!engine.createConicGradient) return 'rgb(0 0 0 / 0)';
+            if (!engine.createConicGradient) return BLANK;
 
             const gradient = engine.createConicGradient(...this.gradientArgs);
             
             return this.addStopsToGradient(gradient, this.paletteStart, this.paletteEnd, this.cyclePalette);
         }
     }
-    return 'rgb(0 0 0 / 0)';
+    return BLANK;
 };
 
 // `updateGradientArgs` - internal function

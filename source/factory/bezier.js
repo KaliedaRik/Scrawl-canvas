@@ -413,30 +413,18 @@ S.endControlLockTo = function (item) {
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
-
-    let p = ZERO_PATH;
-
-    p = this.makeBezierPath();
-    
-    this.pathDefinition = p;
+    this.pathDefinition = this.makeBezierPath();
 };
 
 // `makeBezierPath` - internal helper function - called by `cleanSpecies`
 P.makeBezierPath = function () {
     
-    let [startX, startY] = this.currentStampPosition;
-    let [startControlX, startControlY] = this.currentStartControl;
-    let [endControlX, endControlY] = this.currentEndControl;
-    let [endX, endY] = this.currentEnd;
+    const [sX, sY] = this.currentStampPosition;
+    const [sCX, sCY] = this.currentStartControl;
+    const [eCX, eCY] = this.currentEndControl;
+    const [eX, eY] = this.currentEnd;
 
-    let scx = (startControlX - startX).toFixed(2),
-        scy = (startControlY - startY).toFixed(2),
-        ecx = (endControlX - startX).toFixed(2),
-        ecy = (endControlY - startY).toFixed(2),
-        ex = (endX - startX).toFixed(2),
-        ey = (endY - startY).toFixed(2);
-
-    return `m0,0c${scx},${scy} ${ecx},${ecy} ${ex},${ey}`;
+    return `m0,0c${(sCX - sX).toFixed(2)},${(sCY - sY).toFixed(2)} ${(eCX - sX).toFixed(2)},${(eCY - sY).toFixed(2)} ${(eX - sX).toFixed(2)},${(eY - sY).toFixed(2)}`;
 };
 
 // `cleanDimensions` - internal helper function called by `prepareStamp` 

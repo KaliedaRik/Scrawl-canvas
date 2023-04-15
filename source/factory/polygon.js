@@ -155,11 +155,7 @@ D.radius = function (item) {
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
-
-    let p = ZERO_PATH;
-    p = this.makePolygonPath();
-
-    this.pathDefinition = p;
+    this.pathDefinition = this.makePolygonPath();
 };
 
 

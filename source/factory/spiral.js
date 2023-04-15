@@ -174,11 +174,7 @@ D.drawFromLoop = function (item) {
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
-
-    let p = ZERO_PATH;
-    p = this.makeSpiralPath();
-
-    this.pathDefinition = p;
+    this.pathDefinition = this.makeSpiralPath();
 };
 
 // `makeSpiralPath` - internal helper function - called by `cleanSpecies`

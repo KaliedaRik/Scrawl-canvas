@@ -208,11 +208,7 @@ D.stepLimit = function (item) {
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
-
-    let p = ZERO_PATH;
-    p = this.makeLineSpiralPath();
-
-    this.pathDefinition = p;
+    this.pathDefinition = this.makeLineSpiralPath();
 };
 
 

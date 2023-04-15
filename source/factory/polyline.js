@@ -415,11 +415,7 @@ P.prepareStamp = function() {
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
-
-    let p = ZERO_PATH;
-    p = this.makePolylinePath();
-
-    this.pathDefinition = p;
+    this.pathDefinition = this.makePolylinePath();
 };
 
 // `getPathParts` - internal helper function - called by `makePolylinePath`

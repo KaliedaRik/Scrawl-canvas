@@ -55,7 +55,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DIV, FIT_DEFS, HIDDEN, IMG, NAME, NAV, NONE, PC0, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, ZERO_STR } from '../core/shared-vars.js';
+import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC0, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Canvas constructor
@@ -539,9 +539,11 @@ P.setBaseHelper = function () {
 P.updateCells = function (items = Ωempty) {
 
     const c = this.cells;
+    let mycell;
+
     for (let i = 0, iz = c.length; i < iz; i++) {
 
-        const mycell = cell[c[i]];
+        mycell = cell[c[i]];
 
         if (mycell) {
 
@@ -801,14 +803,16 @@ P.cascadeEventAction = function (action, e = {}) {
 
     if (!this.currentActiveEntityNames) this.currentActiveEntityNames = [];
 
-    let currentActiveEntityNames = this.currentActiveEntityNames,
-        testActiveEntityObjects = [],
-        testActiveEntityNames = [],
-        newActiveEntityObjects = [],
-        newActiveEntityNames = [],
-        knownActiveEntityObjects = [],
-        knownActiveEntityNames = [],
-        i, iz, myCell, item, name, myArt;
+    const currentActiveEntityNames = this.currentActiveEntityNames,
+        currentActiveEntityObjects = requestArray(),
+        testActiveEntityObjects = requestArray(),
+        testActiveEntityNames = requestArray(),
+        newActiveEntityObjects = requestArray(),
+        newActiveEntityNames = requestArray(),
+        knownActiveEntityObjects = requestArray(),
+        knownActiveEntityNames = requestArray();
+
+    let i, iz, myCell, item, name, myArt;
 
     // 1. Find all entitys currently colliding with the mouse/touch coordinate over the canvas
     const c = this.cells;
@@ -816,10 +820,8 @@ P.cascadeEventAction = function (action, e = {}) {
 
         myCell = cell[c[i]];
 
-        if (myCell && (myCell.shown || myCell.isBase || myCell.includeInCascadeEventActions)) testActiveEntityObjects.push(myCell.getEntityHits());
+        if (myCell && (myCell.shown || myCell.isBase || myCell.includeInCascadeEventActions)) testActiveEntityObjects.push(...myCell.getEntityHits());
     };
-
-    testActiveEntityObjects = testActiveEntityObjects.reduce((a, v) => a.concat(v), []);
 
     // 2. Process the returned test results
     for (i = 0, iz = testActiveEntityObjects.length; i < iz; i++) {
@@ -844,10 +846,10 @@ P.cascadeEventAction = function (action, e = {}) {
         }
     }
 
-    let currentActiveEntityObjects = newActiveEntityObjects.concat(knownActiveEntityObjects);
+    currentActiveEntityObjects.push(...newActiveEntityObjects, ...knownActiveEntityObjects);
 
     // 3. Trigger the required action on each affected entity
-    let doLeave = function (e) {
+    const doLeave = function (e) {
 
         if (currentActiveEntityNames.length) {
 
@@ -873,29 +875,29 @@ P.cascadeEventAction = function (action, e = {}) {
 
     switch (action) {
 
-        case 'down' :
+        case DOWN :
             for (i = 0; i < currentActiveLen; i++) {
                 currentActiveEntityObjects[i].onDown(e);
             }
             break;
 
-        case 'up' :
+        case UP :
             for (i = 0; i < currentActiveLen; i++) {
                 currentActiveEntityObjects[i].onUp(e);
             }
             break;
 
-        case 'enter' :
+        case ENTER :
             for (i = 0; i < newActiveLen; i++) {
                 newActiveEntityObjects[i].onEnter(e);
             }
             break;
 
-        case 'leave' :
+        case LEAVE :
             doLeave(e);
             break;
 
-        case 'move' :
+        case MOVE :
             doLeave(e);
             for (i = 0; i < newActiveLen; i++) {
                 newActiveEntityObjects[i].onEnter(e);
@@ -904,9 +906,18 @@ P.cascadeEventAction = function (action, e = {}) {
     }
 
     // 4. Cleanup and return
-    this.currentActiveEntityNames = newActiveEntityNames.concat(knownActiveEntityNames);
+    currentActiveEntityNames.length = 0;
+    currentActiveEntityNames.push(...newActiveEntityNames, ...knownActiveEntityNames);
 
-    return this.currentActiveEntityNames;
+    releaseArray(currentActiveEntityObjects);
+    releaseArray(testActiveEntityObjects);
+    releaseArray(testActiveEntityNames);
+    releaseArray(newActiveEntityObjects);
+    releaseArray(newActiveEntityNames);
+    releaseArray(knownActiveEntityObjects);
+    releaseArray(knownActiveEntityNames);
+
+    return [].concat(currentActiveEntityNames);
 };
 
 // `getEntityHits`, `checkHover` - returns the names of all entitys associated with this canvas that are currently colliding with the mouse cursor; should also trigger any hover actions active on Group objects associated with the Canvas wrapper 
@@ -1024,7 +1035,7 @@ export const setCurrentCanvas = function (item) {
 
         if (item.substring) {
 
-            let mycanvas = libCanvas[item];
+            const mycanvas = libCanvas[item];
 
             if (mycanvas) {
                 currentCanvas = mycanvas;
@@ -1040,7 +1051,7 @@ export const setCurrentCanvas = function (item) {
 
     if (changeFlag && currentCanvas.base) {
 
-        let mygroup = group[currentCanvas.base.name];
+        const mygroup = group[currentCanvas.base.name];
 
         if (mygroup) currentGroup = mygroup;
     }
@@ -1054,17 +1065,19 @@ export const setCurrentCanvas = function (item) {
 // By default, Scrawl-canvas will setup the new Canvas as the 'current canvas', and will add mouse/pointer tracking functionality to it. If no dimensions are supplied then the Canvas will default to 300px wide and 150px high.
 export const addCanvas = function (items = Ωempty) {
 
-    let el = document.createElement(CANVAS),
+    const el = document.createElement(CANVAS),
         myname = (items.name) ? items.name : generateUniqueString(),
-        host = items.host,
-        mygroup = ROOT,
         width = items.width || 300,
-        height = items.height || 150,
-        position = RELATIVE;
+        height = items.height || 150;
+
+    let mygroup = ROOT,
+        position = RELATIVE,
+        host = items.host,
+        temphost;
 
     if (host.substring) {
 
-        let temphost = artefact[host];
+        temphost = artefact[host];
 
         if (!temphost && host) {
 

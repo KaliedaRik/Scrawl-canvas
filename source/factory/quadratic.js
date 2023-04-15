@@ -270,12 +270,7 @@ S.controlLockTo = function (item) {
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
-
-    let p = ZERO_PATH;
-
-    p = this.makeQuadraticPath();
-    
-    this.pathDefinition = p;
+    this.pathDefinition = this.makeQuadraticPath();
 };
 
 // `makeQuadraticPath` - internal helper function - called by `cleanSpecies`

@@ -191,11 +191,7 @@ P.deltaRectHelper = function (item, corners) {
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
-
-    let p = ZERO_PATH;
-    p = this.makeTetragonPath();
-
-    this.pathDefinition = p;
+    this.pathDefinition = this.makeTetragonPath();
 };
 
 

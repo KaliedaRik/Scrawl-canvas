@@ -264,7 +264,7 @@ P.build = function () {
 
     if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
 
-    let link = document.createElement(_A);
+    const link = document.createElement(_A);
 
     link.id = this.name;
 
@@ -302,7 +302,7 @@ P.click = function () {
 
     if (!this.hasBeenRecentlyClicked) {
 
-        let e = new MouseEvent(CLICK, {
+        const e = new MouseEvent(CLICK, {
             view: window,
             bubbles: true,
             cancelable: true
@@ -312,7 +312,7 @@ P.click = function () {
         // + Was causing an issue in Demo [Canvas-027](../../demo/canvas-027.html), where two entitys share the same anchor
         this.hasBeenRecentlyClicked = true;
 
-        let self = this;
+        const self = this;
         setTimeout(() => self.hasBeenRecentlyClicked = false, 200);
 
         return this.domElement.dispatchEvent(e);

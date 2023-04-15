@@ -425,11 +425,7 @@ P.deltaRectHelper = function (item, corners) {
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
-
-    let p = ZERO_PATH;
-    p = this.makeRectanglePath();
-
-    this.pathDefinition = p;
+    this.pathDefinition = this.makeRectanglePath();
 };
 
 // `cleanDimensions` - internal helper function called by `prepareStamp` 
