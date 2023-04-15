@@ -76,7 +76,7 @@ export default function (P = Ωempty) {
         }
         else {
 
-            let oldMimic = this.mimic,
+            const oldMimic = this.mimic,
                 name = this.name;
 
             let newMimic = (item.substring) ? artefact[item] : item;
@@ -85,12 +85,12 @@ export default function (P = Ωempty) {
 
                 newMimic = asset[item];
 
-                if (newMimic && newMimic.type !== T_CELL) newMimic = false;
+                if (newMimic && newMimic.type != T_CELL) newMimic = false;
             }
 
             if (newMimic && newMimic.name) {
 
-                if (oldMimic && oldMimic.name !== newMimic.name) removeItem(oldMimic.mimicked, name);
+                if (oldMimic && oldMimic.name != newMimic.name) removeItem(oldMimic.mimicked, name);
 
                 pushUnique(newMimic.mimicked, name);
 
@@ -177,31 +177,33 @@ export default function (P = Ωempty) {
 // `updateMimicSubscribers`
     P.updateMimicSubscribers = function () {
 
-        let DMH = this.dirtyMimicHandle;
-        let DMO = this.dirtyMimicOffset;
-        let DMR = this.dirtyMimicRotation;
-        let DMS = this.dirtyMimicScale;
-        let DMD = this.dirtyMimicDimensions;
+        const DMH = this.dirtyMimicHandle,
+            DMO = this.dirtyMimicOffset,
+            DMR = this.dirtyMimicRotation,
+            DMS = this.dirtyMimicScale,
+            DMD = this.dirtyMimicDimensions;
+
+        let m;
 
         this.mimicked.forEach(name => {
 
-            let instance = artefact[name];
+            let m = artefact[name];
 
-            if (!instance) {
+            if (!m) {
 
-                instance = asset[name];
+                m = asset[name];
 
-                if (!instance || instance.type !== T_CELL) instance = false;
+                if (!m || m.type !== T_CELL) m = false;
             }
 
-            if (instance) {
+            if (m) {
 
-                if (instance.useMimicStart) instance.dirtyStart = true;
-                if (DMH && instance.useMimicHandle) instance.dirtyHandle = true;
-                if (DMO && instance.useMimicOffset) instance.dirtyOffset = true;
-                if (DMR && instance.useMimicRotation) instance.dirtyRotation = true;
-                if (DMS && instance.useMimicScale) instance.dirtyScale = true;
-                if (DMD && instance.useMimicDimensions) instance.dirtyDimensions = true;
+                if (m.useMimicStart) m.dirtyStart = true;
+                if (DMH && m.useMimicHandle) m.dirtyHandle = true;
+                if (DMO && m.useMimicOffset) m.dirtyOffset = true;
+                if (DMR && m.useMimicRotation) m.dirtyRotation = true;
+                if (DMS && m.useMimicScale) m.dirtyScale = true;
+                if (DMD && m.useMimicDimensions) m.dirtyDimensions = true;
             }
         });
 

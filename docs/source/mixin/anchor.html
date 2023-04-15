@@ -1050,7 +1050,7 @@ artefact.<span class="hljs-property">anchorBlurAction</span>        ~~&gt;  anch
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getAnchorHold</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">let</span> entityHost = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
+        <span class="hljs-keyword">const</span> entityHost = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
 
         <span class="hljs-keyword">if</span> (entityHost) {
 
@@ -1058,7 +1058,7 @@ artefact.<span class="hljs-property">anchorBlurAction</span>        ~~&gt;  anch
 
             <span class="hljs-keyword">if</span> (entityHost.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_CELL</span>) {
 
-                <span class="hljs-keyword">let</span> cellHost = (entityHost.<span class="hljs-property">currentHost</span>) ? entityHost.<span class="hljs-property">currentHost</span> : canvas[entityHost.<span class="hljs-property">host</span>];
+                <span class="hljs-keyword">const</span> cellHost = (entityHost.<span class="hljs-property">currentHost</span>) ? entityHost.<span class="hljs-property">currentHost</span> : canvas[entityHost.<span class="hljs-property">host</span>];
 
                 <span class="hljs-keyword">if</span> (cellHost &amp;&amp; cellHost.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_CANVAS</span>) <span class="hljs-keyword">return</span> cellHost.<span class="hljs-property">navigation</span>;
             }

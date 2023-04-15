@@ -134,7 +134,7 @@ import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../factory
 
 import { releaseCell, requestCell } from '../factory/cell-fragment.js';
 
-import { _keys, _isArray, _parse, _values, ALL, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, GROUP, HANDLE, LEFT, LOCKTO, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, STARTX, STARTY, T_GROUP, T_POLYLINE, TOP } from '../core/shared-vars.js'
+import { _keys, _isArray, _parse, _values, ALL, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, GROUP, HANDLE, LEFT, LOCKTO, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, STARTX, STARTY, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../core/shared-vars.js'
 
 
 // #### Export function
@@ -302,8 +302,8 @@ export default function (P = Ωempty) {
 // #### Packet management
     P.packetExclusions = pushUnique(P.packetExclusions, ['pathObject', 'mimicked', 'pivoted']);
     P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)', 'Subscriber$']);
-    P.packetCoordinates = pushUnique(P.packetCoordinates, [START, HANDLE, OFFSET]);
-    P.packetObjects = pushUnique(P.packetObjects, [GROUP]);
+    P.packetCoordinates = pushUnique(P.packetCoordinates, ['start', 'handle', 'offset']);
+    P.packetObjects = pushUnique(P.packetObjects, ['group']);
     P.packetFunctions = pushUnique(P.packetFunctions, []);
 
     P.processPacketOut = function (key, value, inc) {
@@ -314,7 +314,7 @@ export default function (P = Ωempty) {
 
             case LOCKTO :
 
-                if (value[0] === START && value[1] === START) {
+                if (value[0] == START && value[1] == START) {
 
                     result = (inc.includes(LOCKTO)) ? true : false;
                 }
@@ -322,7 +322,7 @@ export default function (P = Ωempty) {
 
             default :
 
-                if (this.lib === ENTITY) result = this.processEntityPacketOut(key, value, inc);
+                if (this.lib == ENTITY) result = this.processEntityPacketOut(key, value, inc);
                 else if (this.isArtefact) result = this.processDOMPacketOut(key, value, inc);
         }
         return result;
@@ -646,8 +646,8 @@ export default function (P = Ωempty) {
 
             this.particle = null;
 
-            if (this.lockTo[0] === PARTICLE) this.lockTo[0] = START;
-            if (this.lockTo[1] === PARTICLE) this.lockTo[1] = START;
+            if (this.lockTo[0] == PARTICLE) this.lockTo[0] = START;
+            if (this.lockTo[1] == PARTICLE) this.lockTo[1] = START;
 
             this.dirtyStampPositions = true;
             this.dirtyStampHandlePositions = true;
@@ -730,7 +730,7 @@ export default function (P = Ωempty) {
             if (host && host.here) this.host = host.name;
             else this.host = item;
         }
-        else this.host = '';
+        else this.host = ZERO_STR;
 
         this.dirtyDimensions = true;
         this.dirtyHandle = true;
@@ -743,7 +743,7 @@ export default function (P = Ωempty) {
 
         if (item) {
 
-            if (this.group && this.group.type === T_GROUP) this.group.removeArtefacts(this.name);
+            if (this.group && this.group.type == T_GROUP) this.group.removeArtefacts(this.name);
 
             if (item.substring) {
 
@@ -755,7 +755,7 @@ export default function (P = Ωempty) {
             else this.group = item;
         }
 
-        if (this.group && this.group.type === T_GROUP) this.group.addArtefacts(this.name);
+        if (this.group && this.group.type == T_GROUP) this.group.addArtefacts(this.name);
     };
 
 // __noFilters__
@@ -1025,9 +1025,9 @@ export default function (P = Ωempty) {
                 d = dimensions[i];
 
             if (s.toFixed) current[i] = s;
-            else if (s === LEFT || s === TOP) current[i] = 0;
-            else if (s === RIGHT || s === BOTTOM) current[i] = d;
-            else if (s === CENTER) current[i] = d / 2;
+            else if (s == LEFT || s == TOP) current[i] = 0;
+            else if (s == RIGHT || s == BOTTOM) current[i] = d;
+            else if (s == CENTER) current[i] = d / 2;
             else current[i] = (parseFloat(s) / 100) * d;
         }
         this.dirtyFilterIdentifier = true;
@@ -1342,10 +1342,10 @@ export default function (P = Ωempty) {
 
             const confirmLock = function (lock) {
 
-                if (lock === PIVOT && !pivot) return START;
-                else if (lock === PATH && !path) return START;
-                else if (lock === MIMIC && !mimic) return START;
-                else if (lock === PARTICLE && !particle) return START;
+                if (lock == PIVOT && !pivot) return START;
+                else if (lock == PATH && !path) return START;
+                else if (lock == MIMIC && !mimic) return START;
+                else if (lock == PARTICLE && !particle) return START;
                 return lock;
             };
 
@@ -1508,9 +1508,9 @@ export default function (P = Ωempty) {
 
                 lock = lockArray[i];
 
-                if (lock === PIVOT && !pivot) lock = START;
-                if (lock === PATH && !path) lock = START;
-                if (lock === MIMIC && !mimic) lock = START;
+                if (lock == PIVOT && !pivot) lock = START;
+                if (lock == PATH && !path) lock = START;
+                if (lock == MIMIC && !mimic) lock = START;
 
                 coord = handle[i];
 
@@ -1542,7 +1542,7 @@ export default function (P = Ωempty) {
         // At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality. 
         this.cleanStampHandlePositionsAdditionalActions();
 
-        if (oldX !== stampHandle[0] || oldY !== stampHandle[1]) this.dirtyPositionSubscribers = true;
+        if (oldX != stampHandle[0] || oldY != stampHandle[1]) this.dirtyPositionSubscribers = true;
     };
     P.cleanStampHandlePositionsAdditionalActions = λnull;
 

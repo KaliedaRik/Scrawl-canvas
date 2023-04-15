@@ -563,7 +563,9 @@
 
 <span class="hljs-keyword">import</span> { getIgnorePixelRatio, getPixelRatio } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { _cos, _entries, _isArray, _keys, _radian, _sin, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LINE_DASH</span>, <span class="hljs-variable constant_">STATE_ALL_KEYS</span>, <span class="hljs-variable constant_">STYLES_ARR</span>, <span class="hljs-variable constant_">TOP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/array-pool.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _computed, _cos, _entries, _isArray, _keys, _radian, _sin, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LINE_DASH</span>, <span class="hljs-variable constant_">STATE_ALL_KEYS</span>, <span class="hljs-variable constant_">STYLES_ARR</span>, <span class="hljs-variable constant_">TOP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -652,7 +654,7 @@
             state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>,
             engine = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>;
 
-        <span class="hljs-title function_">_entries</span>(items).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+        <span class="hljs-title function_">_entries</span>(items).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[key, val]</span>) =&gt;</span> {
 
             <span class="hljs-keyword">if</span> (key === <span class="hljs-variable constant_">LINE_DASH</span>) {
 
@@ -664,8 +666,8 @@
             }
             <span class="hljs-keyword">else</span> {
 
-                engine[key] = value;
-                state[key] = value;
+                engine[key] = val;
+                state[key] = val;
             }
         });
 
@@ -864,12 +866,12 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">clearShadow</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0.0</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0.0</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0.0</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0.0</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0.0</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0.0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
 
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
@@ -889,7 +891,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">restoreShadow</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">entity</span>) {
 
-        <span class="hljs-keyword">let</span> state = entity.<span class="hljs-property">state</span>;
+        <span class="hljs-keyword">const</span> state = entity.<span class="hljs-property">state</span>;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">shadowOffsetX</span> = state.<span class="hljs-property">shadowOffsetX</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-property">shadowOffsetY</span> = state.<span class="hljs-property">shadowOffsetY</span>;
@@ -970,8 +972,8 @@
 
         <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">domElement</span>) {
 
-            <span class="hljs-keyword">const</span> em = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(host.<span class="hljs-property">domElement</span>),
-                rem = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>);
+            <span class="hljs-keyword">const</span> em = <span class="hljs-title function_">_computed</span>(host.<span class="hljs-property">domElement</span>),
+                rem = <span class="hljs-title function_">_computed</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>);
 
             <span class="hljs-keyword">return</span> [<span class="hljs-built_in">parseFloat</span>(em.<span class="hljs-property">fontSize</span>), <span class="hljs-built_in">parseFloat</span>(rem.<span class="hljs-property">fontSize</span>), <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerWidth</span>, <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerHeight</span>];
         }
@@ -994,32 +996,34 @@
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getEntityHits</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         <span class="hljs-keyword">const</span> response = [],
-            resultNames = [];
-
-        <span class="hljs-keyword">let</span> results = [];
+            res = <span class="hljs-title function_">requestArray</span>(),
+            names = <span class="hljs-title function_">requestArray</span>();
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">groupBuckets</span>) {
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">groupBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">grp</span> =&gt;</span> {
-                <span class="hljs-keyword">if</span> (grp.<span class="hljs-property">visibility</span>) results.<span class="hljs-title function_">push</span>(grp.<span class="hljs-title function_">getAllArtefactsAt</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>));
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">groupBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">g</span> =&gt;</span> {
+
+                <span class="hljs-keyword">if</span> (g.<span class="hljs-property">visibility</span>) {
+
+                    res.<span class="hljs-title function_">push</span>(...g.<span class="hljs-title function_">getAllArtefactsAt</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>));
+                }
             }, <span class="hljs-variable language_">this</span>);
         }
 
-        <span class="hljs-keyword">if</span> (results.<span class="hljs-property">length</span>) {
+        res.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
-            results = results.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.<span class="hljs-title function_">concat</span>(v), []);
+            <span class="hljs-keyword">const</span> art = item.<span class="hljs-property">artefact</span>;
 
-            results.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">visibility</span> &amp;&amp; !names.<span class="hljs-title function_">includes</span>(art.<span class="hljs-property">name</span>)) {
 
-                <span class="hljs-keyword">const</span> art = item.<span class="hljs-property">artefact</span>;
+                names.<span class="hljs-title function_">push</span>(art.<span class="hljs-property">name</span>);
+                response.<span class="hljs-title function_">push</span>(art);
+            }
+        });
 
-                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">visibility</span> &amp;&amp; !resultNames.<span class="hljs-title function_">includes</span>(art.<span class="hljs-property">name</span>)) {
+        <span class="hljs-title function_">releaseArray</span>(names);
+        <span class="hljs-title function_">releaseArray</span>(res);
 
-                    resultNames.<span class="hljs-title function_">push</span>(art.<span class="hljs-property">name</span>);
-                    response.<span class="hljs-title function_">push</span>(art);
-                }
-            })
-        }
         <span class="hljs-keyword">return</span> response;
     };</pre></div></div>
             

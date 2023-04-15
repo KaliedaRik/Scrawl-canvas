@@ -598,6 +598,8 @@
 
 <span class="hljs-keyword">import</span> { importDomImage } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./image-asset.js&#x27;</span>;
 
+<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./array-pool.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> filterMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/filter.js&#x27;</span>;
 
@@ -1306,9 +1308,19 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">const</span> buckets = [];
+        <span class="hljs-keyword">const</span> calcBuckets = <span class="hljs-title function_">requestArray</span>(),
+            stampBuckets = <span class="hljs-title function_">requestArray</span>();
 
-        <span class="hljs-keyword">let</span> obj, order;</pre></div></div>
+        <span class="hljs-keyword">const</span> { artefacts, artefactCalculateBuckets, artefactStampBuckets } = <span class="hljs-variable language_">this</span>;
+
+        <span class="hljs-keyword">let</span> obj, order, i, iz, name, arr;
+        
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = artefacts.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+            name = artefacts[i];
+            obj = artefact[name];
+
+            <span class="hljs-keyword">if</span> (obj) {</pre></div></div>
             
         </li>
         
@@ -1323,16 +1335,9 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
-
-            obj = artefact[name];
-            order = <span class="hljs-title function_">_floor</span>(obj.<span class="hljs-property">calculateOrder</span>) || <span class="hljs-number">0</span>;
-
-            <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
-
-            buckets[order].<span class="hljs-title function_">push</span>(obj);
-        });
-         <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactCalculateBuckets</span> = buckets.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.<span class="hljs-title function_">concat</span>(v), []);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                order = <span class="hljs-title function_">_floor</span>(obj.<span class="hljs-property">calculateOrder</span>);
+                <span class="hljs-keyword">if</span> (!calcBuckets[order]) calcBuckets[order] = <span class="hljs-title function_">requestArray</span>();
+                calcBuckets[order].<span class="hljs-title function_">push</span>(obj);</pre></div></div>
             
         </li>
         
@@ -1347,17 +1352,37 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        buckets.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>                order = <span class="hljs-title function_">_floor</span>(obj.<span class="hljs-property">stampOrder</span>);
+                <span class="hljs-keyword">if</span> (!stampBuckets[order]) stampBuckets[order] = <span class="hljs-title function_">requestArray</span>();
+                stampBuckets[order].<span class="hljs-title function_">push</span>(obj);
+            }
+        }
 
-            obj = artefact[name];
-            order = <span class="hljs-title function_">_floor</span>(obj.<span class="hljs-property">stampOrder</span>) || <span class="hljs-number">0</span>;
+        artefactCalculateBuckets.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = calcBuckets.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-            <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
+            arr = calcBuckets[i];
 
-            buckets[order].<span class="hljs-title function_">push</span>(obj);
-        });
-         <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactStampBuckets</span> = buckets.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.<span class="hljs-title function_">concat</span>(v), []);
+            <span class="hljs-keyword">if</span> (arr) {
+
+                artefactCalculateBuckets.<span class="hljs-title function_">push</span>(...arr);
+                <span class="hljs-title function_">releaseArray</span>(arr);
+            }
+        };
+        <span class="hljs-title function_">releaseArray</span>(calcBuckets);
+
+        artefactStampBuckets.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = stampBuckets.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+            arr = stampBuckets[i];
+
+            <span class="hljs-keyword">if</span> (arr) {
+
+                artefactStampBuckets.<span class="hljs-title function_">push</span>(...arr);
+                <span class="hljs-title function_">releaseArray</span>(arr);
+            }
+        };
+        <span class="hljs-title function_">releaseArray</span>(stampBuckets);
     }
 };</pre></div></div>
             

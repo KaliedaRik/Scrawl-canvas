@@ -930,7 +930,7 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
 
         <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
-            <span class="hljs-keyword">let</span> match = <span class="hljs-variable constant_">ASSET_IMPORT_REGEX</span>.<span class="hljs-title function_">exec</span>(item);
+            <span class="hljs-keyword">const</span> match = <span class="hljs-variable constant_">ASSET_IMPORT_REGEX</span>.<span class="hljs-title function_">exec</span>(item);
 
             name = (match &amp;&amp; match[<span class="hljs-number">1</span>]) ? match[<span class="hljs-number">1</span>] : <span class="hljs-variable constant_">ZERO_STR</span>;
             urls = [item];
@@ -999,7 +999,7 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
 
                 <span class="hljs-keyword">if</span> (fileTlas.<span class="hljs-title function_">test</span>(url)) {
 
-                    match = reg.<span class="hljs-title function_">exec</span>(url);
+                    match = <span class="hljs-variable constant_">ASSET_IMPORT_REGEX</span>.<span class="hljs-title function_">exec</span>(url);
                     filename = (match &amp;&amp; match[<span class="hljs-number">1</span>]) ? match[<span class="hljs-number">1</span>] : <span class="hljs-variable constant_">ZERO_STR</span>;
                 }
 

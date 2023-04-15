@@ -609,7 +609,7 @@
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/dom.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CORNER_SELECTOR</span>, <span class="hljs-variable constant_">ELEMENT</span>, <span class="hljs-variable constant_">MIMIC</span>, <span class="hljs-variable constant_">T_ELEMENT</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _computed, <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CORNER_SELECTOR</span>, <span class="hljs-variable constant_">ELEMENT</span>, <span class="hljs-variable constant_">MIMIC</span>, <span class="hljs-variable constant_">T_ELEMENT</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -930,7 +930,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         canvas.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-canvas`</span>;
         
         <span class="hljs-keyword">const</span> rect = el.<span class="hljs-title function_">getBoundingClientRect</span>(),
-            style = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(el);
+            style = <span class="hljs-title function_">_computed</span>(el);
 
         el.<span class="hljs-property">parentNode</span>.<span class="hljs-title function_">insertBefore</span>(canvas, <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>);
 

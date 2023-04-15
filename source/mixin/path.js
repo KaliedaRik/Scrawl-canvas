@@ -69,13 +69,13 @@ export default function (P = Ωempty) {
         }
         else {
 
-            let oldPath = this.path,
+            const oldPath = this.path,
                 newPath = (item.substring) ? artefact[item] : item,
                 name = this.name;
 
             if (newPath && newPath.name && newPath.useAsPath) {
 
-                if (oldPath && oldPath.name !== newPath.name) removeItem(oldPath.pathed, name);
+                if (oldPath && oldPath.name != newPath.name) removeItem(oldPath.pathed, name);
 
                 pushUnique(newPath.pathed, name);
 

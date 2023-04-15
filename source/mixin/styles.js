@@ -196,13 +196,13 @@ export default function (P = Ωempty) {
     };
     D.startX = function (coord) {
 
-        let c = this.start;
+        const c = this.start;
         c[0] = addStrings(c[0], coord);
         this.dirtyStart = true;
     };
     D.startY = function (coord) {
 
-        let c = this.start;
+        const c = this.start;
         c[1] = addStrings(c[1], coord);
         this.dirtyStart = true;
     };
@@ -244,13 +244,13 @@ export default function (P = Ωempty) {
     };
     D.endX = function (coord) {
 
-        let c = this.end;
+        const c = this.end;
         c[0] = addStrings(c[0], coord);
         this.dirtyEnd = true;
     };
     D.endY = function (coord) {
 
-        let c = this.end;
+        const c = this.end;
         c[1] = addStrings(c[1], coord);
         this.dirtyEnd = true;
     };
@@ -369,13 +369,13 @@ export default function (P = Ωempty) {
 // `get` - Overwrites function defined in mixin/base.js - takes into account Palette object attributes
     P.get = function (item) {
 
-        let getter = this.getters[item];
+        const getter = this.getters[item],
+            palette = this.palette;
 
         if (getter) return getter.call(this);
         else {
 
             let def = this.defs[item],
-                palette = this.palette,
                 val;
 
             if (typeof def != UNDEF) {
@@ -495,7 +495,7 @@ export default function (P = Ωempty) {
 // `setCoordinateHelper` - internal helper function
     P.setCoordinateHelper = function (label, x, y) {
 
-        let c = this[label];
+        const c = this[label];
 
         if (_isArray(x)) {
 
@@ -512,7 +512,7 @@ export default function (P = Ωempty) {
 // `setDeltaCoordinateHelper` - internal helper function
     P.setDeltaCoordinateHelper = function (label, x, y) {
 
-        let c = this[label],
+        const c = this[label],
             myX = c[0],
             myY = c[1];
 
@@ -624,12 +624,11 @@ export default function (P = Ωempty) {
 // `finalizeCoordinates` - internal function invoked as part of the gradient-type object's `getData` function.
     P.finalizeCoordinates = function (entity = Ωempty) {
 
-        let currentStart = this.currentStart,
-            currentEnd = this.currentEnd,
-            entityStampPosition = entity.currentStampPosition,
+        const entityStampPosition = entity.currentStampPosition,
             entityStampHandlePosition = entity.currentStampHandlePosition,
-            entityScale = entity.currentScale,
-            correctX, correctY;
+            entityScale = entity.currentScale;
+
+        let correctX, correctY;
 
         if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
 

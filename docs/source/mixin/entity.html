@@ -948,7 +948,7 @@
 
         <span class="hljs-keyword">let</span> result = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span>(!incs.<span class="hljs-title function_">indexOf</span>(key) &amp;&amp; value === <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[key]) result = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span>(!incs.<span class="hljs-title function_">indexOf</span>(key) &amp;&amp; value == <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[key]) result = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">return</span> result;
     };
@@ -1601,13 +1601,13 @@
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStamp</span>();
 
-            <span class="hljs-keyword">if</span> (filterTest) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">filteredStamp</span>();
+            <span class="hljs-keyword">if</span> (filterTest) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">filteredStamp</span>(filterTest);
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();
         }
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">visibility</span>) {
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutput</span> || filterTest) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">filteredStamp</span>();
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutput</span> || filterTest) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">filteredStamp</span>(filterTest);
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();
         }
     };</pre></div></div>
@@ -1702,7 +1702,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">filteredStamp</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">filteredStamp</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">hasFilters = <span class="hljs-literal">false</span></span>) {
 
         <span class="hljs-keyword">const</span> { dirtyFilters, currentHost, state } = <span class="hljs-variable language_">this</span>;</pre></div></div>
             
@@ -1801,7 +1801,7 @@
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();
 
-            <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noFilters</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span>.<span class="hljs-property">length</span>) {
+            <span class="hljs-keyword">if</span> (hasFilters) {
 
                 <span class="hljs-keyword">const</span> filters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>;</pre></div></div>
             
@@ -1943,17 +1943,18 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getCellCoverage</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) {
 
-        <span class="hljs-keyword">let</span> width = img.<span class="hljs-property">width</span>,
+        <span class="hljs-keyword">const</span> width = img.<span class="hljs-property">width</span>,
             height = img.<span class="hljs-property">height</span>,
-            data = img.<span class="hljs-property">data</span>,
-            maxX = <span class="hljs-number">0</span>,
+            data = img.<span class="hljs-property">data</span>;
+
+        <span class="hljs-keyword">let</span> maxX = <span class="hljs-number">0</span>,
             maxY = <span class="hljs-number">0</span>,
             minX = width,
             minY = height,
             counter = <span class="hljs-number">3</span>,
-            x, y;
+            x, y, i, iz;
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = width * height; i &lt; iz; i++) {
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = width * height; i &lt; iz; i++) {
 
             <span class="hljs-keyword">if</span> (data[counter]) {
 
@@ -1988,13 +1989,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">simpleStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host, changes = Ωempty</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">simpleStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host, changes</span>) {
 
         <span class="hljs-keyword">if</span> (host &amp;&amp; <span class="hljs-variable constant_">GOOD_HOST</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = host;
             
-            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(changes);
+            <span class="hljs-keyword">if</span> (changes) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(changes);
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStamp</span>();
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();

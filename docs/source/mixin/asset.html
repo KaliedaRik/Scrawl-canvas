@@ -593,9 +593,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">SOURCE</span>, <span class="hljs-variable constant_">SOURCE_LOADED</span>, <span class="hljs-variable constant_">SUBSCRIBERS</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -704,7 +702,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-variable constant_">SOURCE_LOADED</span>, <span class="hljs-variable constant_">SOURCE</span>, <span class="hljs-variable constant_">SUBSCRIBERS</span>]);
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;sourceLoaded&#x27;</span>, <span class="hljs-string">&#x27;source&#x27;</span>, <span class="hljs-string">&#x27;subscribers&#x27;</span>]);
 
 
     P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
@@ -920,7 +918,7 @@
         <span class="hljs-keyword">if</span> (sub &amp;&amp; sub.<span class="hljs-property">name</span>) {
 
             <span class="hljs-keyword">const</span> name = sub.<span class="hljs-property">name</span>,
-                index = <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-title function_">findIndex</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">name</span> === name);
+                index = <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-title function_">findIndex</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">name</span> == name);
 
             <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span>) {
 

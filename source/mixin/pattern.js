@@ -65,7 +65,7 @@ export default function (P = Ωempty) {
 
         item = (item.substring) ? parseFloat(item) : item;
 
-        let posCheck = MAT_POS.includes(pos);
+        const posCheck = MAT_POS.includes(pos);
 
         if (isa_number(item) && posCheck) this.patternMatrix[pos] = item;
     };
@@ -91,7 +91,7 @@ export default function (P = Ωempty) {
 
         if (_isArray(item)) {
 
-            let update = this.updateMatrixNumber;
+            const update = this.updateMatrixNumber;
 
             update(item[0], _A);
             update(item[1], _B);
@@ -113,8 +113,9 @@ export default function (P = Ωempty) {
             if (mycell.substring) mycell = cell[mycell];
 
             let source = this.source, 
-                loaded = this.sourceLoaded,
-                repeat = this.repeat,
+                loaded = this.sourceLoaded;
+            
+            const repeat = this.repeat,
                 engine = mycell.engine;
 
             if (this.type == T_CELL || this.type == T_NOISE) {
@@ -124,7 +125,7 @@ export default function (P = Ωempty) {
             }
             if (engine && loaded) {
 
-                let p = engine.createPattern(source, repeat);
+                const p = engine.createPattern(source, repeat);
 
                 p.setTransform(this.patternMatrix);
 

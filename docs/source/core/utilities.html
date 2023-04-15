@@ -593,8 +593,6 @@
             <div class="content"><div class='highlight'><pre>
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">addStrings</span> = (<span class="hljs-params">current, delta</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(delta)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities addStrings() error - no delta argument supplied <span class="hljs-subst">${current}</span>, <span class="hljs-subst">${delta}</span>`</span>);
-
     <span class="hljs-keyword">if</span> ((delta != <span class="hljs-literal">null</span>)) {</pre></div></div>
             
         </li>
@@ -614,7 +612,7 @@
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">RIGHT</span> == current || <span class="hljs-variable constant_">BOTTOM</span> == current) current = <span class="hljs-title class_">PC100</span>;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">CENTER</span> == current) current = <span class="hljs-title class_">PC50</span>;
 
-        <span class="hljs-keyword">let</span> stringFlag = (current.<span class="hljs-property">substring</span> || delta.<span class="hljs-property">substring</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">const</span> stringFlag = (current.<span class="hljs-property">substring</span> || delta.<span class="hljs-property">substring</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(current)) current += (<span class="hljs-title function_">isa_number</span>(delta) ? delta : <span class="hljs-built_in">parseFloat</span>(delta));
         <span class="hljs-keyword">else</span> current = <span class="hljs-built_in">parseFloat</span>(current) + (<span class="hljs-title function_">isa_number</span>(delta) ? delta : <span class="hljs-built_in">parseFloat</span>(delta));
@@ -672,35 +670,34 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">convertTime</span> = (<span class="hljs-params">item</span>) =&gt; {
 
-    <span class="hljs-keyword">let</span> a, timeUnit, timeValue;
-
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities convertTime() error - no argument supplied`</span>);
-
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(item)) <span class="hljs-keyword">return</span> [<span class="hljs-variable constant_">MS</span>, item];
 
-    <span class="hljs-keyword">if</span> (!item.<span class="hljs-property">substring</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities convertTime() error - invalid argument: <span class="hljs-subst">${item}</span>`</span>);
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
-    a = item.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/^\d+\.?\d*(\D*)/</span>);
-    timeUnit = (a[<span class="hljs-number">1</span>].<span class="hljs-property">toLowerCase</span>) ? a[<span class="hljs-number">1</span>].<span class="hljs-title function_">toLowerCase</span>() : <span class="hljs-variable constant_">MS</span>;
-    
-    timeValue = <span class="hljs-built_in">parseFloat</span>(item);
+        <span class="hljs-keyword">const</span> a = item.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/^\d+\.?\d*(\D*)/</span>);
+        <span class="hljs-keyword">let</span> timeUnit = (a[<span class="hljs-number">1</span>].<span class="hljs-property">toLowerCase</span>) ? a[<span class="hljs-number">1</span>].<span class="hljs-title function_">toLowerCase</span>() : <span class="hljs-variable constant_">MS</span>;
+        
+        <span class="hljs-keyword">let</span> timeValue = <span class="hljs-built_in">parseFloat</span>(item);
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_number</span>(timeValue)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/base error - convertTime() argument converts to NaN: <span class="hljs-subst">${item}</span>`</span>);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">isNaN</span>(timeValue)) {
 
-    <span class="hljs-keyword">switch</span> (timeUnit) {
+            <span class="hljs-keyword">switch</span> (timeUnit) {
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;s&#x27;</span>:
-            timeValue *= <span class="hljs-number">1000</span>;
-            <span class="hljs-keyword">break</span>;
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;s&#x27;</span>:
+                    timeValue *= <span class="hljs-number">1000</span>;
+                    <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;%&#x27;</span>:
-            <span class="hljs-keyword">break</span>;
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;%&#x27;</span>:
+                    <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-attr">default</span>:
-            timeUnit = <span class="hljs-variable constant_">MS</span>;
+                <span class="hljs-attr">default</span>:
+                    timeUnit = <span class="hljs-variable constant_">MS</span>;
+            }
+            
+            <span class="hljs-keyword">return</span> [timeUnit, timeValue];
+        }
+        <span class="hljs-keyword">return</span> [<span class="hljs-variable constant_">MS</span>, <span class="hljs-number">0</span>];
     }
-    
-    <span class="hljs-keyword">return</span> [timeUnit, timeValue];
 };</pre></div></div>
             
         </li>
@@ -718,17 +715,12 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">correctAngle</span> = (<span class="hljs-params">item</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!item.<span class="hljs-property">toFixed</span> || <span class="hljs-built_in">isNaN</span>(item)) {
-
-        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${item}</span> is not a valid number`</span>);
-        <span class="hljs-keyword">return</span> item;
-    }
+    <span class="hljs-keyword">if</span> (!item.<span class="hljs-property">toFixed</span> || <span class="hljs-built_in">isNaN</span>(item)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 
     item = item % <span class="hljs-number">360</span>;
 
-    <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) {
-        item += <span class="hljs-number">360</span>;
-    }
+    <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item += <span class="hljs-number">360</span>;
+
     <span class="hljs-keyword">return</span> item;
 };</pre></div></div>
             
@@ -748,6 +740,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">correctForZero</span> = (<span class="hljs-params">item</span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span> &amp;&amp; !<span class="hljs-built_in">isNaN</span>(item)) {
+
         <span class="hljs-keyword">if</span> (item &lt; -<span class="hljs-number">0.000001</span>) <span class="hljs-keyword">return</span> item;
         <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">0.000001</span>) <span class="hljs-keyword">return</span> item;
     }
@@ -963,11 +956,15 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeInto</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(original) || !<span class="hljs-title function_">isa_obj</span>(additional)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities mergeInto() error - insufficient arguments supplied <span class="hljs-subst">${original}</span>, <span class="hljs-subst">${additional}</span>`</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(original) &amp;&amp; <span class="hljs-title function_">isa_obj</span>(additional)) {
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> additional) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> additional) {
 
-        <span class="hljs-keyword">if</span> (additional.<span class="hljs-title function_">hasOwnProperty</span>(key) &amp;&amp; <span class="hljs-keyword">typeof</span> original[key] == <span class="hljs-variable constant_">UNDEF</span>) original[key] = additional[key];
+            <span class="hljs-keyword">if</span> (additional.<span class="hljs-title function_">hasOwnProperty</span>(key) &amp;&amp; <span class="hljs-keyword">typeof</span> original[key] == <span class="hljs-variable constant_">UNDEF</span>) {
+
+                original[key] = additional[key];
+            }
+        }
     }
     <span class="hljs-keyword">return</span> original;
 };</pre></div></div>
@@ -994,11 +991,12 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeOver</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(original) || !<span class="hljs-title function_">isa_obj</span>(additional)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities mergeOver() error - insufficient arguments supplied <span class="hljs-subst">${original}</span>, <span class="hljs-subst">${additional}</span>`</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(original) &amp;&amp; <span class="hljs-title function_">isa_obj</span>(additional)) {
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> additional) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> additional) {
 
-        <span class="hljs-keyword">if</span> (additional.<span class="hljs-title function_">hasOwnProperty</span>(key)) original[key] = additional[key];
+            <span class="hljs-keyword">if</span> (additional.<span class="hljs-title function_">hasOwnProperty</span>(key)) original[key] = additional[key];
+        }
     }
     <span class="hljs-keyword">return</span> original;
 };</pre></div></div>
@@ -1025,13 +1023,14 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeDiscard</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(original) || !<span class="hljs-title function_">isa_obj</span>(additional)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities mergeDiscard() error - insufficient arguments supplied <span class="hljs-subst">${original}</span>, <span class="hljs-subst">${additional}</span>`</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(original) &amp;&amp; <span class="hljs-title function_">isa_obj</span>(additional)) {
 
-    <span class="hljs-title function_">_entries</span>(additional).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[key, val]</span>) =&gt;</span> {
+        <span class="hljs-title function_">_entries</span>(additional).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[key, val]</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (val === <span class="hljs-literal">null</span>) <span class="hljs-keyword">delete</span> original[key];
-        <span class="hljs-keyword">else</span> original[key] = additional[key];
-    });
+            <span class="hljs-keyword">if</span> (val === <span class="hljs-literal">null</span>) <span class="hljs-keyword">delete</span> original[key];
+            <span class="hljs-keyword">else</span> original[key] = additional[key];
+        });
+    }
     <span class="hljs-keyword">return</span> original;
 };</pre></div></div>
             
@@ -1058,17 +1057,16 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">pushUnique</span> = (<span class="hljs-params">myArray, potentialMember</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(myArray, potentialMember)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities pushUnique() error - insufficient arguments supplied <span class="hljs-subst">${myArray}</span>, <span class="hljs-subst">${potentialMember}</span>`</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(myArray)) {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isArray</span>(myArray)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities pushUnique() error - argument not an array <span class="hljs-subst">${myArray}</span>`</span>);
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(potentialMember)) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(potentialMember)) {
+            potentialMember.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-title function_">pushUnique</span>(myArray, item));
+        }
+        <span class="hljs-keyword">else</span> {
 
-        potentialMember.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-title function_">pushUnique</span>(myArray, item));
-    }
-    <span class="hljs-keyword">else</span> {
-
-        <span class="hljs-keyword">if</span> (!myArray.<span class="hljs-title function_">includes</span>(potentialMember)) myArray.<span class="hljs-title function_">push</span>(potentialMember);
+            <span class="hljs-keyword">if</span> (!myArray.<span class="hljs-title function_">includes</span>(potentialMember)) myArray.<span class="hljs-title function_">push</span>(potentialMember);
+        }
     }
     <span class="hljs-keyword">return</span> myArray;
 };</pre></div></div>
@@ -1096,14 +1094,13 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">removeItem</span> = (<span class="hljs-params">myArray, unwantedMember</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(myArray, unwantedMember)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities removeItem() error - insufficient arguments supplied <span class="hljs-subst">${myArray}</span>, <span class="hljs-subst">${unwantedMember}</span>`</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(myArray)) {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isArray</span>(myArray)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities removeItem() error - argument not an array <span class="hljs-subst">${myArray}</span>`</span>);
+        <span class="hljs-keyword">const</span> index = myArray.<span class="hljs-title function_">indexOf</span>(unwantedMember);
 
-    <span class="hljs-keyword">let</span> index = myArray.<span class="hljs-title function_">indexOf</span>(unwantedMember);
+        <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span>) myArray.<span class="hljs-title function_">splice</span>(index, <span class="hljs-number">1</span>);
 
-    <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span>) myArray.<span class="hljs-title function_">splice</span>(index, <span class="hljs-number">1</span>);
-
+    }
     <span class="hljs-keyword">return</span> myArray;
 };</pre></div></div>
             

@@ -5,41 +5,85 @@
 
 
 // #### Imports
-import { _atan2, _cos, _pow, _sin, _sqrt, BEZIER, CLOSE, GET_BEZIER, GET_QUADRATIC, LINEAR, MOVE, QUADRATIC, UNKNOWN, ZERO_STR } from '../core/shared-vars.js';
+import { _atan2, _cos, _max, _min, _pow, _seal, _sin, _sqrt, BEZIER, CLOSE, GET_BEZIER, GET_QUADRATIC, LINEAR, MOVE, QUADRATIC, UNKNOWN, ZERO_STR } from '../core/shared-vars.js';
+
+import { releaseArray, requestArray } from '../factory/array-pool.js';
+
+
+// We only use one pathCalcObject, but treat it like a pool of such objects for resetting to defaults
+const pathCalcObjectPool = [];
+
+export const requestPathCalcObject = function () {
+
+    if (!pathCalcObjectPool.length) pathCalcObjectPool.push(_seal({
+        localPath: null,
+        length: 0,
+        maxX: 0,
+        maxY: 0,
+        minX: 0,
+        minY: 0,
+        unitLengths: [],
+        unitPartials: [],
+        units: [],
+        unitPositions: [],
+        unitProgression: [],
+        xRange: [],
+        yRange: [],
+    }));
+
+    return pathCalcObjectPool.shift();
+};
+
+export const releasePathCalcObject = function (a) {
+
+    a.localPath = null,
+    a.length = 0,
+    a.units.length = 0,
+    a.maxX = 0,
+    a.maxY = 0,
+    a.minX = 0,
+    a.minY = 0,
+    a.unitLengths.length = 0,
+    a.unitPartials.length = 0,
+    a.unitPositions.length = 0,
+    a.unitProgression.length = 0,
+    a.xRange.length = 0,
+    a.yRange.length = 0,
+
+    pathCalcObjectPool.push(a);
+};
 
 
 // #### Export function
-export default function (d, scale, start, useAsPath, precision) {
+export const calculatePath = (d, scale, start, useAsPath, precision, result) => {
 
     // Setup local variables
-    let points = [],
-        myData = [],
-        command = ZERO_STR,
+    const points = requestArray(),
+        myData = requestArray(),
+        xPoints = requestArray(),
+        yPoints = requestArray(),
+        units = result.units,
+        unitLengths = result.unitLengths,
+        unitPartials = result.unitPartials,
+        progression = result.unitProgression,
+        positions = result.unitPositions,
+        mySet = d.match(/([A-Za-z][0-9. ,\-]*)/g),
+        localMatch = /(-?[0-9.]+\b)/g;
+
+    let command = ZERO_STR,
         localPath = ZERO_STR,
-        units = [],
-        unitLengths = [],
-        unitPartials = [],
-        mySet = d.match(/([A-Za-z][0-9. ,\-]*)/g), 
         myLen = 0,
-        i, iz, j, jz;
-
-    let returnObject = {};
-
-    let curX = 0, 
+        i, iz, j, jz,
+        checkMatch,
+        curX = 0, 
         curY = 0, 
         oldX = 0, 
-        oldY = 0;
-
-    let xPoints = [],
-        yPoints = [],
-        progression = [],
-        positions = [];
-
-    let reflectX = 0,
+        oldY = 0,
+        reflectX = 0,
         reflectY = 0;
 
     // Local function to populate the temporary myData array with data for every path partial
-    let buildArrays = (thesePoints) => {
+    const buildArrays = (thesePoints) => {
 
         myData.push({
             c: command.toLowerCase(),
@@ -70,7 +114,9 @@ export default function (d, scale, start, useAsPath, precision) {
     for (i = 0, iz = mySet.length; i < iz; i++) {
 
         command = mySet[i][0];
-        points = mySet[i].match(/(-?[0-9.]+\b)/g) || [];
+        points.length = 0;
+        checkMatch = mySet[i].match(localMatch);
+        if (checkMatch) points.push(...checkMatch);
 
         if (points.length) {
 
@@ -298,43 +344,44 @@ export default function (d, scale, start, useAsPath, precision) {
     for (i = 0, iz = myData.length; i < iz; i++) {
 
         let curData = myData[i],
-            points = curData.p;
+            myPts = curData.p;
 
-        if (points) {
+        if (myPts) {
 
-            for (j = 0, jz = points.length; j < jz; j++) {
+            for (j = 0, jz = myPts.length; j < jz; j++) {
 
-                points[j] = points[j].toFixed(1);
+                myPts[j] = myPts[j].toFixed(1);
             }
 
             localPath += `${curData.c}${curData.p.join()}`;
 
-            for (j = 0, jz = points.length; j < jz; j++) {
+            for (j = 0, jz = myPts.length; j < jz; j++) {
 
-                points[j] = parseFloat(points[j]);
+                myPts[j] = parseFloat(myPts[j]);
             }
 
         }
         else localPath += `${curData.c}`;
     }
 
-    returnObject.localPath = localPath;
+    result.localPath = localPath;
 
     // Calculates unit lengths and sum of lengths, alongside obtaining data to build a more accurate bounding box 
     if (useAsPath) {
 
         // Request a vector - used for reflection points
-        let v = vector;
+        const v = vector;
+        let curData, prevData, c, p, x, y, cx, cy, rx, ry;
 
         // This loop calculates this.units array data
         // + because the lengths calculations requires absolute coordinates
         // + and TtSs path units use reflective coordinates
         for (i = 0, iz = myData.length; i < iz; i++) {
 
-            let curData = myData[i],
-                prevData = (i > 0) ? myData[i - 1] : false;
+            curData = myData[i];
+            prevData = (i > 0) ? myData[i - 1] : false;
 
-            let {c, p, x, y, cx, cy, rx, ry} = curData;
+            ({c, p, x, y, cx, cy, rx, ry} = curData);
 
             if (p) {
 
@@ -405,24 +452,22 @@ export default function (d, scale, start, useAsPath, precision) {
             else units[i] = [`no-points-${c}`, x, y];
         }
 
-        returnObject.units = units;
-
         for (i = 0, iz = units.length; i < iz; i++) {
 
             let [spec, ...data] = units[i],
-                results;
+                localResults;
 
             switch (spec) {
 
                 case LINEAR :
                 case QUADRATIC :
                 case BEZIER :
-                    results = getShapeUnitMetaData(spec, precision, data);
-                    unitLengths[i] = results.length;
-                    xPoints = xPoints.concat(results.xPoints);
-                    yPoints = yPoints.concat(results.yPoints);
-                    progression.push(results.progression);
-                    positions.push(results.positions);
+                    localResults = getShapeUnitMetaData(spec, precision, data);
+                    unitLengths[i] = localResults.length;
+                    xPoints.push(...localResults.xPoints);
+                    yPoints.push(...localResults.yPoints);
+                    progression.push(localResults.progression);
+                    positions.push(localResults.positions);
                     break;
                     
                 default :
@@ -441,26 +486,23 @@ export default function (d, scale, start, useAsPath, precision) {
         }
     }
 
-    returnObject.unitLengths = unitLengths;
-    returnObject.unitPartials = unitPartials;
-    returnObject.length = parseFloat(myLen.toFixed(1));
-    returnObject.unitPositions = positions;
-    returnObject.unitProgression = progression;
+    result.length = parseFloat(myLen.toFixed(1));
 
     // calculate bounding box dimensions
-    let maxX = Math.max(...xPoints),
-        maxY = Math.max(...yPoints),
-        minX = Math.min(...xPoints),
-        minY = Math.min(...yPoints);
+    result.maxX = _max(...xPoints);
+    result.maxY = _max(...yPoints);
+    result.minX = _min(...xPoints);
+    result.minY = _min(...yPoints);
 
-    returnObject.maxX = maxX;
-    returnObject.maxY = maxY;
-    returnObject.minX = minX;
-    returnObject.minY = minY;
-    returnObject.xRange = xPoints;
-    returnObject.yRange = yPoints;
+    result.xRange.push(...xPoints);
+    result.yRange.push(...yPoints);
 
-    return returnObject;
+    releaseArray(points);
+    releaseArray(myData);
+    releaseArray(xPoints);
+    releaseArray(yPoints);
+
+    return result;
 };
 
 

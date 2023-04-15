@@ -642,7 +642,7 @@
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _entries, _floor, _max, <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">DATA_SCRAWL_NAME</span>, <span class="hljs-variable constant_">HEIGHT</span>, <span class="hljs-variable constant_">RELATIVE</span>, <span class="hljs-variable constant_">STATIC</span>, <span class="hljs-variable constant_">T_UNSTACKED_ELEMENT</span>, <span class="hljs-variable constant_">UE_INCLUDED_STYLES</span>, <span class="hljs-variable constant_">UE_MIMICKED_STYLES</span>, <span class="hljs-variable constant_">UNSTACKEDELEMENT</span>, <span class="hljs-variable constant_">WIDTH</span>, <span class="hljs-variable constant_">Z_INDEX</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _computed, _entries, _floor, _max, <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">DATA_SCRAWL_NAME</span>, <span class="hljs-variable constant_">HEIGHT</span>, <span class="hljs-variable constant_">RELATIVE</span>, <span class="hljs-variable constant_">STATIC</span>, <span class="hljs-variable constant_">T_UNSTACKED_ELEMENT</span>, <span class="hljs-variable constant_">UE_INCLUDED_STYLES</span>, <span class="hljs-variable constant_">UE_MIMICKED_STYLES</span>, <span class="hljs-variable constant_">UNSTACKEDELEMENT</span>, <span class="hljs-variable constant_">WIDTH</span>, <span class="hljs-variable constant_">Z_INDEX</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -667,7 +667,7 @@
     el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_NAME</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> = el;
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">elementComputedStyles</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(el);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">elementComputedStyles</span> = <span class="hljs-title function_">_computed</span>(el);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">hostStyles</span> = Ωempty;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasStartX</span> = <span class="hljs-number">0</span>;

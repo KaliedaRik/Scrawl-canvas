@@ -231,7 +231,9 @@ P.cleanSpecies = function () {
 // `makeCogPath` - internal helper function - called by `cleanSpecies`
 P.makeCogPath = function () {
 
-    const {points, twist, outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset, curve} = this;
+    const { points, twist, curve } = this;
+
+    let { outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset } = this;
 
     const turn = 360 / points,
         xPts = [];

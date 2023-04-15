@@ -177,10 +177,11 @@ P.makeStarPath = function () {
 
     const points = this.points,
         twist = this.twist,
-        radius1 = this.radius1,
-        radius2 = this.radius2,
         turn = 360 / points,
         xPts = [];
+
+    let radius1 = this.radius1,
+        radius2 = this.radius2;
 
     let currentX, currentY, x, y,
         myMin, myXoffset, myYoffset, i,

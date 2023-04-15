@@ -70,7 +70,7 @@ export default function (P = Ωempty) {
         }
         else {
 
-            let oldPivot = this.pivot,
+            const oldPivot = this.pivot,
                 name = this.name;
 
             let newPivot = (item.substring) ? artefact[item] : item;
@@ -79,12 +79,12 @@ export default function (P = Ωempty) {
 
                 newPivot = asset[item];
 
-                if (newPivot && newPivot.type !== T_CELL) newPivot = false;
+                if (newPivot && newPivot.type != T_CELL) newPivot = false;
             }
 
             if (newPivot && newPivot.name) {
 
-                if (oldPivot && oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
+                if (oldPivot && oldPivot.name != newPivot.name) removeItem(oldPivot.pivoted, name);
 
                 pushUnique(newPivot.pivoted, name);
 
@@ -125,26 +125,28 @@ export default function (P = Ωempty) {
 // `updatePivotSubscribers`
     P.updatePivotSubscribers = function () {
 
+        let art;
+
         this.pivoted.forEach(name => {
 
-            let instance = artefact[name];
+            art = artefact[name];
 
-            if (!instance) {
+            if (!art) {
 
-                instance = asset[name];
+                art = asset[name];
 
-                if (!instance || instance.type !== T_CELL) instance = false;
+                if (!art || art.type !== T_CELL) art = false;
             }
 
-            if (instance) {
+            if (art) {
 
-                instance.dirtyStart = true;
-                if (instance.addPivotHandle) instance.dirtyHandle = true;
-                if (instance.addPivotOffset) instance.dirtyOffset = true;
-                if (instance.addPivotRotation) instance.dirtyRotation = true;
+                art.dirtyStart = true;
+                if (art.addPivotHandle) art.dirtyHandle = true;
+                if (art.addPivotOffset) art.dirtyOffset = true;
+                if (art.addPivotRotation) art.dirtyRotation = true;
 
-                if (instance.type === T_POLYLINE) instance.dirtyPins = true;
-                else if (instance.type === T_LINE || instance.type === T_QUADRATIC || instance.type === T_BEZIER) instance.dirtyPins.push(this.name);
+                if (art.type == T_POLYLINE) art.dirtyPins = true;
+                else if (art.type == T_LINE || art.type == T_QUADRATIC || art.type == T_BEZIER) art.dirtyPins.push(this.name);
             }
         }, this);
     };

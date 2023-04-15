@@ -259,7 +259,7 @@ P.makeOvalPath = function () {
         height = radiusY * 2;
     }
 
-    let port = parseFloat((width * this.intersectX).toFixed(2)),
+    const port = parseFloat((width * this.intersectX).toFixed(2)),
         starboard = parseFloat((width - port).toFixed(2)),
         fore = parseFloat((height * this.intersectY).toFixed(2)),
         aft = parseFloat((height - fore).toFixed(2));

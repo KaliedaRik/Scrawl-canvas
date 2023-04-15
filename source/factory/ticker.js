@@ -61,7 +61,7 @@ import { releaseArray, requestArray } from './array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _floor, _now, _seal, ANIMATIONTICKERS, FUNCTION, PC, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, TICKERUPDATE } from '../core/shared-vars.js';
+import { _floor, _isArray, _now, _seal, ANIMATIONTICKERS, FUNCTION, PC, T_RENDER_ANIMATION, T_TICKER, T_TWEEN, TICKERUPDATE } from '../core/shared-vars.js';
 
 
 // #### Ticker constructor
@@ -238,8 +238,9 @@ S.cycles = function (item) {
 // __duration__ - changes to the `duration` (and as a consequence `effectiveDuration`) attributes will be cascaded down to subscribed Tweens and Actions immediately.
 S.duration = function (item) {
 
-    let i, iz, target,
-        subscribers = this.subscribers;
+    let i, iz, target;
+
+    const subscribers = this.subscribers;
 
     this.duration = item;
     this.setEffectiveDuration();
@@ -266,7 +267,9 @@ S.duration = function (item) {
 // `subscribe` - accepts a Tween or Action name-String, or an Array of such Strings. 
 P.subscribe = function (items) {
 
-    const myItems = [].concat(items);
+    const myItems = requestArray();
+    if (_isArray(items)) myItems.push(...items);
+    else myItems.push(items);
     
     let i, iz, item, name;
 
@@ -288,13 +291,16 @@ P.subscribe = function (items) {
         this.sortSubscribers();
         this.recalculateEffectiveDuration();
     }
+    releaseArray(myItems);
     return this;
 };
 
 // `unsubscribe` - accepts a Tween or Action name-String, or an Array of such Strings.
 P.unsubscribe = function (items) {
 
-    const myItems = [].concat(items);
+    const myItems = requestArray();
+    if (_isArray(items)) myItems.push(...items);
+    else myItems.push(items);
     
     let i, iz, item, name;
 
@@ -313,6 +319,7 @@ P.unsubscribe = function (items) {
         this.sortSubscribers();
         this.recalculateEffectiveDuration();
     }
+    releaseArray(myItems);
     return this;
 };
 
@@ -322,14 +329,13 @@ P.repopulateSubscriberObjects = function () {
     const arr = this.subscriberObjects,
         subs = this.subscribers;
 
-    let t;
+    let i, iz, t;
 
     arr.length = 0;
 
     subs.forEach(sub => {
 
         t = tween[sub];
-
         if (t) arr.push(t);
     });
 };
@@ -445,8 +451,9 @@ P.makeTickerUpdateEvent = function() {
 // + Tweens can overlap - they do not all have to start and end at the same time, nor do they need to run sequentially.
 P.recalculateEffectiveDuration = function() {
 
+    const subs = this.getSubscriberObjects();
+
     let durationValue, 
-        subs = this.getSubscriberObjects(),
         duration = 0;
 
     if (!this.duration) {
@@ -515,21 +522,22 @@ P.checkObserverRunningState = function () {
 // + __reverseOrder__ argument is a Boolean value; when set, subscribed Tween/Action objects will be processed in reverse order.
 P.fn = function (reverseOrder) {
 
-    // Request a `result` object from the pool.
-    let result = requestResultObject();
-
     // Determine the order in which subscribed objects will be processed
     reverseOrder = xt(reverseOrder) ? reverseOrder : false;
 
-    let i, iz, subs, eTime, now, e,
-        active = this.active,
-        startTime = this.startTime,
-        currentTime, tick,
+    // Request a `result` object from the pool.
+    const result = requestResultObject();
+
+    const startTime = this.startTime,
         cycles = this.cycles,
-        cycleCount = this.cycleCount,
         effectiveDuration = this.effectiveDuration,
         eventChoke = this.eventChoke;
     
+    let i, iz, subs, eTime, now, e,
+        currentTime, tick,
+        active = this.active,
+        cycleCount = this.cycleCount;
+
     // Process only if the Ticker is currently ___active___ and has a ___startTime___ value assigned to it.
     if (active && startTime) {
 

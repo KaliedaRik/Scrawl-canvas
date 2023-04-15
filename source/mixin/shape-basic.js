@@ -9,7 +9,9 @@ import { mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js
 
 import { releaseVector, requestVector } from '../factory/vector.js';
 
-import calculatePath from './shape-path-calculation.js';
+import { releaseArray, requestArray } from '../factory/array-pool.js';
+
+import { calculatePath, releasePathCalcObject, requestPathCalcObject } from './shape-path-calculation.js';
 
 import entityMix from './entity.js';
 
@@ -326,7 +328,7 @@ export default function (P = Ωempty) {
         return false;
     }
 
-    // `getPathPositionData` - function called by `getPathPositionData`
+    // `getPathPositionData`
     // + Also useful in user code to retrieve the Cell-relative coordinates of any point (measured as a float Number between `0` and `1` along the path)
     // + The second argument - a Boolean - rectifies for constant speed
     P.getPathPositionData = function (pos, constantSpeed = false) {
@@ -432,7 +434,7 @@ export default function (P = Ωempty) {
             if (this.dirtyHandle) this.cleanHandle();
             if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
-            let handle = this.currentStampHandlePosition;
+            const handle = this.currentStampHandlePosition;
 
             this.pathObject = new Path2D(`m${-handle[0]},${-handle[1]}${this.localPath}`);
         }
@@ -445,7 +447,7 @@ export default function (P = Ωempty) {
 
         if (!this.pathCalculatedOnce) {
 
-            res = calculatePath(d, this.currentScale, this.currentStart, this.useAsPath, this.precision);
+            res = calculatePath(d, this.currentScale, this.currentStart, this.useAsPath, this.precision, requestPathCalcObject());
             this.pathCalculatedOnce = true;
         }
 
@@ -454,12 +456,12 @@ export default function (P = Ωempty) {
             this.localPath = res.localPath;
             this.length = res.length;
 
-            let maxX = res.maxX,
+            const maxX = res.maxX,
                 maxY = res.maxY,
                 minX = res.minX,
                 minY = res.minY;
 
-            let dims = this.dimensions,
+            const dims = this.dimensions,
                 currentDims = this.currentDimensions,
                 box = this.localBox;
 
@@ -481,12 +483,14 @@ export default function (P = Ωempty) {
                 // we can do work here to flatten some of these arrays
                 const {units, unitLengths, unitPartials, unitProgression, unitPositions} = res;
 
+// console.log(unitProgression);
+                const flatProgression = requestArray(),
+                    flatPositions = requestArray();
+
                 let lastLength = 0, 
                     currentPartial,
                     lastPartial,
                     progression, 
-                    flatProgression = [],
-                    flatPositions = [],
                     positions,
                     i, iz, j, jz, l, p;
 
@@ -510,16 +514,29 @@ export default function (P = Ωempty) {
                             flatPositions.push(parseFloat(p.toFixed(6)));
                         }
                     }
-
-
                 }
-                this.units = units;
-                this.unitLengths = unitLengths;
-                this.unitPartials = unitPartials;
+                this.units.length = 0;
+                this.units.push(...units);
 
-                this.unitProgression = flatProgression;
-                this.unitPositions = flatPositions;
+                this.unitLengths.length = 0;
+                this.unitLengths.push(...unitLengths);
+
+                this.unitPartials.length = 0;
+                this.unitPartials.push(...unitPartials);
+
+                if (!this.unitProgression) this.unitProgression = [];
+                this.unitProgression.length = 0;
+                this.unitProgression.push(...flatProgression);
+
+                if (!this.unitPositions) this.unitPositions = [];
+                this.unitPositions.length = 0;
+                this.unitPositions.push(...flatPositions);
+
+                releaseArray(flatProgression);
+                releaseArray(flatPositions);
             }
+            releasePathCalcObject(res);
+
             if (!isCalledFromAdditionalActions) this.calculateLocalPathAdditionalActions();
         }
     };
@@ -528,20 +545,22 @@ export default function (P = Ωempty) {
 // `updatePathSubscribers`
     P.updatePathSubscribers = function () {
 
+        let art;
+
         this.pathed.forEach(name => {
 
-            let instance = artefact[name];
+            art = artefact[name];
 
-            if (instance) {
+            if (art) {
 
-                instance.currentPathData = false;
-                instance.dirtyStart = true;
-                if (instance.addPathHandle) instance.dirtyHandle = true;
-                if (instance.addPathOffset) instance.dirtyOffset = true;
-                if (instance.addPathRotation) instance.dirtyRotation = true;
+                art.currentPathData = false;
+                art.dirtyStart = true;
+                if (art.addPathHandle) art.dirtyHandle = true;
+                if (art.addPathOffset) art.dirtyOffset = true;
+                if (art.addPathRotation) art.dirtyRotation = true;
 
-                if (instance.type == T_POLYLINE) instance.dirtyPins = true;
-                else if (instance.type == T_LINE || instance.type == T_QUADRATIC || instance.type == T_BEZIER) instance.dirtyPins.push(this.name);
+                if (art.type == T_POLYLINE) art.dirtyPins = true;
+                else if (art.type == T_LINE || art.type == T_QUADRATIC || art.type == T_BEZIER) art.dirtyPins.push(this.name);
             }
         }, this);
     };

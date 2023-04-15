@@ -658,13 +658,16 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, cell, group, entity, asset, styles } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, removeItem, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { asset, cell, constructors, entity, group, styles } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { doCreate, mergeOver, removeItem, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./gradient.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { colorEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filter-engine.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { _entries, _keys, _round, <span class="hljs-variable constant_">ALPHA_TO_CHANNELS</span>, <span class="hljs-variable constant_">AREA_ALPHA</span>, <span class="hljs-variable constant_">ARG_SPLITTER</span>, <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BLACK_WHITE</span>, <span class="hljs-variable constant_">BLEND</span>, <span class="hljs-variable constant_">BLUENOISE</span>, <span class="hljs-variable constant_">BLUR</span>, <span class="hljs-variable constant_">CHANNELS_TO_ALPHA</span>, <span class="hljs-variable constant_">CHROMA</span>, <span class="hljs-variable constant_">CLAMP_CHANNELS</span>, <span class="hljs-variable constant_">CLAMP_VALUES</span>, <span class="hljs-variable constant_">COLORS_TO_ALPHA</span>, <span class="hljs-variable constant_">COMPOSE</span>, <span class="hljs-variable constant_">CORRODE</span>, <span class="hljs-variable constant_">DEFAULT_SEED</span>, <span class="hljs-variable constant_">DISPLACE</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">EMBOSS</span>, <span class="hljs-variable constant_">EMBOSS_WORK</span>, <span class="hljs-variable constant_">FILTER</span>, <span class="hljs-variable constant_">FLOOD</span>, <span class="hljs-variable constant_">GAUSSIAN_BLUR</span>, <span class="hljs-variable constant_">GLITCH</span>, <span class="hljs-variable constant_">GRAYSCALE</span>, <span class="hljs-variable constant_">GREEN</span>, <span class="hljs-variable constant_">INVERT_CHANNELS</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">LOCK_CHANNELS_TO_LEVELS</span>, <span class="hljs-variable constant_">MAP_TO_GRADIENT</span>, <span class="hljs-variable constant_">MATRIX</span>, <span class="hljs-variable constant_">MEAN</span>, <span class="hljs-variable constant_">MODULATE_CHANNELS</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NEWSPRINT</span>, <span class="hljs-variable constant_">NOISE_VALUES</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-variable constant_">OFFSET</span>, <span class="hljs-title class_">PC30</span>, <span class="hljs-title class_">PC50</span>, <span class="hljs-variable constant_">PIXELATE</span>, <span class="hljs-variable constant_">PROCESS_IMAGE</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">RANDOM_NOISE</span>, <span class="hljs-variable constant_">RECT_GRID</span>, <span class="hljs-variable constant_">RED</span>, <span class="hljs-variable constant_">REDUCE_PALETTE</span>, <span class="hljs-variable constant_">SET_CHANNEL_TO_LEVEL</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STEP_CHANNELS</span>, <span class="hljs-variable constant_">SWIRL</span>, <span class="hljs-variable constant_">T_FILTER</span>, <span class="hljs-variable constant_">THRESHOLD</span>, <span class="hljs-variable constant_">TILES</span>, <span class="hljs-variable constant_">TINT_CHANNELS</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">USER_DEFINED_LEGACY</span>, <span class="hljs-variable constant_">VARY_CHANNELS_BY_WEIGHTS</span>, <span class="hljs-variable constant_">WHITE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -703,9 +706,9 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Filter</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Filter&#x27;</span>;
-P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;filter&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Filter</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_FILTER</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_">FILTER</span>;
 P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
 P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -777,7 +780,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">ZERO_STR</span>,</pre></div></div>
             
         </li>
         
@@ -806,9 +809,9 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;&#x27;</span>,
-    <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;&#x27;</span>,
-    <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">lineIn</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
+    <span class="hljs-attr">lineMix</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
+    <span class="hljs-attr">lineOut</span>: <span class="hljs-variable constant_">ZERO_STR</span>,</pre></div></div>
             
         </li>
         
@@ -876,23 +879,23 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">alpha</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">angle</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">areaAlphaLevels</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;&#x27;</span>,
-    <span class="hljs-attr">blend</span>: <span class="hljs-string">&#x27;normal&#x27;</span>,
+    <span class="hljs-attr">asset</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
+    <span class="hljs-attr">blend</span>: <span class="hljs-variable constant_">NORMAL</span>,
     <span class="hljs-attr">blue</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">blueInBlue</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">blueColor</span>: <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>,
+    <span class="hljs-attr">blueColor</span>: <span class="hljs-variable constant_">BLACK</span>,
     <span class="hljs-attr">blueInGreen</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">blueInRed</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">channelX</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-    <span class="hljs-attr">channelY</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
+    <span class="hljs-attr">channelX</span>: <span class="hljs-variable constant_">RED</span>,
+    <span class="hljs-attr">channelY</span>: <span class="hljs-variable constant_">GREEN</span>,
     <span class="hljs-attr">clamp</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">compose</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
+    <span class="hljs-attr">compose</span>: <span class="hljs-variable constant_">SOURCE_OVER</span>,
     <span class="hljs-attr">copyHeight</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">copyWidth</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">copyX</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">copyY</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">concurrent</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">easing</span>: <span class="hljs-string">&#x27;linear&#x27;</span>,
+    <span class="hljs-attr">easing</span>: <span class="hljs-variable constant_">LINEAR</span>,
     <span class="hljs-attr">excludeAlpha</span>: <span class="hljs-literal">true</span>, 
     <span class="hljs-attr">excludeBlue</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">excludeGreen</span>: <span class="hljs-literal">false</span>,
@@ -901,7 +904,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">gradient</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">green</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">greenInBlue</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">greenColor</span>: <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>,
+    <span class="hljs-attr">greenColor</span>: <span class="hljs-variable constant_">BLACK</span>,
     <span class="hljs-attr">greenInGreen</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">greenInRed</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">gutterHeight</span>: <span class="hljs-number">1</span>,
@@ -909,7 +912,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">height</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">highAlpha</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">highBlue</span>: <span class="hljs-number">255</span>,
-    <span class="hljs-attr">highColor</span>: <span class="hljs-string">&#x27;rgba(255 255 255 / 1)&#x27;</span>,
+    <span class="hljs-attr">highColor</span>: <span class="hljs-variable constant_">WHITE</span>,
     <span class="hljs-attr">highGreen</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">highRed</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">includeAlpha</span>: <span class="hljs-literal">false</span>, 
@@ -921,11 +924,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">level</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">lowAlpha</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">lowBlue</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">lowColor</span>: <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>,
+    <span class="hljs-attr">lowColor</span>: <span class="hljs-variable constant_">BLACK</span>,
     <span class="hljs-attr">lowGreen</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">lowRed</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">minimumColorDistance</span>: <span class="hljs-number">1000</span>,
-    <span class="hljs-attr">noiseType</span>: <span class="hljs-string">&#x27;random&#x27;</span>,
+    <span class="hljs-attr">noiseType</span>: <span class="hljs-variable constant_">RANDOM</span>,
     <span class="hljs-attr">noWrap</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">offsetAlphaX</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">offsetAlphaY</span>: <span class="hljs-number">0</span>,
@@ -948,9 +951,9 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">offsetMin</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">offsetMax</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">opaqueAt</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">operation</span>: <span class="hljs-string">&#x27;mean&#x27;</span>,
-    <span class="hljs-attr">outerRadius</span>: <span class="hljs-string">&#x27;30%&#x27;</span>,
-    <span class="hljs-attr">palette</span>: <span class="hljs-string">&#x27;black-white&#x27;</span>, 
+    <span class="hljs-attr">operation</span>: <span class="hljs-variable constant_">MEAN</span>,
+    <span class="hljs-attr">outerRadius</span>: <span class="hljs-title class_">PC30</span>,
+    <span class="hljs-attr">palette</span>: <span class="hljs-variable constant_">BLACK_WHITE</span>, 
     <span class="hljs-attr">passes</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">points</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">postProcessResults</span>: <span class="hljs-literal">true</span>,
@@ -960,16 +963,16 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">ranges</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">red</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">redInBlue</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">redColor</span>: <span class="hljs-string">&#x27;rgba(0 0 0 / 1)&#x27;</span>,
+    <span class="hljs-attr">redColor</span>: <span class="hljs-variable constant_">BLACK</span>,
     <span class="hljs-attr">redInGreen</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">redInRed</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">reference</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+    <span class="hljs-attr">reference</span>: <span class="hljs-variable constant_">BLACK</span>,
     <span class="hljs-attr">scaleX</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">scaleY</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">seed</span>: <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
+    <span class="hljs-attr">seed</span>: <span class="hljs-variable constant_">DEFAULT_SEED</span>,
     <span class="hljs-attr">smoothing</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-title class_">PC50</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-title class_">PC50</span>,
     <span class="hljs-attr">step</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">strength</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">staticSwirls</span>: <span class="hljs-literal">null</span>,
@@ -1047,7 +1050,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(entity).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, ent]</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">_entries</span>(entity).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, ent]</span>) =&gt;</span> {
 
         <span class="hljs-keyword">let</span> f = ent.<span class="hljs-property">filters</span>;
         <span class="hljs-keyword">if</span> (f &amp;&amp; f.<span class="hljs-title function_">includes</span>(myname)) <span class="hljs-title function_">removeItem</span>(f, myname);
@@ -1066,7 +1069,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(group).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, grp]</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">_entries</span>(group).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, grp]</span>) =&gt;</span> {
 
         <span class="hljs-keyword">let</span> f = grp.<span class="hljs-property">filters</span>;
         <span class="hljs-keyword">if</span> (f &amp;&amp; f.<span class="hljs-title function_">includes</span>(myname)) <span class="hljs-title function_">removeItem</span>(f, myname);
@@ -1085,7 +1088,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(cell).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, c]</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">_entries</span>(cell).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, c]</span>) =&gt;</span> {
 
         <span class="hljs-keyword">let</span> f = c.<span class="hljs-property">filters</span>;
         <span class="hljs-keyword">if</span> (f &amp;&amp; f.<span class="hljs-title function_">includes</span>(myname)) <span class="hljs-title function_">removeItem</span>(f, myname);
@@ -1128,7 +1131,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
 P.<span class="hljs-property">set</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">const</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(items),
+    <span class="hljs-keyword">const</span> keys = <span class="hljs-title function_">_keys</span>(items),
         keysLen = keys.<span class="hljs-property">length</span>;
 
     <span class="hljs-keyword">if</span> (keysLen) {
@@ -1143,12 +1146,12 @@ P.<span class="hljs-property">set</span> = <span class="hljs-keyword">function</
             key = keys[i];
             value = items[key];
 
-            <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+            <span class="hljs-keyword">if</span> (key &amp;&amp; key != <span class="hljs-variable constant_">NAME</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
                 predefined = setters[key];
 
                 <span class="hljs-keyword">if</span> (predefined) predefined.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, value);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-variable language_">this</span>[key] = value;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-variable constant_">UNDEF</span>) <span class="hljs-variable language_">this</span>[key] = value;
             }
         }
     }
@@ -1162,7 +1165,7 @@ P.<span class="hljs-property">set</span> = <span class="hljs-keyword">function</
 
 P.<span class="hljs-property">setDelta</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">const</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(items),
+    <span class="hljs-keyword">const</span> keys = <span class="hljs-title function_">_keys</span>(items),
         keysLen = keys.<span class="hljs-property">length</span>;
 
     <span class="hljs-keyword">if</span> (keysLen) {
@@ -1177,12 +1180,12 @@ P.<span class="hljs-property">setDelta</span> = <span class="hljs-keyword">funct
             key = keys[i];
             value = items[key];
 
-            <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+            <span class="hljs-keyword">if</span> (key &amp;&amp; key != <span class="hljs-variable constant_">NAME</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
                 predefined = setters[key];
 
                 <span class="hljs-keyword">if</span> (predefined) predefined.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, value);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-variable language_">this</span>[key] = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>[key], value);
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-variable constant_">UNDEF</span>) <span class="hljs-variable language_">this</span>[key] = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>[key], value);
             }
         }
     }
@@ -1263,9 +1266,9 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">alphaToChannels</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;alpha-to-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">ALPHA_TO_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
@@ -1291,9 +1294,9 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">areaAlpha</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;area-alpha&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">AREA_ALPHA</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">tileWidth</span>: (f.<span class="hljs-property">tileWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileWidth</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">tileHeight</span>: (f.<span class="hljs-property">tileHeight</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileHeight</span> : <span class="hljs-number">1</span>,
@@ -1333,9 +1336,9 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             high = (f.<span class="hljs-property">high</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">high</span> : [highRed, highGreen, highBlue, highAlpha];
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">THRESHOLD</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">level</span>: (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">128</span>,
             <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">128</span>,
@@ -1367,11 +1370,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">blend</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;blend&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineMix</span>: (f.<span class="hljs-property">lineMix</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineMix</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">blend</span>: (f.<span class="hljs-property">blend</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blend</span> : <span class="hljs-string">&#x27;normal&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">BLEND</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineMix</span>: (f.<span class="hljs-property">lineMix</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineMix</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">blend</span>: (f.<span class="hljs-property">blend</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blend</span> : <span class="hljs-variable constant_">NORMAL</span>,
             <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
@@ -1393,9 +1396,9 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">blue</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">excludeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">excludeGreen</span>: <span class="hljs-literal">true</span>,
@@ -1421,9 +1424,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">blur</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">BLUR</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
@@ -1455,9 +1458,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         <span class="hljs-keyword">let</span> level = (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">1</span>;
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;modulate-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">MODULATE_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">red</span>: level,
             <span class="hljs-attr">green</span>: level,
@@ -1483,9 +1486,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">channelLevels</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;lock-channels-to-levels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">LOCK_CHANNELS_TO_LEVELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : [<span class="hljs-number">0</span>],
             <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : [<span class="hljs-number">0</span>],
@@ -1509,9 +1512,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">channels</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;modulate-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">MODULATE_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">1</span>,
@@ -1535,14 +1538,14 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">channelstep</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
 
-        <span class="hljs-keyword">let</span> clamp = (f.<span class="hljs-property">clamp</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">clamp</span> : <span class="hljs-string">&#x27;down&#x27;</span>
+        <span class="hljs-keyword">let</span> clamp = (f.<span class="hljs-property">clamp</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">clamp</span> : <span class="hljs-variable constant_">DOWN</span>
 
-        <span class="hljs-keyword">if</span> (![<span class="hljs-string">&#x27;down&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>, <span class="hljs-string">&#x27;up&#x27;</span>].<span class="hljs-title function_">includes</span>(clamp)) clamp = <span class="hljs-string">&#x27;down&#x27;</span>;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable constant_">CLAMP_VALUES</span>.<span class="hljs-title function_">includes</span>(clamp)) clamp = <span class="hljs-variable constant_">DOWN</span>;
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;step-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">STEP_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             clamp,
             <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">1</span>,
@@ -1566,9 +1569,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">channelsToAlpha</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;channels-to-alpha&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">CHANNELS_TO_ALPHA</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
@@ -1620,9 +1623,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         }
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;chroma&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">CHROMA</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">ranges</span>: processedRanges,
         }];
@@ -1662,9 +1665,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         }
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;colors-to-alpha&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">COLORS_TO_ALPHA</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             red,
             green,
@@ -1722,9 +1725,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         }
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;clamp-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">CLAMP_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             lowRed,
             lowGreen,
@@ -1750,11 +1753,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">compose</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineMix</span>: (f.<span class="hljs-property">lineMix</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineMix</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">compose</span>: (f.<span class="hljs-property">compose</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">compose</span> : <span class="hljs-string">&#x27;source-over&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">COMPOSE</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineMix</span>: (f.<span class="hljs-property">lineMix</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineMix</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">compose</span>: (f.<span class="hljs-property">compose</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">compose</span> : <span class="hljs-variable constant_">SOURCE_OVER</span>,
             <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
@@ -1782,9 +1785,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">corrode</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;corrode&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">CORRODE</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">width</span>: (f.<span class="hljs-property">width</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">width</span> : <span class="hljs-number">3</span>,
             <span class="hljs-attr">height</span>: (f.<span class="hljs-property">height</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">height</span> : <span class="hljs-number">3</span>,
             <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">1</span>,
@@ -1793,7 +1796,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">false</span>,
             <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">false</span>,
             <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">operation</span>: (f.<span class="hljs-property">operation</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">operation</span> : <span class="hljs-string">&#x27;mean&#x27;</span>,
+            <span class="hljs-attr">operation</span>: (f.<span class="hljs-property">operation</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">operation</span> : <span class="hljs-variable constant_">MEAN</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
@@ -1813,9 +1816,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">curveWeights</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;vary-channels-by-weights&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">VARY_CHANNELS_BY_WEIGHTS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">weights</span>: (f.<span class="hljs-property">weights</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">weights</span> : <span class="hljs-literal">false</span>,
             <span class="hljs-attr">useMixedChannel</span>: (f.<span class="hljs-property">useMixedChannel</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useMixedChannel</span> : <span class="hljs-literal">true</span>,
@@ -1837,9 +1840,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">cyan</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">true</span>,
@@ -1862,13 +1865,13 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">displace</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;displace&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineMix</span>: (f.<span class="hljs-property">lineMix</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineMix</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">DISPLACE</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineMix</span>: (f.<span class="hljs-property">lineMix</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineMix</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">channelX</span>: (f.<span class="hljs-property">channelX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">channelX</span> : <span class="hljs-string">&#x27;red&#x27;</span>,
-            <span class="hljs-attr">channelY</span>: (f.<span class="hljs-property">channelY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">channelY</span> : <span class="hljs-string">&#x27;green&#x27;</span>,
+            <span class="hljs-attr">channelX</span>: (f.<span class="hljs-property">channelX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">channelX</span> : <span class="hljs-variable constant_">RED</span>,
+            <span class="hljs-attr">channelY</span>: (f.<span class="hljs-property">channelY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">channelY</span> : <span class="hljs-variable constant_">GREEN</span>,
             <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">scaleX</span>: (f.<span class="hljs-property">scaleX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">scaleX</span> : <span class="hljs-number">1</span>,
@@ -1892,9 +1895,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">edgeDetect</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">MATRIX</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-number">3</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-number">3</span>,
@@ -1925,16 +1928,16 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         <span class="hljs-keyword">const</span> actions = [];
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">useNaturalGrayscale</span>) {
             actions.<span class="hljs-title function_">push</span>({
-                <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
-                <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-                <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
+                <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">GRAYSCALE</span>,
+                <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+                <span class="hljs-attr">lineOut</span>: <span class="hljs-variable constant_">EMBOSS_WORK</span>,
             });
         }
         <span class="hljs-keyword">else</span> {
             actions.<span class="hljs-title function_">push</span>({
-                <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-                <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-                <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
+                <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>,
+                <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+                <span class="hljs-attr">lineOut</span>: <span class="hljs-variable constant_">EMBOSS_WORK</span>,
                 <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
                 <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,
                 <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">true</span>,
@@ -1942,9 +1945,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         }
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">clamp</span>) {
             actions.<span class="hljs-title function_">push</span>({
-                <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;clamp-channels&#x27;</span>,
-                <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
-                <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
+                <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">CLAMP_CHANNELS</span>,
+                <span class="hljs-attr">lineIn</span>: <span class="hljs-variable constant_">EMBOSS_WORK</span>,
+                <span class="hljs-attr">lineOut</span>: <span class="hljs-variable constant_">EMBOSS_WORK</span>,
                 <span class="hljs-attr">lowRed</span>: <span class="hljs-number">0</span> + f.<span class="hljs-property">clamp</span>, 
                 <span class="hljs-attr">lowGreen</span>: <span class="hljs-number">0</span> + f.<span class="hljs-property">clamp</span>, 
                 <span class="hljs-attr">lowBlue</span>: <span class="hljs-number">0</span> + f.<span class="hljs-property">clamp</span>, 
@@ -1955,16 +1958,16 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         }
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">smoothing</span>) {
             actions.<span class="hljs-title function_">push</span>({
-                <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
-                <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
-                <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
+                <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">GAUSSIAN_BLUR</span>,
+                <span class="hljs-attr">lineIn</span>: <span class="hljs-variable constant_">EMBOSS_WORK</span>,
+                <span class="hljs-attr">lineOut</span>: <span class="hljs-variable constant_">EMBOSS_WORK</span>,
                 <span class="hljs-attr">radius</span>: f.<span class="hljs-property">smoothing</span>,
             });
         }
         actions.<span class="hljs-title function_">push</span>({
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">EMBOSS</span>,
+            <span class="hljs-attr">lineIn</span>: <span class="hljs-variable constant_">EMBOSS_WORK</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">angle</span>: (f.<span class="hljs-property">angle</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">angle</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">strength</span>: (f.<span class="hljs-property">strength</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">strength</span> : <span class="hljs-number">1</span>,
@@ -2004,7 +2007,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
 
             [red, green, blue, alpha] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">reference</span>);
 
-            alpha = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(alpha * <span class="hljs-number">255</span>);
+            alpha = <span class="hljs-title function_">_round</span>(alpha * <span class="hljs-number">255</span>);
 
             f.<span class="hljs-property">red</span> = red;
             f.<span class="hljs-property">green</span> = green;
@@ -2015,9 +2018,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         }
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;flood&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">FLOOD</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             red,
             green,
@@ -2042,9 +2045,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">gaussianBlur</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">GAUSSIAN_BLUR</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">radius</span>: (f.<span class="hljs-property">radius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">radius</span> : <span class="hljs-number">1</span>,
         }];
@@ -2065,12 +2068,12 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">glitch</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;glitch&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">GLITCH</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">useMixedChannel</span>: (f.<span class="hljs-property">useMixedChannel</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useMixedChannel</span> : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
+            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-variable constant_">DEFAULT_SEED</span>,
             <span class="hljs-attr">step</span>: (f.<span class="hljs-property">step</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">step</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">offsetMin</span>: (f.<span class="hljs-property">offsetMin</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetMin</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">offsetMax</span>: (f.<span class="hljs-property">offsetMax</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetMax</span> : <span class="hljs-number">0</span>,
@@ -2102,9 +2105,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">gray</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,
@@ -2127,9 +2130,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">grayscale</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">GRAYSCALE</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
@@ -2149,9 +2152,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">green</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">excludeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">excludeBlue</span>: <span class="hljs-literal">true</span>,
@@ -2174,9 +2177,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">image</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;process-image&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">asset</span>: (f.<span class="hljs-property">asset</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">asset</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">PROCESS_IMAGE</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">asset</span>: (f.<span class="hljs-property">asset</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">asset</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">width</span>: (f.<span class="hljs-property">width</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">width</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">height</span>: (f.<span class="hljs-property">height</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">height</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">copyWidth</span>: (f.<span class="hljs-property">copyWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyWidth</span> : <span class="hljs-number">1</span>,
@@ -2201,9 +2204,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">invert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;invert-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">INVERT_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,
@@ -2226,9 +2229,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">magenta</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">true</span>,
@@ -2254,9 +2257,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">gradient</span> &amp;&amp; f.<span class="hljs-property">gradient</span>.<span class="hljs-property">substring</span>) f.<span class="hljs-property">gradient</span> = styles[f.<span class="hljs-property">gradient</span>];
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;map-to-gradient&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">MAP_TO_GRADIENT</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">useNaturalGrayscale</span>: (f.<span class="hljs-property">useNaturalGrayscale</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useNaturalGrayscale</span> : <span class="hljs-literal">false</span>,
             <span class="hljs-attr">gradient</span>: f.<span class="hljs-property">gradient</span> || <span class="hljs-title function_">makeGradient</span>(),
@@ -2278,9 +2281,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">matrix</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">MATRIX</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-number">3</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-number">3</span>,
@@ -2309,9 +2312,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">matrix5</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">MATRIX</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-number">5</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-number">5</span>,
@@ -2340,9 +2343,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">newsprint</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;newsprint&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">NEWSPRINT</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">width</span>: (f.<span class="hljs-property">width</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">width</span> : <span class="hljs-number">1</span>,
         }];
@@ -2363,9 +2366,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">notblue</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;set-channel-to-level&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">SET_CHANNEL_TO_LEVEL</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">level</span>: <span class="hljs-number">0</span>,
@@ -2387,9 +2390,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">notgreen</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;set-channel-to-level&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">SET_CHANNEL_TO_LEVEL</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">level</span>: <span class="hljs-number">0</span>,
@@ -2411,9 +2414,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">notred</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;set-channel-to-level&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">SET_CHANNEL_TO_LEVEL</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">level</span>: <span class="hljs-number">0</span>,
@@ -2435,9 +2438,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">offset</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;offset&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">OFFSET</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">offsetRedX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">offsetRedY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
@@ -2465,9 +2468,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">offsetChannels</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;offset&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">OFFSET</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">offsetRedX</span>: (f.<span class="hljs-property">offsetRedX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetRedX</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">offsetRedY</span>: (f.<span class="hljs-property">offsetRedY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetRedY</span> : <span class="hljs-number">0</span>,
@@ -2495,9 +2498,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">pixelate</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;pixelate&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">PIXELATE</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">tileWidth</span>: (f.<span class="hljs-property">tileWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileWidth</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">tileHeight</span>: (f.<span class="hljs-property">tileHeight</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileHeight</span> : <span class="hljs-number">1</span>,
@@ -2525,16 +2528,16 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">randomNoise</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
 
-        <span class="hljs-keyword">const</span> noiseType = ([<span class="hljs-string">&#x27;random&#x27;</span>, <span class="hljs-string">&#x27;ordered&#x27;</span>, <span class="hljs-string">&#x27;bluenoise&#x27;</span>].<span class="hljs-title function_">includes</span>(f.<span class="hljs-property">noiseType</span>)) ? f.<span class="hljs-property">noiseType</span> : <span class="hljs-string">&#x27;random&#x27;</span>;
+        <span class="hljs-keyword">const</span> noiseType = (<span class="hljs-variable constant_">NOISE_VALUES</span>.<span class="hljs-title function_">includes</span>(f.<span class="hljs-property">noiseType</span>)) ? f.<span class="hljs-property">noiseType</span> : <span class="hljs-variable constant_">RANDOM</span>;
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;random-noise&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">RANDOM_NOISE</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">width</span>: (f.<span class="hljs-property">width</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">width</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">height</span>: (f.<span class="hljs-property">height</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">height</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
+            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-variable constant_">DEFAULT_SEED</span>,
             noiseType,
             <span class="hljs-attr">level</span>: (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">noWrap</span>: (f.<span class="hljs-property">noWrap</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">noWrap</span> : <span class="hljs-literal">false</span>,
@@ -2561,9 +2564,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">red</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">excludeGreen</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">excludeBlue</span>: <span class="hljs-literal">true</span>,
@@ -2585,15 +2588,15 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">reducePalette</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         
-        <span class="hljs-keyword">let</span> palette = (f.<span class="hljs-property">palette</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">palette</span> : <span class="hljs-string">&#x27;black-white&#x27;</span>;
+        <span class="hljs-keyword">let</span> palette = (f.<span class="hljs-property">palette</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">palette</span> : <span class="hljs-variable constant_">BLACK_WHITE</span>;
 
         f.<span class="hljs-property">actions</span> = [];
 
         <span class="hljs-keyword">if</span> (palette.<span class="hljs-property">substring</span>) {
 
-            <span class="hljs-keyword">if</span> (palette.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;,&#x27;</span>)) {
+            <span class="hljs-keyword">if</span> (palette.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">ARG_SPLITTER</span>)) {
 
-                palette = palette.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);
+                palette = palette.<span class="hljs-title function_">split</span>(<span class="hljs-variable constant_">ARG_SPLITTER</span>);
                 palette.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">trim</span>());
             }
         }</pre></div></div>
@@ -2614,14 +2617,14 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> noiseType = (f.<span class="hljs-property">useBluenoise</span>) ? <span class="hljs-string">&#x27;bluenoise&#x27;</span> : f.<span class="hljs-property">noiseType</span> || <span class="hljs-string">&#x27;random&#x27;</span>;
-        <span class="hljs-keyword">if</span> (![<span class="hljs-string">&#x27;random&#x27;</span>, <span class="hljs-string">&#x27;ordered&#x27;</span>, <span class="hljs-string">&#x27;bluenoise&#x27;</span>].<span class="hljs-title function_">includes</span>(noiseType)) noiseType = <span class="hljs-string">&#x27;random&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> noiseType = (f.<span class="hljs-property">useBluenoise</span>) ? <span class="hljs-variable constant_">BLUENOISE</span> : f.<span class="hljs-property">noiseType</span> || <span class="hljs-variable constant_">RANDOM</span>;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable constant_">NOISE_VALUES</span>.<span class="hljs-title function_">includes</span>(noiseType)) noiseType = <span class="hljs-variable constant_">RANDOM</span>;
 
         f.<span class="hljs-property">actions</span>.<span class="hljs-title function_">push</span>({
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;reduce-palette&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">REDUCE_PALETTE</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-variable constant_">DEFAULT_SEED</span>,
             <span class="hljs-attr">minimumColorDistance</span>: (f.<span class="hljs-property">minimumColorDistance</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">minimumColorDistance</span> : <span class="hljs-number">1000</span>,
             <span class="hljs-attr">useLabForPaletteDistance</span>: (f.<span class="hljs-property">useLabForPaletteDistance</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useLabForPaletteDistance</span> : <span class="hljs-literal">false</span>,
             palette,
@@ -2647,9 +2650,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         <span class="hljs-keyword">let</span> level = (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">1</span>;
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;modulate-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">MODULATE_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">red</span>: level,
             <span class="hljs-attr">green</span>: level,
@@ -2673,9 +2676,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">sepia</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;tint-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">TINT_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">redInRed</span>: <span class="hljs-number">0.393</span>,
             <span class="hljs-attr">redInGreen</span>: <span class="hljs-number">0.349</span>,
@@ -2704,9 +2707,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">sharpen</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">MATRIX</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-number">3</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-number">3</span>,
@@ -2737,21 +2740,21 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">swirl</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
-        <span class="hljs-keyword">let</span> startX = (f.<span class="hljs-property">startX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">startX</span> : <span class="hljs-string">&#x27;50%&#x27;</span>,
-            startY = (f.<span class="hljs-property">startY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">startY</span> : <span class="hljs-string">&#x27;50%&#x27;</span>,
+        <span class="hljs-keyword">let</span> startX = (f.<span class="hljs-property">startX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">startX</span> : <span class="hljs-title class_">PC50</span>,
+            startY = (f.<span class="hljs-property">startY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">startY</span> : <span class="hljs-title class_">PC50</span>,
             innerRadius = (f.<span class="hljs-property">innerRadius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">innerRadius</span> : <span class="hljs-number">0</span>,
-            outerRadius = (f.<span class="hljs-property">outerRadius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">outerRadius</span> : <span class="hljs-string">&#x27;30%&#x27;</span>,
+            outerRadius = (f.<span class="hljs-property">outerRadius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">outerRadius</span> : <span class="hljs-title class_">PC30</span>,
             angle = (f.<span class="hljs-property">angle</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">angle</span> : <span class="hljs-number">0</span>,
-            easing = (f.<span class="hljs-property">easing</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">easing</span> : <span class="hljs-string">&#x27;linear&#x27;</span>,
+            easing = (f.<span class="hljs-property">easing</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">easing</span> : <span class="hljs-variable constant_">LINEAR</span>,
             staticSwirls = (f.<span class="hljs-property">staticSwirls</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">staticSwirls</span> : [];
 
         <span class="hljs-keyword">const</span> swirls = [...staticSwirls];
         swirls.<span class="hljs-title function_">push</span>([startX, startY, innerRadius, outerRadius, angle, easing]);
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;swirl&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">SWIRL</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             swirls, 
         }];
@@ -2787,7 +2790,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
 
             [lowRed, lowGreen, lowBlue, lowAlpha] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">lowColor</span>);
 
-            lowAlpha = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(lowAlpha * <span class="hljs-number">255</span>);
+            lowAlpha = <span class="hljs-title function_">_round</span>(lowAlpha * <span class="hljs-number">255</span>);
 
             f.<span class="hljs-property">lowRed</span> = lowRed;
             f.<span class="hljs-property">lowGreen</span> = lowGreen;
@@ -2803,7 +2806,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             [highRed, highGreen, highBlue, highAlpha] = colorEngine.<span class="hljs-title function_">extractRGBfromColor</span>(f.<span class="hljs-property">highColor</span>);
 
-            highAlpha = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(highAlpha * <span class="hljs-number">255</span>);
+            highAlpha = <span class="hljs-title function_">_round</span>(highAlpha * <span class="hljs-number">255</span>);
 
             f.<span class="hljs-property">highRed</span> = highRed;
             f.<span class="hljs-property">highGreen</span> = highGreen;
@@ -2819,9 +2822,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             high = (f.<span class="hljs-property">high</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">high</span> : [highRed, highGreen, highBlue, highAlpha];
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">THRESHOLD</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">level</span>: (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">128</span>,
             <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">128</span>,
@@ -2853,9 +2856,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">tiles</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">TILES</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">tileWidth</span>: (f.<span class="hljs-property">tileWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileWidth</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">tileHeight</span>: (f.<span class="hljs-property">tileHeight</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileHeight</span> : <span class="hljs-number">1</span>,
@@ -2863,8 +2866,8 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">angle</span>: (f.<span class="hljs-property">angle</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">angle</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">points</span>: (f.<span class="hljs-property">points</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">points</span> : <span class="hljs-string">&#x27;rect-grid&#x27;</span>,
-            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
+            <span class="hljs-attr">points</span>: (f.<span class="hljs-property">points</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">points</span> : <span class="hljs-variable constant_">RECT_GRID</span>,
+            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-variable constant_">DEFAULT_SEED</span>,
             <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">true</span>,
@@ -2943,9 +2946,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         }
 
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;tint-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">TINT_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             redInRed,
             redInGreen,
@@ -2974,9 +2977,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">userDefined</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;user-defined-legacy&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">USER_DEFINED_LEGACY</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
@@ -2996,9 +2999,9 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">yellow</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,

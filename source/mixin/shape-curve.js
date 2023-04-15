@@ -80,15 +80,15 @@ P.factoryKill = function () {
 
         if (art.name !== this.name) {
 
-            if (art.startControlPivot && art.startControlPivot.name === this.name) art.set({ startControlPivot: false});
-            if (art.controlPivot && art.controlPivot.name === this.name) art.set({ controlPivot: false});
-            if (art.endControlPivot && art.endControlPivot.name === this.name) art.set({ endControlPivot: false});
-            if (art.endPivot && art.endPivot.name === this.name) art.set({ endPivot: false});
+            if (art.startControlPivot && art.startControlPivot.name == this.name) art.set({ startControlPivot: false});
+            if (art.controlPivot && art.controlPivot.name == this.name) art.set({ controlPivot: false});
+            if (art.endControlPivot && art.endControlPivot.name == this.name) art.set({ endControlPivot: false});
+            if (art.endPivot && art.endPivot.name == this.name) art.set({ endPivot: false});
 
-            if (art.startControlPath && art.startControlPath.name === this.name) art.set({ startControlPath: false});
-            if (art.controlPath && art.controlPath.name === this.name) art.set({ controlPath: false});
-            if (art.endControlPath && art.endControlPath.name === this.name) art.set({ endControlPath: false});
-            if (art.endPath && art.endPath.name === this.name) art.set({ endPath: false});
+            if (art.startControlPath && art.startControlPath.name == this.name) art.set({ startControlPath: false});
+            if (art.controlPath && art.controlPath.name == this.name) art.set({ controlPath: false});
+            if (art.endControlPath && art.endControlPath.name == this.name) art.set({ endControlPath: false});
+            if (art.endPath && art.endPath.name == this.name) art.set({ endPath: false});
         }
     });
 };
@@ -198,7 +198,7 @@ P.factoryKill = function () {
     };
     D.endX = function (coord) {
 
-        let c = this.end;
+        const c = this.end;
         c[0] = addStrings(c[0], coord);
         this.updateDirty();
         this.dirtyEnd = true;
@@ -206,7 +206,7 @@ P.factoryKill = function () {
     };
     D.endY = function (coord) {
 
-        let c = this.end;
+        const c = this.end;
         c[1] = addStrings(c[1], coord);
         this.updateDirty();
         this.dirtyEnd = true;
@@ -259,8 +259,9 @@ P.factoryKill = function () {
         }
         else if (item) {
 
-            let oldControl = this[attr],
-                newControl = (item.substring) ? artefact[item] : item;
+            let oldControl = this[attr];
+            
+            let newControl = (item.substring) ? artefact[item] : item;
 
             if (attr.includes(T_PIVOT)) {
                 
@@ -429,7 +430,7 @@ P.factoryKill = function () {
 // `cleanControlLock` - internal helper function - called by `prepareStamp`
     P.cleanControlLock = function (label) {
 
-        let capLabel = capitalize(label);
+        const capLabel = capitalize(label);
 
         this[`dirty${capLabel}Lock`] = false;
         this[`dirty${capLabel}`] = true;
@@ -438,16 +439,13 @@ P.factoryKill = function () {
 // `cleanControl` - internal helper function - called by `prepareStamp`
     P.cleanControl = function (label) {
 
-        let capLabel = capitalize(label);
+        const capLabel = capitalize(label);
 
         this[`dirty${capLabel}`] = false;
 
-        let pivotLabel = `${label}Pivot`,
-            pathLabel = `${label}Path`,
-            particleLabel = `${label}Particle`,
-            pivot = this[pivotLabel],
-            path = this[pathLabel],
-            part = this[particleLabel],
+        let pivot = this[`${label}Pivot`],
+            path = this[`${label}Path`],
+            part = this[`${label}Particle`],
             art, pathData;
 
         if (pivot && pivot.substring) {
@@ -476,9 +474,9 @@ P.factoryKill = function () {
             raw = this[label],
             current = this[`current${capLabel}`];
 
-        if (lock === PIVOT && (!pivot || pivot.substring)) lock = COORD;
-        else if (lock === PATH && (!path || path.substring)) lock = COORD;
-        else if (lock === PARTICLE && (!part || part.substring)) lock = COORD;
+        if (lock == PIVOT && (!pivot || pivot.substring)) lock = COORD;
+        else if (lock == PATH && (!path || path.substring)) lock = COORD;
+        else if (lock == PARTICLE && (!part || part.substring)) lock = COORD;
 
         switch(lock) {
 
@@ -560,7 +558,7 @@ P.factoryKill = function () {
 // `getControlPathData` - internal helper function - called by `cleanControl`
     P.getControlPathData = function (path, label, capLabel) {
 
-        let checkAttribute = this[`current${capLabel}PathData`];
+        const checkAttribute = this[`current${capLabel}PathData`];
 
         if (checkAttribute) return checkAttribute;
 
@@ -572,7 +570,7 @@ P.factoryKill = function () {
         if (pathPos > 1) pathPos = pathPos % 1;
 
         pathPos = parseFloat(pathPos.toFixed(6));
-        if (pathPos !== tempPos) this[`${label}PathPosition`] = pathPos;
+        if (pathPos != tempPos) this[`${label}PathPosition`] = pathPos;
 
         if (pathData) {
 
@@ -582,15 +580,15 @@ P.factoryKill = function () {
 
         else {
 
-            let host = this.getHost();
+            const host = this.getHost();
 
             if (host) {
 
-                let dims = host.currentDimensions;
+                const dims = host.currentDimensions;
 
                 if (dims) {
 
-                    let current = this[`current${capLabel}`];
+                    const current = this[`current${capLabel}`];
 
                     this.cleanPosition(current, this[label], dims);
 
@@ -613,32 +611,34 @@ P.factoryKill = function () {
         // THIS WON'T WORK - got rid of these 'subscriber' Arrays!
         let items = [].concat(this.endSubscriber, this.endControlSubscriber, this.controlSubscriber, this.startControlSubscriber);
 
+        let sub;
+
         items.forEach(name => {
 
-            let instance = artefact[name];
+            sub = artefact[name];
 
-            if (instance) {
+            if (sub) {
 
-                if (instance.type == T_LINE || instance.type == T_QUADRATIC || instance.type == T_BEZIER) {
+                if (sub.type == T_LINE || sub.type == T_QUADRATIC || sub.type == T_BEZIER) {
 
-                    if (instance.type == T_QUADRATIC) {
+                    if (sub.type == T_QUADRATIC) {
 
-                        instance.dirtyControl = true;
-                        instance.currentControlPathData = false;
+                        sub.dirtyControl = true;
+                        sub.currentControlPathData = false;
                     }
 
-                    else if (instance.type == T_BEZIER) {
+                    else if (sub.type == T_BEZIER) {
 
-                        instance.dirtyStartControl = true;
-                        instance.dirtyEndControl = true;
-                        instance.currentStartControlPathData = false;
-                        instance.currentEndControlPathData = false;
+                        sub.dirtyStartControl = true;
+                        sub.dirtyEndControl = true;
+                        sub.currentStartControlPathData = false;
+                        sub.currentEndControlPathData = false;
                     }
-                    instance.currentEndPathData = false;
-                    instance.dirtyEnd = true;
+                    sub.currentEndPathData = false;
+                    sub.dirtyEnd = true;
                 }
-                instance.currentPathData = false;
-                instance.dirtyStart = true;
+                sub.currentPathData = false;
+                sub.dirtyStart = true;
             }
         });
     };

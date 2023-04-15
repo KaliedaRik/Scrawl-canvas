@@ -587,12 +587,11 @@
 
 <span class="hljs-keyword">const</span> displayCycleBatchProcess = <span class="hljs-keyword">function</span> (<span class="hljs-params">rootWrappers, method</span>) {
 
-    <span class="hljs-keyword">let</span> i, iz, name, item;
+    <span class="hljs-keyword">let</span> i, iz, item;
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = rootWrappers.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-        name = rootWrappers[i];
-        item = artefact[name];
+        item = artefact[rootWrappers[i]];
 
         <span class="hljs-keyword">if</span> (item &amp;&amp; item[method]) item[method]();
     }

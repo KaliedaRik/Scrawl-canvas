@@ -557,7 +557,7 @@
 
 <span class="hljs-keyword">import</span> { addNativeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { $BODY, _keys, <span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>, <span class="hljs-variable constant_">KEY_DOWN</span>, <span class="hljs-variable constant_">KEY_UP</span>, keyGroupsArray, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">T_ESCAPE</span>, <span class="hljs-variable constant_">T_TAB</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { $BODY, _keys, <span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>, <span class="hljs-variable constant_">KEY_DOWN</span>, <span class="hljs-variable constant_">KEY_UP</span>, <span class="hljs-variable constant_">KEYBOARD_GROUPS</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">T_ESCAPE</span>, <span class="hljs-variable constant_">T_TAB</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -568,21 +568,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>// Local constants
-const $BODY = ‘BODY’,
-    ACCEPTED_WRAPPERS = [‘Canvas’, ‘Stack’],
-    KEY_DOWN = ‘keydown’,
-    KEY_UP = ‘keyup’,
-    keyGroupsArray = [‘none’, ‘shiftOnly’, ‘altOnly’, ‘ctrlOnly’, ‘metaOnly’, ‘shiftAlt’, ‘shiftCtrl’, ‘shiftMeta’, ‘altCtrl’, ‘altMeta’, ‘ctrlMeta’, ‘shiftAltCtrl’, ‘shiftAltMeta’, ‘shiftCtrlMeta’, ‘altCtrlMeta’, ‘all’],
-    NONE = ‘none’,
-    T_ESCAPE = ‘Escape’,
-    T_TAB = ‘Tab’;</p>
+              <p>Local constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-
-<span class="hljs-keyword">const</span> keyboardZones = {};
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> keyboardZones = {};
 
 <span class="hljs-keyword">const</span> processKeyboardZoneData = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty, doAddListeners, doRemoveListeners</span>) {
 
@@ -636,13 +626,13 @@ const $BODY = ‘BODY’,
     <span class="hljs-keyword">if</span> (!zoneItem.<span class="hljs-property">keyGroups</span>) {
 
         <span class="hljs-keyword">const</span> groups = {};
-        keyGroupsArray.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">g</span> =&gt;</span> groups[g] = {});
+        <span class="hljs-variable constant_">KEYBOARD_GROUPS</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">g</span> =&gt;</span> groups[g] = {});
         zoneItem.<span class="hljs-property">keyGroups</span> = groups;
     }
 
     <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">KG</span> = zoneItem.<span class="hljs-property">keyGroups</span>;
 
-    keyGroupsArray.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">g</span> =&gt;</span> {
+    <span class="hljs-variable constant_">KEYBOARD_GROUPS</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">g</span> =&gt;</span> {
 
         <span class="hljs-keyword">const</span> keymap = items[g];
         <span class="hljs-keyword">if</span> (keymap != <span class="hljs-literal">null</span>) <span class="hljs-title function_">mergeDiscard</span>(<span class="hljs-variable constant_">KG</span>[g], keymap);

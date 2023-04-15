@@ -10,13 +10,15 @@ import { animationtickers } from '../core/library.js';
 
 import { convertTime, isa_fn, isa_obj, mergeOver, xt, xtGet, λnull, Ωempty } from '../core/utilities.js';
 
+import { releaseArray, requestArray } from '../factory/array-pool.js';
+
 import { FUNCTION, PC, TARGET_SECTIONS, UNKNOWN, UNNAMED, ZERO_STR } from '../core/shared-vars.js';
 
 
 // Helper function
 const locateTarget = (item) => {
 
-    if(item && item.substring){
+    if(item && item.substring) {
 
         let result;
 
@@ -78,12 +80,11 @@ export default function (P = Ωempty) {
 // #### Kill management
     P.kill = function () {
 
-        let t,
-            ticker = this.ticker;
+        const ticker = this.ticker;
 
-        if (ticker === `${this.name}_ticker`) {
+        if (ticker == `${this.name}_ticker`) {
 
-            t = animationtickers[ticker];
+            const t = animationtickers[ticker];
             
             if (t) t.kill();
         }
@@ -126,12 +127,7 @@ export default function (P = Ωempty) {
 // The ___effective time___ is the time, relative to the Tween/Action's associated Ticker timeline, when the Tween/Action will start running
     P.calculateEffectiveTime = function (item) {
 
-        let time = xtGet(item, this.time),
-            calculatedTime = convertTime(time),
-            cTime = calculatedTime[1],
-            cType = calculatedTime[0],
-            ticker, 
-            tickerDuration = 0;
+        const [cType, cTime] = convertTime(xtGet(item, this.time));
 
         this.effectiveTime = 0;
 
@@ -139,13 +135,9 @@ export default function (P = Ωempty) {
 
             if (this.ticker) {
 
-                ticker = animationtickers[this.ticker];
+                const ticker = animationtickers[this.ticker];
 
-                if (ticker) {
-
-                    tickerDuration = ticker.effectiveDuration;
-                    this.effectiveTime = tickerDuration * (cTime / 100);
-                }
+                if (ticker) this.effectiveTime = ticker.effectiveDuration * (cTime / 100);
             }
         }
         else this.effectiveTime = cTime;
@@ -156,18 +148,17 @@ export default function (P = Ωempty) {
 // `addToTicker`
     P.addToTicker = function (item) {
 
-        let tick;
-
         if (xt(item)) {
 
-            if (this.ticker && this.ticker !== item) this.removeFromTicker(this.ticker);
+            const oldT = this.ticker,
+                newT = animationtickers[item];
 
-            tick = animationtickers[item];
+            if (oldT && oldT != item) this.removeFromTicker(oldT);
 
-            if (xt(tick)) {
+            if (xt(newT)) {
 
                 this.ticker = item;
-                tick.subscribe(this.name);
+                newT.subscribe(this.name);
                 this.calculateEffectiveTime();
             }
         }
@@ -177,17 +168,15 @@ export default function (P = Ωempty) {
 // `removeFromTicker`
     P.removeFromTicker = function (item) {
 
-        let tick;
-
         item = (xt(item)) ? item : this.ticker;
 
         if (item) {
 
-            tick = animationtickers[item];
+            const tick = animationtickers[item];
 
             if (xt(tick)) {
 
-                this.ticker = '';
+                this.ticker = ZERO_STR;
                 tick.unsubscribe(this.name);
             }
         }
@@ -199,7 +188,7 @@ export default function (P = Ωempty) {
 
         items = [].concat(items);
 
-        let newTargets = [];
+        const newTargets = requestArray();
 
         items.forEach(item => {
 
@@ -210,13 +199,16 @@ export default function (P = Ωempty) {
             else if (isa_obj(item) && xt(item.name)) newTargets.push(item);
             else {
 
-                let result = locateTarget(item);
+                const result = locateTarget(item);
 
                 if (result) newTargets.push(result);
             }
         });
 
-        this.targets = newTargets;
+        if (!this.targets) this.targets = [];
+        this.targets.length = 0;
+        this.targets.push(...newTargets);
+        releaseArray(newTargets);
 
         return this;
     };
@@ -248,7 +240,7 @@ export default function (P = Ωempty) {
 
         items = [].concat(items);
 
-        let identifiers = [],
+        const identifiers = requestArray(),
             newTargets = [].concat(this.targets);
 
         newTargets.forEach(target => {
@@ -281,11 +273,13 @@ export default function (P = Ωempty) {
             }
         });
 
-        this.targets = [];
+        if (!this.targets) this.targets = [];
+        const t = this.targets;
+        t.length = 0;
 
         newTargets.forEach(target => {
 
-            if (target) this.targets.push(target);
+            if (target) t.push(target);
         }, this);
 
         return this;
@@ -296,7 +290,7 @@ export default function (P = Ωempty) {
 
         if (!item.substring) return false;
 
-        return this.targets.some(t => t.name === item);
+        return this.targets.some(t => t.name == item);
     };
 
     P.run = λnull;

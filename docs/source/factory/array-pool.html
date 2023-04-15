@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Coordinate factory</title>
+  <title>Array pools</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -539,8 +539,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="coordinate-factory">Coordinate factory</h1>
-<p>Scrawl-canvas uses Coordinate Arrays extensively throughout the code base - in particular to hold artefact coordinate [x, y] and dimensional [w, h] data. The Coordinate factory does not care whether these values are presented as Numbers or Strings (or a mixture of both) - it leaves such functionality to other mixins (in particular the <a href="../mixin/position.html">position</a>, <a href="../mixin/dom.html">dom</a> and <a href="../mixin/entity.html">entity</a> mixins) and factories.</p>
+              <h1 id="array-pools">Array pools</h1>
+<p>Used internally to minimise the number of Array objects created/disposed during operations</p>
 
             </div>
             
@@ -559,9 +559,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { isa_number, xt } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { _atan2, _cos, _create, _hypot, _isArray, _seal, _setPrototypeOf, _sin, <span class="hljs-variable constant_">T_COORDINATE</span>, <span class="hljs-variable constant_">T_QUATERNION</span>, <span class="hljs-variable constant_">T_VECTOR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _create, _setPrototypeOf, <span class="hljs-variable constant_">T_GENERIC_ARRAY</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -572,21 +570,18 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="coordinate-constructor">Coordinate constructor</h4>
+              <h4 id="genericarray-constructor">GenericArray constructor</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Coordinate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">GenericArray</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> coords = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
+    <span class="hljs-keyword">const</span> a = [];
+    <span class="hljs-title function_">_setPrototypeOf</span>(a, <span class="hljs-title class_">GenericArray</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+    <span class="hljs-keyword">return</span> a;
+};
 
-    <span class="hljs-title function_">_setPrototypeOf</span>(coords, <span class="hljs-title class_">Coordinate</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-    <span class="hljs-title function_">_seal</span>(coords);
-
-    <span class="hljs-keyword">if</span> (items) coords.<span class="hljs-title function_">set</span>(items, y);
-
-    <span class="hljs-keyword">return</span> coords;
-};</pre></div></div>
+constructors.<span class="hljs-property">GenericArray</span> = <span class="hljs-title class_">GenericArray</span>;</pre></div></div>
             
         </li>
         
@@ -597,13 +592,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <h4 id="coordinate-prototype">Coordinate prototype</h4>
+              <h4 id="genericarray-prototype">GenericArray prototype</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">Coordinate</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">_create</span>(<span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
-P.<span class="hljs-property">constructor</span> = <span class="hljs-title class_">Coordinate</span>;
-P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_COORDINATE</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">GenericArray</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">_create</span>(<span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">constructor</span> = <span class="hljs-title class_">GenericArray</span>;
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_GENERIC_ARRAY</span>;</pre></div></div>
             
         </li>
         
@@ -614,459 +609,29 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <h4 id="mixins">Mixins</h4>
-<p>Coordinate Arrays do not use mixins - they are regular Javascript Arrays. As such, they do not possess packet, clone or kill functionality.</p>
+              <h4 id="genericarray-pool">GenericArray pool</h4>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <h4 id="coordinate-attributes">Coordinate attributes</h4>
-<p>There are no attributes. The constructor returns an Array containing two members, whose prototype object includes functions for manipulating those members in various ways.</p>
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">const</span> genericArrayPool = [];
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
-<p>The Array members can be set using a <code>set</code> function, which is overloaded as follows:</p>
-<ul>
-<li><code>mycoordinate.set(Coordinate)</code> - use another Coordinate Array to set this Coordinate members’ values</li>
-<li><code>mycoordinate.set(Array)</code> -  - use a Javascript Array to set this Coordinate members’ values</li>
-<li><code>mycoordinate.set(Quaternion)</code> - use a Quaternion object (specifically, its <strong>v</strong> Vector object attribute) to set this Coordinate members’ values</li>
-<li><code>mycoordinate.set(Vector)</code> - use a Vector object to set this Coordinate members’ values</li>
-<li><code>mycoordinate.set(a:Number|String, b:Number|String)</code> - supply two arguments to the function</li>
-</ul>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestArray = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">set</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) {
+    <span class="hljs-keyword">if</span> (!genericArrayPool.<span class="hljs-property">length</span>) genericArrayPool.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">GenericArray</span>());
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(items)) {
-
-        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_COORDINATE</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromArray</span>(items);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_VECTOR</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromVector</span>(items);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_QUATERNION</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromVector</span>(items.<span class="hljs-property">v</span>);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(items)) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromArray</span>(items);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(y)) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromArray</span>([items, y]);
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">return</span> genericArrayPool.<span class="hljs-title function_">shift</span>();
 };
 
-P.<span class="hljs-property">setFromArray</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> releaseArray = <span class="hljs-keyword">function</span> (<span class="hljs-params">a</span>) {
 
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] = item[<span class="hljs-number">0</span>];
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] = item[<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">if</span> (a &amp;&amp; a.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_GENERIC_ARRAY</span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};
-
-P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] = item.<span class="hljs-property">x</span>;
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] = item.<span class="hljs-property">y</span>;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
-<p>Set the Coordinate array to <code>[0, 0]</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">zero</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>Add a Vector object’s <strong>x</strong> and <strong>y</strong> attributes to the Coordinate members’ values</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">vectorAdd</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] += item.<span class="hljs-property">x</span>;
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] += item.<span class="hljs-property">y</span>;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>Subtract a Vector object’s <strong>x</strong> and <strong>y</strong> attributes from the Coordinate members’ values</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">vectorSubtract</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] -= item.<span class="hljs-property">x</span>;
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] -= item.<span class="hljs-property">y</span>;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p>Array addition - argument is a <code>[Number, Number]</code> Array</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">add</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] += item[<span class="hljs-number">0</span>];
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] += item[<span class="hljs-number">1</span>];
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p>Array subtraction - argument is a <code>[Number, Number]</code> Array</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">subtract</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] -= item[<span class="hljs-number">0</span>];
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] -= item[<span class="hljs-number">1</span>];
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <p>Array multiplication - argument is a <code>[Number, Number]</code> Array</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">multiply</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] *= item[<span class="hljs-number">0</span>];
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] *= item[<span class="hljs-number">1</span>];
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>Array division - argument is a <code>[Number, Number]</code> Array</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">divide</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">let</span> [x, y] = item;
-
-    <span class="hljs-keyword">if</span> (x &amp;&amp; y) {
-
-        <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] /= x;
-        <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] /= y;
+        a.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        genericArrayPool.<span class="hljs-title function_">push</span>(a);
+        <span class="hljs-keyword">if</span> (genericArrayPool.<span class="hljs-property">length</span> &gt; <span class="hljs-number">10</span>) <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;genericArrayPool length&#x27;</span>, genericArrayPool.<span class="hljs-property">length</span>);
     }
-
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p>Multiply both Coordinate Array members by the argument Number</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">scalarMultiply</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] *= item;
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] *= item;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p>Divide both Coordinate Array members by the argument Number</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">scalarDivide</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">toFixed</span>) {
-
-        <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] /= item;
-        <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] /= item;
-    }
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p>Get the Array’s <strong>magnitude</strong> value (treating the Coordinate as if it was a 2D vector)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getMagnitude</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">return</span> <span class="hljs-title function_">_hypot</span>(<span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>], <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>]);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>Rotate the Coordinate by the argument number (treating the Coordinate as if it was a 2D vector) - the argument represents degrees, not radians</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">rotate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">angle</span>) {
-
-    <span class="hljs-keyword">let</span> x = <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>],
-        y = <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>],
-        r0, r1;
-
-    r0 = <span class="hljs-title function_">_atan2</span>(y, x);
-    r0 += (angle * <span class="hljs-number">0.01745329251</span>);
-    r1 = <span class="hljs-title function_">_hypot</span>(x, y);
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] = r1 * <span class="hljs-title function_">_cos</span>(r0);
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] = r1 * <span class="hljs-title function_">_sin</span>(r0);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>Reverse the numerical sign on each of the Array’s members</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">reverse</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] = -<span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>];
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] = -<span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>];
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>Get the Array’s <strong>dot product</strong> value (treating the Coordinate as if it was a 2D vector)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getDotProduct</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
-
-    <span class="hljs-keyword">return</span> (<span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] * coord[<span class="hljs-number">0</span>]) + (<span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] * coord[<span class="hljs-number">1</span>]);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p><strong>Normalize</strong> the Array’s members (treating the Coordinate as if it was a 2D vector)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">normalize</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
-    
-    <span class="hljs-keyword">let</span> val = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMagnitude</span>();
-    
-    <span class="hljs-keyword">if</span> (val &gt; <span class="hljs-number">0</span>) {
-        <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] /= val;
-        <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] /= val;
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <h4 id="coordinate-pool">Coordinate pool</h4>
-<p>An attempt to reuse coordinates rather than constantly creating and deleting them</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> coordinatePool = [];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <p><code>exported function</code> - retrieve a Coordinate from the coordinate pool</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestCoordinate = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) {
-
-    <span class="hljs-keyword">if</span> (!coordinatePool.<span class="hljs-property">length</span>) coordinatePool.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Coordinate</span>());
-
-    <span class="hljs-keyword">let</span> c = coordinatePool.<span class="hljs-title function_">shift</span>();
-    c.<span class="hljs-title function_">set</span>(items, y);
-    <span class="hljs-keyword">return</span> c
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <p><code>exported function</code> - return a Coordinate to the coordinate pool. Failing to return Coordinates to the pool may lead to more inefficient code and possible memory leaks.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> releaseCoordinate = <span class="hljs-keyword">function</span> (<span class="hljs-params">c</span>) {
-
-    <span class="hljs-keyword">if</span> (c &amp;&amp; c.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_COORDINATE</span>) coordinatePool.<span class="hljs-title function_">push</span>(c.<span class="hljs-title function_">zero</span>());
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
-              <h4 id="factory">Factory</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeCoordinate = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) {
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Coordinate</span>(items, y);
-};
-
-constructors.<span class="hljs-property">Coordinate</span> = <span class="hljs-title class_">Coordinate</span>;</pre></div></div>
             
         </li>
         

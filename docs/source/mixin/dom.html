@@ -1289,23 +1289,23 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">updateDomAttributes</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">attr, value</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">updateDomAttributes</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">key, val</span>) {
 
         <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
         <span class="hljs-keyword">if</span> (el) {
 
-            <span class="hljs-keyword">if</span> (attr.<span class="hljs-property">substring</span> &amp;&amp; <span class="hljs-title function_">xt</span>(value)) {
+            <span class="hljs-keyword">if</span> (key.<span class="hljs-property">substring</span> &amp;&amp; <span class="hljs-title function_">xt</span>(val)) {
 
-                <span class="hljs-keyword">if</span> (value) el.<span class="hljs-title function_">setAttribute</span>(attr, value);
-                <span class="hljs-keyword">else</span> el.<span class="hljs-title function_">removeAttribute</span>(attr);
+                <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(val)) el.<span class="hljs-title function_">setAttribute</span>(key, val);
+                <span class="hljs-keyword">else</span> el.<span class="hljs-title function_">removeAttribute</span>(key);
             }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(attr)) {
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(key)) {
 
-                <span class="hljs-title function_">_entries</span>(attr).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[key, val]</span>) =&gt;</span> {
+                <span class="hljs-title function_">_entries</span>(key).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[k, v]</span>) =&gt;</span> {
 
-                    <span class="hljs-keyword">if</span> (val) el.<span class="hljs-title function_">setAttribute</span>(key, val);
-                    <span class="hljs-keyword">else</span> el.<span class="hljs-title function_">removeAttribute</span>(key);
+                    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(v)) el.<span class="hljs-title function_">setAttribute</span>(k, v);
+                    <span class="hljs-keyword">else</span> el.<span class="hljs-title function_">removeAttribute</span>(k);
                 });
             }
         }
@@ -1331,25 +1331,17 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">initializeDomLayout</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-        <span class="hljs-keyword">const</span> el = items.<span class="hljs-property">domElement</span>,
-            style = el.<span class="hljs-property">style</span>;
+        <span class="hljs-keyword">const</span> el = items.<span class="hljs-property">domElement</span>;
 
-        style.<span class="hljs-property">boxSizing</span> = <span class="hljs-variable constant_">BORDER_BOX</span>;
+        <span class="hljs-keyword">if</span> (el) {
+            
+            <span class="hljs-keyword">const</span> style = el.<span class="hljs-property">style</span>;
 
-        <span class="hljs-keyword">if</span> (el &amp;&amp; items.<span class="hljs-property">setInitialDimensions</span>) {
+            style.<span class="hljs-property">boxSizing</span> = <span class="hljs-variable constant_">BORDER_BOX</span>;
 
-            <span class="hljs-keyword">const</span> dims = el.<span class="hljs-title function_">getBoundingClientRect</span>();
-            <span class="hljs-keyword">let</span> host = <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">setInitialDimensions</span>) {
 
-            <span class="hljs-keyword">const</span> trans = style.<span class="hljs-property">transform</span>,
-                transOrigin = style.<span class="hljs-property">transformOrigin</span>;
-                
-            <span class="hljs-keyword">if</span> (items &amp;&amp; items.<span class="hljs-property">host</span>) {
-
-                host = items.<span class="hljs-property">host</span>;
-
-                <span class="hljs-keyword">if</span> (host.<span class="hljs-property">substring</span> &amp;&amp; artefact[host]) host = artefact[host];
-            }</pre></div></div>
+                <span class="hljs-keyword">const</span> dims = el.<span class="hljs-title function_">getBoundingClientRect</span>();</pre></div></div>
             
         </li>
         
@@ -1377,10 +1369,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">0</span>] = dims.<span class="hljs-property">width</span>;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">1</span>] = dims.<span class="hljs-property">height</span>;
-            items.<span class="hljs-property">width</span> = dims.<span class="hljs-property">width</span>;
-            items.<span class="hljs-property">height</span> = dims.<span class="hljs-property">height</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">0</span>] = dims.<span class="hljs-property">width</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">1</span>] = dims.<span class="hljs-property">height</span>;
+                items.<span class="hljs-property">width</span> = dims.<span class="hljs-property">width</span>;
+                items.<span class="hljs-property">height</span> = dims.<span class="hljs-property">height</span>;</pre></div></div>
             
         </li>
         
@@ -1395,7 +1387,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (el.<span class="hljs-property">className</span>) items.<span class="hljs-property">classes</span> = el.<span class="hljs-property">className</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (el.<span class="hljs-property">className</span>) items.<span class="hljs-property">classes</span> = el.<span class="hljs-property">className</span>;</pre></div></div>
             
         </li>
         
@@ -1423,16 +1415,25 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">domElement</span>) {
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">let</span> host = <span class="hljs-literal">false</span>;
 
-                <span class="hljs-keyword">const</span> hostDims = host.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">getBoundingClientRect</span>();
+                <span class="hljs-keyword">if</span> (items &amp;&amp; items.<span class="hljs-property">host</span>) {
 
-                <span class="hljs-keyword">if</span> (hostDims) {
+                    host = items.<span class="hljs-property">host</span>;
 
-                    items.<span class="hljs-property">startX</span> = dims.<span class="hljs-property">left</span> - hostDims.<span class="hljs-property">left</span>;
-                    items.<span class="hljs-property">startY</span> = dims.<span class="hljs-property">top</span> - hostDims.<span class="hljs-property">top</span>;
+                    <span class="hljs-keyword">if</span> (host.<span class="hljs-property">substring</span> &amp;&amp; artefact[host]) host = artefact[host];
                 }
-            }</pre></div></div>
+
+                <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">domElement</span>) {
+
+                    <span class="hljs-keyword">const</span> hostDims = host.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">getBoundingClientRect</span>();
+
+                    <span class="hljs-keyword">if</span> (hostDims) {
+
+                        items.<span class="hljs-property">startX</span> = dims.<span class="hljs-property">left</span> - hostDims.<span class="hljs-property">left</span>;
+                        items.<span class="hljs-property">startY</span> = dims.<span class="hljs-property">top</span> - hostDims.<span class="hljs-property">top</span>;
+                    }
+                }</pre></div></div>
             
         </li>
         
@@ -1460,6 +1461,8 @@
 
             </div>
             
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> { transform, transformOrigin } = style;</pre></div></div>
+            
         </li>
         
         
@@ -1486,7 +1489,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_STACK</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_STACK</span>) {
+
+                    <span class="hljs-keyword">const</span> pStyle = <span class="hljs-built_in">parseFloat</span>(style.<span class="hljs-property">perspective</span>);
+                    <span class="hljs-keyword">const</span> {perspective, perspectiveX, perspectiveY, perspectiveZ} = items;</pre></div></div>
             
         </li>
         
@@ -1501,7 +1507,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">perspective</span>) &amp;&amp; !<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">perspectiveZ</span>)) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(perspective, perspectiveZ)) {</pre></div></div>
             
         </li>
         
@@ -1519,21 +1525,17 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    items.<span class="hljs-property">perspectiveZ</span> = (<span class="hljs-title function_">xt</span>(style.<span class="hljs-property">perspective</span>) &amp;&amp; style.<span class="hljs-property">perspective</span>) ? <span class="hljs-built_in">parseFloat</span>(style.<span class="hljs-property">perspective</span>) : <span class="hljs-number">0</span>;
-                }
+            <div class="content"><div class='highlight'><pre>                        items.<span class="hljs-property">perspectiveZ</span> = (!<span class="hljs-built_in">isNaN</span>(pStyle)) ? pStyle : <span class="hljs-number">0</span>;
+                    }
 
-                <span class="hljs-keyword">let</span> perspectiveOrigin = style.<span class="hljs-property">perspectiveOrigin</span>;
+                    <span class="hljs-keyword">const</span> pOrigin = style.<span class="hljs-property">perspectiveOrigin</span>;
 
-                <span class="hljs-keyword">if</span> (perspectiveOrigin.<span class="hljs-property">length</span>) {
+                    <span class="hljs-keyword">if</span> (pOrigin.<span class="hljs-property">length</span>) {
 
-                    perspectiveOrigin = perspectiveOrigin.<span class="hljs-title function_">split</span>(<span class="hljs-variable constant_">SPACE</span>);
+                        <span class="hljs-keyword">const</span> [pX, pY] = pOrigin.<span class="hljs-title function_">split</span>(<span class="hljs-variable constant_">SPACE</span>);
 
-                    <span class="hljs-keyword">if</span> (perspectiveOrigin.<span class="hljs-property">length</span> &gt; <span class="hljs-number">0</span> &amp;&amp; !<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">perspective</span>) &amp;&amp; !<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">perspectiveX</span>)) items.<span class="hljs-property">perspectiveX</span> = perspectiveOrigin[<span class="hljs-number">0</span>];
-
-                    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">perspective</span>) &amp;&amp; !<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">perspectiveY</span>)) {
-
-                        <span class="hljs-keyword">if</span> (perspectiveOrigin.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>) items.<span class="hljs-property">perspectiveY</span> = perspectiveOrigin[<span class="hljs-number">1</span>];
-                        <span class="hljs-keyword">else</span> items.<span class="hljs-property">perspectiveY</span> = perspectiveOrigin[<span class="hljs-number">0</span>];
+                        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(perspective, perspectiveX)) items.<span class="hljs-property">perspectiveX</span> = pX;
+                        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(perspective, perspectiveY)) items.<span class="hljs-property">perspectiveY</span> = pY;
                     }
                 }
             }
@@ -1570,11 +1572,7 @@
 
         <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
-            <span class="hljs-keyword">let</span> classes = <span class="hljs-variable language_">this</span>.<span class="hljs-property">classes</span>;
-
-            classes += <span class="hljs-string">` <span class="hljs-subst">${item}</span>`</span>;
-            classes = classes.<span class="hljs-title function_">trim</span>();
-            classes = classes.<span class="hljs-title function_">replace</span>(<span class="hljs-variable constant_">CLASS_REGEX</span>, <span class="hljs-variable constant_">SPACE</span>);
+            <span class="hljs-keyword">const</span> classes = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.classes}</span>  <span class="hljs-subst">${item}</span>`</span>.<span class="hljs-title function_">trim</span>().<span class="hljs-title function_">replace</span>(<span class="hljs-variable constant_">CLASS_REGEX</span>, <span class="hljs-variable constant_">SPACE</span>);
 
             <span class="hljs-keyword">if</span> (classes !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">classes</span>) {
 
@@ -1726,7 +1724,7 @@
 
         <span class="hljs-keyword">const</span> pathCorners = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCorners</span>;
 
-        <span class="hljs-keyword">if</span> (pathCorners.<span class="hljs-property">length</span> === <span class="hljs-number">4</span>) {
+        <span class="hljs-keyword">if</span> (pathCorners.<span class="hljs-property">length</span> == <span class="hljs-number">4</span>) {
 
             <span class="hljs-keyword">const</span> here = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHere</span>(),
                 x = currentCorePosition.<span class="hljs-property">scrollX</span> - (here.<span class="hljs-property">offsetX</span> || <span class="hljs-number">0</span>),
