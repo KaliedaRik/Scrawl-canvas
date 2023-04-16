@@ -44,7 +44,7 @@ import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { releaseVector, requestVector } from './vector.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from './array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';

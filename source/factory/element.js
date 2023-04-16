@@ -50,7 +50,7 @@ import { _computed, ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT
 // #### Element constructor
 const Element = function (items = Ωempty) {
     
-    let el = items.domElement;
+    const el = items.domElement;
 
     this.makeName(items.name);
     this.register();
@@ -77,9 +77,9 @@ const Element = function (items = Ωempty) {
 
     this.set(items);
 
-    el = this.domElement;
+    const myEl = this.domElement;
 
-    if (el) el.id = this.name;
+    if (myEl) myEl.id = this.name;
 
     this.apply();
     
@@ -141,14 +141,15 @@ const S = P.setters;
 // When we update the DOM attribute `element.textContent`, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its 'kids' after updating the text
 S.text = function (item) {
 
-    if (isa_dom(this.domElement)) {
+    const el = this.domElement;
 
-        const el = this.domElement,
-            kids = el.querySelectorAll(CORNER_SELECTOR);
+    if (isa_dom(el)) {
+
+        const corners = el.querySelectorAll(CORNER_SELECTOR);
 
         el.textContent = item;
 
-        kids.forEach(kid => el.appendChild(kid));
+        corners.forEach(c => el.appendChild(c));
 
         this.dirtyContent = true;
     }
@@ -160,14 +161,15 @@ S.text = function (item) {
 // When we update the DOM attribute `element.innerHTML`, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its 'kids' after updating the text
 S.content = function (item) {
 
-    if (this.domElement) {
+    const el = this.domElement;
 
-        const el = this.domElement,
-            kids = el.querySelectorAll(CORNER_SELECTOR);
+    if (isa_dom(el)) {
+
+        const corners = el.querySelectorAll(CORNER_SELECTOR);
 
         el.innerHTML = item;
 
-        kids.forEach(kid => el.appendChild(kid));
+        corners.forEach(c => el.appendChild(c));
 
         this.dirtyContent = true;
     }

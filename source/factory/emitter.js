@@ -674,7 +674,7 @@ P.addParticles = function (req) {
         const len = particleStore.length,
             res = requestVector();
 
-        let v, r, parent, history, ignore1, ignore2, startval;
+        let r, parent, history, ignore1, ignore2, startval;
 
         for (i = 0; i < req; i++) {
 
@@ -750,7 +750,7 @@ P.addParticles = function (req) {
         let len = particleStore.length,
             res = requestVector();
 
-        let v, r, parent;
+        let r, parent;
 
         for (i = 0; i < req; i++) {
 

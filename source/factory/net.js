@@ -324,10 +324,11 @@ S.shapeTemplate = function (item) {
 // `regularStamp` - overwriters the functionality defined in the entity.js mixin
 P.regularStamp = function () {
 
-    let {world, artefact:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = this;
+    const {world, artefact:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = this;
 
     let globalAlpha = 1,
-        globalCompositeOperation = SOURCE_OVER;
+        globalCompositeOperation = SOURCE_OVER,
+        particleFrom, particleTo;
 
     if (this.state) {
         globalAlpha = this.state.globalAlpha;
@@ -383,7 +384,7 @@ P.regularStamp = function () {
 
         springs.forEach(s => {
 
-            let {particleFrom, particleTo} = s;
+            ({particleFrom, particleTo} = s);
 
             engine.moveTo(particleFrom.position.x, particleFrom.position.y);
             engine.lineTo(particleTo.position.x, particleTo.position.y);
@@ -544,13 +545,41 @@ P.dropArtefact = function () {
 
 
 // #### Pre-defined Net generators
+
+// `springMaker` - internal helper function to generate the entity's Spring objects
+const springMaker = function (particleFrom, particleTo, springName) {
+
+    const { springs, springConstant, damperConstant, restLength } = this;
+
+    let v, l, s;
+
+    v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
+    l = v.getMagnitude();
+
+    s = makeSpring({
+
+        name: springName,
+
+        particleFrom,
+        particleTo,
+
+        springConstant, 
+        damperConstant,
+
+        restLength: l * restLength,
+    });
+
+    springs.push(s);
+    releaseVector(v);
+};
+
 const generators = {
 
     // `weak-net` - a net made up of rows and columns, with particles at each row/column intersection. The generator will connect each Particle with springs to up to four of its closest horizontal and vertical neighbors
     // + Can be used to model cloth
     [WEAK_NET]: function (host) {
 
-        let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
+        const { particleStore, artefact:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name } = this;
 
         if (host && rows > 0 && columns > 0) {
 
@@ -599,30 +628,6 @@ const generators = {
                 }
             }
 
-            const springMaker = function (particleFrom, particleTo, springName) {
-
-                let v, l, s;
-
-                v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
-                l = v.getMagnitude();
-
-                s = makeSpring({
-
-                    name: springName,
-
-                    particleFrom,
-                    particleTo,
-
-                    springConstant, 
-                    damperConstant,
-
-                    restLength: l * restLength,
-                });
-
-                springs.push(s);
-                releaseVector(v);
-            };
-
             let f, t;
 
             // generate springs
@@ -632,7 +637,7 @@ const generators = {
 
                     f = particle[`${name}-${i}-${j}`];
                     t = particle[`${name}-${i}-${j + 1}`];
-                    springMaker(f, t, `${name}-${i}-${j}~${name}-${i}-${j + 1}`);
+                    springMaker.call(this, f, t, `${name}-${i}-${j}~${name}-${i}-${j + 1}`);
                 }
             }
 
@@ -642,7 +647,7 @@ const generators = {
 
                     f = particle[`${name}-${j}-${i}`];
                     t = particle[`${name}-${j + 1}-${i}`];
-                    springMaker(f, t, `${name}-${j}-${i}~${name}-${j + 1}-${i}`);
+                    springMaker.call(this, f, t, `${name}-${j}-${i}~${name}-${j + 1}-${i}`);
                 }
             }
         }
@@ -652,7 +657,7 @@ const generators = {
     // + Can be used to model a soft-bodied object
     [STRONG_NET]: function (host) {
 
-        let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
+        const { particleStore, artefact:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name } = this;
 
         if (host && rows > 0 && columns > 0) {
 
@@ -701,30 +706,6 @@ const generators = {
                 }
             }
 
-            const springMaker = function (particleFrom, particleTo, springName) {
-
-                let v, l, s;
-
-                v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
-                l = v.getMagnitude();
-
-                s = makeSpring({
-
-                    name: springName,
-
-                    particleFrom,
-                    particleTo,
-
-                    springConstant, 
-                    damperConstant,
-
-                    restLength: l * restLength,
-                });
-
-                springs.push(s);
-                releaseVector(v);
-            };
-
             let f, t;
 
             // generate springs
@@ -734,7 +715,7 @@ const generators = {
 
                     f = particle[`${name}-${i}-${j}`];
                     t = particle[`${name}-${i}-${j + 1}`];
-                    springMaker(f, t, `${name}-${i}-${j}~${name}-${i}-${j + 1}`);
+                    springMaker.call(this, f, t, `${name}-${i}-${j}~${name}-${i}-${j + 1}`);
                 }
             }
 
@@ -744,7 +725,7 @@ const generators = {
 
                     f = particle[`${name}-${j}-${i}`];
                     t = particle[`${name}-${j + 1}-${i}`];
-                    springMaker(f, t, `${name}-${j}-${i}~${name}-${j + 1}-${i}`);
+                    springMaker.call(this, f, t, `${name}-${j}-${i}~${name}-${j + 1}-${i}`);
                 }
             }
 
@@ -754,7 +735,7 @@ const generators = {
 
                     f = particle[`${name}-${j}-${i}`];
                     t = particle[`${name}-${j + 1}-${i + 1}`];
-                    springMaker(f, t, `${name}-${j}-${i}~${name}-${j + 1}-${i + 1}`);
+                    springMaker.call(this, f, t, `${name}-${j}-${i}~${name}-${j + 1}-${i + 1}`);
                 }
             }
 
@@ -764,7 +745,7 @@ const generators = {
 
                     f = particle[`${name}-${j}-${i}`];
                     t = particle[`${name}-${j - 1}-${i + 1}`];
-                    springMaker(f, t, `${name}-${j}-${i}~${name}-${j - 1}-${i + 1}`);
+                    springMaker.call(this, f, t, `${name}-${j}-${i}~${name}-${j - 1}-${i + 1}`);
                 }
             }
         }
@@ -773,31 +754,7 @@ const generators = {
     // `weak-shape` - __Warning: not very stable!__ - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors
     [WEAK_SHAPE]: function (host) {
 
-        let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = this;
-
-        const springMaker = function (particleFrom, particleTo, springName) {
-
-            let v, l, s;
-
-            v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
-            l = v.getMagnitude();
-
-            s = makeSpring({
-
-                name: springName,
-
-                particleFrom,
-                particleTo,
-
-                springConstant, 
-                damperConstant,
-
-                restLength: l * restLength,
-            });
-
-            springs.push(s);
-            releaseVector(v);
-        };
+        const { particleStore, artefact:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name, shapeTemplate, precision, joinTemplateEnds } = this;
 
         let i, p, f, t;
 
@@ -838,54 +795,54 @@ const generators = {
 
                 f = particle[`${name}-${i}`];
                 t = particle[`${name}-${i + 1}`];
-                springMaker(f, t, `${name}-${i}~${name}-${i + 1}`);
+                springMaker.call(this, f, t, `${name}-${i}~${name}-${i + 1}`);
             }
 
             if (joinTemplateEnds) {
 
                 f = particle[`${name}-${precision - 1}`];
                 t = particle[`${name}-${0}`];
-                springMaker(f, t, `${name}-${precision - 1}~${name}-${0}`);
+                springMaker.call(this, f, t, `${name}-${precision - 1}~${name}-${0}`);
             }
 
             for (i = 0; i < precision - 2; i++) {
 
                 f = particle[`${name}-${i}`];
                 t = particle[`${name}-${i + 2}`];
-                springMaker(f, t, `${name}-${i}~${name}-${i + 2}`);
+                springMaker.call(this, f, t, `${name}-${i}~${name}-${i + 2}`);
             }
 
             if (joinTemplateEnds) {
 
                 f = particle[`${name}-${precision - 2}`];
                 t = particle[`${name}-${0}`];
-                springMaker(f, t, `${name}-${precision - 2}~${name}-${0}`);
+                springMaker.call(this, f, t, `${name}-${precision - 2}~${name}-${0}`);
 
                 f = particle[`${name}-${precision - 1}`];
                 t = particle[`${name}-${1}`];
-                springMaker(f, t, `${name}-${precision - 1}~${name}-${1}`);
+                springMaker.call(this, f, t, `${name}-${precision - 1}~${name}-${1}`);
             }
 
             for (i = 0; i < precision - 3; i++) {
 
                 f = particle[`${name}-${i}`];
                 t = particle[`${name}-${i + 3}`];
-                springMaker(f, t, `${name}-${i}~${name}-${i + 3}`);
+                springMaker.call(this, f, t, `${name}-${i}~${name}-${i + 3}`);
             }
 
             if (joinTemplateEnds) {
 
                 f = particle[`${name}-${precision - 3}`];
                 t = particle[`${name}-${0}`];
-                springMaker(f, t, `${name}-${precision - 3}~${name}-${0}`);
+                springMaker.call(this, f, t, `${name}-${precision - 3}~${name}-${0}`);
 
                 f = particle[`${name}-${precision - 2}`];
                 t = particle[`${name}-${1}`];
-                springMaker(f, t, `${name}-${precision - 2}~${name}-${1}`);
+                springMaker.call(this, f, t, `${name}-${precision - 2}~${name}-${1}`);
 
                 f = particle[`${name}-${precision - 1}`];
                 t = particle[`${name}-${2}`];
-                springMaker(f, t, `${name}-${precision - 1}~${name}-${2}`);
+                springMaker.call(this, f, t, `${name}-${precision - 1}~${name}-${2}`);
             }
         }
     },
@@ -893,31 +850,7 @@ const generators = {
     // `strong-shape` - __Warning: generally unstable!__ - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors, and make an additional connection with a Particle at some distance from it (to act as a strut)
     [STRONG_SHAPE]: function (host) {
 
-        let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = this;
-
-        const springMaker = function (particleFrom, particleTo, springName) {
-
-            let v, l, s;
-
-            v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
-            l = v.getMagnitude();
-
-            s = makeSpring({
-
-                name: springName,
-
-                particleFrom,
-                particleTo,
-
-                springConstant, 
-                damperConstant,
-
-                restLength: l * restLength,
-            });
-
-            springs.push(s);
-            releaseVector(v);
-        };
+        const { particleStore, artefact:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name, shapeTemplate, precision, joinTemplateEnds } = this;
 
         let i, p, f, t;
 
@@ -958,54 +891,54 @@ const generators = {
 
                 f = particle[`${name}-${i}`];
                 t = particle[`${name}-${i + 1}`];
-                springMaker(f, t, `${name}-${i}~${name}-${i + 1}`);
+                springMaker.call(this, f, t, `${name}-${i}~${name}-${i + 1}`);
             }
 
             if (joinTemplateEnds) {
 
                 f = particle[`${name}-${precision - 1}`];
                 t = particle[`${name}-${0}`];
-                springMaker(f, t, `${name}-${precision - 1}~${name}-${0}`);
+                springMaker.call(this, f, t, `${name}-${precision - 1}~${name}-${0}`);
             }
 
             for (i = 0; i < precision - 2; i++) {
 
                 f = particle[`${name}-${i}`];
                 t = particle[`${name}-${i + 2}`];
-                springMaker(f, t, `${name}-${i}~${name}-${i + 2}`);
+                springMaker.call(this, f, t, `${name}-${i}~${name}-${i + 2}`);
             }
 
             if (joinTemplateEnds) {
 
                 f = particle[`${name}-${precision - 2}`];
                 t = particle[`${name}-${0}`];
-                springMaker(f, t, `${name}-${precision - 2}~${name}-${0}`);
+                springMaker.call(this, f, t, `${name}-${precision - 2}~${name}-${0}`);
 
                 f = particle[`${name}-${precision - 1}`];
                 t = particle[`${name}-${1}`];
-                springMaker(f, t, `${name}-${precision - 1}~${name}-${1}`);
+                springMaker.call(this, f, t, `${name}-${precision - 1}~${name}-${1}`);
             }
 
             for (i = 0; i < precision - 3; i++) {
 
                 f = particle[`${name}-${i}`];
                 t = particle[`${name}-${i + 3}`];
-                springMaker(f, t, `${name}-${i}~${name}-${i + 3}`);
+                springMaker.call(this, f, t, `${name}-${i}~${name}-${i + 3}`);
             }
 
             if (joinTemplateEnds) {
 
                 f = particle[`${name}-${precision - 3}`];
                 t = particle[`${name}-${0}`];
-                springMaker(f, t, `${name}-${precision - 3}~${name}-${0}`);
+                springMaker.call(this, f, t, `${name}-${precision - 3}~${name}-${0}`);
 
                 f = particle[`${name}-${precision - 2}`];
                 t = particle[`${name}-${1}`];
-                springMaker(f, t, `${name}-${precision - 2}~${name}-${1}`);
+                springMaker.call(this, f, t, `${name}-${precision - 2}~${name}-${1}`);
 
                 f = particle[`${name}-${precision - 1}`];
                 t = particle[`${name}-${2}`];
-                springMaker(f, t, `${name}-${precision - 1}~${name}-${2}`);
+                springMaker.call(this, f, t, `${name}-${precision - 1}~${name}-${2}`);
             }
 
             let halfPrecision = _floor(precision / 2);
@@ -1017,7 +950,7 @@ const generators = {
                 if (i + halfPrecision < precision - 1) {
 
                     t = particle[`${name}-${i + halfPrecision}`];
-                    springMaker(f, t, `${name}-${i}~${name}-${i + halfPrecision}`);
+                    springMaker.call(this, f, t, `${name}-${i}~${name}-${i + halfPrecision}`);
                 }
             }
         }
@@ -1030,31 +963,7 @@ const generators = {
 
         if (shapeTemplate && shapeTemplate.type && precision) {
 
-            let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, joinTemplateEnds } = this;
-
-            const springMaker = function (particleFrom, particleTo, springName) {
-
-                let v, l, s;
-
-                v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
-                l = v.getMagnitude();
-
-                s = makeSpring({
-
-                    name: springName,
-
-                    particleFrom,
-                    particleTo,
-
-                    springConstant, 
-                    damperConstant,
-
-                    restLength: l * restLength,
-                });
-
-                springs.push(s);
-                releaseVector(v);
-            };
+            const { particleStore, artefact:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name, joinTemplateEnds } = this;
 
             let i, p, f, t, hub;
 
@@ -1096,42 +1005,40 @@ const generators = {
 
                     f = particle[`${name}-${i}`];
                     t = particle[`${name}-${i + 1}`];
-                    springMaker(f, t, `${name}-${i}-${i + 1}`);
+                    springMaker.call(this, f, t, `${name}-${i}-${i + 1}`);
                 }
 
                 if (joinTemplateEnds) {
 
                     f = particle[`${name}-${precision - 1}`];
                     t = particle[`${name}-${0}`];
-                    springMaker(f, t, `${name}-${precision - 1}-0`);
+                    springMaker.call(this, f, t, `${name}-${precision - 1}-0`);
                 }
 
                 for (i = 0; i < precision - 2; i++) {
 
                     f = particle[`${name}-${i}`];
                     t = particle[`${name}-${i + 2}`];
-                    springMaker(f, t, `${name}-${i}~${name}-${i + 2}`);
+                    springMaker.call(this, f, t, `${name}-${i}~${name}-${i + 2}`);
                 }
 
                 if (joinTemplateEnds) {
 
                     f = particle[`${name}-${precision - 2}`];
                     t = particle[`${name}-${0}`];
-                    springMaker(f, t, `${name}-${precision - 2}~${name}-${0}`);
+                    springMaker.call(this, f, t, `${name}-${precision - 2}~${name}-${0}`);
 
                     f = particle[`${name}-${precision - 1}`];
                     t = particle[`${name}-${1}`];
-                    springMaker(f, t, `${name}-${precision - 1}~${name}-${1}`);
+                    springMaker.call(this, f, t, `${name}-${precision - 1}~${name}-${1}`);
                 }
             }
-            else if (HUB_ARTEFACTS_2.includes(host.type)) {
 
-            }
-            else if (HUB_ARTEFACTS_3.includes(host.type)) {
+            // TODO: consider whether we need these
+            else if (HUB_ARTEFACTS_2.includes(host.type)) {}
+            else if (HUB_ARTEFACTS_3.includes(host.type)) {}
 
-            }
-
-            let [x, y] = shapeTemplate.get(POSITION);
+            const [x, y] = shapeTemplate.get(POSITION);
 
             hub = makeParticle({
 
@@ -1157,7 +1064,7 @@ const generators = {
 
             hub.run(0, 0, false);
 
-            particleStore.forEach((p, index) => springMaker(p, hub, `${name}-${index}-hub`));
+            particleStore.forEach((p, index) => springMaker.call(this, p, hub, `${name}-${index}-hub`));
 
             particleStore.push(hub);
         }

@@ -246,7 +246,7 @@ P.processPacketOut = function (key, value, incs) {
 
 P.finalizePacketOut = function (copy, items) {
 
-    let stateCopy = _parse(this.state.saveAsPacket(items))[3];
+    const stateCopy = _parse(this.state.saveAsPacket(items))[3];
     copy = mergeOver(copy, stateCopy);
 
     copy = this.handlePacketAnchor(copy, items);
@@ -258,7 +258,7 @@ P.handlePacketAnchor = function (copy, items) {
 
     if (this.anchor) {
 
-        let a = _parse(this.anchor.saveAsPacket(items))[3];
+        const a = _parse(this.anchor.saveAsPacket(items))[3];
         copy.anchor = a;
     }
     return copy;
@@ -461,7 +461,7 @@ S.fromPath = function (item) {
 
         if (newPath && newPath.name && newPath.useAsPath) {
 
-            if (oldPath && oldPath.name !== newPath.name) removeItem(oldPath.pathed, name);
+            if (oldPath && oldPath.name != newPath.name) removeItem(oldPath.pathed, name);
 
             pushUnique(newPath.pathed, name);
 
@@ -483,7 +483,7 @@ S.toPath = function (item) {
 
         if (newPath && newPath.name && newPath.useAsPath) {
 
-            if (oldPath && oldPath.name !== newPath.name) removeItem(oldPath.pathed, name);
+            if (oldPath && oldPath.name != newPath.name) removeItem(oldPath.pathed, name);
 
             pushUnique(newPath.pathed, name);
 
@@ -501,7 +501,7 @@ S.source = function (item) {
 
     if (item && item.type == T_PICTURE) {
 
-        let src = this.source;
+        const src = this.source;
 
         if (src && src.type == T_PICTURE) src.imageUnsubscribe(this.name);
 
@@ -916,7 +916,7 @@ P.cleanOutput = function () {
             isHorizontalCopy = this.isHorizontalCopy,
             loop = this.loopPathCursors,
 
-            fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin, 
+            fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin, i, j,
 
             watchFromPath = this.watchFromPath,
             watchIndex = this.watchIndex, 
@@ -946,7 +946,7 @@ P.cleanOutput = function () {
 
         if(!engineInstructions.length) {
 
-            for (let i = 0; i < sourceDimension; i++) {
+            for (i = 0; i < sourceDimension; i++) {
 
                 if (watchIndex < 0) {
 
@@ -1005,7 +1005,7 @@ P.cleanOutput = function () {
         if (isHorizontalCopy) {
 
 
-            for (let i = 0; i < sourceDimension; i++) {
+            for (i = 0; i < sourceDimension; i++) {
 
                 instruction = engineInstructions[watchIndex];
 
@@ -1021,7 +1021,7 @@ P.cleanOutput = function () {
         }
         else {
 
-            for (let i = 0; i < sourceDimension; i++) {
+            for (i = 0; i < sourceDimension; i++) {
 
                 instruction = engineInstructions[watchIndex];
 
@@ -1048,7 +1048,7 @@ P.cleanOutput = function () {
         outputEngine.setTransform(1, 0, 0, 1, 0, 0);
         inputEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-        for (let j = 0; j < iLoops; j++) {
+        for (j = 0; j < iLoops; j++) {
 
             inputEngine.drawImage(outputCanvas, 0, 0, outputWidth, outputHeight, 0, 0, iWidth, iHeight);
             outputEngine.drawImage(inputCanvas, 0, 0, iWidth, iHeight, 0, 0, outputWidth, outputHeight);
@@ -1110,10 +1110,10 @@ P.getBoundingBox = function () {
                 lex += ex;
                 ley += ey;
 
-                let minX = _min(lsx, lex);
-                let maxX = _max(lsx + sw, lex + ew);
-                let minY = _min(lsy, ley);
-                let maxY = _max(lsy + sh, ley + eh);
+                const minX = _min(lsx, lex),
+                    maxX = _max(lsx + sw, lex + ew),
+                    minY = _min(lsy, ley),
+                    maxY = _max(lsy + sh, ley + eh);
 
                 this.boundingBox = [minX, minY, maxX - minX, maxY - minY];
 

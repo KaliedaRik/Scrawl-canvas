@@ -57,7 +57,7 @@ import { makeCoordinate, releaseCoordinate, requestCoordinate } from './coordina
 import { filterEngine } from './filter-engine.js';
 import { importDomImage } from './image-asset.js';
 
-import { releaseCell, requestCell } from '../factory/cell-fragment.js';
+import { releaseCell, requestCell } from './cell-fragment.js';
 
 import baseMix from '../mixin/base.js';
 import cellMix from '../mixin/cell-key-functions.js';

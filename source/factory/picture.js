@@ -701,23 +701,27 @@ P.checkHitReturn = function (x, y, cell) {
     if (this.checkHitIgnoreTransparency && cell && cell.engine) {
 
         const [copyX, copyY, copyWidth, copyHeight] = this.copyArray;
-        const [pasteX, pasteY, pasteWidth, pasteHeight] = this.pasteArray;
-        const [stampX, stampY] = this.currentStampPosition;
 
-        const img = cell.engine.getImageData(copyX, copyY, copyWidth, copyHeight);
+        if (xta(copyX, copyY, copyWidth, copyHeight)) {
 
-        const myX = x - stampX,
-            myY = y - stampY;
+            const [pasteX, pasteY, pasteWidth, pasteHeight] = this.pasteArray;
+            const [stampX, stampY] = this.currentStampPosition;
 
-        const index = (((myY * pasteWidth) + myX) * 4) + 3;
+            const img = cell.engine.getImageData(copyX, copyY, copyWidth, copyHeight);
 
-        if (img.data[index]) {
+            const myX = x - stampX,
+                myY = y - stampY;
 
-            return {
-                x: x,
-                y: y,
-                artefact: this
-            };
+            const index = (((myY * pasteWidth) + myX) * 4) + 3;
+
+            if (img.data[index]) {
+
+                return {
+                    x: x,
+                    y: y,
+                    artefact: this
+                };
+            }
         }
         return false;
     }

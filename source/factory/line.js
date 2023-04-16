@@ -155,7 +155,9 @@ P.preparePinsForStamp = function () {
         ePivot = this.endPivot,
         ePath = this.endPath;
 
-    for (let i = 0, iz = dirtyPins.length, name; i < iz; i++) {
+    let i, iz, name;
+
+    for (i = 0, iz = dirtyPins.length; i < iz; i++) {
 
         name = dirtyPins[i];
 

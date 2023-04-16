@@ -73,16 +73,16 @@ export const observeAndUpdate = function (items = Ωempty) {
 
     if (!xta(items.event, items.origin, items.updates)) return false;
 
-    let target = (items.target.substring && items.targetLibrarySection) ?
+    const target = (items.target.substring && items.targetLibrarySection) ?
         library[items.targetLibrarySection][items.target] :
         items.target;
 
     if (!target) return false;
 
-    let event = items.event,
+    const event = items.event,
         origin = items.origin;
 
-    let listener = (items.useNativeListener) ? addNativeListener : addListener,
+    const listener = (items.useNativeListener) ? addNativeListener : addListener,
         killListener = (items.useNativeListener) ? removeNativeListener : removeListener;
 
     let stop = λnull;
@@ -96,19 +96,19 @@ export const observeAndUpdate = function (items = Ωempty) {
         };
     }
 
-    let setup = (isa_fn(items.setup)) ? items.setup : λnull;
+    const setup = (isa_fn(items.setup)) ? items.setup : λnull;
 
-    let callback = (isa_fn(items.callback)) ? items.callback : λnull;
+    const callback = (isa_fn(items.callback)) ? items.callback : λnull;
 
-    let func = function (e) {
+    const func = function (e) {
 
         stop(e);
 
-        let id = (e && e.target) ? e.target.id : false;
+        const id = (e && e.target) ? e.target.id : false;
 
         if (id) {
 
-            let updates = items.updates,
+            const updates = items.updates,
                 actionArray = updates[id];
 
             if (actionArray) {

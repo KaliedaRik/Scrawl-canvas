@@ -191,7 +191,8 @@ G.artefacts = function () {
 // Replaces the existing artefact membership with new members, supplied as an Array of name-String values
 S.artefacts = function (item) {
 
-    this.artefacts = [];
+    if (!this.artefacts) this.artefacts = [];
+    this.artefacts.length = 0;
 
     this.addArtefacts(item);
 };
@@ -566,31 +567,28 @@ P.stashAction = function (img) {
 // `getCellCoverage` - internal function which calculates the cumulative coverage of the Group's artefacts. Used as part of the `stashAction` functionality
 P.getCellCoverage = function (img) {
 
-    const width = img.width,
-        height = img.height,
-        data = img.data;
+    const { width, height, data } = img;
 
     let maxX = 0,
         maxY = 0,
         minX = width,
         minY = height,
         counter = 3,
-        x, y;
+        x, y, i, iz;
 
-    for (y = 0; y < height; y++) {
+    for (i = 0, iz = width * height; i < iz; i++) {
 
-        for (x = 0; x < width; x++) {
+        if (data[counter]) {
 
-            if (data[counter]) {
+            y = _floor(i / width); 
+            x = i - (y * width);
 
-                if (minX > x) minX = x;
-                if (maxX < x) maxX = x;
-                if (minY > y) minY = y;
-                if (maxY < y) maxY = y;
-            }
-
-            counter += 4;
+            if (minX > x) minX = x;
+            if (maxX < x) maxX = x;
+            if (minY > y) minY = y;
+            if (maxY < y) maxY = y;
         }
+        counter += 4;
     }
     if (minX < maxX && minY < maxY) return [minX, minY, maxX - minX, maxY - minY];
     else return [0, 0, width, height];
@@ -846,7 +844,7 @@ P.getAllArtefactsAt = function (items) {
     
     const myCell = requestCell(),
         artBuckets = this.artefactStampBuckets,
-        resultNames = [],
+        resultNames = requestArray(),
         results = [];
 
     let art, result, hit;
@@ -872,13 +870,14 @@ P.getAllArtefactsAt = function (items) {
         }
     }
     releaseCell(myCell);
+    releaseArray(resultNames);
 
     if (this.checkForEntityHover) {
 
         const foundArtefacts = (results.length) ? true : false,
             isHovering = this.isHovering;
 
-        if (isHovering !== foundArtefacts) {
+        if (isHovering != foundArtefacts) {
 
             this.isHovering = foundArtefacts;
 

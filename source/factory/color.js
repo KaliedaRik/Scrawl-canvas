@@ -17,7 +17,7 @@ import { constructors, entity } from '../core/library.js';
 
 import { correctAngle, doCreate, easeEngines, interpolate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xtGet, λfirstArg, Ωempty } from '../core/utilities.js';
 
-import { releaseArray, requestArray } from '../factory/array-pool.js';
+import { releaseArray, requestArray } from './array-pool.js';
 
 import baseMix from '../mixin/base.js';
 

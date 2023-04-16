@@ -36,7 +36,7 @@ import { xta, isa_fn, isa_boolean, isa_obj, λnull, Ωempty } from "../core/util
 
 import { addListener, removeListener } from "../core/events.js";
 
-import { _isArray, $BODY, ACCEPTED_WRAPPERS, DOWN, DROP, EXIT, MOVE, T_CANVAS, T_GROUP, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START, UP } from "../core/shared-vars.js";
+import { _isArray, $BODY, ACCEPTED_WRAPPERS, DOWN, DROP, EXIT, MOVE, T_CANVAS, T_GROUP, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START, UP, ZERO_PATH } from "../core/shared-vars.js";
 
 
 // NOTE: drag-and-drop functionality using this factory function __is not guaranteed__ for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.
@@ -159,7 +159,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
         checkE(e);
 
-        let type = e.type;
+        const type = e.type;
         if (type == TOUCH_START || type == TOUCH_CANCEL) touchAction(e, resetCoordsToZeroOnTouchEnd);
 
         current = collisionGroup.getArtefactAt(coordinateSource);
@@ -183,7 +183,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
             checkE(e);
 
-            let type = e.type;
+            const type = e.type;
             if (type == TOUCH_MOVE) touchAction(e);
 
             if (e.shiftKey) updateWhileShiftMoving(e);
@@ -197,7 +197,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
             checkE(e);
 
-            let type = e.type;
+            const type = e.type;
             if (type == TOUCH_END) {
 
                 touchAction(e, resetCoordsToZeroOnTouchEnd);
@@ -220,7 +220,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
         const name = `${zone.name}_${collisionGroup.name}_${processingOrder}`;
 
-        dragZones[zone.name] = dragZones[zone.name].filter(z => z.name !== name);
+        dragZones[zone.name] = dragZones[zone.name].filter(z => z.name != name);
 
         if (!dragZones[zone.name].length) {
             doRemoveListeners(startOn, endOn, target);
@@ -274,6 +274,7 @@ export const makeDragZone = function (items = Ωempty) {
 
         if (e && e.target) {
 
+            // name cannot be ZERO_STR
             let myTarget = e.target,
                 name = '';
 

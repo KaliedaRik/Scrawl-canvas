@@ -30,6 +30,8 @@ import { makeState } from './state.js';
 
 import { releaseCell, requestCell } from './cell-fragment.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import { currentGroup } from './canvas.js';
 
 import baseMix from '../mixin/base.js';
@@ -563,22 +565,22 @@ P.setSourceDimension = function () {
 
         const {columns, rows, particlePositions} = this;
 
-        const results = [],
-            lengths = [],
-            xPos = [],
-            yPos = [],
-            top = [],
-            left = [],
-            right = [],
-            coords = [],
-            bottom = [];
+        const results = requestArray(),
+            lengths = requestArray(),
+            xPos = requestArray(),
+            yPos = requestArray(),
+            top = requestArray(),
+            left = requestArray(),
+            right = requestArray(),
+            coords = requestArray(),
+            bottom = requestArray();
 
         let x, xz, y, res, pos, coord, x0, x1, y0, y1, dx, dy, len, l, i, iz, j, jz;
 
         for (y = 0; y < rows; y++) {
 
             res = 0;
-            len = lengths[y] = [];
+            len = lengths[y] = requestArray();
             coord = coords[y] = [];
 
             for (x = 0, xz = columns - 1; x < xz; x++) {
@@ -590,25 +592,25 @@ P.setSourceDimension = function () {
 
                 coord.push([x0, y0, x1, y1]);
 
-                if (x === 0) {
+                if (x == 0) {
 
                     left.push([x0, y0]);
                 }
-                else if (x === xz - 1) {
+                else if (x == xz - 1) {
 
                     right.push([x1, y1]);
                 }
-                else if (y === 0) {
+                else if (y == 0) {
 
                     top.push([x0, y0]);
 
-                    if (x === xz - 2) top.push([x1, y1]);
+                    if (x == xz - 2) top.push([x1, y1]);
                 }
-                else if (y === rows - 1) {
+                else if (y == rows - 1) {
 
                     bottom.push([x0, y0]);
 
-                    if (x === xz - 2) bottom.push([x1, y1]);
+                    if (x == xz - 2) bottom.push([x1, y1]);
                 }
 
                 xPos.push(x0, x1);
@@ -647,7 +649,9 @@ P.setSourceDimension = function () {
             }
         }
 
-        this.struts = coords;
+        if (!this.struts) this.struts = [];
+        this.struts.length = 0;
+        this.struts.push(...coords);
 
         let xMin = _min(...xPos),
             yMin = _min(...yPos),
@@ -684,6 +688,17 @@ P.setSourceDimension = function () {
         p += 'z';
 
         this.pathObject = new Path2D(p);
+
+        lengths.forEach(a => releaseArray(a));
+        releaseArray(lengths);
+        releaseArray(results);
+        releaseArray(xPos);
+        releaseArray(yPos);
+        releaseArray(top);
+        releaseArray(left);
+        releaseArray(right);
+        releaseArray(bottom);
+        releaseArray(coords);
     }
 };
 

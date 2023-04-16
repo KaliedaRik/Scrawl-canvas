@@ -678,9 +678,7 @@ export default function (P = Ωempty) {
 // `getCellCoverage` - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the `scrawl.createImageFromEntity` function is invoked.
     P.getCellCoverage = function (img) {
 
-        const width = img.width,
-            height = img.height,
-            data = img.data;
+        const { width, height, data } = img;
 
         let maxX = 0,
             maxY = 0,

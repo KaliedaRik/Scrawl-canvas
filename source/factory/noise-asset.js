@@ -29,12 +29,14 @@ import { doCreate, easeEngines, interpolate, mergeOver, removeItem, λfirstArg, 
 
 import { makeColor } from './color.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 import assetAdvancedMix from '../mixin/asset-advanced-functionality.js';
 import patternMix from '../mixin/pattern.js';
 
-import { $X, _abs, _floor, _max, _min, _pow, _random, _sin, _sqrt, ASSET, BESPOKE_NOISE_ENGINES, DEFAULT_SEED, EUCLIDEAN_DISTANCE, IMPROVED_PERLIN, MANHATTAN_DISTANCE, NONE, PERLIN, QUINTIC, SIMPLEX, SMOOTHED_STRIPES, STRIPES, T_NOISE_ASSET, VALUE, WORLEY_EUCLIDEAN, WORLEY_MANHATTAN, WORLEY_OUTPUTS } from '../core/shared-vars.js';
+import { $X, _abs, _floor, _freeze, _max, _min, _pow, _random, _sin, _sqrt, ASSET, BESPOKE_NOISE_ENGINES, DEFAULT_SEED, EUCLIDEAN_DISTANCE, IMPROVED_PERLIN, MANHATTAN_DISTANCE, NONE, PERLIN, QUINTIC, SIMPLEX, SMOOTHED_STRIPES, STRIPES, T_NOISE_ASSET, VALUE, WORLEY_EUCLIDEAN, WORLEY_MANHATTAN, WORLEY_OUTPUTS } from '../core/shared-vars.js';
 
 
 // #### NoiseAsset constructor
@@ -278,7 +280,6 @@ S.modularAmplitude = function (item) {
         this.dirtyOutput = true;
     }
 };
-
 S.sumAmplitude = function (item) {
 
     if (item.toFixed) {
@@ -362,7 +363,7 @@ P.cleanNoise = function () {
             // Initialize the appropriate noise function
             noiseEngine.init.call(this);
 
-           const noiseValues = [];
+            const noiseValues = requestArray();
 
             let x, y, o, i, iz,
                 scaledX, scaledY,
@@ -461,8 +462,12 @@ P.cleanNoise = function () {
                     noiseValues[y][x] = sumFunction.call(this, clampedVal, x * relativeScale, y * relativeScale);
                 }
             }
+
             // Update the cached noise values arrays
-            this.noiseValues = noiseValues;
+            if (!this.noiseValues) this.noiseValues = [];
+            this.noiseValues.length = 0;
+            this.noiseValues.push(...noiseValues);
+            releaseArray(noiseValues);
         }
         else this.dirtyNoise = true;
     }
@@ -485,12 +490,20 @@ P.getOutputValue = function (index, width) {
 // #### NoiseAsset generator functionality
 
 // Convenience constants
-// P.F = 0.5 * (Math.sqrt(3) - 1);
-// P.G = (3 - Math.sqrt(3)) / 6;
-P.simplexConstantF = 0.5 * (_sqrt(3) - 1);
-P.simplexConstantG = (3 - _sqrt(3)) / 6;
-P.simplexConstantDoubleG = ((3 - _sqrt(3)) / 6) * 2;
-P.perlinGrad = [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [-1, 0], [0, 1], [0, -1]];
+const simplexConstantF = 0.5 * (_sqrt(3) - 1);
+const simplexConstantG = (3 - _sqrt(3)) / 6;
+const simplexConstantDoubleG = ((3 - _sqrt(3)) / 6) * 2;
+
+const perlinGrad = _freeze([
+    _freeze([1, 1]), 
+    _freeze([-1, 1]), 
+    _freeze([1, -1]), 
+    _freeze([-1, -1]), 
+    _freeze([1, 0]), 
+    _freeze([-1, 0]), 
+    _freeze([0, 1]), 
+    _freeze([0, -1])
+]);
 
 // `noiseEngines` - a {key:object} object. Each named object contains two functions:
 // + __init__ - invoked to prepare the engine for a bout of calculations - called by the `cleanNoise` function
@@ -523,38 +536,38 @@ P.noiseEngines = {
 
             const {size, perm, grad, smoothing} = this;
 
-            let a, b, u, v;
+            let u, v;
 
-            let bx0 = _floor(x) % size,
+            const bx0 = _floor(x) % size,
                 bx1 = (bx0 + 1) % size;
 
-            let rx0 = x - _floor(x),
+            const rx0 = x - _floor(x),
                 rx1 = rx0 - 1;
 
-            let by0 = _floor(y) % size,
+            const by0 = _floor(y) % size,
                 by1 = (by0 + 1) % size;
 
-            let ry0 = y - _floor(y),
+            const ry0 = y - _floor(y),
                 ry1 = ry0 - 1;
 
-            let i = perm[bx0],
+            const i = perm[bx0],
                 j = perm[bx1];
 
-            let b00 = perm[i + by0],
+            const b00 = perm[i + by0],
                 b10 = perm[j + by0],
                 b01 = perm[i + by1],
                 b11 = perm[j + by1];
 
-            let sx = smoothing(rx0),
+            const sx = smoothing(rx0),
                 sy = smoothing(ry0);
             
             u = rx0 * grad[b00][0] + ry0 * grad[b00][1];
             v = rx1 * grad[b10][0] + ry0 * grad[b10][1];
-            a = interpolate(sx, u, v);
+            const a = interpolate(sx, u, v);
             
             u = rx0 * grad[b01][0] + ry1 * grad[b01][1];
             v = rx1 * grad[b11][0] + ry1 * grad[b11][1];
-            b = interpolate(sx, u, v);
+            const b = interpolate(sx, u, v);
             
             return 0.5 * (1 + interpolate(sy, a, b));
         },
@@ -569,40 +582,40 @@ P.noiseEngines = {
 
         getNoiseValue: function (x, y) {
 
-            const {size, perm, permMod8, perlinGrad, smoothing} = this;
+            const {size, perm, permMod8, smoothing} = this;
 
-            let a, b, u, v;
+            let u, v;
 
-            let bx0 = _floor(x) % size, 
+            const bx0 = _floor(x) % size, 
                 bx1 = (bx0 + 1) % size;
 
-            let rx0 = x - _floor(x), 
+            const rx0 = x - _floor(x), 
                 rx1 = rx0 - 1;
 
-            let by0 = _floor(y) % size, 
+            const by0 = _floor(y) % size, 
                 by1 = (by0 + 1) % size;
 
-            let ry0 = y - _floor(y), 
+            const ry0 = y - _floor(y), 
                 ry1 = ry0 - 1;
 
-            let i = perm[bx0], 
+            const i = perm[bx0], 
                 j = perm[bx1]; 
 
-            let b00 = permMod8[i + by0], 
+            const b00 = permMod8[i + by0], 
                 b10 = permMod8[j + by0], 
                 b01 = permMod8[i + by1], 
                 b11 = permMod8[j + by1];
             
-            let sx = smoothing(rx0),
+            const sx = smoothing(rx0),
                 sy = smoothing(ry0);
             
             u = rx0 * perlinGrad[b00][0] + ry0 * perlinGrad[b00][1];
             v = rx1 * perlinGrad[b10][0] + ry0 * perlinGrad[b10][1];
-            a = interpolate(sx, u, v);
+            const a = interpolate(sx, u, v);
             
             u = rx0 * perlinGrad[b01][0] + ry1 * perlinGrad[b01][1];
             v = rx1 * perlinGrad[b11][0] + ry1 * perlinGrad[b11][1];
-            b = interpolate(sx, u, v);
+            const b = interpolate(sx, u, v);
 
             return 0.5 * (1 + interpolate(sy, a, b));
         }
@@ -619,24 +632,24 @@ P.noiseEngines = {
 
             const getCornerNoise = function (cx, cy, gridPos) {
 
-                let calc = 0.5 - (cx * cx) - (cy * cy);
+                const calc = 0.5 - (cx * cx) - (cy * cy);
                 if (calc < 0) return 0;
 
-                let [gx, gy] = perlinGrad[gridPos];
+                const [gx, gy] = perlinGrad[gridPos];
                 return calc * calc * ((gx * cx) + (gy * cy));
             };
             
-            const {simplexConstantF, simplexConstantG, simplexConstantDoubleG, size, perlinGrad, perm, permMod8} = this;
+            const { size, perm, permMod8 } = this;
             
-            let summedCoordinates = (x + y) * simplexConstantF,
+            const summedCoordinates = (x + y) * simplexConstantF,
                 summedX = _floor(x + summedCoordinates),
                 summedY = _floor(y + summedCoordinates),
                 modifiedSummedCoordinates = (summedX + summedY) * simplexConstantG;
 
-            let cornerX = x - (summedX - modifiedSummedCoordinates),
+            const cornerX = x - (summedX - modifiedSummedCoordinates),
                 cornerY = y - (summedY - modifiedSummedCoordinates);
             
-            let remainderX = summedX % size,
+            const remainderX = summedX % size,
                 remainderY = summedY % size;
 
             let pos = permMod8[remainderX + perm[remainderY]],
@@ -681,7 +694,7 @@ P.noiseEngines = {
 
             const {values, size, perm, smoothing} = this;
 
-            let x0 = _floor(x) % size,
+            const x0 = _floor(x) % size,
                 y0 = _floor(y) % size,
                 x1 = (x0 + 1) % size,
                 y1 = (y0 + 1) % size,
@@ -727,7 +740,7 @@ P.noiseEngines = {
 
             const {smoothing} = this;
 
-            let sx = smoothing(x),
+            const sx = smoothing(x),
                 sy = smoothing(y);
 
             return (sx / 5) + (sy / 5);
@@ -830,14 +843,14 @@ P.sumFunctions = {
 
     // This function creates repeating bands, the frequency of which depends on the sumAmplitude attribute
     modular: function(v) {
-        let g = v * this.sumAmplitude;
+        const g = v * this.sumAmplitude;
         return g - _floor(g);
     },
 
     // This function adds random interference to the final output, the strength of which depends on the sumAmplitude attribute (lower values create a stronger effect)
     random: function(v) {
-        let a = this.sumAmplitude;
-        let r = (Math.random() / a) - (0.5 / a);
+        const a = this.sumAmplitude;
+        const r = (_random() / a) - (0.5 / a);
         let g = v + r;
 
         if (g > 1) g = 1;

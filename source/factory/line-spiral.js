@@ -217,9 +217,9 @@ P.makeLineSpiralPath = function () {
 
     let path = `${ZERO_PATH} m`;
 
-    let {startRadius, radiusIncrement, radiusIncrementAdjust, startAngle, angleIncrement, angleIncrementAdjust, stepLimit} = this;
+    const {startRadius, radiusIncrement, radiusIncrementAdjust, startAngle, angleIncrement, angleIncrementAdjust, stepLimit} = this;
 
-    let coord = requestCoordinate();
+    const coord = requestCoordinate();
 
     let currentAngle = startAngle,
         currentAngleIncrement = angleIncrement,
@@ -251,7 +251,7 @@ P.makeLineSpiralPath = function () {
 
 P.calculateLocalPathAdditionalActions = function () {
 
-    let [x, y, w, h] = this.localBox,
+    const [x, y, w, h] = this.localBox,
         scale = this.scale;
 
     this.pathDefinition = this.pathDefinition.replace(`${ZERO_PATH} `, `m${-x / scale},${-y / scale}`);
