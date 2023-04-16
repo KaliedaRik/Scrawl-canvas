@@ -63,7 +63,7 @@ import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _assign, _entries, _floor, _isArray, _keys, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, PALETTE, RGB, SPACE, T_PALETTE, WHITE } from '../core/shared-vars.js';
+import { _assign, _entries, _floor, _isArray, _keys, _seal, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, PALETTE, RGB, SPACE, T_PALETTE, WHITE } from '../core/shared-vars.js';
 
 
 // #### Palette constructor
@@ -81,9 +81,10 @@ const Palette = function (items = Ωempty) {
     this.set(this.defs);
 
     this.colors = items.colors || {'0 ': [0,0,0,1], '999 ': [255,255,255,1]};
-    this.stops = Array(1000);
-    this.easingFunction = λfirstArg;
 
+    this.stops = _seal(Array(1000).fill(BLANK));
+    
+    this.easingFunction = λfirstArg;
 
     this.set(items);
 
@@ -317,9 +318,6 @@ P.getReturnColorAs = function () {
     return RGB;
 };
 
-// `recalculateHold` - internal variable
-P.recalculateHold = [];
-
 // `recalculate` - populate the stops Array with CSS color Strings, as determined by colors stored in the `colors` object
 P.recalculate = function () {
 
@@ -331,18 +329,16 @@ P.recalculate = function () {
 
     const { colorSpace } = factory;
 
-    let colorKeys = _keys(colors);
-    colorKeys = colorKeys.map(n => parseInt(n, 10))
-    colorKeys.sort((a, b) => a - b);
+    const colorKeys = _keys(colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
 
     let currentKey = colorKeys[0], 
-        nextKey, currentVals, nextVals, diff;
+        nextKey, currentVals, nextVals, diff, i, iz, j;
 
     let [b, c, d, a] = colors[`${currentKey} `];
 
     stops[currentKey] = factory.returnColorFromValues(b, c, d, a);
 
-    for (let i = 0, iz = colorKeys.length - 1; i < iz; i++) {
+    for (i = 0, iz = colorKeys.length - 1; i < iz; i++) {
 
         currentKey = colorKeys[i];
         nextKey = colorKeys[i + 1];
@@ -354,7 +350,7 @@ P.recalculate = function () {
 
         diff = nextKey - currentKey;
 
-        for (let j = currentKey + 1; j <= nextKey; j++) {
+        for (j = currentKey + 1; j <= nextKey; j++) {
 
             stops[j] = factory.getRangeColor((j - currentKey) / diff, true);
         }
@@ -373,7 +369,7 @@ P.updateColor = function (index, color) {
 
         index = (index.substring) ? parseInt(index, 10) : _floor(index);
 
-        if (index >= 0 && index <= 999) {
+        if (index >= 0 && index < 1000) {
 
             f.convert(color);
             index += SPACE;
@@ -391,7 +387,7 @@ P.removeColor = function (index) {
 
         index = (index.substring) ? parseInt(index, 10) : _floor(index);
         
-        if (index >= 0 && index <= 999) {
+        if (index >= 0 && index < 1000) {
 
             index += SPACE;
             delete this.colors[index];
@@ -405,15 +401,13 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
     // It's at this point that we apply the easing function
 
-    let { stops, easing, easingFunction, precision } = this;
+    const { stops, easing, easingFunction, precision } = this;
 
-    let keys = _keys(this.colors),
-        spread, offset, i, iz, item, n;
+    const keys = _keys(this.colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
+    
+    let spread, offset, i, iz, item, n;
 
     if (gradient) {
-
-        keys = keys.map(n => parseInt(n, 10))
-        keys.sort((a, b) => a - b);
 
         if (!xta(start, end)) {
             start = 0;
@@ -428,7 +422,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
         const precisionTest = (!precision || (easing == LINEAR && colorSpace == RGB)) ? false : true;
 
         // Option 1 start == end, cycle irrelevant
-        if (start === end) return stops[start] || BLANK;
+        if (start == end) return stops[start] || BLANK;
 
         // Option 2: start < end, cycle irrelevant
         else if (start < end) {
@@ -494,7 +488,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                         item = i + start;
 
-                        if (item > 999) item -= 999;
+                        if (item > 999) item -= 1000;
 
                         offset = engine(i / spread);
 
@@ -507,9 +501,9 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                         item = keys[i];
 
-                        if (item === 999) offset = (item - start - 0.01) / spread;
+                        if (item == 999) offset = (item - start - 0.01) / spread;
                         else if (item > start) offset = (item - start) / spread;
-                        else if (item === 0) offset = (item + n + 0.01) / spread;
+                        else if (item == 0) offset = (item + n + 0.01) / spread;
                         else if (item < end) offset = (item + n) / spread;
                         else continue;
 

@@ -70,7 +70,7 @@ P.finalizePacketOut = function (copy, items) {
     if (_isArray(items.patternMatrix)) copy.patternMatrix = items.patternMatrix;
     else {
 
-        let m = this.patternMatrix;
+        const m = this.patternMatrix;
         if (m) copy.patternMatrix = [m.a, m.b, m.c, m.d, m.e, m.f];
     }
 
@@ -125,7 +125,7 @@ P.kill = function () {
 // `get`
 P.get = function (item) {
 
-    let source = this.source;
+    const source = this.source;
 
     if ((item.indexOf($VIDEO) == 0 || item.indexOf($IMAGE) == 0) && source) {
 
@@ -135,18 +135,17 @@ P.get = function (item) {
 
     else {
 
-        let getter = this.getters[item];
+        const getter = this.getters[item];
 
         if (getter) return getter.call(this);
 
         else {
 
-            let def = this.defs[item],
-                val;
+            const def = this.defs[item];
 
             if (typeof def != UNDEF) {
 
-                val = this[item];
+                const val = this[item];
                 return (typeof val != UNDEF) ? val : def;
             }
             return undef;

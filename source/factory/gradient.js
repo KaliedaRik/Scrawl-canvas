@@ -99,8 +99,9 @@ P.updateGradientArgs = function (x, y) {
 
     const sx = currentStart[0] + x,
         sy = currentStart[1] + y,
-        ex = currentEnd[0] + x,
         ey = currentEnd[1] + y;
+
+    let ex = currentEnd[0] + x;
 
     // check to correct situation where coordinates represent a '0 x 0' box - which will cause errors in some browsers
     if (sx == ex && sy == ey) ex++;

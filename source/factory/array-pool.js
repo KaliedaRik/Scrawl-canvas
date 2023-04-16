@@ -43,6 +43,10 @@ export const releaseArray = function (a) {
         a.length = 0;
         genericArrayPool.push(a);
 
-        if (genericArrayPool.length > 16) genericArrayPool.length = 4;
+        if (genericArrayPool.length > 20) {
+
+            console.log('purging genericArrayPool');
+            genericArrayPool.length = 10;
+        }
     }
 };

@@ -43,7 +43,7 @@ import { constructors, force, spring, springnames } from '../core/library.js';
 
 import { doCreate, mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
 
-import { releaseParticleHistoryObject, requestParticleHistoryObject } from './particle-history.js';
+import { releaseParticleHistory, requestParticleHistory } from './particle-history.js';
 
 import { makeVector, releaseVector, requestVector } from './vector.js';
 
@@ -130,7 +130,7 @@ P.packetObjects = pushUnique(P.packetObjects, ['position', 'velocity', 'accelera
 // #### Kill management
 P.factoryKill = function () {
 
-    this.history.forEach(h => releaseParticleHistoryObject(h));
+    this.history.forEach(h => releaseParticleHistory(h));
 
     const deadSprings = [];
     let s;
@@ -290,7 +290,7 @@ P.manageHistory = function (tick, host) {
 
             const last = history.pop();
 
-            releaseParticleHistoryObject(last);
+            releaseParticleHistory(last);
 
             addHistoryFlag = false;
 
@@ -340,9 +340,12 @@ P.manageHistory = function (tick, host) {
 
         const {x, y, z} = position;
 
-        const h = requestParticleHistoryObject();
+        const h = requestParticleHistory();
 
-        h.push(remaining, z, x, y);
+        h[0] = remaining;
+        h[1] = z;
+        h[2] = x;
+        h[3] = y;
 
         history.unshift(h);
 
@@ -350,7 +353,7 @@ P.manageHistory = function (tick, host) {
 
             const old = history.splice(historyLength);
 
-            old.forEach(item => releaseParticleHistoryObject(item));
+            old.forEach(item => releaseParticleHistory(item));
         }
     }
 };
@@ -413,7 +416,7 @@ export const releaseParticle = function (item) {
 
     if (item && item.type == T_PARTICLE) {
 
-        item.history.forEach(h => releaseParticleHistoryObject(h));
+        item.history.forEach(h => releaseParticleHistory(h));
         item.history.length = 0;
 
         item.set(item.defs);

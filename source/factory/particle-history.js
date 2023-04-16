@@ -37,19 +37,17 @@ import { constructors } from '../core/library.js';
 
 import { λnull } from '../core/utilities.js';
 
-import { _create, _setPrototypeOf, T_PARTICLE_HISTORY } from '../core/shared-vars.js';
+import { _create, _seal, _setPrototypeOf, T_PARTICLE_HISTORY } from '../core/shared-vars.js';
 
 
 // #### ParticleHistory constructor
-const ParticleHistory = function (items) {
+const ParticleHistory = function () {
 
-    let history = [];
+    const h = Array(4).fill(0);
 
-    _setPrototypeOf(history, ParticleHistory.prototype);
+    _setPrototypeOf(h, ParticleHistory.prototype);
 
-    if (items) history.set(items);
-
-    return history;
+    return _seal(h);
 };
 
 
@@ -80,7 +78,7 @@ P.type = T_PARTICLE_HISTORY;
 const particleHistoryPool = [];
 
 // `exported function` - retrieve a ParticleHistory from the history pool
-export const requestParticleHistoryObject = function (items, y) {
+export const requestParticleHistory = function () {
 
     if (!particleHistoryPool.length) particleHistoryPool.push(new ParticleHistory());
 
@@ -88,11 +86,11 @@ export const requestParticleHistoryObject = function (items, y) {
 };
 
 // `exported function` - return a ParticleHistory array to the history pool. Failing to return arrays to the pool may lead to more inefficient code and possible memory leaks.
-export const releaseParticleHistoryObject = function (h) {
+export const releaseParticleHistory = function (h) {
 
     if (h && h.type == T_PARTICLE_HISTORY) {
 
-        h.length = 0;
+        h.fill(0);
         particleHistoryPool.push(h);
 
         // Do not keep excessive numbers of under-utilised arrays in the pool

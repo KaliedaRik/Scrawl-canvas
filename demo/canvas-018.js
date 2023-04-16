@@ -256,3 +256,7 @@ document.querySelector('#letterSpacing').value = 0;
 document.querySelector('#family').options.selectedIndex = 0;
 // @ts-expect-error
 document.querySelector('#size_px').value = 16;
+
+
+// #### Development and testing
+console.log(L);

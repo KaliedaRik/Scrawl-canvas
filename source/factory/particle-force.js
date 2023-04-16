@@ -151,6 +151,8 @@ export const makeForce = function (items) {
 constructors.Force = Force;
 
 
+// #### Gravity force
+// Seeing as it's such a common requirement, we pre-create it here
 makeForce({
 
     name: GRAVITY,

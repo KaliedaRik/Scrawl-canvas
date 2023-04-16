@@ -79,6 +79,8 @@ import { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, Ωempty 
 
 import { releaseCell, requestCell } from './cell-fragment.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import { makeFontAttributes } from './font-attributes.js';
 
 import baseMix from '../mixin/base.js';
@@ -372,7 +374,7 @@ S.handle = function (x, y) {
 };
 D.handleX = function (coord) {
 
-    let c = this.handle;
+    const c = this.handle;
     c[0] = addStrings(c[0], coord);
     this.dirtyHandle = true;
     this.dirtyText = true;
@@ -380,7 +382,7 @@ D.handleX = function (coord) {
 };
 D.handleY = function (coord) {
 
-    let c = this.handle;
+    const c = this.handle;
     c[1] = addStrings(c[1], coord);
     this.dirtyHandle = true;
     this.dirtyText = true;
@@ -431,7 +433,7 @@ S.width = function (item) {
 };
 D.width = function (item) {
 
-    let c = this.dimensions;
+    const c = this.dimensions;
     c[0] = addStrings(c[0], item);
 
     this.dirtyDimensions = true;
@@ -947,7 +949,7 @@ P.convertTextEntityCharacters = function (item) {
 P.calculateTextPositions = function (mytext) {
 
     // 0. `strokeStyle` and `fillStyle` helper function
-    const makeStyle = function (item) {
+    const makeStyle = function (art) {
 
         if (!host) {
 
@@ -956,16 +958,16 @@ P.calculateTextPositions = function (mytext) {
             return BLACK;
         }
 
-        if (item.substring) {
+        if (art.substring) {
 
             let brokenStyle = false;
 
-            if (stylesnames.includes(item)) brokenStyle = styles[item];
-            else if (cellnames.includes(item)) brokenStyle = cell[item];
+            if (stylesnames.includes(art)) brokenStyle = styles[art];
+            else if (cellnames.includes(art)) brokenStyle = cell[art];
 
             if (brokenStyle) return brokenStyle;
         }
-        return item;
+        return art;
     };
 
     // 1. Setup - get values for text? arrays, current?, highlight?, ?Attributes, etc
@@ -975,70 +977,76 @@ P.calculateTextPositions = function (mytext) {
     const self = this,
         host = (this.group && this.group.getHost) ? this.group.getHost() : false;
 
-    let textGlyphs, 
-        textGlyphWidths = [], 
-        textLines = [], 
-        textLineWidths = [],
-        textLineWords = [], 
-        textPositions = [],
-        spacesArray = [],
-        gStyle, gPos, item, 
+    const textGlyphWidths = requestArray(),
+        textLines = requestArray(),
+        textLineWidths = requestArray(),
+        textLineWords = requestArray(),
+        textPositions = requestArray();
+
+    let gStyle, gPos, item, 
         starts, ends, cursor, word, height,
         space, i, iz, j, jz, k, kz;
 
+    const singles = requestArray(),
+        pairs = requestArray(),
+        path = this.getTextPath();
+
     let fragment, len, glyphArr, glyph, nextGlyph, glyphWidth, lineLen, totalLen,
-        singles = [],
-        pairs = [],
-        path = this.getTextPath(),
         direction, loop, rotate;
 
-    let fontAttributes = this.fontAttributes,
+    const fontAttributes = this.fontAttributes,
         glyphAttributes = fontAttributes.clone({});
 
-    let sectionStyles = this.sectionStyles;
+    const sectionStyles = this.sectionStyles;
 
-    let state = this.state,
+    const state = this.state,
         fontLibrary = {},
-        fontArray = [];
+        fontArray = requestArray();
 
-    let scale = this.currentScale,
+    const scale = this.currentScale,
         dims = this.currentDimensions,
         width = dims[0] * scale,
         treatWordAsGlyph = this.treatWordAsGlyph,
         lineHeight = this.lineHeight,
-        justify = this.justify,
-        handle, handleX, handleY;
+        justify = this.justify;
+
+    let handle, handleX, handleY;
 
     fontAttributes.updateMetadata(scale, lineHeight, host);
     glyphAttributes.updateMetadata(scale, lineHeight, host);
 
-    let defaultFont = fontAttributes.getFontString(), 
+    const defaultFont = fontAttributes.getFontString(), 
         defaultFillStyle = makeStyle(state.fillStyle), 
         defaultStrokeStyle = makeStyle(state.strokeStyle), 
-        defaultSpace = this.letterSpacing * scale, 
+        defaultSpace = this.letterSpacing * scale; 
 
-        currentFont = defaultFont, 
+    let currentFont = defaultFont, 
         currentFillStyle = defaultFillStyle, 
         currentStrokeStyle = defaultStrokeStyle, 
         currentSpace = defaultSpace;
 
-    let highlightStyle = (this.highlightStyle) ? makeStyle(this.highlightStyle) : false,
-        highlightFlag = false;
+    const highlightStyle = (this.highlightStyle) ? makeStyle(this.highlightStyle) : false;
+    let highlightFlag = false;
 
-    let underlineStyle = (this.underlineStyle) ? makeStyle(this.underlineStyle) : false,
-        underlinePosition = this.underlinePosition,
-        underlineFlag = false;
+    const underlineStyle = (this.underlineStyle) ? makeStyle(this.underlineStyle) : false,
+        underlinePosition = this.underlinePosition;
+    let underlineFlag = false;
 
-    let overlineStyle = (this.overlineStyle) ? makeStyle(this.overlineStyle) : false,
-        overlinePosition = this.overlinePosition,
-        overlineFlag = false;
+    const overlineStyle = (this.overlineStyle) ? makeStyle(this.overlineStyle) : false,
+        overlinePosition = this.overlinePosition;
+    let overlineFlag = false;
 
     let maxHeight = 0;
 
     // 2. Create `textGlyphs` array
     // + also shove the default font into the `fontLibrary` array
-    textGlyphs = (treatWordAsGlyph) ? mytext.split(SPACE) : mytext.split(ZERO_STR);
+    const textGlyphs = requestArray();
+    if (treatWordAsGlyph) textGlyphs.push(...mytext.split(SPACE));
+    else textGlyphs.push(...mytext.split(ZERO_STR));
+
     fontArray.push(currentFont);
+    // textGlyphs = (treatWordAsGlyph) ? mytext.split(SPACE) : mytext.split(ZERO_STR);
+    // fontArray.push(currentFont);
 
     // 3. `textPositions` array will include an array of data for each glyph
     // + `[font, strokeStyle, fillStyle, highlight, underline, overline, text, startX, startY, (pathData)]`
@@ -1048,8 +1056,6 @@ P.calculateTextPositions = function (mytext) {
         item = textGlyphs[i];
 
         textPositions[i] = [, , , , , , item, 0, 0, 0];
-
-        if (item == SPACE) spacesArray.push(i);
     }
 
     // 4. Process the `sectionStyles` array to start populating the `textPositions` arrays
@@ -1250,10 +1256,10 @@ P.calculateTextPositions = function (mytext) {
         }
 
         // Need to pick up the last (or only) line
-        if (i + 1 === iz) {
+        if (i + 1 == iz) {
 
             // Pick up single line
-            if (lineLen === totalLen) {
+            if (lineLen == totalLen) {
 
                 fragment = mytext;
 
@@ -1371,15 +1377,44 @@ P.calculateTextPositions = function (mytext) {
     }
 
     // 9. Clean up and exit
-    this.textGlyphs = textGlyphs;
-    this.textGlyphWidths = textGlyphWidths;
-    this.textLines = textLines;
-    this.textLineWidths = textLineWidths;
-    this.textLineWords = textLineWords;
-    this.textPositions = textPositions;
+    if (!this.textGlyphs) this.textGlyphs = [];
+    this.textGlyphs.length = 0;
+    this.textGlyphs.push(...textGlyphs);
+    releaseArray(textGlyphs);
+
+    if (!this.textGlyphWidths) this.textGlyphWidths = [];
+    this.textGlyphWidths.length = 0;
+    this.textGlyphWidths.push(...textGlyphWidths);
+    releaseArray(textGlyphWidths);
+
+    if (!this.textLines) this.textLines = [];
+    this.textLines.length = 0;
+    this.textLines.push(...textLines);
+    releaseArray(textLines);
+
+    if (!this.textLineWidths) this.textLineWidths = [];
+    this.textLineWidths.length = 0;
+    this.textLineWidths.push(...textLineWidths);
+    releaseArray(textLineWidths);
+
+    if (!this.textLineWords) this.textLineWords = [];
+    this.textLineWords.length = 0;
+    this.textLineWords.push(...textLineWords);
+    releaseArray(textLineWords);
+
+    if (!this.textPositions) this.textPositions = [];
+    this.textPositions.length = 0;
+    this.textPositions.push(...textPositions);
+    releaseArray(textPositions);
+
     this.textHeight = maxHeight;
     this.textLength = totalLen;
+
     this.fontLibrary = fontLibrary;
+
+    releaseArray(fontArray);
+    releaseArray(singles);
+    releaseArray(pairs);
 
     releaseCell(myCell);
 };
@@ -1390,21 +1425,19 @@ P.calculateTextPositions = function (mytext) {
 // `regularStamp` - overwrites the mixin/entity.js function
 P.regularStamp = function () {
 
-    let dest = this.currentHost, 
-        method = this.method,
-        engine, i, iz, pos, data,
-        preStamper = this.preStamper,
-        stamper = this.stamper;
+    if (this.currentHost) {
 
-    if (dest) {
+        const { currentHost, method, preStamper, stamper, addTextPathRoll, currentHandle } = this;
 
-        engine = dest.engine;
+        const engine = currentHost.engine;
 
-        if (this.method == NONE) this.performRotation(engine);
+        let i, iz, pos, data;
+
+        if (method == NONE) this.performRotation(engine);
 
         // Scrawl-canvas clips canvases to the Phrase's hit area
         // + To 'clip' to the text, use stamp order and globalCompositeOperation instead
-        else if (this.method == CLIP) {
+        else if (method == CLIP) {
 
             this.performRotation(engine);
             engine.clip(this.pathObject, this.winding);
@@ -1412,7 +1445,7 @@ P.regularStamp = function () {
 
         else if (this.textPath) {
 
-            if (!this.noCanvasEngineUpdates) dest.setEngine(this);
+            if (!this.noCanvasEngineUpdates) currentHost.setEngine(this);
 
             // __Needs investigating:__ for some reason when applying a filter to a phrase entity the pool cell gets its baseline reset to default, which displaces the filter effect upwards. These lines fix the immediate issue, but don't solve the deeper mystery.
             engine.textBaseline = TOP;
@@ -1423,51 +1456,53 @@ P.regularStamp = function () {
 
             pos = this.textPositions;
 
-            let item, pathData,
-                addTextPathRoll = this.addTextPathRoll,
-                aPR = this.addPathRotation,
-                cr = this.currentRotation,
-                handle = this.currentHandle;
+            let p, pathData;
+            
+            const cr = this.currentRotation;
 
+            // TODO: is this still needed?
+            const aPR = this.addPathRotation;
             this.addPathRotation = addTextPathRoll;
 
             for (i = 0, iz = pos.length; i < iz; i++) {
 
-                item = pos[i];
-
-                pathData = item[10];
+                p = pos[i];
+                pathData = p[10];
 
                 if (pathData) {
 
                     this.currentPathData = pathData;
                     if (addTextPathRoll) this.currentRotation = pathData.angle;
 
-                    dest.rotateDestination(engine, pathData.x, pathData.y, this);
+                    currentHost.rotateDestination(engine, pathData.x, pathData.y, this);
 
-                    engine.translate(-handle[0], -handle[1]);
+                    engine.translate(-currentHandle[0], -currentHandle[1]);
 
-                    data = preStamper(dest, engine, this, item);
+                    data = preStamper(currentHost, engine, this, p);
                     stamper[method](engine, this, data);
                 }
             }
+
+            // TODO: is this still needed?
             this.addPathRotation = aPR;
+
             this.currentRotation = cr;
         }
         else {
 
             this.performRotation(engine);
 
-            if (!this.noCanvasEngineUpdates) dest.setEngine(this);
+            if (!this.noCanvasEngineUpdates) currentHost.setEngine(this);
 
             // ... See above
             engine.textBaseline = TOP;
             engine.textAlign = LEFT;
 
-            pos = this.textPositions || [];
+            pos = this.textPositions;
 
             for (i = 0, iz = pos.length; i < iz; i++) {
 
-                data = preStamper(dest, engine, this, pos[i]);
+                data = preStamper(currentHost, engine, this, pos[i]);
                 stamper[method](engine, this, data);
             }
             if (this.showBoundingBox) this.drawBoundingBox(engine);
@@ -1478,17 +1513,18 @@ P.regularStamp = function () {
 // `calculateGlyphPathPositions` - internal helper function called by `regularStamp`
 P.calculateGlyphPathPositions = function () {
 
-    let path = this.getTextPath(),
+    const path = this.getTextPath(),
         len = path.length,
         textPos = this.textPositions,
         widths = this.textGlyphWidths,
         direction = (this.textPathDirection == LTR) ? true : false,
-        pathPos = this.textPathPosition,
-        distance, posArray, i, iz, width,
         justify = this.justify,
         loop = this.textPathLoop,
-        localPathPos,
         pathSpeed = this.constantPathSpeed;
+
+    let distance, posArray, i, iz, width,
+        pathPos = this.textPathPosition,
+        localPathPos;
 
     for (i = 0, iz = textPos.length; i < iz; i++) {
 
@@ -1547,20 +1583,20 @@ P.calculateGlyphPathPositions = function () {
 // `preStamper` - internal helper function called by `regularStamp`
 P.preStamper = function (dest, engine, entity, args) {
 
-    const makeStyle = function (item) {
+    const makeStyle = function (s) {
 
-        if (item.getData) return item.getData(entity, dest);
+        if (s.getData) return s.getData(entity, dest);
 
-        return item;
+        return s;
     };
 
-    let [font, strokeStyle, fillStyle, highlight, underline, overline, ...data] = args;
+    const [font, strokeStyle, fillStyle, highlight, underline, overline, ...data] = args;
 
     if (font) engine.font = font;
 
     if (highlight || underline || overline) {
 
-        let { highlightStyle, textHeight, underlineStyle, underlineWidth, underlinePosition, noUnderlineGlyphs, overlineStyle, overlineWidth, overlinePosition, noOverlineGlyphs } = entity;
+        const { highlightStyle, textHeight, underlineStyle, underlineWidth, underlinePosition, noUnderlineGlyphs, overlineStyle, overlineWidth, overlinePosition } = entity;
 
         engine.save();
 
@@ -1648,7 +1684,7 @@ P.stamper = {
     // `stamper.clear`
     clear: function (engine, entity, data) { 
 
-        let gco = engine.globalCompositeOperation;
+        const gco = engine.globalCompositeOperation;
         engine.globalCompositeOperation = DESTINATION_OUT;
         engine.fillText(...data);
         engine.globalCompositeOperation = gco;
@@ -1675,11 +1711,11 @@ P.drawBoundingBox = function (engine) {
 // + In other cases, we perform the action on a per-line basis
 P.performRotation = function (engine) {
 
-    let dest = this.currentHost;
+    const dest = this.currentHost;
 
     if (dest) {
 
-        let [x, y] = this.currentStampPosition;
+        const [x, y] = this.currentStampPosition;
 
         dest.rotateDestination(engine, x, y, this);
     }
