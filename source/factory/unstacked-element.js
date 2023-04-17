@@ -28,7 +28,7 @@ import { _computed, _entries, _floor, _max, ABSOLUTE, AUTO, CANVAS, DATA_SCRAWL_
 // ## UnstackedElement constructor
 const UnstackedElement = function (el) {
     
-    let name = el.id || el.name;
+    const name = el.id || el.name;
 
     this.makeName(name);
     this.register();
@@ -101,7 +101,7 @@ P.addCanvas = function (items = Ωempty) {
 
     if (!this.canvas) {
 
-        let canvas = document.createElement(CANVAS),
+        const canvas = document.createElement(CANVAS),
             el = this.domElement,
             style = el.style;
 
@@ -111,7 +111,7 @@ P.addCanvas = function (items = Ωempty) {
         
         el.prepend(canvas);
 
-        let art = makeCanvas({
+        const art = makeCanvas({
             name: `${this.name}-canvas`,
             domElement: canvas,
 
@@ -145,9 +145,9 @@ P.checkElementStyleValues = function () {
             style = this.elementComputedStyles,
             canvas = wrapper.domElement;
 
-        let {x: elX, y: elY, width: elW, height: elH} = el.getBoundingClientRect();
-        let {x: canvasX, y: canvasY} = canvas.getBoundingClientRect();
-        let {zIndex: styleZ, width: styleW, height: styleH} = style;
+        const {x: elX, y: elY, width: elW, height: elH} = el.getBoundingClientRect();
+        const {x: canvasX, y: canvasY} = canvas.getBoundingClientRect();
+        const {zIndex: styleZ, width: styleW, height: styleH} = style;
 
         elX = _floor(elX);
         elY = _floor(elY);

@@ -45,6 +45,8 @@ import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { releaseVector, requestVector } from './vector.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
@@ -174,7 +176,7 @@ P.makeStarPath = function () {
     const points = this.points,
         twist = this.twist,
         turn = 360 / points,
-        xPts = [];
+        xPts = requestArray();
 
     let radius1 = this.radius1,
         radius2 = this.radius2;
@@ -240,6 +242,8 @@ P.makeStarPath = function () {
     myXoffset = _abs(myMin).toFixed(1);
 
     myPath = `m${myXoffset},0l${myPath}z`;
+
+    releaseArray(xPts);
 
     return myPath;
 };

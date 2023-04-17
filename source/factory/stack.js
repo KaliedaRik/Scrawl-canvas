@@ -391,11 +391,11 @@ P.render = function () {
 // `addExistingDomElements` - argument is a CSS query search String. All elements in the DOM matching the search will be __moved__ into the Stack wrapper's DOM element and given Scrawl-canvas Element wrappers. While Scrawl-canvas will try its best to respect the elements' CSS attributes, they will be __positioned absolutely__ within the Stack and given start, handle and offset values of `[0, 0]`. 
 P.addExistingDomElements = function (search) {
 
-    let elements, el, captured, i, iz;
-
     if (xt(search)) {
 
-        elements = (search.substring) ? document.querySelectorAll(search) : [].concat(search);
+        let el, captured, i, iz;
+
+        const elements = (search.substring) ? document.querySelectorAll(search) : [].concat(search);
 
         for (i = 0, iz = elements.length; i < iz; i++) {
 
@@ -514,22 +514,24 @@ const addInitialStackElement = function (el) {
 // Helper function for addInitialStackElement()
 const processNewStackChildren = function (el, name) {
 
-    let hostDims = el.getBoundingClientRect(),
-        y = 0;
+    const hostDims = el.getBoundingClientRect();
+
+    let y = 0,
+        dims, computed, yHeight, args;
 
     // Only go down one level of hierarchy here; stacks don't do hierarchies, only interested in knowing about immediate child elements
     Array.from(el.children).forEach(child => {
     
         if (child.getAttribute(DATA_SCRAWL_STACK) == null && !isa_canvas(child) && child.tagName != $SCRIPT) {
 
-            let dims = child.getBoundingClientRect(),
-                computed = _computed(child);
+            dims = child.getBoundingClientRect();
+            computed = _computed(child);
 
-            let yHeight = parseFloat(computed.marginTop) + parseFloat(computed.borderTopWidth) + parseFloat(computed.paddingTop) + parseFloat(computed.paddingBottom) + parseFloat(computed.borderBottomWidth) + parseFloat(computed.marginBottom);
+            yHeight = parseFloat(computed.marginTop) + parseFloat(computed.borderTopWidth) + parseFloat(computed.paddingTop) + parseFloat(computed.paddingBottom) + parseFloat(computed.borderBottomWidth) + parseFloat(computed.marginBottom);
 
             y = (!y) ? dims.top - hostDims.top : y;
 
-            const args = {
+            args = {
                 name: child.id || child.getAttribute(NAME),
                 domElement: child,
                 group: name,

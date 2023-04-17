@@ -43,6 +43,8 @@ import { constructors } from '../core/library.js';
 
 import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
@@ -183,7 +185,7 @@ P.makeSpiralPath = function () {
     const loops = _floor(this.loops),
         loopIncrement = this.loopIncrement,
         drawFromLoop = _floor(this.drawFromLoop),
-        currentTurn = [];
+        currentTurn = requestArray();
 
     let x1, y1, x2, y2, x3, y3,
         sx1, sy1, sx2, sy2, sx3, sy3;
@@ -208,6 +210,8 @@ P.makeSpiralPath = function () {
             currentTurn[i] = [x1 + (sx1 * loopIncrement), y1 + (sy1 * loopIncrement), x2 + (sx2 * loopIncrement), y2 + (sy2 * loopIncrement), x3 + (sx3 * loopIncrement), y3 + (sy3 * loopIncrement)];
         }
     }
+    releaseArray(currentTurn);
+
     return path;
 };
 

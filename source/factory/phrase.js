@@ -170,7 +170,6 @@ entityMix(P);
 P.midInitActions = function (items) {
 
     this.sectionStyles = [];
-    this.sectionClasses = sectionClasses;
 };
 
 
@@ -212,7 +211,7 @@ const defaultAttributes = {
 
 // __sectionClasses__ - Array of styling objects
 //
-// Glyphs (letters) can be individually styled by adding a ___styling object___ to the `sectionClasses` Array, and then adding __section style markup__ to the Phrase's text String attribute. Subsequent glyphs will inherit those styles until a second style marker updating or terminating that particular style is encountered.
+// Glyphs (letters) can be individually styled by adding a ___styling object___ to the global `sectionClasses` Array (which is stored in the Library, not the Phrase prototype or entity), and then adding __section style markup__ to the Phrase's text String attribute. Subsequent glyphs will inherit those styles until a second style marker updating or terminating that particular style is encountered.
 //
 // The following font attributes can be modified on a per-glyph basis using section classes:
 // + `style` - eg 'italic'
@@ -245,14 +244,13 @@ const defaultAttributes = {
 //
 // The following classes are pre-defined for every Phrase entity:
 // + `DEFAULTS` - remove all inline glyph styling from this point on
-// + `BOLD`, `/BOLD` - add/remove bold styling
-// + `ITALIC`, `/ITALIC` - add/remove italic styling
+// + `b`, `/b`, `strong`, `/strong`, `BOLD`, `/BOLD`  - add/remove bold styling
+// + `i`, `/i`, `em`, `/em`, `ITALIC`, `/ITALIC` - add/remove italic styling
 // + `SMALL-CAPS`, `/SMALL-CAPS` - add/remove small-caps styling
 // + `HIGHLIGHT`, `/HIGHLIGHT` - add/remove glyph background highlight
-// + `UNDERLINE`, `/UNDERLINE` - add/remove glyph underline
+// + `u`, `/u`, `UNDERLINE`, `/UNDERLINE` - add/remove glyph underline
 // + `OVERLINE`, `/OVERLINE` - add/remove glyph overline
     sectionClassMarker: DEF_SECTION_MARKERS,
-    sectionClasses: null,
 
 // ##### Overlines, underlines, highlighting
 // We set the position and style for overlines, underlines and background highlight on a per-Phrase entity level, then apply them to glyphs using __sectionClasses__ styling objects.
@@ -769,7 +767,8 @@ P.setSectionStyles = function (text) {
     const search = new RegExp(this.sectionClassMarker),
         parseArray = text.split(search),
         styles = this.sectionStyles,
-        classes = this.sectionClasses;
+        // classes = this.sectionClasses;
+        classes = sectionClasses;
 
     let parsedText = ZERO_STR,
         classObj, index, styleObj;
@@ -800,7 +799,8 @@ P.addSectionClass = function (label, obj) {
 
     if (xta(label, obj) && label.substring && isa_obj(obj)) {
 
-        this.sectionClasses[label] = obj;
+        // this.sectionClasses[label] = obj;
+        sectionClasses[label] = obj;
     }
     this.dirtyText = true;
     this.dirtyPathObject = true;
@@ -810,7 +810,8 @@ P.addSectionClass = function (label, obj) {
 
 P.removeSectionClass = function (label) {
 
-    delete this.sectionClasses[label];
+    // delete this.sectionClasses[label];
+    delete sectionClasses[label];
 
     this.dirtyText = true;
     this.dirtyPathObject = true;

@@ -319,7 +319,7 @@ export const importDomVideo = function (query) {
 export const importMediaStream = function (items = Ωempty) {
 
     // Setup the constraints object with user-supplied data in the items argument
-    let constraints = {};
+    const constraints = {};
 
     // For proof-of-concept, only interested in wheter to include or exclude audio in the capture
     constraints.audio = (xt(items.audio)) ? items.audio : true;
@@ -327,12 +327,12 @@ export const importMediaStream = function (items = Ωempty) {
     // For video, limiting functionality to accepting user values for video width and height (as minDIMENSION, maxDIMENSION and the ideal DIMENSION, and a preference for which camera to use - where applicable
     constraints.video = {};
     
-    let width = constraints.video.width = {};
+    const width = constraints.video.width = {};
     if (items.minWidth) width.min = items.minWidth;
     if (items.maxWidth) width.max = items.maxWidth;
     width.ideal = (items.width) ? items.width : 1280;
     
-    let height = constraints.video.height = {};
+    const height = constraints.video.height = {};
     if (items.minHeight) height.min = items.minHeight;
     if (items.maxHeight) height.max = items.maxHeight;
     height.ideal = (items.height) ? items.height : 720;
@@ -341,11 +341,11 @@ export const importMediaStream = function (items = Ωempty) {
     if (items.facing) constraints.video.facingMode = items.facing;
     
     // We need a video element to receive the media stream
-    let name = items.name || generateUniqueString();
+    const name = items.name || generateUniqueString();
 
-    let el = document.createElement(VIDEO);
+    const el = document.createElement(VIDEO);
 
-    let vid = makeVideoAsset({
+    const vid = makeVideoAsset({
         name: name,
         source: el,
     });
@@ -357,8 +357,9 @@ export const importMediaStream = function (items = Ωempty) {
             navigator.mediaDevices.getUserMedia(constraints)
             .then(mediaStream => {
 
-                let actuals = mediaStream.getVideoTracks(),
-                    data;
+                const actuals = mediaStream.getVideoTracks();
+
+                let data;
 
                 if (_isArray(actuals) && actuals[0]) data = actuals[0].getConstraints();
 

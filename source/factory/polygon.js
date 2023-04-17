@@ -45,6 +45,8 @@ import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { releaseVector, requestVector } from './vector.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
@@ -166,7 +168,7 @@ P.makePolygonPath = function () {
     const sideLength = this.sideLength || this.radius,
         sides = this.sides,
         turn = 360 / sides,
-        yPts = [];
+        yPts = requestArray();
 
     let currentY = 0,
         myPath = ZERO_STR,
@@ -189,6 +191,8 @@ P.makePolygonPath = function () {
     myYoffset = (((_abs(myMin) + _abs(myMax)) - sideLength) / 2).toFixed(1);
 
     myPath = `m0,${myYoffset}l${myPath}z`;
+
+    releaseArray(yPts);
 
     return myPath;
 };

@@ -285,11 +285,12 @@ S.shadowColor = function (item) {
 P.getChanges = function (ent, engineState) {
 
     let k, style, scaled, i, iz, j, jz,
-        linedashFlag, desired, current,
-        defs = this.defs,
+        linedashFlag, desired, current;
+
+    const defs = this.defs,
         result = {};
 
-    let getItem = function (source, key) {
+    const getItem = function (source, key) {
         return (typeof source[key] != UNDEF) ? source[key] : defs[key];
     };
 

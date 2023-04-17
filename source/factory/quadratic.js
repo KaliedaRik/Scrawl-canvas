@@ -276,16 +276,11 @@ P.cleanSpecies = function () {
 // `makeQuadraticPath` - internal helper function - called by `cleanSpecies`
 P.makeQuadraticPath = function () {
     
-    let [startX, startY] = this.currentStampPosition;
-    let [controlX, controlY] = this.currentControl;
-    let [endX, endY] = this.currentEnd;
+    const [startX, startY] = this.currentStampPosition;
+    const [controlX, controlY] = this.currentControl;
+    const [endX, endY] = this.currentEnd;
 
-    let cx = (controlX - startX).toFixed(2),
-        cy = (controlY - startY).toFixed(2),
-        ex = (endX - startX).toFixed(2),
-        ey = (endY - startY).toFixed(2);
-
-    return `${ZERO_PATH}q${cx},${cy} ${ex},${ey}`;
+    return `${ZERO_PATH}q${(controlX - startX).toFixed(2)},${(controlY - startY).toFixed(2)} ${(endX - startX).toFixed(2)},${(endY - startY).toFixed(2)}`;
 };
 
 // `cleanDimensions` - internal helper function called by `prepareStamp` 
@@ -315,13 +310,13 @@ P.preparePinsForStamp = function () {
 
         name = dirtyPins[i];
 
-        if ((cPivot && cPivot.name === name) || (cPath && cPath.name == name)) {
+        if ((cPivot && cPivot.name == name) || (cPath && cPath.name == name)) {
 
             this.dirtyControl = true;
             if (this.controlLockTo.includes(PATH)) this.currentControlPathData = false;
         }
 
-        if ((ePivot && ePivot.name === name) || (ePath && ePath.name == name)) {
+        if ((ePivot && ePivot.name == name) || (ePath && ePath.name == name)) {
 
             this.dirtyEnd = true;
             if (this.endLockTo.includes(PATH)) this.currentEndPathData = false;

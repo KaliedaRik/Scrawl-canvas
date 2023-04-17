@@ -208,7 +208,7 @@ S.copyStart = function (x, y) {
 };
 D.copyStartX = function (coord) {
 
-    let c = this.copyStart;
+    const c = this.copyStart;
     c[0] = addStrings(c[0], coord);
     this.dirtyCopyStart = true;
     this.dirtyImageSubscribers = true;
@@ -216,7 +216,7 @@ D.copyStartX = function (coord) {
 };
 D.copyStartY = function (coord) {
 
-    let c = this.copyStart;
+    const c = this.copyStart;
     c[1] = addStrings(c[1], coord);
     this.dirtyCopyStart = true;
     this.dirtyFilterIdentifier = true;
@@ -272,7 +272,7 @@ S.copyDimensions = function (w, h) {
 };
 D.copyWidth = function (val) {
 
-    let c = this.copyDimensions;
+    const c = this.copyDimensions;
     c[0] = addStrings(c[0], val);
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
@@ -280,7 +280,7 @@ D.copyWidth = function (val) {
 };
 D.copyHeight = function (val) {
 
-    let c = this.copyDimensions;
+    const c = this.copyDimensions;
     c[1] = addStrings(c[1], val);
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
@@ -306,7 +306,7 @@ S.checkHitIgnoreTransparency = function (item) {
 // `get`
 P.get = function (item) {
 
-    let source = this.source;
+    const source = this.source;
 
     if ((item.indexOf($VIDEO) == 0 || item.indexOf($IMAGE) == 0) && source) {
 
@@ -316,7 +316,7 @@ P.get = function (item) {
 
     else {
 
-        let getter = this.getters[item];
+        const getter = this.getters[item];
 
         if (getter) return getter.call(this);
 
@@ -360,7 +360,7 @@ P.set = function (items = Ωempty) {
         const stateSetters = (state) ? state.setters : Ωempty;
         const stateDefs = (state) ? state.defs : Ωempty;
 
-        let predefined, i, key, value;
+        let fn, i, key, value;
 
         for (i = 0; i < keysLen; i++) {
 
@@ -377,16 +377,16 @@ P.set = function (items = Ωempty) {
 
                 if (!STATE_KEYS.includes(key)) {
 
-                    predefined = setters[key];
+                    fn = setters[key];
 
-                    if (predefined) predefined.call(this, value);
+                    if (fn) fn.call(this, value);
                     else if (typeof defs[key] != UNDEF) this[key] = value;
                 }
                 else {
 
-                    predefined = stateSetters[key];
+                    fn = stateSetters[key];
 
-                    if (predefined) predefined.call(state, value);
+                    if (fn) fn.call(state, value);
                     else if (typeof stateDefs[key] != UNDEF) state[key] = value;
                 }
             }
@@ -407,7 +407,7 @@ P.updateImageSubscribers = function () {
 
         this.imageSubscribers.forEach(name => {
 
-            let instance = artefact[name];
+            const instance = artefact[name];
 
             if (instance) instance.dirtyInput = true;
         });
@@ -432,25 +432,25 @@ P.imageUnsubscribe = function (name) {
 // `cleanImage`
 P.cleanImage = function () {
 
-    let natWidth = this.sourceNaturalWidth,
+    const natWidth = this.sourceNaturalWidth,
         natHeight = this.sourceNaturalHeight;
 
     if (xta(natWidth, natHeight) && natWidth > 0 && natHeight > 0) {
 
         this.dirtyImage = false;
 
-        let start = this.currentCopyStart,
+        const start = this.currentCopyStart,
             x = start[0],
             y = start[1];
 
-        let dims = this.currentCopyDimensions,
+        const dims = this.currentCopyDimensions,
             w = dims[0],
             h = dims[1];
 
         if (x + w > natWidth) start[0] = natWidth - w;
         if (y + h > natHeight) start[1] = natHeight - h;
 
-        let copyArray = this.copyArray;
+        const copyArray = this.copyArray;
 
         copyArray.length = 0;
         copyArray.push(start[0], start[1], w, h);
@@ -460,7 +460,7 @@ P.cleanImage = function () {
 // `cleanCopyStart`
 P.cleanCopyStart = function () {
 
-    let width = this.sourceNaturalWidth,
+    const width = this.sourceNaturalWidth,
         height = this.sourceNaturalHeight;
 
     if (xta(width, height) && width > 0 && height > 0) {
@@ -469,7 +469,7 @@ P.cleanCopyStart = function () {
 
         this.cleanPosition(this.currentCopyStart, this.copyStart, [width, height]);
 
-        let current = this.currentCopyStart,
+        const current = this.currentCopyStart,
             x = current[0],
             y = current[1];
 
@@ -617,7 +617,7 @@ P.cleanPathObject = function () {
         if (this.pasteArray.length !== 4) this.dirtyPathObject = true;
         else {
 
-            let p = this.pathObject = new Path2D();
+            const p = this.pathObject = new Path2D();
 
             p.rect(...this.pasteArray);
         }

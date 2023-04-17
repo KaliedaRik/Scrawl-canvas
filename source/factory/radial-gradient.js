@@ -174,11 +174,11 @@ P.buildStyle = function (cell) {
     
     if (cell) {
 
-        let engine = cell.engine;
+        const engine = cell.engine;
 
         if (engine) {
 
-            let gradient = engine.createRadialGradient(...this.gradientArgs);
+            const gradient = engine.createRadialGradient(...this.gradientArgs);
             
             return this.addStopsToGradient(gradient, this.paletteStart, this.paletteEnd, this.cyclePalette);
         }

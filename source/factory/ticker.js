@@ -662,7 +662,6 @@ P.run = function () {
 
         if (typeof this.onRun == FUNCTION) this.onRun();
     }
-
     return this;
 };
 
@@ -761,7 +760,7 @@ P.reverse = function (resume = false) {
 P.halt = function () {
 
     this.active = false;
-    pushUnique(tickerAnimations, this.name);
+    removeItem(tickerAnimations, this.name);
     tickerAnimationsFlag = true;
 
     if (typeof this.onHalt == FUNCTION) this.onHalt();

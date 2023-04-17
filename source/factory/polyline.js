@@ -39,6 +39,8 @@ import { correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, 
 
 import { makeCoordinate } from '../factory/coordinate.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
@@ -161,7 +163,7 @@ S.pins = function (item) {
 
     if (xt(item)) {
 
-        let pins = this.pins;
+        const pins = this.pins;
 
         if (_isArray(item)) {
 
@@ -173,7 +175,7 @@ S.pins = function (item) {
         }
         else if (isa_obj(item) && xt(item.index)) {
 
-            let element = pins[item.index];
+            const element = pins[item.index];
 
             if (_isArray(element)) {
 
@@ -188,11 +190,11 @@ D.pins = function (item) {
 
     if (xt(item)) {
 
-        let pins = this.pins;
+        const pins = this.pins;
 
         if (isa_obj(item) && xt(item.index)) {
 
-            let element = pins[item.index];
+            const element = pins[item.index];
 
             if (_isArray(element)) {
 
@@ -599,26 +601,31 @@ P.makePolylinePath = function () {
             first = cPin[0],
             last = cPin[cLen - 1];
 
-        let calc = [],
-            result = ZERO_PATH,
+        const calc = requestArray();
+        
+        let result = ZERO_PATH,
             i;
 
         if (closed) {
 
-            const startPoint = [].concat(...getPathParts(...last, ...first, ...cPin[1], tension));
+            const startPoint = requestArray();
+
+            startPoint.push(...getPathParts(...last, ...first, ...cPin[1], tension));
 
             for (i = 0; i < cLen - 2; i++) {
 
-                calc = calc.concat(...getPathParts(...cPin[i], ...cPin[i + 1], ...cPin[i + 2], tension));
+                calc.push(...getPathParts(...cPin[i], ...cPin[i + 1], ...cPin[i + 2], tension));
             }
 
-            calc = calc.concat(...getPathParts(...cPin[cLen - 2], ...last, ...first, tension));
+            calc.push(...getPathParts(...cPin[cLen - 2], ...last, ...first, tension));
 
             calc.unshift(startPoint[4], startPoint[5]);
             calc.push(startPoint[0], startPoint[1], startPoint[2], startPoint[3]);
 
             if (tension) result = buildCurve(first[0], first[1], calc) + 'z';
             else result = buildLine(first[0], first[1], calc) + 'z';
+
+            releaseArray(startPoint);
         }
         else {
 
@@ -626,13 +633,16 @@ P.makePolylinePath = function () {
 
             for (i = 0; i < cLen - 2; i++) {
 
-                calc = calc.concat(...getPathParts(...cPin[i], ...cPin[i + 1], ...cPin[i + 2], tension));
+                calc.push(...getPathParts(...cPin[i], ...cPin[i + 1], ...cPin[i + 2], tension));
             }
             calc.push(last[0], last[1], last[0], last[1]);
 
             if (tension) result = buildCurve(first[0], first[1], calc);
             else result = buildLine(first[0], first[1], calc);
         }
+
+        releaseArray(calc);
+
         return result;
     }
     return ZERO_PATH;

@@ -198,9 +198,10 @@ P.cleanSpecies = function () {
 // `makeTetragonPath` - internal helper function - called by `cleanSpecies`
 P.makeTetragonPath = function () {
 
-    let radiusX = this.radiusX,
-        radiusY = this.radiusY,
-        width, height;
+    const radiusX = this.radiusX,
+        radiusY = this.radiusY;
+
+    let width, height;
 
     if (radiusX.substring || radiusY.substring) {
 
