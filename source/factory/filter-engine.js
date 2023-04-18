@@ -15,6 +15,8 @@ import { releaseCell, requestCell } from './cell-fragment.js';
 
 import { releaseCoordinate, requestCoordinate } from './coordinate.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import { makeColor } from './color.js';
 
 import { bluenoise } from './filter-engine-bluenoise-data.js';
@@ -23,26 +25,26 @@ import { _abs, _ceil, _entries, _exp, _floor, _freeze, _isArray, _keys, _max, _m
 
 
 // Local constants
-const orderedNoise = _freeze([0.00,0.50,0.13,0.63,0.03,0.53,0.16,0.66,0.75,0.25,0.88,0.38,0.78,0.28,0.91,0.41,0.19,0.69,0.06,0.56,0.22,0.72,0.09,0.59,0.94,0.44,0.81,0.31,0.97,0.47,0.84,0.34,0.05,0.55,0.17,0.67,0.02,0.52,0.14,0.64,0.80,0.30,0.92,0.42,0.77,0.27,0.89,0.39,0.23,0.73,0.11,0.61,0.20,0.70,0.08,0.58,0.98,0.48,0.86,0.36,0.95,0.45,0.83,0.33]);
+const orderedNoise = new Float32Array([0.00,0.50,0.13,0.63,0.03,0.53,0.16,0.66,0.75,0.25,0.88,0.38,0.78,0.28,0.91,0.41,0.19,0.69,0.06,0.56,0.22,0.72,0.09,0.59,0.94,0.44,0.81,0.31,0.97,0.47,0.84,0.34,0.05,0.55,0.17,0.67,0.02,0.52,0.14,0.64,0.80,0.30,0.92,0.42,0.77,0.27,0.89,0.39,0.23,0.73,0.11,0.61,0.20,0.70,0.08,0.58,0.98,0.48,0.86,0.36,0.95,0.45,0.83,0.33]);
 
 const newspaperPatterns = _freeze([
-    _freeze([0, 0, 0, 0]), 
-    _freeze([0, 0, 0, 180]), 
-    _freeze([180, 0, 0, 0]), 
-    _freeze([180, 0, 0, 180]), 
-    _freeze([0, 180, 180, 180]),
-    _freeze([180, 180, 180, 0]), 
-    _freeze([180, 180, 180, 180]), 
-    _freeze([180, 180, 180, 255]), 
-    _freeze([255, 180, 180, 180]), 
-    _freeze([255, 180, 180, 255]), 
-    _freeze([180, 255, 255, 255]), 
-    _freeze([255, 255, 255, 180]), 
-    _freeze([255, 255, 255, 255])
+    new Uint8Array([0,0,0,0]),
+    new Uint8Array([0,0,0,180]),
+    new Uint8Array([180,0,0,0]),
+    new Uint8Array([180,0,0,180]),
+    new Uint8Array([0,180,180,180]),
+    new Uint8Array([180,180,180,0]),
+    new Uint8Array([180,180,180,180]),
+    new Uint8Array([180,180,180,255]),
+    new Uint8Array([255,180,180,180]),
+    new Uint8Array([255,180,180,255]),
+    new Uint8Array([180,255,255,255]),
+    new Uint8Array([255,255,255,180]),
+    new Uint8Array([255,255,255,255])
 ]);
 
-const LOW_ARRAY = _freeze([0, 255, 0]);
-const HIGH_ARRAY = _freeze([0, 255, 255]);
+const LOW_ARRAY = new Uint8Array([0,255,0]);
+const HIGH_ARRAY = new Uint8Array([0,255,255]);
 
 
 // The filter Color object - used by various filters
@@ -78,16 +80,18 @@ export const setFilterMemoizationChoke = function (val) {
 
 P.action = function (packet) {
 
-    let { identifier, filters, image } = packet;
+    const { identifier, filters, image } = packet;
 
-    let { workstoreLastAccessed, workstore, actions, theBigActionsObject } = this;
+    const { workstoreLastAccessed, workstore, actions, theBigActionsObject } = this;
 
-    let workstoreKeys = _keys(workstore), 
+    const workstoreKeys = _keys(workstore), 
         workstoreChoke = _now() - choke;
 
-    for (let k = 0, kz = workstoreKeys.length, s; k < kz; k++) {
+    let i, iz, s, actData, a;
 
-        s = workstoreKeys[k];
+    for (i = 0, iz = workstoreKeys.length, s; i < iz; i++) {
+
+        s = workstoreKeys[i];
 
         if (workstoreLastAccessed[s] < workstoreChoke) {
 
@@ -104,18 +108,18 @@ P.action = function (packet) {
 
     actions.length = 0;
 
-    for (let f = 0, fz = filters.length; f < fz; f++) {
+    for (i = 0, iz = filters.length; i < iz; i++) {
 
-        actions.push(...filters[f].actions)
+        actions.push(...filters[i].actions)
     }
 
-    let actionsLen = actions.length;
+    const actionsLen = actions.length;
 
     if (actionsLen) {
 
         this.unknit(image);
 
-        for (let i = 0, actData, a; i < actionsLen; i++) {
+        for (i = 0; i < actionsLen; i++) {
 
             actData = actions[i];
             a = theBigActionsObject[actData.action];
@@ -165,11 +169,9 @@ P.unknit = function (image) {
 
     this.cache = {};
 
-    let cache = this.cache;
+    const cache = this.cache;
 
-    let { width, height, data } = image;
-
-    let len = data.length;
+    const { width, height, data } = image;
 
     cache.source = new ImageData(data, width, height);
     cache.work = new ImageData(data, width, height);
@@ -178,16 +180,18 @@ P.unknit = function (image) {
 // `getAlphaData` - extract alpha channel data from (usually the source) ImageData object and populate the color channels of a new ImageData object with that data
 P.getAlphaData = function (image) {
 
-    let {width, height, data:iData} = image;
+    const {width, height, data:iData} = image;
 
-    let len = iData.length;
+    const len = iData.length;
 
-    let sourceAlpha = new ImageData(width, height),
+    const sourceAlpha = new ImageData(width, height),
         aData = sourceAlpha.data;
 
-    for (let i = 0; i < len; i += 4) {
+    let a, i;
 
-        let a = iData[i + 3];
+    for (i = 0; i < len; i += 4) {
+
+        a = iData[i + 3];
         aData[i] = 0;
         aData[i + 1] = 0;
         aData[i + 2] = 0;
@@ -203,37 +207,39 @@ P.getAlphaData = function (image) {
 // `buildImageGrid` creates an Array of Arrays which contain the indexes of each pixel in the image channel Arrays
 P.buildImageGrid = function (image) {
 
-    let { cache, workstore, workstoreLastAccessed } = this;
+    const { cache, workstore, workstoreLastAccessed } = this;
 
     if (!image) image = cache.source;
 
-    let { width, height } = image
+    const { width, height } = image
 
     if (width && height) {
 
-        let name = `grid-${width}-${height}`;
+        const name = `grid-${width}-${height}`;
         if (workstore[name]) {
             workstoreLastAccessed[name] = _now();
             return workstore[name];
         }
 
-        let grid = [],
-            counter = 0;
+        const grid = [];
 
-        for (let y = 0; y < height; y++) {
+        let counter = 0,
+            row, x, y;
 
-            let row = [];
+        for (y = 0; y < height; y++) {
 
-            for (let x = 0; x < width; x++) {
+            row = [];
+
+            for (x = 0; x < width; x++) {
                 
                 row.push(counter);
                 counter++;
             }
-            grid.push(row);
+            grid.push(_freeze(row));
         }
-        workstore[name] = grid;
+        workstore[name] = _freeze(grid);
         workstoreLastAccessed[name] = _now();
-        return grid;
+        return workstore[name];
     }
     return false;
 };
@@ -255,11 +261,11 @@ P.getOrAddWorkstore = function (name) {
 
 P.getRandomNumbers = function (items = {}) {
 
-    let {
+    const {
         seed = DEFAULT_SEED, 
         length = 0, 
         imgWidth = 0, 
-        type = RANDOM
+        type = RANDOM,
     } = items;
 
     const name = `random-${seed}-${length}-${type}`;
@@ -271,74 +277,80 @@ P.getRandomNumbers = function (items = {}) {
         return workstore[name];
     }
 
-    const vals = [];
+    const vals = requestArray();
+
+    let i, j, k, temp, currentRow;
 
     if (type == BLUENOISE && imgWidth) {
 
         const bLen = bluenoise.length,
             blueDims = _sqrt(bLen),
             imgHeight = length / imgWidth,
-            bLines = [];
+            bLines = requestArray();
 
-        for (let i = 0; i < bLen; i += blueDims) {
+        for (i = 0; i < bLen; i += blueDims) {
 
-            let temp = bluenoise.slice(i, i + blueDims);
+            temp = bluenoise.slice(i, i + blueDims);
             bLines.push(temp);
         }
 
-        for (let bigRows = imgHeight; bigRows > 0; bigRows -= blueDims) {
+        for (i = imgHeight; i > 0; i -= blueDims) {
 
-            for (let bRow = 0; bRow < blueDims; bRow++) {
+            for (j = 0; j < blueDims; j++) {
 
-                let currentRow = bLines[bRow];
+                currentRow = bLines[j];
 
-                for (let bCol = imgWidth; bCol > 0; bCol -= blueDims) {
+                for (k = imgWidth; k > 0; k -= blueDims) {
 
-                    if (bCol < blueDims) vals.push(...currentRow.slice(0, bCol));
+                    if (k < blueDims) vals.push(...currentRow.slice(0, k));
                     else vals.push(...currentRow);
                 }
             }
         }
+        releaseArray(bLines);
     }
     else if (type == ORDERED && imgWidth) {
 
         const oLen = orderedNoise.length,
             oDims = _sqrt(oLen),
             imgHeight = length / imgWidth,
-            oLines = [];
+            oLines = requestArray();
 
-        for (let i = 0; i < oLen; i += oDims) {
+        for (i = 0; i < oLen; i += oDims) {
 
-            let temp = orderedNoise.slice(i, i + oDims);
+            temp = orderedNoise.slice(i, i + oDims);
             oLines.push(temp);
         }
 
-        for (let bigRows = imgHeight; bigRows > 0; bigRows -= oDims) {
+        for (i = imgHeight; i > 0; i -= oDims) {
 
-            for (let bRow = 0; bRow < oDims; bRow++) {
+            for (j = 0; j < oDims; j++) {
 
-                let currentRow = oLines[bRow];
+                currentRow = oLines[j];
 
-                for (let bCol = imgWidth; bCol > 0; bCol -= oDims) {
+                for (k = imgWidth; k > 0; k -= oDims) {
 
-                    if (bCol < oDims) vals.push(...currentRow.slice(0, bCol));
+                    if (k < oDims) vals.push(...currentRow.slice(0, k));
                     else vals.push(...currentRow);
                 }
             }
         }
+        releaseArray(oLines);
     }
     else {
 
         const engine = seededRandomNumberGenerator(seed);
 
-        for (let i = 0; i < length; i++) {
+        for (i = 0; i < length; i++) {
 
             vals.push(engine.random());
         }
     }
 
-    workstore[name] = vals;
+    workstore[name] = new Float32Array(vals);
     workstoreLastAccessed[name] = _now();
+
+    releaseArray(vals);
 
     return workstore[name];
 };
@@ -366,12 +378,12 @@ P.buildImageCoordinateLookup = function (image) {
 
             for (let x = 0; x < width; x++) {
                 
-                lookup.push([x, y]);
+                lookup.push(_freeze([x, y]));
             }
         }
-        workstore[name] = lookup;
+        workstore[name] = _freeze(lookup);
         workstoreLastAccessed[name] = _now();
-        return lookup;
+        return workstore[name];
     }
     return false;
 };
@@ -404,7 +416,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
         if (tileWidth + gutterWidth >= iWidth) gutterWidth = iWidth - tileWidth - 1;
         if (tileHeight + gutterHeight >= iHeight) gutterHeight = iHeight - tileHeight - 1;
 
-        let aWidth = tileWidth + gutterWidth,
+        const aWidth = tileWidth + gutterWidth,
             aHeight = tileHeight + gutterHeight;
 
         if (offsetX < 0) offsetX = 0;
@@ -419,8 +431,9 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
             return workstore[name];
         }
 
-        let tiles = [],
-            hold, i, iz, j, jz, x, xz, y, yz;
+        const tiles = [];
+        
+        let hold, i, iz, j, jz, x, xz, y, yz;
 
         for (j = offsetY - aHeight, jz = iHeight; j < jz; j += aHeight) {
 
@@ -434,7 +447,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                         }
                     }
                 }
-                tiles.push([].concat(hold));
+                tiles.push(_freeze([].concat(hold)));
 
                 hold = [];
                 for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
@@ -444,7 +457,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                         }
                     }
                 }
-                tiles.push([].concat(hold));
+                tiles.push(_freeze([].concat(hold)));
 
                 hold = [];
                 for (y = j, yz = j + tileHeight; y < yz; y++) {
@@ -454,7 +467,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                         }
                     }
                 }
-                tiles.push([].concat(hold));
+                tiles.push(_freeze([].concat(hold)));
 
                 hold = [];
                 for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
@@ -464,12 +477,12 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                         }
                     }
                 }
-                tiles.push([].concat(hold));
+                tiles.push(_freeze([].concat(hold)));
             }
         }
-        workstore[name] = tiles;
+        workstore[name] = _freeze(tiles);
         workstoreLastAccessed[name] = _now();
-        return tiles;
+        return workstore[name];
     }
     return false;
 };
@@ -508,26 +521,28 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
 
         const tiles = [];
 
-        for (let j = offsetY - tileHeight, jz = iHeight; j < jz; j += tileHeight) {
+        let i, iz, j, jz, x, xz, y, yz, hold;
 
-            for (let i = offsetX - tileWidth, iz = iWidth; i < iz; i += tileWidth) {
+        for (j = offsetY - tileHeight, jz = iHeight; j < jz; j += tileHeight) {
 
-                let hold = [];
+            for (i = offsetX - tileWidth, iz = iWidth; i < iz; i += tileWidth) {
+
+                hold = [];
                 
-                for (let y = j, yz = j + tileHeight; y < yz; y++) {
+                for (y = j, yz = j + tileHeight; y < yz; y++) {
 
                     if (y >= 0 && y < iHeight) {
 
-                        for (let x = i, xz = i + tileWidth; x < xz; x++) {
+                        for (x = i, xz = i + tileWidth; x < xz; x++) {
 
                             if (x >= 0 && x < iWidth) hold.push(((y * iWidth) + x) * 4);
                         }
                     }
                 }
-                if (hold.length) tiles.push(hold);
+                if (hold.length) tiles.push(_freeze(hold));
             }
         }
-        workstore[name] = tiles;
+        workstore[name] = _freeze(tiles);
         workstoreLastAccessed[name] = _now();
         return tiles;
     }
@@ -655,7 +670,8 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                         }
                     }
                     workstoreLastAccessed[pointsName] = _now();
-                    workstore[pointsName] = points;
+                    workstore[pointsName] = _freeze(points);
+                    points = workstore[pointsName];
                 }
                 break;
 
@@ -683,7 +699,8 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                         counter++;
                     }
                     workstoreLastAccessed[pointsName] = _now();
-                    workstore[pointsName] = points;
+                    workstore[pointsName] = _freeze(points);
+                    points = workstore[pointsName];
                 }
                 tileW = doubleR * 2;
                 tileH = hexDown * 2;
@@ -714,6 +731,9 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                         [x, y] = coord;
                         points.push(_round(x), _round(y));
                     }
+                    workstoreLastAccessed[pointsName] = _now();
+                    workstore[pointsName] = _freeze(points);
+                    points = workstore[pointsName];
                 }
                 tileW = tileR;
                 tileH = tileR;
@@ -729,7 +749,14 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
                     points = workstore[pointsName];
                 }
                 // User-generated points are not pre-processed. Note that the positioning of these points is relative to the offset coordinate values; users, when generating the point values, need to take this into account otherwise the end result may unexpectedly move towards (or beyond) the bottom-right part of the final image.
-                else points.push(...pointVals);
+                else {
+
+                    points.push(...pointVals);
+
+                    workstoreLastAccessed[pointsName] = _now();
+                    workstore[pointsName] = _freeze(points);
+                    points = workstore[pointsName];
+                }
 
                 tileW = tileR;
                 tileH = tileR;
@@ -821,9 +848,9 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         // Filter the tiles Array to remove undefined indexes, then stash the result in the workstore (for future quick-serve) and return the array.
         tiles = tiles.filter(t => t != null);
 
-        workstore[name] = tiles;
+        workstore[name] = _freeze(tiles);
         workstoreLastAccessed[name] = _now();
-        return tiles;
+        return workstore[name];
     }
     return [];
 };
@@ -845,25 +872,26 @@ P.buildHorizontalBlur = function (grid, radius) {
         return workstore[name];
     }
 
-    let horizontalBlur = [],
-        cell;
+    const horizontalBlur = [];
 
-    for (let y = 0; y < gridHeight; y++) {
+    let x, y, c, cz, cellsToProcess;
 
-        for (let x = 0; x < gridWidth; x++) {
+    for (y = 0; y < gridHeight; y++) {
 
-            let cellsToProcess = [];
+        for (x = 0; x < gridWidth; x++) {
 
-            for (let c = x - radius, cz = x + radius + 1; c < cz; c++) {
+            cellsToProcess = [];
+
+            for (c = x - radius, cz = x + radius + 1; c < cz; c++) {
 
                 if (c >= 0 && c < gridWidth) cellsToProcess.push(grid[y][c] * 4);
             }
-            horizontalBlur[(y * gridWidth) + x] = cellsToProcess;
+            horizontalBlur[(y * gridWidth) + x] = _freeze(cellsToProcess);
         }
     }
-    workstore[name] = horizontalBlur;
+    workstore[name] = _freeze(horizontalBlur);
     workstoreLastAccessed[name] = _now();
-    return horizontalBlur;
+    return workstore[name];
 };
 
 // `buildVerticalBlur` - creates an Array of Arrays detailing which pixels contribute to the vertical part of each pixel's blur calculation. Resulting object will be cached in the store
@@ -883,25 +911,26 @@ P.buildVerticalBlur = function (grid, radius) {
         return workstore[name];
     }
 
-    let verticalBlur = [],
-        cell;
+    const verticalBlur = [];
 
-    for (let x = 0; x < gridWidth; x++) {
+    let x, y, c, cz, cellsToProcess;
 
-        for (let y = 0; y < gridHeight; y++) {
+    for (x = 0; x < gridWidth; x++) {
 
-            let cellsToProcess = [];
+        for (y = 0; y < gridHeight; y++) {
 
-            for (let c = y - radius, cz = y + radius + 1; c < cz; c++) {
+            cellsToProcess = [];
+
+            for (c = y - radius, cz = y + radius + 1; c < cz; c++) {
 
                 if (c >= 0 && c < gridHeight) cellsToProcess.push(grid[c][x] * 4);
             }
-            verticalBlur[(y * gridWidth) + x] = cellsToProcess;
+            verticalBlur[(y * gridWidth) + x] = _freeze(cellsToProcess);
         }
     }
-    workstore[name] = verticalBlur;
+    workstore[name] = _freeze(verticalBlur);
     workstoreLastAccessed[name] = _now();
-    return verticalBlur;
+    return workstore[name];
 };
 
 // `buildMatrixGrid` - creates an Array of Arrays detailing which pixels contribute to each pixel's matrix calculation. Resulting object will be cached in the store
@@ -929,10 +958,11 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
         return workstore[name];
     }
 
-    let dataLength = data.length,
-        x, xz, y, yz, i, iz, pos, cell, val,
+    const dataLength = data.length,
         cellsTemplate = [],
         grid = [];
+
+    let x, xz, y, yz, i, iz, pos, cell, val;
 
     for (y = -mY, yz = mHeight - mY; y < yz; y++) {
 
@@ -956,14 +986,14 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
                 if (val < 0) val += dataLength;
                 else if (val >= dataLength) val -= dataLength;
 
-                cell.push(val);
+                cell.push(_freeze(val));
             }
-            grid.push(cell);
+            grid.push(_freeze(cell));
         }
     }
-    workstore[name] = grid;
+    workstore[name] = _freeze(grid);
     workstoreLastAccessed[name] = _now();
-    return grid;
+    return workstore[name];
 };
 
 // `checkChannelLevelsParameters` - divide each channel into discrete sequences of pixels
@@ -992,10 +1022,10 @@ P.checkChannelLevelsParameters = function (f) {
 
             if (v.length == 1) return [[0, 255, v[0]]];
 
-            let res = [],
-                starts, ends;
+            const res = [];
+            let starts, ends, i, iz;
 
-            for (let i = 0, iz = v.length; i < iz; i++) {
+            for (i = 0, iz = v.length; i < iz; i++) {
 
                 starts = 0;
                 ends = 255;
@@ -1023,11 +1053,11 @@ P.cacheOutput = function (name, obj, caller) {
 // `getInputAndOutputLines` - determine, and return, the appropriate results object for the lineIn, lineMix and lineOut values supplied to each action function when it gets invoked
 P.getInputAndOutputLines = function (requirements) {
 
-    let { cache } = this;
+    const { cache } = this;
+    const sourceData = cache.source;
 
     let lineIn = cache.work,
         lineMix = false,
-        sourceData = cache.source,
         alphaData = false;
 
     if (requirements.lineIn == SOURCE_ALPHA || requirements.lineMix == SOURCE_ALPHA) alphaData = this.getAlphaData(sourceData);
@@ -1068,12 +1098,14 @@ P.getGrayscaleValue = function (r, g, b) {
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
 P.processResults = function (store, incoming, ratio) {
 
-    let sData = store.data,
-        iData = incoming.data,
-        antiRatio;
+    const sData = store.data,
+        iData = incoming.data;
+    
+    let antiRatio, i, iz;
 
-    if (ratio === 1) {
-        for (let i = 0, iz = sData.length; i < iz; i++) {
+    if (ratio == 1) {
+
+        for (i = 0, iz = sData.length; i < iz; i++) {
 
             sData[i] = iData[i];
         }
@@ -1082,7 +1114,7 @@ P.processResults = function (store, incoming, ratio) {
 
         antiRatio = 1 - ratio;
 
-        for (let i = 0, iz = sData.length; i < iz; i++) {
+        for (i = 0, iz = sData.length; i < iz; i++) {
 
             sData[i] = (sData[i] * antiRatio) + (iData[i] * ratio);
         }
@@ -1114,7 +1146,7 @@ P.getGradientData = function (gradient) {
         engine.fillStyle = G;
         engine.fillRect(0, 0, 256, 1);
 
-        let data = engine.getImageData(0, 0, 256, 1).data;
+        const data = engine.getImageData(0, 0, 256, 1).data;
 
         releaseCell(mycell);
 
@@ -1154,12 +1186,13 @@ P.theBigActionsObject = {
 // __alpha-to-channels__ - Copies the alpha channel value over to the selected value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
     [ALPHA_TO_CHANNELS]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, aVal, i;
+            len = iData.length;
+        
+        let r, g, b, a, aVal, i;
 
         let {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
 
@@ -1195,12 +1228,13 @@ P.theBigActionsObject = {
 // __area-alpha__ - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
     [AREA_ALPHA]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, i, j, jz, tVal;
+            len = iData.length;
+        
+        let r, g, b, a, i, j, jz, tVal;
 
         let {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, lineOut } = requirements;
 
@@ -1213,7 +1247,7 @@ P.theBigActionsObject = {
         if (null == gutterHeight) gutterHeight = 1;
         if (null == areaAlphaLevels) areaAlphaLevels = [255,0,0,0];
 
-        let tiles = this.buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
+        const tiles = this.buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
 
         this.transferDataUnchanged(oData, iData, len);
 
@@ -1236,12 +1270,13 @@ P.theBigActionsObject = {
 // __average-channels__ - Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0.
     [AVERAGE_CHANNELS]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            i, avg, r, g, b, a;
+            len = iData.length;
+        
+        let i, avg, r, g, b, a;
 
         let {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
 
@@ -1312,7 +1347,7 @@ P.theBigActionsObject = {
 
         const copyPixel = function (fr, tr, data) {
 
-            let fg = fr + 1,
+            const fg = fr + 1,
                 fb = fg + 1,
                 fa = fb + 1,
                 tg = tr + 1,
@@ -1327,13 +1362,14 @@ P.theBigActionsObject = {
 
         const getLinePositions = function (x, y) {
 
-            let ix = x,
+            const ix = x,
                 iy = y,
                 mx = x - offsetX,
                 my = y - offsetY;
 
-            let mPos = -1,
-                iPos = ((iy * iWidth) + ix) * 4;
+            let mPos = -1;
+            
+            const iPos = ((iy * iWidth) + ix) * 4;
 
             if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = ((my * mWidth) + mx) * 4;
 
@@ -1342,7 +1378,7 @@ P.theBigActionsObject = {
 
         const getChannelNormals = function (irn, mrn) {
 
-            let ign = irn + 1,
+            const ign = irn + 1,
                 ibn = ign + 1,
                 ian = ibn + 1,
                 mgn = mrn + 1,
@@ -1365,12 +1401,12 @@ P.theBigActionsObject = {
 
         // const colorEngine = this.colorEngine;
 
-        let [input, output, mix] = this.getInputAndOutputLines(requirements);
+        const [input, output, mix] = this.getInputAndOutputLines(requirements);
 
-        let {width:iWidth, height:iHeight, data:iData} = input;
-        let {width:oWidth, height:oHeight, data:oData} = output;
-        let {width:mWidth, height:mHeight, data:mData} = mix;
-        let len = iData.length;
+        const {width:iWidth, height:iHeight, data:iData} = input;
+        const {width:oWidth, height:oHeight, data:oData} = output;
+        const {width:mWidth, height:mHeight, data:mData} = mix;
+        const len = iData.length;
 
         let {opacity, blend, offsetX, offsetY, lineOut} = requirements;
 
@@ -1756,7 +1792,7 @@ P.theBigActionsObject = {
 
                 const softlightCalc = (din, dmix) => {
 
-                    let d = (dmix <= 0.25) ?
+                    const d = (dmix <= 0.25) ?
                         ((((16 * dmix) - 12) * dmix) + 4) * dmix :
                         _sqrt(dmix);
 
@@ -1973,12 +2009,13 @@ P.theBigActionsObject = {
 
             if (flag) {
 
-                let h = gridStore[pos];
+                const h = gridStore[pos];
 
                 if (h != null) {
 
-                    let l = h.length,
-                        valCounter = 0,
+                    const l = h.length;
+                    
+                    let valCounter = 0,
                         total = 0,
                         index, t;
 
@@ -1999,12 +2036,13 @@ P.theBigActionsObject = {
 
             if (flag) {
 
-                let h = gridStore[pos];
+                const h = gridStore[pos];
 
                 if (h != null) {
 
-                    let l = h.length,
-                        valCounter = 0,
+                    const l = h.length;
+                    
+                    let valCounter = 0,
                         total = 0,
                         index, t, a, hVal;
 
@@ -2027,15 +2065,16 @@ P.theBigActionsObject = {
             return data[(pos * 4) + offset];
         };
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
             len = iData.length,
-            pixelLen = _floor(len / 4),
-            counter, r, g, b, a, pass;
+            pixelLen = _floor(len / 4);
+        
+        let counter, r, g, b, a, pass;
 
-        let {width, height} = input;
+        const {width, height} = input;
 
         let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, step, lineOut} = requirements;
 
@@ -2119,12 +2158,13 @@ P.theBigActionsObject = {
 // __channels-to-alpha__ - Calculates an average value from each pixel's included channels and applies that value to the alpha channel.
     [CHANNELS_TO_ALPHA]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, vr, vg, vb, i, sum;
+            len = iData.length;
+        
+        let r, g, b, a, vr, vg, vb, i, sum;
 
         let {opacity, includeRed, includeGreen, includeBlue, lineOut} = requirements;
 
@@ -2173,19 +2213,20 @@ P.theBigActionsObject = {
 // __chroma__ - Using an array of 'range' arrays, determine whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. Each 'range' array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.
     [CHROMA]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, vr, vg, vb, i, iz, j, flag;
+            len = iData.length;
+        
+        let r, g, b, a, vr, vg, vb, i, iz, j, flag;
 
         let {opacity, ranges, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == ranges) ranges = [];
 
-        for (let j = 0; j < len; j += 4) {
+        for (j = 0; j < len; j += 4) {
 
             flag = false;
 
@@ -2221,13 +2262,13 @@ P.theBigActionsObject = {
 // __clamp-channels__ - Clamp each color channel to a range set by lowColor and highColor values
     [CLAMP_CHANNELS]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            floor = _floor,
-            r, g, b, a, vr, vg, vb, va, i;
+            len = iData.length;
+        
+        let r, g, b, a, vr, vg, vb, va, i;
 
         let {opacity, lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue, lineOut} = requirements;
 
@@ -2282,19 +2323,20 @@ P.theBigActionsObject = {
 
         const getCTAValue = function (dr, dg, db) {
 
-            let diff = (_abs(red - dr) + _abs(green - dg) + _abs(blue - db)) / 3;
+            const diff = (_abs(red - dr) + _abs(green - dg) + _abs(blue - db)) / 3;
 
             if (diff < transparent) return 0;
             if (diff > opaque) return 255;
             return ((diff - transparent) / range) * 255;
         };
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, vr, vg, vb, va, i;
+            len = iData.length;
+        
+        let r, g, b, a, vr, vg, vb, va, i;
 
         let {opacity, red, green, blue, opaqueAt, transparentAt, lineOut} = requirements;
 
@@ -2305,12 +2347,12 @@ P.theBigActionsObject = {
         if (null == opaqueAt) opaqueAt = 1;
         if (null == transparentAt) transparentAt = 0;
 
-        let maxDiff = _max(((red + green + blue) / 3), (((255 - red) + (255 - green) + (255 - blue)) / 3)),
+        const maxDiff = _max(((red + green + blue) / 3), (((255 - red) + (255 - green) + (255 - blue)) / 3)),
             transparent = transparentAt * maxDiff,
             opaque = opaqueAt * maxDiff,
             range = opaque - transparent;
 
-        for (let i = 0; i < len; i += 4) {
+        for (i = 0; i < len; i += 4) {
 
             r = i;
             g = r + 1;
@@ -2339,7 +2381,7 @@ P.theBigActionsObject = {
 
         const copyPixel = function (fr, tr, data) {
 
-            let fg = fr + 1,
+            const fg = fr + 1,
                 fb = fg + 1,
                 fa = fb + 1,
                 tg = tr + 1,
@@ -2354,27 +2396,26 @@ P.theBigActionsObject = {
 
         const getLinePositions = function (x, y) {
 
-            let ix = x,
+            const ix = x,
                 iy = y,
                 mx = x - offsetX,
                 my = y - offsetY;
 
-            let mp = -1,
-                ip = ((iy * iWidth) + ix) * 4;
+            let mp = -1;
+            
+            const ip = ((iy * iWidth) + ix) * 4;
 
             if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mp = ((my * mWidth) + mx) * 4;
 
             return [ip, mp];
         };
 
-        let [input, output, mix] = this.getInputAndOutputLines(requirements);
+        const [input, output, mix] = this.getInputAndOutputLines(requirements);
 
-        // console.log(input, output, mix)
-
-        let {width:iWidth, height:iHeight, data:iData} = input;
-        let {width:oWidth, height:oHeight, data:oData} = output;
-        let {width:mWidth, height:mHeight, data:mData} = mix;
-        let len = iData.length;
+        const {width:iWidth, height:iHeight, data:iData} = input;
+        const {width:oWidth, height:oHeight, data:oData} = output;
+        const {width:mWidth, height:mHeight, data:mData} = mix;
+        const len = iData.length;
 
         let {opacity, compose, offsetX, offsetY, lineOut} = requirements;
 
@@ -2702,12 +2743,11 @@ P.theBigActionsObject = {
             }
         };
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
             len = iData.length;
-            // mathFloor = Math.floor;
 
         let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation, lineOut} = requirements;
 
@@ -2722,10 +2762,11 @@ P.theBigActionsObject = {
         if (null == offsetY) offsetY = 1;
         if (null == operation) operation = MEAN;
 
-        let grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
+        const grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
 
-        let m = _floor(len / 4),
-            r, g, b, a, i;
+        const m = _floor(len / 4);
+        
+        let r, g, b, a, i;
 
         for (i = 0; i < m; i++) {
 

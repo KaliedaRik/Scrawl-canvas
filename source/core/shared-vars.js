@@ -35,6 +35,7 @@ export const _sqrt = Math.sqrt;
 export const _string = JSON.stringify;
 export const _stringify = JSON.stringify;
 export const _tick = 16 / 1000;
+export const _trunc = Math.trunc;
 export const _values = Object.values;
 
 export const $BODY = 'BODY';

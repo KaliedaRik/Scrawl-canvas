@@ -133,6 +133,8 @@ import { asset, cell, constructors, entity, group, styles } from '../core/librar
 
 import { doCreate, mergeOver, removeItem, λnull, Ωempty } from '../core/utilities.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import { makeGradient } from './gradient.js';
 import { colorEngine } from './filter-engine.js';
 
@@ -362,26 +364,27 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 // Overwrites ./mixin/base.js
 P.kill = function () {
 
-    let myname = this.name;
+    const myname = this.name;
+    let f;
 
     // Remove filter from all entity filters attribute
     _entries(entity).forEach(([name, ent]) => {
 
-        let f = ent.filters;
+        f = ent.filters;
         if (f && f.includes(myname)) removeItem(f, myname);
     });
     
     // Remove filter from all group filters attribute
     _entries(group).forEach(([name, grp]) => {
 
-        let f = grp.filters;
+        f = grp.filters;
         if (f && f.includes(myname)) removeItem(f, myname);
     });
     
     // Remove filter from all cell filters attribute
     _entries(cell).forEach(([name, c]) => {
 
-        let f = c.filters;
+        f = c.filters;
         if (f && f.includes(myname)) removeItem(f, myname);
     });
     
@@ -407,7 +410,7 @@ P.set = function (items = Ωempty) {
         const setters = this.setters,
             defs = this.defs;
         
-        let predefined, i, key, value;
+        let fn, i, key, value;
 
         for (i = 0; i < keysLen; i++) {
 
@@ -416,9 +419,9 @@ P.set = function (items = Ωempty) {
 
             if (key && key != NAME && value != null) {
 
-                predefined = setters[key];
+                fn = setters[key];
 
-                if (predefined) predefined.call(this, value);
+                if (fn) fn.call(this, value);
                 else if (typeof defs[key] != UNDEF) this[key] = value;
             }
         }
@@ -441,7 +444,7 @@ P.setDelta = function (items = Ωempty) {
         const setters = this.deltaSetters,
             defs = this.defs;
         
-        let predefined, i, iz, key, value;
+        let fn, i, iz, key, value;
 
         for (i = 0; i < keysLen; i++) {
 
@@ -450,9 +453,9 @@ P.setDelta = function (items = Ωempty) {
 
             if (key && key != NAME && value != null) {
 
-                predefined = setters[key];
+                fn = setters[key];
 
-                if (predefined) predefined.call(this, value);
+                if (fn) fn.call(this, value);
                 else if (typeof defs[key] != UNDEF) this[key] = addStrings(this[key], value);
             }
         }
@@ -534,7 +537,7 @@ const setActionsArray = {
 
 // DEPRECATED! __binary__ - use the updated threshold filter instead, as this functionality has been added to it.
     binary: function (f) {
-        let lowRed = (f.lowRed != null) ? f.lowRed : 0,
+        const lowRed = (f.lowRed != null) ? f.lowRed : 0,
             lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,
             lowBlue = (f.lowBlue != null) ? f.lowBlue : 0,
             lowAlpha = (f.lowAlpha != null) ? f.lowAlpha : 255,
@@ -544,7 +547,7 @@ const setActionsArray = {
             highAlpha = (f.highAlpha != null) ? f.highAlpha : 255;
             
 
-        let low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue, lowAlpha],
+        const low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue, lowAlpha],
             high = (f.high != null) ? f.high : [highRed, highGreen, highBlue, highAlpha];
 
         f.actions = [{
@@ -617,7 +620,7 @@ const setActionsArray = {
 
 // __brightness__ - adjusts the brightness of the image
     brightness: function (f) {
-        let level = (f.level != null) ? f.level : 1;
+        const level = (f.level != null) ? f.level : 1;
 
         f.actions = [{
             action: MODULATE_CHANNELS,
@@ -696,14 +699,14 @@ const setActionsArray = {
     chroma: function (f) {
 
         const processedRanges = [],
-            res = [];
+            res = requestArray();
 
         if ((f.ranges != null)) {
 
             f.ranges.forEach(range => {
 
-                if (range.length === 6) processedRanges.push(range);
-                else if (range.length === 2) {
+                if (range.length == 6) processedRanges.push(range);
+                else if (range.length == 2) {
 
                     if (range[0].substring && range[1].substring) {
 
@@ -727,6 +730,8 @@ const setActionsArray = {
             opacity: (f.opacity != null) ? f.opacity : 1,
             ranges: processedRanges,
         }];
+
+        releaseArray(res);
     },
 
 // __chromakey__ (new in v8.4.0) - determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the `red`, `green` and `blue` arguments. The sensitivity of the effect can be manipulated using the `transparentAt` and `opaqueAt` values, both of which lie in the range 0-1.
@@ -1339,7 +1344,7 @@ const setActionsArray = {
 
 // __saturation__ - alters the saturation level of the image
     saturation: function (f) {
-        let level = (f.level != null) ? f.level : 1;
+        const level = (f.level != null) ? f.level : 1;
 
         f.actions = [{
             action: MODULATE_CHANNELS,
