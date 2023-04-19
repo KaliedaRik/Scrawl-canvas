@@ -115,6 +115,8 @@ let myline = scrawl.makePolyline({
     // Note: when using a Polyline entity as a pivot for other artefacts, set the `useAsPath` flag to true
     // + It generates more accurate results - particularly when the Polyline is flipped, rolled and/or scaled, and when underlying pins (particularly when those pins are artefacts) update their coordinates.
     useAsPath: true,
+
+    bringToFrontOnDrag: false,
 });
 
 

@@ -333,9 +333,9 @@ export default function (P = Ωempty) {
 
                             const src = img.source || img.element;
 
-                            engine.drawImage(src, copyX, copyY, copyWidth, copyHeight, 0, 0, destWidth, destHeight);
+                            engine.drawImage(src, ~~copyX, ~~copyY, ~~copyWidth, ~~copyHeight, 0, 0, ~~destWidth, ~~destHeight);
 
-                            obj.assetData = engine.getImageData(0, 0, destWidth, destHeight);
+                            obj.assetData = engine.getImageData(0, 0, ~~destWidth, ~~destHeight);
 
                             releaseCell(cell);
                         }

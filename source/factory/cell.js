@@ -72,7 +72,7 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _entries, _floor, _round, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
+import { _entries, _floor, _round, _trunc, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Cell constructor
@@ -738,14 +738,17 @@ P.updateControllerCells = function () {
 P.clear = function () {
 
     const {element, engine, backgroundColor, clearAlpha, currentDimensions} = this;
-    const [width, height] = currentDimensions;
+    let [width, height] = currentDimensions;
+
+    width = _trunc(width);
+    height = _trunc(height);
 
     this.prepareStamp();
 
     const dpr = checkEngineScale(engine);
 
-    const w = width * dpr,
-        h = height * dpr;
+    const w = _trunc(width * dpr),
+        h = _trunc(height * dpr);
 
     if (this.useAsPattern) {
 
@@ -833,8 +836,8 @@ P.show = function () {
     if (engine) {
 
         const hostDimensions = host.currentDimensions,
-            destWidth = _floor(hostDimensions[0]),
-            destHeight = _floor(hostDimensions[1]);
+            destWidth = ~~(hostDimensions[0]),
+            destHeight = ~~(hostDimensions[1]);
 
         // Cannot draw to the destination canvas if either of its dimensions === 0
         if (!destWidth || !destHeight) return false;
@@ -851,8 +854,8 @@ P.show = function () {
             currentStampPosition:stamp, 
         } = this;
 
-        const curWidth = _floor(currentDimensions[0]),
-            curHeight = _floor(currentDimensions[1]);
+        const curWidth = ~~(currentDimensions[0]),
+            curHeight = ~~(currentDimensions[1]);
 
         let paste;
 
@@ -890,17 +893,17 @@ P.show = function () {
 
                     if (relWidth > relHeight) {
 
-                        paste[0] = _floor((destWidth - (curWidth * relHeight)) / 2);
+                        paste[0] = ~~((destWidth - (curWidth * relHeight)) / 2);
                         paste[1] = 0;
-                        paste[2] = _floor(curWidth * relHeight);
-                        paste[3] = _floor(curHeight * relHeight);
+                        paste[2] = ~~(curWidth * relHeight);
+                        paste[3] = ~~(curHeight * relHeight);
                     }
                     else {
 
                         paste[0] = 0;
-                        paste[1] = _floor((destHeight - (curHeight * relWidth)) / 2);
-                        paste[2] = _floor(curWidth * relWidth);
-                        paste[3] = _floor(curHeight * relWidth);
+                        paste[1] = ~~((destHeight - (curHeight * relWidth)) / 2);
+                        paste[2] = ~~(curWidth * relWidth);
+                        paste[3] = ~~(curHeight * relWidth);
                     }
                     break;
 
@@ -911,17 +914,17 @@ P.show = function () {
 
                     if (relWidth < relHeight) {
 
-                        paste[0] = _floor((destWidth - (curWidth * relHeight)) / 2);
+                        paste[0] = ~~((destWidth - (curWidth * relHeight)) / 2);
                         paste[1] = 0;
-                        paste[2] = _floor(curWidth * relHeight);
-                        paste[3] = _floor(curHeight * relHeight);
+                        paste[2] = ~~(curWidth * relHeight);
+                        paste[3] = ~~(curHeight * relHeight);
                     }
                     else{
 
                         paste[0] = 0;
-                        paste[1] = _floor((destHeight - (curHeight * relWidth)) / 2);
-                        paste[2] = _floor(curWidth * relWidth);
-                        paste[3] = _floor(curHeight * relWidth);
+                        paste[1] = ~~((destHeight - (curHeight * relWidth)) / 2);
+                        paste[2] = ~~(curWidth * relWidth);
+                        paste[3] = ~~(curHeight * relWidth);
                     }
                     break;
 
@@ -929,15 +932,15 @@ P.show = function () {
                     // base must copy into display resized, distorting the aspect ratio as necessary
                     paste[0] = 0;
                     paste[1] = 0;
-                    paste[2] = _floor(destWidth);
-                    paste[3] = _floor(destHeight);
+                    paste[2] = ~~(destWidth);
+                    paste[3] = ~~(destHeight);
                     break;
 
                 case NONE :
                 default :
                     // base copies into display as-is, centred, maintaining aspect ratio
-                    paste[0] = _floor((destWidth - curWidth) / 2);
-                    paste[1] = _floor((destHeight - curHeight) / 2);
+                    paste[0] = ~~((destWidth - curWidth) / 2);
+                    paste[1] = ~~((destHeight - curHeight) / 2);
                     paste[2] = curWidth;
                     paste[3] = curHeight;
             }
@@ -956,10 +959,10 @@ P.show = function () {
             engine.globalCompositeOperation = composite;
             engine.globalAlpha = alpha;
 
-            paste[0] = _floor(-handle[0] * scale);
-            paste[1] = _floor(-handle[1] * scale);
-            paste[2] = _floor(curWidth * scale);
-            paste[3] = _floor(curHeight * scale);
+            paste[0] = ~~(-handle[0] * scale);
+            paste[1] = ~~(-handle[1] * scale);
+            paste[2] = ~~(curWidth * scale);
+            paste[3] = ~~(curHeight * scale);
 
             this.rotateDestination(engine, ...stamp);
         }

@@ -453,7 +453,7 @@ P.cleanImage = function () {
         const copyArray = this.copyArray;
 
         copyArray.length = 0;
-        copyArray.push(start[0], start[1], w, h);
+        copyArray.push(~~start[0], ~~start[1], ~~w, ~~h);
     }
 };
 
@@ -599,7 +599,7 @@ P.preparePasteObject = function () {
     const pasteArray = this.pasteArray;
 
     pasteArray.length = 0;
-    pasteArray.push(x, y, w, h);
+    pasteArray.push(~~x, ~~y, ~~w, ~~h);
 
     this.dirtyPathObject = true;
 };
@@ -612,9 +612,9 @@ P.cleanPathObject = function () {
 
     if (!this.noPathUpdates || !this.pathObject) {
 
-        if (!this.pasteArray || this.pasteArray.length !== 4) this.preparePasteObject();
+        if (!this.pasteArray || this.pasteArray.length != 4) this.preparePasteObject();
 
-        if (this.pasteArray.length !== 4) this.dirtyPathObject = true;
+        if (this.pasteArray.length != 4) this.dirtyPathObject = true;
         else {
 
             const p = this.pathObject = new Path2D();
@@ -636,22 +636,24 @@ P.draw = function (engine) {
 P.fill = function (engine) {
 
     const [x, y, w, h] = this.copyArray;
-    if (this.source && w && h) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+    if (this.source && w && h) engine.drawImage(this.source, x, y, w, h, ...this.pasteArray);
 };
 
 // `drawAndFill`
 P.drawAndFill = function (engine) {
 
     const [x, y, w, h] = this.copyArray;
+    const [_x, _y, _w, _h] = this.pasteArray;
+
     if (this.source && w && h) {
 
         engine.stroke(this.pathObject);
-        engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+        engine.drawImage(this.source, x, y, w, h, _x, _y, _w, _h);
 
         this.currentHost.clearShadow();
 
         engine.stroke(this.pathObject);
-        engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+        engine.drawImage(this.source, x, y, w, h, _x, _y, _w, _h);
     }
 };
 
@@ -659,14 +661,16 @@ P.drawAndFill = function (engine) {
 P.fillAndDraw = function (engine) {
 
     const [x, y, w, h] = this.copyArray;
+    const [_x, _y, _w, _h] = this.pasteArray;
+
     if (this.source && w && h) {
 
-        engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+        engine.drawImage(this.source, x, y, w, h, _x, _y, _w, _h);
         engine.stroke(this.pathObject);
 
         this.currentHost.clearShadow();
 
-        engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+        engine.drawImage(this.source, x, y, w, h, _x, _y, _w, _h);
         engine.stroke(this.pathObject);
     }
 
@@ -680,7 +684,7 @@ P.drawThenFill = function (engine) {
     if (this.source && w && h) {
 
         engine.stroke(this.pathObject);
-        engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+        engine.drawImage(this.source, x, y, w, h, ...this.pasteArray);
     }
 };
 
@@ -690,7 +694,7 @@ P.fillThenDraw = function (engine) {
     const [x, y, w, h] = this.copyArray;
     if (this.source && w && h) {
 
-        engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+        engine.drawImage(this.source, x, y, w, h, ...this.pasteArray);
         engine.stroke(this.pathObject);
     }
 };

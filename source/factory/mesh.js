@@ -815,8 +815,10 @@ P.cleanOutput = function () {
 
         let [startX, startY, outputWidth, outputHeight] = boundingBox;
 
-        outputWidth += startX;
-        outputHeight += startY;
+        // outputWidth += startX;
+        // outputHeight += startY;
+        outputWidth = ~~(startX + outputWidth);
+        outputHeight = ~~(startY + outputHeight);
 
         const inputCell = requestCell(),
             inputEngine = inputCell.engine,
@@ -889,7 +891,7 @@ P.cleanOutput = function () {
                     // + [Stack Overflow question identifying the issue](https://stackoverflow.com/questions/35500999/cropping-with-drawimage-not-working-in-safari)
                     let testHeight = (sy + inputStrutHeight > sourceDimension) ? sourceDimension - sy : inputStrutHeight;
 
-                    outputEngine.drawImage(inputCanvas, sx, sy, 1, testHeight, 0, 0, 1, stripLength);
+                    outputEngine.drawImage(inputCanvas, ~~sx, ~~sy, 1, ~~testHeight, 0, 0, 1, ~~stripLength);
                 }
             }
         }
@@ -897,8 +899,8 @@ P.cleanOutput = function () {
         const iFactor = this.interferenceFactor,
             iLoops = this.interferenceLoops,
 
-            iWidth = _ceil(outputWidth * iFactor),
-            iHeight = _ceil(outputHeight * iFactor);
+            iWidth = ~~(outputWidth * iFactor) + 1,
+            iHeight = ~~(outputHeight * iFactor) + 1;
 
         inputCanvas.width = iWidth;
         inputCanvas.height = iHeight;

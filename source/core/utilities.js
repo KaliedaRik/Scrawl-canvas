@@ -2,7 +2,7 @@
 // A ragtag collection of helper functions which other modules can import and use
 
 
-import { _cos, _create, _entries, _floor, _isArray, _pi, _pow, _random, _sin, _sqrt, $CANVAS_ELEMENT, $OBJECT, BOOLEAN, BOTTOM, CENTER, FUNCTION, LEFT, MS, PC, PC0, PC100, PC50, RIGHT, T_QUATERNION, TOP, UNDEF } from './shared-vars.js';
+import { _cos, _create, _entries, _floor, _freeze, _isArray, _pi, _pow, _random, _sin, _sqrt, $CANVAS_ELEMENT, $OBJECT, BOOLEAN, BOTTOM, CENTER, FUNCTION, LEFT, MS, PC, PC0, PC100, PC50, RIGHT, T_QUATERNION, TOP, UNDEF } from './shared-vars.js';
 
 
 // #### Functions
@@ -26,7 +26,6 @@ import { _cos, _create, _entries, _floor, _isArray, _pi, _pow, _random, _sin, _s
 // addStrings('center', 3);
 // -> '53%'
 // ```
-
 export const addStrings = (current, delta) => {
 
     if ((delta != null)) {
@@ -135,7 +134,7 @@ export const λnull = () => {};
 export const λfirstArg = function (a) { return a; };
 export const λthis = function () { return this; };
 export const λpromise = () => Promise.resolve(true);
-export const Ωempty = {};
+export const Ωempty = _freeze({});
 
 
 // __generateUuid__ is a simple (crude) uuid generator 

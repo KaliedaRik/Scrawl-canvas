@@ -502,7 +502,7 @@ P.performFill = function (engine) {
                             method: FILL,
                         });
 
-                        engine.drawImage(compCanvas, tileRealCoords[0][0], tileRealCoords[0][1]);
+                        engine.drawImage(compCanvas, ~~tileRealCoords[0][0], ~~tileRealCoords[0][1]);
                     }
                     break;
 
@@ -524,7 +524,7 @@ P.performFill = function (engine) {
                             method: FILL,
                         });
 
-                        validTiles.forEach((tile, pos) => tile && engine.drawImage(compCanvas, tileRealCoords[pos][0], tileRealCoords[pos][1]));
+                        validTiles.forEach((tile, pos) => tile && engine.drawImage(compCanvas, ~~tileRealCoords[pos][0], ~~tileRealCoords[pos][1]));
                     }
                     break;
 
@@ -620,7 +620,7 @@ P.performFill = function (engine) {
                             method: FILL,
                         });
 
-                        engine.drawImage(compCanvas, tileRealCoords[0][0], tileRealCoords[0][1]);
+                        engine.drawImage(compCanvas, ~~tileRealCoords[0][0], ~~tileRealCoords[0][1]);
                         compEngine.translate(0, 0);
                     }
                 }

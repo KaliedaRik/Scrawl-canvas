@@ -924,7 +924,10 @@ P.cleanOutput = function () {
             engineDeltaLengths = this.engineDeltaLengths,
             instruction;
 
-        const [startX, startY, outputWidth, outputHeight] = this.getBoundingBox();
+        let [startX, startY, outputWidth, outputHeight] = this.getBoundingBox();
+
+        outputWidth = ~~outputWidth;
+        outputHeight = ~~outputHeight;
 
         const inputCell = requestCell(),
             inputEngine = inputCell.engine,
@@ -1012,7 +1015,7 @@ P.cleanOutput = function () {
                 if (instruction) {
 
                     outputEngine.setTransform(...instruction);
-                    outputEngine.drawImage(inputCanvas, 0, watchIndex, sourceDimension, 1, 0, 0, engineDeltaLengths[watchIndex], 1);
+                    outputEngine.drawImage(inputCanvas, 0, ~~watchIndex, ~~sourceDimension, 1, 0, 0, ~~engineDeltaLengths[watchIndex], 1);
                 }
                 watchIndex++;
 
@@ -1028,7 +1031,7 @@ P.cleanOutput = function () {
                 if (instruction) {
 
                     outputEngine.setTransform(...instruction);
-                    outputEngine.drawImage(inputCanvas, watchIndex, 0, 1, sourceDimension, 0, 0, 1, engineDeltaLengths[watchIndex]);
+                    outputEngine.drawImage(inputCanvas, ~~watchIndex, 0, 1, ~~sourceDimension, 0, 0, 1, ~~engineDeltaLengths[watchIndex]);
                 }
                 watchIndex++;
 
@@ -1039,8 +1042,8 @@ P.cleanOutput = function () {
         const iFactor = this.interferenceFactor,
             iLoops = this.interferenceLoops,
 
-            iWidth = _ceil(outputWidth * iFactor),
-            iHeight = _ceil(outputHeight * iFactor);
+            iWidth = ~~(outputWidth * iFactor) + 1,
+            iHeight = ~~(outputHeight * iFactor) + 1;
 
         inputCanvas.width = iWidth;
         inputCanvas.height = iHeight;
@@ -1200,7 +1203,12 @@ P.clear = function (engine) {
             tempEngine = tempCell.engine,
             tempCanvas = tempCell.element;
 
-        const [x, y, w, h] = this.getBoundingBox();
+        let [x, y, w, h] = this.getBoundingBox();
+
+        x = ~~x;
+        y = ~~y;
+        w = ~~w;
+        h = ~~h;
 
         tempCanvas.width = w;
         tempCanvas.height = h;
@@ -1245,7 +1253,7 @@ P.doStroke = function (engine) {
             host.rotateDestination(engine, tStart[0], tStart[1], fPath);
             engine.stroke(tPath.pathObject);
 
-            engine.setTransform(1,0, 0, 1, 0, 0);
+            engine.setTransform(1, 0, 0, 1, 0, 0);
             engine.beginPath()
             engine.moveTo(fEnd.x, fEnd.y);
             engine.lineTo(tEnd.x, tEnd.y);
@@ -1271,7 +1279,12 @@ P.doFill = function (engine) {
             tempEngine = tempCell.engine,
             tempCanvas = tempCell.element;
 
-        const [x, y, w, h] = this.getBoundingBox();
+        let [x, y, w, h] = this.getBoundingBox();
+
+        x = ~~x;
+        y = ~~y;
+        w = ~~w;
+        h = ~~h;
 
         tempCanvas.width = w;
         tempCanvas.height = h;

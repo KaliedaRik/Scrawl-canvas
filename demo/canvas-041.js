@@ -99,7 +99,7 @@ const drawBoxes = function () {
             [x, y, deltaX, boxpos] = box;
             width = boxpos + 10
 
-            ctx.drawImage(source, boxpos * 50, 0, 50, 50, x - 25, y - 25, 50, 50);
+            ctx.drawImage(source, ~~(boxpos * 50), 0, 50, 50, ~~(x - 25), ~~(y - 25), 50, 50);
 
             x += deltaX;
             if (x < -width) x += engineWidth + (width * 2);
