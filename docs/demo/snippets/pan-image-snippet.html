@@ -499,37 +499,10 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
                 cursor = <span class="hljs-string">&#x27;grabbing&#x27;</span>;
                 el.<span class="hljs-property">style</span>.<span class="hljs-property">cursor</span> = cursor;
 
-                <span class="hljs-keyword">let</span> {x, y} = here;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+                <span class="hljs-keyword">let</span> {x, y} = here;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                lastX = x;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                lastY = y;
+                lastX = x;
+                lastY = y;
             }
         }, el);
 
@@ -537,72 +510,18 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;grabbing&#x27;</span> === cursor) {
 
-                <span class="hljs-keyword">let</span> {x, y} = canvas.<span class="hljs-property">here</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+                <span class="hljs-keyword">let</span> {x, y} = canvas.<span class="hljs-property">here</span>;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">let</span> dx = lastX - x,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    dy = lastY - y;
+                <span class="hljs-keyword">let</span> dx = lastX - x,
+                    dy = lastY - y;
 
                 panImage.<span class="hljs-title function_">setDelta</span>({
                     <span class="hljs-attr">copyStartX</span>: dx * aspectWidth,
                     <span class="hljs-attr">copyStartY</span>: dy * aspectHeight,
-                });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+                });
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                lastX = x;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                lastY = y;
+                lastX = x;
+                lastY = y;
              }
         }, el);
 
@@ -613,37 +532,10 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
                 cursor = <span class="hljs-string">&#x27;grab&#x27;</span>;
                 el.<span class="hljs-property">style</span>.<span class="hljs-property">cursor</span> = cursor;
 
-                <span class="hljs-keyword">let</span> {x, y} = canvas.<span class="hljs-property">here</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
+                <span class="hljs-keyword">let</span> {x, y} = canvas.<span class="hljs-property">here</span>;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">let</span> dx = lastX - x,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p>@ts-expect-error</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    dy = lastY - y;
+                <span class="hljs-keyword">let</span> dx = lastX - x,
+                    dy = lastY - y;
 
                 panImage.<span class="hljs-title function_">setDelta</span>({
                     <span class="hljs-attr">copyStartX</span>: dx * aspectWidth,
@@ -658,11 +550,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-22">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>We’re checking dimensions here partly because images load asynchronously and during the early part of that process their &lt;img&gt; elements will supply incorrect information to the script which is trying to set up the canvas element which will (eventually) host their image data. But we also need to check because the script has no way of knowing what sort of image it is dealing with - for instance an &lt;img&gt; element with a “srcset” attribute will load new images if the user decides to expand their browser’s window - which would have an impact on the assumptions we make in our scaling and dragging calculations.</p>
 
@@ -676,11 +568,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-23">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>check to see if there’s been any resize browser resize or CSS layout change that affects our DOM element</p>
 
@@ -693,11 +585,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-24">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>We want the image we paint in our canvas to keep its asset’s original aspect ratio</p>
 
@@ -709,11 +601,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-25">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>We want the zoom level to be x3 (along the width) with respect to the DOM element’s dimensions</p>
 
@@ -736,11 +628,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-26">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Invoke our ‘checkDimensions’ function at the start of every Display cycle</p>
 
@@ -754,11 +646,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-27">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Return the snippet, so coders can access the snippet’s parts - in case they need to tweak the output to meet the web page’s specific requirements</p>
 
