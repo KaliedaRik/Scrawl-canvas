@@ -1297,14 +1297,14 @@
 
             <span class="hljs-keyword">if</span> (key.<span class="hljs-property">substring</span> &amp;&amp; <span class="hljs-title function_">xt</span>(val)) {
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(val)) el.<span class="hljs-title function_">setAttribute</span>(key, val);
+                <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(val) &amp;&amp; val) el.<span class="hljs-title function_">setAttribute</span>(key, val);
                 <span class="hljs-keyword">else</span> el.<span class="hljs-title function_">removeAttribute</span>(key);
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(key)) {
 
                 <span class="hljs-title function_">_entries</span>(key).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[k, v]</span>) =&gt;</span> {
 
-                    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(v)) el.<span class="hljs-title function_">setAttribute</span>(k, v);
+                    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(v) &amp;&amp; v) el.<span class="hljs-title function_">setAttribute</span>(k, v);
                     <span class="hljs-keyword">else</span> el.<span class="hljs-title function_">removeAttribute</span>(k);
                 });
             }

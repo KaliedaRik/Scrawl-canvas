@@ -867,7 +867,9 @@ P.<span class="hljs-property">preparePinsForStamp</span> = <span class="hljs-key
         ePivot = <span class="hljs-variable language_">this</span>.<span class="hljs-property">endPivot</span>,
         ePath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">endPath</span>;
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dirtyPins.<span class="hljs-property">length</span>, name; i &lt; iz; i++) {
+    <span class="hljs-keyword">let</span> i, iz, name;
+
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = dirtyPins.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
         name = dirtyPins[i];
 

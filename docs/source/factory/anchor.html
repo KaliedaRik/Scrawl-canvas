@@ -1041,7 +1041,7 @@ S.<span class="hljs-property">clickAction</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">hold</span>.<span class="hljs-title function_">removeChild</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>);
 
-    <span class="hljs-keyword">let</span> link = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(_A);
+    <span class="hljs-keyword">const</span> link = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(_A);
 
     link.<span class="hljs-property">id</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
@@ -1101,7 +1101,7 @@ S.<span class="hljs-property">clickAction</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">hasBeenRecentlyClicked</span>) {
 
-        <span class="hljs-keyword">let</span> e = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MouseEvent</span>(<span class="hljs-variable constant_">CLICK</span>, {
+        <span class="hljs-keyword">const</span> e = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MouseEvent</span>(<span class="hljs-variable constant_">CLICK</span>, {
             <span class="hljs-attr">view</span>: <span class="hljs-variable language_">window</span>,
             <span class="hljs-attr">bubbles</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">cancelable</span>: <span class="hljs-literal">true</span>
@@ -1125,7 +1125,7 @@ S.<span class="hljs-property">clickAction</span> = <span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">hasBeenRecentlyClicked</span> = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">let</span> self = <span class="hljs-variable language_">this</span>;
+        <span class="hljs-keyword">const</span> self = <span class="hljs-variable language_">this</span>;
         <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> self.<span class="hljs-property">hasBeenRecentlyClicked</span> = <span class="hljs-literal">false</span>, <span class="hljs-number">200</span>);
 
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">dispatchEvent</span>(e);

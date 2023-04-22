@@ -615,7 +615,7 @@
 <span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/dom.js&#x27;</span>;
 <span class="hljs-keyword">import</span> displayMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/display-shape.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _2D, <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">ARIA_DESCRIBEDBY</span>, <span class="hljs-variable constant_">ARIA_LABELLEDBY</span>, <span class="hljs-variable constant_">ARIA_LIVE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CANVAS_QUERY</span>, <span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>, <span class="hljs-variable constant_">DIV</span>, <span class="hljs-variable constant_">FIT_DEFS</span>, <span class="hljs-variable constant_">HIDDEN</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NAV</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-title class_">PC0</span>, <span class="hljs-title class_">PC100</span>, <span class="hljs-title class_">PC50</span>, <span class="hljs-variable constant_">POLITE</span>, <span class="hljs-title class_">PX0</span>, <span class="hljs-variable constant_">RELATIVE</span>, <span class="hljs-variable constant_">ROLE</span>, <span class="hljs-variable constant_">ROOT</span>, <span class="hljs-variable constant_">SUBSCRIBE</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_STACK</span>, <span class="hljs-variable constant_">TITLE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _2D, <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">ARIA_DESCRIBEDBY</span>, <span class="hljs-variable constant_">ARIA_LABELLEDBY</span>, <span class="hljs-variable constant_">ARIA_LIVE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CANVAS_QUERY</span>, <span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>, <span class="hljs-variable constant_">DIV</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">ENTER</span>, <span class="hljs-variable constant_">FIT_DEFS</span>, <span class="hljs-variable constant_">HIDDEN</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">LEAVE</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NAV</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-title class_">PC0</span>, <span class="hljs-title class_">PC100</span>, <span class="hljs-title class_">PC50</span>, <span class="hljs-variable constant_">POLITE</span>, <span class="hljs-title class_">PX0</span>, <span class="hljs-variable constant_">RELATIVE</span>, <span class="hljs-variable constant_">ROLE</span>, <span class="hljs-variable constant_">ROOT</span>, <span class="hljs-variable constant_">SUBSCRIBE</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_STACK</span>, <span class="hljs-variable constant_">TITLE</span>, <span class="hljs-variable constant_">UP</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1597,9 +1597,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateCells</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
     <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cells</span>;
+    <span class="hljs-keyword">let</span> mycell;
+
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = c.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-        <span class="hljs-keyword">const</span> mycell = cell[c[i]];
+        mycell = cell[c[i]];
 
         <span class="hljs-keyword">if</span> (mycell) {
 
@@ -2105,14 +2107,16 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentActiveEntityNames</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentActiveEntityNames</span> = [];
 
-    <span class="hljs-keyword">let</span> currentActiveEntityNames = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentActiveEntityNames</span>,
-        testActiveEntityObjects = [],
-        testActiveEntityNames = [],
-        newActiveEntityObjects = [],
-        newActiveEntityNames = [],
-        knownActiveEntityObjects = [],
-        knownActiveEntityNames = [],
-        i, iz, myCell, item, name, myArt;</pre></div></div>
+    <span class="hljs-keyword">const</span> currentActiveEntityNames = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentActiveEntityNames</span>,
+        currentActiveEntityObjects = <span class="hljs-title function_">requestArray</span>(),
+        testActiveEntityObjects = <span class="hljs-title function_">requestArray</span>(),
+        testActiveEntityNames = <span class="hljs-title function_">requestArray</span>(),
+        newActiveEntityObjects = <span class="hljs-title function_">requestArray</span>(),
+        newActiveEntityNames = <span class="hljs-title function_">requestArray</span>(),
+        knownActiveEntityObjects = <span class="hljs-title function_">requestArray</span>(),
+        knownActiveEntityNames = <span class="hljs-title function_">requestArray</span>();
+
+    <span class="hljs-keyword">let</span> i, iz, myCell, item, name, myArt;</pre></div></div>
             
         </li>
         
@@ -2134,10 +2138,8 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
 
         myCell = cell[c[i]];
 
-        <span class="hljs-keyword">if</span> (myCell &amp;&amp; (myCell.<span class="hljs-property">shown</span> || myCell.<span class="hljs-property">isBase</span> || myCell.<span class="hljs-property">includeInCascadeEventActions</span>)) testActiveEntityObjects.<span class="hljs-title function_">push</span>(myCell.<span class="hljs-title function_">getEntityHits</span>());
-    };
-
-    testActiveEntityObjects = testActiveEntityObjects.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.<span class="hljs-title function_">concat</span>(v), []);</pre></div></div>
+        <span class="hljs-keyword">if</span> (myCell &amp;&amp; (myCell.<span class="hljs-property">shown</span> || myCell.<span class="hljs-property">isBase</span> || myCell.<span class="hljs-property">includeInCascadeEventActions</span>)) testActiveEntityObjects.<span class="hljs-title function_">push</span>(...myCell.<span class="hljs-title function_">getEntityHits</span>());
+    };</pre></div></div>
             
         </li>
         
@@ -2176,7 +2178,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         }
     }
 
-    <span class="hljs-keyword">let</span> currentActiveEntityObjects = newActiveEntityObjects.<span class="hljs-title function_">concat</span>(knownActiveEntityObjects);</pre></div></div>
+    currentActiveEntityObjects.<span class="hljs-title function_">push</span>(...newActiveEntityObjects, ...knownActiveEntityObjects);</pre></div></div>
             
         </li>
         
@@ -2193,7 +2195,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> doLeave = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> doLeave = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
         <span class="hljs-keyword">if</span> (currentActiveEntityNames.<span class="hljs-property">length</span>) {
 
@@ -2219,29 +2221,29 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
 
     <span class="hljs-keyword">switch</span> (action) {
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span> :
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">DOWN</span> :
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; currentActiveLen; i++) {
                 currentActiveEntityObjects[i].<span class="hljs-title function_">onDown</span>(e);
             }
             <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span> :
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">UP</span> :
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; currentActiveLen; i++) {
                 currentActiveEntityObjects[i].<span class="hljs-title function_">onUp</span>(e);
             }
             <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enter&#x27;</span> :
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">ENTER</span> :
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; newActiveLen; i++) {
                 newActiveEntityObjects[i].<span class="hljs-title function_">onEnter</span>(e);
             }
             <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;leave&#x27;</span> :
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">LEAVE</span> :
             <span class="hljs-title function_">doLeave</span>(e);
             <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;move&#x27;</span> :
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">MOVE</span> :
             <span class="hljs-title function_">doLeave</span>(e);
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; newActiveLen; i++) {
                 newActiveEntityObjects[i].<span class="hljs-title function_">onEnter</span>(e);
@@ -2264,9 +2266,18 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentActiveEntityNames</span> = newActiveEntityNames.<span class="hljs-title function_">concat</span>(knownActiveEntityNames);
+            <div class="content"><div class='highlight'><pre>    currentActiveEntityNames.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    currentActiveEntityNames.<span class="hljs-title function_">push</span>(...newActiveEntityNames, ...knownActiveEntityNames);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentActiveEntityNames</span>;
+    <span class="hljs-title function_">releaseArray</span>(currentActiveEntityObjects);
+    <span class="hljs-title function_">releaseArray</span>(testActiveEntityObjects);
+    <span class="hljs-title function_">releaseArray</span>(testActiveEntityNames);
+    <span class="hljs-title function_">releaseArray</span>(newActiveEntityObjects);
+    <span class="hljs-title function_">releaseArray</span>(newActiveEntityNames);
+    <span class="hljs-title function_">releaseArray</span>(knownActiveEntityObjects);
+    <span class="hljs-title function_">releaseArray</span>(knownActiveEntityNames);
+
+    <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(currentActiveEntityNames);
 };</pre></div></div>
             
         </li>
@@ -2489,7 +2500,7 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
 
         <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
-            <span class="hljs-keyword">let</span> mycanvas = libCanvas[item];
+            <span class="hljs-keyword">const</span> mycanvas = libCanvas[item];
 
             <span class="hljs-keyword">if</span> (mycanvas) {
                 currentCanvas = mycanvas;
@@ -2505,7 +2516,7 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
 
     <span class="hljs-keyword">if</span> (changeFlag &amp;&amp; currentCanvas.<span class="hljs-property">base</span>) {
 
-        <span class="hljs-keyword">let</span> mygroup = group[currentCanvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>];
+        <span class="hljs-keyword">const</span> mygroup = group[currentCanvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>];
 
         <span class="hljs-keyword">if</span> (mygroup) currentGroup = mygroup;
     }
@@ -2532,17 +2543,19 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> addCanvas = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">CANVAS</span>),
+    <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">CANVAS</span>),
         myname = (items.<span class="hljs-property">name</span>) ? items.<span class="hljs-property">name</span> : <span class="hljs-title function_">generateUniqueString</span>(),
-        host = items.<span class="hljs-property">host</span>,
-        mygroup = <span class="hljs-variable constant_">ROOT</span>,
         width = items.<span class="hljs-property">width</span> || <span class="hljs-number">300</span>,
-        height = items.<span class="hljs-property">height</span> || <span class="hljs-number">150</span>,
-        position = <span class="hljs-variable constant_">RELATIVE</span>;
+        height = items.<span class="hljs-property">height</span> || <span class="hljs-number">150</span>;
+
+    <span class="hljs-keyword">let</span> mygroup = <span class="hljs-variable constant_">ROOT</span>,
+        position = <span class="hljs-variable constant_">RELATIVE</span>,
+        host = items.<span class="hljs-property">host</span>,
+        temphost;
 
     <span class="hljs-keyword">if</span> (host.<span class="hljs-property">substring</span>) {
 
-        <span class="hljs-keyword">let</span> temphost = artefact[host];
+        temphost = artefact[host];
 
         <span class="hljs-keyword">if</span> (!temphost &amp;&amp; host) {
 

@@ -1176,11 +1176,12 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getChanges</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">ent, engineState</span>) {
 
     <span class="hljs-keyword">let</span> k, style, scaled, i, iz, j, jz,
-        linedashFlag, desired, current,
-        defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>,
+        linedashFlag, desired, current;
+
+    <span class="hljs-keyword">const</span> defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>,
         result = {};
 
-    <span class="hljs-keyword">let</span> getItem = <span class="hljs-keyword">function</span> (<span class="hljs-params">source, key</span>) {
+    <span class="hljs-keyword">const</span> getItem = <span class="hljs-keyword">function</span> (<span class="hljs-params">source, key</span>) {
         <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> source[key] != <span class="hljs-variable constant_">UNDEF</span>) ? source[key] : defs[key];
     };
 

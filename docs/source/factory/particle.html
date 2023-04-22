@@ -611,7 +611,7 @@
 
 <span class="hljs-keyword">import</span> { doCreate, mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { releaseParticleHistoryObject, requestParticleHistoryObject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./particle-history.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { releaseParticleHistory, requestParticleHistory } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./particle-history.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeVector, releaseVector, requestVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;</pre></div></div>
             
@@ -879,11 +879,8 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, []);
-P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, [<span class="hljs-string">&#x27;^(local|dirty|current)&#x27;</span>]);
-P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, []);
-P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;position&#x27;</span>, <span class="hljs-string">&#x27;velocity&#x27;</span>, <span class="hljs-string">&#x27;acceleration&#x27;</span>]);
-P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, []);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, [<span class="hljs-string">&#x27;^(local|dirty|current)&#x27;</span>]);
+P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;position&#x27;</span>, <span class="hljs-string">&#x27;velocity&#x27;</span>, <span class="hljs-string">&#x27;acceleration&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -914,7 +911,7 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">history</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> <span class="hljs-title function_">releaseParticleHistoryObject</span>(h));
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">history</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> <span class="hljs-title function_">releaseParticleHistory</span>(h));
 
     <span class="hljs-keyword">const</span> deadSprings = [];
     <span class="hljs-keyword">let</span> s;
@@ -1225,7 +1222,7 @@ D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</s
 
             <span class="hljs-keyword">const</span> last = history.<span class="hljs-title function_">pop</span>();
 
-            <span class="hljs-title function_">releaseParticleHistoryObject</span>(last);
+            <span class="hljs-title function_">releaseParticleHistory</span>(last);
 
             addHistoryFlag = <span class="hljs-literal">false</span>;
 
@@ -1301,9 +1298,12 @@ D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</s
 
         <span class="hljs-keyword">const</span> {x, y, z} = position;
 
-        <span class="hljs-keyword">const</span> h = <span class="hljs-title function_">requestParticleHistoryObject</span>();
+        <span class="hljs-keyword">const</span> h = <span class="hljs-title function_">requestParticleHistory</span>();
 
-        h.<span class="hljs-title function_">push</span>(remaining, z, x, y);
+        h[<span class="hljs-number">0</span>] = remaining;
+        h[<span class="hljs-number">1</span>] = z;
+        h[<span class="hljs-number">2</span>] = x;
+        h[<span class="hljs-number">3</span>] = y;
 
         history.<span class="hljs-title function_">unshift</span>(h);
 
@@ -1311,7 +1311,7 @@ D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</s
 
             <span class="hljs-keyword">const</span> old = history.<span class="hljs-title function_">splice</span>(historyLength);
 
-            old.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-title function_">releaseParticleHistoryObject</span>(item));
+            old.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-title function_">releaseParticleHistory</span>(item));
         }
     }
 };</pre></div></div>
@@ -1468,7 +1468,7 @@ constructors.<span class="hljs-property">Particle</span> = <span class="hljs-tit
 
     <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_PARTICLE</span>) {
 
-        item.<span class="hljs-property">history</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> <span class="hljs-title function_">releaseParticleHistoryObject</span>(h));
+        item.<span class="hljs-property">history</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> <span class="hljs-title function_">releaseParticleHistory</span>(h));
         item.<span class="hljs-property">history</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
         item.<span class="hljs-title function_">set</span>(item.<span class="hljs-property">defs</span>);

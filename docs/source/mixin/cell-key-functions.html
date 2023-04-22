@@ -565,7 +565,7 @@
 
 <span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/array-pool.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _computed, _cos, _entries, _isArray, _keys, _radian, _sin, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LINE_DASH</span>, <span class="hljs-variable constant_">STATE_ALL_KEYS</span>, <span class="hljs-variable constant_">STYLES_ARR</span>, <span class="hljs-variable constant_">TOP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _computed, _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LINE_DASH</span>, <span class="hljs-variable constant_">STATE_ALL_KEYS</span>, <span class="hljs-variable constant_">STYLES_ARR</span>, <span class="hljs-variable constant_">TOP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -727,7 +727,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">setEngineActions</span> = {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">setEngineActions</span> = <span class="hljs-title function_">_freeze</span>({
 
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item, engine, STYLES_ARR, entity, layer</span>) {
 
@@ -831,7 +831,7 @@
             }
             <span class="hljs-keyword">else</span> engine.<span class="hljs-property">strokeStyle</span> = item.<span class="hljs-title function_">getData</span>(entity, layer);
         },
-    };</pre></div></div>
+    });</pre></div></div>
             
         </li>
         

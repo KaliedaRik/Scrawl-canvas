@@ -603,7 +603,7 @@
 
 <span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _create, _setPrototypeOf, <span class="hljs-variable constant_">T_PARTICLE_HISTORY</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _create, _seal, _setPrototypeOf, <span class="hljs-variable constant_">T_PARTICLE_HISTORY</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -618,15 +618,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">ParticleHistory</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">ParticleHistory</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> history = [];
+    <span class="hljs-keyword">const</span> h = <span class="hljs-title class_">Array</span>(<span class="hljs-number">4</span>).<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>);
 
-    <span class="hljs-title function_">_setPrototypeOf</span>(history, <span class="hljs-title class_">ParticleHistory</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+    <span class="hljs-title function_">_setPrototypeOf</span>(h, <span class="hljs-title class_">ParticleHistory</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
 
-    <span class="hljs-keyword">if</span> (items) history.<span class="hljs-title function_">set</span>(items);
-
-    <span class="hljs-keyword">return</span> history;
+    <span class="hljs-keyword">return</span> <span class="hljs-title function_">_seal</span>(h);
 };</pre></div></div>
             
         </li>
@@ -731,7 +729,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestParticleHistoryObject = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestParticleHistory = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">if</span> (!particleHistoryPool.<span class="hljs-property">length</span>) particleHistoryPool.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ParticleHistory</span>());
 
@@ -751,11 +749,11 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> releaseParticleHistoryObject = <span class="hljs-keyword">function</span> (<span class="hljs-params">h</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> releaseParticleHistory = <span class="hljs-keyword">function</span> (<span class="hljs-params">h</span>) {
 
     <span class="hljs-keyword">if</span> (h &amp;&amp; h.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_PARTICLE_HISTORY</span>) {
 
-        h.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        h.<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>);
         particleHistoryPool.<span class="hljs-title function_">push</span>(h);</pre></div></div>
             
         </li>

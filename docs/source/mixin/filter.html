@@ -1095,9 +1095,9 @@
 
                             <span class="hljs-keyword">const</span> src = img.<span class="hljs-property">source</span> || img.<span class="hljs-property">element</span>;
 
-                            engine.<span class="hljs-title function_">drawImage</span>(src, copyX, copyY, copyWidth, copyHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, destWidth, destHeight);
+                            engine.<span class="hljs-title function_">drawImage</span>(src, ~~copyX, ~~copyY, ~~copyWidth, ~~copyHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, ~~destWidth, ~~destHeight);
 
-                            obj.<span class="hljs-property">assetData</span> = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, destWidth, destHeight);
+                            obj.<span class="hljs-property">assetData</span> = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, ~~destWidth, ~~destHeight);
 
                             <span class="hljs-title function_">releaseCell</span>(cell);
                         }

@@ -696,7 +696,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 
 <span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/cell-fragment.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _keys, _isArray, _parse, _values, <span class="hljs-variable constant_">ALL</span>, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">BOTTOM</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">DIMENSIONS</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">FILTER</span>, <span class="hljs-variable constant_">GROUP</span>, <span class="hljs-variable constant_">HANDLE</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LOCKTO</span>, <span class="hljs-variable constant_">MIMIC</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">OFFSET</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">PATH</span>, <span class="hljs-variable constant_">PIVOT</span>, <span class="hljs-variable constant_">RIGHT</span>, <span class="hljs-variable constant_">START</span>, <span class="hljs-variable constant_">STARTX</span>, <span class="hljs-variable constant_">STARTY</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">T_POLYLINE</span>, <span class="hljs-variable constant_">TOP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span></pre></div></div>
+<span class="hljs-keyword">import</span> { _keys, _isArray, _parse, _values, <span class="hljs-variable constant_">ALL</span>, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">BOTTOM</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">DIMENSIONS</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">FILTER</span>, <span class="hljs-variable constant_">GROUP</span>, <span class="hljs-variable constant_">HANDLE</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LOCKTO</span>, <span class="hljs-variable constant_">MIMIC</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">OFFSET</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">PATH</span>, <span class="hljs-variable constant_">PIVOT</span>, <span class="hljs-variable constant_">RIGHT</span>, <span class="hljs-variable constant_">START</span>, <span class="hljs-variable constant_">STARTX</span>, <span class="hljs-variable constant_">STARTY</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">T_POLYLINE</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span></pre></div></div>
             
         </li>
         
@@ -1110,9 +1110,8 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;pathObject&#x27;</span>, <span class="hljs-string">&#x27;mimicked&#x27;</span>, <span class="hljs-string">&#x27;pivoted&#x27;</span>]);
     P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, [<span class="hljs-string">&#x27;^(local|dirty|current)&#x27;</span>, <span class="hljs-string">&#x27;Subscriber$&#x27;</span>]);
-    P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, [<span class="hljs-variable constant_">START</span>, <span class="hljs-variable constant_">HANDLE</span>, <span class="hljs-variable constant_">OFFSET</span>]);
-    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-variable constant_">GROUP</span>]);
-    P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, []);
+    P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, [<span class="hljs-string">&#x27;start&#x27;</span>, <span class="hljs-string">&#x27;handle&#x27;</span>, <span class="hljs-string">&#x27;offset&#x27;</span>]);
+    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;group&#x27;</span>]);
 
     P.<span class="hljs-property">processPacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">key, value, inc</span>) {
 
@@ -1122,7 +1121,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">LOCKTO</span> :
 
-                <span class="hljs-keyword">if</span> (value[<span class="hljs-number">0</span>] === <span class="hljs-variable constant_">START</span> &amp;&amp; value[<span class="hljs-number">1</span>] === <span class="hljs-variable constant_">START</span>) {
+                <span class="hljs-keyword">if</span> (value[<span class="hljs-number">0</span>] == <span class="hljs-variable constant_">START</span> &amp;&amp; value[<span class="hljs-number">1</span>] == <span class="hljs-variable constant_">START</span>) {
 
                     result = (inc.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">LOCKTO</span>)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
                 }
@@ -1130,7 +1129,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
             <span class="hljs-keyword">default</span> :
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lib</span> === <span class="hljs-variable constant_">ENTITY</span>) result = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processEntityPacketOut</span>(key, value, inc);
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lib</span> == <span class="hljs-variable constant_">ENTITY</span>) result = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processEntityPacketOut</span>(key, value, inc);
                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isArtefact</span>) result = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processDOMPacketOut</span>(key, value, inc);
         }
         <span class="hljs-keyword">return</span> result;
@@ -1657,8 +1656,8 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">particle</span> = <span class="hljs-literal">null</span>;
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] === <span class="hljs-variable constant_">PARTICLE</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] = <span class="hljs-variable constant_">START</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] === <span class="hljs-variable constant_">PARTICLE</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] = <span class="hljs-variable constant_">START</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] == <span class="hljs-variable constant_">PARTICLE</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] = <span class="hljs-variable constant_">START</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] == <span class="hljs-variable constant_">PARTICLE</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] = <span class="hljs-variable constant_">START</span>;
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
@@ -1790,7 +1789,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
             <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">here</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> = host.<span class="hljs-property">name</span>;
             <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> = item;
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> = <span class="hljs-string">&#x27;&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> = <span class="hljs-variable constant_">ZERO_STR</span>;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
@@ -1815,7 +1814,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
         <span class="hljs-keyword">if</span> (item) {
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_GROUP</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>.<span class="hljs-title function_">removeArtefacts</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_GROUP</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>.<span class="hljs-title function_">removeArtefacts</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
             <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
@@ -1827,7 +1826,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
             <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span> = item;
         }
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_GROUP</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_GROUP</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
     };</pre></div></div>
             
         </li>
@@ -2216,9 +2215,9 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
                 d = dimensions[i];
 
             <span class="hljs-keyword">if</span> (s.<span class="hljs-property">toFixed</span>) current[i] = s;
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s === <span class="hljs-variable constant_">LEFT</span> || s === <span class="hljs-variable constant_">TOP</span>) current[i] = <span class="hljs-number">0</span>;
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s === <span class="hljs-variable constant_">RIGHT</span> || s === <span class="hljs-variable constant_">BOTTOM</span>) current[i] = d;
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s === <span class="hljs-variable constant_">CENTER</span>) current[i] = d / <span class="hljs-number">2</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s == <span class="hljs-variable constant_">LEFT</span> || s == <span class="hljs-variable constant_">TOP</span>) current[i] = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s == <span class="hljs-variable constant_">RIGHT</span> || s == <span class="hljs-variable constant_">BOTTOM</span>) current[i] = d;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s == <span class="hljs-variable constant_">CENTER</span>) current[i] = d / <span class="hljs-number">2</span>;
             <span class="hljs-keyword">else</span> current[i] = (<span class="hljs-built_in">parseFloat</span>(s) / <span class="hljs-number">100</span>) * d;
         }
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
@@ -2658,10 +2657,10 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
             <span class="hljs-keyword">const</span> confirmLock = <span class="hljs-keyword">function</span> (<span class="hljs-params">lock</span>) {
 
-                <span class="hljs-keyword">if</span> (lock === <span class="hljs-variable constant_">PIVOT</span> &amp;&amp; !pivot) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">START</span>;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock === <span class="hljs-variable constant_">PATH</span> &amp;&amp; !path) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">START</span>;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock === <span class="hljs-variable constant_">MIMIC</span> &amp;&amp; !mimic) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">START</span>;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock === <span class="hljs-variable constant_">PARTICLE</span> &amp;&amp; !particle) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">START</span>;
+                <span class="hljs-keyword">if</span> (lock == <span class="hljs-variable constant_">PIVOT</span> &amp;&amp; !pivot) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">START</span>;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock == <span class="hljs-variable constant_">PATH</span> &amp;&amp; !path) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">START</span>;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock == <span class="hljs-variable constant_">MIMIC</span> &amp;&amp; !mimic) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">START</span>;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock == <span class="hljs-variable constant_">PARTICLE</span> &amp;&amp; !particle) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">START</span>;
                 <span class="hljs-keyword">return</span> lock;
             };
 
@@ -2897,9 +2896,9 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
                 lock = lockArray[i];
 
-                <span class="hljs-keyword">if</span> (lock === <span class="hljs-variable constant_">PIVOT</span> &amp;&amp; !pivot) lock = <span class="hljs-variable constant_">START</span>;
-                <span class="hljs-keyword">if</span> (lock === <span class="hljs-variable constant_">PATH</span> &amp;&amp; !path) lock = <span class="hljs-variable constant_">START</span>;
-                <span class="hljs-keyword">if</span> (lock === <span class="hljs-variable constant_">MIMIC</span> &amp;&amp; !mimic) lock = <span class="hljs-variable constant_">START</span>;
+                <span class="hljs-keyword">if</span> (lock == <span class="hljs-variable constant_">PIVOT</span> &amp;&amp; !pivot) lock = <span class="hljs-variable constant_">START</span>;
+                <span class="hljs-keyword">if</span> (lock == <span class="hljs-variable constant_">PATH</span> &amp;&amp; !path) lock = <span class="hljs-variable constant_">START</span>;
+                <span class="hljs-keyword">if</span> (lock == <span class="hljs-variable constant_">MIMIC</span> &amp;&amp; !mimic) lock = <span class="hljs-variable constant_">START</span>;
 
                 coord = handle[i];
 
@@ -2943,7 +2942,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampHandlePositionsAdditionalActions</span>();
 
-        <span class="hljs-keyword">if</span> (oldX !== stampHandle[<span class="hljs-number">0</span>] || oldY !== stampHandle[<span class="hljs-number">1</span>]) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (oldX != stampHandle[<span class="hljs-number">0</span>] || oldY != stampHandle[<span class="hljs-number">1</span>]) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span> = <span class="hljs-literal">true</span>;
     };
     P.<span class="hljs-property">cleanStampHandlePositionsAdditionalActions</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             

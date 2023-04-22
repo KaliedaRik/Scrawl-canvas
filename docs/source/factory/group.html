@@ -988,7 +988,8 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">artefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span> = [];
+    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addArtefacts</span>(item);
 };</pre></div></div>
@@ -1674,31 +1675,28 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getCellCoverage</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) {
 
-    <span class="hljs-keyword">const</span> width = img.<span class="hljs-property">width</span>,
-        height = img.<span class="hljs-property">height</span>,
-        data = img.<span class="hljs-property">data</span>;
+    <span class="hljs-keyword">const</span> { width, height, data } = img;
 
     <span class="hljs-keyword">let</span> maxX = <span class="hljs-number">0</span>,
         maxY = <span class="hljs-number">0</span>,
         minX = width,
         minY = height,
         counter = <span class="hljs-number">3</span>,
-        x, y;
+        x, y, i, iz;
 
-    <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; height; y++) {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = width * height; i &lt; iz; i++) {
 
-        <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; width; x++) {
+        <span class="hljs-keyword">if</span> (data[counter]) {
 
-            <span class="hljs-keyword">if</span> (data[counter]) {
+            y = <span class="hljs-title function_">_floor</span>(i / width); 
+            x = i - (y * width);
 
-                <span class="hljs-keyword">if</span> (minX &gt; x) minX = x;
-                <span class="hljs-keyword">if</span> (maxX &lt; x) maxX = x;
-                <span class="hljs-keyword">if</span> (minY &gt; y) minY = y;
-                <span class="hljs-keyword">if</span> (maxY &lt; y) maxY = y;
-            }
-
-            counter += <span class="hljs-number">4</span>;
+            <span class="hljs-keyword">if</span> (minX &gt; x) minX = x;
+            <span class="hljs-keyword">if</span> (maxX &lt; x) maxX = x;
+            <span class="hljs-keyword">if</span> (minY &gt; y) minY = y;
+            <span class="hljs-keyword">if</span> (maxY &lt; y) maxY = y;
         }
+        counter += <span class="hljs-number">4</span>;
     }
     <span class="hljs-keyword">if</span> (minX &lt; maxX &amp;&amp; minY &lt; maxY) <span class="hljs-keyword">return</span> [minX, minY, maxX - minX, maxY - minY];
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height];
@@ -2186,7 +2184,7 @@ TODO: don’t think this is tested anywhere - build test!</p>
     
     <span class="hljs-keyword">const</span> myCell = <span class="hljs-title function_">requestCell</span>(),
         artBuckets = <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactStampBuckets</span>,
-        resultNames = [],
+        resultNames = <span class="hljs-title function_">requestArray</span>(),
         results = [];
 
     <span class="hljs-keyword">let</span> art, result, hit;
@@ -2212,13 +2210,14 @@ TODO: don’t think this is tested anywhere - build test!</p>
         }
     }
     <span class="hljs-title function_">releaseCell</span>(myCell);
+    <span class="hljs-title function_">releaseArray</span>(resultNames);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">checkForEntityHover</span>) {
 
         <span class="hljs-keyword">const</span> foundArtefacts = (results.<span class="hljs-property">length</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>,
             isHovering = <span class="hljs-variable language_">this</span>.<span class="hljs-property">isHovering</span>;
 
-        <span class="hljs-keyword">if</span> (isHovering !== foundArtefacts) {
+        <span class="hljs-keyword">if</span> (isHovering != foundArtefacts) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">isHovering</span> = foundArtefacts;
 

@@ -623,6 +623,8 @@
 
 <span class="hljs-keyword">import</span> { releaseVector, requestVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
 
+<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./array-pool.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shape-basic.js&#x27;</span>;
 
@@ -892,11 +894,7 @@ D.<span class="hljs-property">radius</span> = <span class="hljs-keyword">functio
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-variable constant_">ZERO_PATH</span>;
-    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makePolygonPath</span>();
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makePolygonPath</span>();
 };</pre></div></div>
             
         </li>
@@ -930,7 +928,7 @@ D.<span class="hljs-property">radius</span> = <span class="hljs-keyword">functio
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> sideLength = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sideLength</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius</span>,
         sides = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sides</span>,
         turn = <span class="hljs-number">360</span> / sides,
-        yPts = [];
+        yPts = <span class="hljs-title function_">requestArray</span>();
 
     <span class="hljs-keyword">let</span> currentY = <span class="hljs-number">0</span>,
         myPath = <span class="hljs-variable constant_">ZERO_STR</span>,
@@ -953,6 +951,8 @@ D.<span class="hljs-property">radius</span> = <span class="hljs-keyword">functio
     myYoffset = (((<span class="hljs-title function_">_abs</span>(myMin) + <span class="hljs-title function_">_abs</span>(myMax)) - sideLength) / <span class="hljs-number">2</span>).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
 
     myPath = <span class="hljs-string">`m0,<span class="hljs-subst">${myYoffset}</span>l<span class="hljs-subst">${myPath}</span>z`</span>;
+
+    <span class="hljs-title function_">releaseArray</span>(yPts);
 
     <span class="hljs-keyword">return</span> myPath;
 };</pre></div></div>

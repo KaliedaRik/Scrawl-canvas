@@ -990,13 +990,13 @@
     };
     D.<span class="hljs-property">startX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">start</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">start</span>;
         c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], coord);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
     };
     D.<span class="hljs-property">startY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">start</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">start</span>;
         c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], coord);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
     };
@@ -1050,13 +1050,13 @@
     };
     D.<span class="hljs-property">endX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">end</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">end</span>;
         c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], coord);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
     };
     D.<span class="hljs-property">endY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">end</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">end</span>;
         c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], coord);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
     };
@@ -1296,13 +1296,13 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">get</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">let</span> getter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getters</span>[item];
+        <span class="hljs-keyword">const</span> getter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getters</span>[item],
+            palette = <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>;
 
         <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);
         <span class="hljs-keyword">else</span> {
 
             <span class="hljs-keyword">let</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item],
-                palette = <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>,
                 val;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-variable constant_">UNDEF</span>) {
@@ -1457,7 +1457,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">setCoordinateHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">label, x, y</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>[label];
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>[label];
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(x)) {
 
@@ -1486,7 +1486,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">setDeltaCoordinateHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">label, x, y</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>[label],
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>[label],
             myX = c[<span class="hljs-number">0</span>],
             myY = c[<span class="hljs-number">1</span>];
 
@@ -1717,12 +1717,11 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">finalizeCoordinates</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">entity = Ωempty</span>) {
 
-        <span class="hljs-keyword">let</span> currentStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStart</span>,
-            currentEnd = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEnd</span>,
-            entityStampPosition = entity.<span class="hljs-property">currentStampPosition</span>,
+        <span class="hljs-keyword">const</span> entityStampPosition = entity.<span class="hljs-property">currentStampPosition</span>,
             entityStampHandlePosition = entity.<span class="hljs-property">currentStampHandlePosition</span>,
-            entityScale = entity.<span class="hljs-property">currentScale</span>,
-            correctX, correctY;
+            entityScale = entity.<span class="hljs-property">currentScale</span>;
+
+        <span class="hljs-keyword">let</span> correctX, correctY;
 
         <span class="hljs-keyword">if</span> (entity.<span class="hljs-property">lockFillStyleToEntity</span> || entity.<span class="hljs-property">lockStrokeStyleToEntity</span>) {
 

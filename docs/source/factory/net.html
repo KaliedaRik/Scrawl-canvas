@@ -1143,8 +1143,6 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;forces&#x27;</span>, <span class="hljs-string">&#x27;springs&#x27;</span>, <span class="hljs-string">&#x27;particleStore&#x27;</span>]);
-P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, []);
-P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, []);
 P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;world&#x27;</span>, <span class="hljs-string">&#x27;artefact&#x27;</span>, <span class="hljs-string">&#x27;shapeTemplate&#x27;</span>]);
 P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;generate&#x27;</span>, <span class="hljs-string">&#x27;postGenerate&#x27;</span>, <span class="hljs-string">&#x27;stampAction&#x27;</span>]);
 
@@ -1395,10 +1393,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">regularStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> {world, <span class="hljs-attr">artefact</span>:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">const</span> {world, <span class="hljs-attr">artefact</span>:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = <span class="hljs-variable language_">this</span>;
 
     <span class="hljs-keyword">let</span> globalAlpha = <span class="hljs-number">1</span>,
-        globalCompositeOperation = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+        globalCompositeOperation = <span class="hljs-variable constant_">SOURCE_OVER</span>,
+        particleFrom, particleTo;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>) {
         globalAlpha = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">globalAlpha</span>;
@@ -1516,7 +1515,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
         springs.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> {particleFrom, particleTo} = s;
+            ({particleFrom, particleTo} = s);
 
             engine.<span class="hljs-title function_">moveTo</span>(particleFrom.<span class="hljs-property">position</span>.<span class="hljs-property">x</span>, particleFrom.<span class="hljs-property">position</span>.<span class="hljs-property">y</span>);
             engine.<span class="hljs-title function_">lineTo</span>(particleTo.<span class="hljs-property">position</span>.<span class="hljs-property">x</span>, particleTo.<span class="hljs-property">position</span>.<span class="hljs-property">y</span>);
@@ -1794,8 +1793,6 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> generators = {</pre></div></div>
-            
         </li>
         
         
@@ -1805,26 +1802,37 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
-              <p><code>weak-net</code> - a net made up of rows and columns, with particles at each row/column intersection. The generator will connect each Particle with springs to up to four of its closest horizontal and vertical neighbors</p>
-<ul>
-<li>Can be used to model cloth</li>
-</ul>
+              <p><code>springMaker</code> - internal helper function to generate the entity’s Spring objects</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">WEAK_NET</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> springMaker = <span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) {
 
-        <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">const</span> { springs, springConstant, damperConstant, restLength } = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">if</span> (host &amp;&amp; rows &gt; <span class="hljs-number">0</span> &amp;&amp; columns &gt; <span class="hljs-number">0</span>) {
+    <span class="hljs-keyword">let</span> v, l, s;
 
-            <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
-            <span class="hljs-keyword">let</span> [width, height] = host.<span class="hljs-property">currentDimensions</span>;
+    v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
+    l = v.<span class="hljs-title function_">getMagnitude</span>();
 
-            <span class="hljs-keyword">let</span> deltaR = (rowDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
-            <span class="hljs-keyword">let</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
+    s = <span class="hljs-title function_">makeSpring</span>({
 
-            <span class="hljs-keyword">let</span> dx, dy, p, i, j;</pre></div></div>
+        <span class="hljs-attr">name</span>: springName,
+
+        particleFrom,
+        particleTo,
+
+        springConstant, 
+        damperConstant,
+
+        <span class="hljs-attr">restLength</span>: l * restLength,
+    });
+
+    springs.<span class="hljs-title function_">push</span>(s);
+    <span class="hljs-title function_">releaseVector</span>(v);
+};
+
+<span class="hljs-keyword">const</span> generators = {</pre></div></div>
             
         </li>
         
@@ -1835,126 +1843,16 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
-              <p>generate particles</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; rows; i++) {
-
-                dy = (deltaR * i) + y;
-
-                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; columns; j++) {
-
-                    dx = (deltaC * j) + x;
-
-                    p = <span class="hljs-title function_">makeParticle</span>({
-
-                        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>`</span>,
-
-                        <span class="hljs-attr">positionX</span>: dx,
-                        <span class="hljs-attr">positionY</span>: dy,
-                        <span class="hljs-attr">positionZ</span>: <span class="hljs-number">0</span>,
-
-                        <span class="hljs-attr">velocityX</span>: <span class="hljs-number">0</span>,
-                        <span class="hljs-attr">velocityY</span>: <span class="hljs-number">0</span>,
-                        <span class="hljs-attr">velocityZ</span>: <span class="hljs-number">0</span>,
-
-                        historyLength, 
-                        engine, 
-                        forces, 
-
-                        mass,
-
-                        <span class="hljs-attr">fill</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">FILL_STYLE</span>),
-                        <span class="hljs-attr">stroke</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">STROKE_STYLE</span>),
-                    });
-
-                    p.<span class="hljs-title function_">run</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
-
-                    particleStore.<span class="hljs-title function_">push</span>(p);
-                }
-            }
-
-            <span class="hljs-keyword">const</span> springMaker = <span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) {
-
-                <span class="hljs-keyword">let</span> v, l, s;
-
-                v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
-                l = v.<span class="hljs-title function_">getMagnitude</span>();
-
-                s = <span class="hljs-title function_">makeSpring</span>({
-
-                    <span class="hljs-attr">name</span>: springName,
-
-                    particleFrom,
-                    particleTo,
-
-                    springConstant, 
-                    damperConstant,
-
-                    <span class="hljs-attr">restLength</span>: l * restLength,
-                });
-
-                springs.<span class="hljs-title function_">push</span>(s);
-                <span class="hljs-title function_">releaseVector</span>(v);
-            };
-
-            <span class="hljs-keyword">let</span> f, t;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-62">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
-              </div>
-              <p>generate springs</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; rows; i++) {
-
-                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; columns - <span class="hljs-number">1</span>; j++) {
-
-                    f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>`</span>];
-                    t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>];
-                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>);
-                }
-            }
-
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; columns; i++) {
-
-                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; rows - <span class="hljs-number">1</span>; j++) {
-
-                    f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>`</span>];
-                    t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>];
-                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>);
-                }
-            }
-        }
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-63">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
-              </div>
-              <p><code>strong-net</code> - a net made up of rows and columns, with particles at each row/column intersection. The generator will connect each Particle with springs to up to eight of its closest horizontal, vertical and diagonal neighbors</p>
+              <p><code>weak-net</code> - a net made up of rows and columns, with particles at each row/column intersection. The generator will connect each Particle with springs to up to four of its closest horizontal and vertical neighbors</p>
 <ul>
-<li>Can be used to model a soft-bodied object</li>
+<li>Can be used to model cloth</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">STRONG_NET</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
+            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">WEAK_NET</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
 
-        <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = <span class="hljs-variable language_">this</span>;
+        <span class="hljs-keyword">const</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name } = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">if</span> (host &amp;&amp; rows &gt; <span class="hljs-number">0</span> &amp;&amp; columns &gt; <span class="hljs-number">0</span>) {
 
@@ -1969,11 +1867,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-64">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>generate particles</p>
 
@@ -2015,40 +1913,16 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
                 }
             }
 
-            <span class="hljs-keyword">const</span> springMaker = <span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) {
-
-                <span class="hljs-keyword">let</span> v, l, s;
-
-                v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
-                l = v.<span class="hljs-title function_">getMagnitude</span>();
-
-                s = <span class="hljs-title function_">makeSpring</span>({
-
-                    <span class="hljs-attr">name</span>: springName,
-
-                    particleFrom,
-                    particleTo,
-
-                    springConstant, 
-                    damperConstant,
-
-                    <span class="hljs-attr">restLength</span>: l * restLength,
-                });
-
-                springs.<span class="hljs-title function_">push</span>(s);
-                <span class="hljs-title function_">releaseVector</span>(v);
-            };
-
             <span class="hljs-keyword">let</span> f, t;</pre></div></div>
             
         </li>
         
         
-        <li id="section-65">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>generate springs</p>
 
@@ -2060,7 +1934,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>];
-                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>);
+                    springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>);
                 }
             }
 
@@ -2070,31 +1944,92 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>];
-                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>);
-                }
-            }
-
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; columns - <span class="hljs-number">1</span>; i++) {
-
-                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; rows - <span class="hljs-number">1</span>; j++) {
-
-                    f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>`</span>];
-                    t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
-                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
-                }
-            }
-
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; columns - <span class="hljs-number">1</span>; i++) {
-
-                <span class="hljs-keyword">for</span> (j = rows - <span class="hljs-number">1</span>; j &gt; <span class="hljs-number">0</span>; j--) {
-
-                    f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>`</span>];
-                    t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j - <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
-                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j - <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+                    springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>);
                 }
             }
         }
     },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
+              </div>
+              <p><code>strong-net</code> - a net made up of rows and columns, with particles at each row/column intersection. The generator will connect each Particle with springs to up to eight of its closest horizontal, vertical and diagonal neighbors</p>
+<ul>
+<li>Can be used to model a soft-bodied object</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">STRONG_NET</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
+
+        <span class="hljs-keyword">const</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name } = <span class="hljs-variable language_">this</span>;
+
+        <span class="hljs-keyword">if</span> (host &amp;&amp; rows &gt; <span class="hljs-number">0</span> &amp;&amp; columns &gt; <span class="hljs-number">0</span>) {
+
+            <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
+            <span class="hljs-keyword">let</span> [width, height] = host.<span class="hljs-property">currentDimensions</span>;
+
+            <span class="hljs-keyword">let</span> deltaR = (rowDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
+            <span class="hljs-keyword">let</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
+
+            <span class="hljs-keyword">let</span> dx, dy, p, i, j;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-65">&#x00a7;</a>
+              </div>
+              <p>generate particles</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; rows; i++) {
+
+                dy = (deltaR * i) + y;
+
+                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; columns; j++) {
+
+                    dx = (deltaC * j) + x;
+
+                    p = <span class="hljs-title function_">makeParticle</span>({
+
+                        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>`</span>,
+
+                        <span class="hljs-attr">positionX</span>: dx,
+                        <span class="hljs-attr">positionY</span>: dy,
+                        <span class="hljs-attr">positionZ</span>: <span class="hljs-number">0</span>,
+
+                        <span class="hljs-attr">velocityX</span>: <span class="hljs-number">0</span>,
+                        <span class="hljs-attr">velocityY</span>: <span class="hljs-number">0</span>,
+                        <span class="hljs-attr">velocityZ</span>: <span class="hljs-number">0</span>,
+
+                        historyLength, 
+                        engine, 
+                        forces, 
+
+                        mass,
+
+                        <span class="hljs-attr">fill</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">FILL_STYLE</span>),
+                        <span class="hljs-attr">stroke</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">STROKE_STYLE</span>),
+                    });
+
+                    p.<span class="hljs-title function_">run</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
+
+                    particleStore.<span class="hljs-title function_">push</span>(p);
+                }
+            }
+
+            <span class="hljs-keyword">let</span> f, t;</pre></div></div>
             
         </li>
         
@@ -2105,125 +2040,48 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
-              <p><code>weak-shape</code> - <strong>Warning: not very stable!</strong> - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors</p>
+              <p>generate springs</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">WEAK_SHAPE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; rows; i++) {
 
-        <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
+                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; columns - <span class="hljs-number">1</span>; j++) {
 
-        <span class="hljs-keyword">const</span> springMaker = <span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) {
-
-            <span class="hljs-keyword">let</span> v, l, s;
-
-            v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
-            l = v.<span class="hljs-title function_">getMagnitude</span>();
-
-            s = <span class="hljs-title function_">makeSpring</span>({
-
-                <span class="hljs-attr">name</span>: springName,
-
-                particleFrom,
-                particleTo,
-
-                springConstant, 
-                damperConstant,
-
-                <span class="hljs-attr">restLength</span>: l * restLength,
-            });
-
-            springs.<span class="hljs-title function_">push</span>(s);
-            <span class="hljs-title function_">releaseVector</span>(v);
-        };
-
-        <span class="hljs-keyword">let</span> i, p, f, t;
-
-        <span class="hljs-keyword">if</span> (shapeTemplate &amp;&amp; precision) {
-
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision; i++) {
-
-                <span class="hljs-keyword">let</span> coords = shapeTemplate.<span class="hljs-title function_">getPathPositionData</span>(i / precision);
-
-                p = <span class="hljs-title function_">makeParticle</span>({
-
-                    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>,
-
-                    <span class="hljs-attr">positionX</span>: coords.<span class="hljs-property">x</span>,
-                    <span class="hljs-attr">positionY</span>: coords.<span class="hljs-property">y</span>,
-                    <span class="hljs-attr">positionZ</span>: <span class="hljs-number">0</span>,
-
-                    <span class="hljs-attr">velocityX</span>: <span class="hljs-number">0</span>,
-                    <span class="hljs-attr">velocityY</span>: <span class="hljs-number">0</span>,
-                    <span class="hljs-attr">velocityZ</span>: <span class="hljs-number">0</span>,
-
-                    historyLength,
-                    engine,
-                    forces,
-
-                    mass,
-
-                    <span class="hljs-attr">fill</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">FILL_STYLE</span>),
-                    <span class="hljs-attr">stroke</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">STROKE_STYLE</span>),
-                });
-
-                p.<span class="hljs-title function_">run</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
-
-                particleStore.<span class="hljs-title function_">push</span>(p);
+                    f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>`</span>];
+                    t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>];
+                    springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>);
+                }
             }
 
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">1</span>; i++) {
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; columns; i++) {
 
-                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
-                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; rows - <span class="hljs-number">1</span>; j++) {
+
+                    f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>`</span>];
+                    t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>];
+                    springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>);
+                }
             }
 
-            <span class="hljs-keyword">if</span> (joinTemplateEnds) {
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; columns - <span class="hljs-number">1</span>; i++) {
 
-                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
-                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; rows - <span class="hljs-number">1</span>; j++) {
+
+                    f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>`</span>];
+                    t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
+                    springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+                }
             }
 
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">2</span>; i++) {
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; columns - <span class="hljs-number">1</span>; i++) {
 
-                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
-                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>);
-            }
+                <span class="hljs-keyword">for</span> (j = rows - <span class="hljs-number">1</span>; j &gt; <span class="hljs-number">0</span>; j--) {
 
-            <span class="hljs-keyword">if</span> (joinTemplateEnds) {
-
-                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>`</span>];
-                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
-
-                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
-                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
-            }
-
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">3</span>; i++) {
-
-                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
-                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>);
-            }
-
-            <span class="hljs-keyword">if</span> (joinTemplateEnds) {
-
-                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>`</span>];
-                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
-
-                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>`</span>];
-                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
-
-                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
-                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>);
+                    f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>`</span>];
+                    t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j - <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
+                    springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j - <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+                }
             }
         }
     },</pre></div></div>
@@ -2237,37 +2095,13 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
-              <p><code>strong-shape</code> - <strong>Warning: generally unstable!</strong> - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors, and make an additional connection with a Particle at some distance from it (to act as a strut)</p>
+              <p><code>weak-shape</code> - <strong>Warning: not very stable!</strong> - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">STRONG_SHAPE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
+            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">WEAK_SHAPE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
 
-        <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
-
-        <span class="hljs-keyword">const</span> springMaker = <span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) {
-
-            <span class="hljs-keyword">let</span> v, l, s;
-
-            v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
-            l = v.<span class="hljs-title function_">getMagnitude</span>();
-
-            s = <span class="hljs-title function_">makeSpring</span>({
-
-                <span class="hljs-attr">name</span>: springName,
-
-                particleFrom,
-                particleTo,
-
-                springConstant, 
-                damperConstant,
-
-                <span class="hljs-attr">restLength</span>: l * restLength,
-            });
-
-            springs.<span class="hljs-title function_">push</span>(s);
-            <span class="hljs-title function_">releaseVector</span>(v);
-        };
+        <span class="hljs-keyword">const</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name, shapeTemplate, precision, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">let</span> i, p, f, t;
 
@@ -2308,67 +2142,54 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">2</span>; i++) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>);
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">3</span>; i++) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>);
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>];
-                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>);
-            }
-
-            <span class="hljs-keyword">let</span> halfPrecision = <span class="hljs-title function_">_floor</span>(precision / <span class="hljs-number">2</span>);
-
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - halfPrecision; i++) {
-
-                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
-
-                <span class="hljs-keyword">if</span> (i + halfPrecision &lt; precision - <span class="hljs-number">1</span>) {
-
-                    t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + halfPrecision}</span>`</span>];
-                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + halfPrecision}</span>`</span>);
-                }
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>);
             }
         }
     },</pre></div></div>
@@ -2382,6 +2203,127 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
+              <p><code>strong-shape</code> - <strong>Warning: generally unstable!</strong> - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors, and make an additional connection with a Particle at some distance from it (to act as a strut)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">STRONG_SHAPE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
+
+        <span class="hljs-keyword">const</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name, shapeTemplate, precision, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
+
+        <span class="hljs-keyword">let</span> i, p, f, t;
+
+        <span class="hljs-keyword">if</span> (shapeTemplate &amp;&amp; precision) {
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision; i++) {
+
+                <span class="hljs-keyword">let</span> coords = shapeTemplate.<span class="hljs-title function_">getPathPositionData</span>(i / precision);
+
+                p = <span class="hljs-title function_">makeParticle</span>({
+
+                    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>,
+
+                    <span class="hljs-attr">positionX</span>: coords.<span class="hljs-property">x</span>,
+                    <span class="hljs-attr">positionY</span>: coords.<span class="hljs-property">y</span>,
+                    <span class="hljs-attr">positionZ</span>: <span class="hljs-number">0</span>,
+
+                    <span class="hljs-attr">velocityX</span>: <span class="hljs-number">0</span>,
+                    <span class="hljs-attr">velocityY</span>: <span class="hljs-number">0</span>,
+                    <span class="hljs-attr">velocityZ</span>: <span class="hljs-number">0</span>,
+
+                    historyLength,
+                    engine,
+                    forces,
+
+                    mass,
+
+                    <span class="hljs-attr">fill</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">FILL_STYLE</span>),
+                    <span class="hljs-attr">stroke</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">STROKE_STYLE</span>),
+                });
+
+                p.<span class="hljs-title function_">run</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
+
+                particleStore.<span class="hljs-title function_">push</span>(p);
+            }
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">1</span>; i++) {
+
+                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
+                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+            }
+
+            <span class="hljs-keyword">if</span> (joinTemplateEnds) {
+
+                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
+                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+            }
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">2</span>; i++) {
+
+                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
+                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>];
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>);
+            }
+
+            <span class="hljs-keyword">if</span> (joinTemplateEnds) {
+
+                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>`</span>];
+                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+
+                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
+                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>];
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
+            }
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">3</span>; i++) {
+
+                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
+                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>];
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>);
+            }
+
+            <span class="hljs-keyword">if</span> (joinTemplateEnds) {
+
+                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>`</span>];
+                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+
+                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>`</span>];
+                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>];
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
+
+                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
+                t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>];
+                springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>);
+            }
+
+            <span class="hljs-keyword">let</span> halfPrecision = <span class="hljs-title function_">_floor</span>(precision / <span class="hljs-number">2</span>);
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - halfPrecision; i++) {
+
+                f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
+
+                <span class="hljs-keyword">if</span> (i + halfPrecision &lt; precision - <span class="hljs-number">1</span>) {
+
+                    t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + halfPrecision}</span>`</span>];
+                    springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + halfPrecision}</span>`</span>);
+                }
+            }
+        }
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-69">&#x00a7;</a>
+              </div>
               <p><code>hub-spoke</code> - <strong>Warning: highly unstable!</strong> - a rope of Particles set along a path. The generator will connect each Particle with springs to its closest neighbors, and make an additional connection with a ‘hub’ particle at the template’s rotation-reflection point.</p>
 
             </div>
@@ -2392,31 +2334,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
         <span class="hljs-keyword">if</span> (shapeTemplate &amp;&amp; shapeTemplate.<span class="hljs-property">type</span> &amp;&amp; precision) {
 
-            <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
-
-            <span class="hljs-keyword">const</span> springMaker = <span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) {
-
-                <span class="hljs-keyword">let</span> v, l, s;
-
-                v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
-                l = v.<span class="hljs-title function_">getMagnitude</span>();
-
-                s = <span class="hljs-title function_">makeSpring</span>({
-
-                    <span class="hljs-attr">name</span>: springName,
-
-                    particleFrom,
-                    particleTo,
-
-                    springConstant, 
-                    damperConstant,
-
-                    <span class="hljs-attr">restLength</span>: l * restLength,
-                });
-
-                springs.<span class="hljs-title function_">push</span>(s);
-                <span class="hljs-title function_">releaseVector</span>(v);
-            };
+            <span class="hljs-keyword">const</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
 
             <span class="hljs-keyword">let</span> i, p, f, t, hub;
 
@@ -2425,11 +2343,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p>build the rim</p>
 
@@ -2470,42 +2388,52 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
-                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+                    springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
                 }
 
                 <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>-0`</span>);
+                    springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>-0`</span>);
                 }
 
                 <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">2</span>; i++) {
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>];
-                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>);
+                    springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>);
                 }
 
                 <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+                    springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>];
-                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
+                    springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
                 }
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">HUB_ARTEFACTS_2</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) {
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-71">&#x00a7;</a>
+              </div>
+              <p>TODO: consider whether we need these</p>
 
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">HUB_ARTEFACTS_3</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">HUB_ARTEFACTS_2</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) {}
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">HUB_ARTEFACTS_3</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) {}
 
-            }
-
-            <span class="hljs-keyword">let</span> [x, y] = shapeTemplate.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">POSITION</span>);
+            <span class="hljs-keyword">const</span> [x, y] = shapeTemplate.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">POSITION</span>);
 
             hub = <span class="hljs-title function_">makeParticle</span>({
 
@@ -2531,7 +2459,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
             hub.<span class="hljs-title function_">run</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
 
-            particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> <span class="hljs-title function_">springMaker</span>(p, hub, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${index}</span>-hub`</span>));
+            particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, p, hub, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${index}</span>-hub`</span>));
 
             particleStore.<span class="hljs-title function_">push</span>(hub);
         }
@@ -2541,11 +2469,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-70">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 

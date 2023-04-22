@@ -695,7 +695,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(items.<span class="hljs-property">patternMatrix</span>)) copy.<span class="hljs-property">patternMatrix</span> = items.<span class="hljs-property">patternMatrix</span>;
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">let</span> m = <span class="hljs-variable language_">this</span>.<span class="hljs-property">patternMatrix</span>;
+        <span class="hljs-keyword">const</span> m = <span class="hljs-variable language_">this</span>.<span class="hljs-property">patternMatrix</span>;
         <span class="hljs-keyword">if</span> (m) copy.<span class="hljs-property">patternMatrix</span> = [m.<span class="hljs-property">a</span>, m.<span class="hljs-property">b</span>, m.<span class="hljs-property">c</span>, m.<span class="hljs-property">d</span>, m.<span class="hljs-property">e</span>, m.<span class="hljs-property">f</span>];
     }
 
@@ -830,7 +830,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">get</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+    <span class="hljs-keyword">const</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
     <span class="hljs-keyword">if</span> ((item.<span class="hljs-title function_">indexOf</span>($VIDEO) == <span class="hljs-number">0</span> || item.<span class="hljs-title function_">indexOf</span>($IMAGE) == <span class="hljs-number">0</span>) &amp;&amp; source) {
 
@@ -840,18 +840,17 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">let</span> getter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getters</span>[item];
+        <span class="hljs-keyword">const</span> getter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getters</span>[item];
 
         <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);
 
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item],
-                val;
+            <span class="hljs-keyword">const</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item];
 
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-variable constant_">UNDEF</span>) {
 
-                val = <span class="hljs-variable language_">this</span>[item];
+                <span class="hljs-keyword">const</span> val = <span class="hljs-variable language_">this</span>[item];
                 <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-variable constant_">UNDEF</span>) ? val : def;
             }
             <span class="hljs-keyword">return</span> undef;

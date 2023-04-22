@@ -671,7 +671,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-variable constant_">PIVOT</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;pivot&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -758,7 +758,7 @@
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> oldPivot = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span>,
+            <span class="hljs-keyword">const</span> oldPivot = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span>,
                 name = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
             <span class="hljs-keyword">let</span> newPivot = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item;
@@ -767,12 +767,12 @@
 
                 newPivot = asset[item];
 
-                <span class="hljs-keyword">if</span> (newPivot &amp;&amp; newPivot.<span class="hljs-property">type</span> !== <span class="hljs-variable constant_">T_CELL</span>) newPivot = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">if</span> (newPivot &amp;&amp; newPivot.<span class="hljs-property">type</span> != <span class="hljs-variable constant_">T_CELL</span>) newPivot = <span class="hljs-literal">false</span>;
             }
 
             <span class="hljs-keyword">if</span> (newPivot &amp;&amp; newPivot.<span class="hljs-property">name</span>) {
 
-                <span class="hljs-keyword">if</span> (oldPivot &amp;&amp; oldPivot.<span class="hljs-property">name</span> !== newPivot.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(oldPivot.<span class="hljs-property">pivoted</span>, name);
+                <span class="hljs-keyword">if</span> (oldPivot &amp;&amp; oldPivot.<span class="hljs-property">name</span> != newPivot.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(oldPivot.<span class="hljs-property">pivoted</span>, name);
 
                 <span class="hljs-title function_">pushUnique</span>(newPivot.<span class="hljs-property">pivoted</span>, name);
 
@@ -858,26 +858,28 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">updatePivotSubscribers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
+        <span class="hljs-keyword">let</span> art;
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivoted</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> instance = artefact[name];
+            art = artefact[name];
 
-            <span class="hljs-keyword">if</span> (!instance) {
+            <span class="hljs-keyword">if</span> (!art) {
 
-                instance = asset[name];
+                art = asset[name];
 
-                <span class="hljs-keyword">if</span> (!instance || instance.<span class="hljs-property">type</span> !== <span class="hljs-variable constant_">T_CELL</span>) instance = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">if</span> (!art || art.<span class="hljs-property">type</span> !== <span class="hljs-variable constant_">T_CELL</span>) art = <span class="hljs-literal">false</span>;
             }
 
-            <span class="hljs-keyword">if</span> (instance) {
+            <span class="hljs-keyword">if</span> (art) {
 
-                instance.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">addPivotHandle</span>) instance.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">addPivotOffset</span>) instance.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">addPivotRotation</span>) instance.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
+                art.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">addPivotHandle</span>) art.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">addPivotOffset</span>) art.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">addPivotRotation</span>) art.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
 
-                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_POLYLINE</span>) instance.<span class="hljs-property">dirtyPins</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_LINE</span> || instance.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_QUADRATIC</span> || instance.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_BEZIER</span>) instance.<span class="hljs-property">dirtyPins</span>.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_POLYLINE</span>) art.<span class="hljs-property">dirtyPins</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (art.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_LINE</span> || art.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_QUADRATIC</span> || art.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_BEZIER</span>) art.<span class="hljs-property">dirtyPins</span>.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
             }
         }, <span class="hljs-variable language_">this</span>);
     };

@@ -622,10 +622,12 @@
 
 <span class="hljs-keyword">import</span> { releaseVector, requestVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
 
+<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./array-pool.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shape-basic.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">BEZIER</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">LINE</span>, <span class="hljs-variable constant_">PERMITTED_CURVES</span>, <span class="hljs-variable constant_">QUADRATIC</span>, <span class="hljs-variable constant_">T_COG</span>, <span class="hljs-variable constant_">ZERO_PATH</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _abs, _min, <span class="hljs-variable constant_">BEZIER</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">LINE</span>, <span class="hljs-variable constant_">PERMITTED_CURVES</span>, <span class="hljs-variable constant_">QUADRATIC</span>, <span class="hljs-variable constant_">T_COG</span>, <span class="hljs-variable constant_">ZERO_PATH</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -982,11 +984,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-variable constant_">ZERO_PATH</span>;
-    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeCogPath</span>();
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeCogPath</span>();
 };</pre></div></div>
             
         </li>
@@ -1004,10 +1002,12 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeCogPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> {points, twist, outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset, curve} = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">const</span> { points, twist, curve } = <span class="hljs-variable language_">this</span>;
+
+    <span class="hljs-keyword">let</span> { outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset } = <span class="hljs-variable language_">this</span>;
 
     <span class="hljs-keyword">const</span> turn = <span class="hljs-number">360</span> / points,
-        xPts = [];
+        xPts = <span class="hljs-title function_">requestArray</span>();
 
     <span class="hljs-keyword">let</span> currentTrailX, currentTrailY, currentPointX, currentPointY, currentLeadX, currentLeadY, 
         controlStartX, controlStartY, deltaX, deltaY, controlEndX, controlEndY,
@@ -1020,7 +1020,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 
         <span class="hljs-keyword">if</span> (host) {
 
-            <span class="hljs-keyword">let</span> [hW, hH] = host.<span class="hljs-property">currentDimensions</span>;
+            <span class="hljs-keyword">const</span> [hW, hH] = host.<span class="hljs-property">currentDimensions</span>;
 
             outerRadius = (outerRadius.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(outerRadius) / <span class="hljs-number">100</span>) * hW : outerRadius;
             innerRadius = (innerRadius.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(innerRadius) / <span class="hljs-number">100</span>) * hW : innerRadius;
@@ -1183,8 +1183,10 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
     }
     <span class="hljs-title function_">releaseVector</span>(outerPoint, outerPointLead, outerPointTrail, innerPoint, innerPointLead, innerPointTrail);
 
-    myMin = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(...xPts);
-    myXoffset = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(myMin).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
+    myMin = <span class="hljs-title function_">_min</span>(...xPts);
+    myXoffset = <span class="hljs-title function_">_abs</span>(myMin).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
+
+    <span class="hljs-title function_">releaseArray</span>(xPts);
 
     <span class="hljs-keyword">if</span> (curve == <span class="hljs-variable constant_">BEZIER</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0c<span class="hljs-subst">${myPath}</span>z`</span>;
     <span class="hljs-keyword">if</span> (curve == <span class="hljs-variable constant_">QUADRATIC</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0q<span class="hljs-subst">${myPath}</span>z`</span>;

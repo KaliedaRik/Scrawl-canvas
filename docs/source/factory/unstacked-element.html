@@ -659,7 +659,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">UnstackedElement</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) {
     
-    <span class="hljs-keyword">let</span> name = el.<span class="hljs-property">id</span> || el.<span class="hljs-property">name</span>;
+    <span class="hljs-keyword">const</span> name = el.<span class="hljs-property">id</span> || el.<span class="hljs-property">name</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(name);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
@@ -668,7 +668,7 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> = el;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">elementComputedStyles</span> = <span class="hljs-title function_">_computed</span>(el);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hostStyles</span> = Ωempty;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hostStyles</span> = {};
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasStartX</span> = <span class="hljs-number">0</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasStartY</span> = <span class="hljs-number">0</span>;
@@ -850,7 +850,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>) {
 
-        <span class="hljs-keyword">let</span> canvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">CANVAS</span>),
+        <span class="hljs-keyword">const</span> canvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">CANVAS</span>),
             el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>,
             style = el.<span class="hljs-property">style</span>;
 
@@ -860,7 +860,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         
         el.<span class="hljs-title function_">prepend</span>(canvas);
 
-        <span class="hljs-keyword">let</span> art = <span class="hljs-title function_">makeCanvas</span>({
+        <span class="hljs-keyword">const</span> art = <span class="hljs-title function_">makeCanvas</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-canvas`</span>,
             <span class="hljs-attr">domElement</span>: canvas,
 

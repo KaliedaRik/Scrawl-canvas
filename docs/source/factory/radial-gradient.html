@@ -918,11 +918,11 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
     
     <span class="hljs-keyword">if</span> (cell) {
 
-        <span class="hljs-keyword">let</span> engine = cell.<span class="hljs-property">engine</span>;
+        <span class="hljs-keyword">const</span> engine = cell.<span class="hljs-property">engine</span>;
 
         <span class="hljs-keyword">if</span> (engine) {
 
-            <span class="hljs-keyword">let</span> gradient = engine.<span class="hljs-title function_">createRadialGradient</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-property">gradientArgs</span>);
+            <span class="hljs-keyword">const</span> gradient = engine.<span class="hljs-title function_">createRadialGradient</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-property">gradientArgs</span>);
             
             <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addStopsToGradient</span>(gradient, <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteStart</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteEnd</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">cyclePalette</span>);
         }

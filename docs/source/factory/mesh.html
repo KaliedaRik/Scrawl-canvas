@@ -598,6 +598,8 @@
 
 <span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell-fragment.js&#x27;</span>;
 
+<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./array-pool.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> { currentGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./canvas.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
@@ -982,7 +984,6 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;pathObject&#x27;</span>, <span class="hljs-string">&#x27;state&#x27;</span>]);
 P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, [<span class="hljs-string">&#x27;^(local|dirty|current)&#x27;</span>, <span class="hljs-string">&#x27;Subscriber$&#x27;</span>]);
-P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, []);
 P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;group&#x27;</span>, <span class="hljs-string">&#x27;net&#x27;</span>, <span class="hljs-string">&#x27;source&#x27;</span>]);
 P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;onEnter&#x27;</span>, <span class="hljs-string">&#x27;onLeave&#x27;</span>, <span class="hljs-string">&#x27;onDown&#x27;</span>, <span class="hljs-string">&#x27;onUp&#x27;</span>]);
 
@@ -1567,22 +1568,22 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
 
         <span class="hljs-keyword">const</span> {columns, rows, particlePositions} = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">const</span> results = [],
-            lengths = [],
-            xPos = [],
-            yPos = [],
-            top = [],
-            left = [],
-            right = [],
-            coords = [],
-            bottom = [];
+        <span class="hljs-keyword">const</span> results = <span class="hljs-title function_">requestArray</span>(),
+            lengths = <span class="hljs-title function_">requestArray</span>(),
+            xPos = <span class="hljs-title function_">requestArray</span>(),
+            yPos = <span class="hljs-title function_">requestArray</span>(),
+            top = <span class="hljs-title function_">requestArray</span>(),
+            left = <span class="hljs-title function_">requestArray</span>(),
+            right = <span class="hljs-title function_">requestArray</span>(),
+            coords = <span class="hljs-title function_">requestArray</span>(),
+            bottom = <span class="hljs-title function_">requestArray</span>();
 
         <span class="hljs-keyword">let</span> x, xz, y, res, pos, coord, x0, x1, y0, y1, dx, dy, len, l, i, iz, j, jz;
 
         <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; rows; y++) {
 
             res = <span class="hljs-number">0</span>;
-            len = lengths[y] = [];
+            len = lengths[y] = <span class="hljs-title function_">requestArray</span>();
             coord = coords[y] = [];
 
             <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>, xz = columns - <span class="hljs-number">1</span>; x &lt; xz; x++) {
@@ -1594,25 +1595,25 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
 
                 coord.<span class="hljs-title function_">push</span>([x0, y0, x1, y1]);
 
-                <span class="hljs-keyword">if</span> (x === <span class="hljs-number">0</span>) {
+                <span class="hljs-keyword">if</span> (x == <span class="hljs-number">0</span>) {
 
                     left.<span class="hljs-title function_">push</span>([x0, y0]);
                 }
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (x === xz - <span class="hljs-number">1</span>) {
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (x == xz - <span class="hljs-number">1</span>) {
 
                     right.<span class="hljs-title function_">push</span>([x1, y1]);
                 }
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (y === <span class="hljs-number">0</span>) {
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (y == <span class="hljs-number">0</span>) {
 
                     top.<span class="hljs-title function_">push</span>([x0, y0]);
 
-                    <span class="hljs-keyword">if</span> (x === xz - <span class="hljs-number">2</span>) top.<span class="hljs-title function_">push</span>([x1, y1]);
+                    <span class="hljs-keyword">if</span> (x == xz - <span class="hljs-number">2</span>) top.<span class="hljs-title function_">push</span>([x1, y1]);
                 }
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (y === rows - <span class="hljs-number">1</span>) {
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (y == rows - <span class="hljs-number">1</span>) {
 
                     bottom.<span class="hljs-title function_">push</span>([x0, y0]);
 
-                    <span class="hljs-keyword">if</span> (x === xz - <span class="hljs-number">2</span>) bottom.<span class="hljs-title function_">push</span>([x1, y1]);
+                    <span class="hljs-keyword">if</span> (x == xz - <span class="hljs-number">2</span>) bottom.<span class="hljs-title function_">push</span>([x1, y1]);
                 }
 
                 xPos.<span class="hljs-title function_">push</span>(x0, x1);
@@ -1663,7 +1664,9 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
             }
         }
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">struts</span> = coords;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">struts</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">struts</span> = [];
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">struts</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">struts</span>.<span class="hljs-title function_">push</span>(...coords);
 
         <span class="hljs-keyword">let</span> xMin = <span class="hljs-title function_">_min</span>(...xPos),
             yMin = <span class="hljs-title function_">_min</span>(...yPos),
@@ -1700,6 +1703,17 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         p += <span class="hljs-string">&#x27;z&#x27;</span>;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D(p);
+
+        lengths.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> <span class="hljs-title function_">releaseArray</span>(a));
+        <span class="hljs-title function_">releaseArray</span>(lengths);
+        <span class="hljs-title function_">releaseArray</span>(results);
+        <span class="hljs-title function_">releaseArray</span>(xPos);
+        <span class="hljs-title function_">releaseArray</span>(yPos);
+        <span class="hljs-title function_">releaseArray</span>(top);
+        <span class="hljs-title function_">releaseArray</span>(left);
+        <span class="hljs-title function_">releaseArray</span>(right);
+        <span class="hljs-title function_">releaseArray</span>(bottom);
+        <span class="hljs-title function_">releaseArray</span>(coords);
     }
 };</pre></div></div>
             
@@ -1892,10 +1906,24 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
 
     <span class="hljs-keyword">if</span> (sourceImageData &amp;&amp; rows - <span class="hljs-number">1</span> &gt; <span class="hljs-number">0</span>) {
 
-        <span class="hljs-keyword">let</span> [startX, startY, outputWidth, outputHeight] = boundingBox;
+        <span class="hljs-keyword">let</span> [startX, startY, outputWidth, outputHeight] = boundingBox;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
+              <p>outputWidth += startX;
+outputHeight += startY;</p>
 
-        outputWidth += startX;
-        outputHeight += startY;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        outputWidth = ~~(startX + outputWidth);
+        outputHeight = ~~(startY + outputHeight);
 
         <span class="hljs-keyword">const</span> inputCell = <span class="hljs-title function_">requestCell</span>(),
             inputEngine = inputCell.<span class="hljs-property">engine</span>,
@@ -1967,11 +1995,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>Safari bugfix because we fall foul of of the Safari source-out-of-bounds bug</p>
 <ul>
@@ -1982,7 +2010,7 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">let</span> testHeight = (sy + inputStrutHeight &gt; sourceDimension) ? sourceDimension - sy : inputStrutHeight;
 
-                    outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, sx, sy, <span class="hljs-number">1</span>, testHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, stripLength);
+                    outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, ~~sx, ~~sy, <span class="hljs-number">1</span>, ~~testHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, ~~stripLength);
                 }
             }
         }
@@ -1990,8 +2018,8 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         <span class="hljs-keyword">const</span> iFactor = <span class="hljs-variable language_">this</span>.<span class="hljs-property">interferenceFactor</span>,
             iLoops = <span class="hljs-variable language_">this</span>.<span class="hljs-property">interferenceLoops</span>,
 
-            iWidth = <span class="hljs-title function_">_ceil</span>(outputWidth * iFactor),
-            iHeight = <span class="hljs-title function_">_ceil</span>(outputHeight * iFactor);
+            iWidth = ~~(outputWidth * iFactor) + <span class="hljs-number">1</span>,
+            iHeight = ~~(outputHeight * iFactor) + <span class="hljs-number">1</span>;
 
         inputCanvas.<span class="hljs-property">width</span> = iWidth;
         inputCanvas.<span class="hljs-property">height</span> = iHeight;
@@ -2020,11 +2048,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - internal function called by <code>stamp</code></p>
 
@@ -2047,11 +2075,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>These ‘method’ functions stamp the Mesh entity onto the canvas context supplied to them in the <code>engine</code> argument.</p>
@@ -2061,11 +2089,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -2079,11 +2107,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -2097,11 +2125,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -2117,11 +2145,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -2137,11 +2165,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -2156,11 +2184,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -2175,11 +2203,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2216,11 +2244,11 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>none</code>, <code>clip</code></p>
 
@@ -2232,11 +2260,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p>These <strong>stroke</strong> and <strong>fill</strong> functions handle most of the stuff that the method functions require to stamp the Mesh entity onto a canvas cell.</p>
 
@@ -2245,11 +2273,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>doStroke</code></p>
 
@@ -2264,11 +2292,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>doFill</code></p>
 <ul>
@@ -2306,11 +2334,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 
@@ -2319,11 +2347,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>checkHit</code></p>
 <ul>
@@ -2389,28 +2417,14 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-63">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
-              </div>
-              <h4 id="factory">Factory</h4>
-<pre><code><span class="hljs-keyword">let</span> myMesh = scrawl.<span class="hljs-title function_">makeMesh</span>({
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;display-mesh&#x27;</span>,
+              <h4 id="factory">Factory</h4>
+<pre><code><span class="hljs-keyword">let</span> myMesh = scrawl.<span class="hljs-title function_">makeMesh</span>({
 </code></pre>
 
             </div>
@@ -2424,8 +2438,7 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
               <div class="sswrap ">
                 <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-attr">net</span>: <span class="hljs-string">&#x27;test-net&#x27;</span>,
-<span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;my-flower&#x27;</span>,
+              <pre><code><span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;display-mesh&#x27;</span>,
 </code></pre>
 
             </div>
@@ -2439,9 +2452,8 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
               <div class="sswrap ">
                 <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-<span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
-<span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,
+              <pre><code><span class="hljs-attr">net</span>: <span class="hljs-string">&#x27;test-net&#x27;</span>,
+<span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;my-flower&#x27;</span>,
 </code></pre>
 
             </div>
@@ -2455,7 +2467,9 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
               <div class="sswrap ">
                 <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
+              <pre><code><span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+<span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+<span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,
 </code></pre>
 
             </div>
@@ -2468,6 +2482,20 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
               
               <div class="sswrap ">
                 <a class="ss" href="#section-68">&#x00a7;</a>
+              </div>
+              <pre><code><span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span> }) },
 <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span> }) },

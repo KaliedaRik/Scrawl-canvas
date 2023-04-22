@@ -626,7 +626,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Element</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
     
-    <span class="hljs-keyword">let</span> el = items.<span class="hljs-property">domElement</span>;
+    <span class="hljs-keyword">const</span> el = items.<span class="hljs-property">domElement</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
@@ -665,9 +665,9 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-    el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
+    <span class="hljs-keyword">const</span> myEl = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
-    <span class="hljs-keyword">if</span> (el) el.<span class="hljs-property">id</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
+    <span class="hljs-keyword">if</span> (myEl) myEl.<span class="hljs-property">id</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">apply</span>();
     
@@ -816,14 +816,15 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
             
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">text</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_dom</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>)) {
+    <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
-        <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>,
-            kids = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-variable constant_">CORNER_SELECTOR</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_dom</span>(el)) {
+
+        <span class="hljs-keyword">const</span> corners = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-variable constant_">CORNER_SELECTOR</span>);
 
         el.<span class="hljs-property">textContent</span> = item;
 
-        kids.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">kid</span> =&gt;</span> el.<span class="hljs-title function_">appendChild</span>(kid));
+        corners.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> el.<span class="hljs-title function_">appendChild</span>(c));
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyContent</span> = <span class="hljs-literal">true</span>;
     }
@@ -845,14 +846,15 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
             
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">content</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) {
+    <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
-        <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>,
-            kids = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-variable constant_">CORNER_SELECTOR</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_dom</span>(el)) {
+
+        <span class="hljs-keyword">const</span> corners = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-variable constant_">CORNER_SELECTOR</span>);
 
         el.<span class="hljs-property">innerHTML</span> = item;
 
-        kids.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">kid</span> =&gt;</span> el.<span class="hljs-title function_">appendChild</span>(kid));
+        corners.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> el.<span class="hljs-title function_">appendChild</span>(c));
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyContent</span> = <span class="hljs-literal">true</span>;
     }

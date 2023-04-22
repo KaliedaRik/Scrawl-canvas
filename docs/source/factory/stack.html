@@ -1299,11 +1299,11 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">addExistingDomElements</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">search</span>) {
 
-    <span class="hljs-keyword">let</span> elements, el, captured, i, iz;
-
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(search)) {
 
-        elements = (search.<span class="hljs-property">substring</span>) ? <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(search) : [].<span class="hljs-title function_">concat</span>(search);
+        <span class="hljs-keyword">let</span> el, captured, i, iz;
+
+        <span class="hljs-keyword">const</span> elements = (search.<span class="hljs-property">substring</span>) ? <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(search) : [].<span class="hljs-title function_">concat</span>(search);
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = elements.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
@@ -1481,8 +1481,10 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> processNewStackChildren = <span class="hljs-keyword">function</span> (<span class="hljs-params">el, name</span>) {
 
-    <span class="hljs-keyword">let</span> hostDims = el.<span class="hljs-title function_">getBoundingClientRect</span>(),
-        y = <span class="hljs-number">0</span>;</pre></div></div>
+    <span class="hljs-keyword">const</span> hostDims = el.<span class="hljs-title function_">getBoundingClientRect</span>();
+
+    <span class="hljs-keyword">let</span> y = <span class="hljs-number">0</span>,
+        dims, computed, yHeight, args;</pre></div></div>
             
         </li>
         
@@ -1501,14 +1503,14 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
     
         <span class="hljs-keyword">if</span> (child.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_STACK</span>) == <span class="hljs-literal">null</span> &amp;&amp; !<span class="hljs-title function_">isa_canvas</span>(child) &amp;&amp; child.<span class="hljs-property">tagName</span> != $SCRIPT) {
 
-            <span class="hljs-keyword">let</span> dims = child.<span class="hljs-title function_">getBoundingClientRect</span>(),
-                computed = <span class="hljs-title function_">_computed</span>(child);
+            dims = child.<span class="hljs-title function_">getBoundingClientRect</span>();
+            computed = <span class="hljs-title function_">_computed</span>(child);
 
-            <span class="hljs-keyword">let</span> yHeight = <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">marginTop</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">borderTopWidth</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">paddingTop</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">paddingBottom</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">borderBottomWidth</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">marginBottom</span>);
+            yHeight = <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">marginTop</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">borderTopWidth</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">paddingTop</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">paddingBottom</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">borderBottomWidth</span>) + <span class="hljs-built_in">parseFloat</span>(computed.<span class="hljs-property">marginBottom</span>);
 
             y = (!y) ? dims.<span class="hljs-property">top</span> - hostDims.<span class="hljs-property">top</span> : y;
 
-            <span class="hljs-keyword">const</span> args = {
+            args = {
                 <span class="hljs-attr">name</span>: child.<span class="hljs-property">id</span> || child.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">NAME</span>),
                 <span class="hljs-attr">domElement</span>: child,
                 <span class="hljs-attr">group</span>: name,
@@ -1813,8 +1815,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">rootElementsSort</span>(<span class="hljs-literal">true</span>);
-    <span class="hljs-keyword">return</span> mystack;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> mystack;
 };</pre></div></div>
             
         </li>

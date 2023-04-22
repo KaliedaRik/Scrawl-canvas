@@ -1132,8 +1132,6 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;forces&#x27;</span>, <span class="hljs-string">&#x27;particleStore&#x27;</span>, <span class="hljs-string">&#x27;deadParticles&#x27;</span>, <span class="hljs-string">&#x27;liveParticles&#x27;</span>, <span class="hljs-string">&#x27;fillColorFactory&#x27;</span>, <span class="hljs-string">&#x27;strokeColorFactory&#x27;</span>]);
-P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, []);
-P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, []);
 P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;world&#x27;</span>, <span class="hljs-string">&#x27;artefact&#x27;</span>, <span class="hljs-string">&#x27;generateInArea&#x27;</span>, <span class="hljs-string">&#x27;generateAlongPath&#x27;</span>]);
 P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;preAction&#x27;</span>, <span class="hljs-string">&#x27;stampAction&#x27;</span>, <span class="hljs-string">&#x27;postAction&#x27;</span>]);
 
@@ -1835,7 +1833,7 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         <span class="hljs-keyword">const</span> len = particleStore.<span class="hljs-property">length</span>,
             res = <span class="hljs-title function_">requestVector</span>();
 
-        <span class="hljs-keyword">let</span> v, r, parent, history, ignore1, ignore2, startval;
+        <span class="hljs-keyword">let</span> r, parent, history, ignore1, ignore2, startval;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; req; i++) {
 
@@ -1924,7 +1922,7 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         <span class="hljs-keyword">let</span> len = particleStore.<span class="hljs-property">length</span>,
             res = <span class="hljs-title function_">requestVector</span>();
 
-        <span class="hljs-keyword">let</span> v, r, parent;
+        <span class="hljs-keyword">let</span> r, parent;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; req; i++) {
 

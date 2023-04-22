@@ -637,16 +637,16 @@
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(items.<span class="hljs-property">event</span>, items.<span class="hljs-property">origin</span>, items.<span class="hljs-property">updates</span>)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> target = (items.<span class="hljs-property">target</span>.<span class="hljs-property">substring</span> &amp;&amp; items.<span class="hljs-property">targetLibrarySection</span>) ?
+    <span class="hljs-keyword">const</span> target = (items.<span class="hljs-property">target</span>.<span class="hljs-property">substring</span> &amp;&amp; items.<span class="hljs-property">targetLibrarySection</span>) ?
         library[items.<span class="hljs-property">targetLibrarySection</span>][items.<span class="hljs-property">target</span>] :
         items.<span class="hljs-property">target</span>;
 
     <span class="hljs-keyword">if</span> (!target) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> event = items.<span class="hljs-property">event</span>,
+    <span class="hljs-keyword">const</span> event = items.<span class="hljs-property">event</span>,
         origin = items.<span class="hljs-property">origin</span>;
 
-    <span class="hljs-keyword">let</span> listener = (items.<span class="hljs-property">useNativeListener</span>) ? addNativeListener : addListener,
+    <span class="hljs-keyword">const</span> listener = (items.<span class="hljs-property">useNativeListener</span>) ? addNativeListener : addListener,
         killListener = (items.<span class="hljs-property">useNativeListener</span>) ? removeNativeListener : removeListener;
 
     <span class="hljs-keyword">let</span> stop = λ<span class="hljs-literal">null</span>;
@@ -660,19 +660,19 @@
         };
     }
 
-    <span class="hljs-keyword">let</span> setup = (<span class="hljs-title function_">isa_fn</span>(items.<span class="hljs-property">setup</span>)) ? items.<span class="hljs-property">setup</span> : λ<span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">const</span> setup = (<span class="hljs-title function_">isa_fn</span>(items.<span class="hljs-property">setup</span>)) ? items.<span class="hljs-property">setup</span> : λ<span class="hljs-literal">null</span>;
 
-    <span class="hljs-keyword">let</span> callback = (<span class="hljs-title function_">isa_fn</span>(items.<span class="hljs-property">callback</span>)) ? items.<span class="hljs-property">callback</span> : λ<span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">const</span> callback = (<span class="hljs-title function_">isa_fn</span>(items.<span class="hljs-property">callback</span>)) ? items.<span class="hljs-property">callback</span> : λ<span class="hljs-literal">null</span>;
 
-    <span class="hljs-keyword">let</span> func = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+    <span class="hljs-keyword">const</span> func = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
         <span class="hljs-title function_">stop</span>(e);
 
-        <span class="hljs-keyword">let</span> id = (e &amp;&amp; e.<span class="hljs-property">target</span>) ? e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span> : <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">const</span> id = (e &amp;&amp; e.<span class="hljs-property">target</span>) ? e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span> : <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">if</span> (id) {
 
-            <span class="hljs-keyword">let</span> updates = items.<span class="hljs-property">updates</span>,
+            <span class="hljs-keyword">const</span> updates = items.<span class="hljs-property">updates</span>,
                 actionArray = updates[id];
 
             <span class="hljs-keyword">if</span> (actionArray) {

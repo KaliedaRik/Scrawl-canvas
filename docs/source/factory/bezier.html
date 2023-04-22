@@ -917,11 +917,8 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, []);
-P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, []);
-P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, [<span class="hljs-string">&#x27;startControl&#x27;</span>, <span class="hljs-string">&#x27;endControl&#x27;</span>]);
-P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;startControlPivot&#x27;</span>, <span class="hljs-string">&#x27;startControlParticle&#x27;</span>, <span class="hljs-string">&#x27;startControlPath&#x27;</span>, <span class="hljs-string">&#x27;endControlPivot&#x27;</span>, <span class="hljs-string">&#x27;endControlParticle&#x27;</span>, <span class="hljs-string">&#x27;endControlPath&#x27;</span>]);
-P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, []);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, [<span class="hljs-string">&#x27;startControl&#x27;</span>, <span class="hljs-string">&#x27;endControl&#x27;</span>]);
+P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;startControlPivot&#x27;</span>, <span class="hljs-string">&#x27;startControlParticle&#x27;</span>, <span class="hljs-string">&#x27;startControlPath&#x27;</span>, <span class="hljs-string">&#x27;endControlPivot&#x27;</span>, <span class="hljs-string">&#x27;endControlParticle&#x27;</span>, <span class="hljs-string">&#x27;endControlPath&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -1376,12 +1373,7 @@ D.<span class="hljs-property">endControl</span> = <span class="hljs-keyword">fun
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-variable constant_">ZERO_PATH</span>;
-
-    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeBezierPath</span>();
-    
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeBezierPath</span>();
 };</pre></div></div>
             
         </li>
@@ -1399,19 +1391,12 @@ D.<span class="hljs-property">endControl</span> = <span class="hljs-keyword">fun
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeBezierPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
     
-    <span class="hljs-keyword">let</span> [startX, startY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
-    <span class="hljs-keyword">let</span> [startControlX, startControlY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControl</span>;
-    <span class="hljs-keyword">let</span> [endControlX, endControlY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControl</span>;
-    <span class="hljs-keyword">let</span> [endX, endY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEnd</span>;
+    <span class="hljs-keyword">const</span> [sX, sY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
+    <span class="hljs-keyword">const</span> [sCX, sCY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControl</span>;
+    <span class="hljs-keyword">const</span> [eCX, eCY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControl</span>;
+    <span class="hljs-keyword">const</span> [eX, eY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEnd</span>;
 
-    <span class="hljs-keyword">let</span> scx = (startControlX - startX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>),
-        scy = (startControlY - startY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>),
-        ecx = (endControlX - startX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>),
-        ecy = (endControlY - startY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>),
-        ex = (endX - startX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>),
-        ey = (endY - startY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`m0,0c<span class="hljs-subst">${scx}</span>,<span class="hljs-subst">${scy}</span> <span class="hljs-subst">${ecx}</span>,<span class="hljs-subst">${ecy}</span> <span class="hljs-subst">${ex}</span>,<span class="hljs-subst">${ey}</span>`</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`m0,0c<span class="hljs-subst">${(sCX - sX).toFixed(<span class="hljs-number">2</span>)}</span>,<span class="hljs-subst">${(sCY - sY).toFixed(<span class="hljs-number">2</span>)}</span> <span class="hljs-subst">${(eCX - sX).toFixed(<span class="hljs-number">2</span>)}</span>,<span class="hljs-subst">${(eCY - sY).toFixed(<span class="hljs-number">2</span>)}</span> <span class="hljs-subst">${(eX - sX).toFixed(<span class="hljs-number">2</span>)}</span>,<span class="hljs-subst">${(eY - sY).toFixed(<span class="hljs-number">2</span>)}</span>`</span>;
 };</pre></div></div>
             
         </li>

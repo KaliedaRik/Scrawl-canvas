@@ -734,7 +734,7 @@
 
         item = (item.<span class="hljs-property">substring</span>) ? <span class="hljs-built_in">parseFloat</span>(item) : item;
 
-        <span class="hljs-keyword">let</span> posCheck = <span class="hljs-variable constant_">MAT_POS</span>.<span class="hljs-title function_">includes</span>(pos);
+        <span class="hljs-keyword">const</span> posCheck = <span class="hljs-variable constant_">MAT_POS</span>.<span class="hljs-title function_">includes</span>(pos);
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(item) &amp;&amp; posCheck) <span class="hljs-variable language_">this</span>.<span class="hljs-property">patternMatrix</span>[pos] = item;
     };</pre></div></div>
@@ -796,7 +796,7 @@
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item)) {
 
-            <span class="hljs-keyword">let</span> update = <span class="hljs-variable language_">this</span>.<span class="hljs-property">updateMatrixNumber</span>;
+            <span class="hljs-keyword">const</span> update = <span class="hljs-variable language_">this</span>.<span class="hljs-property">updateMatrixNumber</span>;
 
             <span class="hljs-title function_">update</span>(item[<span class="hljs-number">0</span>], _A);
             <span class="hljs-title function_">update</span>(item[<span class="hljs-number">1</span>], _B);
@@ -840,8 +840,9 @@
             <span class="hljs-keyword">if</span> (mycell.<span class="hljs-property">substring</span>) mycell = cell[mycell];
 
             <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, 
-                loaded = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span>,
-                repeat = <span class="hljs-variable language_">this</span>.<span class="hljs-property">repeat</span>,
+                loaded = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span>;
+            
+            <span class="hljs-keyword">const</span> repeat = <span class="hljs-variable language_">this</span>.<span class="hljs-property">repeat</span>,
                 engine = mycell.<span class="hljs-property">engine</span>;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_CELL</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_NOISE</span>) {
@@ -851,7 +852,7 @@
             }
             <span class="hljs-keyword">if</span> (engine &amp;&amp; loaded) {
 
-                <span class="hljs-keyword">let</span> p = engine.<span class="hljs-title function_">createPattern</span>(source, repeat);
+                <span class="hljs-keyword">const</span> p = engine.<span class="hljs-title function_">createPattern</span>(source, repeat);
 
                 p.<span class="hljs-title function_">setTransform</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">patternMatrix</span>);
 

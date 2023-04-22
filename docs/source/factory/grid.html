@@ -915,7 +915,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isInteger</span>(item)) item = <span class="hljs-built_in">parseInt</span>(item, <span class="hljs-number">10</span>);
 
-        <span class="hljs-keyword">if</span> (item !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">columns</span>) {
+        <span class="hljs-keyword">if</span> (item != <span class="hljs-variable language_">this</span>.<span class="hljs-property">columns</span>) {
 
             <span class="hljs-keyword">let</span> i, iz, j, 
                 currentFill = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>,
@@ -959,7 +959,7 @@ D.<span class="hljs-property">columns</span> = λ<span class="hljs-literal">null
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isInteger</span>(item)) item = <span class="hljs-built_in">parseInt</span>(item, <span class="hljs-number">10</span>);
 
-        <span class="hljs-keyword">if</span> (item !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span>) {
+        <span class="hljs-keyword">if</span> (item != <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span>) {
 
             <span class="hljs-keyword">let</span> currentRows = <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span>;
 
@@ -1036,7 +1036,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
     <span class="hljs-keyword">const</span> { columns, rows } = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item) &amp;&amp; item.<span class="hljs-property">length</span> === columns * rows) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item) &amp;&amp; item.<span class="hljs-property">length</span> == columns * rows) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span> = item;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
@@ -1451,7 +1451,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
                             <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">FILL</span>,
                         });
 
-                        engine.<span class="hljs-title function_">drawImage</span>(compCanvas, tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
+                        engine.<span class="hljs-title function_">drawImage</span>(compCanvas, ~~tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], ~~tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
                     }
                     <span class="hljs-keyword">break</span>;
 
@@ -1473,7 +1473,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
                             <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">FILL</span>,
                         });
 
-                        validTiles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">tile, pos</span>) =&gt;</span> tile &amp;&amp; engine.<span class="hljs-title function_">drawImage</span>(compCanvas, tileRealCoords[pos][<span class="hljs-number">0</span>], tileRealCoords[pos][<span class="hljs-number">1</span>]));
+                        validTiles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">tile, pos</span>) =&gt;</span> tile &amp;&amp; engine.<span class="hljs-title function_">drawImage</span>(compCanvas, ~~tileRealCoords[pos][<span class="hljs-number">0</span>], ~~tileRealCoords[pos][<span class="hljs-number">1</span>]));
                     }
                     <span class="hljs-keyword">break</span>;
 
@@ -1607,7 +1607,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
                             <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">FILL</span>,
                         });
 
-                        engine.<span class="hljs-title function_">drawImage</span>(compCanvas, tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
+                        engine.<span class="hljs-title function_">drawImage</span>(compCanvas, ~~tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], ~~tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
                         compEngine.<span class="hljs-title function_">translate</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
                     }
                 }

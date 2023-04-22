@@ -644,7 +644,7 @@
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _floor, _now, _seal, <span class="hljs-variable constant_">ANIMATIONTICKERS</span>, <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">T_RENDER_ANIMATION</span>, <span class="hljs-variable constant_">T_TICKER</span>, <span class="hljs-variable constant_">T_TWEEN</span>, <span class="hljs-variable constant_">TICKERUPDATE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _floor, _isArray, _now, _seal, <span class="hljs-variable constant_">ANIMATIONTICKERS</span>, <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">T_RENDER_ANIMATION</span>, <span class="hljs-variable constant_">T_TICKER</span>, <span class="hljs-variable constant_">T_TWEEN</span>, <span class="hljs-variable constant_">TICKERUPDATE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1078,8 +1078,9 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">duration</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> i, iz, target,
-        subscribers = <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>;
+    <span class="hljs-keyword">let</span> i, iz, target;
+
+    <span class="hljs-keyword">const</span> subscribers = <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">duration</span> = item;
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setEffectiveDuration</span>();
@@ -1128,7 +1129,9 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">subscribe</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-keyword">const</span> myItems = [].<span class="hljs-title function_">concat</span>(items);
+    <span class="hljs-keyword">const</span> myItems = <span class="hljs-title function_">requestArray</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(items)) myItems.<span class="hljs-title function_">push</span>(...items);
+    <span class="hljs-keyword">else</span> myItems.<span class="hljs-title function_">push</span>(items);
     
     <span class="hljs-keyword">let</span> i, iz, item, name;
 
@@ -1150,6 +1153,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortSubscribers</span>();
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">recalculateEffectiveDuration</span>();
     }
+    <span class="hljs-title function_">releaseArray</span>(myItems);
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
@@ -1168,7 +1172,9 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">unsubscribe</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-keyword">const</span> myItems = [].<span class="hljs-title function_">concat</span>(items);
+    <span class="hljs-keyword">const</span> myItems = <span class="hljs-title function_">requestArray</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(items)) myItems.<span class="hljs-title function_">push</span>(...items);
+    <span class="hljs-keyword">else</span> myItems.<span class="hljs-title function_">push</span>(items);
     
     <span class="hljs-keyword">let</span> i, iz, item, name;
 
@@ -1187,6 +1193,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortSubscribers</span>();
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">recalculateEffectiveDuration</span>();
     }
+    <span class="hljs-title function_">releaseArray</span>(myItems);
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
@@ -1208,14 +1215,13 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
     <span class="hljs-keyword">const</span> arr = <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscriberObjects</span>,
         subs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>;
 
-    <span class="hljs-keyword">let</span> t;
+    <span class="hljs-keyword">let</span> i, iz, t;
 
     arr.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
     subs.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> {
 
         t = tween[sub];
-
         <span class="hljs-keyword">if</span> (t) arr.<span class="hljs-title function_">push</span>(t);
     });
 };</pre></div></div>
@@ -1428,8 +1434,9 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">recalculateEffectiveDuration</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
 
+    <span class="hljs-keyword">const</span> subs = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSubscriberObjects</span>();
+
     <span class="hljs-keyword">let</span> durationValue, 
-        subs = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSubscriberObjects</span>(),
         duration = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">duration</span>) {
@@ -1570,11 +1577,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
               <div class="sswrap ">
                 <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
-              <p>Request a <code>result</code> object from the pool.</p>
+              <p>Determine the order in which subscribed objects will be processed</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> result = <span class="hljs-title function_">requestResultObject</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    reverseOrder = <span class="hljs-title function_">xt</span>(reverseOrder) ? reverseOrder : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -1585,20 +1592,21 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
               <div class="sswrap ">
                 <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
-              <p>Determine the order in which subscribed objects will be processed</p>
+              <p>Request a <code>result</code> object from the pool.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    reverseOrder = <span class="hljs-title function_">xt</span>(reverseOrder) ? reverseOrder : <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> result = <span class="hljs-title function_">requestResultObject</span>();
 
-    <span class="hljs-keyword">let</span> i, iz, subs, eTime, now, e,
-        active = <span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>,
-        startTime = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTime</span>,
-        currentTime, tick,
+    <span class="hljs-keyword">const</span> startTime = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTime</span>,
         cycles = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cycles</span>,
-        cycleCount = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cycleCount</span>,
         effectiveDuration = <span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveDuration</span>,
-        eventChoke = <span class="hljs-variable language_">this</span>.<span class="hljs-property">eventChoke</span>;</pre></div></div>
+        eventChoke = <span class="hljs-variable language_">this</span>.<span class="hljs-property">eventChoke</span>;
+    
+    <span class="hljs-keyword">let</span> i, iz, subs, eTime, now, e,
+        currentTime, tick,
+        active = <span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>,
+        cycleCount = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cycleCount</span>;</pre></div></div>
             
         </li>
         
@@ -1862,7 +1870,6 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">onRun</span> == <span class="hljs-variable constant_">FUNCTION</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">onRun</span>();
     }
-
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
@@ -2029,7 +2036,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">halt</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span> = <span class="hljs-literal">false</span>;
-    <span class="hljs-title function_">pushUnique</span>(tickerAnimations, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+    <span class="hljs-title function_">removeItem</span>(tickerAnimations, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
     tickerAnimationsFlag = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">onHalt</span> == <span class="hljs-variable constant_">FUNCTION</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">onHalt</span>();

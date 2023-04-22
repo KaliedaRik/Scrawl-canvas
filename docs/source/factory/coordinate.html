@@ -825,7 +825,7 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">divide</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> [x, y] = item;
+    <span class="hljs-keyword">const</span> [x, y] = item;
 
     <span class="hljs-keyword">if</span> (x &amp;&amp; y) {
 
@@ -897,7 +897,7 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getMagnitude</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-title function_">_hypot</span>(<span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>], <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>]);
+    <span class="hljs-keyword">return</span> <span class="hljs-title function_">_hypot</span>(...<span class="hljs-variable language_">this</span>);
 };</pre></div></div>
             
         </li>
@@ -915,13 +915,12 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">rotate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">angle</span>) {
 
-    <span class="hljs-keyword">let</span> x = <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>],
-        y = <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>],
-        r0, r1;
+    <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>;
 
-    r0 = <span class="hljs-title function_">_atan2</span>(y, x);
+    <span class="hljs-keyword">let</span> r0 = <span class="hljs-title function_">_atan2</span>(y, x);
     r0 += (angle * <span class="hljs-number">0.01745329251</span>);
-    r1 = <span class="hljs-title function_">_hypot</span>(x, y);
+    
+    <span class="hljs-keyword">const</span> r1 = <span class="hljs-title function_">_hypot</span>(x, y);
 
     <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] = r1 * <span class="hljs-title function_">_cos</span>(r0);
     <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] = r1 * <span class="hljs-title function_">_sin</span>(r0);
@@ -983,7 +982,7 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">normalize</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
     
-    <span class="hljs-keyword">let</span> val = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMagnitude</span>();
+    <span class="hljs-keyword">const</span> val = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMagnitude</span>();
     
     <span class="hljs-keyword">if</span> (val &gt; <span class="hljs-number">0</span>) {
         <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] /= val;
@@ -1025,7 +1024,7 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
 
     <span class="hljs-keyword">if</span> (!coordinatePool.<span class="hljs-property">length</span>) coordinatePool.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Coordinate</span>());
 
-    <span class="hljs-keyword">let</span> c = coordinatePool.<span class="hljs-title function_">shift</span>();
+    <span class="hljs-keyword">const</span> c = coordinatePool.<span class="hljs-title function_">shift</span>();
     c.<span class="hljs-title function_">set</span>(items, y);
     <span class="hljs-keyword">return</span> c
 };</pre></div></div>

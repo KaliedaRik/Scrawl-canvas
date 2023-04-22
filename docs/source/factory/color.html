@@ -584,9 +584,11 @@
 
 <span class="hljs-keyword">import</span> { correctAngle, doCreate, easeEngines, interpolate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xtGet, λfirstArg, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
+<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./array-pool.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _abs, _atan2, _cbrt, _cos, _entries, _floor, _freeze, _isArray, _keys, _max, _min, _pi, _pow, _radian,  _random, _round, _sin, _sqrt, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BLACK_HEX</span>, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">DEG</span>, <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">GRAD</span>, <span class="hljs-variable constant_">HSL</span>, <span class="hljs-variable constant_">HSL_HWB_ARRAY</span>, <span class="hljs-variable constant_">HWB</span>, <span class="hljs-variable constant_">INT_COLOR_SPACES</span>, <span class="hljs-variable constant_">LAB</span>, <span class="hljs-variable constant_">LCH</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">MAX</span>, <span class="hljs-variable constant_">MIN</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">OKLAB</span>, <span class="hljs-variable constant_">OKLCH</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">RAD</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">RET_COLOR_SPACES</span>, <span class="hljs-variable constant_">RGB</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">SPACE</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">T_COLOR</span>, <span class="hljs-variable constant_">TURN</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">WHITE</span>, <span class="hljs-variable constant_">XYZ</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _abs, _atan2, _cbrt, _cos, _entries, _floor, _freeze, _inverseRadian, _isArray, _keys, _max, _min, _pi, _pow, _radian,  _random, _round, _sin, _sqrt, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BLACK_HEX</span>, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">DEG</span>, <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">GRAD</span>, <span class="hljs-variable constant_">HSL</span>, <span class="hljs-variable constant_">HSL_HWB_ARRAY</span>, <span class="hljs-variable constant_">HWB</span>, <span class="hljs-variable constant_">INT_COLOR_SPACES</span>, <span class="hljs-variable constant_">LAB</span>, <span class="hljs-variable constant_">LCH</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">MAX</span>, <span class="hljs-variable constant_">MIN</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">OKLAB</span>, <span class="hljs-variable constant_">OKLCH</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">RAD</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">RET_COLOR_SPACES</span>, <span class="hljs-variable constant_">RGB</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">SPACE</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">T_COLOR</span>, <span class="hljs-variable constant_">TURN</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">WHITE</span>, <span class="hljs-variable constant_">XYZ</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1532,7 +1534,7 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
 
     <span class="hljs-keyword">const</span> { colorSpace, returnColorAs } = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">let</span> col = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildColorString</span>(b, c, d, a, colorSpace);
+    <span class="hljs-keyword">const</span> col = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildColorString</span>(b, c, d, a, colorSpace);
 
     <span class="hljs-keyword">let</span> flag = <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">XYZ</span> == colorSpace) flag = <span class="hljs-literal">true</span>;
@@ -2742,15 +2744,30 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
 }
 P.<span class="hljs-property">convertRGBtoXYZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">r, g, b</span>) {
 
-    <span class="hljs-keyword">const</span> sRGB = [r / <span class="hljs-number">255</span>, g / <span class="hljs-number">255</span>, b / <span class="hljs-number">255</span>];
-    <span class="hljs-keyword">const</span> lRGB = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">lin_sRGB</span>(sRGB)
+    <span class="hljs-keyword">const</span> sRGB = <span class="hljs-title function_">requestArray</span>();
+    sRGB.<span class="hljs-title function_">push</span>(r / <span class="hljs-number">255</span>, g / <span class="hljs-number">255</span>, b / <span class="hljs-number">255</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...convertRGBtoXYZ_matrix], [...lRGB]);
+    <span class="hljs-keyword">const</span> lRGB = <span class="hljs-title function_">requestArray</span>();
+    lRGB.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">lin_sRGB</span>(sRGB));
+
+    <span class="hljs-keyword">const</span> A = <span class="hljs-title function_">requestArray</span>();
+    A.<span class="hljs-title function_">push</span>(...convertRGBtoXYZ_matrix);
+
+    <span class="hljs-keyword">const</span> res = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>(A, lRGB);
+
+    <span class="hljs-title function_">releaseArray</span>(sRGB);
+    <span class="hljs-title function_">releaseArray</span>(lRGB);
+    <span class="hljs-title function_">releaseArray</span>(A);
+
+    <span class="hljs-keyword">return</span> res;
 };
 
 P.<span class="hljs-property">convertRGBtoOKLAB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">r, g, b</span>) {
 
-    <span class="hljs-keyword">const</span> [_r, _g, _b] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">lin_sRGB</span>([r / <span class="hljs-number">255</span>, g / <span class="hljs-number">255</span>, b / <span class="hljs-number">255</span>])
+    <span class="hljs-keyword">const</span> sRGB = <span class="hljs-title function_">requestArray</span>();
+    sRGB.<span class="hljs-title function_">push</span>(r / <span class="hljs-number">255</span>, g / <span class="hljs-number">255</span>, b / <span class="hljs-number">255</span>);
+
+    <span class="hljs-keyword">const</span> [_r, _g, _b] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">lin_sRGB</span>(sRGB);
 
     <span class="hljs-keyword">const</span> l = <span class="hljs-number">0.4122214708</span> * _r + <span class="hljs-number">0.5363325363</span> * _g + <span class="hljs-number">0.0514459929</span> * _b;
     <span class="hljs-keyword">const</span> m = <span class="hljs-number">0.2119034982</span> * _r + <span class="hljs-number">0.6806995451</span> * _g + <span class="hljs-number">0.1073969566</span> * _b;
@@ -2759,6 +2776,8 @@ P.<span class="hljs-property">convertRGBtoOKLAB</span> = <span class="hljs-keywo
     <span class="hljs-keyword">const</span> _l = <span class="hljs-title function_">cbrt</span>(l);
     <span class="hljs-keyword">const</span> _m = <span class="hljs-title function_">cbrt</span>(m);
     <span class="hljs-keyword">const</span> _s = <span class="hljs-title function_">cbrt</span>(s);
+
+    <span class="hljs-title function_">releaseArray</span>(sRGB);
 
     <span class="hljs-keyword">return</span> [
         <span class="hljs-number">0.2104542553</span> * _l + <span class="hljs-number">0.7936177850</span> * _m - <span class="hljs-number">0.0040720468</span> * _s,
@@ -2793,8 +2812,17 @@ P.<span class="hljs-property">convertRGBtoOKLAB</span> = <span class="hljs-keywo
 }
 P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
 
-    <span class="hljs-keyword">const</span> lRGB = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...convertXYZtoRGB_matrix], [x, y, z]);
+    <span class="hljs-keyword">const</span> A = <span class="hljs-title function_">requestArray</span>();
+    A.<span class="hljs-title function_">push</span>(...convertXYZtoRGB_matrix);
+
+    <span class="hljs-keyword">const</span> B = <span class="hljs-title function_">requestArray</span>();
+    B.<span class="hljs-title function_">push</span>(x, y, z);
+
+    <span class="hljs-keyword">const</span> lRGB = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>(A, B);
     <span class="hljs-keyword">const</span> sRGB = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">gam_sRGB</span>(lRGB);
+
+    <span class="hljs-title function_">releaseArray</span>(A);
+    <span class="hljs-title function_">releaseArray</span>(B);
 
     <span class="hljs-keyword">return</span> [
         <span class="hljs-title function_">_round</span>(sRGB[<span class="hljs-number">0</span>] * <span class="hljs-number">255</span>),
@@ -2818,9 +2846,18 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertXYZtoLAB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
 
-    <span class="hljs-keyword">const</span> toD50 = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...D65_to_D50_matrix], [x, y, z]);
+    <span class="hljs-keyword">const</span> A = <span class="hljs-title function_">requestArray</span>();
+    A.<span class="hljs-title function_">push</span>(...D65_to_D50_matrix);
+
+    <span class="hljs-keyword">const</span> B = <span class="hljs-title function_">requestArray</span>();
+    B.<span class="hljs-title function_">push</span>(x, y, z);
+
+    <span class="hljs-keyword">const</span> toD50 = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>(A, B);
     <span class="hljs-keyword">const</span> xyz = toD50.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">val, i</span>) =&gt;</span> val / <span class="hljs-variable constant_">D50</span>[i]);
     <span class="hljs-keyword">const</span> f = xyz.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> val &gt; E ? <span class="hljs-title function_">cbrt</span>(val) : (K * val + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>);
+
+    <span class="hljs-title function_">releaseArray</span>(A);
+    <span class="hljs-title function_">releaseArray</span>(B);
 
     <span class="hljs-keyword">return</span> [
         (<span class="hljs-number">116</span> * f[<span class="hljs-number">1</span>]) - <span class="hljs-number">16</span>,
@@ -2844,21 +2881,30 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertLABtoXYZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, a, b</span>) {
 
-    <span class="hljs-keyword">const</span> f = [];
+    <span class="hljs-keyword">const</span> f1 = (l + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>,
+        f0 = a / <span class="hljs-number">500</span> + f1,
+        f2 = f1 - b / <span class="hljs-number">200</span>;
 
-    f[<span class="hljs-number">1</span>] = (l + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>;
-    f[<span class="hljs-number">0</span>] = a / <span class="hljs-number">500</span> + f[<span class="hljs-number">1</span>];
-    f[<span class="hljs-number">2</span>] = f[<span class="hljs-number">1</span>] - b / <span class="hljs-number">200</span>;
-
-    <span class="hljs-keyword">const</span> xyz = [
-        (<span class="hljs-title function_">_pow</span>(f[<span class="hljs-number">0</span>], <span class="hljs-number">3</span>) &gt; E) ? <span class="hljs-title function_">_pow</span>(f[<span class="hljs-number">0</span>], <span class="hljs-number">3</span>) : (<span class="hljs-number">116</span> * f[<span class="hljs-number">0</span>] - <span class="hljs-number">16</span>) / K,
+    <span class="hljs-keyword">const</span> xyz = <span class="hljs-title function_">requestArray</span>();
+    xyz.<span class="hljs-title function_">push</span>(
+        (<span class="hljs-title function_">_pow</span>(f0, <span class="hljs-number">3</span>) &gt; E) ? <span class="hljs-title function_">_pow</span>(f0, <span class="hljs-number">3</span>) : (<span class="hljs-number">116</span> * f0 - <span class="hljs-number">16</span>) / K,
         (l &gt; K * E) ? <span class="hljs-title function_">_pow</span>((l + <span class="hljs-number">16</span>) / <span class="hljs-number">116</span>, <span class="hljs-number">3</span>) : l / K,
-        (<span class="hljs-title function_">_pow</span>(f[<span class="hljs-number">2</span>], <span class="hljs-number">3</span>) &gt; E) ? <span class="hljs-title function_">_pow</span>(f[<span class="hljs-number">2</span>], <span class="hljs-number">3</span>) : (<span class="hljs-number">116</span> * f[<span class="hljs-number">2</span>] - <span class="hljs-number">16</span>) / K,
-    ];
+        (<span class="hljs-title function_">_pow</span>(f2, <span class="hljs-number">3</span>) &gt; E) ? <span class="hljs-title function_">_pow</span>(f2, <span class="hljs-number">3</span>) : (<span class="hljs-number">116</span> * f2 - <span class="hljs-number">16</span>) / K,
+    );
 
-    <span class="hljs-keyword">const</span> toD50 = xyz.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">val, i</span>) =&gt;</span> val * <span class="hljs-variable constant_">D50</span>[i]);
+    <span class="hljs-keyword">const</span> A = <span class="hljs-title function_">requestArray</span>();
+    A.<span class="hljs-title function_">push</span>(...D50_to_D65_matrix);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...D50_to_D65_matrix], [...toD50]);
+    <span class="hljs-keyword">const</span> toD50 = <span class="hljs-title function_">requestArray</span>();
+    toD50.<span class="hljs-title function_">push</span>(...xyz.<span class="hljs-title function_">map</span>(<span class="hljs-function">(<span class="hljs-params">val, i</span>) =&gt;</span> val * <span class="hljs-variable constant_">D50</span>[i]));
+
+    <span class="hljs-keyword">const</span> res = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>(A, toD50);
+
+    <span class="hljs-title function_">releaseArray</span>(xyz);
+    <span class="hljs-title function_">releaseArray</span>(A);
+    <span class="hljs-title function_">releaseArray</span>(toD50);
+
+    <span class="hljs-keyword">return</span> res;
 };</pre></div></div>
             
         </li>
@@ -2876,7 +2922,7 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertLABtoLCH</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, a, b</span>) {
 
-    <span class="hljs-keyword">const</span> hue = <span class="hljs-title function_">_atan2</span>(b, a) * <span class="hljs-number">180</span> / _pi;
+    <span class="hljs-keyword">const</span> hue = <span class="hljs-title function_">_atan2</span>(b, a) * _inverseRadian;
 
     <span class="hljs-keyword">return</span> [
         l,
@@ -2902,8 +2948,8 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
 
     <span class="hljs-keyword">return</span> [
         l,
-        c * <span class="hljs-title function_">_cos</span>(h * _pi / <span class="hljs-number">180</span>),
-        c * <span class="hljs-title function_">_sin</span>(h * _pi / <span class="hljs-number">180</span>),
+        c * <span class="hljs-title function_">_cos</span>(h * _radian),
+        c * <span class="hljs-title function_">_sin</span>(h * _radian),
     ];
 };</pre></div></div>
             
@@ -2922,8 +2968,24 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertXYZtoOKLAB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
 
-    <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">LMS</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...<span class="hljs-title class_">XYZto</span>LMS], [x, y, z]);
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...<span class="hljs-title class_">LMSto</span>OKLab], <span class="hljs-variable constant_">LMS</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> <span class="hljs-title function_">cbrt</span>(c)));
+    <span class="hljs-keyword">const</span> A = <span class="hljs-title function_">requestArray</span>();
+    A.<span class="hljs-title function_">push</span>(...<span class="hljs-title class_">XYZto</span>LMS);
+
+    <span class="hljs-keyword">const</span> B = <span class="hljs-title function_">requestArray</span>();
+    B.<span class="hljs-title function_">push</span>(x, y, z);
+
+    <span class="hljs-keyword">const</span> C = <span class="hljs-title function_">requestArray</span>();
+    C.<span class="hljs-title function_">push</span>(...<span class="hljs-title class_">LMSto</span>OKLab);
+
+    <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">LMS</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>(A, B);
+
+    <span class="hljs-keyword">const</span> res = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>(C, <span class="hljs-variable constant_">LMS</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> <span class="hljs-title function_">cbrt</span>(c)));
+
+    <span class="hljs-title function_">releaseArray</span>(A);
+    <span class="hljs-title function_">releaseArray</span>(B);
+    <span class="hljs-title function_">releaseArray</span>(C);
+
+    <span class="hljs-keyword">return</span> res;
 };</pre></div></div>
             
         </li>
@@ -2941,8 +3003,24 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertOKLABtoXYZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, a, b</span>) {
 
-    <span class="hljs-keyword">const</span> <span class="hljs-title class_">LMSnl</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...<span class="hljs-title class_">OKLabto</span>LMS], [l, a, b]);
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>([...<span class="hljs-title class_">LMSto</span>XYZ], <span class="hljs-title class_">LMSnl</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c ** <span class="hljs-number">3</span>));
+    <span class="hljs-keyword">const</span> A = <span class="hljs-title function_">requestArray</span>();
+    A.<span class="hljs-title function_">push</span>(...<span class="hljs-title class_">OKLabto</span>LMS);
+
+    <span class="hljs-keyword">const</span> B = <span class="hljs-title function_">requestArray</span>();
+    B.<span class="hljs-title function_">push</span>(l, a, b);
+
+    <span class="hljs-keyword">const</span> C = <span class="hljs-title function_">requestArray</span>();
+    C.<span class="hljs-title function_">push</span>(...<span class="hljs-title class_">LMSto</span>XYZ);
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title class_">LMSnl</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>(A, B);
+
+    <span class="hljs-keyword">const</span> res = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">multiplyMatrices</span>(C, <span class="hljs-title class_">LMSnl</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c ** <span class="hljs-number">3</span>));
+
+    <span class="hljs-title function_">releaseArray</span>(A);
+    <span class="hljs-title function_">releaseArray</span>(B);
+    <span class="hljs-title function_">releaseArray</span>(C);
+
+    <span class="hljs-keyword">return</span> res;
 };</pre></div></div>
             
         </li>
@@ -2960,7 +3038,7 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertOKLABtoOKLCH</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">l, a, b</span>) {
 
-    <span class="hljs-keyword">const</span> hue = <span class="hljs-title function_">_atan2</span>(b, a) * <span class="hljs-number">180</span> / _pi;
+    <span class="hljs-keyword">const</span> hue = <span class="hljs-title function_">_atan2</span>(b, a) * _inverseRadian;
 
     <span class="hljs-keyword">return</span> [
         l,
@@ -2986,8 +3064,8 @@ P.<span class="hljs-property">convertXYZtoRGB</span> = <span class="hljs-keyword
 
     <span class="hljs-keyword">return</span> [
         l,
-        c * <span class="hljs-title function_">_cos</span>(h * _pi / <span class="hljs-number">180</span>),
-        c * <span class="hljs-title function_">_sin</span>(h * _pi / <span class="hljs-number">180</span>),
+        c * <span class="hljs-title function_">_cos</span>(h * _radian),
+        c * <span class="hljs-title function_">_sin</span>(h * _radian),
     ];
 };</pre></div></div>
             

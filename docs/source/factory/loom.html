@@ -1073,7 +1073,6 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;pathObject&#x27;</span>, <span class="hljs-string">&#x27;state&#x27;</span>]);
 P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, [<span class="hljs-string">&#x27;^(local|dirty|current)&#x27;</span>, <span class="hljs-string">&#x27;Subscriber$&#x27;</span>]);
-P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, []);
 P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;group&#x27;</span>, <span class="hljs-string">&#x27;fromPath&#x27;</span>, <span class="hljs-string">&#x27;toPath&#x27;</span>, <span class="hljs-string">&#x27;source&#x27;</span>]);
 P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;onEnter&#x27;</span>, <span class="hljs-string">&#x27;onLeave&#x27;</span>, <span class="hljs-string">&#x27;onDown&#x27;</span>, <span class="hljs-string">&#x27;onUp&#x27;</span>]);
 
@@ -1088,7 +1087,7 @@ P.<span class="hljs-property">processPacketOut</span> = <span class="hljs-keywor
 
 P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
 
-    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-title function_">_parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
+    <span class="hljs-keyword">const</span> stateCopy = <span class="hljs-title function_">_parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
     copy = <span class="hljs-title function_">mergeOver</span>(copy, stateCopy);
 
     copy = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handlePacketAnchor</span>(copy, items);
@@ -1100,7 +1099,7 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>) {
 
-        <span class="hljs-keyword">let</span> a = <span class="hljs-title function_">_parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
+        <span class="hljs-keyword">const</span> a = <span class="hljs-title function_">_parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
         copy.<span class="hljs-property">anchor</span> = a;
     }
     <span class="hljs-keyword">return</span> copy;
@@ -1430,7 +1429,7 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
 
         <span class="hljs-keyword">if</span> (newPath &amp;&amp; newPath.<span class="hljs-property">name</span> &amp;&amp; newPath.<span class="hljs-property">useAsPath</span>) {
 
-            <span class="hljs-keyword">if</span> (oldPath &amp;&amp; oldPath.<span class="hljs-property">name</span> !== newPath.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(oldPath.<span class="hljs-property">pathed</span>, name);
+            <span class="hljs-keyword">if</span> (oldPath &amp;&amp; oldPath.<span class="hljs-property">name</span> != newPath.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(oldPath.<span class="hljs-property">pathed</span>, name);
 
             <span class="hljs-title function_">pushUnique</span>(newPath.<span class="hljs-property">pathed</span>, name);
 
@@ -1464,7 +1463,7 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
 
         <span class="hljs-keyword">if</span> (newPath &amp;&amp; newPath.<span class="hljs-property">name</span> &amp;&amp; newPath.<span class="hljs-property">useAsPath</span>) {
 
-            <span class="hljs-keyword">if</span> (oldPath &amp;&amp; oldPath.<span class="hljs-property">name</span> !== newPath.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(oldPath.<span class="hljs-property">pathed</span>, name);
+            <span class="hljs-keyword">if</span> (oldPath &amp;&amp; oldPath.<span class="hljs-property">name</span> != newPath.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(oldPath.<span class="hljs-property">pathed</span>, name);
 
             <span class="hljs-title function_">pushUnique</span>(newPath.<span class="hljs-property">pathed</span>, name);
 
@@ -1494,7 +1493,7 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
 
     <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_PICTURE</span>) {
 
-        <span class="hljs-keyword">let</span> src = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+        <span class="hljs-keyword">const</span> src = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
         <span class="hljs-keyword">if</span> (src &amp;&amp; src.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_PICTURE</span>) src.<span class="hljs-title function_">imageUnsubscribe</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
@@ -2226,7 +2225,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
             isHorizontalCopy = <span class="hljs-variable language_">this</span>.<span class="hljs-property">isHorizontalCopy</span>,
             loop = <span class="hljs-variable language_">this</span>.<span class="hljs-property">loopPathCursors</span>,
 
-            fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin, 
+            fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin, i, j,
 
             watchFromPath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchFromPath</span>,
             watchIndex = <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchIndex</span>, 
@@ -2234,7 +2233,10 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
             engineDeltaLengths = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engineDeltaLengths</span>,
             instruction;
 
-        <span class="hljs-keyword">const</span> [startX, startY, outputWidth, outputHeight] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
+        <span class="hljs-keyword">let</span> [startX, startY, outputWidth, outputHeight] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
+
+        outputWidth = ~~outputWidth;
+        outputHeight = ~~outputHeight;
 
         <span class="hljs-keyword">const</span> inputCell = <span class="hljs-title function_">requestCell</span>(),
             inputEngine = inputCell.<span class="hljs-property">engine</span>,
@@ -2256,7 +2258,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 
         <span class="hljs-keyword">if</span>(!engineInstructions.<span class="hljs-property">length</span>) {
 
-            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; sourceDimension; i++) {
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; sourceDimension; i++) {
 
                 <span class="hljs-keyword">if</span> (watchIndex &lt; <span class="hljs-number">0</span>) {
 
@@ -2315,14 +2317,14 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         <span class="hljs-keyword">if</span> (isHorizontalCopy) {
 
 
-            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; sourceDimension; i++) {
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; sourceDimension; i++) {
 
                 instruction = engineInstructions[watchIndex];
 
                 <span class="hljs-keyword">if</span> (instruction) {
 
                     outputEngine.<span class="hljs-title function_">setTransform</span>(...instruction);
-                    outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, <span class="hljs-number">0</span>, watchIndex, sourceDimension, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, engineDeltaLengths[watchIndex], <span class="hljs-number">1</span>);
+                    outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, <span class="hljs-number">0</span>, ~~watchIndex, ~~sourceDimension, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, ~~engineDeltaLengths[watchIndex], <span class="hljs-number">1</span>);
                 }
                 watchIndex++;
 
@@ -2331,14 +2333,14 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; sourceDimension; i++) {
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; sourceDimension; i++) {
 
                 instruction = engineInstructions[watchIndex];
 
                 <span class="hljs-keyword">if</span> (instruction) {
 
                     outputEngine.<span class="hljs-title function_">setTransform</span>(...instruction);
-                    outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, watchIndex, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, sourceDimension, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, engineDeltaLengths[watchIndex]);
+                    outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, ~~watchIndex, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, ~~sourceDimension, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, ~~engineDeltaLengths[watchIndex]);
                 }
                 watchIndex++;
 
@@ -2349,8 +2351,8 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         <span class="hljs-keyword">const</span> iFactor = <span class="hljs-variable language_">this</span>.<span class="hljs-property">interferenceFactor</span>,
             iLoops = <span class="hljs-variable language_">this</span>.<span class="hljs-property">interferenceLoops</span>,
 
-            iWidth = <span class="hljs-title function_">_ceil</span>(outputWidth * iFactor),
-            iHeight = <span class="hljs-title function_">_ceil</span>(outputHeight * iFactor);
+            iWidth = ~~(outputWidth * iFactor) + <span class="hljs-number">1</span>,
+            iHeight = ~~(outputHeight * iFactor) + <span class="hljs-number">1</span>;
 
         inputCanvas.<span class="hljs-property">width</span> = iWidth;
         inputCanvas.<span class="hljs-property">height</span> = iHeight;
@@ -2358,7 +2360,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         outputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
         inputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; iLoops; j++) {
+        <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; iLoops; j++) {
 
             inputEngine.<span class="hljs-title function_">drawImage</span>(outputCanvas, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, outputWidth, outputHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, iWidth, iHeight);
             outputEngine.<span class="hljs-title function_">drawImage</span>(inputCanvas, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, iWidth, iHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, outputWidth, outputHeight);
@@ -2446,10 +2448,10 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
                 lex += ex;
                 ley += ey;
 
-                <span class="hljs-keyword">let</span> minX = <span class="hljs-title function_">_min</span>(lsx, lex);
-                <span class="hljs-keyword">let</span> maxX = <span class="hljs-title function_">_max</span>(lsx + sw, lex + ew);
-                <span class="hljs-keyword">let</span> minY = <span class="hljs-title function_">_min</span>(lsy, ley);
-                <span class="hljs-keyword">let</span> maxY = <span class="hljs-title function_">_max</span>(lsy + sh, ley + eh);
+                <span class="hljs-keyword">const</span> minX = <span class="hljs-title function_">_min</span>(lsx, lex),
+                    maxX = <span class="hljs-title function_">_max</span>(lsx + sw, lex + ew),
+                    minY = <span class="hljs-title function_">_min</span>(lsy, ley),
+                    maxY = <span class="hljs-title function_">_max</span>(lsy + sh, ley + eh);
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBox</span> = [minX, minY, maxX - minX, maxY - minY];
 
@@ -2630,7 +2632,12 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
             tempEngine = tempCell.<span class="hljs-property">engine</span>,
             tempCanvas = tempCell.<span class="hljs-property">element</span>;
 
-        <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
+        <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
+
+        x = ~~x;
+        y = ~~y;
+        w = ~~w;
+        h = ~~h;
 
         tempCanvas.<span class="hljs-property">width</span> = w;
         tempCanvas.<span class="hljs-property">height</span> = h;
@@ -2710,7 +2717,7 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
             host.<span class="hljs-title function_">rotateDestination</span>(engine, tStart[<span class="hljs-number">0</span>], tStart[<span class="hljs-number">1</span>], fPath);
             engine.<span class="hljs-title function_">stroke</span>(tPath.<span class="hljs-property">pathObject</span>);
 
-            engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>,<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
             engine.<span class="hljs-title function_">beginPath</span>()
             engine.<span class="hljs-title function_">moveTo</span>(fEnd.<span class="hljs-property">x</span>, fEnd.<span class="hljs-property">y</span>);
             engine.<span class="hljs-title function_">lineTo</span>(tEnd.<span class="hljs-property">x</span>, tEnd.<span class="hljs-property">y</span>);
@@ -2750,7 +2757,12 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
             tempEngine = tempCell.<span class="hljs-property">engine</span>,
             tempCanvas = tempCell.<span class="hljs-property">element</span>;
 
-        <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
+        <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
+
+        x = ~~x;
+        y = ~~y;
+        w = ~~w;
+        h = ~~h;
 
         tempCanvas.<span class="hljs-property">width</span> = w;
         tempCanvas.<span class="hljs-property">height</span> = h;

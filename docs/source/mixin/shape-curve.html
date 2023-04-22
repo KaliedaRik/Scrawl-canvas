@@ -729,10 +729,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;controlledLineOffset&#x27;</span>]);
-    P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, []);
     P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, [<span class="hljs-string">&#x27;end&#x27;</span>]);
-    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;endPivot&#x27;</span>, <span class="hljs-string">&#x27;endPath&#x27;</span>]);
-    P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, []);</pre></div></div>
+    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;endPivot&#x27;</span>, <span class="hljs-string">&#x27;endPath&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -767,15 +765,15 @@
 
         <span class="hljs-keyword">if</span> (art.<span class="hljs-property">name</span> !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) {
 
-            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">startControlPivot</span> &amp;&amp; art.<span class="hljs-property">startControlPivot</span>.<span class="hljs-property">name</span> === <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startControlPivot</span>: <span class="hljs-literal">false</span>});
-            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">controlPivot</span> &amp;&amp; art.<span class="hljs-property">controlPivot</span>.<span class="hljs-property">name</span> === <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">controlPivot</span>: <span class="hljs-literal">false</span>});
-            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">endControlPivot</span> &amp;&amp; art.<span class="hljs-property">endControlPivot</span>.<span class="hljs-property">name</span> === <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">endControlPivot</span>: <span class="hljs-literal">false</span>});
-            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">endPivot</span> &amp;&amp; art.<span class="hljs-property">endPivot</span>.<span class="hljs-property">name</span> === <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">endPivot</span>: <span class="hljs-literal">false</span>});
+            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">startControlPivot</span> &amp;&amp; art.<span class="hljs-property">startControlPivot</span>.<span class="hljs-property">name</span> == <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startControlPivot</span>: <span class="hljs-literal">false</span>});
+            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">controlPivot</span> &amp;&amp; art.<span class="hljs-property">controlPivot</span>.<span class="hljs-property">name</span> == <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">controlPivot</span>: <span class="hljs-literal">false</span>});
+            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">endControlPivot</span> &amp;&amp; art.<span class="hljs-property">endControlPivot</span>.<span class="hljs-property">name</span> == <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">endControlPivot</span>: <span class="hljs-literal">false</span>});
+            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">endPivot</span> &amp;&amp; art.<span class="hljs-property">endPivot</span>.<span class="hljs-property">name</span> == <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">endPivot</span>: <span class="hljs-literal">false</span>});
 
-            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">startControlPath</span> &amp;&amp; art.<span class="hljs-property">startControlPath</span>.<span class="hljs-property">name</span> === <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startControlPath</span>: <span class="hljs-literal">false</span>});
-            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">controlPath</span> &amp;&amp; art.<span class="hljs-property">controlPath</span>.<span class="hljs-property">name</span> === <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">controlPath</span>: <span class="hljs-literal">false</span>});
-            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">endControlPath</span> &amp;&amp; art.<span class="hljs-property">endControlPath</span>.<span class="hljs-property">name</span> === <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">endControlPath</span>: <span class="hljs-literal">false</span>});
-            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">endPath</span> &amp;&amp; art.<span class="hljs-property">endPath</span>.<span class="hljs-property">name</span> === <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">endPath</span>: <span class="hljs-literal">false</span>});
+            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">startControlPath</span> &amp;&amp; art.<span class="hljs-property">startControlPath</span>.<span class="hljs-property">name</span> == <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startControlPath</span>: <span class="hljs-literal">false</span>});
+            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">controlPath</span> &amp;&amp; art.<span class="hljs-property">controlPath</span>.<span class="hljs-property">name</span> == <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">controlPath</span>: <span class="hljs-literal">false</span>});
+            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">endControlPath</span> &amp;&amp; art.<span class="hljs-property">endControlPath</span>.<span class="hljs-property">name</span> == <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">endControlPath</span>: <span class="hljs-literal">false</span>});
+            <span class="hljs-keyword">if</span> (art.<span class="hljs-property">endPath</span> &amp;&amp; art.<span class="hljs-property">endPath</span>.<span class="hljs-property">name</span> == <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) art.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">endPath</span>: <span class="hljs-literal">false</span>});
         }
     });
 };</pre></div></div>
@@ -970,7 +968,7 @@
     };
     D.<span class="hljs-property">endX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">end</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">end</span>;
         c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], coord);
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
@@ -978,7 +976,7 @@
     };
     D.<span class="hljs-property">endY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">end</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">end</span>;
         c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], coord);
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
@@ -1077,8 +1075,9 @@
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item) {
 
-            <span class="hljs-keyword">let</span> oldControl = <span class="hljs-variable language_">this</span>[attr],
-                newControl = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item;
+            <span class="hljs-keyword">let</span> oldControl = <span class="hljs-variable language_">this</span>[attr];
+            
+            <span class="hljs-keyword">let</span> newControl = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item;
 
             <span class="hljs-keyword">if</span> (attr.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">T_PIVOT</span>)) {
                 
@@ -1381,7 +1380,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">cleanControlLock</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">label</span>) {
 
-        <span class="hljs-keyword">let</span> capLabel = <span class="hljs-title function_">capitalize</span>(label);
+        <span class="hljs-keyword">const</span> capLabel = <span class="hljs-title function_">capitalize</span>(label);
 
         <span class="hljs-variable language_">this</span>[<span class="hljs-string">`dirty<span class="hljs-subst">${capLabel}</span>Lock`</span>] = <span class="hljs-literal">false</span>;
         <span class="hljs-variable language_">this</span>[<span class="hljs-string">`dirty<span class="hljs-subst">${capLabel}</span>`</span>] = <span class="hljs-literal">true</span>;
@@ -1402,16 +1401,13 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">cleanControl</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">label</span>) {
 
-        <span class="hljs-keyword">let</span> capLabel = <span class="hljs-title function_">capitalize</span>(label);
+        <span class="hljs-keyword">const</span> capLabel = <span class="hljs-title function_">capitalize</span>(label);
 
         <span class="hljs-variable language_">this</span>[<span class="hljs-string">`dirty<span class="hljs-subst">${capLabel}</span>`</span>] = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> pivotLabel = <span class="hljs-string">`<span class="hljs-subst">${label}</span>Pivot`</span>,
-            pathLabel = <span class="hljs-string">`<span class="hljs-subst">${label}</span>Path`</span>,
-            particleLabel = <span class="hljs-string">`<span class="hljs-subst">${label}</span>Particle`</span>,
-            pivot = <span class="hljs-variable language_">this</span>[pivotLabel],
-            path = <span class="hljs-variable language_">this</span>[pathLabel],
-            part = <span class="hljs-variable language_">this</span>[particleLabel],
+        <span class="hljs-keyword">let</span> pivot = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${label}</span>Pivot`</span>],
+            path = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${label}</span>Path`</span>],
+            part = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${label}</span>Particle`</span>],
             art, pathData;
 
         <span class="hljs-keyword">if</span> (pivot &amp;&amp; pivot.<span class="hljs-property">substring</span>) {
@@ -1440,9 +1436,9 @@
             raw = <span class="hljs-variable language_">this</span>[label],
             current = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`current<span class="hljs-subst">${capLabel}</span>`</span>];
 
-        <span class="hljs-keyword">if</span> (lock === <span class="hljs-variable constant_">PIVOT</span> &amp;&amp; (!pivot || pivot.<span class="hljs-property">substring</span>)) lock = <span class="hljs-variable constant_">COORD</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock === <span class="hljs-variable constant_">PATH</span> &amp;&amp; (!path || path.<span class="hljs-property">substring</span>)) lock = <span class="hljs-variable constant_">COORD</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock === <span class="hljs-variable constant_">PARTICLE</span> &amp;&amp; (!part || part.<span class="hljs-property">substring</span>)) lock = <span class="hljs-variable constant_">COORD</span>;
+        <span class="hljs-keyword">if</span> (lock == <span class="hljs-variable constant_">PIVOT</span> &amp;&amp; (!pivot || pivot.<span class="hljs-property">substring</span>)) lock = <span class="hljs-variable constant_">COORD</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock == <span class="hljs-variable constant_">PATH</span> &amp;&amp; (!path || path.<span class="hljs-property">substring</span>)) lock = <span class="hljs-variable constant_">COORD</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock == <span class="hljs-variable constant_">PARTICLE</span> &amp;&amp; (!part || part.<span class="hljs-property">substring</span>)) lock = <span class="hljs-variable constant_">COORD</span>;
 
         <span class="hljs-keyword">switch</span>(lock) {
 
@@ -1536,7 +1532,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getControlPathData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">path, label, capLabel</span>) {
 
-        <span class="hljs-keyword">let</span> checkAttribute = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`current<span class="hljs-subst">${capLabel}</span>PathData`</span>];
+        <span class="hljs-keyword">const</span> checkAttribute = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`current<span class="hljs-subst">${capLabel}</span>PathData`</span>];
 
         <span class="hljs-keyword">if</span> (checkAttribute) <span class="hljs-keyword">return</span> checkAttribute;
 
@@ -1548,7 +1544,7 @@
         <span class="hljs-keyword">if</span> (pathPos &gt; <span class="hljs-number">1</span>) pathPos = pathPos % <span class="hljs-number">1</span>;
 
         pathPos = <span class="hljs-built_in">parseFloat</span>(pathPos.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">6</span>));
-        <span class="hljs-keyword">if</span> (pathPos !== tempPos) <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${label}</span>PathPosition`</span>] = pathPos;
+        <span class="hljs-keyword">if</span> (pathPos != tempPos) <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${label}</span>PathPosition`</span>] = pathPos;
 
         <span class="hljs-keyword">if</span> (pathData) {
 
@@ -1558,15 +1554,15 @@
 
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>();
+            <span class="hljs-keyword">const</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>();
 
             <span class="hljs-keyword">if</span> (host) {
 
-                <span class="hljs-keyword">let</span> dims = host.<span class="hljs-property">currentDimensions</span>;
+                <span class="hljs-keyword">const</span> dims = host.<span class="hljs-property">currentDimensions</span>;
 
                 <span class="hljs-keyword">if</span> (dims) {
 
-                    <span class="hljs-keyword">let</span> current = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`current<span class="hljs-subst">${capLabel}</span>`</span>];
+                    <span class="hljs-keyword">const</span> current = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`current<span class="hljs-subst">${capLabel}</span>`</span>];
 
                     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanPosition</span>(current, <span class="hljs-variable language_">this</span>[label], dims);
 
@@ -1613,32 +1609,34 @@
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> items = [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">endSubscriber</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControlSubscriber</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">controlSubscriber</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControlSubscriber</span>);
 
+        <span class="hljs-keyword">let</span> sub;
+
         items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> instance = artefact[name];
+            sub = artefact[name];
 
-            <span class="hljs-keyword">if</span> (instance) {
+            <span class="hljs-keyword">if</span> (sub) {
 
-                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_LINE</span> || instance.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_QUADRATIC</span> || instance.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_BEZIER</span>) {
+                <span class="hljs-keyword">if</span> (sub.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_LINE</span> || sub.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_QUADRATIC</span> || sub.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_BEZIER</span>) {
 
-                    <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_QUADRATIC</span>) {
+                    <span class="hljs-keyword">if</span> (sub.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_QUADRATIC</span>) {
 
-                        instance.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
-                        instance.<span class="hljs-property">currentControlPathData</span> = <span class="hljs-literal">false</span>;
+                        sub.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
+                        sub.<span class="hljs-property">currentControlPathData</span> = <span class="hljs-literal">false</span>;
                     }
 
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_BEZIER</span>) {
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (sub.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_BEZIER</span>) {
 
-                        instance.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
-                        instance.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
-                        instance.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
-                        instance.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
+                        sub.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+                        sub.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
+                        sub.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
+                        sub.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
                     }
-                    instance.<span class="hljs-property">currentEndPathData</span> = <span class="hljs-literal">false</span>;
-                    instance.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
+                    sub.<span class="hljs-property">currentEndPathData</span> = <span class="hljs-literal">false</span>;
+                    sub.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
                 }
-                instance.<span class="hljs-property">currentPathData</span> = <span class="hljs-literal">false</span>;
-                instance.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
+                sub.<span class="hljs-property">currentPathData</span> = <span class="hljs-literal">false</span>;
+                sub.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
             }
         });
     };

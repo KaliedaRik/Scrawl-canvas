@@ -1289,7 +1289,7 @@ sourceEngine.<span class="hljs-property">lineWidth</span> = <span class="hljs-nu
             [x, y, deltaX, boxpos] = box;
             width = boxpos + <span class="hljs-number">10</span>
 
-            ctx.<span class="hljs-title function_">drawImage</span>(source, boxpos * <span class="hljs-number">50</span>, <span class="hljs-number">0</span>, <span class="hljs-number">50</span>, <span class="hljs-number">50</span>, x - <span class="hljs-number">25</span>, y - <span class="hljs-number">25</span>, <span class="hljs-number">50</span>, <span class="hljs-number">50</span>);
+            ctx.<span class="hljs-title function_">drawImage</span>(source, ~~(boxpos * <span class="hljs-number">50</span>), <span class="hljs-number">0</span>, <span class="hljs-number">50</span>, <span class="hljs-number">50</span>, ~~(x - <span class="hljs-number">25</span>), ~~(y - <span class="hljs-number">25</span>), <span class="hljs-number">50</span>, <span class="hljs-number">50</span>);
 
             x += deltaX;
             <span class="hljs-keyword">if</span> (x &lt; -width) x += engineWidth + (width * <span class="hljs-number">2</span>);

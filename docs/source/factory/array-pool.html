@@ -629,7 +629,12 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
 
         a.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
         genericArrayPool.<span class="hljs-title function_">push</span>(a);
-        <span class="hljs-keyword">if</span> (genericArrayPool.<span class="hljs-property">length</span> &gt; <span class="hljs-number">10</span>) <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;genericArrayPool length&#x27;</span>, genericArrayPool.<span class="hljs-property">length</span>);
+
+        <span class="hljs-keyword">if</span> (genericArrayPool.<span class="hljs-property">length</span> &gt; <span class="hljs-number">20</span>) {
+
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;purging genericArrayPool&#x27;</span>);
+            genericArrayPool.<span class="hljs-property">length</span> = <span class="hljs-number">10</span>;
+        }
     }
 };</pre></div></div>
             

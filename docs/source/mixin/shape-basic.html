@@ -563,7 +563,9 @@
 
 <span class="hljs-keyword">import</span> { releaseVector, requestVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/vector.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> calculatePath <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shape-path-calculation.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/array-pool.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { calculatePath, releasePathCalcObject, requestPathCalcObject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shape-path-calculation.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./entity.js&#x27;</span>;
 
@@ -645,10 +647,6 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;dimensions&#x27;</span>, <span class="hljs-string">&#x27;pathed&#x27;</span>]);
-    P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, []);
-    P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, []);
-    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, []);
-    P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, []);
 
     P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
 
@@ -1190,7 +1188,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
-              <p><code>getPathPositionData</code> - function called by <code>getPathPositionData</code></p>
+              <p><code>getPathPositionData</code></p>
 <ul>
 <li>Also useful in user code to retrieve the Cell-relative coordinates of any point (measured as a float Number between <code>0</code> and <code>1</code> along the path)</li>
 <li>The second argument - a Boolean - rectifies for constant speed</li>
@@ -1389,7 +1387,7 @@
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanHandle</span>();
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampHandlePositions</span>();
 
-            <span class="hljs-keyword">let</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>;
+            <span class="hljs-keyword">const</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>;
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D(<span class="hljs-string">`m<span class="hljs-subst">${-handle[<span class="hljs-number">0</span>]}</span>,<span class="hljs-subst">${-handle[<span class="hljs-number">1</span>]}</span><span class="hljs-subst">${<span class="hljs-variable language_">this</span>.localPath}</span>`</span>);
         }
@@ -1414,7 +1412,7 @@
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCalculatedOnce</span>) {
 
-            res = <span class="hljs-title function_">calculatePath</span>(d, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStart</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">useAsPath</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">precision</span>);
+            res = <span class="hljs-title function_">calculatePath</span>(d, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStart</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">useAsPath</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">precision</span>, <span class="hljs-title function_">requestPathCalcObject</span>());
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCalculatedOnce</span> = <span class="hljs-literal">true</span>;
         }
 
@@ -1423,12 +1421,12 @@
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">localPath</span> = res.<span class="hljs-property">localPath</span>;
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">length</span> = res.<span class="hljs-property">length</span>;
 
-            <span class="hljs-keyword">let</span> maxX = res.<span class="hljs-property">maxX</span>,
+            <span class="hljs-keyword">const</span> maxX = res.<span class="hljs-property">maxX</span>,
                 maxY = res.<span class="hljs-property">maxY</span>,
                 minX = res.<span class="hljs-property">minX</span>,
                 minY = res.<span class="hljs-property">minY</span>;
 
-            <span class="hljs-keyword">let</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>,
+            <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>,
                 currentDims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>,
                 box = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>;
 
@@ -1460,14 +1458,28 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> {units, unitLengths, unitPartials, unitProgression, unitPositions} = res;
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> {units, unitLengths, unitPartials, unitProgression, unitPositions} = res;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <p>console.log(unitProgression);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> flatProgression = <span class="hljs-title function_">requestArray</span>(),
+                    flatPositions = <span class="hljs-title function_">requestArray</span>();
 
                 <span class="hljs-keyword">let</span> lastLength = <span class="hljs-number">0</span>, 
                     currentPartial,
                     lastPartial,
                     progression, 
-                    flatProgression = [],
-                    flatPositions = [],
                     positions,
                     i, iz, j, jz, l, p;
 
@@ -1491,53 +1503,33 @@
                             flatPositions.<span class="hljs-title function_">push</span>(<span class="hljs-built_in">parseFloat</span>(p.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">6</span>)));
                         }
                     }
-
-
                 }
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">units</span> = units;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitLengths</span> = unitLengths;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPartials</span> = unitPartials;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">units</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">units</span>.<span class="hljs-title function_">push</span>(...units);
 
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitProgression</span> = flatProgression;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPositions</span> = flatPositions;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitLengths</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitLengths</span>.<span class="hljs-title function_">push</span>(...unitLengths);
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPartials</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPartials</span>.<span class="hljs-title function_">push</span>(...unitPartials);
+
+                <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">unitProgression</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitProgression</span> = [];
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitProgression</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitProgression</span>.<span class="hljs-title function_">push</span>(...flatProgression);
+
+                <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPositions</span> = [];
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPositions</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPositions</span>.<span class="hljs-title function_">push</span>(...flatPositions);
+
+                <span class="hljs-title function_">releaseArray</span>(flatProgression);
+                <span class="hljs-title function_">releaseArray</span>(flatPositions);
             }
+            <span class="hljs-title function_">releasePathCalcObject</span>(res);
+
             <span class="hljs-keyword">if</span> (!isCalledFromAdditionalActions) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">calculateLocalPathAdditionalActions</span>();
         }
     };
     P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
-              </div>
-              <p><code>updatePathSubscribers</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">updatePathSubscribers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathed</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> instance = artefact[name];
-
-            <span class="hljs-keyword">if</span> (instance) {
-
-                instance.<span class="hljs-property">currentPathData</span> = <span class="hljs-literal">false</span>;
-                instance.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">addPathHandle</span>) instance.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">addPathOffset</span>) instance.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">addPathRotation</span>) instance.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
-
-                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_POLYLINE</span>) instance.<span class="hljs-property">dirtyPins</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_LINE</span> || instance.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_QUADRATIC</span> || instance.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_BEZIER</span>) instance.<span class="hljs-property">dirtyPins</span>.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
-            }
-        }, <span class="hljs-variable language_">this</span>);
-    };</pre></div></div>
             
         </li>
         
@@ -1548,10 +1540,31 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
-              <h4 id="stamp-methods">Stamp methods</h4>
-<p>All actual drawing is achieved using the entity’s pre-calculated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D object</a>.</p>
+              <p><code>updatePathSubscribers</code></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">updatePathSubscribers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">let</span> art;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathed</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+
+            art = artefact[name];
+
+            <span class="hljs-keyword">if</span> (art) {
+
+                art.<span class="hljs-property">currentPathData</span> = <span class="hljs-literal">false</span>;
+                art.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">addPathHandle</span>) art.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">addPathOffset</span>) art.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">addPathRotation</span>) art.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
+
+                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_POLYLINE</span>) art.<span class="hljs-property">dirtyPins</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (art.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_LINE</span> || art.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_QUADRATIC</span> || art.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_BEZIER</span>) art.<span class="hljs-property">dirtyPins</span>.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+            }
+        }, <span class="hljs-variable language_">this</span>);
+    };</pre></div></div>
             
         </li>
         
@@ -1561,6 +1574,20 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-41">&#x00a7;</a>
+              </div>
+              <h4 id="stamp-methods">Stamp methods</h4>
+<p>All actual drawing is achieved using the entity’s pre-calculated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D object</a>.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -1575,11 +1602,11 @@
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -1594,11 +1621,11 @@
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -1617,11 +1644,11 @@
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -1641,11 +1668,11 @@
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -1663,11 +1690,11 @@
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -1685,11 +1712,11 @@
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -1710,11 +1737,11 @@
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>drawBoundingBox</code></p>
 
@@ -1740,11 +1767,11 @@
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>getBoundingBox</code></p>
 
@@ -1761,11 +1788,11 @@
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>Pad out excessively thin widths and heights</p>
 

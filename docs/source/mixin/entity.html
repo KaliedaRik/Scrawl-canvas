@@ -585,7 +585,7 @@
 <span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/anchor.js&#x27;</span>;
 <span class="hljs-keyword">import</span> filterMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/filter.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _floor, _keys, _parse,  <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GOOD_HOST</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NONZERO</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STATE_KEYS</span>,  <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _floor, _keys, _parse, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GOOD_HOST</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NONZERO</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STATE_KEYS</span>,  <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1943,9 +1943,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getCellCoverage</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) {
 
-        <span class="hljs-keyword">const</span> width = img.<span class="hljs-property">width</span>,
-            height = img.<span class="hljs-property">height</span>,
-            data = img.<span class="hljs-property">data</span>;
+        <span class="hljs-keyword">const</span> { width, height, data } = img;
 
         <span class="hljs-keyword">let</span> maxX = <span class="hljs-number">0</span>,
             maxY = <span class="hljs-number">0</span>,

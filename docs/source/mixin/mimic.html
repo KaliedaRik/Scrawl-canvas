@@ -665,7 +665,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-variable constant_">MIMIC</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;mimic&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -752,7 +752,7 @@
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> oldMimic = <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span>,
+            <span class="hljs-keyword">const</span> oldMimic = <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span>,
                 name = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
             <span class="hljs-keyword">let</span> newMimic = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item;
@@ -761,12 +761,12 @@
 
                 newMimic = asset[item];
 
-                <span class="hljs-keyword">if</span> (newMimic &amp;&amp; newMimic.<span class="hljs-property">type</span> !== <span class="hljs-variable constant_">T_CELL</span>) newMimic = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">if</span> (newMimic &amp;&amp; newMimic.<span class="hljs-property">type</span> != <span class="hljs-variable constant_">T_CELL</span>) newMimic = <span class="hljs-literal">false</span>;
             }
 
             <span class="hljs-keyword">if</span> (newMimic &amp;&amp; newMimic.<span class="hljs-property">name</span>) {
 
-                <span class="hljs-keyword">if</span> (oldMimic &amp;&amp; oldMimic.<span class="hljs-property">name</span> !== newMimic.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(oldMimic.<span class="hljs-property">mimicked</span>, name);
+                <span class="hljs-keyword">if</span> (oldMimic &amp;&amp; oldMimic.<span class="hljs-property">name</span> != newMimic.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(oldMimic.<span class="hljs-property">mimicked</span>, name);
 
                 <span class="hljs-title function_">pushUnique</span>(newMimic.<span class="hljs-property">mimicked</span>, name);
 
@@ -898,31 +898,33 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">updateMimicSubscribers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">let</span> <span class="hljs-variable constant_">DMH</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicHandle</span>;
-        <span class="hljs-keyword">let</span> <span class="hljs-variable constant_">DMO</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicOffset</span>;
-        <span class="hljs-keyword">let</span> <span class="hljs-variable constant_">DMR</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicRotation</span>;
-        <span class="hljs-keyword">let</span> <span class="hljs-variable constant_">DMS</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicScale</span>;
-        <span class="hljs-keyword">let</span> <span class="hljs-variable constant_">DMD</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicDimensions</span>;
+        <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">DMH</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicHandle</span>,
+            <span class="hljs-variable constant_">DMO</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicOffset</span>,
+            <span class="hljs-variable constant_">DMR</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicRotation</span>,
+            <span class="hljs-variable constant_">DMS</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicScale</span>,
+            <span class="hljs-variable constant_">DMD</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicDimensions</span>;
+
+        <span class="hljs-keyword">let</span> m;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimicked</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> instance = artefact[name];
+            <span class="hljs-keyword">let</span> m = artefact[name];
 
-            <span class="hljs-keyword">if</span> (!instance) {
+            <span class="hljs-keyword">if</span> (!m) {
 
-                instance = asset[name];
+                m = asset[name];
 
-                <span class="hljs-keyword">if</span> (!instance || instance.<span class="hljs-property">type</span> !== <span class="hljs-variable constant_">T_CELL</span>) instance = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">if</span> (!m || m.<span class="hljs-property">type</span> !== <span class="hljs-variable constant_">T_CELL</span>) m = <span class="hljs-literal">false</span>;
             }
 
-            <span class="hljs-keyword">if</span> (instance) {
+            <span class="hljs-keyword">if</span> (m) {
 
-                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">useMimicStart</span>) instance.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">DMH</span> &amp;&amp; instance.<span class="hljs-property">useMimicHandle</span>) instance.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">DMO</span> &amp;&amp; instance.<span class="hljs-property">useMimicOffset</span>) instance.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">DMR</span> &amp;&amp; instance.<span class="hljs-property">useMimicRotation</span>) instance.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">DMS</span> &amp;&amp; instance.<span class="hljs-property">useMimicScale</span>) instance.<span class="hljs-property">dirtyScale</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">DMD</span> &amp;&amp; instance.<span class="hljs-property">useMimicDimensions</span>) instance.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (m.<span class="hljs-property">useMimicStart</span>) m.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">DMH</span> &amp;&amp; m.<span class="hljs-property">useMimicHandle</span>) m.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">DMO</span> &amp;&amp; m.<span class="hljs-property">useMimicOffset</span>) m.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">DMR</span> &amp;&amp; m.<span class="hljs-property">useMimicRotation</span>) m.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">DMS</span> &amp;&amp; m.<span class="hljs-property">useMimicScale</span>) m.<span class="hljs-property">dirtyScale</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">DMD</span> &amp;&amp; m.<span class="hljs-property">useMimicDimensions</span>) m.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
             }
         });
 

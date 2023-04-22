@@ -621,6 +621,8 @@
 
 <span class="hljs-keyword">import</span> { doCreate, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
+<span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./array-pool.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shape-basic.js&#x27;</span>;
 
@@ -910,11 +912,7 @@ D.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-keyword">f
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-variable constant_">ZERO_PATH</span>;
-    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeSpiralPath</span>();
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeSpiralPath</span>();
 };</pre></div></div>
             
         </li>
@@ -935,7 +933,7 @@ D.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-keyword">f
     <span class="hljs-keyword">const</span> loops = <span class="hljs-title function_">_floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">loops</span>),
         loopIncrement = <span class="hljs-variable language_">this</span>.<span class="hljs-property">loopIncrement</span>,
         drawFromLoop = <span class="hljs-title function_">_floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span>),
-        currentTurn = [];
+        currentTurn = <span class="hljs-title function_">requestArray</span>();
 
     <span class="hljs-keyword">let</span> x1, y1, x2, y2, x3, y3,
         sx1, sy1, sx2, sy2, sx3, sy3;
@@ -960,6 +958,8 @@ D.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-keyword">f
             currentTurn[i] = [x1 + (sx1 * loopIncrement), y1 + (sy1 * loopIncrement), x2 + (sx2 * loopIncrement), y2 + (sy2 * loopIncrement), x3 + (sx3 * loopIncrement), y3 + (sy3 * loopIncrement)];
         }
     }
+    <span class="hljs-title function_">releaseArray</span>(currentTurn);
+
     <span class="hljs-keyword">return</span> path;
 };
 

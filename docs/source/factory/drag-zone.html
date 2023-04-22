@@ -584,7 +584,9 @@
 
 <span class="hljs-keyword">import</span> { addListener, removeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/events.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { _isArray, $BODY, <span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">DROP</span>, <span class="hljs-variable constant_">EXIT</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">TOUCH_CANCEL</span>, <span class="hljs-variable constant_">TOUCH_END</span>, <span class="hljs-variable constant_">TOUCH_MOVE</span>, <span class="hljs-variable constant_">TOUCH_START</span>, <span class="hljs-variable constant_">UP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/shared-vars.js&quot;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { touchAction } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/user-interaction.js&quot;</span>;
+
+<span class="hljs-keyword">import</span> { _isArray, $BODY, <span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">DROP</span>, <span class="hljs-variable constant_">EXIT</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">TOUCH_CANCEL</span>, <span class="hljs-variable constant_">TOUCH_END</span>, <span class="hljs-variable constant_">TOUCH_MOVE</span>, <span class="hljs-variable constant_">TOUCH_START</span>, <span class="hljs-variable constant_">UP</span>, <span class="hljs-variable constant_">ZERO_PATH</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/shared-vars.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -844,7 +846,7 @@
 
         <span class="hljs-title function_">checkE</span>(e);
 
-        <span class="hljs-keyword">let</span> type = e.<span class="hljs-property">type</span>;
+        <span class="hljs-keyword">const</span> type = e.<span class="hljs-property">type</span>;
         <span class="hljs-keyword">if</span> (type == <span class="hljs-variable constant_">TOUCH_START</span> || type == <span class="hljs-variable constant_">TOUCH_CANCEL</span>) <span class="hljs-title function_">touchAction</span>(e, resetCoordsToZeroOnTouchEnd);
 
         current = collisionGroup.<span class="hljs-title function_">getArtefactAt</span>(coordinateSource);
@@ -868,7 +870,7 @@
 
             <span class="hljs-title function_">checkE</span>(e);
 
-            <span class="hljs-keyword">let</span> type = e.<span class="hljs-property">type</span>;
+            <span class="hljs-keyword">const</span> type = e.<span class="hljs-property">type</span>;
             <span class="hljs-keyword">if</span> (type == <span class="hljs-variable constant_">TOUCH_MOVE</span>) <span class="hljs-title function_">touchAction</span>(e);
 
             <span class="hljs-keyword">if</span> (e.<span class="hljs-property">shiftKey</span>) <span class="hljs-title function_">updateWhileShiftMoving</span>(e);
@@ -882,7 +884,7 @@
 
             <span class="hljs-title function_">checkE</span>(e);
 
-            <span class="hljs-keyword">let</span> type = e.<span class="hljs-property">type</span>;
+            <span class="hljs-keyword">const</span> type = e.<span class="hljs-property">type</span>;
             <span class="hljs-keyword">if</span> (type == <span class="hljs-variable constant_">TOUCH_END</span>) {
 
                 <span class="hljs-title function_">touchAction</span>(e, resetCoordsToZeroOnTouchEnd);
@@ -905,7 +907,7 @@
 
         <span class="hljs-keyword">const</span> name = <span class="hljs-string">`<span class="hljs-subst">${zone.name}</span>_<span class="hljs-subst">${collisionGroup.name}</span>_<span class="hljs-subst">${processingOrder}</span>`</span>;
 
-        dragZones[zone.<span class="hljs-property">name</span>] = dragZones[zone.<span class="hljs-property">name</span>].<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">z</span> =&gt;</span> z.<span class="hljs-property">name</span> !== name);
+        dragZones[zone.<span class="hljs-property">name</span>] = dragZones[zone.<span class="hljs-property">name</span>].<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">z</span> =&gt;</span> z.<span class="hljs-property">name</span> != name);
 
         <span class="hljs-keyword">if</span> (!dragZones[zone.<span class="hljs-property">name</span>].<span class="hljs-property">length</span>) {
             <span class="hljs-title function_">doRemoveListeners</span>(startOn, endOn, target);
@@ -981,9 +983,22 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">pickup</span> = (<span class="hljs-params">e = Ωempty</span>) =&gt; {
 
-        <span class="hljs-keyword">if</span> (e &amp;&amp; e.<span class="hljs-property">target</span>) {
+        <span class="hljs-keyword">if</span> (e &amp;&amp; e.<span class="hljs-property">target</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>name cannot be ZERO_STR</p>
 
-            <span class="hljs-keyword">let</span> myTarget = e.<span class="hljs-property">target</span>,
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> myTarget = e.<span class="hljs-property">target</span>,
                 name = <span class="hljs-string">&#x27;&#x27;</span>;
 
             <span class="hljs-keyword">while</span> (!name) {
@@ -1017,11 +1032,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>The exposed <code>move</code> and <code>drop</code> functions will change to match the equivalent funtions supplied by the zone selected during the <code>pickup</code> stage of the operation</p>
 
@@ -1044,11 +1059,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Listeners are added to the DOM element when the first drag zone is created for that target</p>
 
@@ -1064,11 +1079,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Listeners are only removed from the DOM element when all the drag zones associated with that target have been killed</p>
 
@@ -1086,11 +1101,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Return the appropriate function based on the value of the <code>exposeCurrentArtefact</code> attribute</p>
 

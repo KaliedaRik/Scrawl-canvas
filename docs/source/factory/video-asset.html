@@ -1196,7 +1196,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> constraints = {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> constraints = {};</pre></div></div>
             
         </li>
         
@@ -1228,12 +1228,12 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
             
             <div class="content"><div class='highlight'><pre>    constraints.<span class="hljs-property">video</span> = {};
     
-    <span class="hljs-keyword">let</span> width = constraints.<span class="hljs-property">video</span>.<span class="hljs-property">width</span> = {};
+    <span class="hljs-keyword">const</span> width = constraints.<span class="hljs-property">video</span>.<span class="hljs-property">width</span> = {};
     <span class="hljs-keyword">if</span> (items.<span class="hljs-property">minWidth</span>) width.<span class="hljs-property">min</span> = items.<span class="hljs-property">minWidth</span>;
     <span class="hljs-keyword">if</span> (items.<span class="hljs-property">maxWidth</span>) width.<span class="hljs-property">max</span> = items.<span class="hljs-property">maxWidth</span>;
     width.<span class="hljs-property">ideal</span> = (items.<span class="hljs-property">width</span>) ? items.<span class="hljs-property">width</span> : <span class="hljs-number">1280</span>;
     
-    <span class="hljs-keyword">let</span> height = constraints.<span class="hljs-property">video</span>.<span class="hljs-property">height</span> = {};
+    <span class="hljs-keyword">const</span> height = constraints.<span class="hljs-property">video</span>.<span class="hljs-property">height</span> = {};
     <span class="hljs-keyword">if</span> (items.<span class="hljs-property">minHeight</span>) height.<span class="hljs-property">min</span> = items.<span class="hljs-property">minHeight</span>;
     <span class="hljs-keyword">if</span> (items.<span class="hljs-property">maxHeight</span>) height.<span class="hljs-property">max</span> = items.<span class="hljs-property">maxHeight</span>;
     height.<span class="hljs-property">ideal</span> = (items.<span class="hljs-property">height</span>) ? items.<span class="hljs-property">height</span> : <span class="hljs-number">720</span>;</pre></div></div>
@@ -1266,11 +1266,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> name = items.<span class="hljs-property">name</span> || <span class="hljs-title function_">generateUniqueString</span>();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> name = items.<span class="hljs-property">name</span> || <span class="hljs-title function_">generateUniqueString</span>();
 
-    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">VIDEO</span>);
+    <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">VIDEO</span>);
 
-    <span class="hljs-keyword">let</span> vid = <span class="hljs-title function_">makeVideoAsset</span>({
+    <span class="hljs-keyword">const</span> vid = <span class="hljs-title function_">makeVideoAsset</span>({
         <span class="hljs-attr">name</span>: name,
         <span class="hljs-attr">source</span>: el,
     });
@@ -1282,8 +1282,9 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
             navigator.<span class="hljs-property">mediaDevices</span>.<span class="hljs-title function_">getUserMedia</span>(constraints)
             .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">mediaStream</span> =&gt;</span> {
 
-                <span class="hljs-keyword">let</span> actuals = mediaStream.<span class="hljs-title function_">getVideoTracks</span>(),
-                    data;
+                <span class="hljs-keyword">const</span> actuals = mediaStream.<span class="hljs-title function_">getVideoTracks</span>();
+
+                <span class="hljs-keyword">let</span> data;
 
                 <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(actuals) &amp;&amp; actuals[<span class="hljs-number">0</span>]) data = actuals[<span class="hljs-number">0</span>].<span class="hljs-title function_">getConstraints</span>();
 
