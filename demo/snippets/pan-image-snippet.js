@@ -130,9 +130,7 @@ export default function (scrawl, el) {
 
                 let {x, y} = here;
 
-// @ts-expect-error
                 lastX = x;
-// @ts-expect-error
                 lastY = y;
             }
         }, el);
@@ -143,9 +141,7 @@ export default function (scrawl, el) {
 
                 let {x, y} = canvas.here;
 
-// @ts-expect-error
                 let dx = lastX - x,
-// @ts-expect-error
                     dy = lastY - y;
 
                 panImage.setDelta({
@@ -153,9 +149,7 @@ export default function (scrawl, el) {
                     copyStartY: dy * aspectHeight,
                 });
 
-// @ts-expect-error
                 lastX = x;
-// @ts-expect-error
                 lastY = y;
              }
         }, el);
@@ -169,9 +163,7 @@ export default function (scrawl, el) {
 
                 let {x, y} = canvas.here;
 
-// @ts-expect-error
                 let dx = lastX - x,
-// @ts-expect-error
                     dy = lastY - y;
 
                 panImage.setDelta({

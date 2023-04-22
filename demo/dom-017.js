@@ -110,8 +110,11 @@ const buildSquareCanvas = (namespace) => {
                 focusAction: true,
                 blurAction: true,
             },
+// @ts-expect-error
             onEnter: function () { this.set({ lineWidth: 6 }) },
+// @ts-expect-error
             onLeave: function () { this.set({ lineWidth: 2 }) },
+// @ts-expect-error
             onUp: function () { this.clickAnchor() },
         });
 
@@ -207,8 +210,11 @@ const buildCircleCanvas = (namespace) => {
                 focusAction: true,
                 blurAction: true,
             },
+// @ts-expect-error
             onEnter: function () { this.set({ lineWidth: 6 }) },
+// @ts-expect-error
             onLeave: function () { this.set({ lineWidth: 2 }) },
+// @ts-expect-error
             onUp: function () { this.clickAnchor() },
         });
 

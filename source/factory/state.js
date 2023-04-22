@@ -241,7 +241,7 @@ const G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// The following setters use the `window.scrawlEnvironmentColorChecker` Color factory. This factory gets created and attached to the window object during Scrawl-canvas initialization. Code for creating the factory can be found in the `core/init.js` module
+// The following setters use the `SC-system-state-do-not-remove` Color factory. This factory gets created when the `state.js` file first runs and is accessed only by State objects
 S.fillStyle = function (item) {
 
     let temp;
