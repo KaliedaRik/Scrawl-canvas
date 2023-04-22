@@ -73,7 +73,7 @@
       <li>Kill and resurrect a Pattern style to make sure it removes itself entirely from the Scrawl-canvas system, and cleanly recreate itself from saved packet</li>
     </ul>
 
-    <p><b>To note:</b> this test runs very slowly on Chrome-based browsers, but as expected on Firefox/Safari. The issue is entirely around the canvas context drawImage() function - in Chrome, if the source and destination canvas/contexts are of different sizes such that one gets stored in in CPU and the other in GPU then the speed of the drawImage copy gets badly degraded. A workaround would be to consider the sizes of any non-base Cells used in the demo and recode them accordingly. We're keeping this bug in the demo code for now, in the hope that one day Chrome devs find a better fix for this issue.</p>
+    <p><b>To note:</b> this test runs very slowly on Chrome-based browsers, but as expected on Firefox/Safari. The issue is entirely around the canvas context drawImage() function. One possibility is that in Chrome, if the source and destination canvas/contexts are of different sizes such that one gets stored in in CPU and the other in GPU, then the speed of the drawImage copy gets badly degraded. Chrome appears to use drawImage() internally to create patterns, which can lead to painfully slow render speeds.</p>
 
     <p><b>Touch test:</b> should work as expected - but dragging a finger from one block to another may lead to web page navigation being blocked by browser</p>
 

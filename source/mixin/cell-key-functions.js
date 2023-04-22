@@ -11,7 +11,7 @@ import { getIgnorePixelRatio, getPixelRatio } from "../core/events.js";
 
 import { releaseArray, requestArray } from '../factory/array-pool.js';
 
-import { _computed, _cos, _entries, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../core/shared-vars.js';
+import { _computed, _cos, _entries, _freeze, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../core/shared-vars.js';
 
 
 // #### Export function
@@ -103,7 +103,7 @@ export default function (P = Ωempty) {
     };
 
     // __setEngineActions__ - an Object containing functions for updating the engine's attributes; used by `setEngine`
-    P.setEngineActions = {
+    P.setEngineActions = _freeze({
 
         fillStyle: function (item, engine, STYLES_ARR, entity, layer) {
 
@@ -207,7 +207,7 @@ export default function (P = Ωempty) {
             }
             else engine.strokeStyle = item.getData(entity, layer);
         },
-    };
+    });
 
     // The following functions are used as part of entity object `stamp` functionality - specifically for those with a __method__ whose appearance is affected by shadows, and for the `clear` method
     // + Scrawl-canvas, for the most part, avoids using engine.save() and engine.restore() functionality, instead preferring to keep track of engine state in State objects. 

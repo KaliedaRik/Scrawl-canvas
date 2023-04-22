@@ -67,7 +67,7 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Modules test 005</h1>
-  <h2>Accessible GUI-based simple canvas editor</h2>
+  <h2>Proof of concept: accessible GUI-based simple canvas editor</h2>
   <h3 class="centered">Instructions for using the editor appear below the canvas</h3>
 
   <p id="reportmessage"></p>
@@ -168,11 +168,11 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
 
-    <ul>
-      <li></li>
-    </ul>
+    <p>This is more of a proof-of-concept than a demo test. It does give the Keyboard object a good work-out. But the demo is buggy and would need some serious work before being put into a production-ready product.</p>
 
-    <p><b>Touch test:</b> not required</p>
+    <p>Note the animation is slow, due to some expensive filters being applied to a big canvas. Work needs to be done to make the system performant.</p>
+
+    <p><b>Touch test:</b> the entitys should be draggable, preventing scroll movement; when the canvas itself is dragged the screen should scroll as expected.</p>
 
     <p><a href="../docs/demo/modules-005">Annotated code</a></p>
   </div>

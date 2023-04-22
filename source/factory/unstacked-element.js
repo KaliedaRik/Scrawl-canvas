@@ -37,7 +37,7 @@ const UnstackedElement = function (el) {
     this.domElement = el;
 
     this.elementComputedStyles = _computed(el);
-    this.hostStyles = Ωempty;
+    this.hostStyles = {};
 
     this.canvasStartX = 0;
     this.canvasStartY = 0;

@@ -1181,7 +1181,7 @@ P.transferDataUnchanged = function (oData, iData, len) {
 
 // ## Filter action functions
 // Each function is held in the `theBigActionsObject` object, for convenience
-P.theBigActionsObject = {
+P.theBigActionsObject = _freeze({
 
 // __alpha-to-channels__ - Copies the alpha channel value over to the selected value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
     [ALPHA_TO_CHANNELS]: function (requirements) {
@@ -5175,7 +5175,7 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-};
+});
 
 // We need an animation object to go through all the filters at the very end of the Display cycle RAF (request animation frame) and reset their `dirtyFilterIdentifier` flag to false.
 makeAnimation({

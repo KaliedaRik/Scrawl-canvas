@@ -20,12 +20,12 @@ const myFilter = scrawl.makeFilter({
     name: 'chromakey',
     method: 'chromakey',
 
-    red: 0,
-    green: 127,
-    blue: 0,
+    red: 190,
+    green: 129,
+    blue: 223,
 
-    opaqueAt: 1,
-    transparentAt: 0,
+    opaqueAt: 0.39,
+    transparentAt: 0.32,
 });
 
 
@@ -94,11 +94,11 @@ const reference = document.querySelector('#reference'),
     opacity = document.querySelector('#opacity');
 
 // @ts-expect-error
-reference.value = '#007700';
+reference.value = '#be81df';
 // @ts-expect-error
-opaqueAt.value = 1;
+opaqueAt.value = 0.39;
 // @ts-expect-error
-transparentAt.value = 0;
+transparentAt.value = 0.32;
 // @ts-expect-error
 opacity.value = 1;
 

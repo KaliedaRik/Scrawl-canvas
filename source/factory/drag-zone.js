@@ -36,6 +36,8 @@ import { xta, isa_fn, isa_boolean, isa_obj, λnull, Ωempty } from "../core/util
 
 import { addListener, removeListener } from "../core/events.js";
 
+import { touchAction } from "../core/user-interaction.js";
+
 import { _isArray, $BODY, ACCEPTED_WRAPPERS, DOWN, DROP, EXIT, MOVE, T_CANVAS, T_GROUP, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START, UP, ZERO_PATH } from "../core/shared-vars.js";
 
 

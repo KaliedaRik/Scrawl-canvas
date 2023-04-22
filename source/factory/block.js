@@ -21,13 +21,10 @@
 import { constructors } from '../core/library.js';
 import { doCreate, mergeOver, xt, Ωempty } from '../core/utilities.js';
 
+import { ENTITY, T_BLOCK } from '../core/shared-vars.js';
+
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
-
-import {
-    T_BLOCK,
-    ENTITY,
-} from '../core/shared-vars.js';
 
 
 // #### Block constructor

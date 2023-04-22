@@ -321,14 +321,14 @@ export default function (P = Ωempty) {
 
             if (key.substring && xt(val)) {
 
-                if (xt(val)) el.setAttribute(key, val);
+                if (xt(val) && val) el.setAttribute(key, val);
                 else el.removeAttribute(key);
             }
             else if (isa_obj(key)) {
 
                 _entries(key).forEach(([k, v]) => {
 
-                    if (xt(v)) el.setAttribute(k, v);
+                    if (xt(v) && v) el.setAttribute(k, v);
                     else el.removeAttribute(k);
                 });
             }

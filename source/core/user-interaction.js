@@ -194,7 +194,7 @@ export const setTouchActionChoke = function (val) {
     if (val && val.toFixed && !isNaN(val)) touchActionChoke = val;
 };
 
-const touchAction = function (e, resetCoordsToZeroOnTouchEnd = true) {
+export const touchAction = function (e, resetCoordsToZeroOnTouchEnd = true) {
 
     currentCorePosition.rawTouches.length = 0;
 
