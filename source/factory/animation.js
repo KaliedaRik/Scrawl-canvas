@@ -149,7 +149,6 @@ P.kill = function () {
 
     this.onKill();
     animateRemove(this.name);
-    resortAnimations();
 
     this.deregister();
     
