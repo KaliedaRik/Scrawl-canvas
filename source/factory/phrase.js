@@ -1004,7 +1004,7 @@ P.calculateTextPositions = function (mytext) {
         fontLibrary = {},
         fontArray = requestArray();
 
-    const scale = this.currentScale,
+    let scale = this.currentScale,
         dims = this.currentDimensions,
         width = dims[0] * scale,
         treatWordAsGlyph = this.treatWordAsGlyph,
