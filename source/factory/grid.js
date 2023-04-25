@@ -168,8 +168,7 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // #### Get, Set, deltaSet
-const G = P.getters,
-    S = P.setters,
+const S = P.setters,
     D = P.deltaSetters;
 
 // __columns__

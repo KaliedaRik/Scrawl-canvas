@@ -99,11 +99,11 @@ const G = P.getters,
     D = P.deltaSetters;
 
 // The getter functions `myradialgradient.get('startRadius')` and `myradialgradient.get('endRadius')` return the current radius values as Numbers, measuring pixels
-G.startRadius = function (item) {
+G.startRadius = function () {
 
     return this.currentStartRadius;
 };
-G.endRadius = function (item) {
+G.endRadius = function () {
 
     return this.currentEndRadius;
 };

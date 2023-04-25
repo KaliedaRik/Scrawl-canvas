@@ -35,8 +35,6 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { λnull } from '../core/utilities.js';
-
 import { _create, _seal, _setPrototypeOf, T_PARTICLE_HISTORY } from '../core/shared-vars.js';
 
 

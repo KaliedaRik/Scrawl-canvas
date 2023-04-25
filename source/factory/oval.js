@@ -41,7 +41,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
@@ -272,7 +272,7 @@ P.makeOvalPath = function () {
 
 P.calculateLocalPathAdditionalActions = function () {
 
-    const [x, y, w, h] = this.localBox;
+    const [x, y] = this.localBox;
 
     this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x},${-y}`);
 

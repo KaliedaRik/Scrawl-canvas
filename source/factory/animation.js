@@ -21,9 +21,9 @@
 
 
 // #### Imports
-import { animation, constructors } from '../core/library.js';
+import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, removeItem, xt, λnull, λpromise, λthis, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, xt, λnull, λpromise, λthis, Ωempty } from '../core/utilities.js';
 
 import { forceUpdate } from '../core/system-flags.js';
 

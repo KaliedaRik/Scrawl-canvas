@@ -538,7 +538,7 @@ P.makeRectanglePath = function () {
 
 P.calculateLocalPathAdditionalActions = function () {
 
-    let [x, y, w, h] = this.localBox;
+    let [x, y] = this.localBox;
 
     this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x},${-y}`);
 

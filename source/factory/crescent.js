@@ -16,7 +16,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_number, mergeOver, xt, xta, xto, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, xta, xto, Ωempty } from '../core/utilities.js';
 
 import { releaseCoordinate, requestCoordinate } from './coordinate.js';
 
@@ -26,18 +26,6 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
 import { _radian, DESTINATION_OUT, ENTITY, T_CRESCENT } from '../core/shared-vars.js';
-
-
-// __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
-const ensureFloat = (val, precision) => {
-
-    val = parseFloat(val);
-
-    if (!isa_number(val)) val = 0;
-    if (!isa_number(precision)) precision = 0;
-
-    return parseFloat(val.toFixed(precision));
-};
 
 
 // #### Crescent constructor
@@ -108,8 +96,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-const G = P.getters,
-    S = P.setters,
+const S = P.setters,
     D = P.deltaSetters;
 
 
@@ -257,6 +244,7 @@ P.calculateInterception = function () {
             // Decided to calculate the start/end angles for each circle through brute force
             // + Trigonometry is the proper answer, but I can't get the equations to stay still and play nicely
             // + So instead we draw circles on a canvas and rotate a vector to see when it enters/leaves the circles
+/* eslint-disable-next-line */
             element.width = element.width;
             engine.fillStyle = 'black';
 

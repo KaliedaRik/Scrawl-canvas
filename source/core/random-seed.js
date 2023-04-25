@@ -160,6 +160,7 @@ var uheprng = function (seed) {
         // users always obtain the same EFFECTIVE uheprng seeding key.
         random.cleanString = function (inStr) {
             inStr = inStr.replace(/(^\s*)|(\s*$)/gi, ''); // remove any/all leading spaces
+/* eslint-disable-next-line */
             inStr = inStr.replace(/[\x00-\x1F]/gi, ''); // remove any/all control characters
             inStr = inStr.replace(/\n /, '\n'); // remove any/all trailing spaces
             return inStr; // return the cleaned up result

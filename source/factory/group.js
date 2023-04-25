@@ -22,7 +22,7 @@
 
 
 // #### Imports
-import { artefact, asset, cell, constructors, entity, group } from '../core/library.js';
+import { artefact, cell, constructors, entity, group } from '../core/library.js';
 
 import { doCreate, mergeOver, pushUnique, removeItem, λnull, Ωempty } from '../core/utilities.js';
 
@@ -39,7 +39,7 @@ import { releaseArray, requestArray } from './array-pool.js';
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
 
-import { _isArray, _entries, _floor, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../core/shared-vars.js';
+import { _isArray, _floor, _values, ACCEPTED_OWNERS, ADD_CLASSES, ENTITY, GROUP, REMOVE_CLASSES, REVERSE_BY_DELTA, SET, SET_DELTA, SOURCE_IN, SOURCE_OVER, T_GROUP, UPDATE_BY_DELTA } from '../core/shared-vars.js';
 
 
 // #### Group constructor
@@ -146,22 +146,22 @@ P.kill = function (killArtefacts = false) {
     const myname = this.name;
 
     // Remove the Group object from affected Stack and Cell objects' `groups` attribute
-    _entries(artefact).forEach(([name, art]) => {
+    _values(artefact).forEach(art => {
 
         if (_isArray(art.groups) && art.groups.includes(myname)) {
 
             removeItem(art.groups, myname);
             art.batchResort = true;
-        };
+        }
     });
 
-    _entries(cell).forEach(([name, obj]) => {
+    _values(cell).forEach(obj => {
 
         if (_isArray(obj.groups) && obj.groups.includes(myname)) {
 
             removeItem(obj.groups, myname);
             obj.batchResort = true;
-        };
+        }
     });
 
     // Remove Group object from the Scrawl-canvas library
@@ -367,7 +367,7 @@ P.sortArtefacts = function () {
                 artefactCalculateBuckets.push(...arr);
                 releaseArray(arr);
             }
-        };
+        }
         releaseArray(calcBuckets);
 
         artefactStampBuckets.length = 0;
@@ -380,7 +380,7 @@ P.sortArtefacts = function () {
                 artefactStampBuckets.push(...arr);
                 releaseArray(arr);
             }
-        };
+        }
         releaseArray(stampBuckets);
     }
 };
@@ -411,8 +411,6 @@ P.prepareStamp = function (myCell) {
 
 // `stampAction` - the key Group-mediated action in the Display cycle, invoked as part of the `compile` functionality.
 P.stampAction = function (myCell) {
-
-    const mystash = (this.currentHost && this.currentHost.stashOutput) ? true : false;
 
     const { dirtyFilters, currentFilters, artefactStampBuckets, noFilters, filters, stashOutput, currentHost } = this;
 
@@ -644,7 +642,7 @@ P.removeArtefacts = function (...args) {
 // `moveArtefactsIntoGroup` - remove the artefact from their current Group (which is generally their Display cycle group, as set in their `group` and/or `host` attribute) and add them to this Group
 P.moveArtefactsIntoGroup = function (...args) {
 
-    let temp, art, grp;
+    let temp, art;
 
     args.forEach(item => {
 

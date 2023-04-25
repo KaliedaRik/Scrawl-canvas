@@ -41,9 +41,9 @@
 
 
 // #### Imports
-import { artefact, asset, canvas, cell, cellnames, constructors, group, styles, stylesnames, tween } from '../core/library.js';
+import { artefact, asset, canvas, constructors, group } from '../core/library.js';
 
-import { doCreate, generateUniqueString, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
@@ -72,7 +72,7 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
-import { _entries, _floor, _round, _trunc, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
+import { _round, _trunc, _values, _2D, AUTO, CANVAS, CELL, CONTAIN, COVER, DIMENSIONS, FILL, GRAYSCALE, HEIGHT, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, T_CELL, TRANSPARENT_VALS, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Cell constructor
@@ -252,7 +252,18 @@ P.factoryKill = function () {
     let myname = this.name
 
     // Remove artefact from all canvases
-    _entries(canvas).forEach(([name, cvs]) => {
+    // _entries(canvas).forEach(([name, cvs]) => {
+
+    //     if (cvs.cells.includes(myname)) cvs.removeCell(myname);
+
+    //     if (cvs.base && cvs.base.name == myname) {
+
+    //         cvs.set({
+    //             visibility: false,
+    //         });
+    //     }
+    // });
+    _values(canvas).forEach(cvs => {
 
         if (cvs.cells.includes(myname)) cvs.removeCell(myname);
 
@@ -265,7 +276,23 @@ P.factoryKill = function () {
     });
 
     // Remove from other artefacts
-    _entries(artefact).forEach(([name, art]) => {
+    // _entries(artefact).forEach(([name, art]) => {
+
+    //     if (art.name !== myname) {
+
+    //         const state = art.state;
+
+    //         if (state) {
+
+    //             const fill = state.fillStyle,
+    //                 stroke = state.strokeStyle;
+
+    //             if (fill.name && fill.name == myname) state.fillStyle = state.defs.fillStyle;
+    //             if (stroke.name && stroke.name == myname) state.strokeStyle = state.defs.strokeStyle;
+    //         }
+    //     }
+    // });
+    _values(artefact).forEach(art => {
 
         if (art.name !== myname) {
 
@@ -318,7 +345,7 @@ P.get = function (item) {
             val = state[item];
             return (val != null) ? val : def;
         }
-        return undef;
+        return undefined;
     }
 };
 
@@ -368,8 +395,8 @@ S.dimensions = function (w, h) {
 
 // Internal setters
 S.source = function () {};
-S.engine = function (item) {};
-S.state = function (item) {};
+S.engine = function () {};
+S.state = function () {};
 
 S.element = function (item) {
 
@@ -1264,7 +1291,7 @@ P.updateHere = function () {
 
         if (hostHere && hostHere.active) {
 
-            const {x:hostX, y:hostY, w:hostWidth, h:hostHeight} = hostHere;
+            const {x:hostX, y:hostY} = hostHere;
 
             if (!this.pathObject || this.dirtyPathObject) this.cleanPathObject();
 

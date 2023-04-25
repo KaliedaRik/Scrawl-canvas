@@ -17,7 +17,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, xt, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, xt, Ωempty } from '../core/utilities.js';
 
 import { releaseCell, requestCell } from './cell-fragment.js';
 
@@ -143,8 +143,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Get, Set, deltaSet
 const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+    S = P.setters;
 
 // __size__ - pseudo-attribute 
 // + getter returns a CSS fontSize String
@@ -158,8 +157,7 @@ S.size = function (item) {
 
     if (xt(item)) {
 
-        let res, 
-            size = 0, 
+        let size = 0, 
             metric = MEDIUM;
 
         if (item.includes(XX_SMALL)) metric = XX_SMALL;
@@ -178,13 +176,13 @@ S.size = function (item) {
             metric = PX
         }
 
-        let full, val, suffix;
+        let val, suffix;
 
         let r = item.match(/(\d+\.\d+|\d+|\.\d+)(rem|em|rlh|lh|ex|cap|ch|ic|%|vw|vh|vmax|vmin|vi|vb|in|cm|mm|Q|pc|pt|px)?/i);
 
         if (_isArray(r)) {
 
-            [full, val, suffix] = r;
+            [, val, suffix] = r;
 
             if (val && suffix && val != STOP) {
 
@@ -198,7 +196,7 @@ S.size = function (item) {
 
             if (_isArray(r)) {
 
-                [full, val, suffix] = r;
+                [, val, suffix] = r;
 
                 if (val && suffix && val != STOP) {
 
@@ -571,7 +569,7 @@ P.calculateSize = function () {
         }
         return `${res * scale}px`;
     }
-    return `${12 * scale}px`;
+    return `${12 * this.scale}px`;
 }
 
 // `buildFont` - internal function

@@ -442,7 +442,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                 hold = [];
                 for (y = j, yz = j + tileHeight; y < yz; y++) {
                     if (y >= 0 && y < iHeight) {
-                        for (let x = i, xz = i + tileWidth; x < xz; x++) {
+                        for (x = i, xz = i + tileWidth; x < xz; x++) {
                             if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
                         }
                     }
@@ -1045,9 +1045,9 @@ P.checkChannelLevelsParameters = function (f) {
 };
 
 // `cacheOutput` - insert an action function's output into the filter engine's cache
-P.cacheOutput = function (name, obj, caller) {
+P.cacheOutput = function (name, obj) {
 
-    cache[name] = obj;
+    this.cache[name] = obj;
 };
 
 // `getInputAndOutputLines` - determine, and return, the appropriate results object for the lineIn, lineMix and lineOut values supplied to each action function when it gets invoked
@@ -1234,7 +1234,7 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length;
         
-        let r, g, b, a, i, j, jz, tVal;
+        let a, j, jz, tVal;
 
         let {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, lineOut } = requirements;
 
@@ -1399,14 +1399,11 @@ P.theBigActionsObject = _freeze({
 
         const alphaCalc = (dA, mA) => (dA + (mA * (1 - dA))) * 255;
 
-        // const colorEngine = this.colorEngine;
-
         const [input, output, mix] = this.getInputAndOutputLines(requirements);
 
         const {width:iWidth, height:iHeight, data:iData} = input;
-        const {width:oWidth, height:oHeight, data:oData} = output;
+        const {data:oData} = output;
         const {width:mWidth, height:mHeight, data:mData} = mix;
-        const len = iData.length;
 
         let {opacity, blend, offsetX, offsetY, lineOut} = requirements;
 
@@ -1415,17 +1412,53 @@ P.theBigActionsObject = _freeze({
         if (null == offsetX) offsetX = 0;
         if (null == offsetY) offsetY = 0;
 
+        const colorburnCalc = (din, dmix) => {
+            if (dmix == 1) return 255;
+            else if (din == 0) return 0;
+            return (1 - _min(1, ((1 - dmix) / din ))) * 255;
+        };
+
+        const colordodgeCalc = (din, dmix) => {
+            if (dmix == 0) return 0;
+            else if (din == 1) return 255;
+            return _min(1, (dmix / (1 - din))) * 255;
+        };
+
+        const darkenCalc = (din, dmix) => (din < dmix) ? din : dmix;
+
+        const differenceCalc = (din, dmix) => _abs(din - dmix) * 255;
+
+        const exclusionCalc = (din, dmix) => (din + dmix - (2 * dmix * din)) * 255;
+
+        const hardlightCalc = (din, dmix) => (din <= 0.5) ? (din * dmix) * 255 : (dmix + (din - (dmix * din))) * 255;
+
+        const lightenCalc = (din, dmix) => (din > dmix) ? din : dmix;
+
+        const lighterCalc = (din, dmix) => (din + dmix) * 255;
+
+        const multiplyCalc = (din, dmix) => din * dmix * 255;
+
+        const overlayCalc = (din, dmix) => (din >= 0.5) ? (din * dmix) * 255 : (dmix + (din - (dmix * din))) * 255;
+
+        const screenCalc = (din, dmix) => (dmix + (din - (dmix * din))) * 255;
+
+        const softlightCalc = (din, dmix) => {
+            const d = (dmix <= 0.25) ?
+                ((((16 * dmix) - 12) * dmix) + 4) * dmix :
+                _sqrt(dmix);
+
+            if (din <= 0.5) return (dmix - ((1 - (2 * din)) * dmix * (1 - dmix))) * 255;
+            return (dmix + (((2 * din) - 1) * (d - dmix))) * 255;
+        };
+
+
+        const normalCalc = (Cs, As, Cb, Ab) => (As * Cs) + (Ab * Cb * (1 - As));
+
         let x, y, dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA, ir, ig, ib, ia, mr, mg, mb, ma, cr, cg, cb;
 
         switch (blend) {
 
             case COLOR_BURN :
-
-                const colorburnCalc = (din, dmix) => {
-                    if (dmix == 1) return 255;
-                    else if (din == 0) return 0;
-                    return (1 - _min(1, ((1 - dmix) / din ))) * 255;
-                };
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -1459,12 +1492,6 @@ P.theBigActionsObject = _freeze({
 
             case COLOR_DODGE :
 
-                const colordodgeCalc = (din, dmix) => {
-                    if (dmix == 0) return 0;
-                    else if (din == 1) return 255;
-                    return _min(1, (dmix / (1 - din))) * 255;
-                };
-
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
 
@@ -1496,8 +1523,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case DARKEN :
-
-                const darkenCalc = (din, dmix) => (din < dmix) ? din : dmix;
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -1531,8 +1556,6 @@ P.theBigActionsObject = _freeze({
 
             case DIFFERENCE :
 
-                const differenceCalc = (din, dmix) => _abs(din - dmix) * 255;
-
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
 
@@ -1562,8 +1585,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case EXCLUSION :
-
-                const exclusionCalc = (din, dmix) => (din + dmix - (2 * dmix * din)) * 255;
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -1595,8 +1616,6 @@ P.theBigActionsObject = _freeze({
 
             case HARD_LIGHT :
 
-                const hardlightCalc = (din, dmix) => (din <= 0.5) ? (din * dmix) * 255 : (dmix + (din - (dmix * din))) * 255;
-
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
 
@@ -1626,8 +1645,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case LIGHTEN :
-
-                const lightenCalc = (din, dmix) => (din > dmix) ? din : dmix;
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -1660,8 +1677,6 @@ P.theBigActionsObject = _freeze({
 
             case LIGHTER :
 
-                const lighterCalc = (din, dmix) => (din + dmix) * 255;
-
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
 
@@ -1691,8 +1706,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case MULTIPLY :
-
-                const multiplyCalc = (din, dmix) => din * dmix * 255;
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -1726,8 +1739,6 @@ P.theBigActionsObject = _freeze({
 
             case OVERLAY :
 
-                const overlayCalc = (din, dmix) => (din >= 0.5) ? (din * dmix) * 255 : (dmix + (din - (dmix * din))) * 255;
-
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
 
@@ -1758,8 +1769,6 @@ P.theBigActionsObject = _freeze({
 
             case SCREEN :
 
-                const screenCalc = (din, dmix) => (dmix + (din - (dmix * din))) * 255;
-
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
 
@@ -1789,16 +1798,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case SOFT_LIGHT :
-
-                const softlightCalc = (din, dmix) => {
-
-                    const d = (dmix <= 0.25) ?
-                        ((((16 * dmix) - 12) * dmix) + 4) * dmix :
-                        _sqrt(dmix);
-
-                    if (din <= 0.5) return (dmix - ((1 - (2 * din)) * dmix * (1 - dmix))) * 255;
-                    return (dmix + (((2 * din) - 1) * (d - dmix))) * 255;
-                };
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -1963,7 +1962,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             default:
-                const normalCalc = (Cs, As, Cb, Ab) => (As * Cs) + (Ab * Cb * (1 - As));
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -2073,8 +2071,6 @@ P.theBigActionsObject = _freeze({
             pixelLen = _floor(len / 4);
         
         let counter, r, g, b, a, pass;
-
-        const {width, height} = input;
 
         let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, step, lineOut} = requirements;
 
@@ -2336,7 +2332,7 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length;
         
-        let r, g, b, a, vr, vg, vb, va, i;
+        let r, g, b, a, vr, vg, vb, i;
 
         let {opacity, red, green, blue, opaqueAt, transparentAt, lineOut} = requirements;
 
@@ -2413,9 +2409,8 @@ P.theBigActionsObject = _freeze({
         const [input, output, mix] = this.getInputAndOutputLines(requirements);
 
         const {width:iWidth, height:iHeight, data:iData} = input;
-        const {width:oWidth, height:oHeight, data:oData} = output;
+        const {data:oData} = output;
         const {width:mWidth, height:mHeight, data:mData} = mix;
-        const len = iData.length;
 
         let {opacity, compose, offsetX, offsetY, lineOut} = requirements;
 
@@ -2423,6 +2418,25 @@ P.theBigActionsObject = _freeze({
         if (null == compose) compose = ZERO_STR;
         if (null == offsetX) offsetX = 0;
         if (null == offsetY) offsetY = 0;
+
+        // Pixel calculations
+        const sAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * mAlpha) + (mAlpha * mColor * (1 - iAlpha));
+
+        const sInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
+
+        const sOutCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * (1 - mAlpha);
+
+        const dAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * iAlpha);
+
+        const dOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor);
+
+        const dInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
+
+        const dOutCalc = (mColor, iAlpha, mAlpha) => mAlpha * mColor * (1 - iAlpha);
+
+        const xorCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * (1 - iAlpha));
+
+        const sOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor) + (mAlpha * mColor * (1 - iAlpha));
 
         let ir, ig, ib, ia, mr, mg, mb, ma, x, y, dinA, dmixA;
 
@@ -2433,7 +2447,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case SOURCE_ATOP :
-                const sAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * mAlpha) + (mAlpha * mColor * (1 - iAlpha));
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -2462,7 +2475,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case SOURCE_IN :
-                const sInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -2489,7 +2501,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case SOURCE_OUT :
-                const sOutCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * (1 - mAlpha);
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -2528,7 +2539,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case DESTINATION_ATOP :
-                const dAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * iAlpha);
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -2558,7 +2568,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case DESTINATION_OVER :
-                const dOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor);
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -2588,7 +2597,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case DESTINATION_IN :
-                const dInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -2617,7 +2625,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case DESTINATION_OUT :
-                const dOutCalc = (mColor, iAlpha, mAlpha) => mAlpha * mColor * (1 - iAlpha);
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -2649,7 +2656,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             case XOR :
-                const xorCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * (1 - iAlpha));
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -2679,7 +2685,6 @@ P.theBigActionsObject = _freeze({
                 break;
 
             default:
-                const sOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor) + (mAlpha * mColor * (1 - iAlpha));
 
                 for (y = 0; y < iHeight; y++) {
                     for (x = 0; x < iWidth; x++) {
@@ -2827,7 +2832,7 @@ P.theBigActionsObject = _freeze({
         let [input, output, mix] = this.getInputAndOutputLines(requirements);
 
         let {width:iWidth, height:iHeight, data:iData} = input;
-        let {width:oWidth, height:oHeight, data:oData} = output;
+        let {data:oData} = output;
         let {width:mWidth, height:mHeight, data:mData} = mix;
 
         let {opacity, channelX, channelY, scaleX, scaleY, offsetX, offsetY, transparentEdges, lineOut} = requirements;
@@ -2982,7 +2987,7 @@ P.theBigActionsObject = _freeze({
 
         const grid = this.buildMatrixGrid(3, 3, 1, 1, input);
 
-        let i, r, g, b, a, iR, iG, iB, iA, oR, oG, oB, oA, m;
+        let i, r, g, b, a, iR, iG, iB, iA, oR, oG, oB, m;
 
         for (i = 0; i < len; i += 4) {
 
@@ -3009,8 +3014,7 @@ P.theBigActionsObject = _freeze({
 
                     oR = oData[r],
                     oG = oData[g],
-                    oB = oData[b],
-                    oA = oData[a];
+                    oB = oData[b];
 
                     if (oR >= iR - tolerance && oR <= iR + tolerance && 
                         oG >= iG - tolerance && oG <= iG + tolerance && 
@@ -3535,7 +3539,7 @@ P.theBigActionsObject = _freeze({
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            i, avg, r, g, b, a, v, G;
+            i, avg, r, g, b, a, v;
 
         let {opacity, useNaturalGrayscale, gradient, lineOut} = requirements;
 
@@ -3721,12 +3725,9 @@ P.theBigActionsObject = _freeze({
             calcGrays.length = 0;
 
             let avg = 0, 
-                i, w, h, j, jz, k, kz, r, g, b, a, gray,
+                i, r, g, b, a, gray,
                 l = tile.length,
-                pattern,
-                topLeft = tile[0],
-                down = 0,
-                along = 0;
+                pattern;
 
             for (i = 0; i < l; i++) {
 
@@ -3788,11 +3789,8 @@ P.theBigActionsObject = _freeze({
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iWidth = input.width,
-            iHeight = input.height,
-            iData = input.data,
-            oData = output.data,
-            len = iData.length;
+        let iData = input.data,
+            oData = output.data;
 
         let {opacity, width, lineOut} = requirements;
 
@@ -3822,8 +3820,7 @@ P.theBigActionsObject = _freeze({
         let [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
 
         let {opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY, lineOut} = requirements;
 
@@ -3939,8 +3936,7 @@ P.theBigActionsObject = _freeze({
         let [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
 
         let {opacity, tileWidth, tileHeight, offsetX, offsetY, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
 
@@ -4148,7 +4144,7 @@ P.theBigActionsObject = _freeze({
     },
 
 // __reducePalette__ - Reduce the number of colors in its palette. The `palette` attribute can be: a Number (for the commonest colors);  an Array of CSS color Strings to use as the palette; or  the String name of a pre-defined palette - default: 'black-white'
-    [REDUCE_PALETTE]: function (requirements, identifier) {
+    [REDUCE_PALETTE]: function (requirements) {
 
         // Check to see if external objects have been set up by a previous run
         // + If they are missing, create them
@@ -4160,10 +4156,9 @@ P.theBigActionsObject = _freeze({
         this.colorSpaceIndices();
 
         // Localize some handles to required functions/objects
-        // const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, colorEngine, predefinedPalette, getGrayscaleValue, tfx, tfx2, tfx3, indicesLen, labIndicesMultiplier } = this;
-        const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, predefinedPalette, getGrayscaleValue, tfx, tfx2, tfx3, indicesLen, labIndicesMultiplier } = this;
+        const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, predefinedPalette, getGrayscaleValue, tfx, tfx2, labIndicesMultiplier } = this;
 
-        let xyz, lab;
+        let lab;
 
         // Internal function - create and memoize a palette
         const createPalette = (name, colors) => {
@@ -4359,8 +4354,7 @@ P.theBigActionsObject = _freeze({
                 palL, palA, palB, 
                 pixL, pixA, pixB, 
                 diff, dL, dA, dB,
-                j, jz,
-                totalScore, propensity0, propensity1;
+                j, totalScore, propensity;
 
             if (!pl) return 0;
 
@@ -4405,11 +4399,11 @@ P.theBigActionsObject = _freeze({
             let test = rnd[rndCursor];
 
             totalScore = distance0 + distance1;
-            propensity0 = totalScore - distance0;
+            propensity = totalScore - distance0;
             
             test *= totalScore;
 
-            if (test < propensity0) return candidate0;
+            if (test < propensity) return candidate0;
             return candidate1;
         };
 
@@ -4422,7 +4416,7 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length,
             quarterLen = len / 4,
-            i, iz, index,
+            i, index,
             r, g, b, a, red, green, blue, alpha, gray, 
             rndCursor, indicesCursor, dataCursor,
             selectedPalette;
@@ -4456,9 +4450,7 @@ P.theBigActionsObject = _freeze({
         // Transfer input data over to a temporary object
         // + if the palette is grayscale, we grayscale the input at this point
         const tempInput = new ImageData(iWidth, iHeight),
-            tData = tempInput.data,
-            tWidth = tempInput.width,
-            tHeight = tempInput.height;
+            tData = tempInput.data;
 
         for (i = 0; i < len; i += 4) {
 
@@ -4695,7 +4687,7 @@ P.theBigActionsObject = _freeze({
             len = iData.length,
             iWidth = input.width,
             iHeight = input.height,
-            r, g, b, a, s, sz, counter, pos, x, y, xz, yz, i, j, 
+            r, g, b, a, s, sz, pos, x, y, xz, yz, i, j, 
             distance, dr, dg, db, da, dx, dy, dLen;
 
         let tempInput = new ImageData(iWidth, iHeight),

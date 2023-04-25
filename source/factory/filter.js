@@ -129,18 +129,16 @@
 
 
 // #### Imports
-import { asset, cell, constructors, entity, group, styles } from '../core/library.js';
+import { cell, constructors, entity, group, styles } from '../core/library.js';
 
-import { doCreate, mergeOver, removeItem, λnull, Ωempty } from '../core/utilities.js';
-
-import { releaseArray, requestArray } from './array-pool.js';
+import { addStrings, doCreate, mergeOver, removeItem, Ωempty } from '../core/utilities.js';
 
 import { makeGradient } from './gradient.js';
 import { colorEngine } from './filter-engine.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _entries, _freeze, _keys, _round, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, EMBOSS_WORK, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, NAME, NEWSPRINT, NOISE_VALUES, NORMAL, OFFSET, PC30, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../core/shared-vars.js';
+import { _freeze, _keys, _round, _values, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, EMBOSS_WORK, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODULATE_CHANNELS, NAME, NEWSPRINT, NOISE_VALUES, NORMAL, OFFSET, PC30, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Filter constructor
@@ -368,21 +366,21 @@ P.kill = function () {
     let f;
 
     // Remove filter from all entity filters attribute
-    _entries(entity).forEach(([name, ent]) => {
+    _values(entity).forEach(ent => {
 
         f = ent.filters;
         if (f && f.includes(myname)) removeItem(f, myname);
     });
     
     // Remove filter from all group filters attribute
-    _entries(group).forEach(([name, grp]) => {
+    _values(group).forEach(grp => {
 
         f = grp.filters;
         if (f && f.includes(myname)) removeItem(f, myname);
     });
     
     // Remove filter from all cell filters attribute
-    _entries(cell).forEach(([name, c]) => {
+    _values(cell).forEach(c => {
 
         f = c.filters;
         if (f && f.includes(myname)) removeItem(f, myname);
@@ -396,8 +394,7 @@ P.kill = function () {
 
 
 // #### Get, Set, deltaSet
-const S = P.setters, 
-    D = P.deltaSetters;
+const S = P.setters;
 
 
 P.set = function (items = Ωempty) {
@@ -444,7 +441,7 @@ P.setDelta = function (items = Ωempty) {
         const setters = this.deltaSetters,
             defs = this.defs;
         
-        let fn, i, iz, key, value;
+        let fn, i, key, value;
 
         for (i = 0; i < keysLen; i++) {
 

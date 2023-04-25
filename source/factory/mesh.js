@@ -22,9 +22,11 @@
 
 
 // #### Imports
-import { artefact, constructors } from '../core/library.js';
+import { artefact, constructors, group } from '../core/library.js';
 
-import { doCreate, mergeDiscard, mergeOver, pushUnique, xta, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeOver, pushUnique, xta, λnull, λthis, Ωempty } from '../core/utilities.js';
+
+import { currentCorePosition } from '../core/user-interaction.js';
 
 import { makeState } from './state.js';
 
@@ -38,7 +40,7 @@ import baseMix from '../mixin/base.js';
 import deltaMix from '../mixin/delta.js';
 import anchorMix from '../mixin/anchor.js';
 
-import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _keys, _max, _min, _parse, _piHalf, _sin, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../core/shared-vars.js';
+import { _atan2, _ceil, _isArray, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Mesh constructor
@@ -254,8 +256,7 @@ P.clone = λthis;
 
 // #### Get, Set, deltaSet
 const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+    S = P.setters;
 
 // __get__ - copied over from the entity mixin
 P.get = function (item) {
@@ -842,9 +843,9 @@ P.cleanOutput = function () {
             inputStrutWidth = parseFloat((sourceDimension / (columns - 1)).toFixed(4));
 
         let topStruts, baseStruts,
-            maxLen, tStep, bStep, iStep, xtStep, ytStep, xbStep, ybStep, tx, ty, bx, by, sx, sy,
+            maxLen, iStep, xtStep, ytStep, xbStep, ybStep, tx, ty, bx, by, sx, sy,
             xLen, yLen, stripLength, stripAngle,
-            c, cz, r, rz, i, iz;
+            c, cz, r, rz, i;
 
         for (r = 0, rz = rows - 1; r < rz; r++) {
 
@@ -861,8 +862,6 @@ P.cleanOutput = function () {
 
                 maxLen = _max(tLen, bLen, inputStrutWidth);
 
-                tStep = tLen / maxLen;
-                bStep = bLen / maxLen;
                 iStep = inputStrutWidth / maxLen;
 
                 xtStep = (rtx - ltx) / maxLen;

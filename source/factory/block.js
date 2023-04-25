@@ -19,7 +19,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { doCreate, mergeOver, xt, Ωempty } from '../core/utilities.js';
+import { doCreate, Ωempty } from '../core/utilities.js';
 
 import { ENTITY, T_BLOCK } from '../core/shared-vars.js';
 

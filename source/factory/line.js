@@ -166,7 +166,7 @@ P.preparePinsForStamp = function () {
             this.dirtyEnd = true;
             if (this.endLockTo.includes(PATH)) this.currentEndPathData = false;
         }
-    };
+    }
     dirtyPins.length = 0;
 };
 

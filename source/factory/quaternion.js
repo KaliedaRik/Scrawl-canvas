@@ -13,7 +13,7 @@ import { constructors } from '../core/library.js';
 
 import { correctForZero, doCreate, isa_number, isa_quaternion, xt, xto, Ωempty } from '../core/utilities.js';
 
-import { makeVector, releaseVector, requestVector } from './vector.js';
+import { makeVector } from './vector.js';
 
 import { _radian } from '../core/shared-vars.js';
 

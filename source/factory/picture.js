@@ -38,7 +38,7 @@
 
 
 // #### Imports
-import { artefact, asset, constructors } from '../core/library.js';
+import { artefact, constructors } from '../core/library.js';
 
 import { addStrings, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, Ωempty } from '../core/utilities.js';
 
@@ -147,7 +147,7 @@ P.packetObjects = pushUnique(P.packetObjects, ['asset']);
 
 
 // #### Kill management
-P.factoryKill = function (killAsset = false) {
+P.factoryKill = function () {
 
     const { asset, removeAssetOnKill } = this;
 
@@ -239,7 +239,7 @@ G.copyHeight = function () {
 
     return this.currentCopyDimensions[1];
 };
-G.copyDimensions = function (w, h) {
+G.copyDimensions = function () {
 
     return [].concat(this.currentCopyDimensions);
 };
@@ -339,7 +339,7 @@ P.get = function (item) {
                 val = state[item];
                 return (typeof val != UNDEF) ? val : def;
             }
-            return undef;
+            return undefined;
         }
     }
 };
@@ -708,7 +708,7 @@ P.checkHitReturn = function (x, y, cell) {
 
         if (xta(copyX, copyY, copyWidth, copyHeight)) {
 
-            const [pasteX, pasteY, pasteWidth, pasteHeight] = this.pasteArray;
+            const pasteWidth = this.pasteArray[2];
             const [stampX, stampY] = this.currentStampPosition;
 
             const img = cell.engine.getImageData(copyX, copyY, copyWidth, copyHeight);

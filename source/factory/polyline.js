@@ -35,7 +35,7 @@
 // #### Imports
 import { artefact, constructors, particle } from '../core/library.js';
 
-import { correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } from '../core/utilities.js';
+import { addStrings, correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 
@@ -315,10 +315,10 @@ P.getPinAt = function (index) {
         const pins = this.currentPins,
             pin = pins[i];
 
-        const [x, y, w, h] = this.localBox;
+        const [x, y] = this.localBox;
 
         const [px, py] = pin;
-        const [ox, oy] = pins[0];
+        const [ox] = pins[0];
         const [lx, ly] = this.localOffset;
         const [sx, sy] = this.currentStampPosition;
         let dx, dy;
@@ -333,7 +333,6 @@ P.getPinAt = function (index) {
         }
         return [sx + dx, sy + dy];
     }
-    return [0, 0];
 };
 
 // `updatePinAt` - 
@@ -586,7 +585,6 @@ P.makePolylinePath = function () {
     const getPathParts = this.getPathParts,
         buildLine = this.buildLine,
         buildCurve = this.buildCurve,
-        pins = this.pins,
         cPin = this.currentPins, 
         tension = this.tension,
         closed = this.closed;
@@ -650,7 +648,7 @@ P.makePolylinePath = function () {
 
 P.calculateLocalPathAdditionalActions = function () {
 
-    const [x, y, w, h] = this.localBox,
+    const [x, y] = this.localBox,
         def = this.pathDefinition;
 
     if (this.mapToPins) {

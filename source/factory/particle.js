@@ -306,7 +306,7 @@ P.manageHistory = function (tick, host) {
 
     if (oldest) {
 
-        const [or, oz, ox, oy] = oldest;
+        const [, oz, ox, oy] = oldest;
 
         if (killBeyondCanvas) {
 

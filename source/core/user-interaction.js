@@ -15,9 +15,9 @@ import { addListener } from "./events.js";
 
 import { makeAnimation } from "../factory/animation.js";
 
-import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged, forceUpdate } from './system-flags.js';
+import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } from './system-flags.js';
 
-import { _computed, _entries, _floor, _now, _round, _seal, ADD_EVENT_LISTENER, CHANGE, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from './shared-vars.js'
+import { _computed, _floor, _now, _round, _seal, _values, ADD_EVENT_LISTENER, CHANGE, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, RESIZE, SCROLL, T_CANVAS, T_PHRASE, TOUCH, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from './shared-vars.js'
 
 
 // `Exported array` (to modules). DOM element wrappers subscribe for updates by adding themselves to the __uiSubscribedElements__ array. When an event fires, the updated data will be pushed to them automatically
@@ -123,7 +123,7 @@ currentCorePosition.prefersReduceData = reducedDataMediaQuery.matches;
 // ### Watch for browser window resize, or device rotation, which trigger changes in the viewport dimensions
 
 // __resizeAction__ function - to check if a view resize has occurred; if yes, flag that currentCorePosition object needs to be updated
-const resizeAction = function (e) {
+const resizeAction = function () {
 
     const w = document.documentElement.clientWidth,
         h = document.documentElement.clientHeight;
@@ -141,7 +141,7 @@ const resizeAction = function (e) {
 // ### Watch for scrolling interactions
 
 // __scrollAction__ function - to check if a view scroll has occurred; if yes, flag that currentCorePosition object needs to be updated
-const scrollAction = function (e) {
+const scrollAction = function () {
 
     const x = window.pageXOffset,
         y = window.pageYOffset;
@@ -387,14 +387,22 @@ const updateUiSubscribedElement = function (art) {
 
 const updatePhraseEntitys = function () {
 
-    for (const [name, ent] of _entries(library.entity)) {
+    // for (const [name, ent] of _entries(library.entity)) {
+
+    //     if (ent.type == T_PHRASE) {
+
+    //         ent.dirtyDimensions = true;
+    //         ent.dirtyFont = true;
+    //     }
+    // }
+    _values(library.entity).forEach(ent => {
 
         if (ent.type == T_PHRASE) {
 
             ent.dirtyDimensions = true;
             ent.dirtyFont = true;
         }
-    }
+    })
 };
 
 // Internal functions that get triggered when setting a DOM-based artefact's `trackHere` attribute. They add/remove an event listener to the artefact's domElement.

@@ -281,8 +281,8 @@ P.build = function () {
 
     if (this.description) link.textContent = this.description;
 
-    if (this.focusAction) link.addEventListener(FOCUS, (e) => this.host.onEnter(), false);
-    if (this.blurAction) link.addEventListener(BLUR, (e) => this.host.onLeave(), false);
+    if (this.focusAction) link.addEventListener(FOCUS, () => this.host.onEnter(), false);
+    if (this.blurAction) link.addEventListener(BLUR, () => this.host.onLeave(), false);
 
     this.domElement = link;
 

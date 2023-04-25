@@ -39,7 +39,7 @@
 
 
 // #### Imports
-import { artefact, constructors } from '../core/library.js';
+import { constructors } from '../core/library.js';
 
 import { addStrings, doCreate, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
 
@@ -321,7 +321,7 @@ P.preparePinsForStamp = function () {
             this.dirtyEnd = true;
             if (this.endLockTo.includes(PATH)) this.currentEndPathData = false;
         }
-    };
+    }
     dirtyPins.length = 0;
 };
 

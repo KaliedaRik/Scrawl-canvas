@@ -25,9 +25,7 @@
 import { constructors } from '../core/library.js';
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
 
-import { doCreate, easeEngines, interpolate, mergeOver, removeItem, λfirstArg, λnull, λthis, Ωempty } from '../core/utilities.js';
-
-import { makeColor } from './color.js';
+import { doCreate, easeEngines, interpolate, mergeOver, λfirstArg, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import { releaseArray, requestArray } from './array-pool.js';
 
@@ -162,9 +160,7 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+const S = P.setters;
 
 // __source__
 S.source = λnull;
@@ -350,7 +346,7 @@ P.cleanNoise = function () {
 
         this.dirtyNoise = false;
 
-        const {noiseEngine, seed, width, height, element, engine, octaves, lacunarity, persistence, scale, octaveFunction, sumFunction} = this;
+        const {noiseEngine, seed, width, height, octaves, lacunarity, persistence, scale, octaveFunction, sumFunction} = this;
 
         if (noiseEngine && noiseEngine.init) {
 
@@ -365,7 +361,7 @@ P.cleanNoise = function () {
 
             const noiseValues = requestArray();
 
-            let x, y, o, i, iz,
+            let x, y, o,
                 scaledX, scaledY,
                 totalNoise, amplitude, frequency;
 
@@ -759,7 +755,7 @@ P.noiseEngines = {
 
         getNoiseValue: function (x, y) {
 
-            const {width, height, worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = this;
+            const {worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = this;
 
             const f = worleyDistanceFunctions[EUCLIDEAN_DISTANCE];
             const o = worleyOutputFunctions[worleyOutput];
@@ -780,7 +776,7 @@ P.noiseEngines = {
 
         getNoiseValue: function (x, y) {
 
-            const {width, height, worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = this;
+            const {worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = this;
 
             const f = worleyDistanceFunctions[MANHATTAN_DISTANCE];
             const o = worleyOutputFunctions[worleyOutput];
@@ -837,7 +833,7 @@ P.sumFunctions = {
     none: λfirstArg,
 
     // These functions modify the final output using a sine frequency calculation based on the pixel position within the canvas
-    'sine-x': function (v, sx, sy) { return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 2) },
+    'sine-x': function (v, sx) { return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 2) },
     'sine-y': function (v, sx, sy) { return 0.5 + (_sin((sy * this.sineFrequencyCoeff) + v) / 2) },
     sine: function (v, sx, sy) { return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 4) + (_sin((sy * this.sineFrequencyCoeff) + v) / 4) },
 

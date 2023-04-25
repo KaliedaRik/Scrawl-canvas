@@ -9,7 +9,7 @@
 
 
 // Current version
-export const version = '8.10.1';
+export const version = '8.10.2';
 
 
 // Objects created using the __makeAnchor__ factory
@@ -162,7 +162,7 @@ export function purge (namespace = '') {
         const candidateWorlds = worldnames.filter(c => c.indexOf(namespace) === 0);
         remove(candidateWorlds, world);
     }
-};
+}
 
 
 // Section classes are used with Phrase entitys - we store the class definitions in the library so that they can be easily shared between Phrases

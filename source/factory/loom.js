@@ -23,7 +23,9 @@
 // #### Imports
 import { artefact, constructors, group } from '../core/library.js';
 
-import { doCreate, mergeDiscard, mergeOver, pushUnique, xta, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, mergeDiscard, mergeOver, pushUnique, removeItem, xta, λnull, λthis, Ωempty } from '../core/utilities.js';
+
+import { currentCorePosition } from '../core/user-interaction.js';
 
 import { makeState } from './state.js';
 
@@ -674,7 +676,7 @@ P.prepareStamp = function() {
     // Sanity check 1
     // + `getBoundingBox` will recalculate and set the `dirtyPathData` flag 
     // + if paths have set the Loom's `dirtyStart` flag
-    const [startX, startY, outputWidth, outputHeight] = this.getBoundingBox();
+    const [startX, startY] = this.getBoundingBox();
 
     // Sanity check 2
     // + we can set the `dirtyPathData` ourselves if paths `start/end` coordinates have changed
@@ -721,7 +723,7 @@ P.prepareStamp = function() {
                 fPathEnd = this.fromPathEnd,
                 tPathStart = this.toPathStart,
                 tPathEnd = this.toPathEnd,
-                fPartial, tPartial, fRatio, tRatio, minPartial,
+                fPartial, tPartial, minPartial,
                 pathSpeed = this.constantPathSpeed;
 
             if (fPathStart < fPathEnd) fPartial = fPathEnd - fPathStart;
@@ -924,7 +926,7 @@ P.cleanOutput = function () {
             engineDeltaLengths = this.engineDeltaLengths,
             instruction;
 
-        let [startX, startY, outputWidth, outputHeight] = this.getBoundingBox();
+        let [, , outputWidth, outputHeight] = this.getBoundingBox();
 
         outputWidth = ~~outputWidth;
         outputHeight = ~~outputHeight;

@@ -94,7 +94,7 @@ const sortAnimations = () => {
             animate_sorted.push(...obj);
             releaseArray(obj);
         }
-    };
+    }
     releaseArray(buckets);
 };
 

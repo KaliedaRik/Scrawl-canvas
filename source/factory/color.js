@@ -15,13 +15,13 @@
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
-import { correctAngle, doCreate, easeEngines, interpolate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xtGet, λfirstArg, Ωempty } from '../core/utilities.js';
+import { correctAngle, doCreate, easeEngines, interpolate, isa_fn, isa_obj, mergeOver, pushUnique, xt, λfirstArg, Ωempty } from '../core/utilities.js';
 
 import { releaseArray, requestArray } from './array-pool.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _abs, _atan2, _cbrt, _cos, _entries, _floor, _freeze, _inverseRadian, _isArray, _keys, _max, _min, _pi, _pow, _radian,  _random, _round, _sin, _sqrt, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _atan2, _cbrt, _cos, _floor, _freeze, _inverseRadian, _isArray, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _0, _2D, _HSL, _HWB, _LAB, _LCH, _MAX, _MIN, _OKLAB, _OKLCH, _RGB, _XYZ, BLACK, BLACK_HEX, BLANK, CANVAS, DEG, FUNCTION, GRAD, HSL, HSL_HWB_ARRAY, HWB, INT_COLOR_SPACES, LAB, LCH, LINEAR, MAX, MIN, NAME, NONE, OKLAB, OKLCH, PC, RAD, RANDOM, RET_COLOR_SPACES, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, TURN, UNDEF, WHITE, XYZ, ZERO_STR } from '../core/shared-vars.js';
 
 
 // Local constants
@@ -29,55 +29,58 @@ const E = 216/24389;
 const K = 24389/27;
 const cbrt = (_cbrt != null) ? _cbrt : (val) => _pow(val, 1 / 3);
 
-const D50 = _freeze([0.3457 / 0.3585, 1.00000, (1.0 - 0.3457 - 0.3585) / 0.3585]);
-const D65 = _freeze([0.3127 / 0.3290, 1.00000, (1.0 - 0.3127 - 0.3290) / 0.3290]);
+const D50 = _freeze(new Float64Array(0.3457 / 0.3585, 1.00000, (1.0 - 0.3457 - 0.3585) / 0.3585));
+// const D65 = _freeze(new Float64Array(0.3127 / 0.3290, 1.00000, (1.0 - 0.3127 - 0.3290) / 0.3290));
 
 const D65_to_D50_matrix = _freeze([
-    _freeze([  1.0479298208405488,    0.022946793341019088,  -0.05019222954313557 ]),
-    _freeze([  0.029627815688159344,  0.990434484573249,     -0.01707382502938514 ]),
-    _freeze([ -0.009243058152591178,  0.015055144896577895,   0.7518742899580008  ])
+    new Float64Array(  1.0479298208405488,    0.022946793341019088,  -0.05019222954313557 ),
+    new Float64Array(  0.029627815688159344,  0.990434484573249,     -0.01707382502938514 ),
+    new Float64Array( -0.009243058152591178,  0.015055144896577895,   0.7518742899580008  )
 ]);
 
 const D50_to_D65_matrix = _freeze([
-    _freeze([  0.9554734527042182,   -0.023098536874261423,  0.0632593086610217   ]),
-    _freeze([ -0.028369706963208136,  1.0099954580058226,    0.021041398966943008 ]),
-    _freeze([  0.012314001688319899, -0.020507696433477912,  1.3303659366080753   ])
+    new Float64Array(  0.9554734527042182,   -0.023098536874261423,  0.0632593086610217   ),
+    new Float64Array( -0.028369706963208136,  1.0099954580058226,    0.021041398966943008 ),
+    new Float64Array(  0.012314001688319899, -0.020507696433477912,  1.3303659366080753   )
 ]);
 
 const convertRGBtoXYZ_matrix = _freeze([
-    _freeze([ 506752 / 1228815,  87881 / 245763,   12673 /   70218 ]),
-    _freeze([  87098 /  409605, 175762 / 245763,   12673 /  175545 ]),
-    _freeze([   7918 /  409605,  87881 / 737289, 1001167 / 1053270 ])
+    new Float64Array( 506752 / 1228815,  87881 / 245763,   12673 /   70218 ),
+    new Float64Array(  87098 /  409605, 175762 / 245763,   12673 /  175545 ),
+    new Float64Array(   7918 /  409605,  87881 / 737289, 1001167 / 1053270 )
 ]);
 
 const convertXYZtoRGB_matrix = _freeze([
-    _freeze([   12831 /   3959,    -329 /    214, -1974 /   3959 ]),
-    _freeze([ -851781 / 878810, 1648619 / 878810, 36519 / 878810 ]),
-    _freeze([     705 /  12673,   -2585 /  12673,   705 /    667 ])
+    new Float64Array(   12831 /   3959,    -329 /    214, -1974 /   3959 ),
+    new Float64Array( -851781 / 878810, 1648619 / 878810, 36519 / 878810 ),
+    new Float64Array(     705 /  12673,   -2585 /  12673,   705 /    667 )
 ]);
 
 const XYZtoLMS = _freeze([
-    _freeze([ 0.8190224432164319,    0.3619062562801221,   -0.12887378261216414  ]),
-    _freeze([ 0.0329836671980271,    0.9292868468965546,     0.03614466816999844 ]),
-    _freeze([ 0.048177199566046255,  0.26423952494422764,    0.6335478258136937  ])
+    new Float64Array( 0.8190224432164319,    0.3619062562801221,   -0.12887378261216414  ),
+    new Float64Array( 0.0329836671980271,    0.9292868468965546,     0.03614466816999844 ),
+    new Float64Array( 0.048177199566046255,  0.26423952494422764,    0.6335478258136937  )
 ]);
 
 const LMStoOKLab = _freeze([
-    _freeze([  0.2104542553,   0.7936177850,  -0.0040720468 ]),
-    _freeze([  1.9779984951,  -2.4285922050,   0.4505937099 ]),
-    _freeze([  0.0259040371,   0.7827717662,  -0.8086757660 ])
+    new Float64Array(  0.2104542553,   0.7936177850,  -0.0040720468 ),
+    new Float64Array(  1.9779984951,  -2.4285922050,   0.4505937099 ),
+    new Float64Array(  0.0259040371,   0.7827717662,  -0.8086757660 )
 ]);
 
 const LMStoXYZ =  _freeze([
-    _freeze([  1.2268798733741557,  -0.5578149965554813,   0.28139105017721583 ]),
-    _freeze([ -0.04057576262431372,  1.1122868293970594,  -0.07171106666151701 ]),
-    _freeze([ -0.07637294974672142, -0.4214933239627914,   1.5869240244272418  ])
+    new Float64Array(  1.2268798733741557,  -0.5578149965554813,   0.28139105017721583 ),
+    new Float64Array( -0.04057576262431372,  1.1122868293970594,  -0.07171106666151701 ),
+    new Float64Array( -0.07637294974672142, -0.4214933239627914,   1.5869240244272418  )
 ]);
 
 const OKLabtoLMS = _freeze([
-    _freeze([ 0.99999999845051981432,  0.39633779217376785678,   0.21580375806075880339  ]),
-    _freeze([ 1.0000000088817607767,  -0.1055613423236563494,   -0.063854174771705903402 ]),
-    _freeze([ 1.0000000546724109177,  -0.089484182094965759684, -1.2914855378640917399   ])
+/* eslint-disable-next-line */
+    new Float64Array( 0.99999999845051981432,  0.39633779217376785678,   0.21580375806075880339  ),
+/* eslint-disable-next-line */
+    new Float64Array( 1.0000000088817607767,  -0.1055613423236563494,   -0.063854174771705903402 ),
+/* eslint-disable-next-line */
+    new Float64Array( 1.0000000546724109177,  -0.089484182094965759684, -1.2914855378640917399   )
 ]);
 
 // Local dedicated canvas
@@ -239,7 +242,7 @@ P.kill = function () {
     const myname = this.name;
 
     // Remove style from all entity state objects
-    _entries(entity).forEach(([name, ent]) => {
+    _values(entity).forEach(ent => {
 
         const state = ent.state;
 
@@ -303,7 +306,7 @@ P.get = function (item) {
                 let val = this[item];
                 return (typeof val != UNDEF) ? val : def;
             }
-            return undef;
+            return undefined;
         }
     }
 };
@@ -319,7 +322,7 @@ P.set = function (items = Ωempty) {
         const setters = this.setters,
             defs = this.defs;
         
-        let predefined, i, iz, key, value;
+        let predefined, i, key, value;
 
         for (i = 0; i < keysLen; i++) {
 
@@ -625,7 +628,7 @@ P.checkColor = function (item) {
         let colRet = colSpace;
         if (XYZ == colSpace) colRet = RGB;
 
-        this.returnColorAs = colSpace;
+        this.returnColorAs = colRet;
 
         this.convert(item);
 
@@ -1003,7 +1006,7 @@ P.convert = function (color, suffix = ZERO_STR) {
 
         rgb.push(b, c, d, a);
         hsl.push(...this.convertRGBtoHSL(b, c, d), a);
-        hwb.push(hue, white, black, a);
+        hwb.push(b, c, d, a);
         xyz.push(...this.convertRGBtoXYZ(b, c, d), a);
         lab.push(...this.convertXYZtoLAB(xyz[0], xyz[1], xyz[2]), a);
         lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
@@ -1224,7 +1227,7 @@ P.convertHSLtoRGB = function (hue, sat, light) {
 // `convertRGBtoHWB` - internal helper function
 P.convertRGBtoHWB = function (red, green, blue) {
 
-    let hsl = this.convertRGBtoHSL(red, green, blue, suffix);
+    let hsl = this.convertRGBtoHSL(red, green, blue);
 
     red /= 256;
     green /= 256;
@@ -1539,45 +1542,37 @@ P.convertOKLCHtoOKLAB = function (l, c, h) {
 // `calculateColorBlend` - internal helper function
 P.calculateColorBlend = function (iR, iG, iB, mR, mG, mB) {
 
-    const [iH, iS, iL] = this.convertRGBtoHSL(iR, iG, iB);
-    const [mH, mS, mL] = this.convertRGBtoHSL(mR, mG, mB);
-
-    const [r, g, b] = this.convertHSLtoRGB(iH, iS, mL);
-
-    return [_round(r * 255), _round(g * 255), _round(b * 255)];
+    const i = this.convertRGBtoHSL(iR, iG, iB);
+    const m = this.convertRGBtoHSL(mR, mG, mB);
+    const c = this.convertHSLtoRGB(i[0], i[1], m[2]);
+    return [_round(c[0] * 255), _round(c[1] * 255), _round(c[2] * 255)];
 };
 
 // `calculateHueBlend` - internal helper function
 P.calculateHueBlend = function (iR, iG, iB, mR, mG, mB) {
 
-    const [iH, iS, iL] = this.convertRGBtoHSL(iR, iG, iB);
-    const [mH, mS, mL] = this.convertRGBtoHSL(mR, mG, mB);
-
-    const [r, g, b] = this.convertHSLtoRGB(iH, mS, mL);
-
-    return [_round(r * 255), _round(g * 255), _round(b * 255)];
+    const i = this.convertRGBtoHSL(iR, iG, iB);
+    const m = this.convertRGBtoHSL(mR, mG, mB);
+    const c = this.convertHSLtoRGB(i[0], m[1], m[2]);
+    return [_round(c[0] * 255), _round(c[1] * 255), _round(c[2] * 255)];
 };
 
 // `calculateSaturationBlend` - internal helper function
 P.calculateSaturationBlend = function (iR, iG, iB, mR, mG, mB) {
 
-    const [iH, iS, iL] = this.convertRGBtoHSL(iR, iG, iB);
-    const [mH, mS, mL] = this.convertRGBtoHSL(mR, mG, mB);
-
-    const [r, g, b] = this.convertHSLtoRGB(mH, iS, mL);
-
-    return [_round(r * 255), _round(g * 255), _round(b * 255)];
+    const i = this.convertRGBtoHSL(iR, iG, iB);
+    const m = this.convertRGBtoHSL(mR, mG, mB);
+    const c = this.convertHSLtoRGB(m[0], i[1], m[2]);
+    return [_round(c[0] * 255), _round(c[1] * 255), _round(c[2] * 255)];
 };
 
 // `calculateLuminosityBlend` - internal helper function
 P.calculateLuminosityBlend = function (iR, iG, iB, mR, mG, mB) {
 
-    const [iH, iS, iL] = this.convertRGBtoHSL(iR, iG, iB);
-    const [mH, mS, mL] = this.convertRGBtoHSL(mR, mG, mB);
-
-    const [r, g, b] = this.convertHSLtoRGB(mH, mS, iL);
-
-    return [_round(r * 255), _round(g * 255), _round(b * 255)];
+    const i = this.convertRGBtoHSL(iR, iG, iB);
+    const m = this.convertRGBtoHSL(mR, mG, mB);
+    const c = this.convertHSLtoRGB(m[0], m[1], i[2]);
+    return [_round(c[0] * 255), _round(c[1] * 255), _round(c[2] * 255)];
 };
 
 
@@ -1598,7 +1593,6 @@ const browserChecker = function () {
     let r = 0,
         g = 0,
         b = 0,
-        a = 0,
         image,
         col = '#ffffff00';
 
@@ -1610,7 +1604,7 @@ const browserChecker = function () {
 
     if (image && image.data) {
 
-        [r, g, b, a] = image.data;
+        [r, g, b] = image.data;
     }
     if (r || g || b) supportsHWB = true;
 
@@ -1628,7 +1622,7 @@ const browserChecker = function () {
 
     if (image && image.data) {
 
-        [r, g, b, a] = image.data;
+        [r, g, b] = image.data;
     }
     if (r || g || b) supportsLAB = true;
 
@@ -1645,7 +1639,7 @@ const browserChecker = function () {
 
     if (image && image.data) {
 
-        [r, g, b, a] = image.data;
+        [r, g, b] = image.data;
     }
     if (r || g || b) supportsLCH = true;
 
@@ -1664,7 +1658,7 @@ const browserChecker = function () {
 
     if (image && image.data) {
 
-        [r, g, b, a] = image.data;
+        [r, g, b] = image.data;
     }
     if (r || g || b) supportsOKLAB = true;
 
@@ -1683,7 +1677,7 @@ const browserChecker = function () {
 
     if (image && image.data) {
 
-        [r, g, b, a] = image.data;
+        [r, g, b] = image.data;
     }
     if (r || g || b) supportsOKLCH = true;
 

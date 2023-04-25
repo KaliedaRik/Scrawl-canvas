@@ -57,7 +57,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, easeEngines, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λfirstArg, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, easeEngines, isa_fn, mergeOver, pushUnique, xt, xta, λfirstArg, λnull, Ωempty } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 

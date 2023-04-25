@@ -209,6 +209,7 @@ export const mergeInto = (original, additional) => {
 
         for (let key in additional) {
 
+/* eslint-disable-next-line */
             if (additional.hasOwnProperty(key) && typeof original[key] == UNDEF) {
 
                 original[key] = additional[key];
@@ -235,6 +236,7 @@ export const mergeOver = (original, additional) => {
 
         for (let key in additional) {
 
+/* eslint-disable-next-line */
             if (additional.hasOwnProperty(key)) original[key] = additional[key];
         }
     }
@@ -537,17 +539,19 @@ export const detectBrowser = function () {
 
     let result = [];
 
+/* eslint-disable-next-line */
     if ((!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.includes(' OPR/')) result.push('old-opera');
 
     if (typeof InstallTrigger != UNDEF) result.push('firefox');
 
+/* eslint-disable-next-line */
     else if (/constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() == "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari != UNDEF && safari.pushNotification))) result.push('safari');
 
     if (/*@cc_on!@*/false || !!document.documentMode) result.push('internet-explorer');
 
     if (!result.includes('internet-explorer') && !!window.StyleMedia) result.push('edge');
 
-    if(!!window.chrome) result.push('chrome');
+    if(window.chrome) result.push('chrome');
 
     if((result.includes('chrome') || result.includes('old-opera')) && !!window.CSS) result.push('blink');
 

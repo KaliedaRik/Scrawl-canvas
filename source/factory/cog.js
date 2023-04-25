@@ -49,7 +49,7 @@ import { releaseArray, requestArray } from './array-pool.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _abs, _min, BEZIER, ENTITY, LINE, PERMITTED_CURVES, QUADRATIC, T_COG, ZERO_PATH } from '../core/shared-vars.js';
+import { _abs, _min, BEZIER, ENTITY, PERMITTED_CURVES, QUADRATIC, T_COG } from '../core/shared-vars.js';
 
 
 // #### Cog constructor
@@ -236,9 +236,8 @@ P.makeCogPath = function () {
     const turn = 360 / points,
         xPts = requestArray();
 
-    let currentTrailX, currentTrailY, currentPointX, currentPointY, currentLeadX, currentLeadY, 
-        controlStartX, controlStartY, deltaX, deltaY, controlEndX, controlEndY,
-        myMin, myXoffset, myYoffset, i,
+    let currentPointX, currentPointY, deltaX, deltaY,
+        myMin, myXoffset, i,
         myPath = '';
 
     if (outerRadius.substring || innerRadius.substring || outerControlsDistance.substring || innerControlsDistance.substring || outerControlsOffset.substring || innerControlsOffset.substring) {
@@ -247,7 +246,7 @@ P.makeCogPath = function () {
 
         if (host) {
 
-            const [hW, hH] = host.currentDimensions;
+            const [hW] = host.currentDimensions;
 
             outerRadius = (outerRadius.substring) ? (parseFloat(outerRadius) / 100) * hW : outerRadius;
             innerRadius = (innerRadius.substring) ? (parseFloat(innerRadius) / 100) * hW : innerRadius;

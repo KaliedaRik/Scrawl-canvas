@@ -75,6 +75,6 @@ const sortRootElements = function () {
             rootElements_sorted.push(...obj);
             releaseArray(obj);
         }
-    };
+    }
     releaseArray(buckets);
 };

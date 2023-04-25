@@ -86,8 +86,7 @@ P.clone = λthis;
 
 // #### Get, Set, deltaSet
 const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+    S = P.setters;
 
 // __source__
 G.width = function () {
@@ -183,7 +182,7 @@ P.checkSource = function (width, height) {
 
                     this.notifySubscribers();
                 }
-        };
+        }
     }
 };
 

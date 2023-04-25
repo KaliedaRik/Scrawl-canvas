@@ -75,7 +75,7 @@ import { artefact, cell, cellnames, constructors, sectionClasses, styles, styles
 
 import { scrawlCanvasHold } from '../core/document.js';
 
-import { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, Ωempty } from '../core/utilities.js';
 
 import { releaseCell, requestCell } from './cell-fragment.js';
 
@@ -167,7 +167,7 @@ P.isAsset = false;
 baseMix(P);
 entityMix(P);
 
-P.midInitActions = function (items) {
+P.midInitActions = function () {
 
     this.sectionStyles = [];
 };
@@ -985,15 +985,14 @@ P.calculateTextPositions = function (mytext) {
         textPositions = requestArray();
 
     let gStyle, gPos, item, 
-        starts, ends, cursor, word, height,
-        space, i, iz, j, jz, k, kz;
+        starts, ends, cursor, height,
+        space, i, iz, j, jz;
 
     const singles = requestArray(),
         pairs = requestArray(),
         path = this.getTextPath();
 
-    let fragment, len, glyphArr, glyph, nextGlyph, glyphWidth, lineLen, totalLen,
-        direction, loop, rotate;
+    let fragment, len, glyphArr, glyph, nextGlyph, glyphWidth, lineLen, totalLen;
 
     const fontAttributes = this.fontAttributes,
         glyphAttributes = fontAttributes.clone({});
@@ -1026,18 +1025,25 @@ P.calculateTextPositions = function (mytext) {
         currentStrokeStyle = defaultStrokeStyle, 
         currentSpace = defaultSpace;
 
-    const highlightStyle = (this.highlightStyle) ? makeStyle(this.highlightStyle) : false;
-    let highlightFlag = false;
+    // const highlightStyle = (this.highlightStyle) ? makeStyle(this.highlightStyle) : false;
+    // let highlightFlag = false;
 
-    const underlineStyle = (this.underlineStyle) ? makeStyle(this.underlineStyle) : false,
-        underlinePosition = this.underlinePosition;
-    let underlineFlag = false;
+    // const underlineStyle = (this.underlineStyle) ? makeStyle(this.underlineStyle) : false,
+    //     underlinePosition = this.underlinePosition;
+    // let underlineFlag = false;
 
-    const overlineStyle = (this.overlineStyle) ? makeStyle(this.overlineStyle) : false,
-        overlinePosition = this.overlinePosition;
-    let overlineFlag = false;
+    // const overlineStyle = (this.overlineStyle) ? makeStyle(this.overlineStyle) : false,
+    //     overlinePosition = this.overlinePosition;
+    // let overlineFlag = false;
 
-    let maxHeight = 0;
+    if (this.highlightStyle) makeStyle(this.highlightStyle);
+    if (this.underlineStyle) makeStyle(this.underlineStyle);
+    if (this.overlineStyle) makeStyle(this.overlineStyle);
+
+    let highlightFlag = false,
+        underlineFlag = false,
+        overlineFlag = false,
+        maxHeight = 0;
 
     // 2. Create `textGlyphs` array
     // + also shove the default font into the `fontLibrary` array
@@ -1056,6 +1062,7 @@ P.calculateTextPositions = function (mytext) {
 
         item = textGlyphs[i];
 
+/* eslint-disable-next-line */
         textPositions[i] = [, , , , , , item, 0, 0, 0];
     }
 
@@ -1105,7 +1112,7 @@ P.calculateTextPositions = function (mytext) {
                     if (DEFAULT == item) currentStrokeStyle = defaultStrokeStyle;
                     else currentStrokeStyle = makeStyle(gStyle.stroke);
                     gPos[1] = currentStrokeStyle;
-                };
+                }
 
                 item = gStyle.fill;
                 if (item && item !== currentFillStyle) {
@@ -1113,7 +1120,7 @@ P.calculateTextPositions = function (mytext) {
                     if (DEFAULT == item) currentFillStyle = defaultFillStyle;
                     else currentFillStyle = makeStyle(gStyle.fill);
                     gPos[2] = currentFillStyle;
-                };
+                }
 
                 item = gStyle.space;
                 if (xt(item) && item !== currentSpace) currentSpace = item * scale
@@ -1123,21 +1130,21 @@ P.calculateTextPositions = function (mytext) {
 
                     highlightFlag = item;
                     gPos[3] = highlightFlag;
-                };
+                }
 
                 item = gStyle.underline;
                 if (xt(item) && item !== underlineFlag) {
 
                     underlineFlag = item;
                     gPos[4] = underlineFlag;
-                };
+                }
 
                 item = gStyle.overline;
                 if (xt(item) && item !== overlineFlag) {
 
                     overlineFlag = item;
                     gPos[5] = overlineFlag;
-                };
+                }
 
                 if (i !== 0 && (gStyle.variant || gStyle.weight || gStyle.style || gStyle.stretch || gStyle.size || gStyle.sizeValue || gStyle.sizeMetric || gStyle.family || gStyle.font)) {
 
@@ -1523,7 +1530,7 @@ P.calculateGlyphPathPositions = function () {
         loop = this.textPathLoop,
         pathSpeed = this.constantPathSpeed;
 
-    let distance, posArray, i, iz, width,
+    let posArray, i, iz, width,
         pathPos = this.textPathPosition,
         localPathPos;
 

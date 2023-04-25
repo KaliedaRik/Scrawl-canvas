@@ -50,7 +50,7 @@ import { releaseArray, requestArray } from './array-pool.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _abs, _max, _min, ENTITY, POLYGON, T_POLYGON, ZERO_PATH, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _max, _min, ENTITY, POLYGON, T_POLYGON, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Polygon constructor

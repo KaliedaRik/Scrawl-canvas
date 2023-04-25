@@ -78,9 +78,7 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+const S = P.setters;
 
 // __source__
 S.source = function (items = []) {

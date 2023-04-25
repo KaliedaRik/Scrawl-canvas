@@ -25,9 +25,9 @@
 
 
 // #### Imports
-import { artefact, constructors, group, tween, world } from '../core/library.js';
+import { artefact, constructors, world } from '../core/library.js';
 
-import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../core/utilities.js';
 
 import { currentGroup } from './canvas.js';
 
@@ -40,8 +40,6 @@ import { makeVector, releaseVector, requestVector } from './vector.js';
 import { releaseCoordinate, requestCoordinate } from './coordinate.js';
 
 import { makeColor } from './color.js';
-
-import { filterEngine } from './filter-engine.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
@@ -228,7 +226,7 @@ P.finalizePacketOut = function (copy, items) {
 };
 
 // #### Clone management
-P.postCloneAction = function(clone, items) {
+P.postCloneAction = function(clone) {
 
     return clone;
 };
@@ -253,8 +251,7 @@ P.factoryKill = function (killArtefact, killWorld) {
 
 
 // #### Get, Set, deltaSet
-const G = P.getters,
-    S = P.setters,
+const S = P.setters,
     D = P.deltaSetters;
 
 S.rangeX = function (val) { this.range.x = val; };
@@ -674,7 +671,7 @@ P.addParticles = function (req) {
         const len = particleStore.length,
             res = requestVector();
 
-        let r, parent, history, ignore1, ignore2, startval;
+        let r, parent, history, startval;
 
         for (i = 0; i < req; i++) {
 
@@ -685,7 +682,7 @@ P.addParticles = function (req) {
 
                 if (history && history.length > 1) {
 
-                    [ignore1, ignore2, ...startval] = history[_floor(_random() * history.length)];
+                    [, , ...startval] = history[_floor(_random() * history.length)];
 
                     if (startval) res.setFromArray(startval);
                     else res.setFromVector(parent.position);

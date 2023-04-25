@@ -33,7 +33,7 @@ import { releaseVector, requestVector } from './vector.js';
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
-import { _floor, _isArray, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, FILL_STYLE, HUB_ARTEFACTS_1, HUB_ARTEFACTS_2, HUB_ARTEFACTS_3, HUB_SPOKE, POSITION, SOURCE_OVER, STROKE_STYLE, STRONG_NET, STRONG_SHAPE, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD, WEAK_NET, WEAK_SHAPE } from '../core/shared-vars.js';
+import { _floor, _isArray, _now, _piDouble, _tick, BLACK, BLANK, ENTITY, EULER, FILL_STYLE, HUB_ARTEFACTS_1, HUB_SPOKE, POSITION, SOURCE_OVER, STROKE_STYLE, STRONG_NET, STRONG_SHAPE, T_NET, T_PARTICLE, T_POLYLINE, T_WORLD, WEAK_NET, WEAK_SHAPE } from '../core/shared-vars.js';
 
 
 // #### Net constructor
@@ -204,7 +204,7 @@ P.finalizePacketOut = function (copy, items) {
 };
 
 // #### Clone management
-P.postCloneAction = function(clone, items) {
+P.postCloneAction = function(clone) {
 
     return clone;
 };
@@ -265,9 +265,7 @@ P.purgeParticlesFromLibrary = function () {
 
 
 // #### Get, Set, deltaSet
-const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+const S = P.setters;
 
 S.generate = function (item) {
 
@@ -584,7 +582,7 @@ const generators = {
         if (host && rows > 0 && columns > 0) {
 
             let [x, y] = this.currentStampPosition;
-            let [width, height] = host.currentDimensions;
+            let [, height] = host.currentDimensions;
 
             let deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
             let deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
@@ -662,7 +660,7 @@ const generators = {
         if (host && rows > 0 && columns > 0) {
 
             let [x, y] = this.currentStampPosition;
-            let [width, height] = host.currentDimensions;
+            let [, height] = host.currentDimensions;
 
             let deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
             let deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
@@ -752,9 +750,9 @@ const generators = {
     },
 
     // `weak-shape` - __Warning: not very stable!__ - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors
-    [WEAK_SHAPE]: function (host) {
+    [WEAK_SHAPE]: function () {
 
-        const { particleStore, artefact:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name, shapeTemplate, precision, joinTemplateEnds } = this;
+        const { particleStore, artefact:art, historyLength, engine, forces, mass, name, shapeTemplate, precision, joinTemplateEnds } = this;
 
         let i, p, f, t;
 
@@ -848,9 +846,9 @@ const generators = {
     },
 
     // `strong-shape` - __Warning: generally unstable!__ - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors, and make an additional connection with a Particle at some distance from it (to act as a strut)
-    [STRONG_SHAPE]: function (host) {
+    [STRONG_SHAPE]: function () {
 
-        const { particleStore, artefact:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name, shapeTemplate, precision, joinTemplateEnds } = this;
+        const { particleStore, artefact:art, historyLength, engine, forces, mass, name, shapeTemplate, precision, joinTemplateEnds } = this;
 
         let i, p, f, t;
 
@@ -957,13 +955,13 @@ const generators = {
     },
 
     // `hub-spoke` - __Warning: highly unstable!__ - a rope of Particles set along a path. The generator will connect each Particle with springs to its closest neighbors, and make an additional connection with a 'hub' particle at the template's rotation-reflection point.
-    [HUB_SPOKE]: function (host) {
+    [HUB_SPOKE]: function () {
 
         let { shapeTemplate, precision } = this;
 
         if (shapeTemplate && shapeTemplate.type && precision) {
 
-            const { particleStore, artefact:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name, joinTemplateEnds } = this;
+            const { particleStore, artefact:art, historyLength, engine, forces, mass, name, joinTemplateEnds } = this;
 
             let i, p, f, t, hub;
 
@@ -1035,8 +1033,8 @@ const generators = {
             }
 
             // TODO: consider whether we need these
-            else if (HUB_ARTEFACTS_2.includes(host.type)) {}
-            else if (HUB_ARTEFACTS_3.includes(host.type)) {}
+            // else if (HUB_ARTEFACTS_2.includes(host.type)) {}
+            // else if (HUB_ARTEFACTS_3.includes(host.type)) {}
 
             const [x, y] = shapeTemplate.get(POSITION);
 

@@ -38,7 +38,7 @@ import { addListener, removeListener } from "../core/events.js";
 
 import { touchAction } from "../core/user-interaction.js";
 
-import { _isArray, $BODY, ACCEPTED_WRAPPERS, DOWN, DROP, EXIT, MOVE, T_CANVAS, T_GROUP, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START, UP, ZERO_PATH } from "../core/shared-vars.js";
+import { _isArray, $BODY, ACCEPTED_WRAPPERS, DOWN, DROP, EXIT, MOVE, T_CANVAS, T_GROUP, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START, UP } from "../core/shared-vars.js";
 
 
 // NOTE: drag-and-drop functionality using this factory function __is not guaranteed__ for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.
@@ -70,7 +70,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
     // + must be either a Canvas or Stack wrapper, or a wrapper's String name
     if (!zone) return new Error('dragZone constructor - no zone supplied');
 
-    if (zone.substring) zone = artefact[zone];
+    if (zone.substring) zone = library.artefact[zone];
 
     if (!zone || !ACCEPTED_WRAPPERS.includes(zone.type)) return new Error('dragZone constructor - zone object is not a Stack or Canvas wrapper');
 

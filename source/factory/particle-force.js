@@ -156,7 +156,7 @@ constructors.Force = Force;
 makeForce({
 
     name: GRAVITY,
-    action: (particle, world, host) => {
+    action: (particle, world) => {
 
         const {mass, load} = particle;
 

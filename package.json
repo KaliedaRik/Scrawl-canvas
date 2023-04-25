@@ -1,13 +1,14 @@
 {
   "name": "scrawl-canvas",
-  "version": "8.10.1",
-  "description": "Version 8.10.1 - 23 April 2023",
+  "version": "8.10.2",
+  "description": "Version 8.10.2 - 25 April 2023",
   "main": "./min/scrawl.js",
   "type": "module",
   "types": "./source/scrawl.d.ts",
   "scripts": {
     "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
     "dev": "light-server -p 8000 --serve . --open",
+    "lint": "npx eslint source/**",
     "test": "tsc"
   },
   "keywords": [
@@ -39,6 +40,7 @@
   "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
   "devDependencies": {
     "docco": "^0.9.1",
+    "eslint": "^8.39.0",
     "light-server": "^2.9.1",
     "rollup": "^2.64.0",
     "rollup-plugin-terser": "^7.0.2",

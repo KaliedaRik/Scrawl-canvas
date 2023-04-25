@@ -41,13 +41,12 @@ import { domShow, scrawlCanvasHold } from '../core/document.js';
 
 import { rootElementsAdd, rootElementsRemove } from "../core/document-root-elements.js";
 
-import { doCreate, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import { uiSubscribedElements } from '../core/user-interaction.js';
 
 import { makeState } from './state.js';
 import { makeCell } from './cell.js';
-import { makeCoordinate } from './coordinate.js';
 
 import { releaseArray, requestArray } from './array-pool.js';
 
@@ -55,13 +54,13 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC0, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
+import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CANVAS_QUERY, DATA_SCRAWL_GROUP, DIV, DOWN, ENTER, FIT_DEFS, HIDDEN, IMG, LEAVE, MOVE, NAME, NAV, NONE, PC100, PC50, POLITE, PX0, RELATIVE, ROLE, ROOT, SUBSCRIBE, T_CANVAS, T_STACK, TITLE, UP, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Canvas constructor
 const Canvas = function (items = Ωempty) {
 
-    let g, el;
+    let el;
 
     this.makeName(items.name);
     this.register();
@@ -759,7 +758,7 @@ P.cleanCells = function () {
                 tempShow[order].push(mycell);
             }
         }
-    };
+    }
 
     cellBatchesClear.length = 0;
     cellBatchesClear.push(...tempClear);
@@ -775,7 +774,7 @@ P.cleanCells = function () {
             cellBatchesCompile.push(...arr);
             releaseArray(arr);
         }
-    };
+    }
     releaseArray(tempCompile);
 
     cellBatchesShow.length = 0;
@@ -788,7 +787,7 @@ P.cleanCells = function () {
             cellBatchesShow.push(...arr);
             releaseArray(arr);
         }
-    };
+    }
     releaseArray(tempShow);
 };
 
@@ -821,7 +820,7 @@ P.cascadeEventAction = function (action, e = {}) {
         myCell = cell[c[i]];
 
         if (myCell && (myCell.shown || myCell.isBase || myCell.includeInCascadeEventActions)) testActiveEntityObjects.push(...myCell.getEntityHits());
-    };
+    }
 
     // 2. Process the returned test results
     for (i = 0, iz = testActiveEntityObjects.length; i < iz; i++) {

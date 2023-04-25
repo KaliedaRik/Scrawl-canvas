@@ -33,9 +33,9 @@
 
 
 // #### Imports
-import { artefact, artefactnames, constructors, element, elementnames } from '../core/library.js';
+import { constructors } from '../core/library.js';
 
-import { doCreate, isa_dom, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
+import { doCreate, isa_dom, removeItem, Ωempty } from '../core/utilities.js';
 
 import { uiSubscribedElements } from '../core/user-interaction.js';
 
@@ -44,7 +44,7 @@ import { makeCanvas } from './canvas.js';
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 
-import { _computed, ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '../core/shared-vars.js';
+import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC, T_ELEMENT } from '../core/shared-vars.js';
 
 
 // #### Element constructor
@@ -200,8 +200,7 @@ P.addCanvas = function (items = Ωempty) {
 
         canvas.id = `${this.name}-canvas`;
         
-        const rect = el.getBoundingClientRect(),
-            style = _computed(el);
+        const rect = el.getBoundingClientRect();
 
         el.parentNode.insertBefore(canvas, this.domElement);
 

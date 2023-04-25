@@ -70,7 +70,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['targets']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['revert', 'action']);
 
-P.finalizePacketOut = function (copy, items) {
+P.finalizePacketOut = function (copy) {
 
     if (_isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
 
@@ -122,7 +122,7 @@ P.set = function (items = Ωempty) {
         const setters = this.setters,
             defs = this.defs;
         
-        let fn, i, iz, key, value;
+        let fn, i, key, value;
 
         for (i = 0; i < keysLen; i++) {
 

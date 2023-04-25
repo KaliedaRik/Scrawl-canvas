@@ -36,7 +36,7 @@ export const makeAnimationObserver = function (anim, wrapper, specs = Ωempty) {
 
     if (typeof window.IntersectionObserver == FUNCTION && anim && anim.run) {
 
-        const observer = new IntersectionObserver((entries, observer) => {
+        const observer = new IntersectionObserver((entries) => {
 
             let i, iz, entry;
 

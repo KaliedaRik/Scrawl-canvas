@@ -13,9 +13,7 @@ import { constructors, entity } from '../core/library.js';
 
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
 
-import { constrain, doCreate, mergeOver, removeItem, λfirstArg, λnull, λthis, Ωempty } from '../core/utilities.js';
-
-import { makeColor } from './color.js';
+import { constrain, doCreate, mergeOver, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import { releaseCell, requestCell } from './cell-fragment.js';
 
@@ -138,9 +136,7 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+const S = P.setters;
 
 // __subscribers__ - we disable the ability to set the subscribers Array directly. Picture entitys and Pattern styles will manage their subscription to the asset using their subscribe() and unsubscribe() functions. Filters will check for updates every time they run
 S.subscribers = λnull;
@@ -508,7 +504,7 @@ P.cleanOutput = function (iterations = 0) {
 
     if (!this.dirtyScene) {
 
-        const { element, engine, dataArrays, diffusionRateA, diffusionRateB, feedRate, killRate, currentSource, drawEvery, maxGenerations, currentGeneration } = this;
+        const { dataArrays, diffusionRateA, diffusionRateB, feedRate, killRate, currentSource, drawEvery, maxGenerations, currentGeneration } = this;
 
         let sourceA, destA, sourceB, destB, a, b, c, cz, da, db;
 
@@ -704,19 +700,19 @@ P.checkOutputValuesExist = function () {
 
     return (this.dataArrays.length) ? true : false;
 };
-P.getOutputValue = function (index, width) {
+P.getOutputValue = function (index) {
 
-    let destA, sourceA, destB, sourceB;
+    let destA, destB;
 
     const { dataArrays, currentSource } = this;
 
     if (currentSource) {
 
-        [destA, sourceA, destB, sourceB] = dataArrays;
+        [destA, , destB, ] = dataArrays;
     }
     else {
 
-        [sourceA, destA, sourceB, destB] = dataArrays;
+        [, destA, , destB] = dataArrays;
     }
 
     return (1 + (destA[index] - destB[index])) / 2;

@@ -13,7 +13,7 @@
 
 
 // #### Imports
-import { constructors, cell, entity } from '../core/library.js';
+import { constructors, entity } from '../core/library.js';
 
 import { doCreate, mergeOver, pushUnique, isa_obj, Ωempty } from '../core/utilities.js';
 
@@ -25,7 +25,7 @@ import baseMix from '../mixin/base.js';
 import patternMix from '../mixin/pattern.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
-import { $IMAGE, $VIDEO, _entries, _isArray, _keys, NAME, STATE_KEYS, STYLES, T_PATTERN, UNDEF } from '../core/shared-vars.js';
+import { $IMAGE, $VIDEO, _isArray, _keys, _values, NAME, STYLES, T_PATTERN, UNDEF } from '../core/shared-vars.js';
 
 
 // #### Pattern constructor
@@ -90,7 +90,7 @@ P.kill = function () {
     if (isa_obj(asset)) asset.unsubscribe(this);
 
     // Remove style from all entity state objects
-    _entries(entity).forEach(([label, ent]) => {
+    _values(entity).forEach(ent => {
 
         state = ent.state;
         defs = state.defs;
@@ -148,7 +148,7 @@ P.get = function (item) {
                 const val = this[item];
                 return (typeof val != UNDEF) ? val : def;
             }
-            return undef;
+            return undefined;
         }
     }
 };

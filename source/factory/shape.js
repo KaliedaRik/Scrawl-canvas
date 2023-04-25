@@ -116,7 +116,7 @@ P.cleanSpecies = function () {
 P.cleanStampHandlePositionsAdditionalActions = function () {
 
     const box = this.localBox,
-    	stampHandle = this.currentStampHandlePosition;
+        stampHandle = this.currentStampHandlePosition;
 
     stampHandle[0] += box[0];
     stampHandle[1] += box[1];

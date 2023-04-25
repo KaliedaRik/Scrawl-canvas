@@ -21,7 +21,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { addStrings, doCreate, isa_number, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
+import { doCreate, mergeOver, pushUnique, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';

@@ -20,6 +20,9 @@ import { constructors } from '../core/library.js';
 
 import { doCreate, isa_fn, mergeOver, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
+import { makeQuaternion } from './quaternion.js';
+import { makeVector } from './vector.js';
+import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';

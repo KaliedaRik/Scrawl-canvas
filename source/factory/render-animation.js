@@ -23,7 +23,7 @@
 
 
 // #### Imports
-import { animation, artefact, constructors } from '../core/library.js';
+import { artefact, constructors } from '../core/library.js';
 
 import { clear, compile, show } from '../core/display-cycle.js';
 
