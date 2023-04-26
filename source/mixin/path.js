@@ -153,4 +153,4 @@ export default function (P = Ωempty) {
         }
         return false;
     };
-};
+}

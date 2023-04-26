@@ -127,9 +127,7 @@ P.clone = λthis;
 
 
 // #### Get, Set, deltaSet
-const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+const S = P.setters;
 
 
 // __source__
@@ -373,7 +371,7 @@ export const importMediaStream = function (items = Ωempty) {
 
                 el.srcObject = mediaStream;
 
-                el.onloadedmetadata = function (e) {
+                el.onloadedmetadata = function () {
 
                     el.play();
                 }

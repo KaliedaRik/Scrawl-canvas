@@ -67,7 +67,7 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
         unitPartials = result.unitPartials,
         progression = result.unitProgression,
         positions = result.unitPositions,
-        mySet = d.match(/([A-Za-z][0-9. ,\-]*)/g),
+        mySet = d.match(/([A-Za-z][0-9. ,-]*)/g),
         localMatch = /(-?[0-9.]+\b)/g;
 
     let command = ZERO_STR,
@@ -371,7 +371,7 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
 
         // Request a vector - used for reflection points
         const v = vector;
-        let curData, prevData, c, p, x, y, cx, cy, rx, ry;
+        let curData, prevData, c, p, x, y, cx, cy;
 
         // This loop calculates this.units array data
         // + because the lengths calculations requires absolute coordinates
@@ -381,7 +381,7 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
             curData = myData[i];
             prevData = (i > 0) ? myData[i - 1] : false;
 
-            ({c, p, x, y, cx, cy, rx, ry} = curData);
+            ({c, p, x, y, cx, cy} = curData);
 
             if (p) {
 
@@ -562,7 +562,6 @@ const getShapeUnitMetaData = function (species, precision, args) {
         let func = (species == BEZIER) ? GET_BEZIER : GET_QUADRATIC,
             flag = false,
             step = 0.25,
-            currentLength = 0,
             newLength = 0,
             oldX, oldY, x, y, t, res;
 

@@ -329,7 +329,7 @@ P.repopulateSubscriberObjects = function () {
     const arr = this.subscriberObjects,
         subs = this.subscribers;
 
-    let i, iz, t;
+    let t;
 
     arr.length = 0;
 
@@ -864,7 +864,7 @@ const tickerAnimations = [];
 let tickerAnimationsFlag = true;
 
 // `coreTickersAnimation`
-const coreTickersAnimation = makeAnimation({
+makeAnimation({
 
     name: 'coreTickersAnimation',
     order: 0,
@@ -904,7 +904,7 @@ const coreTickersAnimation = makeAnimation({
                     tickerAnimations.push(...arr);
                     releaseArray(arr);
                 }
-            };
+            }
             releaseArray(buckets);
         }
 

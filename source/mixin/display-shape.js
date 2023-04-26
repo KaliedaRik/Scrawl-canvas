@@ -7,7 +7,7 @@
 
 
 // #### Imports
-import { isa_fn, isa_number, isa_obj, mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
+import { isa_fn, isa_number, mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
 
 import { _entries, BANNER, LANDSCAPE, LARGER, LARGEST, PORTRAIT, RECTANGLE, REGULAR, SKYSCRAPER, SMALLER, SMALLEST, ZERO_STR } from '../core/shared-vars.js';
 
@@ -495,4 +495,4 @@ export default function (P = Ωempty) {
         this.updateDisplayShape();
         this.updateDisplayArea();
     };
-};
+}

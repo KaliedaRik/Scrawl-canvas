@@ -167,7 +167,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['definitions', 'targets']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['commenceAction', 'completeAction', 'onRun', 'onHalt', 'onResume', 'onReverse', 'onSeekTo', 'onSeekFor', 'action']);
 
-P.finalizePacketOut = function (copy, items) {
+P.finalizePacketOut = function (copy) {
 
     if (_isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
 

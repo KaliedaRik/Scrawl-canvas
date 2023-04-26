@@ -218,6 +218,8 @@ export default function (P = Ωempty) {
 
         items = [].concat(items);
 
+        let result;
+
         items.forEach(item => {
 
             if (typeof item == FUNCTION) {
@@ -300,4 +302,4 @@ export default function (P = Ωempty) {
     P.resume = λnull;
     P.seekTo = λnull;
     P.seekFor = λnull;
-};
+}

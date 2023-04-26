@@ -35,9 +35,9 @@
 
 
 // #### Imports
-import { artefact, canvas, constructors, element, group, purge, stack } from '../core/library.js';
+import { artefact, constructors, group, purge, stack } from '../core/library.js';
 
-import { addStrings, doCreate, isa_canvas, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, generateUniqueString, isa_canvas, isa_dom, mergeOver, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import { domShow } from '../core/document.js';
 
@@ -47,14 +47,13 @@ import { currentCorePosition, uiSubscribedElements } from '../core/user-interact
 
 import { makeGroup } from './group.js';
 import { makeElement } from './element.js';
-import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
-import { $DATA_SCRAWL_STACK, $SCRIPT, _computed, _entries, _isArray, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DATA_SCRAWL_STACK, DIV, NAME, PC50, RELATIVE, ROOT, STACK, SUBSCRIBE, T_STACK, ZERO_STR } from '../core/shared-vars.js';
+import { $DATA_SCRAWL_STACK, $SCRIPT, _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DATA_SCRAWL_STACK, DIV, NAME, PC50, RELATIVE, ROOT, STACK, SUBSCRIBE, T_STACK, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Stack constructor
@@ -181,7 +180,7 @@ P.factoryKill = function () {
     // Groups
     if (group[myname]) group[myname].kill();
 
-    _entries(artefact).forEach(([name, art]) => {
+    _values(artefact).forEach(art => {
 
         if (art.host === myname) art.kill();
     });
@@ -563,17 +562,12 @@ export const addStack = function (items = Ωempty) {
 
     // define variables
     let el, host, hostinscrawl, mystack, mygroup, name,
-        position = ABSOLUTE,
-        newElement = false;
+        position = ABSOLUTE;
 
     // get, or generate a new, stack-to-be element
     if (items.element && items.element.substring) el = document.querySelector(items.element);
     else if (isa_dom(items.element)) el = items.element;
-    else {
-
-        newElement = true;
-        el = document.createElement(DIV);
-    }
+    else el = document.createElement(DIV);
 
     // get element's host (parent-to-be) element
     if (items.host && items.host.substring) {

@@ -47,8 +47,7 @@ export default function (P = Ωempty) {
 
 // #### Get, Set, deltaSet
     const G = P.getters,
-        S = P.setters,
-        D = P.deltaSetters;
+        S = P.setters;
 
 
 // The following attributes (which largely map to [HTML anchor attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a)) can be included in the argument object passed to the artefact's factory and `set` functions, or passed as a String to the `get` function:
@@ -272,4 +271,4 @@ export default function (P = Ωempty) {
 
 // Return the prototype
     return P;
-};
+}

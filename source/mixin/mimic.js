@@ -54,9 +54,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    const G = P.getters,
-        S = P.setters,
-        D = P.deltaSetters;
+    const S = P.setters;
 
 
 // #### Prototype functions
@@ -187,7 +185,7 @@ export default function (P = Ωempty) {
 
         this.mimicked.forEach(name => {
 
-            let m = artefact[name];
+            m = artefact[name];
 
             if (!m) {
 
@@ -213,4 +211,4 @@ export default function (P = Ωempty) {
         this.dirtyMimicScale = false;
         this.dirtyMimicDimensions = false;
     };
-};
+}

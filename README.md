@@ -1,5 +1,5 @@
 # Welcome to the Scrawl-canvas Library
-Version: `8.10.2 - 25 April 2023` 
+Version: `8.10.2 - 26 April 2023` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 + learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
@@ -144,6 +144,13 @@ The code base does not include any ___unit testing___ frameworks. Instead, we re
 Why this approach? Because most of the Scrawl-canvas functionality revolves around various forms of animation, which requires visual inspection of the Demo tests to check that the canvas display - and thus, by inference, the underlying code - performs as expected.
 
 Most Demos include some form of user interaction, which allows us to test specific aspects of the code base.
+
+#### Linting
+The tool chain includes the [ESLint](https://eslint.org/) package to impose some basic checks on code. We use the default checks supplied by the package (as indicated in the [rules documentation page](https://eslint.org/docs/latest/rules)). To run the linter:
+
+```sh
+$> yarn lint
+```
 
 ### TypeScript support
 Scrawl-canvas supports TypeScript through a TypeScript Definitions (d.ts) file. The definitions file aims to be as accurate, comprehensive and informative as possible, but specifically excludes support for internal (private) SC object attributes and functions.

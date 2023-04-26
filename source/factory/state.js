@@ -19,7 +19,7 @@ import { doCreate, isa_obj, xt, xtGet, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
-import { _freeze, _HSL, _keys, _RGB, BLACK, BUTT, DEFAULT_FONT, HASH, HIGH, LEFT, LINE_DASH, LINE_WIDTH, MITER, NAME, NONE, SOURCE_OVER, STATE_ALL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, STATE_TEXT_KEYS, STYLES, T_COLOR, T_PHRASE, T_STATE, TOP, UNDEF } from '../core/shared-vars.js';
+import { _HSL, _keys, _RGB, BLACK, BUTT, DEFAULT_FONT, HASH, HIGH, LEFT, LINE_DASH, LINE_WIDTH, MITER, NAME, NONE, SOURCE_OVER, STATE_ALL_KEYS, STATE_LINE_KEYS, STATE_MAIN_KEYS, STATE_STYLE_KEYS, STATE_TEXT_KEYS, STYLES, T_COLOR, T_PHRASE, T_STATE, TOP, UNDEF } from '../core/shared-vars.js';
 
 
 import { makeColor } from './color.js';
@@ -28,7 +28,7 @@ const colorChecker = makeColor({
 });
 
 // #### State constructor
-const State = function (items = Ωempty) {
+const State = function () {
 
     this.set(this.defs);
     this.lineDash = [];
@@ -178,7 +178,7 @@ P.processPacketOut = function (key, value, incs) {
     return result;
 };
 
-P.finalizePacketOut = function (copy, items) {
+P.finalizePacketOut = function (copy) {
 
     let fill = copy.fillStyle,
         stroke = copy.strokeStyle;
@@ -237,9 +237,7 @@ P.get = function (item) {
     else return undef;
 };
 
-const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+const S = P.setters;
 
 // The following setters use the `SC-system-state-do-not-remove` Color factory. This factory gets created when the `state.js` file first runs and is accessed only by State objects
 S.fillStyle = function (item) {
@@ -284,7 +282,7 @@ S.shadowColor = function (item) {
 // `getChanges` is the key function performed by State objects. This is where the entity's state is compared to a Cell engine's current state, to identify which engine attributes need to change to bring it into alignment with the entity object's requirements
 P.getChanges = function (ent, engineState) {
 
-    let k, style, scaled, i, iz, j, jz,
+    let k, scaled, i, iz, j, jz,
         linedashFlag, desired, current;
 
     const defs = this.defs,

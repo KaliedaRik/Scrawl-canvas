@@ -18,7 +18,7 @@
 
 
 // #### Imports
-import { artefact, constructors, group, tween } from '../core/library.js';
+import { artefact, constructors } from '../core/library.js';
 
 import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λnull, Ωempty } from '../core/utilities.js';
 
@@ -118,7 +118,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetObjects = pushUnique(P.packetObjects, ['artefact', 'particle']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['stampAction']);
 
-P.finalizePacketOut = function (copy, items) {
+P.finalizePacketOut = function (copy) {
 
     return copy;
 };
@@ -144,9 +144,7 @@ P.factoryKill = function (killArtefact) {
 
 
 // #### Get, Set, deltaSet
-const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+const S = P.setters;
 
 S.stampAction = function (item) {
 

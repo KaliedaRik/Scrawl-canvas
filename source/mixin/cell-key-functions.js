@@ -3,11 +3,9 @@
 
 
 // #### Imports
-import { mergeDiscard, mergeOver, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { Ωempty } from '../core/utilities.js';
 
 import { cell, cellnames, styles, stylesnames } from '../core/library.js';
-
-import { getIgnorePixelRatio, getPixelRatio } from "../core/events.js";
 
 import { releaseArray, requestArray } from '../factory/array-pool.js';
 
@@ -365,4 +363,4 @@ export default function (P = Ωempty) {
 
         return this;
     };
-};
+}

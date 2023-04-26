@@ -12,7 +12,7 @@
 
 
 // #### Imports
-import { artefact, constructors } from '../core/library.js';
+import { artefact } from '../core/library.js';
 
 import { setMouseChanged } from '../core/system-flags.js';
 
@@ -23,6 +23,8 @@ import { addLocalMouseMoveListener, applyCoreResizeListener, currentCorePosition
 import { addDomShowElement, domShow, setDomShowRequired } from '../core/document.js';
 
 import { makeQuaternion, releaseQuaternion, requestQuaternion } from '../factory/quaternion.js';
+
+import { releaseCell, requestCell } from '../factory/cell-fragment.js';
 
 import positionMix from './position.js';
 import deltaMix from './delta.js';
@@ -166,7 +168,7 @@ export default function (P = Ωempty) {
 
 // #### Clone management
 // `postCloneAction` - internal helper function
-    P.postCloneAction = function(clone, items) {
+    P.postCloneAction = function(clone) {
 
         if (this.onEnter) clone.onEnter = this.onEnter;
         if (this.onLeave) clone.onLeave = this.onLeave;
@@ -391,7 +393,6 @@ export default function (P = Ωempty) {
                 // TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?
 
                 // TODO discover handle (transform, transformOrigin)
-                const { transform, transformOrigin } = style;
                     
                 // TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
 
@@ -662,8 +663,6 @@ export default function (P = Ωempty) {
         }
 
         const engine = cell.engine;
-
-        const [x, y] = this.currentStampPosition;
 
         let tx, ty;
 
@@ -1081,4 +1080,4 @@ export default function (P = Ωempty) {
         this.dirtyPathObject = true;
         this.cleanPathObject();
     };
-};
+}

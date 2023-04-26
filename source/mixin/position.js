@@ -134,7 +134,7 @@ import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../factory
 
 import { releaseCell, requestCell } from '../factory/cell-fragment.js';
 
-import { _keys, _isArray, _parse, _values, ALL, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, GROUP, HANDLE, LEFT, LOCKTO, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, STARTX, STARTY, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../core/shared-vars.js'
+import { _keys, _isArray, _parse, _values, ALL, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, HANDLE, LEFT, LOCKTO, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, STARTX, STARTY, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../core/shared-vars.js'
 
 
 // #### Export function
@@ -370,10 +370,10 @@ export default function (P = Ωempty) {
 
                 if (_isArray(val.pins)) {
 
-                	val.pins.forEach((item, index) => {
+                    val.pins.forEach((item, index) => {
 
-                		if (isa_obj(item) && item.name === name) val.removePinAt(index);
-                	});
+                        if (isa_obj(item) && item.name === name) val.removePinAt(index);
+                    });
                 }
             }
         });
@@ -773,18 +773,18 @@ export default function (P = Ωempty) {
 // + Clone functionality - include items to be purged
     P.purgeArtefact = function (item) {
 
-    	const doPurge = function (art, val) {
+        const doPurge = function (art, val) {
 
-    		switch (val) {
+            switch (val) {
 
-    			case PIVOT :
+                case PIVOT :
                     delete art.pivot;
                     delete art.pivotCorner;
                     delete art.pivotPin;
                     delete art.addPivotHandle;
                     delete art.addPivotOffset;
                     delete art.addPivotRotation;
-    				break;
+                    break;
 
                 case MIMIC :
                     delete art.mimic;
@@ -817,16 +817,16 @@ export default function (P = Ωempty) {
                     delete art.filters;
                     delete art.isStencil;
                     break;
-    		}
-    	}
+            }
+        }
 
-    	if (item.substring) {
+        if (item.substring) {
 
             if (item === ALL) item = [PIVOT, MIMIC, PATH, FILTER];
             else item = [item];
         }
 
-    	if (_isArray(item)) item.forEach(val => doPurge(this, val));
+        if (_isArray(item)) item.forEach(val => doPurge(this, val));
 
         return this;
     };
@@ -992,10 +992,8 @@ export default function (P = Ωempty) {
 
         if (host) {
 
-            if (host.here && _keys(host.here)) {
+            if (host.here && _keys(host.here)) return host.here;
 
-            	return host.here;
-            }
             else if (host.currentDimensions) {
 
                 const dims = host.currentDimensions;
@@ -1158,18 +1156,18 @@ export default function (P = Ωempty) {
 
         if (host) {
 
-	        this.dirtyStart = false;
+            this.dirtyStart = false;
 
-	        if (xta(host.w, host.h)) {
+            if (xta(host.w, host.h)) {
 
-	        	w = host.w;
-	        	h = host.h;
-	        }
-	        else if (host.currentDimensions) {
+                w = host.w;
+                h = host.h;
+            }
+            else if (host.currentDimensions) {
 
-	        	[w, h] = host.currentDimensions;
-	        }
-	        else this.dirtyStart = true;
+                [w, h] = host.currentDimensions;
+            }
+            else this.dirtyStart = true;
         }
 
         if (!this.dirtyStart) {
@@ -1191,20 +1189,20 @@ export default function (P = Ωempty) {
 
         if (host) {
 
-	        this.dirtyOffset = false;
+            this.dirtyOffset = false;
 
-	        if (xta(host.w, host.h)) {
+            if (xta(host.w, host.h)) {
 
-	        	w = host.w;
-	        	h = host.h;
-	        }
-	        else if (host.currentDimensions) {
+                w = host.w;
+                h = host.h;
+            }
+            else if (host.currentDimensions) {
 
-	        	[w, h] = host.currentDimensions;
-	        }
-	        else this.dirtyOffset = true;
+                [w, h] = host.currentDimensions;
+            }
+            else this.dirtyOffset = true;
         }
-        
+
         if (!this.dirtyOffset) {
 
             this.cleanPosition(this.currentOffset, this.offset, [w, h]);
@@ -1500,7 +1498,7 @@ export default function (P = Ωempty) {
                 path = this.path,
                 mimic = this.mimic;
 
-            let lock, coord, here, myscale;
+            let lock, coord;
 
             // We loop twice - once for each coordinate: `x` is calculated on the first loop (`i === 0`); `y` on the second (`i === 1`)
             for (let i = 0; i < 2; i++) {
@@ -1607,12 +1605,12 @@ export default function (P = Ωempty) {
     };
 
     // Function overwritten by entitys, if required
-    P.checkHitReturn = function (x, y, cell) {
+    P.checkHitReturn = function (x, y) {
 
         return {
             x: x,
             y: y,
-            artefact: this
+            artefact: this,
         };
     };
 
@@ -1650,8 +1648,8 @@ export default function (P = Ωempty) {
 
             if (this.bringToFrontOnDrag) {
 
-            	this.stampOrder += 9999;
-	            this.group.batchResort = true;
+                this.stampOrder += 9999;
+                this.group.batchResort = true;
             }
 
             if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
@@ -1681,11 +1679,11 @@ export default function (P = Ωempty) {
 
         if (this.bringToFrontOnDrag) {
 
-        	this.stampOrder -= 9999;
+            this.stampOrder -= 9999;
 
-        	if (this.stampOrder < 0) this.stampOrder = 0;
+            if (this.stampOrder < 0) this.stampOrder = 0;
 
-	        this.group.batchResort = true;
+            this.group.batchResort = true;
         }
 
 
@@ -1725,4 +1723,4 @@ export default function (P = Ωempty) {
 
 // `updateImageSubscribers`
     P.updateImageSubscribers = λnull;
-};
+}

@@ -7,11 +7,11 @@
 // #### Imports
 import { artefact, particle } from '../core/library.js';
 
-import { addStrings, isa_boolean, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } from '../core/utilities.js';
+import { addStrings, isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 
-import { _entries, BEZIER, CONTROL, COORD, END, END_CONTROL, END_PARTICLE, END_PATH, END_PIVOT, LINEAR, MOUSE, PARTICLE, PATH, PIVOT, QUADRATIC, START_CONTROL, T_BEZIER, T_LINE, T_PARTICLE, T_PATH, T_PIVOT, T_QUADRATIC, ZERO_STR } from '../core/shared-vars.js';
+import { _values, BEZIER, CONTROL, COORD, END, END_CONTROL, END_PARTICLE, END_PATH, END_PIVOT, LINEAR, MOUSE, PARTICLE, PATH, PIVOT, QUADRATIC, START_CONTROL, T_BEZIER, T_LINE, T_PARTICLE, T_PATH, T_PIVOT, T_QUADRATIC, ZERO_STR } from '../core/shared-vars.js';
 
 
 const capitalize = (s) => {
@@ -74,7 +74,7 @@ export default function (P = Ωempty) {
 // #### Kill management
 P.factoryKill = function () {
 
-    _entries(artefact).forEach(([name, art]) => {
+    _values(artefact).forEach(art => {
 
         if (art.name !== this.name) {
 
@@ -230,7 +230,7 @@ P.factoryKill = function () {
 // #### Prototype functions
 
     // `curveInit` - internal constructor helper function
-    P.curveInit = function (items) {
+    P.curveInit = function () {
 
         this.end = makeCoordinate();
         this.currentEnd = makeCoordinate();
@@ -468,7 +468,7 @@ P.factoryKill = function () {
         }
 
         let lock = this[`${label}LockTo`], 
-            x, y, ox, oy, here, host, dims, flag,
+            x, y, ox, oy, here, host, dims,
             raw = this[label],
             current = this[`current${capLabel}`];
 
@@ -640,4 +640,4 @@ P.factoryKill = function () {
             }
         });
     };
-};
+}

@@ -19,7 +19,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_number, mergeOver, xt, xto, Ωempty } from '../core/utilities.js';
+import { addStrings, doCreate, isa_number, mergeOver, xt, xto, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
@@ -108,8 +108,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-const G = P.getters,
-    S = P.setters,
+const S = P.setters,
     D = P.deltaSetters;
 
 

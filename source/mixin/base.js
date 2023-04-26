@@ -352,7 +352,7 @@ export default function (P = Ωempty) {
     };
 
 // `finalizePacketOut`
-    P.finalizePacketOut = function (copy, items) {
+    P.finalizePacketOut = function (copy) {
 
         return copy;
     };
@@ -572,7 +572,7 @@ export default function (P = Ωempty) {
 
         const myName = this.name;
 
-        let myPacket, myTicker, myAnchor;
+        let myPacket, myTicker;
 
         this.name = items.name || ZERO_STR;
 
@@ -605,7 +605,7 @@ export default function (P = Ωempty) {
     };
 
 // `postCloneAction` - overwritten by a variety of mixins and factories
-    P.postCloneAction = function (clone, items) {
+    P.postCloneAction = function (clone) {
 
         return clone;
     };
@@ -684,4 +684,4 @@ export default function (P = Ωempty) {
 
         return this;
     };
-};
+}

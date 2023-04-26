@@ -48,9 +48,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    const G = P.getters,
-        S = P.setters,
-        D = P.deltaSetters;
+    const S = P.setters;
 
 
 // #### Prototype functions
@@ -150,4 +148,4 @@ export default function (P = Ωempty) {
             }
         }, this);
     };
-};
+}

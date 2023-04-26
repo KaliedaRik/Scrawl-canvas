@@ -289,7 +289,7 @@ export default function (P = Ωempty) {
             }
             else {
 
-                const [source, x, y, w, h] = asset.manifest[this.spriteTrack][this.spriteCurrentFrame],
+                const [, x, y, w, h] = asset.manifest[this.spriteTrack][this.spriteCurrentFrame],
                     [cx, cy, cw, ch] = copyArray;
 
                 if (cx != x || cy != y || cw != w || ch != h) {
@@ -328,4 +328,4 @@ export default function (P = Ωempty) {
 
         this.spriteIsRunning = false;
     }
-};
+}

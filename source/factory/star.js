@@ -50,7 +50,7 @@ import { releaseArray, requestArray } from './array-pool.js';
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
-import { _abs, _min, ENTITY, STAR, T_STAR, ZERO_PATH, ZERO_STR } from '../core/shared-vars.js';
+import { _abs, _min, ENTITY, STAR, T_STAR, ZERO_STR } from '../core/shared-vars.js';
 
 
 // #### Star constructor
@@ -182,7 +182,7 @@ P.makeStarPath = function () {
         radius2 = this.radius2;
 
     let currentX, currentY, x, y,
-        myMin, myXoffset, myYoffset, i,
+        myMin, myXoffset, i,
         myPath = ZERO_STR;
 
     if (radius1.substring || radius2.substring) {
@@ -191,7 +191,7 @@ P.makeStarPath = function () {
 
         if (host) {
 
-            const [hW, hH] = host.currentDimensions;
+            const hW = host.currentDimensions[0];
 
             radius1 = (radius1.substring) ? (parseFloat(radius1) / 100) * hW : radius1;
             radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * hW : radius2;

@@ -3,7 +3,7 @@
 
 
 // #### Imports
-import { mergeDiscard, mergeOver, xt, Ωempty } from '../core/utilities.js';
+import { mergeDiscard, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { _isArray, _keys, ADD, LONGCHECK, LOOP, MULTIPLY, NEWNUMBER, NEWSTRING, PC, REMOVE, REVERSE, SEPARATOR, SHORTCHECK, UPDATE, ZERO_STR } from '../core/shared-vars.js'
 
@@ -64,8 +64,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    const S = P.setters,
-        D = P.deltaSetters;
+    const S = P.setters;
 
 // __delta__
     S.delta = function (items = Ωempty) {
@@ -346,4 +345,4 @@ export default function (P = Ωempty) {
         }
         return this;
     };
-};
+}

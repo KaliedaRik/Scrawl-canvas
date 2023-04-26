@@ -14,7 +14,7 @@
 
 
 // #### Imports
-import { entity, palette, styles, stylesnames } from '../core/library.js';
+import { entity, styles, stylesnames } from '../core/library.js';
 
 import { addStrings, isa_obj, mergeDiscard, mergeOver, xt, λnull, Ωempty } from '../core/utilities.js';
 
@@ -23,7 +23,7 @@ import { makeCoordinate } from '../factory/coordinate.js';
 
 import { makePalette } from '../factory/palette.js';
 
-import { _entries, _isArray, _keys, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, PALETTE_KEYS, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../core/shared-vars.js';
+import { _isArray, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, COLORS, END, LEFT, LINEAR, NAME, PALETTE_KEYS, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../core/shared-vars.js';
 
 
 // Create an animation to handle automated delta gradient animation
@@ -138,7 +138,7 @@ export default function (P = Ωempty) {
         if (this.palette && this.palette.kill) this.palette.kill();
 
         // Remove style from all entity state objects
-        _entries(entity).forEach(([name, ent]) => {
+        _values(entity).forEach(ent => {
 
             const state = ent.state;
 
@@ -391,7 +391,7 @@ export default function (P = Ωempty) {
                 val = palette[item];
                 return (typeof val != UNDEF) ? val : def;
             }
-            else return undef;
+            else return undefined;
         }
     };
 
@@ -408,7 +408,7 @@ export default function (P = Ωempty) {
                 defs = this.defs,
                 palette = this.palette;
 
-            let paletteSetters, paletteDefs, predefined, i, iz, key, value;
+            let paletteSetters, paletteDefs, predefined, i, key, value;
 
             if (palette) {
 
@@ -456,7 +456,7 @@ export default function (P = Ωempty) {
                 defs = this.defs,
                 palette = this.palette;
 
-            let paletteSetters, paletteDefs, predefined, i, iz, key, value;
+            let paletteSetters, paletteDefs, predefined, i, key, value;
 
             if (palette) {
 
@@ -649,7 +649,7 @@ export default function (P = Ωempty) {
 
 
 // `buildStyle` - Just in case something went wrong with loading other styles Factory modules, which must overwrite this function, we can return transparent color here
-    P.buildStyle = function (cell) {
+    P.buildStyle = function () {
 
         return BLANK;
     };
@@ -735,4 +735,4 @@ export default function (P = Ωempty) {
 
         return this;
     };
-};
+}

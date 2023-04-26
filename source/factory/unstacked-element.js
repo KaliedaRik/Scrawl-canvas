@@ -14,7 +14,7 @@
 
 
 // ## Imports
-import { constructors, unstackedelement } from '../core/library.js';
+import { constructors } from '../core/library.js';
 
 import { doCreate, mergeOver, xt, Ωempty } from '../core/utilities.js';
 
@@ -73,24 +73,18 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // ## Packet management
-
 // TODO
 
 
 // ## Define getter, setter and deltaSetter functions
-const G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
-
+// TODO
 
 
 // ## Define prototype functions
-
-
 // TODO - documentation
 
 // This is going to be rewritten as part of the "kill" review/recode work
-P.demolish = function (removeFromDom = false) {
+P.demolish = function () {
 
     return true;
 };
@@ -158,13 +152,15 @@ P.checkElementStyleValues = function () {
         styleW = _floor(parseFloat(styleW));
         styleH = _floor(parseFloat(styleH));
 
+        let w, h, z, hi, si;
+
         UE_INCLUDED_STYLES.forEach(item => {
 
             switch (item) {
 
                 case WIDTH :
 
-                    const w = _max(styleW, elW);
+                    w = _max(styleW, elW);
                     if (this.canvasWidth != w) {
 
                         this.canvasWidth = w;
@@ -174,7 +170,7 @@ P.checkElementStyleValues = function () {
 
                 case HEIGHT :
 
-                    const h = _max(styleH, elH);
+                    h = _max(styleH, elH);
                     if (this.canvasHeight != h) {
 
                         this.canvasHeight = h;
@@ -184,7 +180,7 @@ P.checkElementStyleValues = function () {
 
                 case Z_INDEX :
 
-                    let z = (styleZ == AUTO) ? 0 : parseInt(styleZ, 10);
+                    z = (styleZ == AUTO) ? 0 : parseInt(styleZ, 10);
                     z = (this.canvasOnTop) ? z + 1 : z - 1;
 
                     if (this.canvasZIndex != z) {
@@ -196,8 +192,9 @@ P.checkElementStyleValues = function () {
 
                 default :
 
-                    const hi = host[item],
-                        si = style[item];
+                    
+                    hi = host[item];
+                    si = style[item];
 
                     if(!xt(hi) || hi != si) {
                 

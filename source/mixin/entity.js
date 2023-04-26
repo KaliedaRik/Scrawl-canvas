@@ -10,10 +10,9 @@
 
 
 // #### Imports
-import { addStrings, isa_obj, mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
+import { addStrings, mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
-import { asset } from '../core/library.js';
 
 import { makeState } from '../factory/state.js';
 
@@ -244,8 +243,7 @@ export default function (P = Ωempty) {
 
 // #### Get, Set, deltaSet
     const G = P.getters,
-        S = P.setters,
-        D = P.deltaSetters;
+        S = P.setters;
 
 // __group__ - returns the entity's latest Group's String name, not the Group object itself
     G.group = function () {
@@ -797,5 +795,5 @@ export default function (P = Ωempty) {
     };
 
 // `none` - perform all the calculations required, but don't perform the final stamping
-    P.none = function (engine) {}
-};
+    P.none = function () {}
+}

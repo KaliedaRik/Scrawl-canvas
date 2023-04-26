@@ -68,8 +68,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    const G = P.getters,
-        S = P.setters,
+    const S = P.setters,
         D = P.deltaSetters;
 
     S.species = function (item) {
@@ -244,7 +243,7 @@ export default function (P = Ωempty) {
                 progress = this.unitProgression,
                 requiredProgress = pos * len;
 
-            let currentProgress, indexProgress, lastProgress, diffProgress,
+            let indexProgress, lastProgress, diffProgress,
                 currentPosition, indexPosition, nextPosition, diffPosition,
                 index = -1;
 
@@ -667,4 +666,4 @@ export default function (P = Ωempty) {
 
         return [_floor(x - hX), _floor(y - hY), _ceil(w), _ceil(h), sX, sY];
     };
-};
+}

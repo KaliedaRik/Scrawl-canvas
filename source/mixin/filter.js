@@ -154,7 +154,7 @@ export default function (P = Ωempty) {
                     currentFilters.push(...arr);
                     releaseArray(arr);
                 }
-            };
+            }
             releaseArray(buckets);
         }
         else currentFilters.length = 0;
@@ -216,7 +216,7 @@ export default function (P = Ωempty) {
 // `preprocessFilters` - internal function called as part of the Display cycle. The __process-image__ filter action loads a Scrawl-canvas asset into the filters engine, where it can be used as a lineIn or lineMix argument for other filter actions.
     P.preprocessFilters = function (filters) {
 
-        let i, iz, j, jz, flag, img, width, height, snd, cnd, filter, obj, copyX, copyY, copyWidth, copyHeight, destWidth, destHeight;
+        let i, iz, flag, img, width, height, snd, cnd, filter, obj, copyX, copyY, copyWidth, copyHeight, destWidth, destHeight;
 
         for (i = 0, iz = filters.length; i < iz; i++) {
 
@@ -371,4 +371,4 @@ export default function (P = Ωempty) {
 
         if (this.dirtyFilterIdentifier || (this.state && this.state.dirtyFilterIdentifier)) this.updateFilterIdentifier(true);
     };
-};
+}

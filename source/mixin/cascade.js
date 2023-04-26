@@ -103,7 +103,7 @@ export default function (P = Ωempty) {
                     groupBuckets.push(...arr);
                     releaseArray(arr);
                 }
-            };
+            }
             releaseArray(buckets);
         }
     };
@@ -269,4 +269,4 @@ export default function (P = Ωempty) {
         }
         return results;
     };
-};
+}

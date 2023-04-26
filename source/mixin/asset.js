@@ -60,7 +60,7 @@ export default function (P = Ωempty) {
     P.packetExclusions = pushUnique(P.packetExclusions, ['sourceLoaded', 'source', 'subscribers']);
 
 
-    P.finalizePacketOut = function (copy, items) {
+    P.finalizePacketOut = function (copy) {
 
         if (this.subscribers && this.subscribers.length) {
 
@@ -83,9 +83,7 @@ export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
-    const G = P.getters, 
-        S = P.setters, 
-        D = P.deltaSetters;
+    const S = P.setters;
 
 
 // __source__ - imageAsset.js and videoAsset.js overwrite this function, thus only put here so cell.js also gains the function - which I don't think it will ever need as cells ARE their own source.
@@ -189,4 +187,4 @@ export default function (P = Ωempty) {
         sub.dirtyImageSubscribers = true;
         sub.dirtyFilterIdentifier = true;
     };
-};
+}

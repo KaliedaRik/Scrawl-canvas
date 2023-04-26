@@ -3,7 +3,7 @@
 
 
 // #### Imports
-import { mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
+import { mergeOver, Ωempty } from '../core/utilities.js';
 
 import { makeGradient } from '../factory/gradient.js';
 
@@ -204,7 +204,7 @@ export default function (P = Ωempty) {
 
                 this.dirtyOutput = false;
 
-                const {element, engine, width, height, colorElement, colorEngine, gradient, choke, gradientLastUpdated } = this;
+                const {element, engine, width, height, colorEngine, gradient, choke, gradientLastUpdated } = this;
 
                 const palette = gradient.palette;
 
@@ -252,4 +252,4 @@ export default function (P = Ωempty) {
             }
         }
     };
-};
+}
