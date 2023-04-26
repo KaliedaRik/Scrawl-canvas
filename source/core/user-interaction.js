@@ -387,14 +387,6 @@ const updateUiSubscribedElement = function (art) {
 
 const updatePhraseEntitys = function () {
 
-    // for (const [name, ent] of _entries(library.entity)) {
-
-    //     if (ent.type == T_PHRASE) {
-
-    //         ent.dirtyDimensions = true;
-    //         ent.dirtyFont = true;
-    //     }
-    // }
     _values(library.entity).forEach(ent => {
 
         if (ent.type == T_PHRASE) {

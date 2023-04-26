@@ -252,17 +252,6 @@ P.factoryKill = function () {
     let myname = this.name
 
     // Remove artefact from all canvases
-    // _entries(canvas).forEach(([name, cvs]) => {
-
-    //     if (cvs.cells.includes(myname)) cvs.removeCell(myname);
-
-    //     if (cvs.base && cvs.base.name == myname) {
-
-    //         cvs.set({
-    //             visibility: false,
-    //         });
-    //     }
-    // });
     _values(canvas).forEach(cvs => {
 
         if (cvs.cells.includes(myname)) cvs.removeCell(myname);
@@ -276,22 +265,6 @@ P.factoryKill = function () {
     });
 
     // Remove from other artefacts
-    // _entries(artefact).forEach(([name, art]) => {
-
-    //     if (art.name !== myname) {
-
-    //         const state = art.state;
-
-    //         if (state) {
-
-    //             const fill = state.fillStyle,
-    //                 stroke = state.strokeStyle;
-
-    //             if (fill.name && fill.name == myname) state.fillStyle = state.defs.fillStyle;
-    //             if (stroke.name && stroke.name == myname) state.strokeStyle = state.defs.strokeStyle;
-    //         }
-    //     }
-    // });
     _values(artefact).forEach(art => {
 
         if (art.name !== myname) {

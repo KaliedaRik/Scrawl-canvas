@@ -1025,16 +1025,15 @@ P.calculateTextPositions = function (mytext) {
         currentStrokeStyle = defaultStrokeStyle, 
         currentSpace = defaultSpace;
 
-    // const highlightStyle = (this.highlightStyle) ? makeStyle(this.highlightStyle) : false;
-    // let highlightFlag = false;
+    /*
+    const highlightStyle = (this.highlightStyle) ? makeStyle(this.highlightStyle) : false;
 
-    // const underlineStyle = (this.underlineStyle) ? makeStyle(this.underlineStyle) : false,
-    //     underlinePosition = this.underlinePosition;
-    // let underlineFlag = false;
+    const underlineStyle = (this.underlineStyle) ? makeStyle(this.underlineStyle) : false,
+        underlinePosition = this.underlinePosition;
 
-    // const overlineStyle = (this.overlineStyle) ? makeStyle(this.overlineStyle) : false,
-    //     overlinePosition = this.overlinePosition;
-    // let overlineFlag = false;
+    const overlineStyle = (this.overlineStyle) ? makeStyle(this.overlineStyle) : false,
+        overlinePosition = this.overlinePosition;
+    */
 
     if (this.highlightStyle) makeStyle(this.highlightStyle);
     if (this.underlineStyle) makeStyle(this.underlineStyle);
