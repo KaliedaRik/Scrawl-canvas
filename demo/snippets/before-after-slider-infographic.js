@@ -471,7 +471,7 @@ export default function (scrawl, el) {
         if (leftPanel && rightPanel) {
 
             // __2. Get all information about links from the wrapper's &lt;nav> child element__
-            const navItems = getNavigationData(element.querySelector(':scope > nav'));
+            const navItems = getNavigationData(element.querySelector(':scope > nav'), {});
 
             // __3. Get all information required from the wrapper element__
             const aria_label = element.dataset.label,
