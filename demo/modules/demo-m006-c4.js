@@ -236,4 +236,4 @@ export default function (items) {
         animation,
         kill: () => scrawl.library.purge(namespace),
     };
-};
+}

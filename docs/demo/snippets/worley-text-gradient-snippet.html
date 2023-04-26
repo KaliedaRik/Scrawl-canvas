@@ -540,7 +540,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         <span class="hljs-keyword">const</span> textStroke = textFill.<span class="hljs-title function_">clone</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-text-outline`</span>,
             <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
-            <span class="hljs-attr">startX</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(fontSize * shadowOffsetY),
+            <span class="hljs-attr">startX</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(fontSize * shadowOffsetX),
             <span class="hljs-attr">startY</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((fontSize * yOffset) + (fontSize * shadowOffsetY)),
             <span class="hljs-attr">fillStyle</span>: shadowColor,
             <span class="hljs-attr">filters</span>: shadowBlur ? [<span class="hljs-string">`<span class="hljs-subst">${name}</span>-blur-filter`</span>] : [],
@@ -654,7 +654,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             });
 
             textStroke.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">startX</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(localFontSize * shadowOffsetY),
+                <span class="hljs-attr">startX</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(localFontSize * shadowOffsetX),
                 <span class="hljs-attr">startY</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((localFontSize * yOffset) + (localFontSize * shadowOffsetY)),
             });
         });</pre></div></div>
@@ -693,7 +693,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> snippet;
-};</pre></div></div>
+}</pre></div></div>
             
         </li>
         

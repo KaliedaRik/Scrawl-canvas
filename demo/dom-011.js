@@ -27,7 +27,7 @@ stack.set({
 
 
 // A displayed canvas can have more than one hidden canvas. These additional 'cells' - which act much like traditional animation cels (see https://en.wikipedia.org/wiki/Cel) - will be copied onto the 'base' canvas before the it gets copied over to the displayed cell at the end of every display cycle.
-let cell = canvas.buildCell({
+canvas.buildCell({
     name: 'mycell',
     width: '50%',
     height: '50%',

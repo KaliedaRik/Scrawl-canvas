@@ -119,7 +119,7 @@ export default function (scrawl, el) {
             aspectHeight = 1;
 
         // The pan effect, where the user can click and drag the image within its container to explore large images in small areas. To achieve the effect we split the functionality across three separate event listeners, which capture the three key actions associated with the effect: starting a drag; continuing a drag; and ending a drag.
-        scrawl.addListener('down', (e) => {
+        scrawl.addListener('down', () => {
 
             let here = canvas.here;
 
@@ -135,7 +135,7 @@ export default function (scrawl, el) {
             }
         }, el);
 
-        scrawl.addListener('move', (e) => {
+        scrawl.addListener('move', () => {
 
             if ('grabbing' === cursor) {
 
@@ -154,7 +154,7 @@ export default function (scrawl, el) {
              }
         }, el);
 
-        scrawl.addListener(['up', 'leave'], (e) => {
+        scrawl.addListener(['up', 'leave'], () => {
 
             if ('grabbing' === cursor) {
 
@@ -214,4 +214,4 @@ export default function (scrawl, el) {
 
     // Return the snippet, so coders can access the snippet's parts - in case they need to tweak the output to meet the web page's specific requirements
     return snippet;
-};
+}

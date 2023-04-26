@@ -168,7 +168,7 @@ export default function (items) {
         })
         .catch(e => console.log('buildChart error', e));
     }
-};
+}
 
 
 // #### Helper function

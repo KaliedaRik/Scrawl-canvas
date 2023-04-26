@@ -21,7 +21,6 @@ const unit = 60,
     sixthUnit = unit / 6,
     rows = 10,
     cols = 10,
-    width = 600,
     height = 600;
 
 // #### Scene setup
@@ -78,6 +77,7 @@ const boxes = [],
     rad = scrawl.library.radian;
 
 // Function to automate rigid body generation from Scrawl-canvas Block entitys
+/* eslint-disable-next-line */
 const createBodyFromBlock = function (world, block, density = 1, isStatic = false ) {
 
     let tempx = block.get("startX") / unit,
@@ -127,8 +127,6 @@ let isRunning = false;
 // Initialize Rapier (involves web assembly, thus asynchronous)
 rapier.init()
 .then(() => {
-
-    let tempx, tempy, tempw, temph;
 
     // Create the world, with added gravity
     let gravity = new rapier.Vector2(0.0, -9.8),
@@ -186,7 +184,7 @@ const animation = scrawl.makeRender({
 const runButton = document.querySelector("#run"),
     haltButton = document.querySelector("#halt");
 
-scrawl.addNativeListener("click", e => {
+scrawl.addNativeListener("click", () => {
 
     runButton.setAttribute("disabled", "disabled");
     haltButton.removeAttribute("disabled");
@@ -194,7 +192,7 @@ scrawl.addNativeListener("click", e => {
 
 }, runButton);
 
-scrawl.addNativeListener("click", e => {
+scrawl.addNativeListener("click", () => {
 
     runButton.removeAttribute("disabled");
     haltButton.setAttribute("disabled", "disabled");

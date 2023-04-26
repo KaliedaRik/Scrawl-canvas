@@ -139,7 +139,7 @@ const myemitter = scrawl.makeEmitter({
         let {strokeStyle, globalAlpha} = myWorld;
 
         // We will display each particle on the canvas using the entity currently assigned to our emitter's `artefact` attribute
-        history.forEach((p, index) => {
+        history.forEach(p => {
 
             // Entitys use Scrawl-canvas Coordinate arrays for their positioning data; we can set the `start` Coordinate using a normal Array containing `[x, y]` data - which we can easily extract from the particle's history arrays like so:
             [remaining, z, ...start] = p;

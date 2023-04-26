@@ -139,7 +139,6 @@ const buildClockface = function (canvas, namespace) {
 
 // #### Scene setup
 let canvas = scrawl.library.canvas.mycanvas,
-    base = canvas.base,
     namespace = 'kaliedoscope-clock';
 
 // Building the background - this goes in a separate Cell
@@ -272,7 +271,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-const myAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: `${namespace}-animation`,
     target: canvas,

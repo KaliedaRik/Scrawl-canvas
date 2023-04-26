@@ -610,7 +610,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { addStrings, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
@@ -851,7 +851,7 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killAsset = <span class="hljs-literal">false</span></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">const</span> { asset, removeAssetOnKill } = <span class="hljs-variable language_">this</span>;
 
@@ -995,7 +995,7 @@ G.<span class="hljs-property">copyHeight</span> = <span class="hljs-keyword">fun
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyDimensions</span>[<span class="hljs-number">1</span>];
 };
-G.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) {
+G.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyDimensions</span>);
 };
@@ -1118,7 +1118,7 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
                 val = state[item];
                 <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-variable constant_">UNDEF</span>) ? val : def;
             }
-            <span class="hljs-keyword">return</span> undef;
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
         }
     }
 };</pre></div></div>
@@ -1785,7 +1785,7 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(copyX, copyY, copyWidth, copyHeight)) {
 
-            <span class="hljs-keyword">const</span> [pasteX, pasteY, pasteWidth, pasteHeight] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>;
+            <span class="hljs-keyword">const</span> pasteWidth = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>[<span class="hljs-number">2</span>];
             <span class="hljs-keyword">const</span> [stampX, stampY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
 
             <span class="hljs-keyword">const</span> img = cell.<span class="hljs-property">engine</span>.<span class="hljs-title function_">getImageData</span>(copyX, copyY, copyWidth, copyHeight);

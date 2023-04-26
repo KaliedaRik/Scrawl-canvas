@@ -339,7 +339,7 @@
             <span class="hljs-keyword">const</span> packetsString = <span class="hljs-title function_">entityGroupGetPackets</span>();
 
             navigator.<span class="hljs-property">clipboard</span>.<span class="hljs-title function_">writeText</span>(packetsString)
-            .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-title function_">resolve</span>(packetsString))
+            .<span class="hljs-title function_">then</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">resolve</span>(packetsString))
             .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
 
                 <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;entityGroupCopy error&#x27;</span>, e.<span class="hljs-property">message</span>);
@@ -378,7 +378,7 @@
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">entityGroupDelete</span> = (<span class="hljs-params"></span>) =&gt; {
 
         <span class="hljs-title function_">entityGroupCopy</span>()
-        .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        .<span class="hljs-title function_">then</span>(<span class="hljs-function">() =&gt;</span> {
 
             selectedEntitys.<span class="hljs-title function_">killArtefacts</span>();
             updateControllerDisplay.<span class="hljs-title function_">onEnd</span>();

@@ -311,4 +311,4 @@ export default function (el, scrawl) {
 
     // Return the snippet, so coders can access the snippet's parts - in case they need to tweak the output to meet the web page's specific requirements
     return snippet;
-};
+}

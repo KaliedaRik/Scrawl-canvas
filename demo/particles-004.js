@@ -62,7 +62,7 @@ let pins = scrawl.makeGroup({
 }).addArtefacts('pin-1', 'pin-2', 'pin-3', 'pin-4');
 
 // Bezier curve using pins as its control points
-const userControlledBezier = scrawl.makeBezier({
+scrawl.makeBezier({
 
     name: 'my-bezier',
 
@@ -124,11 +124,11 @@ let emitter = scrawl.makeEmitter({
     stampAction: function (artefact, particle, host) {
 
         let history = particle.history,
-            remaining, start, z;
+            remaining, start;
 
         if (history.length) {
 
-            [remaining, z, ...start] = history[0];
+            [remaining, , ...start] = history[0];
 
             artefact.simpleStamp(host, {
 

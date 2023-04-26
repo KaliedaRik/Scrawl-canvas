@@ -105,4 +105,4 @@ export default function (scrawl, el) {
         })
     }
     return snippet;
-};
+}

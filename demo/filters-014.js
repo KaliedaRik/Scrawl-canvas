@@ -58,7 +58,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,
@@ -90,10 +90,10 @@ scrawl.makeUpdater({
     },
 });
 
-scrawl.addNativeListener(['input', 'change'], function (e) {
+scrawl.addNativeListener(['input', 'change'], function () {
 
 // @ts-expect-error
-    let a0 = parseInt(alpha_0.value, 10),
+    const a0 = parseInt(alpha_0.value, 10),
 // @ts-expect-error
         a1 = parseInt(alpha_1.value, 10),
 // @ts-expect-error
@@ -101,9 +101,9 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
 // @ts-expect-error
         a3 = parseInt(alpha_3.value, 10);
 
-        myFilter.set({
-            areaAlphaLevels: [a0, a2, a1, a3],
-        });
+    myFilter.set({
+        areaAlphaLevels: [a0, a2, a1, a3],
+    });
 
 }, '.alphas');
 

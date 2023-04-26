@@ -40,13 +40,13 @@ export default function (items = {}) {
         compileOrder: 0,
     });
 
-    const clip = scrawl.makeGroup({
+    scrawl.makeGroup({
         name: name('clip-group'),
         host: name('cell'),
         order: 0,
     });
 
-    const reflect = scrawl.makeGroup({
+    scrawl.makeGroup({
         name: name('reflect-group'),
         host: name('cell'),
         order: 1,
@@ -102,4 +102,4 @@ export default function (items = {}) {
         cell,
         kill: () => scrawl.library.purge(namespace),
     }
-};
+}

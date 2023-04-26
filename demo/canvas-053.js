@@ -21,8 +21,7 @@ import { reportSpeed } from './utilities.js';
 let canvas = L.artefact.mycanvas;
 
 // Magic numbers
-const canvasDimension = 400,
-    assetDimension = 80;
+const assetDimension = 80;
 
 // Make the canvas responsive
 // canvas.set({
@@ -143,9 +142,6 @@ makeSpiral({
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
-
-// @ts-expect-error
-    const {currentGeneration, maxGenerations, initialRandomSeedLevel, diffusionRateA, diffusionRateB, feedRate, killRate, width, height} = reactionAsset;
 
     const mx = myPattern.patternMatrix;
 

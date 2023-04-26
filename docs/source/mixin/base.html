@@ -1145,7 +1145,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy</span>) {
 
         <span class="hljs-keyword">return</span> copy;
     };</pre></div></div>
@@ -1558,7 +1558,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
         <span class="hljs-keyword">const</span> myName = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
-        <span class="hljs-keyword">let</span> myPacket, myTicker, myAnchor;
+        <span class="hljs-keyword">let</span> myPacket, myTicker;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = items.<span class="hljs-property">name</span> || <span class="hljs-variable constant_">ZERO_STR</span>;</pre></div></div>
             
@@ -1627,7 +1627,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">clone, items</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">clone</span>) {
 
         <span class="hljs-keyword">return</span> clone;
     };</pre></div></div>
@@ -1763,7 +1763,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };
-};</pre></div></div>
+}</pre></div></div>
             
         </li>
         

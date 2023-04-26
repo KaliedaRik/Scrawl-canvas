@@ -104,7 +104,7 @@ const myEmitter = scrawl.makeEmitter({
 
             if (fromHistory && fromHistory[0]) {
 
-                let [fr, fz, fx, fy] = fromHistory[0];
+                let [ , , fx, fy] = fromHistory[0];
 
                 for (let j = i + 1, jz = particles.length; j < jz; j ++) {
 
@@ -113,7 +113,7 @@ const myEmitter = scrawl.makeEmitter({
 
                     if (toHistory && toHistory[0]) {
 
-                        let [tr, tz, tx, ty] = toHistory[0];
+                        let [ , , tx, ty] = toHistory[0];
 
                         let test = scrawl.requestVector(fx, fy).vectorSubtractArray([tx, ty]),
                             mag = test.getMagnitude();
@@ -141,7 +141,7 @@ const myEmitter = scrawl.makeEmitter({
     // The `stampAction` function just adds the stars to the scene
     stampAction: function (artefact, particle, host) {
 
-        let [r, z, ...start] = particle.history[0];
+        let [ , , ...start] = particle.history[0];
         artefact.simpleStamp(host, {start});
     },
 
@@ -168,7 +168,7 @@ const myEmitter = scrawl.makeEmitter({
 
                 if (fromHistory && fromHistory[0]) {
 
-                    let [fr, fz, fx, fy] = fromHistory[0];
+                    let [ , , fx, fy] = fromHistory[0];
 
 // @ts-expect-error
                     let test = scrawl.requestVector(fx, fy).vectorSubtractArray([x, y]),

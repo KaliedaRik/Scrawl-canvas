@@ -386,7 +386,6 @@ const initializeEntityManipulationGui = (items = {}, scrawl) => {
     let rotateStartValues;
 
     const radToDeg = 180 / Math.PI;
-    const degToRad = Math.PI / 180;
 
     const calculateAngle = () => {
 

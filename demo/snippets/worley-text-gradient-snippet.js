@@ -214,7 +214,7 @@ export default function (el, scrawl) {
         const textStroke = textFill.clone({
             name: `${name}-text-outline`,
             order: 2,
-            startX: Math.round(fontSize * shadowOffsetY),
+            startX: Math.round(fontSize * shadowOffsetX),
             startY: Math.round((fontSize * yOffset) + (fontSize * shadowOffsetY)),
             fillStyle: shadowColor,
             filters: shadowBlur ? [`${name}-blur-filter`] : [],
@@ -304,7 +304,7 @@ export default function (el, scrawl) {
             });
 
             textStroke.set({
-                startX: Math.round(localFontSize * shadowOffsetY),
+                startX: Math.round(localFontSize * shadowOffsetX),
                 startY: Math.round((localFontSize * yOffset) + (localFontSize * shadowOffsetY)),
             });
         });
@@ -319,4 +319,4 @@ export default function (el, scrawl) {
 
     // Return the snippet, so coders can access the snippet's parts - in case they need to tweak the output to meet the web page's specific requirements
     return snippet;
-};
+}

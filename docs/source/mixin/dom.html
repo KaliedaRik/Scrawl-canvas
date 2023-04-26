@@ -568,7 +568,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { setMouseChanged } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/system-flags.js&#x27;</span>;
 
@@ -579,6 +579,8 @@
 <span class="hljs-keyword">import</span> { addDomShowElement, domShow, setDomShowRequired } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeQuaternion, releaseQuaternion, requestQuaternion } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/quaternion.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/cell-fragment.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> positionMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./position.js&#x27;</span>;
 <span class="hljs-keyword">import</span> deltaMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./delta.js&#x27;</span>;
@@ -977,7 +979,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">clone</span>) {
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onEnter</span>) clone.<span class="hljs-property">onEnter</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onEnter</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onLeave</span>) clone.<span class="hljs-property">onLeave</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onLeave</span>;
@@ -1461,8 +1463,6 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> { transform, transformOrigin } = style;</pre></div></div>
-            
         </li>
         
         
@@ -1898,8 +1898,6 @@
         }
 
         <span class="hljs-keyword">const</span> engine = cell.<span class="hljs-property">engine</span>;
-
-        <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
 
         <span class="hljs-keyword">let</span> tx, ty;
 
@@ -2582,7 +2580,7 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanPathObject</span>();
     };
-};</pre></div></div>
+}</pre></div></div>
             
         </li>
         

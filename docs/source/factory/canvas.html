@@ -601,13 +601,12 @@
 
 <span class="hljs-keyword">import</span> { rootElementsAdd, rootElementsRemove } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/document-root-elements.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, isa_dom, mergeOver, pushUnique, removeItem, xt, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { uiSubscribedElements } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/user-interaction.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./state.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { makeCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./array-pool.js&#x27;</span>;
 
@@ -615,7 +614,7 @@
 <span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/dom.js&#x27;</span>;
 <span class="hljs-keyword">import</span> displayMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/display-shape.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _2D, <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">ARIA_DESCRIBEDBY</span>, <span class="hljs-variable constant_">ARIA_LABELLEDBY</span>, <span class="hljs-variable constant_">ARIA_LIVE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CANVAS_QUERY</span>, <span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>, <span class="hljs-variable constant_">DIV</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">ENTER</span>, <span class="hljs-variable constant_">FIT_DEFS</span>, <span class="hljs-variable constant_">HIDDEN</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">LEAVE</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NAV</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-title class_">PC0</span>, <span class="hljs-title class_">PC100</span>, <span class="hljs-title class_">PC50</span>, <span class="hljs-variable constant_">POLITE</span>, <span class="hljs-title class_">PX0</span>, <span class="hljs-variable constant_">RELATIVE</span>, <span class="hljs-variable constant_">ROLE</span>, <span class="hljs-variable constant_">ROOT</span>, <span class="hljs-variable constant_">SUBSCRIBE</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_STACK</span>, <span class="hljs-variable constant_">TITLE</span>, <span class="hljs-variable constant_">UP</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _2D, <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">ARIA_DESCRIBEDBY</span>, <span class="hljs-variable constant_">ARIA_LABELLEDBY</span>, <span class="hljs-variable constant_">ARIA_LIVE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CANVAS_QUERY</span>, <span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>, <span class="hljs-variable constant_">DIV</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">ENTER</span>, <span class="hljs-variable constant_">FIT_DEFS</span>, <span class="hljs-variable constant_">HIDDEN</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">LEAVE</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NAV</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-title class_">PC100</span>, <span class="hljs-title class_">PC50</span>, <span class="hljs-variable constant_">POLITE</span>, <span class="hljs-title class_">PX0</span>, <span class="hljs-variable constant_">RELATIVE</span>, <span class="hljs-variable constant_">ROLE</span>, <span class="hljs-variable constant_">ROOT</span>, <span class="hljs-variable constant_">SUBSCRIBE</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_STACK</span>, <span class="hljs-variable constant_">TITLE</span>, <span class="hljs-variable constant_">UP</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -632,7 +631,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Canvas</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">let</span> g, el;
+    <span class="hljs-keyword">let</span> el;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
@@ -2051,7 +2050,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
                 tempShow[order].<span class="hljs-title function_">push</span>(mycell);
             }
         }
-    };
+    }
 
     cellBatchesClear.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
     cellBatchesClear.<span class="hljs-title function_">push</span>(...tempClear);
@@ -2067,7 +2066,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
             cellBatchesCompile.<span class="hljs-title function_">push</span>(...arr);
             <span class="hljs-title function_">releaseArray</span>(arr);
         }
-    };
+    }
     <span class="hljs-title function_">releaseArray</span>(tempCompile);
 
     cellBatchesShow.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
@@ -2080,7 +2079,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
             cellBatchesShow.<span class="hljs-title function_">push</span>(...arr);
             <span class="hljs-title function_">releaseArray</span>(arr);
         }
-    };
+    }
     <span class="hljs-title function_">releaseArray</span>(tempShow);
 };</pre></div></div>
             
@@ -2139,7 +2138,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         myCell = cell[c[i]];
 
         <span class="hljs-keyword">if</span> (myCell &amp;&amp; (myCell.<span class="hljs-property">shown</span> || myCell.<span class="hljs-property">isBase</span> || myCell.<span class="hljs-property">includeInCascadeEventActions</span>)) testActiveEntityObjects.<span class="hljs-title function_">push</span>(...myCell.<span class="hljs-title function_">getEntityHits</span>());
-    };</pre></div></div>
+    }</pre></div></div>
             
         </li>
         

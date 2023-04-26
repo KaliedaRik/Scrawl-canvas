@@ -657,7 +657,7 @@
         unitPartials = result.<span class="hljs-property">unitPartials</span>,
         progression = result.<span class="hljs-property">unitProgression</span>,
         positions = result.<span class="hljs-property">unitPositions</span>,
-        mySet = d.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/([A-Za-z][0-9. ,\-]*)/g</span>),
+        mySet = d.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/([A-Za-z][0-9. ,-]*)/g</span>),
         localMatch = <span class="hljs-regexp">/(-?[0-9.]+\b)/g</span>;
 
     <span class="hljs-keyword">let</span> command = <span class="hljs-variable constant_">ZERO_STR</span>,
@@ -1023,7 +1023,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> v = vector;
-        <span class="hljs-keyword">let</span> curData, prevData, c, p, x, y, cx, cy, rx, ry;</pre></div></div>
+        <span class="hljs-keyword">let</span> curData, prevData, c, p, x, y, cx, cy;</pre></div></div>
             
         </li>
         
@@ -1047,7 +1047,7 @@
             curData = myData[i];
             prevData = (i &gt; <span class="hljs-number">0</span>) ? myData[i - <span class="hljs-number">1</span>] : <span class="hljs-literal">false</span>;
 
-            ({c, p, x, y, cx, cy, rx, ry} = curData);
+            ({c, p, x, y, cx, cy} = curData);
 
             <span class="hljs-keyword">if</span> (p) {
 
@@ -1290,7 +1290,6 @@
         <span class="hljs-keyword">let</span> func = (species == <span class="hljs-variable constant_">BEZIER</span>) ? <span class="hljs-variable constant_">GET_BEZIER</span> : <span class="hljs-variable constant_">GET_QUADRATIC</span>,
             flag = <span class="hljs-literal">false</span>,
             step = <span class="hljs-number">0.25</span>,
-            currentLength = <span class="hljs-number">0</span>,
             newLength = <span class="hljs-number">0</span>,
             oldX, oldY, x, y, t, res;
 

@@ -959,6 +959,7 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> additional) {
 
+<span class="hljs-comment">/* eslint-disable-next-line */</span>
             <span class="hljs-keyword">if</span> (additional.<span class="hljs-title function_">hasOwnProperty</span>(key) &amp;&amp; <span class="hljs-keyword">typeof</span> original[key] == <span class="hljs-variable constant_">UNDEF</span>) {
 
                 original[key] = additional[key];
@@ -994,6 +995,7 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> additional) {
 
+<span class="hljs-comment">/* eslint-disable-next-line */</span>
             <span class="hljs-keyword">if</span> (additional.<span class="hljs-title function_">hasOwnProperty</span>(key)) original[key] = additional[key];
         }
     }
@@ -1441,17 +1443,19 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
 
     <span class="hljs-keyword">let</span> result = [];
 
+<span class="hljs-comment">/* eslint-disable-next-line */</span>
     <span class="hljs-keyword">if</span> ((!!<span class="hljs-variable language_">window</span>.<span class="hljs-property">opr</span> &amp;&amp; !!opr.<span class="hljs-property">addons</span>) || !!<span class="hljs-variable language_">window</span>.<span class="hljs-property">opera</span> || navigator.<span class="hljs-property">userAgent</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27; OPR/&#x27;</span>)) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;old-opera&#x27;</span>);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-title class_">InstallTrigger</span> != <span class="hljs-variable constant_">UNDEF</span>) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;firefox&#x27;</span>);
 
+<span class="hljs-comment">/* eslint-disable-next-line */</span>
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/constructor/i</span>.<span class="hljs-title function_">test</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">HTMLElement</span>) || (<span class="hljs-keyword">function</span> (<span class="hljs-params">p</span>) { <span class="hljs-keyword">return</span> p.<span class="hljs-title function_">toString</span>() == <span class="hljs-string">&quot;[object SafariRemoteNotification]&quot;</span>; })(!<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;safari&#x27;</span>] || (<span class="hljs-keyword">typeof</span> safari != <span class="hljs-variable constant_">UNDEF</span> &amp;&amp; safari.<span class="hljs-property">pushNotification</span>))) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;safari&#x27;</span>);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-comment">/*@cc_on!@*/</span><span class="hljs-literal">false</span> || !!<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentMode</span>) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;internet-explorer&#x27;</span>);
 
     <span class="hljs-keyword">if</span> (!result.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;internet-explorer&#x27;</span>) &amp;&amp; !!<span class="hljs-variable language_">window</span>.<span class="hljs-property">StyleMedia</span>) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;edge&#x27;</span>);
 
-    <span class="hljs-keyword">if</span>(!!<span class="hljs-variable language_">window</span>.<span class="hljs-property">chrome</span>) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;chrome&#x27;</span>);
+    <span class="hljs-keyword">if</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">chrome</span>) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;chrome&#x27;</span>);
 
     <span class="hljs-keyword">if</span>((result.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;chrome&#x27;</span>) || result.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;old-opera&#x27;</span>)) &amp;&amp; !!<span class="hljs-variable language_">window</span>.<span class="hljs-property">CSS</span>) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;blink&#x27;</span>);
 

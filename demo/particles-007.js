@@ -85,12 +85,13 @@ let myWorld = scrawl.makeWorld({
 scrawl.makeForce({
 
     name: 'brownian-motion',
+/* eslint-disable-next-line */
     action: (particle, world, host) => {
 
-        let {load} = particle;
+        const {load} = particle;
 
 // @ts-expect-error
-        let intensity = world.brownianIntensity;
+        const intensity = world.brownianIntensity;
 
         load.vectorAdd({
             x: (Math.random() * intensity * 2) - intensity,
@@ -102,16 +103,17 @@ scrawl.makeForce({
 scrawl.makeForce({
 
     name: 'mouse-disruptor',
+/* eslint-disable-next-line */
     action: (particle, world, host) => {
 
-        let {load, position} = particle;
-        let {here} = canvas;
+        const {load, position} = particle;
+        const {here} = canvas;
 
         if (here.active) {
 
-            let v = scrawl.requestVector(here).vectorSubtract(position);
+            const v = scrawl.requestVector(here).vectorSubtract(position);
 
-            let mag = v.getMagnitude();
+            const mag = v.getMagnitude();
 
             if (mag < 100) load.vectorAdd(v);
 
@@ -158,7 +160,7 @@ const myEmitter = scrawl.makeEmitter({
 
     stampAction: function (artefact, particle, host) {
 
-        let [r, z, ...start] = particle.history[0];
+        let [ , , ...start] = particle.history[0];
         artefact.simpleStamp(host, {start});
     },
 });

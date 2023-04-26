@@ -70,11 +70,11 @@ const spinFactory = function (name, radius, order, duration, clockwise) {
     return clipper;
 }
 
-const outer = spinFactory('outer-ring', 170, 1, '4s', true);
-const middleThin = spinFactory('thin-ring', 130, 2, '2.6s', true);
-const middleThick = spinFactory('thick-ring', 120, 3, '5.3s', false);
-const inner = spinFactory('inner-ring', 60, 4, '4s', true);
-const center = spinFactory('center', 20, 5, '4s', false);
+spinFactory('outer-ring', 170, 1, '4s', true);
+spinFactory('thin-ring', 130, 2, '2.6s', true);
+spinFactory('thick-ring', 120, 3, '5.3s', false);
+spinFactory('inner-ring', 60, 4, '4s', true);
+spinFactory('center', 20, 5, '4s', false);
 
 
 // Second interaction - when the user moves their mouse across the signature, details about the painting will fade into view
@@ -133,7 +133,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,

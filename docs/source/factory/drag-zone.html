@@ -586,7 +586,7 @@
 
 <span class="hljs-keyword">import</span> { touchAction } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/user-interaction.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { _isArray, $BODY, <span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">DROP</span>, <span class="hljs-variable constant_">EXIT</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">TOUCH_CANCEL</span>, <span class="hljs-variable constant_">TOUCH_END</span>, <span class="hljs-variable constant_">TOUCH_MOVE</span>, <span class="hljs-variable constant_">TOUCH_START</span>, <span class="hljs-variable constant_">UP</span>, <span class="hljs-variable constant_">ZERO_PATH</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/shared-vars.js&quot;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _isArray, $BODY, <span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">DROP</span>, <span class="hljs-variable constant_">EXIT</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">TOUCH_CANCEL</span>, <span class="hljs-variable constant_">TOUCH_END</span>, <span class="hljs-variable constant_">TOUCH_MOVE</span>, <span class="hljs-variable constant_">TOUCH_START</span>, <span class="hljs-variable constant_">UP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../core/shared-vars.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -655,7 +655,7 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!zone) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - no zone supplied&#x27;</span>);
 
-    <span class="hljs-keyword">if</span> (zone.<span class="hljs-property">substring</span>) zone = artefact[zone];
+    <span class="hljs-keyword">if</span> (zone.<span class="hljs-property">substring</span>) zone = library.<span class="hljs-property">artefact</span>[zone];
 
     <span class="hljs-keyword">if</span> (!zone || !<span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>.<span class="hljs-title function_">includes</span>(zone.<span class="hljs-property">type</span>)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - zone object is not a Stack or Canvas wrapper&#x27;</span>);
 

@@ -9,7 +9,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 const {canvas1, canvas2, canvas3} = scrawl.library.canvas;
-const cells = scrawl.library.cell;
+
 
 scrawl.importDomImage('.canal');
 

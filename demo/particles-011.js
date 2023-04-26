@@ -112,13 +112,13 @@ scrawl.makeTracer({
     stampAction: function (artefact, particle, host) {
 
         let history = particle.history,
-            remaining, z, start;
+            start;
 
         history.forEach((p, index) => {
 
             if (index < 10 || (index > 20 && index < 30) || index > 40) {
 
-                [remaining, z, ...start] = p;
+                [ , , ...start] = p;
                 artefact.simpleStamp(host, { start });
             }
         });
@@ -141,13 +141,13 @@ scrawl.makeTracer({
 
         let history = particle.history,
             len = history.length,
-            remaining, z, start;
+            start;
 
         history.forEach((p, index) => {
 
             if (index % 3 === 0) {
 
-                [remaining, z, ...start] = p;
+                [ , , ...start] = p;
                 
                 artefact.simpleStamp(host, {
                     start,
@@ -173,11 +173,11 @@ scrawl.makeTracer({
 
         let history = particle.history,
             len = history.length,
-            remaining, z, start;
+            start;
 
         history.forEach((p, index) => {
 
-            [remaining, z, ...start] = p;
+            [ , , ...start] = p;
 
             let magicNumber = (len - index) / len;
             

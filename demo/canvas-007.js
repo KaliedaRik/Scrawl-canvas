@@ -584,7 +584,7 @@ makeGradient({
 });
 
 // __Map to gradient__ filter
-const myFilter = makeFilter({
+makeFilter({
 
     name: name('mapToGradient'),
     method: 'mapToGradient',

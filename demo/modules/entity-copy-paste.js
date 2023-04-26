@@ -71,7 +71,7 @@ const initializeEntityCopyPaste = (items = {}, scrawl) => {
             const packetsString = entityGroupGetPackets();
 
             navigator.clipboard.writeText(packetsString)
-            .then(res => resolve(packetsString))
+            .then(() => resolve(packetsString))
             .catch(e => {
 
                 console.log('entityGroupCopy error', e.message);
@@ -110,7 +110,7 @@ const initializeEntityCopyPaste = (items = {}, scrawl) => {
     const entityGroupDelete = () => {
 
         entityGroupCopy()
-        .then(res => {
+        .then(() => {
 
             selectedEntitys.killArtefacts();
             updateControllerDisplay.onEnd();

@@ -293,7 +293,7 @@ const report = reportSpeed('#reportmessage', function () {
     if (typeof dragging !== 'boolean') {
 
         if (dragging && dragging.artefact) return `Currently dragging: ${dragging.artefact.name}`
-    };
+    }
     return 'Currently dragging: nothing';
 });
 

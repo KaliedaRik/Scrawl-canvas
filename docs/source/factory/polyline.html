@@ -612,7 +612,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, constructors, particle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { addStrings, correctForZero, doCreate, isa_boolean, isa_obj, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/coordinate.js&#x27;</span>;
 
@@ -1116,10 +1116,10 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         <span class="hljs-keyword">const</span> pins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPins</span>,
             pin = pins[i];
 
-        <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>;
+        <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>;
 
         <span class="hljs-keyword">const</span> [px, py] = pin;
-        <span class="hljs-keyword">const</span> [ox, oy] = pins[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">const</span> [ox] = pins[<span class="hljs-number">0</span>];
         <span class="hljs-keyword">const</span> [lx, ly] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localOffset</span>;
         <span class="hljs-keyword">const</span> [sx, sy] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
         <span class="hljs-keyword">let</span> dx, dy;
@@ -1134,7 +1134,6 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
         }
         <span class="hljs-keyword">return</span> [sx + dx, sy + dy];
     }
-    <span class="hljs-keyword">return</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
 };</pre></div></div>
             
         </li>
@@ -1518,7 +1517,6 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
     <span class="hljs-keyword">const</span> getPathParts = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getPathParts</span>,
         buildLine = <span class="hljs-variable language_">this</span>.<span class="hljs-property">buildLine</span>,
         buildCurve = <span class="hljs-variable language_">this</span>.<span class="hljs-property">buildCurve</span>,
-        pins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pins</span>,
         cPin = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPins</span>, 
         tension = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tension</span>,
         closed = <span class="hljs-variable language_">this</span>.<span class="hljs-property">closed</span>;</pre></div></div>
@@ -1610,7 +1608,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
 
 P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>,
+    <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>,
         def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mapToPins</span>) {

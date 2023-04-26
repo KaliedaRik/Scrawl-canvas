@@ -587,7 +587,7 @@
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _freeze, _HSL, _keys, _RGB, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BUTT</span>, <span class="hljs-variable constant_">DEFAULT_FONT</span>, <span class="hljs-variable constant_">HASH</span>, <span class="hljs-variable constant_">HIGH</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LINE_DASH</span>, <span class="hljs-variable constant_">LINE_WIDTH</span>, <span class="hljs-variable constant_">MITER</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STATE_ALL_KEYS</span>, <span class="hljs-variable constant_">STATE_LINE_KEYS</span>, <span class="hljs-variable constant_">STATE_MAIN_KEYS</span>, <span class="hljs-variable constant_">STATE_STYLE_KEYS</span>, <span class="hljs-variable constant_">STATE_TEXT_KEYS</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">T_COLOR</span>, <span class="hljs-variable constant_">T_PHRASE</span>, <span class="hljs-variable constant_">T_STATE</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">UNDEF</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { _HSL, _keys, _RGB, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BUTT</span>, <span class="hljs-variable constant_">DEFAULT_FONT</span>, <span class="hljs-variable constant_">HASH</span>, <span class="hljs-variable constant_">HIGH</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LINE_DASH</span>, <span class="hljs-variable constant_">LINE_WIDTH</span>, <span class="hljs-variable constant_">MITER</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STATE_ALL_KEYS</span>, <span class="hljs-variable constant_">STATE_LINE_KEYS</span>, <span class="hljs-variable constant_">STATE_MAIN_KEYS</span>, <span class="hljs-variable constant_">STATE_STYLE_KEYS</span>, <span class="hljs-variable constant_">STATE_TEXT_KEYS</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">T_COLOR</span>, <span class="hljs-variable constant_">T_PHRASE</span>, <span class="hljs-variable constant_">T_STATE</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">UNDEF</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./color.js&#x27;</span>;
@@ -608,7 +608,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">State</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">State</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">lineDash</span> = [];
@@ -1004,7 +1004,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
     <span class="hljs-keyword">return</span> result;
 };
 
-P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
+P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy</span>) {
 
     <span class="hljs-keyword">let</span> fill = copy.<span class="hljs-property">fillStyle</span>,
         stroke = copy.<span class="hljs-property">strokeStyle</span>;
@@ -1094,9 +1094,7 @@ P.<span class="hljs-property">get</span> = <span class="hljs-keyword">function</
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> undef;
 };
 
-<span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
-    S = P.<span class="hljs-property">setters</span>,
-    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
+<span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -1175,7 +1173,7 @@ S.<span class="hljs-property">shadowColor</span> = <span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getChanges</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">ent, engineState</span>) {
 
-    <span class="hljs-keyword">let</span> k, style, scaled, i, iz, j, jz,
+    <span class="hljs-keyword">let</span> k, scaled, i, iz, j, jz,
         linedashFlag, desired, current;
 
     <span class="hljs-keyword">const</span> defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>,

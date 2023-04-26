@@ -6,44 +6,9 @@ import * as scrawl from '../source/scrawl.js'
 
 
 // #### Scene setup
-let library = scrawl.library;
-
+// None for this demo
 
 // #### Scene animation
-// Function that updates the live report on user activity
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow, text,
-        testMessage = document.querySelector('#reportmessage');
-
-    let artefactnames = library.artefactnames,
-        stacknames = library.stacknames,
-        elementnames = library.elementnames,
-        artefact = library.artefact,
-        stack = library.stack,
-        element = library.element;
-
-    let a, s, el;
-
-    return function () {
-
-        a = Object.keys(artefact);
-        s = Object.keys(stack);
-        el = Object.keys(element);
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-artefact - ${a.length}, ${artefactnames.length}: [${(artefactnames).join(', ')}] 
-stack - ${s.length}, ${stacknames.length}: [${(stacknames).join(', ')}] 
-element - ${el.length}, ${elementnames.length}: [${(elementnames).join(', ')}]`;
-    };
-}();
-
-
 // Animation loop - can't use `scrawl.makeRender` in this case because there's no initial stack/canvas arterfact to render. Using `scrawl.makeAnimation` which in turn runs `scrawl.render` instead
 scrawl.makeAnimation({
 

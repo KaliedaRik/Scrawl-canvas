@@ -38,7 +38,7 @@ const build = function (items) {
 
 
         // Build out the frame
-        const { graphWidth, graphHeight, graphBottom, graphLeft } = dims;
+        const { graphHeight, graphBottom, graphLeft } = dims;
 
         const group = scrawl.makeGroup({
 

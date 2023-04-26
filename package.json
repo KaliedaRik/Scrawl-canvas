@@ -8,7 +8,7 @@
   "scripts": {
     "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
     "dev": "light-server -p 8000 --serve . --open",
-    "lint": "npx eslint source/**",
+    "lint": "npx eslint source/**/*.js demo/*.js demo/**/*.js",
     "test": "tsc"
   },
   "keywords": [

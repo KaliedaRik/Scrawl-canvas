@@ -28,6 +28,7 @@ const initializeMinimap = (args = {}, scrawl) => {
     // Check we have required arguments/values
     if (scrawl == null) throw new Error('SC entity navigation module error: missing Scrawl-canvas object argument');
 
+/* eslint-disable-next-line */
     let { mainDimensions, mapDimensions, supportedKey, canvas } = args;
 
     let argsCheck = '';

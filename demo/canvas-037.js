@@ -58,7 +58,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,
@@ -105,7 +105,7 @@ let draggingArtefact = false,
     currentDragY = 0;
 
 // Pan effect, split across three separate event listeners (starting, during, ending)
-scrawl.addListener('down', (e) => {
+scrawl.addListener('down', () => {
 
     let here = base.here,
         target = baseGroup.getArtefactAt(base.here);
@@ -120,7 +120,7 @@ scrawl.addListener('down', (e) => {
     }
 }, canvas.domElement);
 
-scrawl.addListener('move', (e) => {
+scrawl.addListener('move', () => {
 
     let here = base.here;
 
@@ -145,7 +145,7 @@ scrawl.addListener('move', (e) => {
     }
 }, canvas.domElement);
 
-scrawl.addListener(['up', 'leave'], (e) => {
+scrawl.addListener(['up', 'leave'], () => {
 
     draggingArtefact = false;
     currentDragX = 0;

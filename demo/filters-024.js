@@ -48,7 +48,7 @@ const piccy = scrawl.makePicture({
 
 
 // #### Weights canvas
-let curvesCell = wCanvas.buildCell({
+wCanvas.buildCell({
 
     name: 'curves-cell',
     dimensions: [360, 360],
@@ -188,24 +188,21 @@ const recalculateWeights = function () {
         greenCurve = scrawl.library.entity['green-bezier'],
         blueCurve = scrawl.library.entity['blue-bezier'];
 
-    const step = 360 / 256,
-        inverseStep = 256 / 360;
-
-    const { engine, element } = curvesCell;
+    const inverseStep = 256 / 360;
 
     return function () {
 
-        const [startAllX, temp0] = allCurve.get('position');
-        const [endAllX, temp1] = allCurve.get('endPosition');
+        const [startAllX] = allCurve.get('position');
+        const [endAllX] = allCurve.get('endPosition');
 
-        const [startRedX, temp2] = redCurve.get('position');
-        const [endRedX, temp3] = redCurve.get('endPosition');
+        const [startRedX] = redCurve.get('position');
+        const [endRedX] = redCurve.get('endPosition');
 
-        const [startGreenX, temp4] = greenCurve.get('position');
-        const [endGreenX, temp5] = greenCurve.get('endPosition');
+        const [startGreenX] = greenCurve.get('position');
+        const [endGreenX] = greenCurve.get('endPosition');
 
-        const [startBlueX, temp6] = blueCurve.get('position');
-        const [endBlueX, temp7] = blueCurve.get('endPosition');
+        const [startBlueX] = blueCurve.get('position');
+        const [endBlueX] = blueCurve.get('endPosition');
 
         const redArray = [],
             greenArray = [],
@@ -338,7 +335,7 @@ const recalculateWeights = function () {
 
 
 // #### Scene animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: [wCanvas, oCanvas],

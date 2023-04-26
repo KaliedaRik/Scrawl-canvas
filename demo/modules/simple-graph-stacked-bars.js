@@ -72,8 +72,7 @@ api.build = function (items) {
 
 
         // Local variables defined at the top of the build function
-        const area = data.area,
-            yearLabels = data.yearLabels, 
+        const yearLabels = data.yearLabels, 
             categoryLabels = data.categoryLabels, 
             yearData = data.yearData,
 

@@ -224,7 +224,7 @@ const myemitter = scrawl.makeEmitter({
 // @ts-expect-error
             roll = this.get('roll');
 
-        history.forEach((p, index) => {
+        history.forEach(p => {
 
             [remaining, z, ...start] = p;
             globalAlpha = remaining / 6;

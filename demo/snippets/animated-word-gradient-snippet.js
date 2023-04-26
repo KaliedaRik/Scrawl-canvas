@@ -45,7 +45,7 @@
 // + Imports the element's background color, and sets the element background to `transparent`
 // + Imports the element's text node text, and sets the text color to `transparent`
 // + ___Note that canvas text will NEVER be as good as DOM text!___
-export default function (scrawl, el, args = {}) {
+export default function (scrawl, el) {
 
     // Apply the snippet to the DOM element
     let snippet = scrawl.makeSnippet({
@@ -122,4 +122,4 @@ export default function (scrawl, el, args = {}) {
 
     // Return the snippet, so coders can access the snippet's parts - in case they need to tweak the output to meet the web page's specific requirements
     return snippet;
-};
+}

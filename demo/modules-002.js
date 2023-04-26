@@ -79,7 +79,7 @@ scrawl.addNativeListener('change', () => {
         piccy.set({
             asset: assetName,
         });
-    };
+    }
 }, '#wikipedia-page');
 
 

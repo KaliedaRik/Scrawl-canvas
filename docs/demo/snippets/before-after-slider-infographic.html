@@ -430,7 +430,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getNavigationData = <span class="hljs-keyword">function</span> (<span class="hljs-params">el, store, canvas</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getNavigationData = <span class="hljs-keyword">function</span> (<span class="hljs-params">el, store</span>) {
 
     <span class="hljs-keyword">if</span> (!el) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
@@ -469,6 +469,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pinFactory = <span class="hljs-keyword">function</span> (<span class="hljs-params">scrawl, items, canvas, pinTextGroup, pinTextBackgroundGroup, colors</span>) {
 
+<span class="hljs-comment">/* eslint-disable-next-line */</span>
     <span class="hljs-keyword">let</span> { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, labelbackground, shared, suppressAccessibleText } = items;
 
     <span class="hljs-keyword">const</span> coords = position.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);</pre></div></div>
@@ -486,7 +487,8 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> checkVisibility = <span class="hljs-keyword">function</span> (<span class="hljs-params">entity</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable-next-line */</span>
+    <span class="hljs-keyword">const</span> checkVisibility = <span class="hljs-keyword">function</span> (<span class="hljs-params">entity</span>) {
 
         <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
     }</pre></div></div>
@@ -940,7 +942,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> navItems = <span class="hljs-title function_">getNavigationData</span>(element.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;:scope &gt; nav&#x27;</span>), {}, canvas);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> navItems = <span class="hljs-title function_">getNavigationData</span>(element.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;:scope &gt; nav&#x27;</span>));</pre></div></div>
             
         </li>
         
@@ -1139,7 +1141,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
                 <span class="hljs-keyword">const</span> canvasWidth = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;width&#x27;</span>);
                 <span class="hljs-keyword">const</span> currentPos = dragBar.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>);
-                <span class="hljs-keyword">const</span> [x, y] = currentPos;
+                <span class="hljs-keyword">const</span> [x] = currentPos;
 
                 <span class="hljs-keyword">const</span> dir = (moveLeft) ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>;
 
@@ -1601,7 +1603,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
                     <span class="hljs-keyword">const</span> canvasWidth = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;width&#x27;</span>);
                     <span class="hljs-keyword">const</span> currentPos = dragBar.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>);
-                    <span class="hljs-keyword">const</span> [x, y] = currentPos;
+                    <span class="hljs-keyword">const</span> [x] = currentPos;
 
                     <span class="hljs-keyword">const</span> distance = (x * <span class="hljs-number">100</span>) / canvasWidth;
                     <span class="hljs-keyword">const</span> pos = <span class="hljs-string">`<span class="hljs-subst">${distance.toFixed(<span class="hljs-number">2</span>)}</span>%`</span>;
@@ -1633,7 +1635,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
                 <span class="hljs-attr">updateOnEnd</span>: <span class="hljs-function">() =&gt;</span> {
 
-                    <span class="hljs-keyword">let</span> [x, y] = dragBar.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>),
+                    <span class="hljs-keyword">let</span> [x] = dragBar.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>),
                         width = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;width&#x27;</span>);
 
                     dragBar.<span class="hljs-title function_">set</span>({
@@ -1725,7 +1727,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> snippet;
-};</pre></div></div>
+}</pre></div></div>
             
         </li>
         

@@ -78,7 +78,7 @@ export default function (scrawl, el, args = {}) {
         wrapper.domElement.style.backgroundColor = 'transparent';
  
         // We add an event listener to the DOM element
-        let clickAction = (e) => {
+        let clickAction = () => {
 
             let {x, y, active} = canvas.here;
 
@@ -117,4 +117,4 @@ export default function (scrawl, el, args = {}) {
         scrawl.addNativeListener(['click', 'touchend'], clickAction, el);
     }
     return snippet;
-};
+}

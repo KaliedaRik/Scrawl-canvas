@@ -105,7 +105,7 @@ let impressionistAsset = scrawl.makeRawAsset({
         // + It's at this point that we fill the RawAsset canvas with the background image, if required
         key: 'trigger', 
         defaultValue: false,
-        setter: function (item) {
+        setter: function () {
 
             if (this.dirtyBackground) {
 
@@ -214,7 +214,7 @@ scrawl.makePicture({
     method: 'none',
 });
 
-const displayImage = scrawl.makePicture({
+scrawl.makePicture({
     name: 'display-image',
     asset: 'pretend-van-gogh',
     dimensions: [dimension, dimension],

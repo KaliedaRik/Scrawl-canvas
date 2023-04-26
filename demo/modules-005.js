@@ -29,6 +29,7 @@ sceneCanvas.set({
 
 // #### Create the editor
 const {
+/* eslint-disable-next-line */
     killSceneEditor,
     sceneLayer,
     addControllerAttributes,
@@ -165,7 +166,7 @@ scrawl.makePhrase({
 // Most interaction is handled in the modules; the only thing we need to do here is give users the opportunity to update their keyboard character choices for manipulating the GUI controls
 const button = document.querySelector('#update-keyboard-shortcuts-action');
 
-const buttonClickAction = (e) => {
+const buttonClickAction = () => {
 
     const keys = window.prompt('To change the keyboard settings to move, scale and rotate selected entitys, enter the desired characters (11 in total) in the order MOVE-DELTA, MOVE-UP, MOVE-LEFT, MOVE-DOWN, MOVE-RIGHT, SCALE-DELTA, SCALE-GROW, SCALE-SHRINK, ROTATE-DELTA, ROTATE-CLOCKWISE, ROTATE-ANTI-CLOCKWISE (with no spaces or separating commas etc, though the comma key can be used as a shortcut). Character case will be ignored.', 'QWASDBNMGJH');
     

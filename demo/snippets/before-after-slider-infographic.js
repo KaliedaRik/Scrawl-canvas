@@ -174,7 +174,7 @@ const getPanelData = function (el, store, canvas) {
 };
 
 // Internal function to scrape data from the supplied element 
-const getNavigationData = function (el, store, canvas) {
+const getNavigationData = function (el, store) {
 
     if (!el) return false;
 
@@ -201,11 +201,13 @@ const getNavigationData = function (el, store, canvas) {
 // The pin factory takes all the data about pins that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each pin
 const pinFactory = function (scrawl, items, canvas, pinTextGroup, pinTextBackgroundGroup, colors) {
 
+/* eslint-disable-next-line */
     let { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, labelbackground, shared, suppressAccessibleText } = items;
 
     const coords = position.split(',');
 
     // TODO: We don't want to display a label if its associated pin is not currently visible to the user
+/* eslint-disable-next-line */
     const checkVisibility = function (entity) {
 
         return true;
@@ -469,7 +471,7 @@ export default function (scrawl, el) {
         if (leftPanel && rightPanel) {
 
             // __2. Get all information about links from the wrapper's &lt;nav> child element__
-            const navItems = getNavigationData(element.querySelector(':scope > nav'), {}, canvas);
+            const navItems = getNavigationData(element.querySelector(':scope > nav'));
 
             // __3. Get all information required from the wrapper element__
             const aria_label = element.dataset.label,
@@ -572,7 +574,7 @@ export default function (scrawl, el) {
 
                 const canvasWidth = canvas.get('width');
                 const currentPos = dragBar.get('position');
-                const [x, y] = currentPos;
+                const [x] = currentPos;
 
                 const dir = (moveLeft) ? -1 : 1;
 
@@ -876,7 +878,7 @@ export default function (scrawl, el) {
 
                     const canvasWidth = canvas.get('width');
                     const currentPos = dragBar.get('position');
-                    const [x, y] = currentPos;
+                    const [x] = currentPos;
 
                     const distance = (x * 100) / canvasWidth;
                     const pos = `${distance.toFixed(2)}%`;
@@ -908,7 +910,7 @@ export default function (scrawl, el) {
 
                 updateOnEnd: () => {
 
-                    let [x, y] = dragBar.get('position'),
+                    let [x] = dragBar.get('position'),
                         width = canvas.get('width');
 
                     dragBar.set({
@@ -940,4 +942,4 @@ export default function (scrawl, el) {
 
     // #### Return the snippet output
     return snippet;
-};
+}

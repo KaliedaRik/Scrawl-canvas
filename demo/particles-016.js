@@ -16,7 +16,7 @@ scrawl.importDomImage('.flowers');
 
 
 // Every Mesh uses a Net entity
-const myNet = scrawl.makeNet({
+scrawl.makeNet({
 
     name: 'test-net',
     order: 1,
@@ -73,7 +73,7 @@ const myNet = scrawl.makeNet({
 
     stampAction: function (artefact, particle, host) {
 
-        let [r, z, ...start] = particle.history[0];
+        let [ , , ...start] = particle.history[0];
 
         artefact.simpleStamp(host, { 
             start,
@@ -102,8 +102,8 @@ const myPicture = scrawl.makePicture({
 });
 
 
-// ___The Loom entity definition___
-let myMesh = scrawl.makeMesh({
+// ___The Mesh entity definition___
+scrawl.makeMesh({
 
     name: 'display-mesh',
 

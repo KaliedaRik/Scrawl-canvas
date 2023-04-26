@@ -12,8 +12,7 @@ import { reportSpeed } from './utilities.js';
 let artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     element = artefact.myelement,
-    canvas = artefact.mycanvas,
-    cell = canvas.base;
+    canvas = artefact.mycanvas;
 
 
 // Give the stack element some depth

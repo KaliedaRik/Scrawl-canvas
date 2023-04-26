@@ -20,6 +20,7 @@ import { reportSpeed } from './utilities.js';
 // + For this test demo, we forgo names and namespaces to make sure things still get generated and lodged in the library
 
 const namespace = 'demo';
+/* eslint-disable-next-line */
 const name = (n) => `${namespace}-${n}`;
 
 

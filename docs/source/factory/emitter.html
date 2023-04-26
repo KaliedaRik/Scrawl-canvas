@@ -594,9 +594,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, constructors, group, tween, world } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, constructors, world } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, xta, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { currentGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./canvas.js&#x27;</span>;
 
@@ -609,8 +609,6 @@
 <span class="hljs-keyword">import</span> { releaseCoordinate, requestCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./color.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { filterEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filter-engine.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;
@@ -1169,7 +1167,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">clone</span>) {
 
     <span class="hljs-keyword">return</span> clone;
 };</pre></div></div>
@@ -1216,8 +1214,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
-    S = P.<span class="hljs-property">setters</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>,
     D = P.<span class="hljs-property">deltaSetters</span>;
 
 S.<span class="hljs-property">rangeX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">range</span>.<span class="hljs-property">x</span> = val; };
@@ -1833,7 +1830,7 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         <span class="hljs-keyword">const</span> len = particleStore.<span class="hljs-property">length</span>,
             res = <span class="hljs-title function_">requestVector</span>();
 
-        <span class="hljs-keyword">let</span> r, parent, history, ignore1, ignore2, startval;
+        <span class="hljs-keyword">let</span> r, parent, history, startval;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; req; i++) {
 
@@ -1844,7 +1841,7 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
 
                 <span class="hljs-keyword">if</span> (history &amp;&amp; history.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>) {
 
-                    [ignore1, ignore2, ...startval] = history[<span class="hljs-title function_">_floor</span>(<span class="hljs-title function_">_random</span>() * history.<span class="hljs-property">length</span>)];
+                    [, , ...startval] = history[<span class="hljs-title function_">_floor</span>(<span class="hljs-title function_">_random</span>() * history.<span class="hljs-property">length</span>)];
 
                     <span class="hljs-keyword">if</span> (startval) res.<span class="hljs-title function_">setFromArray</span>(startval);
                     <span class="hljs-keyword">else</span> res.<span class="hljs-title function_">setFromVector</span>(parent.<span class="hljs-property">position</span>);

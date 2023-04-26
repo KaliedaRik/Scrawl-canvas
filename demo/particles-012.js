@@ -24,7 +24,7 @@ let myWorld = scrawl.makeWorld({
 });
 
 // Create the Net entity and pin the top row of Particles
-const myNet = scrawl.makeNet({
+scrawl.makeNet({
 
     name: 'test-net',
     world: myWorld,

@@ -634,7 +634,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, unstackedelement } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { doCreate, mergeOver, xt, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
@@ -756,6 +756,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h2 id="packet-management">Packet management</h2>
+<p>TODO</p>
 
             </div>
             
@@ -768,7 +769,8 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p>TODO</p>
+              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+<p>TODO</p>
 
             </div>
             
@@ -781,13 +783,10 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h2 id="define-prototype-functions">Define prototype functions</h2>
+<p>TODO - documentation</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
-    S = P.<span class="hljs-property">setters</span>,
-    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -798,9 +797,14 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <p>This is going to be rewritten as part of the “kill” review/recode work</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">demolish</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+};</pre></div></div>
             
         </li>
         
@@ -810,37 +814,6 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>This is going to be rewritten as part of the “kill” review/recode work</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">demolish</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">removeFromDom = <span class="hljs-literal">false</span></span>) {
-
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Adds a canvas element to sit behind the element, or in front of it, depending on the setting of the <strong>canvasOnTop</strong> attribute</p>
 
@@ -880,11 +853,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Observer function - runs on every RAF loop (when the DOM element is viewable); aim is to:</p>
 <ul>
@@ -921,13 +894,15 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         styleW = <span class="hljs-title function_">_floor</span>(<span class="hljs-built_in">parseFloat</span>(styleW));
         styleH = <span class="hljs-title function_">_floor</span>(<span class="hljs-built_in">parseFloat</span>(styleH));
 
+        <span class="hljs-keyword">let</span> w, h, z, hi, si;
+
         <span class="hljs-variable constant_">UE_INCLUDED_STYLES</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
             <span class="hljs-keyword">switch</span> (item) {
 
                 <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">WIDTH</span> :
 
-                    <span class="hljs-keyword">const</span> w = <span class="hljs-title function_">_max</span>(styleW, elW);
+                    w = <span class="hljs-title function_">_max</span>(styleW, elW);
                     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> != w) {
 
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> = w;
@@ -937,7 +912,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
                 <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">HEIGHT</span> :
 
-                    <span class="hljs-keyword">const</span> h = <span class="hljs-title function_">_max</span>(styleH, elH);
+                    h = <span class="hljs-title function_">_max</span>(styleH, elH);
                     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> != h) {
 
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> = h;
@@ -947,7 +922,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
                 <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">Z_INDEX</span> :
 
-                    <span class="hljs-keyword">let</span> z = (styleZ == <span class="hljs-variable constant_">AUTO</span>) ? <span class="hljs-number">0</span> : <span class="hljs-built_in">parseInt</span>(styleZ, <span class="hljs-number">10</span>);
+                    z = (styleZ == <span class="hljs-variable constant_">AUTO</span>) ? <span class="hljs-number">0</span> : <span class="hljs-built_in">parseInt</span>(styleZ, <span class="hljs-number">10</span>);
                     z = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasOnTop</span>) ? z + <span class="hljs-number">1</span> : z - <span class="hljs-number">1</span>;
 
                     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasZIndex</span> != z) {
@@ -959,8 +934,9 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
                 <span class="hljs-keyword">default</span> :
 
-                    <span class="hljs-keyword">const</span> hi = host[item],
-                        si = style[item];
+                    
+                    hi = host[item];
+                    si = style[item];
 
                     <span class="hljs-keyword">if</span>(!<span class="hljs-title function_">xt</span>(hi) || hi != si) {
                 
@@ -987,11 +963,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-22">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Perform any updates reported by the observer function</p>
 
@@ -1000,11 +976,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-23">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>UnstackedElement canvases keep their display and base canvases in dimensional sync - which means that <strong>relatively positioned and dimensioned</strong> entitys in the canvas (those set with appropriate ‘val%’ string values) will update in line with changes in the DOM element’s width, height, padding and margin values</p>
 
@@ -1070,11 +1046,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-24">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

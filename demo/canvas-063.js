@@ -47,7 +47,7 @@ const myColorFactory = scrawl.makeColor({
     maximumColor: "green"
 });
 
-const myCircleGroup = scrawl.makeGroup({
+scrawl.makeGroup({
 
     name: "my-circle-group",
     host: mainCell.name
@@ -90,7 +90,7 @@ scrawl.makeDragZone({
 // Build out the smaller map Cell (200px x 200px)
 // - this will initially display in the top right corner
 // - it will be draggable too
-const pivotGroup = scrawl.makeGroup({
+scrawl.makeGroup({
 
     name: "map-pivot-group",
     host: canvas.base.name
@@ -142,7 +142,7 @@ scrawl.makePicture({
 });
 
 // Add the draggable map frame
-const myFrameGroup = scrawl.makeGroup({
+scrawl.makeGroup({
 
     name: "my-frame-group",
     host: mapCell.name
@@ -306,10 +306,6 @@ const moveMinimap = (direction) => {
     });
 };
 
-const zoom = (direction) => {
-
-};
-
 const canvasKeys = (e) => {
 
     const { keyCode, shiftKey, isComposing } = e;
@@ -347,7 +343,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,

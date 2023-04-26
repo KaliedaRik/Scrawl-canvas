@@ -141,7 +141,7 @@ scrawl.makeEmitter({
     stampAction: function (artefact, particle, host) {
 
         let history = particle.history,
-            remaining, globalAlpha, scale, start, z, roll;
+            remaining, globalAlpha, scale, start, z;
 
         // These particles only keep data for their most recent position
         if (history.length) {
@@ -236,7 +236,7 @@ scrawl.makeEmitter({
         // These particles only keep data for their most recent position
         if (history.length) {
 
-            let [remaining, z, ...start] = history[0];
+            let [remaining, , ...start] = history[0];
 
             // This function handles fadein/out, and spangle shape. Spangle rotation is handled by the spangle entity itself, using a delta animation
             let globalAlpha = 1,
@@ -299,7 +299,7 @@ scrawl.makeFilter({
 
 
 // The flame animation uses a point-based Emitter entity positioned at the center of the Cell
-const myEmitter = scrawl.makeEmitter({
+scrawl.makeEmitter({
 
     name: 'flame',
     group: 'candle-cell',
@@ -329,7 +329,6 @@ const myEmitter = scrawl.makeEmitter({
 
         let engine = host.engine,
             history = particle.history,
-            len = history.length,
             remaining, radius, alpha, x, y, z,
             endRad = Math.PI * 2;
 
@@ -339,7 +338,7 @@ const myEmitter = scrawl.makeEmitter({
         engine.save();
         engine.setTransform(1, 0, 0, 1, 0, 0);
 
-        history.forEach((p, index) => {
+        history.forEach(p => {
 
             [remaining, z, x, y] = p;
             radius = 2 + z;
@@ -448,7 +447,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,

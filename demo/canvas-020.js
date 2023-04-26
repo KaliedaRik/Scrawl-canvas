@@ -19,7 +19,7 @@ const name = (n) => `${namespace}-${n}`;
 
 
 // Create gradients
-const myGrad = scrawl.makeGradient({
+scrawl.makeGradient({
     name: name('linear1'),
     endX: '100%',
     colors: [

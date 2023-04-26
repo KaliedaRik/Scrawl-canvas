@@ -7,7 +7,6 @@ import {
     importDomImage,
     makeFilter,
     makePicture,
-    createImageFromEntity,
     makeRadialGradient,
     makeBlock,
     makeRender,

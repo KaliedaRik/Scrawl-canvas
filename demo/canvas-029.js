@@ -309,7 +309,7 @@ if ('fonts' in document) {
         document.fonts.load('18px Garamond'),
         document.fonts.load('46px "Mountains of Christmas"')
     ])
-    .then(res => {
+    .then(() => {
 
         const { engine } = canvas;
 

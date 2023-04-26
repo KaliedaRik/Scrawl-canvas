@@ -188,7 +188,7 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
 }, '#show-path');
 
 // Move the paths
-scrawl.addNativeListener(['change', 'input'], (e) => {
+scrawl.addNativeListener(['change', 'input'], () => {
 
     pathGroup.setArtefacts({
 // @ts-expect-error
@@ -198,7 +198,7 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
 }, '.move-paths');
 
 // LineSpiral adjustments
-scrawl.addNativeListener(['change', 'input'], (e) => {
+scrawl.addNativeListener(['change', 'input'], () => {
 
     spiral.set({
 // @ts-expect-error

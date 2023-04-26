@@ -13,10 +13,6 @@ const canvas2 = scrawl.library.canvas['canvas-2'];
 
 scrawl.importDomImage('.flowers');
 
-const colorFactory = scrawl.makeColor({
-    name: 'my-color-factory',
-});
-
 
 // Create the filter
 const myFilter = scrawl.makeFilter({
@@ -78,11 +74,6 @@ scrawl.makeRender({
 
 
 // #### User interaction
-// Use a color object to convert between CSS hexadecimal and RGB decimal colors
-const converter = scrawl.makeColor({
-    name: 'converter',
-});
-
 scrawl.makeUpdater({
 
     event: ['change'],

@@ -480,7 +480,7 @@ scrawl.makeGradient({
 });
 
 // __Map to gradient__ filter
-const myFilter = scrawl.makeFilter({
+scrawl.makeFilter({
 
     name: name('mapToGradient'),
     method: 'mapToGradient',

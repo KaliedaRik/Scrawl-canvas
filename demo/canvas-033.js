@@ -98,7 +98,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,
@@ -137,9 +137,9 @@ canvas.setReduceMotionAction(() => setTimeout(() => stopAnimation("reduced-motio
 
 canvas.setNoPreferenceMotionAction(() => startAnimation("reduced-motion"));
 
-const startButton = scrawl.addNativeListener(['click', 'keydown', 'touchend'], startAnimation, '#play');
+scrawl.addNativeListener(['click', 'keydown', 'touchend'], startAnimation, '#play');
 
-const stopButton = scrawl.addNativeListener(['click', 'keydown', 'touchend'], stopAnimation, '#pause');
+scrawl.addNativeListener(['click', 'keydown', 'touchend'], stopAnimation, '#pause');
 
 
 

@@ -173,8 +173,11 @@ scrawl.importMediaStream({
     });
 
     // Start the MediaPipe model
+/* eslint-disable */
 // @ts-expect-error
     model = new SelfieSegmentation({
+
+/* eslint-enable */
         locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
     });
 
@@ -182,9 +185,11 @@ scrawl.importMediaStream({
     model.onResults(perform);
 
     // Use MediaPipe's camera functionality to get updates to the forever loop
+/* eslint-disable */
 // @ts-expect-error
     const mediaPipeCamera = new Camera(video.source, {
 
+/* eslint-enable */
         onFrame: async () => {
 
             await model.send({image: video.source});

@@ -119,7 +119,7 @@ scrawl.makeEmitter({
         let history = particle.history,
             remaining, globalAlpha, scale, start, z, roll;
 
-        history.forEach((p, index) => {
+        history.forEach(p => {
 
             [remaining, z, ...start] = p;
             

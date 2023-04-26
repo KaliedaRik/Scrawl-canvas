@@ -50,7 +50,7 @@ const buildSmokeRing = function (namespace, canvasWrapper) {
     scrawl.releaseVector(v);
 
     // Create Polyline entity
-    let snake = scrawl.makePolyline({
+    scrawl.makePolyline({
 
         name: getName('snake'),
         group: getName('cell'),
@@ -77,7 +77,8 @@ const buildSmokeRing = function (namespace, canvasWrapper) {
     cell.compile();
 
     // Create the Picture entity, which uses the image asset created in the previous step
-    const img = scrawl.makePicture({
+scrawl.makePicture({
+
         name: getName('smoke-ring'),
         group: canvasWrapper.get('baseGroup'),
 

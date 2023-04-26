@@ -598,9 +598,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, artefactnames, constructors, element, elementnames } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, isa_dom, pushUnique, removeItem, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, isa_dom, removeItem, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { uiSubscribedElements } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/user-interaction.js&#x27;</span>;
 
@@ -609,7 +609,7 @@
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/dom.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _computed, <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CORNER_SELECTOR</span>, <span class="hljs-variable constant_">ELEMENT</span>, <span class="hljs-variable constant_">MIMIC</span>, <span class="hljs-variable constant_">T_ELEMENT</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CORNER_SELECTOR</span>, <span class="hljs-variable constant_">ELEMENT</span>, <span class="hljs-variable constant_">MIMIC</span>, <span class="hljs-variable constant_">T_ELEMENT</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -931,8 +931,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
         canvas.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-canvas`</span>;
         
-        <span class="hljs-keyword">const</span> rect = el.<span class="hljs-title function_">getBoundingClientRect</span>(),
-            style = <span class="hljs-title function_">_computed</span>(el);
+        <span class="hljs-keyword">const</span> rect = el.<span class="hljs-title function_">getBoundingClientRect</span>();
 
         el.<span class="hljs-property">parentNode</span>.<span class="hljs-title function_">insertBefore</span>(canvas, <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>);
 

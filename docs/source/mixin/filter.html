@@ -879,7 +879,7 @@
                     currentFilters.<span class="hljs-title function_">push</span>(...arr);
                     <span class="hljs-title function_">releaseArray</span>(arr);
                 }
-            };
+            }
             <span class="hljs-title function_">releaseArray</span>(buckets);
         }
         <span class="hljs-keyword">else</span> currentFilters.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
@@ -978,7 +978,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">preprocessFilters</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">filters</span>) {
 
-        <span class="hljs-keyword">let</span> i, iz, j, jz, flag, img, width, height, snd, cnd, filter, obj, copyX, copyY, copyWidth, copyHeight, destWidth, destHeight;
+        <span class="hljs-keyword">let</span> i, iz, flag, img, width, height, snd, cnd, filter, obj, copyX, copyY, copyWidth, copyHeight, destWidth, destHeight;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = filters.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
@@ -1133,7 +1133,7 @@
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">dirtyFilterIdentifier</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateFilterIdentifier</span>(<span class="hljs-literal">true</span>);
     };
-};</pre></div></div>
+}</pre></div></div>
             
         </li>
         

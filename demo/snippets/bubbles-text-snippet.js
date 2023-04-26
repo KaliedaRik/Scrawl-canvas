@@ -65,7 +65,7 @@ export default function (el, scrawl) {
     if (snippet) {
 
         // Import data and functionality from the Text Snippet Helper module
-        let { canvas, group, dataset, compStyles, name, yOffset, fontSize, lineHeight, initCanvas, initPhrase, textGroup, eternalTweens, responsiveFunctions, contrastMoreActions, contrastOtherActions, colorSchemeDarkActions, colorSchemeLightActions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
+        let { canvas, group, dataset, compStyles, name, fontSize, initCanvas, initPhrase, textGroup, eternalTweens, responsiveFunctions, contrastMoreActions, contrastOtherActions, colorSchemeDarkActions, colorSchemeLightActions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
 
         // Initialise the canvas
         initCanvas();
@@ -306,4 +306,4 @@ export default function (el, scrawl) {
 
     // Return the snippet, so coders can access the snippet's parts - in case they need to tweak the output to meet the web page's specific requirements
     return snippet;
-};
+}

@@ -8,8 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas,
-    styles = scrawl.library.styles;
+const canvas = scrawl.library.canvas.mycanvas;
 
 const [w, h] = canvas.get('dimensions');
 
@@ -105,7 +104,7 @@ let isGathering = false,
 let startX = 0,
     startY = 0;
 
-const downAction = (e) => {
+const downAction = () => {
 
     const { here } = canvas;
 
@@ -252,7 +251,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,

@@ -801,9 +801,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
-    S = P.<span class="hljs-property">setters</span>,
-    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -1298,7 +1296,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
 
                 el.<span class="hljs-property">srcObject</span> = mediaStream;
 
-                el.<span class="hljs-property">onloadedmetadata</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+                el.<span class="hljs-property">onloadedmetadata</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
                     el.<span class="hljs-title function_">play</span>();
                 }

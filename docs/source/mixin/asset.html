@@ -705,7 +705,7 @@
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;sourceLoaded&#x27;</span>, <span class="hljs-string">&#x27;source&#x27;</span>, <span class="hljs-string">&#x27;subscribers&#x27;</span>]);
 
 
-    P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
+    P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy</span>) {
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-property">length</span>) {
 
@@ -760,9 +760,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>, 
-        S = P.<span class="hljs-property">setters</span>, 
-        D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -970,7 +968,7 @@
         sub.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
         sub.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     };
-};</pre></div></div>
+}</pre></div></div>
             
         </li>
         

@@ -53,6 +53,7 @@ let myWorld = scrawl.makeWorld({
 scrawl.makeForce({
 
     name: 'wind',
+/* eslint-disable-next-line */
     action: (particle, world, host) => {
 
         particle.load.vectorAdd({
@@ -174,7 +175,7 @@ const myNet = scrawl.makeNet({
     // The `stampAction` function describes the steps that our Net will take to draw each of its particles (and springs, hit regions) onto the host canvas screen.
     stampAction: function (artefact, particle, host) {
 
-        let [r, z, ...start] = particle.history[0];
+        let [ , , ...start] = particle.history[0];
 
         artefact.simpleStamp(host, { 
             start,

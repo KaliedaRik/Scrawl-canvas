@@ -53,7 +53,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,
@@ -67,13 +67,6 @@ const interpretColors = function () {
 
     const lowColor = document.querySelector('#lowColor');
     const highColor = document.querySelector('#highColor');
-
-    let lowRed = 0,
-        lowGreen = 0,
-        lowBlue = 0,
-        highRed = 92,
-        highGreen = 127,
-        highBlue = 92;
 
     return function () {
 

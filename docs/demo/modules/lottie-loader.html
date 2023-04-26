@@ -278,7 +278,9 @@
         container.<span class="hljs-property">id</span> = name;
 
         hold.<span class="hljs-title function_">appendChild</span>(container);
-        <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">appendChild</span>(hold);</pre></div></div>
+        <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">appendChild</span>(hold);
+
+<span class="hljs-comment">/* eslint-disable */</span></pre></div></div>
             
         </li>
         
@@ -294,6 +296,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> controller = bodymovin.<span class="hljs-title function_">loadAnimation</span>({
+
+<span class="hljs-comment">/* eslint-enable */</span>
             container,
             <span class="hljs-attr">path</span>: src,
             <span class="hljs-attr">renderer</span>: <span class="hljs-string">&#x27;canvas&#x27;</span>,
@@ -393,7 +397,7 @@
         });
     }
     <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-title function_">doWork</span>());
-};</pre></div></div>
+}</pre></div></div>
             
         </li>
         

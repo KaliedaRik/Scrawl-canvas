@@ -44,7 +44,7 @@
 // __Effects on the element:__ 
 // + no additional effects on the DOM element
 // + setting any background fill on the DOM element will hide the snippet canvas, unless it is deliberately brought forward
-export default function (scrawl, el, args = {}) {
+export default function (scrawl, el) {
 
     // Apply the snippet to the DOM element
     let snippet = scrawl.makeSnippet({
@@ -104,4 +104,4 @@ export default function (scrawl, el, args = {}) {
 
     // Return the snippet, so coders can access the snippet's parts - in case they need to tweak the output to meet the web page's specific requirements
     return snippet;
-};
+}

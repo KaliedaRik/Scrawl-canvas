@@ -64,7 +64,7 @@ export const getSnippetData = (snippet, scrawl) => {
         name = wrapper.name,
         dataset = el.dataset;
 
-    const {fontStyle, fontVariant, fontWeight, fontSize, fontFamily, lineHeight, color, width, height, backgroundColor, textAlign, letterSpacing} = compStyles;
+    const {fontStyle, fontVariant, fontWeight, fontSize, fontFamily, lineHeight, width, height, textAlign, letterSpacing} = compStyles;
 
     let yOffset = 0,
         lineheightAdjuster = 1,
@@ -148,13 +148,13 @@ export const getSnippetData = (snippet, scrawl) => {
 
     if (el.getAttribute('contenteditable')) {
 
-        const updateText = (e) => {
+        const updateText = () => {
             textGroup.setArtefacts({ text: processText(el.innerHTML) });
         }
-        const focusText = (e) => {
+        const focusText = () => {
             el.style.color = 'gray';
         }
-        const blurText = (e) => {
+        const blurText = () => {
             el.style.color = 'transparent';
         }
 
@@ -275,7 +275,7 @@ export const getSnippetData = (snippet, scrawl) => {
         control.textContent = 'Halt';
         control.setAttribute('contenteditable', 'false');
 
-        const controlClick = (e) => {
+        const controlClick = () => {
             doAnimation = !doAnimation;
 
             if (doAnimation) {

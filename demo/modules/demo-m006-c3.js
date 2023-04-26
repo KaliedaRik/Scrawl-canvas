@@ -352,7 +352,7 @@ export default function (items) {
 
 
     // #### Animation
-    const arrowProgress = scrawl.makeWorld({
+    scrawl.makeWorld({
 
         name: name('world'),
 
@@ -444,4 +444,4 @@ export default function (items) {
         animation,
         kill: () => scrawl.library.purge(namespace),
     };
-};
+}

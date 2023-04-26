@@ -586,7 +586,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset, cell, constructors, entity, group } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, cell, constructors, entity, group } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { doCreate, mergeOver, pushUnique, removeItem, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
@@ -603,7 +603,7 @@
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> filterMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/filter.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _isArray, _entries, _floor, <span class="hljs-variable constant_">ACCEPTED_OWNERS</span>, <span class="hljs-variable constant_">ADD_CLASSES</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">GROUP</span>, <span class="hljs-variable constant_">REMOVE_CLASSES</span>, <span class="hljs-variable constant_">REVERSE_BY_DELTA</span>, <span class="hljs-variable constant_">SET</span>, <span class="hljs-variable constant_">SET_DELTA</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">UPDATE_BY_DELTA</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _isArray, _floor, _values, <span class="hljs-variable constant_">ACCEPTED_OWNERS</span>, <span class="hljs-variable constant_">ADD_CLASSES</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">GROUP</span>, <span class="hljs-variable constant_">REMOVE_CLASSES</span>, <span class="hljs-variable constant_">REVERSE_BY_DELTA</span>, <span class="hljs-variable constant_">SET</span>, <span class="hljs-variable constant_">SET_DELTA</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">UPDATE_BY_DELTA</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -885,22 +885,22 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">_entries</span>(artefact).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, art]</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">_values</span>(artefact).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> {
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(art.<span class="hljs-property">groups</span>) &amp;&amp; art.<span class="hljs-property">groups</span>.<span class="hljs-title function_">includes</span>(myname)) {
 
             <span class="hljs-title function_">removeItem</span>(art.<span class="hljs-property">groups</span>, myname);
             art.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
-        };
+        }
     });
 
-    <span class="hljs-title function_">_entries</span>(cell).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, obj]</span>) =&gt;</span> {
+    <span class="hljs-title function_">_values</span>(cell).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">obj</span> =&gt;</span> {
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(obj.<span class="hljs-property">groups</span>) &amp;&amp; obj.<span class="hljs-property">groups</span>.<span class="hljs-title function_">includes</span>(myname)) {
 
             <span class="hljs-title function_">removeItem</span>(obj.<span class="hljs-property">groups</span>, myname);
             obj.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
-        };
+        }
     });</pre></div></div>
             
         </li>
@@ -1369,7 +1369,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
                 artefactCalculateBuckets.<span class="hljs-title function_">push</span>(...arr);
                 <span class="hljs-title function_">releaseArray</span>(arr);
             }
-        };
+        }
         <span class="hljs-title function_">releaseArray</span>(calcBuckets);
 
         artefactStampBuckets.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
@@ -1382,7 +1382,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
                 artefactStampBuckets.<span class="hljs-title function_">push</span>(...arr);
                 <span class="hljs-title function_">releaseArray</span>(arr);
             }
-        };
+        }
         <span class="hljs-title function_">releaseArray</span>(stampBuckets);
     }
 };</pre></div></div>
@@ -1437,8 +1437,6 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">stampAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">myCell</span>) {
-
-    <span class="hljs-keyword">const</span> mystash = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-property">stashOutput</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">const</span> { dirtyFilters, currentFilters, artefactStampBuckets, noFilters, filters, stashOutput, currentHost } = <span class="hljs-variable language_">this</span>;
 
@@ -1809,7 +1807,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">moveArtefactsIntoGroup</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
 
-    <span class="hljs-keyword">let</span> temp, art, grp;
+    <span class="hljs-keyword">let</span> temp, art;
 
     args.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 

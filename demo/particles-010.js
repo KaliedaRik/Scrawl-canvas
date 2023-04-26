@@ -53,7 +53,7 @@ let myWorld = scrawl.makeWorld({
 
 
 // Create a Net entity
-const myNet = scrawl.makeNet({
+scrawl.makeNet({
 
     name: 'weak-arrow',
     world: myWorld,
@@ -125,7 +125,7 @@ const myNet = scrawl.makeNet({
 
     stampAction: function (artefact, particle, host) {
 
-            let [r, z, ...start] = particle.history[0];
+            let [ , , ...start] = particle.history[0];
 
             artefact.simpleStamp(host, { 
                 start,

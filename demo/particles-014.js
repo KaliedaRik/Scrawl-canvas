@@ -81,11 +81,11 @@ let emitter = scrawl.makeEmitter({
     stampAction: function (artefact, particle, host) {
 
         let history = particle.history,
-            remaining, start, z;
+            start;
 
         if (history.length) {
 
-            [remaining, z, ...start] = history[0];
+            [ , , ...start] = history[0];
 
             artefact.simpleStamp(host, { 
                 start,
@@ -119,7 +119,7 @@ const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,

@@ -567,9 +567,9 @@
 
 <span class="hljs-keyword">import</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/animation.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged, forceUpdate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./system-flags.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./system-flags.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _computed, _entries, _floor, _now, _round, _seal, <span class="hljs-variable constant_">ADD_EVENT_LISTENER</span>, <span class="hljs-variable constant_">CHANGE</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">MOUSE_DOWN</span>, <span class="hljs-variable constant_">MOUSE_ENTER</span>, <span class="hljs-variable constant_">MOUSE_LEAVE</span>, <span class="hljs-variable constant_">MOUSE_MOVE</span>, <span class="hljs-variable constant_">MOUSE_UP</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">POINTER</span>, <span class="hljs-variable constant_">POINTER_DOWN</span>, <span class="hljs-variable constant_">POINTER_ENTER</span>, <span class="hljs-variable constant_">POINTER_LEAVE</span>, <span class="hljs-variable constant_">POINTER_MOVE</span>, <span class="hljs-variable constant_">POINTER_UP</span>, <span class="hljs-variable constant_">REMOVE_EVENT_LISTENER</span>, <span class="hljs-variable constant_">RESIZE</span>, <span class="hljs-variable constant_">SCROLL</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_PHRASE</span>, <span class="hljs-variable constant_">TOUCH</span>, <span class="hljs-variable constant_">TOUCH_CANCEL</span>, <span class="hljs-variable constant_">TOUCH_END</span>, <span class="hljs-variable constant_">TOUCH_MOVE</span>, <span class="hljs-variable constant_">TOUCH_START</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span></pre></div></div>
+<span class="hljs-keyword">import</span> { _computed, _floor, _now, _round, _seal, _values, <span class="hljs-variable constant_">ADD_EVENT_LISTENER</span>, <span class="hljs-variable constant_">CHANGE</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">MOUSE_DOWN</span>, <span class="hljs-variable constant_">MOUSE_ENTER</span>, <span class="hljs-variable constant_">MOUSE_LEAVE</span>, <span class="hljs-variable constant_">MOUSE_MOVE</span>, <span class="hljs-variable constant_">MOUSE_UP</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">POINTER</span>, <span class="hljs-variable constant_">POINTER_DOWN</span>, <span class="hljs-variable constant_">POINTER_ENTER</span>, <span class="hljs-variable constant_">POINTER_LEAVE</span>, <span class="hljs-variable constant_">POINTER_MOVE</span>, <span class="hljs-variable constant_">POINTER_UP</span>, <span class="hljs-variable constant_">REMOVE_EVENT_LISTENER</span>, <span class="hljs-variable constant_">RESIZE</span>, <span class="hljs-variable constant_">SCROLL</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_PHRASE</span>, <span class="hljs-variable constant_">TOUCH</span>, <span class="hljs-variable constant_">TOUCH_CANCEL</span>, <span class="hljs-variable constant_">TOUCH_END</span>, <span class="hljs-variable constant_">TOUCH_MOVE</span>, <span class="hljs-variable constant_">TOUCH_START</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span></pre></div></div>
             
         </li>
         
@@ -789,7 +789,7 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> resizeAction = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> resizeAction = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">const</span> w = <span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-property">clientWidth</span>,
         h = <span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-property">clientHeight</span>;
@@ -829,7 +829,7 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> scrollAction = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> scrollAction = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">const</span> x = <span class="hljs-variable language_">window</span>.<span class="hljs-property">pageXOffset</span>,
         y = <span class="hljs-variable language_">window</span>.<span class="hljs-property">pageYOffset</span>;
@@ -1278,17 +1278,7 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
     }
 };
 
-<span class="hljs-keyword">const</span> updatePhraseEntitys = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, ent] <span class="hljs-keyword">of</span> <span class="hljs-title function_">_entries</span>(library.<span class="hljs-property">entity</span>)) {
-
-        <span class="hljs-keyword">if</span> (ent.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_PHRASE</span>) {
-
-            ent.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
-            ent.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
-        }
-    }
-};</pre></div></div>
+<span class="hljs-keyword">const</span> updatePhraseEntitys = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1298,6 +1288,60 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
               
               <div class="sswrap ">
                 <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <p>for (const [name, ent] of _entries(library.entity)) {</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">if</span> (ent.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_PHRASE</span>) {
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <pre><code>    ent.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+    ent.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
+}
+</code></pre>
+<p>}</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">_values</span>(library.<span class="hljs-property">entity</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">ent</span> =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (ent.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_PHRASE</span>) {
+
+            ent.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+            ent.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
+        }
+    })
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Internal functions that get triggered when setting a DOM-based artefact’s <code>trackHere</code> attribute. They add/remove an event listener to the artefact’s domElement.</p>
 
@@ -1338,11 +1382,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-33">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Animation object which checks whether any window event listeners have fired, and actions accordingly</p>
 
@@ -1394,11 +1438,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-34">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><code>Exported functions</code> (to modules and the scrawl object). Event listeners can be a drain on web page efficiency. If a web page contains only static canvas (and/or stack) displays, with no requirement for user interaction, we can minimize Scrawl-canvas’s impact on those pages by switching off the core listeners (and also the core animation loop).</p>
 
@@ -1426,11 +1470,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-35">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Helper function</p>
 
@@ -1467,11 +1511,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-36">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>Exported functions</code> (to modules). Invoke the resize and/or scroll event listeners once, outside the regular requestAnimationFrame tick.</p>
 

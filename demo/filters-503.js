@@ -14,7 +14,7 @@ scrawl.importDomImage('.flowers');
 
 
 // Create the target entity
-const piccy = scrawl.makePicture({
+scrawl.makePicture({
 
     name: 'base-piccy',
 
@@ -70,7 +70,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,

@@ -328,7 +328,7 @@
         name = wrapper.<span class="hljs-property">name</span>,
         dataset = el.<span class="hljs-property">dataset</span>;
 
-    <span class="hljs-keyword">const</span> {fontStyle, fontVariant, fontWeight, fontSize, fontFamily, lineHeight, color, width, height, backgroundColor, textAlign, letterSpacing} = compStyles;
+    <span class="hljs-keyword">const</span> {fontStyle, fontVariant, fontWeight, fontSize, fontFamily, lineHeight, width, height, textAlign, letterSpacing} = compStyles;
 
     <span class="hljs-keyword">let</span> yOffset = <span class="hljs-number">0</span>,
         lineheightAdjuster = <span class="hljs-number">1</span>,
@@ -412,13 +412,13 @@
 
     <span class="hljs-keyword">if</span> (el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;contenteditable&#x27;</span>)) {
 
-        <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateText</span> = (<span class="hljs-params">e</span>) =&gt; {
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateText</span> = (<span class="hljs-params"></span>) =&gt; {
             textGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">text</span>: <span class="hljs-title function_">processText</span>(el.<span class="hljs-property">innerHTML</span>) });
         }
-        <span class="hljs-keyword">const</span> <span class="hljs-title function_">focusText</span> = (<span class="hljs-params">e</span>) =&gt; {
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">focusText</span> = (<span class="hljs-params"></span>) =&gt; {
             el.<span class="hljs-property">style</span>.<span class="hljs-property">color</span> = <span class="hljs-string">&#x27;gray&#x27;</span>;
         }
-        <span class="hljs-keyword">const</span> <span class="hljs-title function_">blurText</span> = (<span class="hljs-params">e</span>) =&gt; {
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">blurText</span> = (<span class="hljs-params"></span>) =&gt; {
             el.<span class="hljs-property">style</span>.<span class="hljs-property">color</span> = <span class="hljs-string">&#x27;transparent&#x27;</span>;
         }
 
@@ -551,7 +551,7 @@
         control.<span class="hljs-property">textContent</span> = <span class="hljs-string">&#x27;Halt&#x27;</span>;
         control.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;contenteditable&#x27;</span>, <span class="hljs-string">&#x27;false&#x27;</span>);
 
-        <span class="hljs-keyword">const</span> <span class="hljs-title function_">controlClick</span> = (<span class="hljs-params">e</span>) =&gt; {
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">controlClick</span> = (<span class="hljs-params"></span>) =&gt; {
             doAnimation = !doAnimation;
 
             <span class="hljs-keyword">if</span> (doAnimation) {

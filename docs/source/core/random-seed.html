@@ -794,6 +794,7 @@ users always obtain the same EFFECTIVE uheprng seeding key.</p>
             
             <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">cleanString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">inStr</span>) {
             inStr = inStr.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/(^\s*)|(\s*$)/gi</span>, <span class="hljs-string">&#x27;&#x27;</span>); <span class="hljs-comment">// remove any/all leading spaces</span>
+<span class="hljs-comment">/* eslint-disable-next-line */</span>
             inStr = inStr.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/[\x00-\x1F]/gi</span>, <span class="hljs-string">&#x27;&#x27;</span>); <span class="hljs-comment">// remove any/all control characters</span>
             inStr = inStr.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\n /</span>, <span class="hljs-string">&#x27;\n&#x27;</span>); <span class="hljs-comment">// remove any/all trailing spaces</span>
             <span class="hljs-keyword">return</span> inStr; <span class="hljs-comment">// return the cleaned up result</span>

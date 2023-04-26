@@ -1187,7 +1187,7 @@
             }
             <span class="hljs-keyword">else</span> {
 
-                <span class="hljs-keyword">const</span> [source, x, y, w, h] = asset.<span class="hljs-property">manifest</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteTrack</span>][<span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteCurrentFrame</span>],
+                <span class="hljs-keyword">const</span> [, x, y, w, h] = asset.<span class="hljs-property">manifest</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteTrack</span>][<span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteCurrentFrame</span>],
                     [cx, cy, cw, ch] = copyArray;
 
                 <span class="hljs-keyword">if</span> (cx != x || cy != y || cw != w || ch != h) {
@@ -1250,7 +1250,7 @@
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">spriteIsRunning</span> = <span class="hljs-literal">false</span>;
     }
-};</pre></div></div>
+}</pre></div></div>
             
         </li>
         

@@ -560,11 +560,11 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, particle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { addStrings, isa_boolean, mergeOver, pushUnique, removeItem, xt, xta, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { addStrings, isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/coordinate.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _entries, <span class="hljs-variable constant_">BEZIER</span>, <span class="hljs-variable constant_">CONTROL</span>, <span class="hljs-variable constant_">COORD</span>, <span class="hljs-variable constant_">END</span>, <span class="hljs-variable constant_">END_CONTROL</span>, <span class="hljs-variable constant_">END_PARTICLE</span>, <span class="hljs-variable constant_">END_PATH</span>, <span class="hljs-variable constant_">END_PIVOT</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">PATH</span>, <span class="hljs-variable constant_">PIVOT</span>, <span class="hljs-variable constant_">QUADRATIC</span>, <span class="hljs-variable constant_">START_CONTROL</span>, <span class="hljs-variable constant_">T_BEZIER</span>, <span class="hljs-variable constant_">T_LINE</span>, <span class="hljs-variable constant_">T_PARTICLE</span>, <span class="hljs-variable constant_">T_PATH</span>, <span class="hljs-variable constant_">T_PIVOT</span>, <span class="hljs-variable constant_">T_QUADRATIC</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { _values, <span class="hljs-variable constant_">BEZIER</span>, <span class="hljs-variable constant_">CONTROL</span>, <span class="hljs-variable constant_">COORD</span>, <span class="hljs-variable constant_">END</span>, <span class="hljs-variable constant_">END_CONTROL</span>, <span class="hljs-variable constant_">END_PARTICLE</span>, <span class="hljs-variable constant_">END_PATH</span>, <span class="hljs-variable constant_">END_PIVOT</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">PATH</span>, <span class="hljs-variable constant_">PIVOT</span>, <span class="hljs-variable constant_">QUADRATIC</span>, <span class="hljs-variable constant_">START_CONTROL</span>, <span class="hljs-variable constant_">T_BEZIER</span>, <span class="hljs-variable constant_">T_LINE</span>, <span class="hljs-variable constant_">T_PARTICLE</span>, <span class="hljs-variable constant_">T_PATH</span>, <span class="hljs-variable constant_">T_PIVOT</span>, <span class="hljs-variable constant_">T_QUADRATIC</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;
 
 
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">capitalize</span> = (<span class="hljs-params">s</span>) =&gt; {
@@ -761,7 +761,7 @@
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-title function_">_entries</span>(artefact).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, art]</span>) =&gt;</span> {
+    <span class="hljs-title function_">_values</span>(artefact).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> {
 
         <span class="hljs-keyword">if</span> (art.<span class="hljs-property">name</span> !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) {
 
@@ -1037,7 +1037,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">curveInit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">curveInit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">end</span> = <span class="hljs-title function_">makeCoordinate</span>();
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEnd</span> = <span class="hljs-title function_">makeCoordinate</span>();
@@ -1432,7 +1432,7 @@
         }
 
         <span class="hljs-keyword">let</span> lock = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${label}</span>LockTo`</span>], 
-            x, y, ox, oy, here, host, dims, flag,
+            x, y, ox, oy, here, host, dims,
             raw = <span class="hljs-variable language_">this</span>[label],
             current = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`current<span class="hljs-subst">${capLabel}</span>`</span>];
 
@@ -1640,7 +1640,7 @@
             }
         });
     };
-};</pre></div></div>
+}</pre></div></div>
             
         </li>
         

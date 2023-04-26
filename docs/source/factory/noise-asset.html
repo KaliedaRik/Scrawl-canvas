@@ -592,9 +592,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/random-seed.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, easeEngines, interpolate, mergeOver, removeItem, λfirstArg, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./color.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, easeEngines, interpolate, mergeOver, λfirstArg, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { releaseArray, requestArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./array-pool.js&#x27;</span>;
 
@@ -958,9 +956,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
-    S = P.<span class="hljs-property">setters</span>,
-    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -1218,7 +1214,7 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyNoise</span> = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">const</span> {noiseEngine, seed, width, height, element, engine, octaves, lacunarity, persistence, scale, octaveFunction, sumFunction} = <span class="hljs-variable language_">this</span>;
+        <span class="hljs-keyword">const</span> {noiseEngine, seed, width, height, octaves, lacunarity, persistence, scale, octaveFunction, sumFunction} = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">if</span> (noiseEngine &amp;&amp; noiseEngine.<span class="hljs-property">init</span>) {</pre></div></div>
             
@@ -1269,7 +1265,7 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
 
             <span class="hljs-keyword">const</span> noiseValues = <span class="hljs-title function_">requestArray</span>();
 
-            <span class="hljs-keyword">let</span> x, y, o, i, iz,
+            <span class="hljs-keyword">let</span> x, y, o,
                 scaledX, scaledY,
                 totalNoise, amplitude, frequency;</pre></div></div>
             
@@ -1984,7 +1980,7 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
 
         <span class="hljs-attr">getNoiseValue</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
-            <span class="hljs-keyword">const</span> {width, height, worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = <span class="hljs-variable language_">this</span>;
+            <span class="hljs-keyword">const</span> {worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = <span class="hljs-variable language_">this</span>;
 
             <span class="hljs-keyword">const</span> f = worleyDistanceFunctions[<span class="hljs-variable constant_">EUCLIDEAN_DISTANCE</span>];
             <span class="hljs-keyword">const</span> o = worleyOutputFunctions[worleyOutput];
@@ -2017,7 +2013,7 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
 
         <span class="hljs-attr">getNoiseValue</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
-            <span class="hljs-keyword">const</span> {width, height, worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = <span class="hljs-variable language_">this</span>;
+            <span class="hljs-keyword">const</span> {worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = <span class="hljs-variable language_">this</span>;
 
             <span class="hljs-keyword">const</span> f = worleyDistanceFunctions[<span class="hljs-variable constant_">MANHATTAN_DISTANCE</span>];
             <span class="hljs-keyword">const</span> o = worleyOutputFunctions[worleyOutput];
@@ -2128,7 +2124,7 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;sine-x&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">v, sx, sy</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (<span class="hljs-title function_">_sin</span>((sx * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sineFrequencyCoeff</span>) + v) / <span class="hljs-number">2</span>) },
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;sine-x&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">v, sx</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (<span class="hljs-title function_">_sin</span>((sx * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sineFrequencyCoeff</span>) + v) / <span class="hljs-number">2</span>) },
     <span class="hljs-string">&#x27;sine-y&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">v, sx, sy</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (<span class="hljs-title function_">_sin</span>((sy * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sineFrequencyCoeff</span>) + v) / <span class="hljs-number">2</span>) },
     <span class="hljs-attr">sine</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">v, sx, sy</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (<span class="hljs-title function_">_sin</span>((sx * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sineFrequencyCoeff</span>) + v) / <span class="hljs-number">4</span>) + (<span class="hljs-title function_">_sin</span>((sy * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sineFrequencyCoeff</span>) + v) / <span class="hljs-number">4</span>) },</pre></div></div>
             

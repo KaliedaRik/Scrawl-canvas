@@ -16,7 +16,7 @@ let library = scrawl.library,
 let report = function () {
 
     let testTicker = Date.now(),
-        testTime, testNow, text,
+        testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
     let artefactnames = library.artefactnames,
@@ -76,7 +76,7 @@ let controls = function () {
 // @ts-expect-error
     b4.disabled = '';
 
-    let stackCanvas, divCanvas;
+    let stackCanvas;
 
     // Using a color factory object to generate random colors within a restricted palette
     scrawl.makeColor({

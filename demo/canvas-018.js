@@ -10,8 +10,6 @@ import {
     makeRender,
     makeSpiral,
     makeUpdater,
-
-    makeFilter,
 } from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';

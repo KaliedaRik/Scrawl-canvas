@@ -70,4 +70,4 @@ export default function (scrawl, el) {
 
     // The return value for this snippet is a boolean, not a JS Object containing links to major actors/actions in the snippet
     return (snippet) ? true : false;
-};
+}

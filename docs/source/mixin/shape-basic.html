@@ -699,8 +699,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
-        S = P.<span class="hljs-property">setters</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>,
         D = P.<span class="hljs-property">deltaSetters</span>;
 
     S.<span class="hljs-property">species</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
@@ -1051,7 +1050,7 @@
                 progress = <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitProgression</span>,
                 requiredProgress = pos * len;
 
-            <span class="hljs-keyword">let</span> currentProgress, indexProgress, lastProgress, diffProgress,
+            <span class="hljs-keyword">let</span> indexProgress, lastProgress, diffProgress,
                 currentPosition, indexPosition, nextPosition, diffPosition,
                 index = -<span class="hljs-number">1</span>;
 
@@ -1803,7 +1802,7 @@
 
         <span class="hljs-keyword">return</span> [<span class="hljs-title function_">_floor</span>(x - hX), <span class="hljs-title function_">_floor</span>(y - hY), <span class="hljs-title function_">_ceil</span>(w), <span class="hljs-title function_">_ceil</span>(h), sX, sY];
     };
-};</pre></div></div>
+}</pre></div></div>
             
         </li>
         

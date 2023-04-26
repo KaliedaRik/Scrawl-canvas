@@ -111,7 +111,7 @@ const report = reportSpeed('#reportmessage', function () {
 
     const [startX, startY] = lorem.start;
     const [handleX, handleY] = lorem.handle;
-    const [width, height] = lorem.dimensions;
+    const width = lorem.dimensions[0];
 
     const {roll, scale} = lorem;
 

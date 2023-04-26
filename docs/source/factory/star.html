@@ -628,7 +628,7 @@
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shape-basic.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _abs, _min, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">STAR</span>, <span class="hljs-variable constant_">T_STAR</span>, <span class="hljs-variable constant_">ZERO_PATH</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _abs, _min, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">STAR</span>, <span class="hljs-variable constant_">T_STAR</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -918,7 +918,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
         radius2 = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius2</span>;
 
     <span class="hljs-keyword">let</span> currentX, currentY, x, y,
-        myMin, myXoffset, myYoffset, i,
+        myMin, myXoffset, i,
         myPath = <span class="hljs-variable constant_">ZERO_STR</span>;
 
     <span class="hljs-keyword">if</span> (radius1.<span class="hljs-property">substring</span> || radius2.<span class="hljs-property">substring</span>) {
@@ -927,7 +927,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 
         <span class="hljs-keyword">if</span> (host) {
 
-            <span class="hljs-keyword">const</span> [hW, hH] = host.<span class="hljs-property">currentDimensions</span>;
+            <span class="hljs-keyword">const</span> hW = host.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">0</span>];
 
             radius1 = (radius1.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(radius1) / <span class="hljs-number">100</span>) * hW : radius1;
             radius2 = (radius2.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(radius2) / <span class="hljs-number">100</span>) * hW : radius2;

@@ -146,10 +146,11 @@ const checkPeg = function () {
     // - so we can pop it when found, then push it onto mypeg
     const updateState = function (mypeg, mydisc) {
 
-        for (const [pName, pState] of Object.entries(pegState)) {
+        Object.values(pegState).forEach(pState => {
 
             if (pState.includes(mydisc.name)) pState.pop();
-        }
+        });
+
         pegState[mypeg.name].push(mydisc.name);
     }
 
@@ -159,10 +160,10 @@ const checkPeg = function () {
 
         discGroup.clearArtefacts();
 
-        for (const [pName, pState] of Object.entries(pegState)) {
+        Object.values(pegState).forEach(pState => {
 
             if (pState.length) discGroup.addArtefacts(pState[pState.length - 1]);
-        }
+        });
 
         // Because this Group is outside the Display cycle
         // - (we haven't assigned it to a Cell object)

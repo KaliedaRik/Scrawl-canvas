@@ -74,7 +74,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-const demoAnimation = makeRender({
+makeRender({
 
     name: "demo-animation",
     target: canvas,

@@ -13,8 +13,7 @@ let canvas = scrawl.library.artefact.mycanvas;
 
 // Magic numbers
 const noOfPins = 16,
-    angleAddition = 90,
-    pinRotationAngle = 360 / noOfPins;;
+    pinRotationAngle = 360 / noOfPins;
 
 // User-updatable values
 let densityValue = 600,
@@ -138,7 +137,7 @@ const report = reportSpeed('#reportmessage', function () {
 });
 
 // Create the Display cycle animation
-const animation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,
@@ -169,7 +168,7 @@ scrawl.addNativeListener(['input', 'change'], () => {
     densityValue = density.value;
 
 // @ts-expect-error
-    pathrollValue = ('0' === pathroll.value) ? false : true;
+    pathrollValue = ('0' === pathRotation.value) ? false : true;
 
     // Setting the `currentOutline` variable to a null string guarantees that the Shape entity's pathDefinition will be recalculated at the start of the next Display cycle
     currentOutline = '';
@@ -182,6 +181,7 @@ rotation.value = 360;
 length.value = 20;
 // @ts-expect-error
 density.value = 600;
-pathroll.options.selectedIndex = 0;
+// @ts-expect-error
+pathRotation.options.selectedIndex = 0;
 
 console.log(scrawl.library);

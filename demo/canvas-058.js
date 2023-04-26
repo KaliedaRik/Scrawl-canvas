@@ -119,7 +119,7 @@ scrawl.makeBlock({
 const report = reportSpeed('#reportmessage');
 
 // Create the Display cycle animation
-const animation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,

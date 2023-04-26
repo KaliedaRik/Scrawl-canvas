@@ -39,8 +39,11 @@ export default function (items) {
         hold.appendChild(container);
         document.body.appendChild(hold);
 
+/* eslint-disable */
 // @ts-expect-error
         const controller = bodymovin.loadAnimation({
+
+/* eslint-enable */
             container,
             path: src,
             renderer: 'canvas',
@@ -128,4 +131,4 @@ export default function (items) {
         });
     }
     return Promise.resolve(doWork());
-};
+}

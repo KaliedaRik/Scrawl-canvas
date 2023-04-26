@@ -126,7 +126,7 @@ scrawl.addNativeListener('touchmove', (e) => {
 }, canvas.domElement);
 
 // Undo action
-scrawl.addNativeListener('click', (e) => {
+scrawl.addNativeListener('click', () => {
 
     let line = lineHold.pop();
 
@@ -139,7 +139,7 @@ scrawl.addNativeListener('click', (e) => {
 }, '#undo-button');
 
 // Redo action
-scrawl.addNativeListener('click', (e) => {
+scrawl.addNativeListener('click', () => {
 
     let line = lineBin.pop();
 
@@ -152,7 +152,7 @@ scrawl.addNativeListener('click', (e) => {
 }, '#redo-button');
 
 // Clear action
-scrawl.addNativeListener('click', (e) => {
+scrawl.addNativeListener('click', () => {
 
     lineHold.forEach(line => line && line.kill());
     lineHold.length = 0;

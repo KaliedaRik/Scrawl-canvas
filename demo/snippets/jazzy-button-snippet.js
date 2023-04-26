@@ -170,7 +170,7 @@ export default function (scrawl, el) {
             ]
         });
 
-        let clickAction = (e) => {
+        let clickAction = () => {
 
             // Increase the local counter; update the Phrase entity with new text
             counter++;
@@ -210,4 +210,4 @@ export default function (scrawl, el) {
         };
     }
     return snippet;
-};
+}

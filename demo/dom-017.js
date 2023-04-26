@@ -561,7 +561,7 @@ const report = reportSpeed('#reportmessage', () => reportFullLibrary(scrawl));
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "report-animation",
     noTarget: true,

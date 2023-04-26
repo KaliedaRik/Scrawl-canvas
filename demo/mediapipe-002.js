@@ -65,6 +65,7 @@ let myAsset = scrawl.makeRawAsset({
             for (const landmarks of stuff.multiFaceLandmarks) {
 
                 // We'll draw stuff on the canvas using MediaPipe's own drawing routines
+/* eslint-disable */
 // @ts-expect-error
                 drawConnectors(engine, landmarks, FACEMESH_TESSELATION, {color: '#707070', lineWidth: 1});
 // @ts-expect-error
@@ -79,6 +80,7 @@ let myAsset = scrawl.makeRawAsset({
                 drawConnectors(engine, landmarks, FACEMESH_FACE_OVAL, {color: '#000000'});
 // @ts-expect-error
                 drawConnectors(engine, landmarks, FACEMESH_LIPS, {color: '#000000'});
+/* eslint-enable */
             }
         }
         engine.restore();
@@ -133,9 +135,11 @@ scrawl.importMediaStream({
     });
 
     // Start the MediaPipe model
+/* eslint-disable */
 // @ts-expect-error
     model = new FaceMesh({
 
+/* eslint-enable */
         locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
     });
 
@@ -147,9 +151,11 @@ scrawl.importMediaStream({
     model.onResults(perform);
 
     // Use MediaPipe's camera functionality to get updates to the forever loop
+/* eslint-disable */
 // @ts-expect-error
     const mediaPipeCamera = new Camera(video.source, {
 
+/* eslint-enable */
         onFrame: async () => {
 
             await model.send({image: video.source});

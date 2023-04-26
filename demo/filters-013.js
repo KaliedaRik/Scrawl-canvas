@@ -59,7 +59,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,
@@ -68,11 +68,6 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-// Use a color object to convert between CSS hexadecimal and RGB decimal colors
-const converter = scrawl.makeColor({
-    name: 'converter',
-});
-
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
@@ -103,8 +98,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
     if (e && e.target) {
 
-        const target = e.target.id,
-            val = e.target.value;
+        const val = e.target.value;
 
         myFilter.set({ 
             reference: val, 

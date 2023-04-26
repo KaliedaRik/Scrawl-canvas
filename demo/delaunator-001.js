@@ -34,8 +34,6 @@ const triangleOfEdge = (e) => Math.floor(e / 3);
 
 const nextHalfedge = (e) => (e % 3 === 2) ? e - 2 : e + 1;
 
-const prevHalfedge = (e) => (e % 3 === 0) ? e + 2 : e - 1;
-
 const forEachTriangleEdge = (pts, del, cb) => {
 
     let { triangles, halfedges } = del;
@@ -54,36 +52,11 @@ const forEachTriangleEdge = (pts, del, cb) => {
     }
 };
 
-const forEachTriangle = (pts, del, cb) => {
-
-    let len = del.triangles.length / 3;
-
-    for (let t = 0; t < len; t++) {
-
-        cb(t, pointsOfTriangle(del, t).map(p => pts[p]));
-    }
-};
-
 const triangleCenter = (pts, del, t) => {
 
     const vertices = pointsOfTriangle(del, t).map(p => pts[p]);
 
     return circumcenter(vertices[0], vertices[1], vertices[2]);
-};
-
-const trianglesAdjacentToTriangle = (del, t) => {
-
-    let { halfedges } = del;
-
-    const adjacent = [];
-
-    for (const e of edgesOfTriangle(t)) {
-
-        const opposite = halfedges[e];
-
-        if (opposite >= 0) adjacent.push(triangleOfEdge(opposite));
-    }
-    return adjacent;
 };
 
 const circumcenter = (a, b, c) => {
@@ -121,55 +94,6 @@ const forEachVoronoiEdge = (pts, del, cb) => {
                 cb(e, p, q);
             }
         }
-    }
-};
-
-const edgesAroundPoint = (del, start) => {
-
-    let { halfedges } = del;
-
-    const result = [];
-
-    let incoming = start;
-
-    do {
-
-        result.push(incoming);
-        const outgoing = nextHalfedge(incoming);
-        incoming = halfedges[outgoing];
-
-    } while (incoming !== -1 && incoming !== start);
-
-    return result;
-};
-
-const forEachVoronoiCell = (pts, del, cb) => {
-
-    const index = new Map();
-
-    let { triangles, halfedges } = del;
-
-    let tLen = triangles.length,
-        pLen = pts.length;
-
-    for (let e = 0; e < tLen; e++) {
-
-        const endpoint = triangles[nextHalfedge(e)];
-
-        if (!index.has(endpoint) || halfedges[e] === -1) index.set(endpoint, e);
-    }
-
-    for (let p = 0; p < pLen; p++) {
-
-        const incoming = index.get(p);
-
-        const E = edgesAroundPoint(del, incoming);
-
-        const T = E.map(triangleOfEdge);
-
-        const V = T.map(t => triangleCenter(pts, del, t));
-
-        cb(p, V);
     }
 };
 
@@ -249,7 +173,7 @@ const buildDelaunayObject = function (coords) {
     return Delaunator.from(coords);
 };
 
-const myEmitter = makeEmitter({
+makeEmitter({
 
     name: 'field-emitter',
     world: myWorld,
@@ -305,11 +229,7 @@ const myEmitter = makeEmitter({
 
         if (delaunay) {
 
-// @ts-expect-error
-            let particles = this.particleStore,
-                engine = host.engine,
-// @ts-expect-error
-                radius = this.world.connectionRadius;
+            const engine = host.engine;
 
             engine.save();
 
@@ -355,7 +275,7 @@ const myEmitter = makeEmitter({
     // The `stampAction` function just adds the stars to the scene
     stampAction: function (artefact, particle, host) {
 
-        let [r, z, ...start] = particle.history[0];
+        let [, , ...start] = particle.history[0];
         artefact.simpleStamp(host, {start});
     },
 });

@@ -578,9 +578,7 @@
 
 <span class="hljs-keyword">import</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/random-seed.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { constrain, doCreate, mergeOver, removeItem, λfirstArg, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./color.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { constrain, doCreate, mergeOver, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell-fragment.js&#x27;</span>;
 
@@ -896,9 +894,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
-    S = P.<span class="hljs-property">setters</span>,
-    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -1331,7 +1327,7 @@ S.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-ke
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScene</span>) {
 
-        <span class="hljs-keyword">const</span> { element, engine, dataArrays, diffusionRateA, diffusionRateB, feedRate, killRate, currentSource, drawEvery, maxGenerations, currentGeneration } = <span class="hljs-variable language_">this</span>;
+        <span class="hljs-keyword">const</span> { dataArrays, diffusionRateA, diffusionRateB, feedRate, killRate, currentSource, drawEvery, maxGenerations, currentGeneration } = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">let</span> sourceA, destA, sourceB, destB, a, b, c, cz, da, db;
 
@@ -1735,19 +1731,19 @@ P.<span class="hljs-property">checkCol</span> = <span class="hljs-keyword">funct
 
     <span class="hljs-keyword">return</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dataArrays</span>.<span class="hljs-property">length</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 };
-P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index, width</span>) {
+P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) {
 
-    <span class="hljs-keyword">let</span> destA, sourceA, destB, sourceB;
+    <span class="hljs-keyword">let</span> destA, destB;
 
     <span class="hljs-keyword">const</span> { dataArrays, currentSource } = <span class="hljs-variable language_">this</span>;
 
     <span class="hljs-keyword">if</span> (currentSource) {
 
-        [destA, sourceA, destB, sourceB] = dataArrays;
+        [destA, , destB, ] = dataArrays;
     }
     <span class="hljs-keyword">else</span> {
 
-        [sourceA, destA, sourceB, destB] = dataArrays;
+        [, destA, , destB] = dataArrays;
     }
 
     <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> + (destA[index] - destB[index])) / <span class="hljs-number">2</span>;

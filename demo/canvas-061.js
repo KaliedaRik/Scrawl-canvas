@@ -98,10 +98,6 @@ const blockGroup = scrawl.makeGroup({
 let counter = 0;
 const generateBlocks = (numRequired) => {
 
-// @ts-expect-error
-    const ease = (bespokeEasings[easing.value]) ? bespokeEasings[easing.value] : easing.value;
-// @ts-expect-error
-    const p = parseInt(precision.value, 10);
     const maxWidth = width - 60;
     const maxHeight = height - 60;
 
@@ -146,7 +142,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,
@@ -194,7 +190,7 @@ scrawl.addNativeListener(['change'], (e) => {
 
 }, '#precision');
 
-scrawl.addNativeListener(['click'], (e) => {
+scrawl.addNativeListener(['click'], () => {
 
     generateBlocks(100);
 

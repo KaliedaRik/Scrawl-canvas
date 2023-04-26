@@ -1159,7 +1159,7 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
                 hold = [];
                 <span class="hljs-keyword">for</span> (y = j, yz = j + tileHeight; y &lt; yz; y++) {
                     <span class="hljs-keyword">if</span> (y &gt;= <span class="hljs-number">0</span> &amp;&amp; y &lt; iHeight) {
-                        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> x = i, xz = i + tileWidth; x &lt; xz; x++) {
+                        <span class="hljs-keyword">for</span> (x = i, xz = i + tileWidth; x &lt; xz; x++) {
                             <span class="hljs-keyword">if</span> (x &gt;= <span class="hljs-number">0</span> &amp;&amp; x &lt; iWidth) hold.<span class="hljs-title function_">push</span>((((y * iWidth) + x) * <span class="hljs-number">4</span>) + <span class="hljs-number">3</span>);
                         }
                     }
@@ -2021,9 +2021,9 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cacheOutput</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">name, obj, caller</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cacheOutput</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">name, obj</span>) {
 
-    cache[name] = obj;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>[name] = obj;
 };</pre></div></div>
             
         </li>
@@ -2293,7 +2293,7 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>;
         
-        <span class="hljs-keyword">let</span> r, g, b, a, i, j, jz, tVal;
+        <span class="hljs-keyword">let</span> a, j, jz, tVal;
 
         <span class="hljs-keyword">let</span> {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, lineOut } = requirements;
 
@@ -2481,28 +2481,13 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
             ];
         };
 
-        <span class="hljs-keyword">const</span> <span class="hljs-title function_">alphaCalc</span> = (<span class="hljs-params">dA, mA</span>) =&gt; (dA + (mA * (<span class="hljs-number">1</span> - dA))) * <span class="hljs-number">255</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-47">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
-              </div>
-              <p>const colorEngine = this.colorEngine;</p>
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">alphaCalc</span> = (<span class="hljs-params">dA, mA</span>) =&gt; (dA + (mA * (<span class="hljs-number">1</span> - dA))) * <span class="hljs-number">255</span>;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
         <span class="hljs-keyword">const</span> [input, output, mix] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
         <span class="hljs-keyword">const</span> {<span class="hljs-attr">width</span>:iWidth, <span class="hljs-attr">height</span>:iHeight, <span class="hljs-attr">data</span>:iData} = input;
-        <span class="hljs-keyword">const</span> {<span class="hljs-attr">width</span>:oWidth, <span class="hljs-attr">height</span>:oHeight, <span class="hljs-attr">data</span>:oData} = output;
+        <span class="hljs-keyword">const</span> {<span class="hljs-attr">data</span>:oData} = output;
         <span class="hljs-keyword">const</span> {<span class="hljs-attr">width</span>:mWidth, <span class="hljs-attr">height</span>:mHeight, <span class="hljs-attr">data</span>:mData} = mix;
-        <span class="hljs-keyword">const</span> len = iData.<span class="hljs-property">length</span>;
 
         <span class="hljs-keyword">let</span> {opacity, blend, offsetX, offsetY, lineOut} = requirements;
 
@@ -2511,17 +2496,53 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetX) offsetX = <span class="hljs-number">0</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetY) offsetY = <span class="hljs-number">0</span>;
 
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">colorburnCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; {
+            <span class="hljs-keyword">if</span> (dmix == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">255</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (din == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> - <span class="hljs-title function_">_min</span>(<span class="hljs-number">1</span>, ((<span class="hljs-number">1</span> - dmix) / din ))) * <span class="hljs-number">255</span>;
+        };
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">colordodgeCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; {
+            <span class="hljs-keyword">if</span> (dmix == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (din == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">255</span>;
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">_min</span>(<span class="hljs-number">1</span>, (dmix / (<span class="hljs-number">1</span> - din))) * <span class="hljs-number">255</span>;
+        };
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">darkenCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (din &lt; dmix) ? din : dmix;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">differenceCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; <span class="hljs-title function_">_abs</span>(din - dmix) * <span class="hljs-number">255</span>;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">exclusionCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (din + dmix - (<span class="hljs-number">2</span> * dmix * din)) * <span class="hljs-number">255</span>;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">hardlightCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (din &lt;= <span class="hljs-number">0.5</span>) ? (din * dmix) * <span class="hljs-number">255</span> : (dmix + (din - (dmix * din))) * <span class="hljs-number">255</span>;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">lightenCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (din &gt; dmix) ? din : dmix;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">lighterCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (din + dmix) * <span class="hljs-number">255</span>;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">multiplyCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; din * dmix * <span class="hljs-number">255</span>;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">overlayCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (din &gt;= <span class="hljs-number">0.5</span>) ? (din * dmix) * <span class="hljs-number">255</span> : (dmix + (din - (dmix * din))) * <span class="hljs-number">255</span>;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">screenCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (dmix + (din - (dmix * din))) * <span class="hljs-number">255</span>;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">softlightCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; {
+            <span class="hljs-keyword">const</span> d = (dmix &lt;= <span class="hljs-number">0.25</span>) ?
+                ((((<span class="hljs-number">16</span> * dmix) - <span class="hljs-number">12</span>) * dmix) + <span class="hljs-number">4</span>) * dmix :
+                <span class="hljs-title function_">_sqrt</span>(dmix);
+
+            <span class="hljs-keyword">if</span> (din &lt;= <span class="hljs-number">0.5</span>) <span class="hljs-keyword">return</span> (dmix - ((<span class="hljs-number">1</span> - (<span class="hljs-number">2</span> * din)) * dmix * (<span class="hljs-number">1</span> - dmix))) * <span class="hljs-number">255</span>;
+            <span class="hljs-keyword">return</span> (dmix + (((<span class="hljs-number">2</span> * din) - <span class="hljs-number">1</span>) * (d - dmix))) * <span class="hljs-number">255</span>;
+        };
+
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">normalCalc</span> = (<span class="hljs-params">Cs, As, Cb, Ab</span>) =&gt; (<span class="hljs-title class_">As</span> * <span class="hljs-title class_">Cs</span>) + (<span class="hljs-title class_">Ab</span> * <span class="hljs-title class_">Cb</span> * (<span class="hljs-number">1</span> - <span class="hljs-title class_">As</span>));
+
         <span class="hljs-keyword">let</span> x, y, dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA, ir, ig, ib, ia, mr, mg, mb, ma, cr, cg, cb;
 
         <span class="hljs-keyword">switch</span> (blend) {
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">COLOR_BURN</span> :
-
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">colorburnCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; {
-                    <span class="hljs-keyword">if</span> (dmix == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">255</span>;
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (din == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-                    <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> - <span class="hljs-title function_">_min</span>(<span class="hljs-number">1</span>, ((<span class="hljs-number">1</span> - dmix) / din ))) * <span class="hljs-number">255</span>;
-                };
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -2555,12 +2576,6 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">COLOR_DODGE</span> :
 
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">colordodgeCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; {
-                    <span class="hljs-keyword">if</span> (dmix == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (din == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">255</span>;
-                    <span class="hljs-keyword">return</span> <span class="hljs-title function_">_min</span>(<span class="hljs-number">1</span>, (dmix / (<span class="hljs-number">1</span> - din))) * <span class="hljs-number">255</span>;
-                };
-
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
 
@@ -2592,8 +2607,6 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">DARKEN</span> :
-
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">darkenCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (din &lt; dmix) ? din : dmix;
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -2627,8 +2640,6 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">DIFFERENCE</span> :
 
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">differenceCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; <span class="hljs-title function_">_abs</span>(din - dmix) * <span class="hljs-number">255</span>;
-
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
 
@@ -2658,8 +2669,6 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">EXCLUSION</span> :
-
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">exclusionCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (din + dmix - (<span class="hljs-number">2</span> * dmix * din)) * <span class="hljs-number">255</span>;
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -2691,8 +2700,6 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">HARD_LIGHT</span> :
 
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">hardlightCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (din &lt;= <span class="hljs-number">0.5</span>) ? (din * dmix) * <span class="hljs-number">255</span> : (dmix + (din - (dmix * din))) * <span class="hljs-number">255</span>;
-
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
 
@@ -2722,8 +2729,6 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">LIGHTEN</span> :
-
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">lightenCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (din &gt; dmix) ? din : dmix;
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -2756,8 +2761,6 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">LIGHTER</span> :
 
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">lighterCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (din + dmix) * <span class="hljs-number">255</span>;
-
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
 
@@ -2787,8 +2790,6 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">MULTIPLY</span> :
-
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">multiplyCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; din * dmix * <span class="hljs-number">255</span>;
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -2822,8 +2823,6 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">OVERLAY</span> :
 
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">overlayCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (din &gt;= <span class="hljs-number">0.5</span>) ? (din * dmix) * <span class="hljs-number">255</span> : (dmix + (din - (dmix * din))) * <span class="hljs-number">255</span>;
-
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
 
@@ -2854,8 +2853,6 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">SCREEN</span> :
 
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">screenCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; (dmix + (din - (dmix * din))) * <span class="hljs-number">255</span>;
-
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
 
@@ -2885,16 +2882,6 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">SOFT_LIGHT</span> :
-
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">softlightCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; {
-
-                    <span class="hljs-keyword">const</span> d = (dmix &lt;= <span class="hljs-number">0.25</span>) ?
-                        ((((<span class="hljs-number">16</span> * dmix) - <span class="hljs-number">12</span>) * dmix) + <span class="hljs-number">4</span>) * dmix :
-                        <span class="hljs-title function_">_sqrt</span>(dmix);
-
-                    <span class="hljs-keyword">if</span> (din &lt;= <span class="hljs-number">0.5</span>) <span class="hljs-keyword">return</span> (dmix - ((<span class="hljs-number">1</span> - (<span class="hljs-number">2</span> * din)) * dmix * (<span class="hljs-number">1</span> - dmix))) * <span class="hljs-number">255</span>;
-                    <span class="hljs-keyword">return</span> (dmix + (((<span class="hljs-number">2</span> * din) - <span class="hljs-number">1</span>) * (d - dmix))) * <span class="hljs-number">255</span>;
-                };
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -3059,7 +3046,6 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-attr">default</span>:
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">normalCalc</span> = (<span class="hljs-params">Cs, As, Cb, Ab</span>) =&gt; (<span class="hljs-title class_">As</span> * <span class="hljs-title class_">Cs</span>) + (<span class="hljs-title class_">Ab</span> * <span class="hljs-title class_">Cb</span> * (<span class="hljs-number">1</span> - <span class="hljs-title class_">As</span>));
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -3100,11 +3086,11 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         </li>
         
         
-        <li id="section-48">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><strong>blur</strong> - Performs a multi-loop, two-step ‘horizontal-then-vertical averaging sweep’ calculation across all pixels to create a blur effect. 
 Note that this filter is expensive, thus much slower to complete compared to other filter effects. Where possible, memoize the results this filter produces.</p>
@@ -3181,8 +3167,6 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             pixelLen = <span class="hljs-title function_">_floor</span>(len / <span class="hljs-number">4</span>);
         
         <span class="hljs-keyword">let</span> counter, r, g, b, a, pass;
-
-        <span class="hljs-keyword">const</span> {width, height} = input;
 
         <span class="hljs-keyword">let</span> {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, step, lineOut} = requirements;
 
@@ -3266,11 +3250,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-49">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>channels-to-alpha</strong> - Calculates an average value from each pixel’s included channels and applies that value to the alpha channel.</p>
 
@@ -3333,11 +3317,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-50">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>chroma</strong> - Using an array of ‘range’ arrays, determine whether a pixel’s values lie entirely within a range’s values and, if true, sets that pixel’s alpha channel value to zero. Each ‘range’ array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.</p>
 
@@ -3394,11 +3378,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-51">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><strong>clamp-channels</strong> - Clamp each color channel to a range set by lowColor and highColor values</p>
 
@@ -3465,11 +3449,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-52">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>colors-to-alpha</strong> - Determine the alpha channel value for each pixel depending on the closeness to that pixel’s color channel values to a reference color supplied in the “red”, “green” and “blue” arguments. The sensitivity of the effect can be manipulated using the “transparentAt” and “opaqueAt” values, both of which lie in the range 0-1.</p>
 
@@ -3492,7 +3476,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>;
         
-        <span class="hljs-keyword">let</span> r, g, b, a, vr, vg, vb, va, i;
+        <span class="hljs-keyword">let</span> r, g, b, a, vr, vg, vb, i;
 
         <span class="hljs-keyword">let</span> {opacity, red, green, blue, opaqueAt, transparentAt, lineOut} = requirements;
 
@@ -3535,11 +3519,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-53">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><strong>compose</strong> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the “compose” argument; permitted values are: ‘destination-only’, ‘destination-over’, ‘destination-in’, ‘destination-out’, ‘destination-atop’, ‘source-only’, ‘source-over’ (default), ‘source-in’, ‘source-out’, ‘source-atop’, ‘clear’, ‘xor’, or ‘lighter’. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the “offsetX” and “offsetY” arguments.</p>
 
@@ -3581,16 +3565,46 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">const</span> [input, output, mix] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
         <span class="hljs-keyword">const</span> {<span class="hljs-attr">width</span>:iWidth, <span class="hljs-attr">height</span>:iHeight, <span class="hljs-attr">data</span>:iData} = input;
-        <span class="hljs-keyword">const</span> {<span class="hljs-attr">width</span>:oWidth, <span class="hljs-attr">height</span>:oHeight, <span class="hljs-attr">data</span>:oData} = output;
+        <span class="hljs-keyword">const</span> {<span class="hljs-attr">data</span>:oData} = output;
         <span class="hljs-keyword">const</span> {<span class="hljs-attr">width</span>:mWidth, <span class="hljs-attr">height</span>:mHeight, <span class="hljs-attr">data</span>:mData} = mix;
-        <span class="hljs-keyword">const</span> len = iData.<span class="hljs-property">length</span>;
 
         <span class="hljs-keyword">let</span> {opacity, compose, offsetX, offsetY, lineOut} = requirements;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == compose) compose = <span class="hljs-variable constant_">ZERO_STR</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetX) offsetX = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetY) offsetY = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetY) offsetY = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-53">&#x00a7;</a>
+              </div>
+              <p>Pixel calculations</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> <span class="hljs-title function_">sAtopCalc</span> = (<span class="hljs-params">iColor, iAlpha, mColor, mAlpha</span>) =&gt; (iAlpha * iColor * mAlpha) + (mAlpha * mColor * (<span class="hljs-number">1</span> - iAlpha));
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">sInCalc</span> = (<span class="hljs-params">iColor, iAlpha, mAlpha</span>) =&gt; iAlpha * iColor * mAlpha;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">sOutCalc</span> = (<span class="hljs-params">iColor, iAlpha, mAlpha</span>) =&gt; iAlpha * iColor * (<span class="hljs-number">1</span> - mAlpha);
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">dAtopCalc</span> = (<span class="hljs-params">iColor, iAlpha, mColor, mAlpha</span>) =&gt; (iAlpha * iColor * (<span class="hljs-number">1</span> - mAlpha)) + (mAlpha * mColor * iAlpha);
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">dOverCalc</span> = (<span class="hljs-params">iColor, iAlpha, mColor, mAlpha</span>) =&gt; (iAlpha * iColor * (<span class="hljs-number">1</span> - mAlpha)) + (mAlpha * mColor);
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">dInCalc</span> = (<span class="hljs-params">iColor, iAlpha, mAlpha</span>) =&gt; iAlpha * iColor * mAlpha;
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">dOutCalc</span> = (<span class="hljs-params">mColor, iAlpha, mAlpha</span>) =&gt; mAlpha * mColor * (<span class="hljs-number">1</span> - iAlpha);
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">xorCalc</span> = (<span class="hljs-params">iColor, iAlpha, mColor, mAlpha</span>) =&gt; (iAlpha * iColor * (<span class="hljs-number">1</span> - mAlpha)) + (mAlpha * mColor * (<span class="hljs-number">1</span> - iAlpha));
+
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">sOverCalc</span> = (<span class="hljs-params">iColor, iAlpha, mColor, mAlpha</span>) =&gt; (iAlpha * iColor) + (mAlpha * mColor * (<span class="hljs-number">1</span> - iAlpha));
 
         <span class="hljs-keyword">let</span> ir, ig, ib, ia, mr, mg, mb, ma, x, y, dinA, dmixA;
 
@@ -3601,7 +3615,6 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">SOURCE_ATOP</span> :
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">sAtopCalc</span> = (<span class="hljs-params">iColor, iAlpha, mColor, mAlpha</span>) =&gt; (iAlpha * iColor * mAlpha) + (mAlpha * mColor * (<span class="hljs-number">1</span> - iAlpha));
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -3630,7 +3643,6 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">SOURCE_IN</span> :
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">sInCalc</span> = (<span class="hljs-params">iColor, iAlpha, mAlpha</span>) =&gt; iAlpha * iColor * mAlpha;
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -3657,7 +3669,6 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">SOURCE_OUT</span> :
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">sOutCalc</span> = (<span class="hljs-params">iColor, iAlpha, mAlpha</span>) =&gt; iAlpha * iColor * (<span class="hljs-number">1</span> - mAlpha);
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -3696,7 +3707,6 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">DESTINATION_ATOP</span> :
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">dAtopCalc</span> = (<span class="hljs-params">iColor, iAlpha, mColor, mAlpha</span>) =&gt; (iAlpha * iColor * (<span class="hljs-number">1</span> - mAlpha)) + (mAlpha * mColor * iAlpha);
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -3726,7 +3736,6 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">DESTINATION_OVER</span> :
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">dOverCalc</span> = (<span class="hljs-params">iColor, iAlpha, mColor, mAlpha</span>) =&gt; (iAlpha * iColor * (<span class="hljs-number">1</span> - mAlpha)) + (mAlpha * mColor);
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -3756,7 +3765,6 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">DESTINATION_IN</span> :
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">dInCalc</span> = (<span class="hljs-params">iColor, iAlpha, mAlpha</span>) =&gt; iAlpha * iColor * mAlpha;
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -3785,7 +3793,6 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">DESTINATION_OUT</span> :
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">dOutCalc</span> = (<span class="hljs-params">mColor, iAlpha, mAlpha</span>) =&gt; mAlpha * mColor * (<span class="hljs-number">1</span> - iAlpha);
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -3817,7 +3824,6 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">XOR</span> :
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">xorCalc</span> = (<span class="hljs-params">iColor, iAlpha, mColor, mAlpha</span>) =&gt; (iAlpha * iColor * (<span class="hljs-number">1</span> - mAlpha)) + (mAlpha * mColor * (<span class="hljs-number">1</span> - iAlpha));
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -3847,7 +3853,6 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-attr">default</span>:
-                <span class="hljs-keyword">const</span> <span class="hljs-title function_">sOverCalc</span> = (<span class="hljs-params">iColor, iAlpha, mColor, mAlpha</span>) =&gt; (iAlpha * iColor) + (mAlpha * mColor * (<span class="hljs-number">1</span> - iAlpha));
 
                 <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
                     <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
@@ -4019,7 +4024,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">let</span> [input, output, mix] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
         <span class="hljs-keyword">let</span> {<span class="hljs-attr">width</span>:iWidth, <span class="hljs-attr">height</span>:iHeight, <span class="hljs-attr">data</span>:iData} = input;
-        <span class="hljs-keyword">let</span> {<span class="hljs-attr">width</span>:oWidth, <span class="hljs-attr">height</span>:oHeight, <span class="hljs-attr">data</span>:oData} = output;
+        <span class="hljs-keyword">let</span> {<span class="hljs-attr">data</span>:oData} = output;
         <span class="hljs-keyword">let</span> {<span class="hljs-attr">width</span>:mWidth, <span class="hljs-attr">height</span>:mHeight, <span class="hljs-attr">data</span>:mData} = mix;
 
         <span class="hljs-keyword">let</span> {opacity, channelX, channelY, scaleX, scaleY, offsetX, offsetY, transparentEdges, lineOut} = requirements;
@@ -4186,7 +4191,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
         <span class="hljs-keyword">const</span> grid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildMatrixGrid</span>(<span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, input);
 
-        <span class="hljs-keyword">let</span> i, r, g, b, a, iR, iG, iB, iA, oR, oG, oB, oA, m;
+        <span class="hljs-keyword">let</span> i, r, g, b, a, iR, iG, iB, iA, oR, oG, oB, m;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -4213,8 +4218,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
                     oR = oData[r],
                     oG = oData[g],
-                    oB = oData[b],
-                    oA = oData[a];
+                    oB = oData[b];
 
                     <span class="hljs-keyword">if</span> (oR &gt;= iR - tolerance &amp;&amp; oR &lt;= iR + tolerance &amp;&amp; 
                         oG &gt;= iG - tolerance &amp;&amp; oG &lt;= iG + tolerance &amp;&amp; 
@@ -4872,7 +4876,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>,
-            i, avg, r, g, b, a, v, G;
+            i, avg, r, g, b, a, v;
 
         <span class="hljs-keyword">let</span> {opacity, useNaturalGrayscale, gradient, lineOut} = requirements;
 
@@ -5094,12 +5098,9 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             calcGrays.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
             <span class="hljs-keyword">let</span> avg = <span class="hljs-number">0</span>, 
-                i, w, h, j, jz, k, kz, r, g, b, a, gray,
+                i, r, g, b, a, gray,
                 l = tile.<span class="hljs-property">length</span>,
-                pattern,
-                topLeft = tile[<span class="hljs-number">0</span>],
-                down = <span class="hljs-number">0</span>,
-                along = <span class="hljs-number">0</span>;
+                pattern;
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; l; i++) {
 
@@ -5161,11 +5162,8 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
         <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iWidth = input.<span class="hljs-property">width</span>,
-            iHeight = input.<span class="hljs-property">height</span>,
-            iData = input.<span class="hljs-property">data</span>,
-            oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>;
+        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+            oData = output.<span class="hljs-property">data</span>;
 
         <span class="hljs-keyword">let</span> {opacity, width, lineOut} = requirements;
 
@@ -5207,8 +5205,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
         <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
-            oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>;
+            oData = output.<span class="hljs-property">data</span>;
 
         <span class="hljs-keyword">let</span> {opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY, lineOut} = requirements;
 
@@ -5336,8 +5333,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
         <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
-            oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>;
+            oData = output.<span class="hljs-property">data</span>;
 
         <span class="hljs-keyword">let</span> {opacity, tileWidth, tileHeight, offsetX, offsetY, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
 
@@ -5583,7 +5579,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">REDUCE_PALETTE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements, identifier</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">REDUCE_PALETTE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {</pre></div></div>
             
         </li>
         
@@ -5629,14 +5625,13 @@ Note that this filter is expensive, thus much slower to complete compared to oth
               <div class="sswrap ">
                 <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
-              <p>Localize some handles to required functions/objects
-const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, colorEngine, predefinedPalette, getGrayscaleValue, tfx, tfx2, tfx3, indicesLen, labIndicesMultiplier } = this;</p>
+              <p>Localize some handles to required functions/objects</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> {rgbIndices, labIndices, <span class="hljs-attr">indicesMemoRecord</span>:memoRecord, predefinedPalette, getGrayscaleValue, tfx, tfx2, tfx3, indicesLen, labIndicesMultiplier } = <span class="hljs-variable language_">this</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> {rgbIndices, labIndices, <span class="hljs-attr">indicesMemoRecord</span>:memoRecord, predefinedPalette, getGrayscaleValue, tfx, tfx2, labIndicesMultiplier } = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">let</span> xyz, lab;</pre></div></div>
+        <span class="hljs-keyword">let</span> lab;</pre></div></div>
             
         </li>
         
@@ -5892,8 +5887,7 @@ const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, colorEngine, predef
                 palL, palA, palB, 
                 pixL, pixA, pixB, 
                 diff, dL, dA, dB,
-                j, jz,
-                totalScore, propensity0, propensity1;
+                j, totalScore, propensity;
 
             <span class="hljs-keyword">if</span> (!pl) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 
@@ -5938,11 +5932,11 @@ const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, colorEngine, predef
             <span class="hljs-keyword">let</span> test = rnd[rndCursor];
 
             totalScore = distance0 + distance1;
-            propensity0 = totalScore - distance0;
+            propensity = totalScore - distance0;
             
             test *= totalScore;
 
-            <span class="hljs-keyword">if</span> (test &lt; propensity0) <span class="hljs-keyword">return</span> candidate0;
+            <span class="hljs-keyword">if</span> (test &lt; propensity) <span class="hljs-keyword">return</span> candidate0;
             <span class="hljs-keyword">return</span> candidate1;
         };</pre></div></div>
             
@@ -5967,7 +5961,7 @@ const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, colorEngine, predef
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>,
             quarterLen = len / <span class="hljs-number">4</span>,
-            i, iz, index,
+            i, index,
             r, g, b, a, red, green, blue, alpha, gray, 
             rndCursor, indicesCursor, dataCursor,
             selectedPalette;
@@ -6053,9 +6047,7 @@ const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, colorEngine, predef
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> tempInput = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImageData</span>(iWidth, iHeight),
-            tData = tempInput.<span class="hljs-property">data</span>,
-            tWidth = tempInput.<span class="hljs-property">width</span>,
-            tHeight = tempInput.<span class="hljs-property">height</span>;
+            tData = tempInput.<span class="hljs-property">data</span>;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -6385,7 +6377,7 @@ const {rgbIndices, labIndices, indicesMemoRecord:memoRecord, colorEngine, predef
             len = iData.<span class="hljs-property">length</span>,
             iWidth = input.<span class="hljs-property">width</span>,
             iHeight = input.<span class="hljs-property">height</span>,
-            r, g, b, a, s, sz, counter, pos, x, y, xz, yz, i, j, 
+            r, g, b, a, s, sz, pos, x, y, xz, yz, i, j, 
             distance, dr, dg, db, da, dx, dy, dLen;
 
         <span class="hljs-keyword">let</span> tempInput = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImageData</span>(iWidth, iHeight),

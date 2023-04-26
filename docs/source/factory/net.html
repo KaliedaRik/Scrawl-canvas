@@ -602,7 +602,7 @@
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { _floor, _isArray, _now, _piDouble, _tick, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">EULER</span>, <span class="hljs-variable constant_">FILL_STYLE</span>, <span class="hljs-variable constant_">HUB_ARTEFACTS_1</span>, <span class="hljs-variable constant_">HUB_ARTEFACTS_2</span>, <span class="hljs-variable constant_">HUB_ARTEFACTS_3</span>, <span class="hljs-variable constant_">HUB_SPOKE</span>, <span class="hljs-variable constant_">POSITION</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STROKE_STYLE</span>, <span class="hljs-variable constant_">STRONG_NET</span>, <span class="hljs-variable constant_">STRONG_SHAPE</span>, <span class="hljs-variable constant_">T_NET</span>, <span class="hljs-variable constant_">T_PARTICLE</span>, <span class="hljs-variable constant_">T_POLYLINE</span>, <span class="hljs-variable constant_">T_WORLD</span>, <span class="hljs-variable constant_">WEAK_NET</span>, <span class="hljs-variable constant_">WEAK_SHAPE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { _floor, _isArray, _now, _piDouble, _tick, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">EULER</span>, <span class="hljs-variable constant_">FILL_STYLE</span>, <span class="hljs-variable constant_">HUB_ARTEFACTS_1</span>, <span class="hljs-variable constant_">HUB_SPOKE</span>, <span class="hljs-variable constant_">POSITION</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STROKE_STYLE</span>, <span class="hljs-variable constant_">STRONG_NET</span>, <span class="hljs-variable constant_">STRONG_SHAPE</span>, <span class="hljs-variable constant_">T_NET</span>, <span class="hljs-variable constant_">T_PARTICLE</span>, <span class="hljs-variable constant_">T_POLYLINE</span>, <span class="hljs-variable constant_">T_WORLD</span>, <span class="hljs-variable constant_">WEAK_NET</span>, <span class="hljs-variable constant_">WEAK_SHAPE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1180,7 +1180,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">clone</span>) {
 
     <span class="hljs-keyword">return</span> clone;
 };</pre></div></div>
@@ -1311,9 +1311,7 @@ P.<span class="hljs-property">purgeParticlesFromLibrary</span> = <span class="hl
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
-    S = P.<span class="hljs-property">setters</span>,
-    D = P.<span class="hljs-property">deltaSetters</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;
 
 S.<span class="hljs-property">generate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
@@ -1857,7 +1855,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         <span class="hljs-keyword">if</span> (host &amp;&amp; rows &gt; <span class="hljs-number">0</span> &amp;&amp; columns &gt; <span class="hljs-number">0</span>) {
 
             <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
-            <span class="hljs-keyword">let</span> [width, height] = host.<span class="hljs-property">currentDimensions</span>;
+            <span class="hljs-keyword">let</span> [, height] = host.<span class="hljs-property">currentDimensions</span>;
 
             <span class="hljs-keyword">let</span> deltaR = (rowDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
             <span class="hljs-keyword">let</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
@@ -1973,7 +1971,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         <span class="hljs-keyword">if</span> (host &amp;&amp; rows &gt; <span class="hljs-number">0</span> &amp;&amp; columns &gt; <span class="hljs-number">0</span>) {
 
             <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
-            <span class="hljs-keyword">let</span> [width, height] = host.<span class="hljs-property">currentDimensions</span>;
+            <span class="hljs-keyword">let</span> [, height] = host.<span class="hljs-property">currentDimensions</span>;
 
             <span class="hljs-keyword">let</span> deltaR = (rowDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
             <span class="hljs-keyword">let</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
@@ -2099,9 +2097,9 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">WEAK_SHAPE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
+            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">WEAK_SHAPE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">const</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name, shapeTemplate, precision, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
+        <span class="hljs-keyword">const</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, mass, name, shapeTemplate, precision, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">let</span> i, p, f, t;
 
@@ -2207,9 +2205,9 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">STRONG_SHAPE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
+            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">STRONG_SHAPE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">const</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name, shapeTemplate, precision, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
+        <span class="hljs-keyword">const</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, mass, name, shapeTemplate, precision, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">let</span> i, p, f, t;
 
@@ -2328,13 +2326,13 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">HUB_SPOKE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
+            <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">HUB_SPOKE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         <span class="hljs-keyword">let</span> { shapeTemplate, precision } = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">if</span> (shapeTemplate &amp;&amp; shapeTemplate.<span class="hljs-property">type</span> &amp;&amp; precision) {
 
-            <span class="hljs-keyword">const</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, mass, rows, columns, rowDistance, columnDistance, name, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
+            <span class="hljs-keyword">const</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, mass, name, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
 
             <span class="hljs-keyword">let</span> i, p, f, t, hub;
 
@@ -2426,13 +2424,13 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
-              <p>TODO: consider whether we need these</p>
+              <p>TODO: consider whether we need these
+else if (HUB_ARTEFACTS_2.includes(host.type)) {}
+else if (HUB_ARTEFACTS_3.includes(host.type)) {}</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">HUB_ARTEFACTS_2</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) {}
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">HUB_ARTEFACTS_3</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) {}
-
+            <div class="content"><div class='highlight'><pre>
             <span class="hljs-keyword">const</span> [x, y] = shapeTemplate.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">POSITION</span>);
 
             hub = <span class="hljs-title function_">makeParticle</span>({

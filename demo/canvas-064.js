@@ -16,7 +16,7 @@ canvas.setBase({
     cleared: false,
 });
 
-const pinGroup = scrawl.makeGroup({
+scrawl.makeGroup({
     
     name: 'pin-group',
     host: canvas.base.name,

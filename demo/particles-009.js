@@ -76,6 +76,7 @@ const bigball = scrawl.makeWheel({
 scrawl.makeForce({
 
     name: 'wheel-repellor',
+/* eslint-disable-next-line */
     action: (particle, world, host) => {
 
         let {load, position} = particle;
@@ -186,7 +187,7 @@ const myNet = scrawl.makeNet({
 
     stampAction: function (artefact, particle, host) {
 
-        let [r, z, ...start] = particle.history[0];
+        let [ , , ...start] = particle.history[0];
 
         artefact.simpleStamp(host, { 
             start,
