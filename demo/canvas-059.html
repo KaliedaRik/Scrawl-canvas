@@ -37,9 +37,9 @@
     </ul>
     <p><b>Note that:</b> browser support for different color spaces is somewhat patchy. Browsers that do support the newer color spacess in CSS may not support them in &lt;canvas> elements.</p>
 
-    <p><b>Safari issue:</b> while Safari currently supports LAB/LCH and OKLAB/OKLCH color spaces, it only supports them when formatted with L as a percentage value and A, B, C, H as number values. Where presented with alternative formats, Safari will ignore the color value in CSS, and render it as black on the canvas.</p>
+    <p><b>Chrome issue:</b> while Chrome supports LAB/LCH and OKLAB/OKLCH color spaces, it does not parse these colors correctly when the non-L values are given in % format.</p>
 
-    <p>For browsers that do not currently support a given color space, SC will calculate the required color space color (for all permitted formatting values) and render the color on the canvas using the sRGB color space. As a result, where a browser may display a color for a given LAB/LCH or OKLAB/OKLCH CSS color string, Safari will instead display black if the CSS color string is, in its view, malformed.</p>
+    <p>For browsers that do not currently support a given color space (eg: Firefox), SC will calculate the required color space color (for all permitted formatting values) and render the color on the canvas using the sRGB color space.</p>
 
     <p><b>Touch test:</b> not required</p>
 
