@@ -1278,53 +1278,9 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
     }
 };
 
-<span class="hljs-keyword">const</span> updatePhraseEntitys = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
-              </div>
-              <p>for (const [name, ent] of _entries(library.entity)) {</p>
+<span class="hljs-keyword">const</span> updatePhraseEntitys = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">if</span> (ent.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_PHRASE</span>) {
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
-              </div>
-              <pre><code>    ent.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
-    ent.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
-}
-</code></pre>
-<p>}</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">_values</span>(library.<span class="hljs-property">entity</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">ent</span> =&gt;</span> {
+    <span class="hljs-title function_">_values</span>(library.<span class="hljs-property">entity</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">ent</span> =&gt;</span> {
 
         <span class="hljs-keyword">if</span> (ent.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_PHRASE</span>) {
 
@@ -1337,11 +1293,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-35">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Internal functions that get triggered when setting a DOM-based artefact’s <code>trackHere</code> attribute. They add/remove an event listener to the artefact’s domElement.</p>
 
@@ -1382,11 +1338,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-36">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Animation object which checks whether any window event listeners have fired, and actions accordingly</p>
 
@@ -1438,11 +1394,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-37">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><code>Exported functions</code> (to modules and the scrawl object). Event listeners can be a drain on web page efficiency. If a web page contains only static canvas (and/or stack) displays, with no requirement for user interaction, we can minimize Scrawl-canvas’s impact on those pages by switching off the core listeners (and also the core animation loop).</p>
 
@@ -1470,11 +1426,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-38">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Helper function</p>
 
@@ -1511,11 +1467,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         </li>
         
         
-        <li id="section-39">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><code>Exported functions</code> (to modules). Invoke the resize and/or scroll event listeners once, outside the regular requestAnimationFrame tick.</p>
 
