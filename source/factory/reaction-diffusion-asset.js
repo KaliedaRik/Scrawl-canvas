@@ -570,7 +570,7 @@ P.cleanScene = function () {
             }
             this.currentSource = 0;
 
-            let [sourceA, destA, sourceB, destB] = dataArrays;
+            const [sourceA, destA, sourceB, destB] = dataArrays;
 
             sourceA.fill(1);
             destA.fill(1);

@@ -45,7 +45,7 @@ scrawl.makePicture({
 //   </filter>
 // </svg>
 // ```
-let feFuncR = document.querySelector('feFuncR'),
+const feFuncR = document.querySelector('feFuncR'),
     feFuncG = document.querySelector('feFuncG'),
     feFuncB = document.querySelector('feFuncB');
 
@@ -79,17 +79,17 @@ scrawl.makeRender({
 
 
 // #### User interaction
-let r1 = document.querySelector('#r1'),
+const r1 = document.querySelector('#r1'),
     r2 = document.querySelector('#r2'),
     r3 = document.querySelector('#r3'),
     r4 = document.querySelector('#r4');
 
-let g1 = document.querySelector('#g1'),
+const g1 = document.querySelector('#g1'),
     g2 = document.querySelector('#g2'),
     g3 = document.querySelector('#g3'),
     g4 = document.querySelector('#g4');
 
-let b1 = document.querySelector('#b1'),
+const b1 = document.querySelector('#b1'),
     b2 = document.querySelector('#b2'),
     b3 = document.querySelector('#b3'),
     b4 = document.querySelector('#b4');
@@ -121,15 +121,15 @@ b4.value = 1;
 
 // Setup form functionality
 // @ts-expect-error
-let updateR = () => feFuncR.setAttribute('tableValues', `${r1.value} ${r2.value} ${r3.value} ${r4.value}`);
+const updateR = () => feFuncR.setAttribute('tableValues', `${r1.value} ${r2.value} ${r3.value} ${r4.value}`);
 scrawl.addNativeListener(['input', 'change'], updateR, '.feFuncR');
 
 // @ts-expect-error
-let updateG = () => feFuncG.setAttribute('tableValues', `${g1.value} ${g2.value} ${g3.value} ${g4.value}`);
+const updateG = () => feFuncG.setAttribute('tableValues', `${g1.value} ${g2.value} ${g3.value} ${g4.value}`);
 scrawl.addNativeListener(['input', 'change'], updateG, '.feFuncG');
 
 // @ts-expect-error
-let updateB = () => feFuncB.setAttribute('tableValues', `${b1.value} ${b2.value} ${b3.value} ${b4.value}`);
+const updateB = () => feFuncB.setAttribute('tableValues', `${b1.value} ${b2.value} ${b3.value} ${b4.value}`);
 scrawl.addNativeListener(['input', 'change'], updateB, '.feFuncB');
 
 

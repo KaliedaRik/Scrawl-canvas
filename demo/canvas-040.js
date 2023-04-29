@@ -45,7 +45,7 @@ const arrow = scrawl.makeShape({
     method: 'fillThenDraw',
 });
 
-let japan = arrow.clone({
+const japan = arrow.clone({
 
     name: 'japan',
     start: ['70%', '50%'],
@@ -512,7 +512,7 @@ const actionTween = function (e) {
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     if (myTween.isRunning() && val === 'halt') {
 

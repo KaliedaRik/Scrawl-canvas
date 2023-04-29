@@ -346,7 +346,7 @@ const updateUiSubscribedElement = function (art) {
 
             if (dom.checkForResize && !dom.dirtyDimensions && !dom.dirtyDomDimensions) {
 
-                let [w, h] = dom.currentDimensions;
+                const [w, h] = dom.currentDimensions;
 
                 if (dom.type == T_CANVAS) {
                     // Regardless of the setting of &lt;canvas> element's `boxSizing` style attribute:
@@ -356,7 +356,7 @@ const updateUiSubscribedElement = function (art) {
                     // + Tested in Demo [Canvas-004](../../demo/canvas-004.html).
                     if (!dom.computedStyles) dom.computedStyles = _computed(dom.domElement);
 
-                    let s = dom.computedStyles,
+                    const s = dom.computedStyles,
                         hw = _floor(here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth) - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight)),
                         hh = _floor(here.h - parseFloat(s.borderTopWidth) - parseFloat(s.borderBottomWidth) - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom));
 
@@ -460,9 +460,9 @@ const coreListenersTracker = makeAnimation({
 
             if (prefersReducedMotionChanged || prefersDarkColorSchemeChanged || prefersReduceTransparencyChanged || prefersReduceDataChanged) {
 
-                setPrefersReducedMotionChanged(false),
-                setPrefersDarkColorSchemeChanged(false),
-                setPrefersReduceTransparencyChanged(false),
+                setPrefersReducedMotionChanged(false);
+                setPrefersDarkColorSchemeChanged(false);
+                setPrefersReduceTransparencyChanged(false);
                 setPrefersReduceDataChanged(false);
             }
         }

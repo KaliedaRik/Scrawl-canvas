@@ -1,10 +1,11 @@
 export default function (scrawl, el) {
 
-    let report = function () {
+    const report = function () {
 
         let testTicker = Date.now(),
-            testTime, testNow,
-            testMessage = document.querySelector(`#${el.id}`);
+            testTime, testNow;
+
+        const testMessage = document.querySelector(`#${el.id}`);
 
         return function () {
 
@@ -18,7 +19,7 @@ export default function (scrawl, el) {
         };
     }();
 
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
         animationHooks: {
             afterShow: report,

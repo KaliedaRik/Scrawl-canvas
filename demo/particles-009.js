@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 // Define some filters
@@ -79,14 +79,14 @@ scrawl.makeForce({
 /* eslint-disable-next-line */
     action: (particle, world, host) => {
 
-        let {load, position} = particle;
+        const {load, position} = particle;
 
-        let ballPosition = bigball.get('position');
+        const ballPosition = bigball.get('position');
 
         // We are using Scrawl-canvas Pool vectors for this calculation, which we need to request before we can use them.
-        let v = scrawl.requestVector(ballPosition).vectorSubtract(position);
+        const v = scrawl.requestVector(ballPosition).vectorSubtract(position);
 
-        let mag = v.getMagnitude();
+        const mag = v.getMagnitude();
 
         if (mag && mag < bigball.get('radius')) {
 
@@ -101,7 +101,7 @@ scrawl.makeForce({
 
 
 // Create a World object which we can then assign to the Net entity
-let myWorld = scrawl.makeWorld({
+const myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
     tickMultiplier: 2,
@@ -187,7 +187,7 @@ const myNet = scrawl.makeNet({
 
     stampAction: function (artefact, particle, host) {
 
-        let [ , , ...start] = particle.history[0];
+        const [ , , ...start] = particle.history[0];
 
         artefact.simpleStamp(host, { 
             start,
@@ -238,7 +238,7 @@ const filterChoice = function (e) {
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     myNet.clearFilters();
     if (val) myNet.addFilters(val);

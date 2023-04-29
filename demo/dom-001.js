@@ -15,7 +15,7 @@ import {
 
 // #### Scene setup
 // Define some demo variables. All Scrawl-canvas wrappers for DOM elements can be found in the __scrawl.library.artefact__ section of the Scrawl-canvas library. The elements themselves are held in the __domElement__ attribute of the wrapper. 
-let myStack = L.artefact.mystack,
+const myStack = L.artefact.mystack,
     reportMessage = L.artefact.reportmessage;
 
 
@@ -58,7 +58,7 @@ makeAnimation({
 
         render()
 
-        let here = myStack.here || {};
+        const here = myStack.here || {};
 
         reportMessage.domElement.textContent =  `File dom-001.js has loaded successfully
    Stack name: ${myStack.name} - width: ${here.w}, height: ${here.h}

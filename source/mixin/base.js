@@ -296,7 +296,7 @@ export default function (P = Ωempty) {
 
                     if (xt(val) && val != null) {
 
-                        let func = this.stringifyFunction(val);
+                        const func = this.stringifyFunction(val);
 
                         if (func && func.length) copy[key] = func;
                     }

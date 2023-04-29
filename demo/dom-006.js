@@ -9,7 +9,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Google Analytics
 // We load GA code in the normal way through markup in the dom-006.html file (lines 11-21), and get a handle on the __ga__ object here
-let ga = window[window['GoogleAnalyticsObject'] || 'ga'];
+const ga = window[window['GoogleAnalyticsObject'] || 'ga'];
 let myTracker;
 
 // Create a new tracker to handle tween and ticker action/progress, and set some attributes on it. 
@@ -20,7 +20,7 @@ ga('create', 'UA-000000-0', 'auto', 'demoCanvasTracker');
 // @ts-expect-error
 ga(function() {
 
-    let ga = window[window['GoogleAnalyticsObject'] || 'ga'];
+    const ga = window[window['GoogleAnalyticsObject'] || 'ga'];
 
 // @ts-expect-error
     myTracker = ga.getByName('demoCanvasTracker');
@@ -32,7 +32,7 @@ ga(function() {
 });
 
 // #### Scene setup
-let artefact = scrawl.library.artefact,
+const artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     element = artefact.myelement;
 
@@ -70,14 +70,14 @@ element.set({
 
 
 // Create tickers - testing Ticker clone and packet functionality
-let modelTicker = scrawl.makeTicker({
+const modelTicker = scrawl.makeTicker({
     name: 'modelTicker',
     cycles: 0,
     duration: '12s'
 });
 
 // Test Ticker cloning
-let ticker = modelTicker.clone({
+const ticker = modelTicker.clone({
     name: 'myTicker',
 });
 
@@ -121,7 +121,7 @@ scrawl.makeTween({
 });
 
 // Build timeline actions
-let red = { css: { backgroundColor: 'red' }},
+const red = { css: { backgroundColor: 'red' }},
     purple = { css: { backgroundColor: 'purple' }},
     brown = { css: { backgroundColor: 'brown' }},
     orange = { css: { backgroundColor: 'orange' }},
@@ -234,7 +234,7 @@ scrawl.makeAction({
 
 
 // Also add some Google Analytics code to one of the tweens
-let smallboat = scrawl.library.tween.mySecondClonedTween;
+const smallboat = scrawl.library.tween.mySecondClonedTween;
 
 smallboat.set({
 
@@ -269,7 +269,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Event listener will reverse direction on the larger boats, while halting/restarting the smallest boat
-let changeDirection = (e) => {
+const changeDirection = (e) => {
 
     e.preventDefault();
     e.returnValue = false;

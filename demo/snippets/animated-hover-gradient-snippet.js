@@ -47,14 +47,14 @@
 export default function (scrawl, el) {
 
     // Apply the snippet to the DOM element
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
     if (snippet) {
 
         // Set some convenience variables
-        let canvas = snippet.canvas,
+        const canvas = snippet.canvas,
             group = canvas.base.name,
             animation = snippet.animation,
             wrapper = snippet.element,

@@ -17,17 +17,18 @@ import { reportSpeed } from './utilities.js';
 // + `frameDimension` - the &lt;canvas> element's (non-responsive) dimension values
 // + `scale` variables to track scale limits and value
 // + `from` variables to track the copyStart coordinate
-let naturalWidth = 4160,
+const naturalWidth = 4160,
     naturalHeight = 3120,
     frameDimension = 500,
     maxScale = naturalHeight / frameDimension,
-    currentScale = maxScale,
-    minScale = 1,
+    minScale = 1;
+
+let currentScale = maxScale,
     fromLeft = 0,
     fromTop = 0;
 
 // Convenience variables to access key Scrawl-canvas objects stored in the library
-let canvas = scrawl.library.canvas.mycanvas, 
+const canvas = scrawl.library.canvas.mycanvas, 
     base = canvas.base,
     baseGroup = base.get('group');
 
@@ -35,7 +36,7 @@ let canvas = scrawl.library.canvas.mycanvas,
 // #### Scene setup
 
 // The Picture entity will cover the entire displayed canvas
-let piccie = scrawl.makePicture({
+const piccie = scrawl.makePicture({
 
     name: 'river-pic',
 
@@ -76,7 +77,7 @@ scrawl.addNativeListener('wheel', (e) => {
 
     e.preventDefault();
 
-    let oldScale = currentScale,
+    const oldScale = currentScale,
         here = canvas.here;
 
     currentScale += (e.deltaY * -0.0005);
@@ -84,7 +85,7 @@ scrawl.addNativeListener('wheel', (e) => {
     if (currentScale > maxScale) currentScale = maxScale;
     else if (currentScale < minScale) currentScale = minScale;
 
-    let delta = (frameDimension * oldScale) - (frameDimension * currentScale);
+    const delta = (frameDimension * oldScale) - (frameDimension * currentScale);
 
     fromLeft += delta * here.normX;
     fromTop += delta * here.normY;
@@ -107,7 +108,7 @@ let draggingArtefact = false,
 // Pan effect, split across three separate event listeners (starting, during, ending)
 scrawl.addListener('down', () => {
 
-    let here = base.here,
+    const here = base.here,
         target = baseGroup.getArtefactAt(base.here);
 
     draggingArtefact = (target && target.artefact && target.artefact.type == 'Picture') ? 
@@ -122,14 +123,14 @@ scrawl.addListener('down', () => {
 
 scrawl.addListener('move', () => {
 
-    let here = base.here;
+    const here = base.here;
 
     if (draggingArtefact) {
 
         fromLeft += (currentDragX - here.x) * currentScale;
         fromTop += (currentDragY - here.y) * currentScale;
 
-        currentDragX = here.x,
+        currentDragX = here.x;
         currentDragY = here.y;
 
         if (fromLeft < 0) fromLeft = 0;

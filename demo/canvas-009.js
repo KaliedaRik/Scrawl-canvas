@@ -16,8 +16,9 @@ import { reportSpeed, killArtefactAndAnchor, killStyle } from './utilities.js';
 
 // #### Google Analytics
 // We load GA code in the normal way through markup in the dom-006.html file (lines 11-21), and get a handle on the __ga__ object here
-let ga = window[window['GoogleAnalyticsObject'] || 'ga'],
-    myTracker;
+const ga = window[window['GoogleAnalyticsObject'] || 'ga'];
+
+let myTracker;
 
 // Create a new tracker to handle tween and ticker action/progress, and set some attributes on it. 
 // @ts-expect-error
@@ -27,7 +28,7 @@ ga('create', 'UA-000000-0', 'auto', 'demoCanvasTracker');
 // @ts-expect-error
 ga(function() {
 
-    let ga = window[window['GoogleAnalyticsObject'] || 'ga'];
+    const ga = window[window['GoogleAnalyticsObject'] || 'ga'];
 
 // @ts-expect-error
     myTracker = ga.getByName('demoCanvasTracker');

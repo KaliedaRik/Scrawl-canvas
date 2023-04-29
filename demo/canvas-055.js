@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 const myMoon = scrawl.makeCrescent({
@@ -40,10 +40,10 @@ scrawl.makeWheel({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let [startX, startY] = myMoon.start;
-    let [handleX, handleY] = myMoon.handle;
+    const [startX, startY] = myMoon.start;
+    const [handleX, handleY] = myMoon.handle;
 
-    let {roll, scale, outerRadius, innerRadius, displacement} = myMoon;
+    const {roll, scale, outerRadius, innerRadius, displacement} = myMoon;
 
     return `    Start - x: ${startX}, y: ${startY}
     Handle - x: ${handleX}, y: ${handleY}

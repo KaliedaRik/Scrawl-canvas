@@ -476,7 +476,7 @@ P.checkOutputValuesExist = function () {
 };
 P.getOutputValue = function (index, width) {
 
-    let row = _floor(index / width),
+    const row = _floor(index / width),
         col = index - (row * width);
 
     return this.noiseValues[row][col];
@@ -760,7 +760,7 @@ P.noiseEngines = {
             const f = worleyDistanceFunctions[EUCLIDEAN_DISTANCE];
             const o = worleyOutputFunctions[worleyOutput];
 
-            return this.worleyNoise.call(this, {x:x, y:y, z:worleyDepth}, f, o);
+            return this.worleyNoise({x:x, y:y, z:worleyDepth}, f, o);
         }
     },
 
@@ -781,7 +781,7 @@ P.noiseEngines = {
             const f = worleyDistanceFunctions[MANHATTAN_DISTANCE];
             const o = worleyOutputFunctions[worleyOutput];
 
-            return this.worleyNoise.call(this, {x:x, y:y, z:worleyDepth}, f, o);
+            return this.worleyNoise({x:x, y:y, z:worleyDepth}, f, o);
         }
     },
 };
@@ -1031,7 +1031,7 @@ P.worleyNoise = function (input, distanceFunc, outputFunc) {
 
     let cubeX, cubeY, cubeZ;
 
-    let distanceArray = [9999999, 9999999, 9999999];
+    const distanceArray = [9999999, 9999999, 9999999];
 
     let {x:inputX, y:inputY, z:inputZ} = input;
     inputX = _floor(inputX);

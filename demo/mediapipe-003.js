@@ -45,11 +45,11 @@ const worm = scrawl.makePolyline({
 
 const updateLabelsAndWorm = function (asset) {
 
-    let { entitys, mesh } = asset
+    const { entitys, mesh } = asset
 
     if (mesh.length && Array.isArray(mesh[0])) {
 
-        let face = mesh[0];
+        const face = mesh[0];
 
         // We only need to create the labels once
         if (!entitys.length) {
@@ -70,9 +70,9 @@ const updateLabelsAndWorm = function (asset) {
         // Update label coordinates with new mesh data
         entitys.forEach((e, index) => {
 
-            let coord = face[index];
+            const coord = face[index];
 
-            let {x, y} = coord;
+            const {x, y} = coord;
 
             e.set({
                 startX: `${x * 100}%`,
@@ -91,7 +91,7 @@ const updateLabelsAndWorm = function (asset) {
 
         if (wormEnd < wormStart) {
 
-            let temp = wormStart;
+            const temp = wormStart;
             wormStart = wormEnd;
             wormEnd = temp; 
         }
@@ -111,7 +111,7 @@ const updateLabelsAndWorm = function (asset) {
 
 // #### MediaPipe functionality
 // We'll handle everything in a raw asset object
-let myAsset = scrawl.makeRawAsset({
+const myAsset = scrawl.makeRawAsset({
 
     name: 'mediapipe-model-interpreter',
 
@@ -123,7 +123,7 @@ let myAsset = scrawl.makeRawAsset({
 
             if (item) {
 
-                let {image:img, multiFaceLandmarks:mesh} = item;
+                const {image:img, multiFaceLandmarks:mesh} = item;
 
                 if (img) {
 
@@ -261,7 +261,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
         e.preventDefault();
         e.stopPropagation();
 
-        let target = e.target;
+        const target = e.target;
 
         if ('wormstart' === target.id) wormStart = parseInt(target.value, 10);
         else if ('wormend' === target.id) wormEnd = parseInt(target.value, 10);

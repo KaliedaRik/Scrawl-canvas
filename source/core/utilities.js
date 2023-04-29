@@ -207,7 +207,7 @@ export const mergeInto = (original, additional) => {
 
     if (isa_obj(original) && isa_obj(additional)) {
 
-        for (let key in additional) {
+        for (const key in additional) {
 
 /* eslint-disable-next-line */
             if (additional.hasOwnProperty(key) && typeof original[key] == UNDEF) {
@@ -234,7 +234,7 @@ export const mergeOver = (original, additional) => {
 
     if (isa_obj(original) && isa_obj(additional)) {
 
-        for (let key in additional) {
+        for (const key in additional) {
 
 /* eslint-disable-next-line */
             if (additional.hasOwnProperty(key)) original[key] = additional[key];
@@ -345,22 +345,22 @@ export const easeEngines = {
     in: (t) => _sin((t * _pi) / 2),
     easeIn: (t) => {
         
-        let temp = 1 - t;
+        const temp = 1 - t;
         return 1 - (temp * temp);
     },
     easeIn3: (t) => {
 
-        let temp = 1 - t;
+        const temp = 1 - t;
         return 1 - (temp * temp * temp);
     },
     easeIn4: (t) => {
 
-        let temp = 1 - t;
+        const temp = 1 - t;
         return 1 - (temp * temp * temp * temp);
     },
     easeIn5: (t) => {
 
-        let temp = 1 - t;
+        const temp = 1 - t;
         return 1 - (temp * temp * temp * temp * temp);
     },
     easeOutIn: (t) => (t < 0.5) ? 2 * t * t : 1 - _pow(-2 * t + 2, 2) / 2,
@@ -534,10 +534,10 @@ export const getArrayType = someObject => someObject && someObject.constructor &
 
 
 // Code to detect browser from Code Box: https://code-boxx.com/detect-browser-with-javascript/
-// + Because there's times when it's easier to just shut down features in webkit-based browsers than deal with their nonsense (looking at you: Safari!)
+// + Ideally we need to get rid of the need for this functionality. Currently used in `/core/events.js` only
 export const detectBrowser = function () {
 
-    let result = [];
+    const result = [];
 
 /* eslint-disable-next-line */
     if ((!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.includes(' OPR/')) result.push('old-opera');
@@ -547,6 +547,7 @@ export const detectBrowser = function () {
 /* eslint-disable-next-line */
     else if (/constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() == "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari != UNDEF && safari.pushNotification))) result.push('safari');
 
+/* eslint-disable-next-line */
     if (/*@cc_on!@*/false || !!document.documentMode) result.push('internet-explorer');
 
     if (!result.includes('internet-explorer') && !!window.StyleMedia) result.push('edge');

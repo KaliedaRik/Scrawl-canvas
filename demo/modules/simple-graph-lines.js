@@ -74,7 +74,7 @@ api.build = function (items) {
 
         // Update module state
         currentData = data;
-        yearLabels = data.yearLabels,
+        yearLabels = data.yearLabels;
         xStep = graphWidth / yearLabels.length;
 
         // The `positions` Group
@@ -202,20 +202,22 @@ api.build = function (items) {
             if (positionGroup) {
 
                 // Initial positioning calculations
-                let yearLabels = currentData.yearLabels,
-                    data = currentData.data,
-                    max = Math.max(...data),
-                    min = Math.min(...data),
-                    batch = calculateBatchValue(max - min);
+                const yearLabels = currentData.yearLabels,
+                    data = currentData.data;
+
+                let max = Math.max(...data),
+                    min = Math.min(...data);
+
+                const batch = calculateBatchValue(max - min);
 
                 max = ((Math.floor(max / batch)) * batch) + batch;
                 min = (Math.floor(min / batch)) * batch;
 
-                let categoryValue = graphHeight / (max - min),
+                const categoryValue = graphHeight / (max - min),
                     yDepth = graphBottom - graphHeight;
 
                 // Grab a handle to the 'entity' section in the Scrawl-canvas library
-                let entity = scrawl.library.entity;
+                const entity = scrawl.library.entity;
 
                 // Reset any highlighted pin Wheel
                 pinGroup.setArtefacts({
@@ -226,7 +228,7 @@ api.build = function (items) {
                 // Final calculations and updates
                 yearLabels.forEach((label, index) => {
 
-                    let pointDepth = (data[index] - min) * categoryValue,
+                    const pointDepth = (data[index] - min) * categoryValue,
                         yVal = yDepth + (graphHeight - pointDepth),
                         tempName = name(`${index}`);
 

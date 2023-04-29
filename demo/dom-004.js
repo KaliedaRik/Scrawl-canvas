@@ -8,7 +8,7 @@ import { reportSpeed, killTicker, reportFullLibrary } from './utilities.js';
 
 
 // #### Scene setup
-let library = scrawl.library,
+const library = scrawl.library,
     artefact = library.artefact,
     stack = artefact.mystack;
 
@@ -21,7 +21,7 @@ stack.set({
 });
 
 stack.addExistingDomElements('#rocket');
-let rocket = artefact.rocket;
+const rocket = artefact.rocket;
 
 rocket.set({
     startX: 600,
@@ -34,7 +34,7 @@ rocket.set({
 
 
 // Set a tween up as a template which can be cloned, but will never itself run
-let tween = scrawl.makeTween({
+const tween = scrawl.makeTween({
 
     name: 'template',
 
@@ -84,7 +84,7 @@ scrawl.makeRender({
 // #### User interaction
 // Create event listener to generate and start new element and tween
 let counter = 0;
-let flyRocket = function(e) {
+const flyRocket = function(e) {
 
     e.preventDefault();
     e.returnValue = false;

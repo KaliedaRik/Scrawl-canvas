@@ -98,7 +98,7 @@ const cell3 = canvas.buildCell({
 // Create some entitys to which we can pivot and mimic Cells
 // + Cells cannot take part in artefact functionality such as drag-and-drop because they are assets who use positional mixins to gain artefact-like behaviour, but they can't be included in Groups because they are limited to grouping Artefacts together
 // + One way to get around this limitation is to use Block entitys for testing collision detection, and then route mouse hover functionality through to any Cells pivoting or mimicking them. This should also allow us to drag-and-drop Cells (by proxy)
-let myGroup = scrawl.makeGroup({
+const myGroup = scrawl.makeGroup({
 
     name: 'target-group',
     host: canvas.base.name,
@@ -147,7 +147,7 @@ scrawl.makeDragZone({
 });
 
 // Check to see if a Cell will mimic on an entity
-let cell4 = canvas.buildCell({
+const cell4 = canvas.buildCell({
 
     name: 'cell-4',
 
@@ -178,7 +178,7 @@ let cell4 = canvas.buildCell({
 });
 
 // Check to see if a Cell will pivot to an entity
-let cell5 = canvas.buildCell({
+const cell5 = canvas.buildCell({
 
     name: 'cell-5',
 

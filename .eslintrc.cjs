@@ -11,5 +11,12 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
+        "no-inline-comments": "error",
+        "no-sequences": "error",
+        "no-unused-expressions": "error",
+        "no-useless-call": "error",
+        "no-useless-return": "error",
+        "no-var": "error",
+        "prefer-const": "error"
     }
 }

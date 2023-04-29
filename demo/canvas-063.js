@@ -163,9 +163,9 @@ const checkFrameDrag = () => {
 
     if (frameDragZone()) {
 
-        let [x, y] = frame.get("position");
+        const [x, y] = frame.get("position");
 
-        let newX = x * mainMapRatio,
+        const newX = x * mainMapRatio,
         newY = y * mainMapRatio;
 
         // Adjust the position of the Picture wrt to the frame in the map
@@ -259,7 +259,7 @@ const moveFrame = (direction) => {
             break;
     }
 
-    let newX = x * mainMapRatio,
+    const newX = x * mainMapRatio,
         newY = y * mainMapRatio;
 
     frame.set({

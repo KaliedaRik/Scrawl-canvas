@@ -331,7 +331,7 @@ export default function (P = Ωempty) {
 
         if (this.anchor) {
 
-            let a = _parse(this.anchor.saveAsPacket(items))[3];
+            const a = _parse(this.anchor.saveAsPacket(items))[3];
             copy.anchor = a;
         }
         return copy;
@@ -455,13 +455,13 @@ export default function (P = Ωempty) {
     };
     D.startX = function (coord) {
 
-        let c = this.start;
+        const c = this.start;
         c[0] = addStrings(c[0], coord);
         this.dirtyStart = true;
     };
     D.startY = function (coord) {
 
-        let c = this.start;
+        const c = this.start;
         c[1] = addStrings(c[1], coord);
         this.dirtyStart = true;
     };
@@ -507,13 +507,13 @@ export default function (P = Ωempty) {
     };
     D.handleX = function (coord) {
 
-        let c = this.handle;
+        const c = this.handle;
         c[0] = addStrings(c[0], coord);
         this.dirtyHandle = true;
     };
     D.handleY = function (coord) {
 
-        let c = this.handle;
+        const c = this.handle;
         c[1] = addStrings(c[1], coord);
         this.dirtyHandle = true;
     };
@@ -559,13 +559,13 @@ export default function (P = Ωempty) {
     };
     D.offsetX = function (coord) {
 
-        let c = this.offset;
+        const c = this.offset;
         c[0] = addStrings(c[0], coord);
         this.dirtyOffset = true;
     };
     D.offsetY = function (coord) {
 
-        let c = this.offset;
+        const c = this.offset;
         c[1] = addStrings(c[1], coord);
         this.dirtyOffset = true;
     };
@@ -611,13 +611,13 @@ export default function (P = Ωempty) {
     };
     D.width = function (val) {
 
-        let c = this.dimensions;
+        const c = this.dimensions;
         c[0] = addStrings(c[0], val);
         this.dirtyDimensions = true;
     };
     D.height = function (val) {
 
-        let c = this.dimensions;
+        const c = this.dimensions;
         c[1] = addStrings(c[1], val);
         this.dirtyDimensions = true;
     };
@@ -1251,7 +1251,7 @@ export default function (P = Ωempty) {
 
             if (this.addPathRotation) {
 
-                let pathData = this.getPathData();
+                const pathData = this.getPathData();
 
                 if (pathData) r += pathData.angle;
             }

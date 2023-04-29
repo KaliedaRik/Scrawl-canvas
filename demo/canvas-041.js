@@ -53,7 +53,7 @@ sourceEngine.lineWidth = 1;
 
 for (let i = 0; i < 40; i++) {
 
-    let size = 10 + i,
+    const size = 10 + i,
         delta = Math.floor(size / 2) + 0.5;
 
     sourceEngine.setTransform(1, 0, 0, 1, (50 * i) + 25, 25);
@@ -65,8 +65,8 @@ for (let i = 0; i < 40; i++) {
 // - these are plain JS objects holding data for our box drawing routine
 const buildBoxes = function (boxesRequired) {
 
-    let { width, height } = engine,
-        size, x, y, dx;
+    const { width, height } = engine;
+    let size, x, y, dx;
 
     boxes.length = 0;
 

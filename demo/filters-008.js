@@ -151,7 +151,7 @@ scrawl.makeUpdater({
     callback: () => {
 
 // @ts-expect-error
-        let rR = Math.round(redInRed.value * 255),
+        const rR = Math.round(redInRed.value * 255),
 // @ts-expect-error
             gR = Math.round(greenInRed.value * 255),
 // @ts-expect-error

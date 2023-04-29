@@ -8,10 +8,10 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
-let mySpiral = scrawl.makeLineSpiral({
+const mySpiral = scrawl.makeLineSpiral({
 
     name: 'my-spiral',
 
@@ -26,7 +26,7 @@ let mySpiral = scrawl.makeLineSpiral({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let {startRadius, radiusIncrement, radiusIncrementAdjust, startAngle, angleIncrement, angleIncrementAdjust, stepLimit} = mySpiral;
+    const {startRadius, radiusIncrement, radiusIncrementAdjust, startAngle, angleIncrement, angleIncrementAdjust, stepLimit} = mySpiral;
 
     return `    Radius - start: ${startRadius}, increment: ${radiusIncrement}, adjust: ${radiusIncrementAdjust}
     Angle - start: ${startAngle}, increment: ${angleIncrement}, adjust: ${angleIncrementAdjust}

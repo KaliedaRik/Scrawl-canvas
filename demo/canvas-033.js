@@ -110,11 +110,15 @@ scrawl.makeRender({
 const checkE = (e) => {
     if (e) {
         if ("keydown" === e.type) {
-            if (32 === e.keycode) return true; // spacebar
-            if (13 === e.keycode) return true; // enter key
+            // spacebar
+            if (32 === e.keycode) return true; 
+            // enter key
+            if (13 === e.keycode) return true; 
         }
-        if ("click" === e.type) return true; // mouse click
-        if ("touchend" === e.type) return true; // tap
+        // mouse click
+        if ("click" === e.type) return true; 
+        // tap
+        if ("touchend" === e.type) return true; 
     }
     return false;
 };

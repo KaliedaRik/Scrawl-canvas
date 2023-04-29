@@ -47,14 +47,14 @@
 export default function (scrawl, el) {
 
     // Apply the snippet to the DOM element
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
     if (snippet) {
 
         // Set some convenience variables
-        let canvas = snippet.canvas,
+        const canvas = snippet.canvas,
             animation = snippet.animation,
             group = canvas.base.name,
             name = snippet.element.name;
@@ -90,11 +90,11 @@ export default function (scrawl, el) {
         scrawl.importDomImage(`.${imgName}`);
 
         // Configuration - coders can set 'data-x' and 'data-y' attributes on the DOM element to indicate which area of the image should be displayed in the new canvas when the page first loads
-        let copyStartX = el.dataset.x || 0,
+        const copyStartX = el.dataset.x || 0,
             copyStartY = el.dataset.y || 0;
 
         // We will display the first image we found in a Picture entity
-        let [w, h] = canvas.get('dimensions');
+        const [w, h] = canvas.get('dimensions');
 
         const asset = scrawl.library.asset[`${imgName}-0`];
 
@@ -121,14 +121,14 @@ export default function (scrawl, el) {
         // The pan effect, where the user can click and drag the image within its container to explore large images in small areas. To achieve the effect we split the functionality across three separate event listeners, which capture the three key actions associated with the effect: starting a drag; continuing a drag; and ending a drag.
         scrawl.addListener('down', () => {
 
-            let here = canvas.here;
+            const here = canvas.here;
 
             if (here.active && 'grab' === cursor) {
 
                 cursor = 'grabbing';
                 el.style.cursor = cursor;
 
-                let {x, y} = here;
+                const {x, y} = here;
 
                 lastX = x;
                 lastY = y;
@@ -139,9 +139,9 @@ export default function (scrawl, el) {
 
             if ('grabbing' === cursor) {
 
-                let {x, y} = canvas.here;
+                const {x, y} = canvas.here;
 
-                let dx = lastX - x,
+                const dx = lastX - x,
                     dy = lastY - y;
 
                 panImage.setDelta({
@@ -161,9 +161,9 @@ export default function (scrawl, el) {
                 cursor = 'grab';
                 el.style.cursor = cursor;
 
-                let {x, y} = canvas.here;
+                const {x, y} = canvas.here;
 
-                let dx = lastX - x,
+                const dx = lastX - x,
                     dy = lastY - y;
 
                 panImage.setDelta({
@@ -179,22 +179,22 @@ export default function (scrawl, el) {
         // We're checking dimensions here partly because images load asynchronously and during the early part of that process their &lt;img> elements will supply incorrect information to the script which is trying to set up the canvas element which will (eventually) host their image data. But we also need to check because the script has no way of knowing what sort of image it is dealing with - for instance an &lt;img> element with a "srcset" attribute will load new images if the user decides to expand their browser's window - which would have an impact on the assumptions we make in our scaling and dragging calculations.
         const checkDimensions = function () {
 
-            let [canvasWidth, canvasHeight] = canvas.get('dimensions');
-            let [imageWidth, imageHeight] = panImage.get('dimensions');
+            const [canvasWidth, canvasHeight] = canvas.get('dimensions');
+            const [imageWidth, imageHeight] = panImage.get('dimensions');
 
             // check to see if there's been any resize browser resize or CSS layout change that affects our DOM element
             if (canvasWidth !== imageWidth || canvasHeight !== imageHeight) {
 
-                let [sourceWidth, sourceHeight] = panImage.get('sourceDimensions');
+                const [sourceWidth, sourceHeight] = panImage.get('sourceDimensions');
     
                 // We want the image we paint in our canvas to keep its asset's original aspect ratio
                 aspectWidth = canvasWidth / sourceWidth;
                 aspectHeight = canvasHeight / sourceHeight;
 
                 // We want the zoom level to be x3 (along the width) with respect to the DOM element's dimensions
-                let setToHalfWidth = 50 / (aspectWidth * 100);
+                const setToHalfWidth = 50 / (aspectWidth * 100);
 
-                let ratioWidth = aspectWidth * setToHalfWidth * 100,
+                const ratioWidth = aspectWidth * setToHalfWidth * 100,
                     ratioHeight = aspectHeight * setToHalfWidth * 100;
 
                 panImage.set({

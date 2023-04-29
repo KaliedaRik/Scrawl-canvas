@@ -247,7 +247,7 @@ export default function (P = Ωempty) {
 
         newTargets.forEach(target => {
 
-            let type = target.type || UNKNOWN,
+            const type = target.type || UNKNOWN,
                 name = target.name || UNNAMED;
 
             if (type != UNKNOWN && name != UNNAMED) identifiers.push(`${type}_${name}`);
@@ -262,12 +262,12 @@ export default function (P = Ωempty) {
 
             if (myObj) {
 
-                let type = myObj.type || UNKNOWN,
+                const type = myObj.type || UNKNOWN,
                     name = myObj.name || UNNAMED;
 
                 if (type != UNKNOWN && name != UNNAMED) {
 
-                    let objName = `${type}_${name}`,
+                    const objName = `${type}_${name}`,
                         doRemove = identifiers.indexOf(objName);
 
                     if (doRemove >= 0) newTargets[doRemove] = false;

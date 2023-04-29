@@ -76,12 +76,12 @@ export default function (scrawl, el, args = {}) {
     // The snippet will accept an optional key:value Object as the second argument
     // + __spotlightColor__ - default: `white`
     // + __backgroundColor__ - default: `lightgray`
-    let spotlightColor = args.spotlightColor || 'white',
+    const spotlightColor = args.spotlightColor || 'white',
         backgroundColor = args.backgroundColor || 'lightgray';
 
 
     // Apply the snippet to the DOM element
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
 
         // (__required__) The DOM element we are about to snippetize
         domElement: el,
@@ -115,7 +115,7 @@ export default function (scrawl, el, args = {}) {
     if (snippet) {
 
         // Set some convenience variables
-        let canvas = snippet.canvas,
+        const canvas = snippet.canvas,
             animation = snippet.animation,
             wrapper = snippet.element,
             name = wrapper.name;
@@ -123,7 +123,7 @@ export default function (scrawl, el, args = {}) {
         canvas.setAsCurrentCanvas();
 
         // Define the gradient
-        let spotlightGradient = scrawl.makeRadialGradient({
+        const spotlightGradient = scrawl.makeRadialGradient({
 
             name: `${name}-gradient`,
             startX: '50%',
@@ -156,7 +156,7 @@ export default function (scrawl, el, args = {}) {
         }();
 
         // Define the block which will (sometimes) display our spotlingt gradient
-        let block = scrawl.makeBlock({
+        const block = scrawl.makeBlock({
 
             name: `${name}-spotlight`,
             width: '200%',

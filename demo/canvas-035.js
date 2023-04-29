@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas,
+const canvas = scrawl.library.artefact.mycanvas,
     styles = scrawl.library.styles,
     cells = scrawl.library.cell;
 
@@ -149,7 +149,7 @@ const myBlock = scrawl.makeBlock({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let matrix = styles['bunny-pattern'].patternMatrix;
+    const matrix = styles['bunny-pattern'].patternMatrix;
     if (matrix) return `    Matrix: [${matrix.a}, ${matrix.b}, ${matrix.c}, ${matrix.d}, ${matrix.e}, ${matrix.f}]
     stretchX: ${matrix.a}, stretchY: ${matrix.d}
     skewX: ${matrix.c}, skewY: ${matrix.b}
@@ -222,23 +222,23 @@ scrawl.makeUpdater({
 // + we'll cascade form updates to all patterns, and Cells used as patterns
 const myPatterns = [styles['bunny-pattern'], styles['leaves-pattern'], styles['video-pattern'], cells['cell-pattern'], cells['cat-pattern']];
 
-let updateRepeat = (e) => {
+const updateRepeat = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     myPatterns.forEach(p => p.set({repeat: val}));
 };
 scrawl.addNativeListener(['input', 'change'], updateRepeat, '#repeat');
 
-let updateMatrix = (e) => {
+const updateMatrix = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value,
+    const val = e.target.value,
         id = e.target.id;
 
     myPatterns.forEach(p => p.set({[id]: parseFloat(val)}));

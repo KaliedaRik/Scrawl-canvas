@@ -42,7 +42,7 @@ scrawl.makePicture({
 //   </filter>
 // </svg>
 // ```
-let bfx = document.querySelector('#bfx'),
+const bfx = document.querySelector('#bfx'),
     bfy = document.querySelector('#bfy'),
     octaves = document.querySelector('#octaves'),
     scale = document.querySelector('#scale'),
@@ -86,23 +86,23 @@ scrawl.makeRender({
 // #### User interaction
 // Setup form functionality
 // @ts-expect-error
-let baseFrequency = () => feTurbulence.setAttribute('baseFrequency', `${bfx.value} ${bfy.value}`);
+const baseFrequency = () => feTurbulence.setAttribute('baseFrequency', `${bfx.value} ${bfy.value}`);
 scrawl.addNativeListener(['input', 'change'], baseFrequency, '.baseFreq');
 
 // @ts-expect-error
-let numOctaves = () => feTurbulence.setAttribute('numOctaves', octaves.value);
+const numOctaves = () => feTurbulence.setAttribute('numOctaves', octaves.value);
 scrawl.addNativeListener(['input', 'change'], numOctaves, '#octaves');
 
 // @ts-expect-error
-let dmScale = () => feDisplacementMap.setAttribute('scale', scale.value);
+const dmScale = () => feDisplacementMap.setAttribute('scale', scale.value);
 scrawl.addNativeListener(['input', 'change'], dmScale, '#scale');
 
 // @ts-expect-error
-let dmX = () => feDisplacementMap.setAttribute('xChannelSelector', xChannelSelector.value);
+const dmX = () => feDisplacementMap.setAttribute('xChannelSelector', xChannelSelector.value);
 scrawl.addNativeListener(['input', 'change'], dmX, '#xChannelSelector');
 
 // @ts-expect-error
-let dmY = () => feDisplacementMap.setAttribute('yChannelSelector', yChannelSelector.value);
+const dmY = () => feDisplacementMap.setAttribute('yChannelSelector', yChannelSelector.value);
 scrawl.addNativeListener(['input', 'change'], dmY, '#yChannelSelector');
 
 

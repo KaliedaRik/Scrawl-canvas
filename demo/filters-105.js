@@ -75,8 +75,8 @@ const pathGroup = scrawl.makeGroup({
 
 // Current paths, and their shared step distance
 // TODO: add more path options, for testing/general interest
-let distance = 50,
-    currentPaths = spiral.name;
+let distance = 50;
+const currentPaths = spiral.name;
 
 
 // Update filter with spiral points data

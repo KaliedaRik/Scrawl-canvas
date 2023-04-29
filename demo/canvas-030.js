@@ -9,13 +9,13 @@ import { reportSpeed, killPolylineArtefact } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 // Build some coordinate arrays ...
-let absoluteCoords = [[100, 200], [200, 400], [300, 300], [400, 400], [500, 200], [240, 100]];
+const absoluteCoords = [[100, 200], [200, 400], [300, 300], [400, 400], [500, 200], [240, 100]];
 
-let relativeCoords = [['50%', 'center'], ['40%', '10%'], ['20%', '40%'], ['25%', '80%'], ['70%', '75%'], ['85%', '60%']];
+const relativeCoords = [['50%', 'center'], ['40%', '10%'], ['20%', '40%'], ['25%', '80%'], ['70%', '75%'], ['85%', '60%']];
 
 
 // ... And a third coordinate array using Wheel entitys 
@@ -41,7 +41,7 @@ absoluteCoords.forEach((item, index) => {
     });
 });
 
-let pivotCoords = ['pin-0', 'pin-1', 'pin-2', 'pin-3', 'pin-4', 'pin-5'];
+const pivotCoords = ['pin-0', 'pin-1', 'pin-2', 'pin-3', 'pin-4', 'pin-5'];
 
 
 // Add another Wheel entity to act as a (potential) pivot for the Polyline
@@ -63,7 +63,7 @@ scrawl.makeWheel({
 
 
 // Define the Polyline entity
-let myline = scrawl.makePolyline({
+const myline = scrawl.makePolyline({
 
     name: 'my-polyline',
 
@@ -247,12 +247,12 @@ scrawl.makeUpdater({
 
 
 // Change the coordinate array used by the Polyline
-let updatePins = (e) => {
+const updatePins = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     if (val === 'absolute') myline.set({ pins: absoluteCoords });
     else if (val === 'relative') myline.set({ pins: relativeCoords });

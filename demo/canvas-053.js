@@ -18,7 +18,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 // Magic numbers
 const assetDimension = 80;
@@ -173,7 +173,7 @@ addNativeListener('input', (e) => {
 
     if (e && e.target) {
 
-        let val = e.target.value;
+        const val = e.target.value;
 
         switch (val) {
 
@@ -212,7 +212,7 @@ addNativeListener(['input', 'change'], (e) => {
 
     if (e && e.target) {
 
-        let val = e.target.value;
+        const val = e.target.value;
 
         reactionAsset.set({
             colors: colorStops[val],
@@ -224,7 +224,7 @@ addNativeListener(['input', 'change'], (e) => {
 
     e.preventDefault();
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     if (['user-steps', 'user-repeat'].includes(val)) {
         reactionAsset.set({
@@ -298,7 +298,7 @@ addNativeListener(['change', 'input'], (e) => {
 
     if (e && e.target) {
 
-        let val = e.target.value;
+        const val = e.target.value;
 
         reactionAsset.set({
             preset: val,

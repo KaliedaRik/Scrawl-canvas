@@ -230,7 +230,7 @@ P.removeAttribute = function (key) {
 // `initializeAttributes` - internal function called by the constructor.
 P.initializeAttributes = function (types) {
 
-    for (let [key, value] of _entries(types)) {
+    for (const [key, value] of _entries(types)) {
 
         switch (value) {
 

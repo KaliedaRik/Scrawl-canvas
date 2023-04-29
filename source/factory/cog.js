@@ -236,8 +236,7 @@ P.makeCogPath = function () {
     const turn = 360 / points,
         xPts = requestArray();
 
-    let currentPointX, currentPointY, deltaX, deltaY,
-        myMin, myXoffset, i,
+    let currentPointX, currentPointY, deltaX, deltaY, i,
         myPath = '';
 
     if (outerRadius.substring || innerRadius.substring || outerControlsDistance.substring || innerControlsDistance.substring || outerControlsOffset.substring || innerControlsOffset.substring) {
@@ -409,8 +408,8 @@ P.makeCogPath = function () {
     }
     releaseVector(outerPoint, outerPointLead, outerPointTrail, innerPoint, innerPointLead, innerPointTrail);
 
-    myMin = _min(...xPts);
-    myXoffset = _abs(myMin).toFixed(1);
+    const myMin = _min(...xPts),
+        myXoffset = _abs(myMin).toFixed(1);
 
     releaseArray(xPts);
 

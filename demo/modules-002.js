@@ -60,7 +60,7 @@ scrawl.makeRender({
 scrawl.addNativeListener('change', () => {
 
 // @ts-expect-error
-    let page = document.querySelector('#wikipedia-page').value;
+    const page = document.querySelector('#wikipedia-page').value;
 
     if (page) {
 

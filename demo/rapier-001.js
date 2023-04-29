@@ -1,3 +1,4 @@
+/* eslint-disable */
 // # Demo Rapier 001
 // Rapier physics engine - stacking boxes
 
@@ -29,14 +30,14 @@ const artefacts = scrawl.library.artefact;
 const canvas = artefacts.mycanvas;
 
 // Keep the dynamic boxes in their own group (for drag-and-drop functionality later)
-let boxesGroup = scrawl.makeGroup({
+const boxesGroup = scrawl.makeGroup({
     name: "boxes-group",
     host: canvas.base.name
 });
 
 // #### Scrawl-canvas entitys
 // Build static boxes
-let ground = scrawl.makeBlock({
+const ground = scrawl.makeBlock({
     name: "my-ground",
     dimensions: [600, 40],
     start: [300, 580],
@@ -46,7 +47,7 @@ let ground = scrawl.makeBlock({
 });
 
 // A color generator to make our dynamic boxes look pretty
-let colorMaker = scrawl.makeColor({
+const colorMaker = scrawl.makeColor({
     name: "box-color-fill-generator",
     maximumColor: "orange",
     minimumColor: "brown"
@@ -80,14 +81,14 @@ const boxes = [],
 /* eslint-disable-next-line */
 const createBodyFromBlock = function (world, block, density = 1, isStatic = false ) {
 
-    let tempx = block.get("startX") / unit,
+    const tempx = block.get("startX") / unit,
         tempy = (height - block.get("startY")) / unit,
         tempw = block.get("width") / unit,
         temph = block.get("height") / unit;
 
     let rbDesc, colDesc, rigidBody;
 
-    let bodyType = isStatic
+    const bodyType = isStatic
         ? rapier.RigidBodyType.Static
         : rapier.RigidBodyType.Dynamic;
 
@@ -103,10 +104,10 @@ const createBodyFromBlock = function (world, block, density = 1, isStatic = fals
 // Function to update Scrawl-canvas entitys with Rapier rigid body position/rotation data
 const updatePosition = function (box) {
 
-    let { entity, body } = box;
-    let { x, y } = body.translation();
+    const { entity, body } = box;
+    const { x, y } = body.translation();
 
-    let r = -body.rotation() / rad;
+    const r = -body.rotation() / rad;
 
     let sx = x * unit,
         sy = y * unit;
@@ -129,7 +130,7 @@ rapier.init()
 .then(() => {
 
     // Create the world, with added gravity
-    let gravity = new rapier.Vector2(0.0, -9.8),
+    const gravity = new rapier.Vector2(0.0, -9.8),
         world = new rapier.World(gravity);
 
     // Create rigid body for static ground entity
@@ -138,7 +139,7 @@ rapier.init()
     // Create dynamic rigid-bodies for the other boxes
     boxnames.forEach((name) => {
 
-        let ent = artefacts[name];
+        const ent = artefacts[name];
 
         if (ent) {
 

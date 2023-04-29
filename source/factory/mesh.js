@@ -390,7 +390,7 @@ S.host = function (item) {
 
     if (item) {
 
-        let host = artefact[item];
+        const host = artefact[item];
 
         if (host && host.here) this.host = host.name;
         else this.host = item;
@@ -629,10 +629,10 @@ P.setSourceDimension = function () {
         this.sourceDimension = _max(...results);
 
         // Sanity check - the particle system, when it breaks down, can create some massive dimension values!
-        let host = this.currentHost || this.getHost();
+        const host = this.currentHost || this.getHost();
         if (host) {
 
-            let max = _max(...host.currentDimensions);
+            const max = _max(...host.currentDimensions);
             if (this.sourceDimension > max) this.sourceDimension = max;
         }
 
@@ -654,7 +654,7 @@ P.setSourceDimension = function () {
         this.struts.length = 0;
         this.struts.push(...coords);
 
-        let xMin = _min(...xPos),
+        const xMin = _min(...xPos),
             yMin = _min(...yPos),
             xMax = _max(...xPos),
             yMax = _max(...yPos);
@@ -794,7 +794,7 @@ P.cleanInput = function () {
 
         method: FILL,
     })
-    let sourceImageData = engine.getImageData(0, 0, sourceDimension, sourceDimension);
+    const sourceImageData = engine.getImageData(0, 0, sourceDimension, sourceDimension);
 
     releaseCell(cell);
     return sourceImageData;
@@ -888,7 +888,7 @@ P.cleanOutput = function () {
 
                     // Safari bugfix because we fall foul of of the Safari source-out-of-bounds bug
                     // + [Stack Overflow question identifying the issue](https://stackoverflow.com/questions/35500999/cropping-with-drawimage-not-working-in-safari)
-                    let testHeight = (sy + inputStrutHeight > sourceDimension) ? sourceDimension - sy : inputStrutHeight;
+                    const testHeight = (sy + inputStrutHeight > sourceDimension) ? sourceDimension - sy : inputStrutHeight;
 
                     outputEngine.drawImage(inputCanvas, ~~sx, ~~sy, 1, ~~testHeight, 0, 0, 1, ~~stripLength);
                 }
@@ -989,17 +989,17 @@ P.fillThenDraw = function (engine) {
 // `clear`
 P.clear = function (engine) {
 
-    let output = this.output,
+    const output = this.output,
         canvas = (this.currentHost) ? this.currentHost.element : false,
         gco = engine.globalCompositeOperation;
 
     if (output && canvas) {
 
-        let tempCell = requestCell(),
+        const tempCell = requestCell(),
             tempEngine = tempCell.engine,
             tempCanvas = tempCell.element;
 
-        let w = canvas.width,
+        const w = canvas.width,
             h = canvas.height;
 
         tempCanvas.width = w;

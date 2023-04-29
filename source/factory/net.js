@@ -184,10 +184,10 @@ P.packetFunctions = pushUnique(P.packetFunctions, ['generate', 'postGenerate', '
 
 P.finalizePacketOut = function (copy, items) {
 
-    let forces = items.forces || this.forces || false;
+    const forces = items.forces || this.forces || false;
     if (forces) {
 
-        let tempForces = [];
+        const tempForces = [];
         forces.forEach(f => {
 
             if (f.substring) tempForces.push(f);
@@ -196,7 +196,7 @@ P.finalizePacketOut = function (copy, items) {
         copy.forces = tempForces;
     }
 
-    let tempParticles = [];
+    const tempParticles = [];
     this.particleStore.forEach(p => tempParticles.push(p.saveAsPacket()));
     copy.particleStore = tempParticles;
 
@@ -372,10 +372,10 @@ P.regularStamp = function () {
         engine.globalAlpha = globalAlpha;
         engine.globalCompositeOperation = globalCompositeOperation;
         engine.strokeStyle = showSpringsColor;
-        engine.shadowOffsetX = 0,
-        engine.shadowOffsetY = 0,
-        engine.shadowBlur = 0,
-        engine.shadowColor = BLANK,
+        engine.shadowOffsetX = 0;
+        engine.shadowOffsetY = 0;
+        engine.shadowBlur = 0;
+        engine.shadowColor = BLANK;
         engine.lineWidth = 1;
         engine.setTransform(1, 0, 0, 1, 0, 0);
         engine.beginPath();
@@ -410,10 +410,10 @@ P.regularStamp = function () {
         engine.globalCompositeOperation = globalCompositeOperation;
         engine.lineWidth = 1;
         engine.strokeStyle = hitRadiusColor;
-        engine.shadowOffsetX = 0,
-        engine.shadowOffsetY = 0,
-        engine.shadowBlur = 0,
-        engine.shadowColor = BLANK,
+        engine.shadowOffsetX = 0;
+        engine.shadowOffsetY = 0;
+        engine.shadowBlur = 0;
+        engine.shadowColor = BLANK;
 
         engine.setTransform(1, 0, 0, 1, 0, 0);
         engine.beginPath();
@@ -525,7 +525,6 @@ P.pickupArtefact = function (items) {
 
         particle.isBeingDragged = items;
         particle.dragOffset = requestVector(particle.position).vectorSubtract(items);
-        this.lastHitParticle
     }
     return this;
 };
@@ -581,11 +580,11 @@ const generators = {
 
         if (host && rows > 0 && columns > 0) {
 
-            let [x, y] = this.currentStampPosition;
-            let [, height] = host.currentDimensions;
+            const [x, y] = this.currentStampPosition;
+            const [, height] = host.currentDimensions;
 
-            let deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
-            let deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
+            const deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
+            const deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
 
             let dx, dy, p, i, j;
 
@@ -659,11 +658,11 @@ const generators = {
 
         if (host && rows > 0 && columns > 0) {
 
-            let [x, y] = this.currentStampPosition;
-            let [, height] = host.currentDimensions;
+            const [x, y] = this.currentStampPosition;
+            const [, height] = host.currentDimensions;
 
-            let deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
-            let deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
+            const deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
+            const deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
 
             let dx, dy, p, i, j;
 
@@ -760,7 +759,7 @@ const generators = {
 
             for (i = 0; i < precision; i++) {
 
-                let coords = shapeTemplate.getPathPositionData(i / precision);
+                const coords = shapeTemplate.getPathPositionData(i / precision);
 
                 p = makeParticle({
 
@@ -856,7 +855,7 @@ const generators = {
 
             for (i = 0; i < precision; i++) {
 
-                let coords = shapeTemplate.getPathPositionData(i / precision);
+                const coords = shapeTemplate.getPathPositionData(i / precision);
 
                 p = makeParticle({
 
@@ -939,7 +938,7 @@ const generators = {
                 springMaker.call(this, f, t, `${name}-${precision - 1}~${name}-${2}`);
             }
 
-            let halfPrecision = _floor(precision / 2);
+            const halfPrecision = _floor(precision / 2);
 
             for (i = 0; i < precision - halfPrecision; i++) {
 
@@ -957,7 +956,7 @@ const generators = {
     // `hub-spoke` - __Warning: highly unstable!__ - a rope of Particles set along a path. The generator will connect each Particle with springs to its closest neighbors, and make an additional connection with a 'hub' particle at the template's rotation-reflection point.
     [HUB_SPOKE]: function () {
 
-        let { shapeTemplate, precision } = this;
+        const { shapeTemplate, precision } = this;
 
         if (shapeTemplate && shapeTemplate.type && precision) {
 
@@ -970,7 +969,7 @@ const generators = {
                 // build the rim
                 for (i = 0; i < precision; i++) {
 
-                    let coords = shapeTemplate.getPathPositionData(i / precision);
+                    const coords = shapeTemplate.getPathPositionData(i / precision);
 
                     p = makeParticle({
 

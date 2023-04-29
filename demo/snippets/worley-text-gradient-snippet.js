@@ -59,7 +59,7 @@ import { getSnippetData } from './text-snippet-helper.js';
 export default function (el, scrawl) {
 
     // Apply the snippet to the DOM element
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
@@ -67,7 +67,7 @@ export default function (el, scrawl) {
     if (snippet) {
 
         // Import data and functionality from the Text Snippet Helper module
-        let { canvas, group, dataset, compStyles, name, width, height, fontSize, yOffset, initCanvas, initPhrase, textGroup, responsiveFunctions, contrastMoreActions, contrastOtherActions, colorSchemeDarkActions, colorSchemeLightActions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
+        const { canvas, group, dataset, compStyles, name, width, height, fontSize, yOffset, initCanvas, initPhrase, textGroup, responsiveFunctions, contrastMoreActions, contrastOtherActions, colorSchemeDarkActions, colorSchemeLightActions, additionalDemolishActions } = getSnippetData(snippet, scrawl);
 
         // Initialise the canvas
         initCanvas();

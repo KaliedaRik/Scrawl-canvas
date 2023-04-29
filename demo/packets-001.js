@@ -8,14 +8,14 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.library.canvas.mycanvas;
 
 // Event listeners
 scrawl.addListener('move', () => canvas.cascadeEventAction('move'), canvas.domElement);
 scrawl.addListener('up', () => canvas.cascadeEventAction('up'), canvas.domElement);
 
 // Testing Block entity
-let box = scrawl.makeBlock({
+const box = scrawl.makeBlock({
 
     name: 'my-box',
 
@@ -54,18 +54,18 @@ let box = scrawl.makeBlock({
 });
 
 //     Test 1 - no argument supplied
-let boxPacket1 = box.saveAsPacket();
+const boxPacket1 = box.saveAsPacket();
 
 //     Test 2 - argument === true
-let boxPacket2 = box.saveAsPacket(true);
+const boxPacket2 = box.saveAsPacket(true);
 
 //     Test 3 - argument.includeDefaults === true
-let boxPacket3 = box.saveAsPacket({
+const boxPacket3 = box.saveAsPacket({
     includeDefaults: true,
 });
 
 //     Test 4 - argument.includeDefaults === Array
-let boxPacket4 = box.saveAsPacket({
+const boxPacket4 = box.saveAsPacket({
     includeDefaults: ['handle', 'miterLimit', 'onUp', 'useMimicScale', 'anchor'],
 });
 

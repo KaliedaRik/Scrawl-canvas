@@ -744,7 +744,7 @@ P.addParticles = function (req) {
     // TODO: documentation
     else if (generateFromExistingParticles) {
 
-        let len = particleStore.length,
+        const len = particleStore.length,
             res = requestVector();
 
         let r, parent;
@@ -855,8 +855,9 @@ P.regularStamp = function () {
 
     const host = this.currentHost;
 
-    let deltaTime = _tick,
-        now = _now();
+    let deltaTime = _tick;
+    
+    const now = _now();
 
     if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 

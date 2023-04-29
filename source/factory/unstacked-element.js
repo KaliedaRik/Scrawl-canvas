@@ -230,7 +230,7 @@ P.updateCanvas = function () {
             style = canvas.domElement.style,
             updates = this.checkElementStyleValues();
 
-        for (let [key, value] of _entries(updates)) {
+        for (const [key, value] of _entries(updates)) {
 
             if (UE_MIMICKED_STYLES.includes(key)) {
 

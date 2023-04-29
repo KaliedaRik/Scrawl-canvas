@@ -49,19 +49,19 @@ export default function (scrawl, el, args = {}) {
 
     // The snippet will accept an optional key:value Object as the second argument
     // + __highlightColor__ - default: `red`
-    let highlightColor = args.highlightColor || 'red',
+    const highlightColor = args.highlightColor || 'red',
         thickness = args.thickness || 3;
 
 
     // Apply the snippet to the DOM element
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
     if (snippet) {
 
         // Set some convenience variables
-        let canvas = snippet.canvas,
+        const canvas = snippet.canvas,
             group = canvas.base.name,
             wrapper = snippet.element,
             name = wrapper.name;

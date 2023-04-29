@@ -9,7 +9,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Create some useful variables for use elsewhere in the script
-let artefact = scrawl.library.artefact,
+const artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     element = artefact.myelement,
     canvas = artefact.mycanvas;

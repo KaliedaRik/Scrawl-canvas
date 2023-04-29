@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 scrawl.importDomImage('.flowers');
 

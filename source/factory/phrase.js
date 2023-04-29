@@ -1178,7 +1178,7 @@ P.calculateTextPositions = function (mytext) {
 
         engine.font = font;
 
-        let f = engine.measureText(defaultTextForHeightMeasurements);
+        const f = engine.measureText(defaultTextForHeightMeasurements);
 
         if (f.actualBoundingBoxAscent != null && f.actualBoundingBoxDescent != null) {
 

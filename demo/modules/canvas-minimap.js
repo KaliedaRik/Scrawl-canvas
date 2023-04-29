@@ -200,7 +200,7 @@ const initializeMinimap = (args = {}, scrawl) => {
 
     const updateFrames = (x, y) => {
 
-        let newX = x * mainMapRatioX,
+        const newX = x * mainMapRatioX,
         newY = y * mainMapRatioY;
 
         // Adjust the position of the Picture wrt to the frame in the map
@@ -234,7 +234,7 @@ const initializeMinimap = (args = {}, scrawl) => {
 
     const checkMinimapFrameDrag = () => {
 
-        let [x, y] = frame.get('position');
+        const [x, y] = frame.get('position');
 
         if (checkPermittedFramePosition(x, y)) updateFrames(x, y);
         else frameDragZone('exit');
@@ -308,7 +308,7 @@ const initializeMinimap = (args = {}, scrawl) => {
 
         if(checkPermittedFramePosition(x, y)) {
 
-            let newX = x * mainMapRatioX,
+            const newX = x * mainMapRatioX,
                 newY = y * mainMapRatioY;
 
             frame.set({

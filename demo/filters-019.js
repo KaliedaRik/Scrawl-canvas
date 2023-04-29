@@ -121,7 +121,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 // @ts-expect-error
 document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 
-let opacity = document.querySelector('#opacity');
+const opacity = document.querySelector('#opacity');
 
 // @ts-expect-error
 opacity.value = 1;

@@ -1,19 +1,19 @@
 export default function (scrawl, el) {
 
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
     if (snippet) {
 
-        let canvas = snippet.canvas,
+        const canvas = snippet.canvas,
             animation = snippet.animation,
             wrapper = snippet.element,
             name = wrapper.name;
 
         canvas.setAsCurrentCanvas();
 
-        let spotlightGradient = scrawl.makeRadialGradient({
+        const spotlightGradient = scrawl.makeRadialGradient({
             name: `${name}-gradient`,
             startX: '50%',
             startY: '50%',
@@ -41,7 +41,7 @@ export default function (scrawl, el) {
             };
         }();
 
-        let block = scrawl.makeBlock({
+        const block = scrawl.makeBlock({
             name: `${name}-spotlight`,
             width: '200%',
             height: '200%',

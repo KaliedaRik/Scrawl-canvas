@@ -42,7 +42,7 @@ const extractHighestAnnualMaximum = (yearLabels, yearData) => {
 
     for (let i = 0; i < yearLabels.length; i++) {
 
-        let total = yearData[yearLabels[i]].reduce((a, v) => a + v, 0);
+        const total = yearData[yearLabels[i]].reduce((a, v) => a + v, 0);
         if (total > max) max = total;
     }
     return ((Math.floor(max / 1000)) * 1000) + 1000;
@@ -62,8 +62,9 @@ api.build = function (items) {
 
     // Module state
     let selectedColumn = 0,
-        selectedRow = 0,
-        currentData = data;
+        selectedRow = 0;
+    
+    const currentData = data;
 
     if (namespace && canvas && data && scrawl) {
 
@@ -104,10 +105,10 @@ api.build = function (items) {
         // Build bars
         yearLabels.forEach((year, yearIndex) => {
 
-            let xPosition = (barDistance * yearIndex) + graphLeft,
-                localHeight = 0;
+            const xPosition = (barDistance * yearIndex) + graphLeft,
+                categoryLen = categoryLabels.length;
 
-            const categoryLen = categoryLabels.length;
+            let localHeight = 0;
 
             categoryLabels.forEach((category, categoryIndex) => {
 

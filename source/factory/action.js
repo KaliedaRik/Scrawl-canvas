@@ -138,7 +138,7 @@ P.set = function (items = Ωempty) {
             }
         }
 
-        let ticker = (xt(items.ticker)) ? this.ticker : false;
+        const ticker = (xt(items.ticker)) ? this.ticker : false;
 
         if (ticker) {
 

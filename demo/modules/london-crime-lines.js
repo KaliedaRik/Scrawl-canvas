@@ -87,7 +87,7 @@ api.build = function (items) {
             // Only update if we already have data available
             if (currentData && namespace && canvas && category && scrawl) {
 
-                let myData = getData(category);
+                const myData = getData(category);
 
                 if (!isBuilt) {
 

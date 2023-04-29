@@ -136,12 +136,12 @@ scrawl.makeWheel({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    let [startX, startY] = mycell.start;
-    let [handleX, handleY] = mycell.handle;
-    let [offsetX, offsetY] = mycell.offset;
-    let [width, height] = mycell.dimensions;
+    const [startX, startY] = mycell.start;
+    const [handleX, handleY] = mycell.handle;
+    const [offsetX, offsetY] = mycell.offset;
+    const [width, height] = mycell.dimensions;
 
-    let {roll, scale} = mycell;
+    const {roll, scale} = mycell;
 
     return `    Start - x: ${startX}, y: ${startY}
     Handle - x: ${handleX}, y: ${handleY}

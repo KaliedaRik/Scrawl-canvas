@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let porthole = scrawl.library.artefact.porthole;
+const porthole = scrawl.library.artefact.porthole;
 
 porthole.set({
     width: 600,
@@ -24,16 +24,16 @@ porthole.set({
 
 // Create new elements and their associated Tweens (each star element has its own Tween)
 // + See Demo [Canvas-006](./canvas-006.html) for a more detailed explanation of this approach to generating new stars.
-let starCount = 0,
-    addNumber = 100;
+let starCount = 0;
+const addNumber = 100;
 
-let makeStars = function (buildNumber) {
+const makeStars = function (buildNumber) {
 
     for (let i = 0; i < buildNumber; i++) {
 
         starCount++;
 
-        let star = porthole.addNewElement({
+        const star = porthole.addNewElement({
 
             name: `star_${starCount}`,
             tag: 'div',
@@ -59,13 +59,13 @@ let makeStars = function (buildNumber) {
             },
         });
 
-        let r1 = Math.random();
+        const r1 = Math.random();
 
-        let v = scrawl.requestVector({ 
+        const v = scrawl.requestVector({ 
             x: 1 
         }).rotate(Math.random() * 360).scalarMultiply(300);
 
-        let x = v.x,
+        const x = v.x,
             y = v.y;
 
         scrawl.releaseVector(v);
@@ -116,7 +116,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // The event listener will add a given number of stars to the display when the user clicks on the scene
-let addStars = (e) => {
+const addStars = (e) => {
 
     e.preventDefault();
     e.returnValue = false;

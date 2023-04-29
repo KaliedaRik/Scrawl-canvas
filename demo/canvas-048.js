@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.library.canvas.mycanvas;
 
 
 // #### Create filters

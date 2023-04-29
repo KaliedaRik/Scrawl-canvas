@@ -142,7 +142,7 @@ P.action = function (packet) {
 // ### Permanent variables
 
 // The filter engine maintains a semi-permanent storage space - the __workstore__ - for some processing objects that are computationally expensive, for instance grids, matrix reference data objects, etc. The engine also maintains a record of when each of these processing objects was last accessed and will remove objects if they have not been accessed in the last three seconds.
-P.workstore = {},
+P.workstore = {};
 P.workstoreLastAccessed = {};
 
 // ColorSpaceIndices are used by the reducePalette filter. Hoping to expand this to other filters to allow a wider use of OKLAB/OKLCH color spaces.
@@ -2090,7 +2090,7 @@ P.theBigActionsObject = _freeze({
 
         if (processHorizontal || processVertical) {
 
-            let grid = this.buildImageGrid(input);
+            const grid = this.buildImageGrid(input);
 
             if (processHorizontal)  horizontalBlurGrid = this.buildHorizontalBlur(grid, radius);
 
@@ -2237,7 +2237,7 @@ P.theBigActionsObject = _freeze({
 
             for (i = 0, iz = ranges.length; i < iz; i++) {
 
-                let [minR, minG, minB, maxR, maxG, maxB] = ranges[i];
+                const [minR, minG, minB, maxR, maxG, maxB] = ranges[i];
 
                 if (vr >= minR && vr <= maxR && vg >= minG && vg <= maxG && vb >= minB && vb <= maxB) {
                     flag = true;
@@ -2816,7 +2816,7 @@ P.theBigActionsObject = _freeze({
 
         const getLinePositions = function (x, y) {
 
-            let ix = x,
+            const ix = x,
                 iy = y,
                 mx = x + offsetX,
                 my = y + offsetY;
@@ -2829,11 +2829,11 @@ P.theBigActionsObject = _freeze({
             return [iPos, mPos];
         };
 
-        let [input, output, mix] = this.getInputAndOutputLines(requirements);
+        const [input, output, mix] = this.getInputAndOutputLines(requirements);
 
-        let {width:iWidth, height:iHeight, data:iData} = input;
-        let {data:oData} = output;
-        let {width:mWidth, height:mHeight, data:mData} = mix;
+        const {width:iWidth, height:iHeight, data:iData} = input;
+        const {data:oData} = output;
+        const {width:mWidth, height:mHeight, data:mData} = mix;
 
         let {opacity, channelX, channelY, scaleX, scaleY, offsetX, offsetY, transparentEdges, lineOut} = requirements;
 
@@ -2906,9 +2906,9 @@ P.theBigActionsObject = _freeze({
             return val;
         }
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
             len = iData.length;
 
@@ -3012,8 +3012,8 @@ P.theBigActionsObject = _freeze({
 
                 if (postProcessResults) {
 
-                    oR = oData[r],
-                    oG = oData[g],
+                    oR = oData[r];
+                    oG = oData[g];
                     oB = oData[b];
 
                     if (oR >= iR - tolerance && oR <= iR + tolerance && 
@@ -3038,7 +3038,7 @@ P.theBigActionsObject = _freeze({
 // __flood__ - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments
     [FLOOD]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -3087,7 +3087,7 @@ P.theBigActionsObject = _freeze({
 
             if (sigma < 0.5) sigma = 0.5;
 
-            let a = _exp(0.726 * 0.726) / sigma,
+            const a = _exp(0.726 * 0.726) / sigma,
                 g1 = _exp(-a),
                 g2 = _exp(-2 * a),
                 k = (1 - g1) * (1 - g1) / (1 + 2 * a * g1 - g2);
@@ -3256,12 +3256,12 @@ P.theBigActionsObject = _freeze({
             }
         }
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data;
 
-        let {width, height} = input;
+        const {width, height} = input;
 
         let {opacity, radius, lineOut} = requirements;
 
@@ -3289,7 +3289,7 @@ P.theBigActionsObject = _freeze({
 // __glitch__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
     [GLITCH]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -3416,7 +3416,7 @@ P.theBigActionsObject = _freeze({
 // __grayscale__ - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.
     [GRAYSCALE]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -3451,7 +3451,7 @@ P.theBigActionsObject = _freeze({
 // __invert-channels__ - For each pixel, subtracts its current channel values - when included - from 255.
     [INVERT_CHANNELS]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -3492,14 +3492,14 @@ P.theBigActionsObject = _freeze({
 
             for (let j = 0, jz = levels.length; j < jz; j++) {
 
-                let [start, end, level] = levels[j];
+                const [start, end, level] = levels[j];
                 if (val >= start && val <= end) return level;
             }
         };
 
         this.checkChannelLevelsParameters(requirements);
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -3534,7 +3534,7 @@ P.theBigActionsObject = _freeze({
 // __map-to-gradient__ - maps the colors in the supplied (complex) gradient to a grayscaled input.
     [MAP_TO_GRADIENT]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -3549,7 +3549,7 @@ P.theBigActionsObject = _freeze({
 
         if (gradient) {
 
-            let rainbowData = this.getGradientData(gradient);
+            const rainbowData = this.getGradientData(gradient);
 
             if (rainbowData.length) {
 
@@ -3607,7 +3607,7 @@ P.theBigActionsObject = _freeze({
             return val;
         };
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -3630,7 +3630,7 @@ P.theBigActionsObject = _freeze({
             weights[_floor(weights.length / 2) + 1] = 1;
         }
 
-        let grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
+        const grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
 
         pixels = _floor(len / 4);
 
@@ -3657,7 +3657,7 @@ P.theBigActionsObject = _freeze({
 // __modulate-channels__ - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at that pixel's grayscale values. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.
     [MODULATE_CHANNELS]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -3787,9 +3787,9 @@ P.theBigActionsObject = _freeze({
             }
         }
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data;
 
         let {opacity, width, lineOut} = requirements;
@@ -3817,9 +3817,9 @@ P.theBigActionsObject = _freeze({
 // __offset__ - Offset the input image in the output image.
     [OFFSET]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data;
 
         let {opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY, lineOut} = requirements;
@@ -3933,9 +3933,9 @@ P.theBigActionsObject = _freeze({
             }
         };
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data;
 
         let {opacity, tileWidth, tileHeight, offsetX, offsetY, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
@@ -3989,7 +3989,7 @@ P.theBigActionsObject = _freeze({
 
             if (width && height && data) {
 
-                let {width:sWidth, height:sHeight} = this.cache.source;
+                const {width:sWidth, height:sHeight} = this.cache.source;
 
                 if (sWidth !== width || sHeight !== height) {
 
@@ -4035,7 +4035,7 @@ P.theBigActionsObject = _freeze({
 // __random-noise__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
     [RANDOM_NOISE]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -4265,7 +4265,7 @@ P.theBigActionsObject = _freeze({
 
             for (k = 0, kz = candidates.length; k < kz; k++) {
 
-                let candidate = candidates[k];
+                const candidate = candidates[k];
 
                 if (!k) final.push(candidate[0]);
                 else {
@@ -4408,7 +4408,7 @@ P.theBigActionsObject = _freeze({
         };
 
         // Filter generics (as used by all filters)
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             iWidth = input.width,
@@ -4581,7 +4581,7 @@ P.theBigActionsObject = _freeze({
 // __set-channel-to-level__ - Sets the value of each pixel's included channel to the value supplied in the "level" argument.
     [SET_CHANNEL_TO_LEVEL]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -4622,7 +4622,7 @@ P.theBigActionsObject = _freeze({
 // + `round` (default) - uses `Math.round()` for the calculation
     [STEP_CHANNELS]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -4680,7 +4680,7 @@ P.theBigActionsObject = _freeze({
             return (val.substring) ? _floor((parseFloat(val) / 100) * dim) : val;
         };
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -4690,7 +4690,7 @@ P.theBigActionsObject = _freeze({
             r, g, b, a, s, sz, pos, x, y, xz, yz, i, j, 
             distance, dr, dg, db, da, dx, dy, dLen;
 
-        let tempInput = new ImageData(iWidth, iHeight),
+        const tempInput = new ImageData(iWidth, iHeight),
             tData = tempInput.data,
             tWidth = tempInput.width,
             tHeight = tempInput.height;
@@ -4721,7 +4721,7 @@ P.theBigActionsObject = _freeze({
 
         if (_isArray(swirls) && swirls.length) {
 
-            let grid = this.buildImageGrid(input);
+            const grid = this.buildImageGrid(input);
 
             for (s = 0, sz = swirls.length; s < sz; s++) {
 
@@ -4735,7 +4735,7 @@ P.theBigActionsObject = _freeze({
 
                 if (inner > outer) {
 
-                    let temp = inner;
+                    const temp = inner;
                     inner = outer;
                     outer = temp;
                 }
@@ -4875,7 +4875,7 @@ P.theBigActionsObject = _freeze({
 // + Channels can be excluded from the filter action by setting the `includeRed` etc flags to false
     [THRESHOLD]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -4898,8 +4898,8 @@ P.theBigActionsObject = _freeze({
         if (null == includeAlpha) includeAlpha = false;
         if (null == useMixedChannel) useMixedChannel = true;
 
-        let [lowR, lowG, lowB, lowA] = low;
-        let [highR, highG, highB, highA] = high;
+        const [lowR, lowG, lowB, lowA] = low;
+        const [highR, highG, highB, highA] = high;
 
         const gVal = this.getGrayscaleValue;
 
@@ -4993,9 +4993,9 @@ P.theBigActionsObject = _freeze({
             }
         };
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
             len = iData.length;
 
@@ -5043,7 +5043,7 @@ P.theBigActionsObject = _freeze({
 // __tint-channels__ - Has similarities to the SVG &lt;feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The 'sepia' convenience filter presets these values to create a sepia effect.
     [TINT_CHANNELS]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,
@@ -5088,7 +5088,7 @@ P.theBigActionsObject = _freeze({
 
     [USER_DEFINED_LEGACY]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        const [input, output] = this.getInputAndOutputChannels(requirements);
 
         let {opacity, lineOut} = requirements;
 
@@ -5107,7 +5107,7 @@ P.theBigActionsObject = _freeze({
 // + Using this method, we can perform a __curve__ (image tonality) filter
     [VARY_CHANNELS_BY_WEIGHTS]: function (requirements) {
 
-        let [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
         let iData = input.data,
             oData = output.data,

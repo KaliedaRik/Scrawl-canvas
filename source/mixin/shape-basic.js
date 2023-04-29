@@ -286,7 +286,7 @@ export default function (P = Ωempty) {
 
         if (unit) {
 
-            let [unitSpecies, ...vars] = unit;
+            const [unitSpecies, ...vars] = unit;
 
             let myPoint, angle;
 
@@ -568,14 +568,14 @@ export default function (P = Ωempty) {
 
         engine.stroke(this.pathObject);
         if (this.showBoundingBox) this.drawBoundingBox(engine);
-    },
+    };
 
     // `fill`
     P.fill = function (engine) {
 
         engine.fill(this.pathObject, this.winding);
         if (this.showBoundingBox) this.drawBoundingBox(engine);
-    },
+    };
 
     // `drawAndFill`
     P.drawAndFill = function (engine) {
@@ -586,7 +586,7 @@ export default function (P = Ωempty) {
         this.currentHost.clearShadow();
         engine.fill(p, this.winding);
         if (this.showBoundingBox) this.drawBoundingBox(engine);
-    },
+    };
 
     // `fillAndDraw`
     P.fillAndDraw = function (engine) {
@@ -598,7 +598,7 @@ export default function (P = Ωempty) {
         engine.fill(p, this.winding);
         engine.stroke(p);
         if (this.showBoundingBox) this.drawBoundingBox(engine);
-    },
+    };
 
     // `drawThenFill`
     P.drawThenFill = function (engine) {
@@ -608,7 +608,7 @@ export default function (P = Ωempty) {
         engine.stroke(p);
         engine.fill(p, this.winding);
         if (this.showBoundingBox) this.drawBoundingBox(engine);
-    },
+    };
 
     // `fillThenDraw`
     P.fillThenDraw = function (engine) {
@@ -618,7 +618,7 @@ export default function (P = Ωempty) {
         engine.fill(p, this.winding);
         engine.stroke(p);
         if (this.showBoundingBox) this.drawBoundingBox(engine);
-    },
+    };
 
     // `clear`
     P.clear = function (engine) {
@@ -631,7 +631,7 @@ export default function (P = Ωempty) {
         engine.globalCompositeOperation = gco;
 
         if (this.showBoundingBox) this.drawBoundingBox(engine);
-    },    
+    };
 
     // `drawBoundingBox`
     P.drawBoundingBox = function (engine) {
@@ -657,8 +657,8 @@ export default function (P = Ωempty) {
         const minDims = this.minimumBoundingBoxDimensions;
 
         let [x, y, w, h] = this.localBox;
-        let [hX, hY] = this.currentStampHandlePosition;
-        let [sX, sY] = this.currentStampPosition;
+        const [hX, hY] = this.currentStampHandlePosition;
+        const [sX, sY] = this.currentStampPosition;
 
         // Pad out excessively thin widths and heights
         if (w < minDims) w = minDims;

@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 // For this Demo, we are creating some Shape entitys and using them as a template for generating Net entity Particles.
@@ -44,7 +44,7 @@ scrawl.makeShape({
 // #### Particle physics animation scene
 
 // Create a World object which we can then assign to the Net entity
-let myWorld = scrawl.makeWorld({
+const myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
     tickMultiplier: 2,
@@ -125,7 +125,7 @@ scrawl.makeNet({
 
     stampAction: function (artefact, particle, host) {
 
-            let [ , , ...start] = particle.history[0];
+            const [ , , ...start] = particle.history[0];
 
             artefact.simpleStamp(host, { 
                 start,

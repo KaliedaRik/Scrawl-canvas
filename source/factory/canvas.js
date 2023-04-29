@@ -60,8 +60,6 @@ import { _2D, ABSOLUTE, ARIA_DESCRIBEDBY, ARIA_LABELLEDBY, ARIA_LIVE, CANVAS, CA
 // #### Canvas constructor
 const Canvas = function (items = Ωempty) {
 
-    let el;
-
     this.makeName(items.name);
     this.register();
     this.initializePositions();
@@ -94,7 +92,7 @@ const Canvas = function (items = Ωempty) {
 
     this.cleanDimensions();
 
-    el = this.domElement;
+    const el = this.domElement;
 
     if (!el) this.cleanDimensions();
     else {
@@ -516,7 +514,7 @@ P.updateBaseHere = function () {
 // Internal helper function
 P.setBaseHelper = function () {
 
-    let items = {};
+    const items = {};
 
     const base = this.base;
 
@@ -1107,7 +1105,7 @@ export const addCanvas = function (items = Ωempty) {
 
     host.appendChild(el);
 
-    let mycanvas = makeCanvas({
+    const mycanvas = makeCanvas({
         name: myname,
         domElement: el,
         group: mygroup,

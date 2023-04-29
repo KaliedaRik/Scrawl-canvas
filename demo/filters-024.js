@@ -124,7 +124,7 @@ curveArray.forEach((name, index) => {
 // Create the drag-and-drop zone
 let draggedPin;
 
-let dragGroup = scrawl.makeGroup({
+const dragGroup = scrawl.makeGroup({
     name: 'drag-group',
 });
 
@@ -144,7 +144,7 @@ const currentPin = scrawl.makeDragZone({
 
         if (typeof draggedPin != 'boolean' && draggedPin) {
 
-            let pin = draggedPin.artefact,
+            const pin = draggedPin.artefact,
                 name = pin.name;
 
             if (name.indexOf('start') > 0 || name.indexOf('end') > 0) {
@@ -162,7 +162,7 @@ const currentPin = scrawl.makeDragZone({
 
         if (typeof draggedPin != 'boolean' && draggedPin) {
 
-            let pin = draggedPin.artefact,
+            const pin = draggedPin.artefact,
                 name = pin.name;
 
             if (name.indexOf('start') > 0 || name.indexOf('end') > 0) {
@@ -211,7 +211,7 @@ const recalculateWeights = function () {
 
         for (let i = 0; i < 1; i += 0.001) {
 
-            let r = redCurve.getPathPositionData(i),
+            const r = redCurve.getPathPositionData(i),
                 g = greenCurve.getPathPositionData(i),
                 b = blueCurve.getPathPositionData(i),
                 a = allCurve.getPathPositionData(i);
@@ -378,7 +378,7 @@ scrawl.addNativeListener('click', (e) => {
 
         if (selectedGroup) {
 
-            let order = selectedGroup.get('order') - 10;
+            const order = selectedGroup.get('order') - 10;
 
             selectedGroup.setArtefacts({ order });
             selectedGroup.set({ order });
@@ -391,7 +391,7 @@ scrawl.addNativeListener('click', (e) => {
 
             document.querySelectorAll('.channel-selector').forEach(el => el.classList.remove('selected'));
 
-            let order = selectedGroup.get('order') + 10;
+            const order = selectedGroup.get('order') + 10;
 
             selectedGroup.setArtefacts({ order });
             selectedGroup.set({ order });

@@ -6,20 +6,22 @@ import * as scrawl from '../source/scrawl.js';
 
 
 // #### Scene setup
-let library = scrawl.library,
+const library = scrawl.library,
     artefact = library.artefact,
-    canvasnames = library.canvasnames,
-    mystack = artefact.mystack;
+    canvasnames = library.canvasnames;
+
+let mystack = artefact.mystack;
 
 
 // #### Scene animation
-let report = function () {
+const report = function () {
 
     let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+        testTime, testNow;
 
-    let artefactnames = library.artefactnames,
+    const testMessage = document.querySelector('#reportmessage');
+
+    const artefactnames = library.artefactnames,
         stacknames = library.stacknames,
         cellnames = library.cellnames,
         stack = library.stack,
@@ -59,10 +61,10 @@ scrawl.makeRender({
 });
 
 // #### User interaction
-let controls = function () {
+const controls = function () {
 
     // the control buttons are never part of a Scrawl-canvas stack
-    let b1 = document.querySelector('#action_1'),
+    const b1 = document.querySelector('#action_1'),
         b2 = document.querySelector('#action_2'),
         b3 = document.querySelector('#action_3'),
         b4 = document.querySelector('#action_4');
@@ -86,7 +88,7 @@ let controls = function () {
     });
 
     // Test color packet and clone functionality
-    let colorFactory = scrawl.library.styles.templateColor.clone({
+    const colorFactory = scrawl.library.styles.templateColor.clone({
         name: 'myColorObject',
     });
 

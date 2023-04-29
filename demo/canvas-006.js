@@ -56,8 +56,8 @@ const starling = makeWheel({
 
 
 // Useful variables
-let starCount = 0,
-    addNumber = 100;
+let starCount = 0;
+const addNumber = 100;
 
 
 // Color factory will generate a new star color on each user click

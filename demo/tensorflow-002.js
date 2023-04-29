@@ -48,7 +48,7 @@ scrawl.makeFilter({
 
 // #### TensorFlow functionality
 // We'll handle everything in a raw asset object, which a Picture entity can then use as its source
-let myAsset = scrawl.makeRawAsset({
+const myAsset = scrawl.makeRawAsset({
 
     name: 'tensorflow-model-interpreter',
 

@@ -249,7 +249,7 @@ P.clone = λthis;
 // #### Kill functionality
 P.factoryKill = function () {
 
-    let myname = this.name
+    const myname = this.name
 
     // Remove artefact from all canvases
     _values(canvas).forEach(cvs => {
@@ -302,8 +302,9 @@ P.get = function (item) {
     else {
 
         let def = this.defs[item],
-            state = this.state,
             val;
+
+        const state = this.state;
 
         if (def != null) {
 
@@ -430,7 +431,7 @@ S.stashWidth = function (val) {
 
     if (!this.stashDimensions) {
 
-        let dims = this.currentDimensions;
+        const dims = this.currentDimensions;
         this.stashDimensions = [dims[0], dims[1]];
     }
     this.stashDimensions[0] = val;
@@ -439,7 +440,7 @@ S.stashHeight = function (val) {
 
     if (!this.stashDimensions) {
 
-        let dims = this.currentDimensions;
+        const dims = this.currentDimensions;
         this.stashDimensions = [dims[0], dims[1]];
     }
     this.stashDimensions[1] = val;
@@ -448,36 +449,36 @@ D.stashX = function (val) {
 
     if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
 
-    let c = this.stashCoordinates;
+    const c = this.stashCoordinates;
     c[0] = addStrings(c[0], val);
 };
 D.stashY = function (val) {
 
     if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
 
-    let c = this.stashCoordinates;
+    const c = this.stashCoordinates;
     c[1] = addStrings(c[1], val);
 };
 D.stashWidth = function (val) {
 
     if (!this.stashDimensions) {
 
-        let dims = this.currentDimensions;
+        const dims = this.currentDimensions;
         this.stashDimensions = [dims[0], dims[1]];
     }
 
-    let c = this.stashDimensions;
+    const c = this.stashDimensions;
     c[0] = addStrings(c[0], val);
 };
 D.stashHeight = function (val) {
 
     if (!this.stashDimensions) {
 
-        let dims = this.currentDimensions;
+        const dims = this.currentDimensions;
         this.stashDimensions = [dims[0], dims[1]];
     }
 
-    let c = this.stashDimensions;
+    const c = this.stashDimensions;
     c[1] = addStrings(c[1], val);
 };
 
@@ -1285,7 +1286,8 @@ P.updateHere = function () {
 
                 const [stampHandleX, stampHandleY] = this.currentStampHandlePosition;
 
-                let {flipUpend, flipReverse, roll, scale} = this;
+                const {flipUpend, flipReverse, scale} = this;
+                let roll = this.roll;
 
                 if (scale) {
 

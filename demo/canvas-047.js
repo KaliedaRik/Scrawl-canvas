@@ -12,7 +12,7 @@ const canvas = scrawl.library.canvas.mycanvas;
 
 const easingDisplayComponent = function (name, ypos) {
 
-    let color = scrawl.makeColor({
+    const color = scrawl.makeColor({
         name: `${name}-color`,
         easing: name,
         minimumColor: 'red',
@@ -28,7 +28,7 @@ const easingDisplayComponent = function (name, ypos) {
         method: 'draw',
     });
 
-    let wheel = scrawl.makeWheel({
+    const wheel = scrawl.makeWheel({
         name: `${name}-wheel`,
         radius: 12,
         startX: 110,

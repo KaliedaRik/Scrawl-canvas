@@ -35,9 +35,9 @@ const colorFactory = scrawl.makeColor({
 
 circleGroup.artefacts.forEach(name => {
 
-    let d = getRandom(50) + 50;
+    const d = getRandom(50) + 50;
 
-    let art = artefact[name];
+    const art = artefact[name];
 
     art.set({
         width: d,

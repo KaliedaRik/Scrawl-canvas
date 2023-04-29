@@ -139,8 +139,8 @@ P.factoryKill = function () {
 
         s = spring[name];
 
-        if (s.particleFrom && s.particleFrom.name === this.name) deadSprings.push[s];
-        else if (s.particleTo && s.particleTo.name === this.name) deadSprings.push[s];
+        if (s.particleFrom && s.particleFrom.name == this.name) deadSprings.push(s);
+        else if (s.particleTo && s.particleTo.name == this.name) deadSprings.push(s);
     });
 
     deadSprings.forEach(s => s.kill());

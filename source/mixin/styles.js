@@ -447,7 +447,7 @@ export default function (P = Ωempty) {
 // `setDelta` - Overwrites function defined in mixin/base.js - takes into account Palette object attributes
     P.setDelta = function (items = Ωempty) {
 
-        let keys = _keys(items),
+        const keys = _keys(items),
             keysLen = keys.length;
 
         if (keysLen) {

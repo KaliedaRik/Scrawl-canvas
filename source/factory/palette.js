@@ -189,13 +189,13 @@ S.colors = function (item) {
 
     if (_isArray(item)) {
 
-        let f = this.factory,
+        const f = this.factory,
             newCols = {},
             colorSpace = f.colorSpace.toLowerCase();
 
         item.forEach(c => {
 
-            let [pos, col] = c; 
+            const [pos, col] = c; 
             if (pos.toFixed && col.substring) {
 
                 f.convert(col);
@@ -334,7 +334,7 @@ P.recalculate = function () {
     let currentKey = colorKeys[0], 
         nextKey, currentVals, nextVals, diff, i, iz, j;
 
-    let [b, c, d, a] = colors[`${currentKey} `];
+    const [b, c, d, a] = colors[`${currentKey} `];
 
     stops[currentKey] = factory.returnColorFromValues(b, c, d, a);
 

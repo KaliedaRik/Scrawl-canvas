@@ -50,23 +50,23 @@
 export default function (scrawl, el) {
 
     // Apply the snippet to the DOM element
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
     if (snippet) {
 
         // Set some convenience variables
-        let canvas = snippet.canvas;
+        const canvas = snippet.canvas;
         canvas.setAsCurrentCanvas();
 
-        let wrapper = snippet.element,
+        const wrapper = snippet.element,
             name = wrapper.name,
             styles = wrapper.elementComputedStyles;
 
         // The snippet will take details of its font family, size and color from the DOM element's computed styles
         // + Note that Firefox does not supply a font string; font details are broken up into their constituent parts and need to be reconstructed. The code below will not pick up bold fonts:
-        let color = styles.color || 'black',
+        const color = styles.color || 'black',
             font = styles.font || `${(styles.fontStyle != 'normal') ? styles.fontStyle + ' ' : ''}${(styles.fontVariant != 'normal') ? styles.fontVariant + ' ' : ''}${styles.fontSize} ${styles.fontFamily}` || '20px sans-serif';
 
         canvas.set({
@@ -75,10 +75,10 @@ export default function (scrawl, el) {
 
         // define the text we'll be displaying in the button
         let counter = 0;
-        let setClickText = () => (counter === 1) ? `${counter} click` : `${counter} clicks`;
+        const setClickText = () => (counter === 1) ? `${counter} click` : `${counter} clicks`;
 
         // A path for the text to animate along, together with a gradient for its strokeStyle
-        let lineGradient = scrawl.makeGradient({
+        const lineGradient = scrawl.makeGradient({
             name: `${name}-gradient`,
             endX: '100%',
             cyclePalette: true
@@ -89,7 +89,7 @@ export default function (scrawl, el) {
         .updateColor(750, 'green')
         .updateColor(999, 'blue');
 
-        let trackLine = scrawl.makeLine({
+        const trackLine = scrawl.makeLine({
 
             name: `${name}-line`,
             startX: 20,
@@ -110,7 +110,7 @@ export default function (scrawl, el) {
         });
 
         // The phrase entity that will display the text
-        let label = scrawl.makePhrase({
+        const label = scrawl.makePhrase({
 
             name: `${wrapper.name}-label`,
 
@@ -128,7 +128,7 @@ export default function (scrawl, el) {
         });
 
         // Animate the phrase entity along the line when button element is clicked
-        let textTween = scrawl.makeTween({
+        const textTween = scrawl.makeTween({
             name: `${name}-textTween`,
             duration: 2500,
             targets: label,
@@ -149,7 +149,7 @@ export default function (scrawl, el) {
         });
 
         // Animate the gradient for the Line the text moves along
-        let gradientTween = scrawl.makeTween({
+        const gradientTween = scrawl.makeTween({
             name: `${name}-gradientTween`,
             targets: lineGradient,
             duration: 2500,
@@ -170,7 +170,7 @@ export default function (scrawl, el) {
             ]
         });
 
-        let clickAction = () => {
+        const clickAction = () => {
 
             // Increase the local counter; update the Phrase entity with new text
             counter++;

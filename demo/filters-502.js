@@ -41,7 +41,7 @@ scrawl.makePicture({
 //   </filter>
 // </svg>
 // ```
-let feGaussianBlur = document.querySelector('feGaussianBlur');
+const feGaussianBlur = document.querySelector('feGaussianBlur');
 
 
 // #### Scene animation
@@ -69,7 +69,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form functionality
-let updateStdDeviation = (e) => {
+const updateStdDeviation = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
@@ -78,7 +78,7 @@ let updateStdDeviation = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateStdDeviation, '#stdDeviation');
 
-let updateEdgeMode = (e) => {
+const updateEdgeMode = (e) => {
 
     e.preventDefault();
     e.returnValue = false;

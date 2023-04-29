@@ -35,7 +35,7 @@
 // + Adds a green box to the background display
 export default function (scrawl, el) {
 
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
     });
 

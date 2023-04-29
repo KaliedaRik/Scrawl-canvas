@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 // Define some filters
@@ -63,7 +63,7 @@ scrawl.makeShape({
 // #### Particle physics animation scene
 
 // Tracer entitys don't have any color control built in; we need to create our own color factory
-let colorFactory = scrawl.makeColor({
+const colorFactory = scrawl.makeColor({
 
     name: 'tracer-3-color-factory',
 
@@ -111,8 +111,9 @@ scrawl.makeTracer({
     // This Tracer will produce a 'dashed' effect, by displaying discrete ranges of its history
     stampAction: function (artefact, particle, host) {
 
-        let history = particle.history,
-            start;
+        const history = particle.history;
+        
+        let start;
 
         history.forEach((p, index) => {
 
@@ -139,9 +140,10 @@ scrawl.makeTracer({
     // Our second Tracer shows a 'tail-fade' effect
     stampAction: function (artefact, particle, host) {
 
-        let history = particle.history,
-            len = history.length,
-            start;
+        const history = particle.history,
+            len = history.length;
+        
+        let start;
 
         history.forEach((p, index) => {
 
@@ -171,15 +173,16 @@ scrawl.makeTracer({
     // This Tracer varies its scale to create a 'teardrop' effect
     stampAction: function (artefact, particle, host) {
 
-        let history = particle.history,
-            len = history.length,
-            start;
+        const history = particle.history,
+            len = history.length;
+        
+        let start;
 
         history.forEach((p, index) => {
 
             [ , , ...start] = p;
 
-            let magicNumber = (len - index) / len;
+            const magicNumber = (len - index) / len;
             
             artefact.simpleStamp(host, {
                 start,
@@ -229,7 +232,7 @@ const filterChoice = function (e) {
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value,
+    const val = e.target.value,
         entity = scrawl.library.entity['trace-2'];
 
     entity.clearFilters();

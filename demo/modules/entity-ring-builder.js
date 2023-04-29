@@ -60,7 +60,7 @@ export default function (items = {}) {
         method: 'clip'
     });
 
-    let v = scrawl.requestVector(0, buildOffset);
+    const v = scrawl.requestVector(0, buildOffset);
     v.rotate(buildStartAngle);
 
     for (let i = buildStartAngle; i <= buildEndAngle; i += buildStepAngle) {

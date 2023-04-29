@@ -895,7 +895,7 @@ P.cleanOutput = function () {
     
     this.dirtyOutput = false;
 
-    let sourceDimension = this.sourceDimension, 
+    const sourceDimension = this.sourceDimension, 
         sourceData = this.sourceImageData;
 
     if (sourceDimension && sourceData) {
@@ -1092,7 +1092,7 @@ P.regularStamp = function () {
 // + Results get stashed in the __boundingBox__ attribute for easier access, but all the method functions call this function just in case the box needs recalculating.
 P.getBoundingBox = function () {
 
-    let fPath = this.fromPath,
+    const fPath = this.fromPath,
         tPath = this.toPath;
 
     if(fPath && tPath) {
@@ -1307,7 +1307,7 @@ P.drawBoundingBox = function (engine) {
 
     engine.save();
 
-    let t = engine.getTransform();
+    const t = engine.getTransform();
     engine.setTransform(1, 0, 0, 1, 0, 0);
 
     engine.strokeStyle = this.boundingBoxColor;
@@ -1340,7 +1340,7 @@ P.checkHit = function (items = []) {
 
     if (targetData) {
 
-        let [x, y, w, h] = this.getBoundingBox();
+        const [x, y, w, h] = this.getBoundingBox();
 
         if (tests.some(test => {
 

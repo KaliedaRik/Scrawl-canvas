@@ -137,7 +137,7 @@ const S = P.setters;
 // Value should be the artefact object, or its name-String
 S.host = function (item) {
 
-    let h = (item.substring) ? artefact[item] : item;
+    const h = (item.substring) ? artefact[item] : item;
 
     if (h && h.name) this.host = h;
 };

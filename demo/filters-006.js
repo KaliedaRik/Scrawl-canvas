@@ -73,11 +73,11 @@ scrawl.addNativeListener(
         if (e.target.id === 'opacity') a = e.target.value;
         else {
 
-            let temp = e.target.value.split(',');
+            const temp = e.target.value.split(',');
             a = [];
 
             temp.forEach(t => {
-                let n = parseInt(t, 10);
+                const n = parseInt(t, 10);
                 if (n.toFixed && !isNaN(n)) a.push(n)
             });
         }

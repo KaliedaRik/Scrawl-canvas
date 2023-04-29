@@ -180,7 +180,7 @@ P.processPacketOut = function (key, value, incs) {
 
 P.finalizePacketOut = function (copy) {
 
-    let fill = copy.fillStyle,
+    const fill = copy.fillStyle,
         stroke = copy.strokeStyle;
 
     if (fill && !fill.substring) copy.fillStyle = fill.name;

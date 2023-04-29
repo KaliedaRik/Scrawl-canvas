@@ -140,8 +140,9 @@ scrawl.makeEmitter({
 
     stampAction: function (artefact, particle, host) {
 
-        let history = particle.history,
-            remaining, globalAlpha, scale, start, z;
+        const history = particle.history;
+        
+        let remaining, globalAlpha, scale, start, z;
 
         // These particles only keep data for their most recent position
         if (history.length) {
@@ -231,12 +232,12 @@ scrawl.makeEmitter({
 
     stampAction: function (artefact, particle, host) {
 
-        let history = particle.history;
+        const history = particle.history;
 
         // These particles only keep data for their most recent position
         if (history.length) {
 
-            let [remaining, , ...start] = history[0];
+            const [remaining, , ...start] = history[0];
 
             // This function handles fadein/out, and spangle shape. Spangle rotation is handled by the spangle entity itself, using a delta animation
             let globalAlpha = 1,
@@ -327,13 +328,14 @@ scrawl.makeEmitter({
 
     stampAction: function (artefact, particle, host) {
 
-        let engine = host.engine,
+        const engine = host.engine,
             history = particle.history,
-            remaining, radius, alpha, x, y, z,
             endRad = Math.PI * 2;
 
+        let remaining, radius, alpha, x, y, z;
+
 // @ts-expect-error
-        let colorFactory = this.fillColorFactory;
+        const colorFactory = this.fillColorFactory;
 
         engine.save();
         engine.setTransform(1, 0, 0, 1, 0, 0);

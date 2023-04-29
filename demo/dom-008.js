@@ -245,8 +245,8 @@ scrawl
 // #### Scene animation
 const stackCheck = (function () {
 
-    let stackActive = false,
-        here = stack.here;
+    let stackActive = false;
+    const here = stack.here;
 
     return function () {
 

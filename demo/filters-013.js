@@ -104,7 +104,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
             reference: val, 
         });
 
-        let [r, g, b, a] = colorFactory.extractRGBfromColor(val)
+        const [r, g, b, a] = colorFactory.extractRGBfromColor(val)
 
 // @ts-expect-error
         red.value = r;

@@ -8,13 +8,13 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 // #### Particle physics animation scene
 
 // Create a World object which we can then assign to the particle emitter
-let myWorld = scrawl.makeWorld({
+const myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
     tickMultiplier: 2,
@@ -55,7 +55,7 @@ scrawl.makeWheel({
 });
 
 // A group to help manage pin drag-and-drop functionality
-let pins = scrawl.makeGroup({
+const pins = scrawl.makeGroup({
 
     name: 'my-pins',
 
@@ -108,7 +108,7 @@ const stars = scrawl.makeStar({
 });
 
 // Particle Emitter entity using the bezier curve as its emission line
-let emitter = scrawl.makeEmitter({
+const emitter = scrawl.makeEmitter({
 
     name: 'emitter-1',
     world: myWorld,
@@ -123,8 +123,9 @@ let emitter = scrawl.makeEmitter({
 
     stampAction: function (artefact, particle, host) {
 
-        let history = particle.history,
-            remaining, start;
+        const history = particle.history;
+        
+        let remaining, start;
 
         if (history.length) {
 
@@ -199,7 +200,7 @@ const report = reportSpeed('#reportmessage', function () {
     let historyCount = 0;
     particlenames.forEach(n => {
 
-        let p = particle[n];
+        const p = particle[n];
         if (p) historyCount += p.history.length;
     });
 

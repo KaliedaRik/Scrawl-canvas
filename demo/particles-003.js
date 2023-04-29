@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 scrawl.importDomImage('#bunny');
 
@@ -74,7 +74,7 @@ scrawl.makeGradient({
 
 
 // Create entitys that we can use with the particle emitter
-let wheel = scrawl.makeWheel({ 
+const wheel = scrawl.makeWheel({ 
 
     name: 'particle-wheel-entity',
     radius: 20, 
@@ -94,7 +94,7 @@ let wheel = scrawl.makeWheel({
     noDeltaUpdates: true,
 });
 
-let block = scrawl.makeBlock({ 
+const block = scrawl.makeBlock({ 
 
     name: 'particle-block-entity',
     dimensions: [40, 16],
@@ -112,7 +112,7 @@ let block = scrawl.makeBlock({
     noDeltaUpdates: true,
 });
 
-let star = scrawl.makeStar({
+const star = scrawl.makeStar({
 
     name: 'particle-star-entity',
 
@@ -133,7 +133,7 @@ let star = scrawl.makeStar({
     noDeltaUpdates: true,
 });
 
-let picture = scrawl.makePicture({
+const picture = scrawl.makePicture({
 
     name: 'particle-image-entity',
     asset: 'bunny',
@@ -157,7 +157,7 @@ let picture = scrawl.makePicture({
 
 
 // Create a World object which we can then assign to the particle emitter
-let myWorld = scrawl.makeWorld({
+const myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
     tickMultiplier: 2,
@@ -219,10 +219,11 @@ const myemitter = scrawl.makeEmitter({
     // `stampAction` function
     stampAction: function (artefact, particle, host) {
 
-        let history = particle.history,
-            remaining, globalAlpha, scale, start, z,
+        const history = particle.history,
 // @ts-expect-error
             roll = this.get('roll');
+
+        let remaining, globalAlpha, scale, start, z;
 
         history.forEach(p => {
 
@@ -251,7 +252,7 @@ const report = reportSpeed('#reportmessage', function () {
     let historyCount = 0;
     particlenames.forEach(n => {
 
-        let p = particle[n];
+        const p = particle[n];
         if (p) historyCount += p.history.length;
     });
 
@@ -313,7 +314,6 @@ const useArtefact = function () {
 
 // @ts-expect-error
         val = selector.value;
-        choice;
 
         switch (val) {
 

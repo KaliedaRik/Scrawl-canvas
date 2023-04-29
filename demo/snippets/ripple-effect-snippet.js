@@ -42,14 +42,14 @@ export default function (scrawl, el, args = {}) {
         rippleColor = args.rippleColor || 'white';
 
     // Apply the snippet to the DOM element
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
     if (snippet) {
 
         // Set some convenience variables
-        let canvas = snippet.canvas,
+        const canvas = snippet.canvas,
             wrapper = snippet.element,
             styles = wrapper.elementComputedStyles,
             name = wrapper.name;
@@ -78,14 +78,14 @@ export default function (scrawl, el, args = {}) {
         wrapper.domElement.style.backgroundColor = 'transparent';
  
         // We add an event listener to the DOM element
-        let clickAction = () => {
+        const clickAction = () => {
 
-            let {x, y, active} = canvas.here;
+            const {x, y, active} = canvas.here;
 
             if (active) {
 
                 // Implement the ripple effect using a run-once-and-die tween operating on a create-and-destroy Wheel entity
-                let r = scrawl.makeWheel({
+                const r = scrawl.makeWheel({
                     name: `${name}-ripple`,
                     start: [x, y],
                     group: canvas.base.name,

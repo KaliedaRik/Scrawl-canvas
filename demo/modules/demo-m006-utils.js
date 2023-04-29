@@ -77,7 +77,8 @@ export const calculateTargetPosition = (target, divisor) => {
 // + `commence` - a function that handles required animation actions at the start of each Display cycle
 export const reducedMotionFunctions = (items) => {
 
-    let {fixed, animated, animation, commence, halt } = items;
+    const {animation, commence } = items;
+    let {fixed, animated, halt } = items;
 
     if (!(fixed && animated && animation && commence)) return {};
 

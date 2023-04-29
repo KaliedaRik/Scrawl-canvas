@@ -293,17 +293,17 @@ P.get = function (item) {
     }
     else{
 
-        let getter = this.getters[item];
+        const getter = this.getters[item];
 
         if (getter) return getter.call(this);
 
         else {
 
-            let def = this.defs[item];
+            const def = this.defs[item];
 
             if (typeof def != UNDEF) {
 
-                let val = this[item];
+                const val = this[item];
                 return (typeof val != UNDEF) ? val : def;
             }
             return undefined;
@@ -822,13 +822,13 @@ P.getColorValuesFromString = function(str, col) {
 P.extractFromHwbColorString = function (color) {
 
     const { getAlphaValue, getHueValue, getColorValuesFromString } = this;
-    let vals, a, b, c, d, hue, white, black;
+    let b, c, d;
 
-    vals = getColorValuesFromString(color, _HWB);
+    const vals = getColorValuesFromString(color, _HWB);
 
-    hue = getHueValue(vals[0]);
-    white = parseFloat(vals[1]);
-    black = parseFloat(vals[2]);
+    const hue = getHueValue(vals[0]),
+    white = parseFloat(vals[1]),
+    black = parseFloat(vals[2]),
     a = getAlphaValue(vals[3]);
 
     [b, c, d] = this.convertHWBtoRGB(hue, white, black);
@@ -855,13 +855,12 @@ P.extractFromHwbColorString = function (color) {
 P.extractFromXyzColorString = function (color) {
 
     const { getAlphaValue, getColorValuesFromString } = this;
-    let vals, a, b, c, d;
 
-    vals = getColorValuesFromString(color, _XYZ);
-    b = parseFloat(vals[0]);
-    c = parseFloat(vals[1]);
-    d = parseFloat(vals[2]);
-    a = getAlphaValue(vals[3]);
+    const vals = getColorValuesFromString(color, _XYZ),
+        b = parseFloat(vals[0]),
+        c = parseFloat(vals[1]),
+        d = parseFloat(vals[2]),
+        a = getAlphaValue(vals[3]);
 
     return [a, b, c, d];
 };
@@ -871,9 +870,10 @@ P.extractFromXyzColorString = function (color) {
 P.extractFromLabColorString = function (color) {
 
     const { getAlphaValue, getColorValuesFromString } = this;
-    let vals, a, b, c, d;
+    let b, c, d;
 
-    vals = getColorValuesFromString(color, _LAB);
+    const vals = getColorValuesFromString(color, _LAB);
+
     b = parseFloat(vals[0]);
     if (b > 100) b = 100;
     if (b < 0) b = 0;
@@ -886,7 +886,7 @@ P.extractFromLabColorString = function (color) {
     if (d > 160) d = 160;
     if (d < -160) d = -160;
 
-    a = getAlphaValue(vals[3]);
+    const a = getAlphaValue(vals[3]);
 
     return [a, b, c, d];
 };
@@ -896,9 +896,10 @@ P.extractFromLabColorString = function (color) {
 P.extractFromOklabColorString = function (color) {
 
     const { getAlphaValue, getColorValuesFromString } = this;
-    let vals, a, b, c, d;
+    let b, c, d;
 
-    vals = getColorValuesFromString(color, _OKLAB);
+    const vals = getColorValuesFromString(color, _OKLAB);
+
     b = (vals[0].includes(PC)) ? parseFloat(vals[0]) / 100 : parseFloat(vals[0]);
     if (b > 1) b = 1;
     if (b < 0) b = 0;
@@ -911,7 +912,7 @@ P.extractFromOklabColorString = function (color) {
     if (d > 0.5) d = 0.5;
     if (d < -0.5) d = -0.5;
 
-    a = getAlphaValue(vals[3]);
+    const a = getAlphaValue(vals[3]);
 
     return [a, b, c, d];
 };
@@ -921,9 +922,10 @@ P.extractFromOklabColorString = function (color) {
 P.extractFromLchColorString = function (color) {
 
     const { getAlphaValue, getHueValue, getColorValuesFromString } = this;
-    let vals, a, b, c, d;
+    let b, c;
 
-    vals = getColorValuesFromString(color, _LCH);
+    const vals = getColorValuesFromString(color, _LCH);
+
     b = parseFloat(vals[0]);
     if (b > 100) b = 100;
     if (b < 0) b = 0;
@@ -932,8 +934,8 @@ P.extractFromLchColorString = function (color) {
     if (c > 230) c = 230;
     if (c < 0) c = 0;
 
-    d = getHueValue(vals[2]);
-    a = getAlphaValue(vals[3]);
+    const d = getHueValue(vals[2]),
+        a = getAlphaValue(vals[3]);
 
     return [a, b, c, d];
 };
@@ -943,9 +945,10 @@ P.extractFromLchColorString = function (color) {
 P.extractFromOklchColorString = function (color) {
 
     const { getAlphaValue, getHueValue, getColorValuesFromString } = this;
-    let vals, a, b, c, d;
+    let b, c;
 
-    vals = getColorValuesFromString(color, _OKLCH);
+    const vals = getColorValuesFromString(color, _OKLCH);
+
     b = b = (vals[0].includes(PC)) ? parseFloat(vals[0]) / 100 : parseFloat(vals[0]);
     if (b > 1) b = 1;
     if (b < 0) b = 0;
@@ -954,8 +957,8 @@ P.extractFromOklchColorString = function (color) {
     if (c > 0.4) c = 0.4;
     if (c < 0) c = 0;
 
-    d = getHueValue(vals[2]);
-    a = getAlphaValue(vals[3]);
+    const d = getHueValue(vals[2]),
+        a = getAlphaValue(vals[3]);
 
     return [a, b, c, d];
 };
@@ -1185,10 +1188,13 @@ P.convertRGBtoHSL = function (red, green, blue) {
     green /= 255;
     blue /= 255;
 
-    let max = _max(red, green, blue);
-    let min = _min(red, green, blue);
-    let [hue, sat, light] = [0, 0, (min + max)/2];
-    let d = max - min;
+    const max = _max(red, green, blue),
+        min = _min(red, green, blue),
+        light = (min + max)/2,
+        d = max - min;
+
+    let hue = 0,
+        sat = 0;
 
     if (d !== 0) {
         sat = (light === 0 || light === 1)
@@ -1215,8 +1221,10 @@ P.convertHSLtoRGB = function (hue, sat, light) {
     light /= 100;
 
     const f = function (n) {
-        let k = (n + hue/30) % 12;
-        let a = sat * _min(light, 1 - light);
+
+        const k = (n + hue/30) % 12,
+            a = sat * _min(light, 1 - light);
+
         return light - a * _max(-1, _min(k - 3, 9 - k, 1));
     }
     return [f(0), f(8), f(4)];
@@ -1225,14 +1233,14 @@ P.convertHSLtoRGB = function (hue, sat, light) {
 // `convertRGBtoHWB` - internal helper function
 P.convertRGBtoHWB = function (red, green, blue) {
 
-    let hsl = this.convertRGBtoHSL(red, green, blue);
+    const hsl = this.convertRGBtoHSL(red, green, blue);
 
     red /= 256;
     green /= 256;
     blue /= 256;
 
-    let white = _min(red, green, blue);
-    let black = 1 - _max(red, green, blue);
+    const white = _min(red, green, blue),
+        black = 1 - _max(red, green, blue);
 
     return [hsl[0], white * 100, black * 100];
 };
@@ -1244,8 +1252,8 @@ P.convertRGBHtoHWB = function (red, green, blue, hue) {
     green /= 256;
     blue /= 256;
 
-    let white = _min(red, green, blue);
-    let black = 1 - _max(red, green, blue);
+    const white = _min(red, green, blue),
+        black = 1 - _max(red, green, blue);
 
     return [hue, white * 100, black * 100];
 };
@@ -1258,11 +1266,11 @@ P.convertHWBtoRGB = function (hue, white, black) {
 
     if (white + black >= 1) {
     
-        let gray = white / (white + black);
+        const gray = white / (white + black);
         return [gray, gray, gray];
     }
 
-    let rgb = this.convertHSLtoRGB(hue, 100, 50);
+    const rgb = this.convertHSLtoRGB(hue, 100, 50);
 
     for (let i = 0; i < 3; i++) {
 

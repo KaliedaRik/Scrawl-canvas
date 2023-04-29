@@ -13,13 +13,13 @@ import * as scrawl from '../source/scrawl.js'
 
 // Import and apply snippet code to DOM elements
 import greenBox from './snippets/green-box-snippet.js';
-let boxElements = document.querySelectorAll('.green-box');
+const boxElements = document.querySelectorAll('.green-box');
 boxElements.forEach(el => greenBox(scrawl, el));
 
 
 // #### Scene setup
 // Create some useful variables for use elsewhere in the script
-let artefact = scrawl.library.artefact,
+const artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     element = artefact.myelement;
 
@@ -47,7 +47,7 @@ element.set({
 // #### Scene animation
 
 // Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
-let stackCheck = function () {
+const stackCheck = function () {
 
     let active = false;
 
@@ -66,11 +66,12 @@ let stackCheck = function () {
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = function () {
 
     let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+        testTime, testNow;
+    
+    const testMessage = document.querySelector('#reportmessage');
 
     return function () {
 

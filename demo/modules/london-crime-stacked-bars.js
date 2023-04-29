@@ -77,7 +77,7 @@ const extractDataByYear = (yearLabels, categoryLabels, categoryData) => {
 
     for (let i = 0; i < categoryLabels.length; i++) {
 
-        let cData = categoryData[categoryLabels[i]];
+        const cData = categoryData[categoryLabels[i]];
 
         for (let j = 0; j < yearLabels.length; j++) {
 

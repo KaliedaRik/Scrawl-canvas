@@ -15,7 +15,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = L.artefact.mycanvas;
+const canvas = L.artefact.mycanvas;
 
 // Initial canvas background color - we will also allow the user to control this attribute's value
 canvas.setBase({
@@ -26,7 +26,7 @@ canvas.setBase({
 // #### Particle physics animation scene
 
 // Create a World object which we can then assign to the Emitter entity
-let myWorld = makeWorld({
+const myWorld = makeWorld({
 
     name: 'demo-world',
 
@@ -118,17 +118,18 @@ const myEmitter = makeEmitter({
     stampAction: function (artefact, particle, host) {
 
         // We obtain the [canvas element's 2D rendering context](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) - which we will call the ___engine___ - from the function's `host` argument.
-        let engine = host.engine,
+        const engine = host.engine,
             history = particle.history,
             len = history.length,
-            remaining, radius, alpha, 
 // @ts-expect-error
             alphaDecay = myWorld.alphaDecay, 
-            colorRange, x, y, z,
             endRad = Math.PI * 2;
 
+        let remaining, radius, alpha, 
+            colorRange, x, y, z;
+
 // @ts-expect-error
-        let colorFactory = this.fillColorFactory;
+        const colorFactory = this.fillColorFactory;
 
         // Start by saving the engine's current state.
         engine.save();
@@ -204,7 +205,7 @@ const report = reportSpeed('#reportmessage', function () {
     let historyCount = 0;
     particlenames.forEach(n => {
 
-        let p = particle[n];
+        const p = particle[n];
         if (p) historyCount += p.history.length;
     });
 
@@ -214,7 +215,7 @@ const report = reportSpeed('#reportmessage', function () {
 
 
 // We want the Emitter to attach itself to the mouse cursor whenever it is active over the &lt;canvas> element
-let mouseCheck = function () {
+const mouseCheck = function () {
 
     let active = false;
 

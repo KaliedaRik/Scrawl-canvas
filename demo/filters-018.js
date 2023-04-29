@@ -105,7 +105,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 }, '#memoizeFilterOutput');
 
 // Setup form
-let strength = document.querySelector('#strength'),
+const strength = document.querySelector('#strength'),
     angle = document.querySelector('#angle'),
     smoothing = document.querySelector('#smoothing'),
     clamp = document.querySelector('#clamp'),

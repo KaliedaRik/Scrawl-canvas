@@ -104,7 +104,7 @@ P.factoryKill = function () {
 
         if (!item) {
 
-            let controlledLine = this.controlledLineOffset;
+            const controlledLine = this.controlledLineOffset;
             controlledLine[0] = 0;
             controlledLine[1] = 0;
         }
@@ -257,7 +257,7 @@ P.factoryKill = function () {
         }
         else if (item) {
 
-            let oldControl = this[attr];
+            const oldControl = this[attr];
             
             let newControl = (item.substring) ? artefact[item] : item;
 
@@ -607,7 +607,7 @@ P.factoryKill = function () {
     P.updateControlPathSubscribers = function () {
 
         // THIS WON'T WORK - got rid of these 'subscriber' Arrays!
-        let items = [].concat(this.endSubscriber, this.endControlSubscriber, this.controlSubscriber, this.startControlSubscriber);
+        const items = [].concat(this.endSubscriber, this.endControlSubscriber, this.controlSubscriber, this.startControlSubscriber);
 
         let sub;
 

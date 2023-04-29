@@ -74,7 +74,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
     if (!zone || !ACCEPTED_WRAPPERS.includes(zone.type)) return new Error('dragZone constructor - zone object is not a Stack or Canvas wrapper');
 
-    let target = zone.domElement;
+    const target = zone.domElement;
 
     if (!target) return new Error('dragZone constructor - zone does not contain a target DOM element');
 

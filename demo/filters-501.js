@@ -81,12 +81,12 @@ let filterTarget = piccy,
     filterString = 'none';
 
 // Setup form functionality
-let updateTarget = (e) => {
+const updateTarget = (e) => {
 
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     if (val) {
 
@@ -104,7 +104,7 @@ let updateTarget = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateTarget, '#target');
 
-let updateFilter = (e) => {
+const updateFilter = (e) => {
 
     e.preventDefault();
     e.returnValue = false;

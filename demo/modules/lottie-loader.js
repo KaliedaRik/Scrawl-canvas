@@ -16,7 +16,8 @@
 // The factory returns a Promise which resolves to an object which contains handles to the RawAsset Object, the Bodymovin controller Object, and a `kill` function which will remove all objects and DOM infrastructure when invoked.
 export default function (items) {
 
-    let { src, bodymovinLibrary, width, name, loop, autoplay, scrawl } = items;
+    const { src, name, scrawl } = items;
+    let { bodymovinLibrary, width, loop, autoplay } = items;
 
     if (!(src && name && scrawl)) return false;
 
@@ -80,7 +81,8 @@ export default function (items) {
 
             updateSource: function (assetWrapper) {
 
-                let { element, engine, canvasWidth, canvasHeight, lottieCanvas } = assetWrapper;
+                const { element, engine } = assetWrapper;
+                let { canvasWidth, canvasHeight, lottieCanvas } = assetWrapper;
 
                 if (!lottieCanvas) {
 

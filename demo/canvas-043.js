@@ -413,7 +413,7 @@ const postInitialization = function (anim) {
 
     console.log(anim.target.name);
 
-    let target = anim.target.name;
+    const target = anim.target.name;
 
     if ('canvas2' === target) canvasTwoPostInitialization();
     else if ('canvas3' === target) canvasThreePostInitialization();

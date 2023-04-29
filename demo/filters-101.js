@@ -115,7 +115,7 @@ const imageFilter = scrawl.makeFilter({
     lineOut: 'flower',
 });
 
-let composeFilter = scrawl.makeFilter({
+const composeFilter = scrawl.makeFilter({
 
     name: 'block-filter',
     method: 'compose',

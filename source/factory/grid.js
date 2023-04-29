@@ -212,7 +212,7 @@ S.rows = function (item) {
 
         if (item != this.rows) {
 
-            let currentRows = this.rows;
+            const currentRows = this.rows;
 
             this.rows = item;
 
@@ -468,7 +468,7 @@ P.performFill = function (engine) {
         }
 
         // Get an map of tiles using this source
-        let validTiles = tileFill.map(item => item === index ? true : false);
+        const validTiles = tileFill.map(item => item === index ? true : false);
 
         if (validTiles.length) {
 
@@ -586,7 +586,7 @@ P.performFill = function (engine) {
 
                     if (currentPicture.simpleStamp) {
 
-                        let handle = this.currentStampHandlePosition,
+                        const handle = this.currentStampHandlePosition,
                             scale = this.currentScale,
                             x = handle[0] * scale,
                             y = handle[1] * scale;

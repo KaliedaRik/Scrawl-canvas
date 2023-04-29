@@ -18,19 +18,19 @@ canvas.buildCell({
     clearAlpha: 0.998,
 });
 
-let lowAdjuster = scrawl.makeColor({
+const lowAdjuster = scrawl.makeColor({
     name: 'low-adjuster',
     minimumColor: 'black',
     maximumColor: 'blue',
 });
 
-let highAdjuster = scrawl.makeColor({
+const highAdjuster = scrawl.makeColor({
     name: 'high-adjuster',
     minimumColor: 'red',
     maximumColor: 'lightblue',
 });
 
-let myWorld = scrawl.makeWorld({
+const myWorld = scrawl.makeWorld({
     name: 'demo-world',
     tickMultiplier: 2,
     userAttributes: [
@@ -51,7 +51,7 @@ let myWorld = scrawl.makeWorld({
 });
 
 
-let emitter = scrawl.makeEmitter({
+const emitter = scrawl.makeEmitter({
 
     name: 'emitter-1',
     group: 'trace-chamber',
@@ -80,8 +80,9 @@ let emitter = scrawl.makeEmitter({
 
     stampAction: function (artefact, particle, host) {
 
-        let history = particle.history,
-            start;
+        const history = particle.history;
+        
+        let start;
 
         if (history.length) {
 

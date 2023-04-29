@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 scrawl.importDomImage('#bunny');
 
@@ -21,7 +21,7 @@ canvas.setBase({
 // + Set various `noXYZ` flags to false in the hope that this will speed up stamp computation times
 // + Set `visibility` to false to prevent the entity appearing in the scene outside of the emitter's control
 // + No need to set `fillStyle` and `strokeStyle` colors - we'll do that via the particle emitter and the world object
-let commonValues = {
+const commonValues = {
     handle: ['center', 'center'],
     lineWidth: 2,
     method: 'fillThenDraw',
@@ -32,7 +32,7 @@ let commonValues = {
     noDeltaUpdates: true,
 };
 
-let wheel = scrawl.makeWheel({ 
+const wheel = scrawl.makeWheel({ 
     name: 'particle-wheel-entity',
     radius: 16, 
     startAngle: 20,
@@ -41,13 +41,13 @@ let wheel = scrawl.makeWheel({
 // @ts-expect-error
 }).set(commonValues);
 
-let block = scrawl.makeBlock({ 
+const block = scrawl.makeBlock({ 
     name: 'particle-block-entity',
     dimensions: [30, 20],
 // @ts-expect-error
 }).set(commonValues);
 
-let star = scrawl.makeStar({
+const star = scrawl.makeStar({
     name: 'particle-star-entity',
     radius1: 18,
     radius2: 12,
@@ -55,7 +55,7 @@ let star = scrawl.makeStar({
 // @ts-expect-error
 }).set(commonValues);
 
-let picture = scrawl.makePicture({
+const picture = scrawl.makePicture({
     name: 'particle-image-entity',
     asset: 'bunny',
     width: 26,
@@ -65,7 +65,7 @@ let picture = scrawl.makePicture({
 // @ts-expect-error
 }).set(commonValues);
 
-let phrase = scrawl.makePhrase({
+const phrase = scrawl.makePhrase({
     name: 'particle-phrase-entity',
     text: 'Hello',
     font: 'bold 40px Garamond, serif',
@@ -77,7 +77,7 @@ let phrase = scrawl.makePhrase({
 // #### Particle physics animation scene
 
 // Create a World object which we can then assign to the particle emitter
-let myWorld = scrawl.makeWorld({
+const myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
 
@@ -131,12 +131,12 @@ const myemitter = scrawl.makeEmitter({
     stampAction: function (artefact, particle, host) {
 
         // We will use the (semi-)random `fill` color assigned to the particle when it was generated
-        let {history, fill} = particle;
+        const {history, fill} = particle;
         let remaining, scale, roll, start, z;
 
         // For the stroke color, we shall give all particles the same color, as defined in our World object
 // @ts-expect-error
-        let {strokeStyle, globalAlpha} = myWorld;
+        const {strokeStyle, globalAlpha} = myWorld;
 
         // We will display each particle on the canvas using the entity currently assigned to our emitter's `artefact` attribute
         history.forEach(p => {
@@ -180,12 +180,12 @@ const report = reportSpeed('#reportmessage', function () {
     let historyCount = 0;
     particlenames.forEach(n => {
 
-        let p = particle[n];
+        const p = particle[n];
         if (p) historyCount += p.history.length;
     });
 
 // @ts-expect-error
-    let kr = parseFloat(killRadius.value),
+    const kr = parseFloat(killRadius.value),
 // @ts-expect-error
         krv = parseFloat(killRadiusVariation.value) / 2;
 
@@ -193,7 +193,7 @@ const report = reportSpeed('#reportmessage', function () {
     return `    Particles: ${particlenames.length}, generationRate: ${generationRate.value}, historyLength: ${historyLength.value}\n    Stamps per display: ${historyCount}\n\n    Background color: ${background.value}, World speed (tickMultiplier): ${worldSpeed.value}\n    Outline color (strokeStyle): ${outlineColor.value}, Opacity (globalAlpha): ${opacity.value}\n    Kill radius: from ${(kr - krv) > 0 ? kr - krv : 0}px to ${kr + krv}px\n    Minimum fill color: ${minFill.value}, Maximum fill color: ${maxFill.value}`;
 });
 
-let mouseCheck = function () {
+const mouseCheck = function () {
 
     let active = false;
 
@@ -267,7 +267,6 @@ const useArtefact = function () {
 
 // @ts-expect-error
         val = selector.value;
-        choice;
 
         switch (val) {
 

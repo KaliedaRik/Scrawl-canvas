@@ -711,7 +711,7 @@ const setActionsArray = _freeze({
 
                         range.forEach(col => {
 
-                            let [r, g, b] = colorEngine.extractRGBfromColor(col);
+                            const [r, g, b] = colorEngine.extractRGBfromColor(col);
                             res.push(r, g, b);
                         });
                     }
@@ -1394,7 +1394,7 @@ const setActionsArray = _freeze({
 // __swirl__ - for each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
 // + This filter can handle multiple swirls in a single pass
     swirl: function (f) {
-        let startX = (f.startX != null) ? f.startX : PC50,
+        const startX = (f.startX != null) ? f.startX : PC50,
             startY = (f.startY != null) ? f.startY : PC50,
             innerRadius = (f.innerRadius != null) ? f.innerRadius : 0,
             outerRadius = (f.outerRadius != null) ? f.outerRadius : PC30,
@@ -1458,7 +1458,7 @@ const setActionsArray = _freeze({
             delete f.highColor;
         }
 
-        let low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue, lowAlpha],
+        const low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue, lowAlpha],
             high = (f.high != null) ? f.high : [highRed, highGreen, highBlue, highAlpha];
 
         f.actions = [{

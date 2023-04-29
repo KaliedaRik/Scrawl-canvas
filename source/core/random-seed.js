@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Seedable random numbers
 // The following code has been lifted in its entirety from https://github.com/skratchdot/random-seed
 

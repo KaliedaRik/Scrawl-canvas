@@ -184,7 +184,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     const items = {
         easing: val,

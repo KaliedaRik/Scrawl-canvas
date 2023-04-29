@@ -10,11 +10,11 @@ const reportSpeed = function (output = '', xtra = () => '') {
 
     if (!output) return function () {};
 
+        const testMessage = document.querySelector(output),
+            history = []
+
         let testTicker = Date.now(),
             testTime, testNow,
-            testMessage = document.querySelector(output);
-
-        let history = [],
             averageTime = 0;
 
         const addTime = (t) => {
@@ -131,12 +131,13 @@ const killArtefact = (canvas, name, time, finishResurrection = () => {}) => {
 
     if (canvas && canvas.base && name && time) {
 
-        let groupname = canvas.base.name,
-            packet;
+        const groupname = canvas.base.name;
 
-        let checkGroupBucket = (name, groupname) => {
+        let res, packet;
 
-            let res = L.group[groupname].artefactCalculateBuckets.filter(e => e.name === name );
+        const checkGroupBucket = (name, groupname) => {
+
+            res = L.group[groupname].artefactCalculateBuckets.filter(e => e.name === name );
             return (res.length) ? 'no' : 'yes';
         };
 
@@ -229,12 +230,13 @@ const killStyle = (canvas, name, time, finishResurrection = () => {}) => {
 // To test artefact + anchor kill functionality
 const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrection = () => {}) => {
 
-    let groupname = 'mycanvas_base',
-        packet;
+    const groupname = 'mycanvas_base';
 
-    let checkGroupBucket = (name, groupname) => {
+    let packet, res;
 
-        let res = L.group[groupname].artefactCalculateBuckets.filter(e => e.name === name );
+    const checkGroupBucket = (name, groupname) => {
+
+        res = L.group[groupname].artefactCalculateBuckets.filter(e => e.name === name );
         return (res.length) ? 'no' : 'yes';
     };
 
@@ -287,20 +289,21 @@ const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrectio
 // To test Polyline artefact kill functionality
 const killPolylineArtefact = (canvas, name, time, myline, restore = () => {}) => {
 
-    let groupname = 'mycanvas_base',
-        packet;
+    const groupname = 'mycanvas_base';
+    
+    let packet, res;
 
-    let checkGroupBucket = (name, groupname) => {
+    const checkGroupBucket = (name, groupname) => {
 
-        let res = L.group[groupname].artefactCalculateBuckets.filter(e => e.name === name );
+        res = L.group[groupname].artefactCalculateBuckets.filter(e => e.name === name );
         return (res.length) ? 'no' : 'yes';
     };
 
-    let checkPinsArray = (name) => {
+    const checkPinsArray = (name) => {
 
         if (myline.pins.indexOf(name) >= 0) return 'no';
 
-        let res = myline.pins.filter(e => e && e.name === name );
+        res = myline.pins.filter(e => e && e.name === name );
         return (res.length) ? 'no' : 'yes';
     };
 

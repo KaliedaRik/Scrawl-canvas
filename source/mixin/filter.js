@@ -361,7 +361,7 @@ export default function (P = Ωempty) {
             if (state.dirtyFilterIdentifier) this.dirtyFilterIdentifier = true;
             else {
 
-                let {fillStyle, strokeStyle} = state;
+                const {fillStyle, strokeStyle} = state;
 
                 if (styles[fillStyle] && styles[fillStyle].dirtyFilterIdentifier) this.dirtyFilterIdentifier = true;
 

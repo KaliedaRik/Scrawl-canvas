@@ -217,7 +217,7 @@ P.makeSpiralPath = function () {
 
 P.calculateLocalPathAdditionalActions = function () {
 
-    let [x, y] = this.localBox,
+    const [x, y] = this.localBox,
         scale = this.scale;
 
     this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x / scale},${-y / scale}`);

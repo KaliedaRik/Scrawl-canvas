@@ -8,15 +8,16 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let artefact = scrawl.library.artefact,
+const artefact = scrawl.library.artefact,
     stack = artefact.mystack,
-    flower = artefact.flower,
-    currentClass = '';
+    flower = artefact.flower;
+
+let currentClass = '';
 
 
 // Create a new Group for the box elements, against which we will be checking for hits
 // + the box elements have been imported already and assigned to the Stack's default group, but we can move them to the new Group using `.set()`
-let hitgroup = scrawl.makeGroup({
+const hitgroup = scrawl.makeGroup({
     name: 'hitareas',
     host: 'mystack',
 });
@@ -100,10 +101,10 @@ flower.set({
 // #### Scene animation
 
 // Updating the flower's DOM element's class attribute
-let checkForFlowerClassUpdates = function () {
+const checkForFlowerClassUpdates = function () {
 
 // @ts-expect-error
-    let current = hitgroup.getArtefactAt([flower.get('start')]).artefact;
+    const current = hitgroup.getArtefactAt([flower.get('start')]).artefact;
 
     if (current && !currentClass) {
 

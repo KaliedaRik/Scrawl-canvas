@@ -10,13 +10,13 @@ import { reportSpeed } from './utilities.js';
 // #### Scene setup
 scrawl.importDomImage('#bunny');
 
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 // #### Particle physics animation scene
 
 // Create a World object; add some user-defined attributes to it
-let myWorld = scrawl.makeWorld({
+const myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
     tickMultiplier: 2,

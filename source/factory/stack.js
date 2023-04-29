@@ -171,7 +171,7 @@ P.clone = λthis;
 // #### Kill functionality
 P.factoryKill = function () {
 
-    let myname = this.name;
+    const myname = this.name;
 
     // rootElements and uiSubscribedElements arrays
     rootElementsRemove(myname);
@@ -300,7 +300,7 @@ P.cleanPerspective = function () {
 
     this.dirtyPerspective = false;
 
-    let p = this.perspective;
+    const p = this.perspective;
 
     this.domPerspectiveString = `perspective-origin: ${p.x} ${p.y}; perspective: ${p.z}px;`;
     this.domShowRequired = true;

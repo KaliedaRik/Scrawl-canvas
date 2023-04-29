@@ -12,7 +12,7 @@ scrawl.importDomImage('.flowers');
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 // For this Demo, we are creating a flag and pinning it to a pole. This is the pole.
@@ -36,7 +36,7 @@ scrawl.makeLine({
 // #### Particle physics animation scene
 
 // Create a World object which we can then assign to the Net entity
-let myWorld = scrawl.makeWorld({
+const myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
     tickMultiplier: 2,
@@ -64,7 +64,7 @@ scrawl.makeForce({
     },
 });
 
-let changeWind = function () {
+const changeWind = function () {
 
 // @ts-expect-error
     let newWind = myWorld.wind + Math.random() - 0.5;
@@ -175,7 +175,7 @@ const myNet = scrawl.makeNet({
     // The `stampAction` function describes the steps that our Net will take to draw each of its particles (and springs, hit regions) onto the host canvas screen.
     stampAction: function (artefact, particle, host) {
 
-        let [ , , ...start] = particle.history[0];
+        const [ , , ...start] = particle.history[0];
 
         artefact.simpleStamp(host, { 
             start,

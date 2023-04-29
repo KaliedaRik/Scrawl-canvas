@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 // Magic numbers
@@ -79,7 +79,7 @@ let currentOutline = '';
 
 const checkOutlines = function () {
 
-    let outline = firstOutline.get('pathDefinition');
+    const outline = firstOutline.get('pathDefinition');
 
     if (outline !== currentOutline) {
 

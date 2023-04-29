@@ -24,11 +24,11 @@ rippleEffect(scrawl, document.querySelector('#ripple-03'), {
 });
 
 import greenBox from './snippets/green-box-snippet.js';
-let greenBoxElements = document.querySelectorAll('.green-box');
+const greenBoxElements = document.querySelectorAll('.green-box');
 greenBoxElements.forEach(el => greenBox(scrawl, el));
 
 import jazzyButton from './snippets/jazzy-button-snippet.js';
-let jazzyButtonElements = document.querySelectorAll('.jazzy-button');
+const jazzyButtonElements = document.querySelectorAll('.jazzy-button');
 jazzyButtonElements.forEach(el => jazzyButton(scrawl, el));
 
 import spotlight from './snippets/spotlight-text-snippet.js';
@@ -40,11 +40,11 @@ spotlight(scrawl, document.querySelector('#spotlight-02'), {
 });
 
 import pagePerformance from './snippets/page-performance-snippet.js';
-let performanceElements = document.querySelectorAll('.page-performance');
+const performanceElements = document.querySelectorAll('.page-performance');
 performanceElements.forEach(el => pagePerformance(scrawl, el));
 
 import placeholder from './snippets/placeholder-effect-snippet.js';
-let placeholderElements = document.querySelectorAll('.placeholder');
+const placeholderElements = document.querySelectorAll('.placeholder');
 placeholderElements.forEach(el => placeholder(scrawl, el));
 
 import wordHighlighter from './snippets/word-highlighter-snippet.js';

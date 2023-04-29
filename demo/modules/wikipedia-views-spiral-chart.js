@@ -101,8 +101,9 @@ export default function (items) {
                         nextWeek = nextWeek % 52;
                     }
 
-                    let views = dayData[i] - minViews,
-                        dataColor;
+                    const views = dayData[i] - minViews;
+                    
+                    let dataColor;
 
                     // Get the appropriate color for this data point's value
                     if (views < medianViews) dataColor = lowViewsFactory.getRangeColor(views / medianViews);
@@ -195,30 +196,32 @@ const getData = (page = 'Cat') => {
             saturday: [], 
         };
 
-        let t = new Date(),
+        const t = new Date(),
             f = new Date();
 
         t.setDate(t.getDate() - 1);
         f.setFullYear(f.getFullYear() - 3);
 
-        let fromdate = f.toISOString().split('T')[0].replace(/-/g, ''),
-            todate = t.toISOString().split('T')[0].replace(/-/g, ''),
-            dayCounter = f.getDay(),
-            maxViews = 0, minViews = -1;
+        const fromdate = f.toISOString().split('T')[0].replace(/-/g, ''),
+            todate = t.toISOString().split('T')[0].replace(/-/g, '');
 
-        let url = `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/${page}/daily/${fromdate}/${todate}`;
+        let dayCounter = f.getDay(),
+            maxViews = 0, 
+            minViews = -1;
+
+        const url = `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/${page}/daily/${fromdate}/${todate}`;
 
         fetch(url)
         .then(response => response.json())
         .then(dataObject => {
 
-            let dataArray = dataObject.items;
+            const dataArray = dataObject.items;
 
-            let results = [[],[],[],[],[],[],[]];
+            const results = [[],[],[],[],[],[],[]];
 
             dataArray.forEach(d => {
 
-                let views = d.views;
+                const views = d.views;
 
                 maxViews = (views > maxViews) ? views : maxViews;
 

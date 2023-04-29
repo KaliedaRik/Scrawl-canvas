@@ -777,8 +777,8 @@ P.resume = function () {
 
     if (!this.active) {
 
-        now = _now(),
-        current = this.currentTime,
+        now = _now();
+        current = this.currentTime;
         start = this.startTime;
         this.startTime = now - (current - start);
         this.currentTime = now;

@@ -6,7 +6,7 @@ import * as scrawl from '../source/scrawl.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 // Setup Gradient style
@@ -74,10 +74,10 @@ scrawl.makeTween({
         start: 0,
         end: 1,
         engine: function (start, change, position) {
-           let temp = 1 - position,
-                val;
 
-            val = (position < 0.5) ?
+           const temp = 1 - position;
+           
+           const val = (position < 0.5) ?
                 start + ((position * position) * change * 2) :
                 (start + change) + ((temp * temp) * -change * 2);
 
@@ -562,17 +562,17 @@ let myshape = scrawl.makeShape({
 });
 
 // #### Development and testing
-let performEntityTests = () => {
+const performEntityTests = () => {
 
     console.log('Creating packets for all entitys in test');
-    let myblockPacket = myblock.saveAsPacket();
-    let mypicturePacket = mypicture.saveAsPacket();
-    let myphrasePacket = myphrase.saveAsPacket();
-    let mypiePacket = mypie.saveAsPacket();
-    let myovalPacket = myoval.saveAsPacket();
-    let mybezierPacket = mybezier.saveAsPacket();
-    let mygridPacket = mygrid.saveAsPacket();
-    let myshapePacket = myshape.saveAsPacket();
+    const myblockPacket = myblock.saveAsPacket();
+    const mypicturePacket = mypicture.saveAsPacket();
+    const myphrasePacket = myphrase.saveAsPacket();
+    const mypiePacket = mypie.saveAsPacket();
+    const myovalPacket = myoval.saveAsPacket();
+    const mybezierPacket = mybezier.saveAsPacket();
+    const mygridPacket = mygrid.saveAsPacket();
+    const myshapePacket = myshape.saveAsPacket();
 
     console.log('Kill all entitys in test');
     myblock.kill();
@@ -642,12 +642,12 @@ let performEntityTests = () => {
     .catch(err => console.log(err));
 };
 
-let performOtherTests = () => {
+const performOtherTests = () => {
 
     console.log('Creating packets for other objects in test');
-    let mygradientPacket = mygradient.saveAsPacket();
-    let mycolorPacket = mycolor.saveAsPacket();
-    let myfilterPacket = myfilter.saveAsPacket();
+    const mygradientPacket = mygradient.saveAsPacket();
+    const mycolorPacket = mycolor.saveAsPacket();
+    const myfilterPacket = myfilter.saveAsPacket();
 
     console.log('Kill other objects in test');
     mygradient.kill();
@@ -692,7 +692,7 @@ scrawl.makeRender({
 
 console.log(scrawl.library);
 
-let fixEntitys = () => {
+const fixEntitys = () => {
 
     console.log('Fix entitys to use other objects');
     myblock.set({

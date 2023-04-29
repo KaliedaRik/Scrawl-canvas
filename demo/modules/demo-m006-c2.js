@@ -14,7 +14,7 @@ import {
 export default function (items) {
 
     // #### Proceed checks
-    let { canvas, namespace, scrawl } = items;
+    const { canvas, namespace, scrawl } = items;
 
     if (!(canvas && namespace && scrawl)) return {
         animation: null,

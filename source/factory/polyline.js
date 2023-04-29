@@ -551,7 +551,7 @@ P.cleanPinsArray = function () {
                 }
                 else if (isa_obj(temp) && temp.currentStart) {
 
-                    let name = this.name;
+                    const name = this.name;
 
                     if (!temp.pivoted.includes(name)) pushUnique(temp.pivoted, name);
 

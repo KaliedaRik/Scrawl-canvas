@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let artefact = scrawl.library.artefact,
+const artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     canvas = artefact.mycanvas;
 
@@ -43,10 +43,11 @@ canvas.buildCell({
 
 // #### Scene animation
 // Function to check whether mouse cursor is over the canvas element within the stack, and lock the element artefact accordingly
-let check = function () {
+const check = function () {
 
-    let active = false,
-        here = canvas.here,
+    let active = false;
+
+    const here = canvas.here,
         cell = scrawl.library.asset.mycell;
 
     return function () {

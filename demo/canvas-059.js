@@ -6,7 +6,7 @@ import * as scrawl from '../source/scrawl.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 const width = canvas.get('width');
 

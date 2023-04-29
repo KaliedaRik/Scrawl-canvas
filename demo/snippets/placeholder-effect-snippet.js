@@ -45,14 +45,14 @@
 export default function (scrawl, el) {
 
     // Apply the snippet to the DOM element
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
     if (snippet) {
 
         // Set some convenience variables
-        let canvas = snippet.canvas,
+        const canvas = snippet.canvas,
             wrapper = snippet.element,
             name = wrapper.name;
 
@@ -66,7 +66,7 @@ export default function (scrawl, el) {
 
         // Transfer the DOM element's current background-color style over to the canvas
         // + This does not handle situations where the DOM element has a gradient assigned to it
-        let backgroundColor = wrapper.elementComputedStyles.backgroundColor || false;
+        const backgroundColor = wrapper.elementComputedStyles.backgroundColor || false;
 
         if (backgroundColor) {
 

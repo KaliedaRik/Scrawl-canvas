@@ -202,7 +202,7 @@ export const observeAndUpdate = function (items = Ωempty) {
         }
     };
 
-    let kill = function () {
+    const kill = function () {
 
         killListener(event, func, origin);
     };

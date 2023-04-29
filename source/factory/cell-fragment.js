@@ -75,10 +75,8 @@ export const requestCell = function () {
 
     if (!cellPool.length) cellPool.push(new CellFragment(`pool_${count++}`));
 
-    let c = cellPool.shift();
+    const c = cellPool.shift();
     c.engine.save();
-
-    // console.log(c.name, c.element.width, c.element.height);
     return c;
 };
 

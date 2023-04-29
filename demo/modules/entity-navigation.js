@@ -219,8 +219,8 @@ const initializeEntityNavigation = (items = {}, scrawl) => {
 
 
     // Setup some state to keep track of navigable entitys, and where we currently are in that list
-    let entityNames = [],
-        currentKeyboardEntity;
+    const entityNames = [];
+    let currentKeyboardEntity;
 
     const updateEntityNames = () => {
 

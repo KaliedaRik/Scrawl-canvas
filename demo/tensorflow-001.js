@@ -13,7 +13,7 @@ const canvas = scrawl.library.artefact.mycanvas;
 
 // #### TensorFlow functionality
 // We'll handle everything in a raw asset object, which a Picture entity can then use as its source
-let myAsset = scrawl.makeRawAsset({
+const myAsset = scrawl.makeRawAsset({
 
     name: 'tensorflow-model-interpreter',
 
@@ -29,7 +29,7 @@ let myAsset = scrawl.makeRawAsset({
 // @ts-expect-error
                 const { parts, leftEyeX, leftEyeY, leftEye, rightEyeX, rightEyeY, rightEye, wobbleDamper } = this;
 
-                let segs = item.allPoses[0];
+                const segs = item.allPoses[0];
 
                 segs.keypoints.forEach(s => parts[s.part] = s.position);
 
@@ -37,7 +37,7 @@ let myAsset = scrawl.makeRawAsset({
 
                     this.dirtyData = true;
 
-                    let eye = parts.leftEye;
+                    const eye = parts.leftEye;
 
                     if (leftEyeX.length > wobbleDamper) leftEyeX.shift();
                     if (leftEyeY.length > wobbleDamper) leftEyeY.shift();
@@ -53,7 +53,7 @@ let myAsset = scrawl.makeRawAsset({
 
                     this.dirtyData = true;
 
-                    let eye = parts.rightEye;
+                    const eye = parts.rightEye;
 
                     if (rightEyeX.length > wobbleDamper) rightEyeX.shift();
                     if (rightEyeY.length > wobbleDamper) rightEyeY.shift();

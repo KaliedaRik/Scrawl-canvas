@@ -9,17 +9,17 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas,
+const canvas = scrawl.library.artefact.mycanvas,
     base = canvas.base;
 
 
 // Internal state variables
-let currentLine,
-    currentPins = [],
+const currentPins = [],
     lineHold = [],
-    lineBin = [],
-    counter = 0,
-    lastX, lastY;
+    lineBin = [];
+
+let counter = 0,
+    currentLine, lastX, lastY;
 
 
 // Use a color factory object to generate random colors within a restricted palette
@@ -32,11 +32,11 @@ const myColorFactory = scrawl.makeColor({
 
 
 // Freehand line drawing functions, used by event listeners attached to the canvas element
-let startLine = function () {
+const startLine = function () {
 
     if (base.here.active) {
 
-        let coord = base.here;
+        const coord = base.here;
 
         if (coord) {
 
@@ -67,7 +67,7 @@ let startLine = function () {
 };
 scrawl.addListener('down', startLine, canvas.domElement);
 
-let endLine = function () {
+const endLine = function () {
 
     if (currentLine) lineHold.push(currentLine);
 
@@ -77,13 +77,13 @@ let endLine = function () {
 };
 scrawl.addListener(['up', 'leave'], endLine, canvas.domElement);
 
-let checkLine = function () {
+const checkLine = function () {
 
     if (currentLine && base.here.active) {
 
-        let coord = base.here;
+        const coord = base.here;
 
-        let x = coord.x,
+        const x = coord.x,
             y = coord.y;
 
         if (x === lastX && y === lastY) return false;
@@ -128,7 +128,7 @@ scrawl.addNativeListener('touchmove', (e) => {
 // Undo action
 scrawl.addNativeListener('click', () => {
 
-    let line = lineHold.pop();
+    const line = lineHold.pop();
 
     if (line) {
 
@@ -141,7 +141,7 @@ scrawl.addNativeListener('click', () => {
 // Redo action
 scrawl.addNativeListener('click', () => {
 
-    let line = lineBin.pop();
+    const line = lineBin.pop();
 
     if (line) {
 

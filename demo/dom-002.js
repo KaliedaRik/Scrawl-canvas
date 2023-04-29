@@ -9,7 +9,7 @@ import { reportSpeed } from './utilities.js';
 
 // #### Scene setup
 // Create some useful variables for use elsewhere in the script
-let artefact = scrawl.library.artefact,
+const artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     element = artefact.myelement,
     mimic = artefact.mymimic,
@@ -75,7 +75,7 @@ pivot.set({
 
 // #### Scene animation
 // Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
-let stackCheck = function () {
+const stackCheck = function () {
 
     let active = false;
 
@@ -194,7 +194,7 @@ scrawl.makeUpdater({
 });
 
 // Using the Scrawl-canvas listener functions directly, in this case because we want to update more than one attribute in a single set action, which the makeUpdater function cannot do (because: too much of an edge case to handle)
-let events = (e) => {
+const events = (e) => {
 
     e.preventDefault();
     e.returnValue = false;

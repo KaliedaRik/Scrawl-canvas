@@ -48,14 +48,14 @@
 export default function (scrawl, el) {
 
     // Apply the snippet to the DOM element
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
     if (snippet) {
 
         // Set some convenience variables
-        let canvas = snippet.canvas,
+        const canvas = snippet.canvas,
             group = canvas.base.name,
             animation = snippet.animation,
             wrapper = snippet.element,
@@ -64,10 +64,10 @@ export default function (scrawl, el) {
 
         // The snippet will take details of its font family and size from the DOM element's computed styles
         // + Note that Firefox does not supply a font string; font details are broken up into their constituent parts and need to be reconstructed. The code below will not pick up bold fonts:
-        let backgroundColor = compStyles.backgroundColor || '#f2f2f2',
+        const backgroundColor = compStyles.backgroundColor || '#f2f2f2',
             font = compStyles.font || `${(compStyles.fontStyle != 'normal') ? compStyles.fontStyle + ' ' : ''}${(compStyles.fontVariant != 'normal') ? compStyles.fontVariant + ' ' : ''}${compStyles.fontSize} ${compStyles.fontFamily}` || '20px sans-serif';
 
-        let text = el.innerText;
+        const text = el.innerText;
 
         canvas.set({
             backgroundColor,

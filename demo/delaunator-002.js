@@ -16,7 +16,7 @@ const edgesOfTriangle = (t) => [3 * t, 3 * t + 1, 3 * t + 2];
 
 const pointsOfTriangle = (del, t) => {
 
-    let { triangles } = del;
+    const { triangles } = del;
 
     return edgesOfTriangle(t).map(e => triangles[e]);
 };
@@ -51,9 +51,9 @@ const forEachVoronoiEdge = (pts, del, cb) => {
 
     if (del) {
 
-        let { triangles, halfedges } = del;
+        const { triangles, halfedges } = del;
 
-        let len = triangles.length;
+        const len = triangles.length;
 
         for (let e = 0; e < len; e++) {
 
@@ -90,7 +90,7 @@ for (let i = 0; i < 200; i++) {
 }
 
 // We build the Voronoi web in a RawAsset wrapper
-let myAsset = scrawl.makeRawAsset({
+const myAsset = scrawl.makeRawAsset({
 
     name: 'voronoi-web',
 

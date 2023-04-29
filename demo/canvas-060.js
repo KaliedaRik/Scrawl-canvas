@@ -60,7 +60,7 @@ const bespokeEasings = {
     'user-repeat': (val) => (val * 4) % 1,
 };
 
-let noiseAsset = scrawl.makeNoiseAsset({
+const noiseAsset = scrawl.makeNoiseAsset({
 
     name: 'my-noise-generator',
     width: 400,
@@ -148,7 +148,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
     if (e && e.target) {
 
-        let val = e.target.value;
+        const val = e.target.value;
 
         noiseAsset.set({
             colors: bespokeColors[val],
@@ -162,7 +162,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
     e.preventDefault();
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     if (['user-steps', 'user-repeat'].includes(val)) {
         noiseAsset.set({

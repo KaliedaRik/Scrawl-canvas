@@ -652,7 +652,7 @@ makeRender({
 
 // #### User interaction
 // Event listeners function
-let events = function () {
+const events = function () {
 
     const base = canvas.base,
         group = base.get('group');

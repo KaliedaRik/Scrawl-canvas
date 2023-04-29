@@ -8,7 +8,7 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 // Magic numbers
 const dimension = 600;
@@ -30,7 +30,7 @@ const backgroundImage = scrawl.makePicture({
 
 
 // We will use Perlin noise to determine brush stroke length and direction
-let noiseAsset = scrawl.makeNoiseAsset({
+const noiseAsset = scrawl.makeNoiseAsset({
 
     name: 'my-noise-generator',
     width: dimension,
@@ -41,7 +41,7 @@ let noiseAsset = scrawl.makeNoiseAsset({
 
 
 // We'll code up the painting effect in a RawAsset, which can then be used by Picture entitys, Pattern styles, and filters
-let impressionistAsset = scrawl.makeRawAsset({
+const impressionistAsset = scrawl.makeRawAsset({
 
     name: 'pretend-van-gogh',
 

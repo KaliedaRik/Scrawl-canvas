@@ -8,7 +8,7 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 scrawl.importDomImage('#bunny');
 
@@ -68,7 +68,7 @@ scrawl.makeBlock({
 // #### Particle physics animation scene
 
 // Create a World object which we can then assign to the particle emitter
-let myWorld = scrawl.makeWorld({
+const myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
     tickMultiplier: 2,
@@ -160,7 +160,7 @@ const myEmitter = scrawl.makeEmitter({
 
     stampAction: function (artefact, particle, host) {
 
-        let [ , , ...start] = particle.history[0];
+        const [ , , ...start] = particle.history[0];
         artefact.simpleStamp(host, {start});
     },
 });
@@ -177,7 +177,7 @@ const report = reportSpeed('#reportmessage', function () {
     let historyCount = 0;
     particlenames.forEach(n => {
 
-        let p = particle[n];
+        const p = particle[n];
         if (p) historyCount += p.history.length;
     });
 
@@ -242,7 +242,7 @@ const filterChoice = function (e) {
     e.preventDefault();
     e.returnValue = false;
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     myEmitter.clearFilters();
     if (val) myEmitter.addFilters(val);

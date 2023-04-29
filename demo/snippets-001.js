@@ -21,15 +21,15 @@ import pagePerformance from './snippets/page-performance-snippet-test.js';
 
 
 // Get the relevant Scrawl-canvas stack elements that need snippet skinning
-let spotlightElements = document.querySelectorAll('.spotlight-text');
-let jazzyElements = document.querySelectorAll('.jazzy-button');
-let pageReport = document.querySelectorAll('#reportmessage');
+const spotlightElements = document.querySelectorAll('.spotlight-text');
+const jazzyElements = document.querySelectorAll('.jazzy-button');
+const pageReport = document.querySelectorAll('#reportmessage');
 
 
 // ... And then skin them using the snippet code we imported
 spotlightElements.forEach(el => spotlightText(scrawl, el));
 
-let myJazzy = [];
+const myJazzy = [];
 jazzyElements.forEach(el => myJazzy.push(jazzyButton(scrawl, el)));
 
 // make the third jazzy button (in the middle of the grid element) display its canvas over the button

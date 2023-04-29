@@ -11,10 +11,10 @@ import { reportSpeed } from './utilities.js';
 // + Because: clocks are useful; most of this code can be thought of as clock boilerplate
 const buildClockface = function (canvas, namespace) {
 
-    let entity = scrawl.library.entity;
+    const entity = scrawl.library.entity;
 
     // The clock face will go into its own Cell
-    let myFace = canvas.buildCell({
+    const myFace = canvas.buildCell({
 
         name: `${namespace}-face`,
 
@@ -106,7 +106,7 @@ const buildClockface = function (canvas, namespace) {
 
         const secondsSinceMidnight = () => {
 
-            let now = new Date(),
+            const now = new Date(),
                 then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
 
             return (now.getTime() - then.getTime()) / 1000;
@@ -114,7 +114,7 @@ const buildClockface = function (canvas, namespace) {
 
         return function () {
 
-            let time = secondsSinceMidnight(),
+            const time = secondsSinceMidnight(),
                 hour = ((time % 43200) / 12) * (360 / 3600),
                 minute = ((time % 3600)) * (360 / 3600),
                 second = ((time % 60)) * (360 / 60);
@@ -138,11 +138,11 @@ const buildClockface = function (canvas, namespace) {
 
 
 // #### Scene setup
-let canvas = scrawl.library.canvas.mycanvas,
+const canvas = scrawl.library.canvas.mycanvas,
     namespace = 'kaliedoscope-clock';
 
 // Building the background - this goes in a separate Cell
-let myBackground = canvas.buildCell({
+const myBackground = canvas.buildCell({
 
     name: `${namespace}-background`,
 
@@ -171,7 +171,7 @@ scrawl.makeWheel({
 });
 
 // Use a color factory object to generate random colors within a restricted palette
-let myColorFactory = scrawl.makeColor({
+const myColorFactory = scrawl.makeColor({
 
     name: `${namespace}-color-factory`,
 });
@@ -251,7 +251,7 @@ scrawl.makePicture({
 });
 
 // Build the clock face
-let clock = buildClockface(canvas, namespace);
+const clock = buildClockface(canvas, namespace);
 
 
 // #### Cell display and compile ordering

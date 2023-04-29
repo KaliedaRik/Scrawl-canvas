@@ -72,7 +72,7 @@ const reportLength = scrawl.makePhrase({
     method: 'none',
 });
 
-let colorFactory = scrawl.makeColor({
+const colorFactory = scrawl.makeColor({
 
     name: 'color-factory',
     minimumColor: 'red',

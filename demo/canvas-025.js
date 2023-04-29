@@ -84,7 +84,7 @@ scrawl.makeAnimation({
         scrawl.render();
         report();
     },
-}),
+});
 
 
 // #### Development and testing

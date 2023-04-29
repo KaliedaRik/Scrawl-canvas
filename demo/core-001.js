@@ -6,7 +6,7 @@ import scrawl from '../source/scrawl.js'
 // To see the Scrawl-canvas associated module files load, use the browser's file inspection console
 
 // Test variables
-let report = document.querySelector('#reportmessage');
+const report = document.querySelector('#reportmessage');
 
 // Animation
 scrawl.makeAnimation({

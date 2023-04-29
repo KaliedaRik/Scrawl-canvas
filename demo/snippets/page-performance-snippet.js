@@ -29,14 +29,14 @@
 export default function (scrawl, el) {
 
     // Define the report function that will record the time taken for each Display cycle animation
-    let report = function () {
+    const report = function () {
 
         let testTicker = Date.now(),
             testTime, testNow,
-            testMessage = document.querySelector(`#${el.id}`);
-
-        let history = [],
             averageTime = 0;
+
+        const testMessage = document.querySelector(`#${el.id}`),
+            history = [];
 
         const addTime = (t) => {
 
@@ -60,7 +60,7 @@ export default function (scrawl, el) {
 
 
     // Apply the snippet to the DOM element
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
         animationHooks: {
             afterShow: report,

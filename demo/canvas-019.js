@@ -77,7 +77,7 @@ data.forEach(scene => {
 
     // The original picture, with the blur filter applied to it
     // - We will remove the filter in a later step
-    let entity = makePicture({
+    const entity = makePicture({
 
         name: name(`${scene.image}-original`),
         group: scene.canvas.base.name,
@@ -144,7 +144,7 @@ const postInitialization = (anim) => {
 
     console.log(anim.target.name, 'postInitialization');
 
-    let original = entitys[name(`${anim.target.name}-bg-original`)];
+    const original = entitys[name(`${anim.target.name}-bg-original`)];
 
     // Update our original Picture entity, in particular to remove the blur filter and set up its composition in the scene
     original.set({

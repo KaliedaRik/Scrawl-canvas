@@ -8,11 +8,11 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 // Create a wheel entity which we can then bounce around the canvas
-let myWheel = scrawl.makeWheel({
+const myWheel = scrawl.makeWheel({
 
     name: 'ball',
 
@@ -79,7 +79,7 @@ const pins = scrawl.makeGroup({
     host: canvas.base.name,
 });
 
-let angle = 3 / 7;
+const angle = 3 / 7;
 
 scrawl.makeBlock({
     name: 'pin-1',
@@ -193,7 +193,7 @@ scrawl.addNativeListener('click', (e) => {
     e.preventDefault();
     e.returnValue = false;
 
-    let target = e.target;
+    const target = e.target;
 
     if (target) {
 

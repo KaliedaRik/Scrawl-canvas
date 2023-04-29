@@ -62,7 +62,7 @@ const RenderAnimation = function (items = Ωempty) {
 
         items.target.forEach(tempTarget => {
 
-            let tempItems = _assign({}, items);
+            const tempItems = _assign({}, items);
             tempItems.name = `${tempItems.name}_${tempTarget.name}`;
             tempItems.target = tempTarget;
             multiReturn.push(new RenderAnimation(tempItems));

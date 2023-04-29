@@ -164,7 +164,7 @@ const createCachePictures = () => {
     // We can get a lot of the data for each cache entity from the original entity that it's shadowing. And we can iterate through each original entity using the originals Group object
     originals.artefacts.forEach(name => {
 
-        let e = entitys[name];
+        const e = entitys[name];
 
         if (e) {
 
@@ -343,7 +343,7 @@ const myFilters = [
 // Update the `opacity` attribute for all the filters
 scrawl.addNativeListener(['input', 'change'], (e) => {
 
-    let val = parseFloat(e.target.value);
+    const val = parseFloat(e.target.value);
 
     myFilters.forEach(f => f.set({ opacity: val }));
 

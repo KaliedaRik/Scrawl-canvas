@@ -8,7 +8,7 @@ import { loader, reducedMotionFunctions } from './demo-m006-utils.js';
 export default function (items) {
 
     // #### Proceed checks
-    let { canvas, namespace, scrawl } = items;
+    const { canvas, namespace, scrawl } = items;
 
     if (!(canvas && namespace && scrawl)) return {
         animation: null,

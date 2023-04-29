@@ -108,7 +108,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
         const target = e.target.id,
             val = e.target.value;
 
-        let [r, g, b] = colorFactory.extractRGBfromColor(val)
+        const [r, g, b] = colorFactory.extractRGBfromColor(val)
 
         if ('low-color' === target) {
 

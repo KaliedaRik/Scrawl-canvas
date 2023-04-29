@@ -8,7 +8,7 @@ import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 // Import image from DOM
@@ -73,7 +73,7 @@ scrawl.makeNet({
 
     stampAction: function (artefact, particle, host) {
 
-        let [ , , ...start] = particle.history[0];
+        const [ , , ...start] = particle.history[0];
 
         artefact.simpleStamp(host, { 
             start,
@@ -140,7 +140,7 @@ scrawl.makeRender({
 // #### User interaction
 
 // Mouse movement over and away from the Loom (emulates CSS element `hover` functionality)
-let interactions = function () { canvas.cascadeEventAction('move') };
+const interactions = function () { canvas.cascadeEventAction('move') };
 scrawl.addListener('move', interactions, canvas.domElement);
 
 

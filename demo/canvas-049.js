@@ -8,11 +8,11 @@ import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
+const canvas = scrawl.library.artefact.mycanvas;
 
 
 // Create the radial gradient
-let graddy = scrawl.makeConicGradient({
+const graddy = scrawl.makeConicGradient({
     name: 'mygradient',
     startX: '50%',
     startY: '50%',
@@ -111,7 +111,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
-    let val = parseInt(e.target.value, 10);
+    const val = parseInt(e.target.value, 10);
 
     switch (e.target.id) {
 
@@ -131,7 +131,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
     events(e);
 
-    let val = e.target.value;
+    const val = e.target.value;
 
     if (['user-steps', 'user-repeat'].includes(val)) {
         graddy.set({

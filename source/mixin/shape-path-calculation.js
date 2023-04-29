@@ -36,19 +36,19 @@ export const requestPathCalcObject = function () {
 
 export const releasePathCalcObject = function (a) {
 
-    a.localPath = null,
-    a.length = 0,
-    a.units.length = 0,
-    a.maxX = 0,
-    a.maxY = 0,
-    a.minX = 0,
-    a.minY = 0,
-    a.unitLengths.length = 0,
-    a.unitPartials.length = 0,
-    a.unitPositions.length = 0,
-    a.unitProgression.length = 0,
-    a.xRange.length = 0,
-    a.yRange.length = 0,
+    a.localPath = null;
+    a.length = 0;
+    a.units.length = 0;
+    a.maxX = 0;
+    a.maxY = 0;
+    a.minX = 0;
+    a.minY = 0;
+    a.unitLengths.length = 0;
+    a.unitPartials.length = 0;
+    a.unitPositions.length = 0;
+    a.unitProgression.length = 0;
+    a.xRange.length = 0;
+    a.yRange.length = 0;
 
     pathCalcObjectPool.push(a);
 };
@@ -343,7 +343,7 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
     // This loop builds the local path string
     for (i = 0, iz = myData.length; i < iz; i++) {
 
-        let curData = myData[i],
+        const curData = myData[i],
             myPts = curData.p;
 
         if (myPts) {
@@ -525,7 +525,7 @@ const rotateVector = function (v, angle) {
     let arg = _atan2(v.y, v.x);
     arg += (angle * 0.01745329251);
     
-    let mag = _sqrt((v.x * v.x) + (v.y * v.y));
+    const mag = _sqrt((v.x * v.x) + (v.y * v.y));
 
     v.x = mag * _cos(arg);
     v.y = mag * _sin(arg);
@@ -547,9 +547,9 @@ const getShapeUnitMetaData = function (species, precision, args) {
     // + because these calculations will be simple
     if (species == LINEAR) {
 
-        let [sx, sy, ex, ey] = args;
+        const [sx, sy, ex, ey] = args;
 
-        w = ex - sx,
+        w = ex - sx;
         h = ey - sy;
 
         len = _sqrt((w * w) + (h * h));
@@ -587,7 +587,7 @@ const getShapeUnitMetaData = function (species, precision, args) {
                 xPts.push(x);
                 yPts.push(y);
 
-                w = x - oldX,
+                w = x - oldX;
                 h = y - oldY;
 
                 newLength += _sqrt((w * w) + (h * h));
@@ -624,7 +624,7 @@ const getXY = {
 
     [GET_BEZIER]: function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 
-        let T = 1 - t;
+        const T = 1 - t;
 
         return {
             x: (_pow(T, 3) * sx) + (3 * t * _pow(T, 2) * cp1x) + (3 * t * t * T * cp2x) + (t * t * t * ex),
@@ -634,7 +634,7 @@ const getXY = {
 
     [GET_QUADRATIC]: function (t, sx, sy, cp1x, cp1y, ex, ey) {
 
-        let T = 1 - t;
+        const T = 1 - t;
 
         return {
             x: T * T * sx + 2 * T * t * cp1x + t * t * ex,

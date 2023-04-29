@@ -19,9 +19,9 @@ scrawl.makeAnimation({
 
 // #### User interaction
 // Buttons listener - the control buttons are never part of a Scrawl-canvas stack
-let controls = function () {
+const controls = function () {
 
-    let b1 = document.querySelector('#action_1'),
+    const b1 = document.querySelector('#action_1'),
         b2 = document.querySelector('#action_2'),
         b3 = document.querySelector('#action_3'),
         b4 = document.querySelector('#action_4');

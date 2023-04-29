@@ -49,7 +49,7 @@ const World = function (items = Ωempty) {
 
     this.set(this.defs);
 
-    let keytypes = items.keytypes || {};
+    const keytypes = items.keytypes || {};
     if (!keytypes.gravity) keytypes.gravity = T_VECTOR;
     if (!items.gravity) items.gravity = [0, 9.81, 0];
 
@@ -167,7 +167,7 @@ P.removeAttribute = function (key) {
 // `initializeAttributes` - internal function called by the constructor.
 P.initializeAttributes = function (types) {
 
-    for (let [key, value] of _entries(types)) {
+    for (const [key, value] of _entries(types)) {
 
         switch (value) {
 

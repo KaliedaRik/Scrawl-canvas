@@ -441,14 +441,14 @@ const linkFactory = function (scrawl, items, canvas, linkTextGroup, colors) {
 export default function (scrawl, el) {
 
     // Apply the snippet to the DOM element
-    let snippet = scrawl.makeSnippet({
+    const snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
     if (snippet) {
 
         // __0. Convenience handle variables__; basic followup housekeeping
-        let canvas = snippet.canvas,
+        const canvas = snippet.canvas,
             animation = snippet.animation,
             wrapper = snippet.element,
             element = wrapper.domElement,
@@ -910,7 +910,7 @@ export default function (scrawl, el) {
 
                 updateOnEnd: () => {
 
-                    let [x] = dragBar.get('position'),
+                    const [x] = dragBar.get('position'),
                         width = canvas.get('width');
 
                     dragBar.set({
