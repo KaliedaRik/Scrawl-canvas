@@ -541,6 +541,7 @@ export default function (P = Ωempty) {
 
                 let args, func, f;
 
+/* eslint-disable-next-line */
                 [args, func] = fItem.split(PACKET_DIVIDER);
 
                 args = args.split(ARG_SPLITTER);

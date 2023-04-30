@@ -432,10 +432,9 @@ P.doSimpleUpdate = function (items = Ωempty) {
         setObj = this.setObj || {};
 
     let def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute,
-        i, iz, j, jz, progress,
-        effectiveTick;
+        i, iz, j, jz, progress;
 
-    effectiveTick = (this.reversed) ? items.reverseTick - starts : items.tick - starts;
+    const effectiveTick = (this.reversed) ? items.reverseTick - starts : items.tick - starts;
 
     if (effectiveDuration && !status) progress = effectiveTick / effectiveDuration;
     else progress = (status > 0) ? 1 : 0;

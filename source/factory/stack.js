@@ -59,8 +59,6 @@ import { $DATA_SCRAWL_STACK, $SCRIPT, _computed, _isArray, _values, ABSOLUTE, BO
 // #### Stack constructor
 const Stack = function (items = Ωempty) {
 
-    let g, el;
-
     this.makeName(items.name);
     this.register();
     this.initializePositions();
@@ -82,7 +80,7 @@ const Stack = function (items = Ωempty) {
 
     this.initializeDomLayout(items);
 
-    g = makeGroup({
+    const g = makeGroup({
         name: this.name,
         host: this.name
     });
@@ -96,7 +94,7 @@ const Stack = function (items = Ωempty) {
 
     this.set(items);
 
-    el = this.domElement;
+    const el = this.domElement;
 
     if (el) {
 
@@ -561,7 +559,7 @@ const processNewStackChildren = function (el, name) {
 export const addStack = function (items = Ωempty) {
 
     // define variables
-    let el, host, hostinscrawl, mystack, mygroup, name,
+    let el, host, hostinscrawl, mygroup, name,
         position = ABSOLUTE;
 
     // get, or generate a new, stack-to-be element
@@ -610,7 +608,7 @@ export const addStack = function (items = Ωempty) {
     if (!el.parentElement || host.id !== el.parentElement.id) host.appendChild(el);
 
     // create the Scrawl-canvas Stack artefact
-    mystack = makeStack({
+    const mystack = makeStack({
         name: name,
         domElement: el,
         group: mygroup,

@@ -180,8 +180,9 @@ S.columns = function (item) {
 
         if (item != this.columns) {
 
-            let i, iz, j,
-                currentFill = this.tileFill,
+            let i, iz, j;
+
+            const currentFill = this.tileFill,
                 currentCols = this.columns,
                 newFill = [];
 
@@ -534,10 +535,11 @@ P.performFill = function (engine) {
         }
     });
 
-    let gColor = this.gutterColor,
+    const gColor = this.gutterColor,
         gRow = this.rowGutterWidth,
-        gCol = this.columnGutterWidth,
-        gObject;
+        gCol = this.columnGutterWidth;
+
+    let gObject;
 
     if(xt(gColor)) {
 

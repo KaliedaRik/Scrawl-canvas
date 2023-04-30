@@ -454,8 +454,9 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
 
         for (i = 0, iz = units.length; i < iz; i++) {
 
-            let [spec, ...data] = units[i],
-                localResults;
+            const [spec, ...data] = units[i];
+
+            let localResults;
 
             switch (spec) {
 
@@ -538,10 +539,11 @@ const getShapeUnitMetaData = function (species, precision, args) {
 
     let xPts = [],
         yPts = [],
-        progression = [],
-        positions = [],
         len = 0,
         w, h;
+
+    const progression = [],
+        positions = [];
 
     // We want to separate out linear species before going into the while loop
     // + because these calculations will be simple
@@ -559,8 +561,9 @@ const getShapeUnitMetaData = function (species, precision, args) {
     }
     else if (species == BEZIER || (species == QUADRATIC)) {
 
-        let func = (species == BEZIER) ? GET_BEZIER : GET_QUADRATIC,
-            flag = false,
+        const func = (species == BEZIER) ? GET_BEZIER : GET_QUADRATIC;
+
+        let flag = false,
             step = 0.25,
             newLength = 0,
             oldX, oldY, x, y, t, res;

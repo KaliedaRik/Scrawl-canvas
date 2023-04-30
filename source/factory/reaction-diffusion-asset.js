@@ -628,14 +628,15 @@ P.calculateLaplacian = function (index, src) {
 
     const w = this.width;
 
-    let res = 0,
-        row = _floor(index / w),
+    const row = _floor(index / w),
         rowAbove = this.checkRow(row - 1) * w,
         rowBelow = this.checkRow(row + 1) * w,
         rowHere = row * w,
         col = index - rowHere,
         colLeft = this.checkCol(col - 1),
-        colRight = this.checkCol(col + 1),
+        colRight = this.checkCol(col + 1);
+
+    let res = 0,
         cursor;
 
     // center

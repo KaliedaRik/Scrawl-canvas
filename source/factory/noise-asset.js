@@ -1026,8 +1026,9 @@ P.worleyNoise = function (input, distanceFunc, outputFunc) {
 
     let lastRandom,
         numberFeaturePoints,
-        randomDiff = { x: 0, y: 0, z: 0 },
         featurePoint = { x: 0, y: 0, z: 0 };
+
+    const randomDiff = { x: 0, y: 0, z: 0 };
 
     let cubeX, cubeY, cubeZ;
 

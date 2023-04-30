@@ -1003,14 +1003,13 @@ P.calculateTextPositions = function (mytext) {
         fontLibrary = {},
         fontArray = requestArray();
 
-    let scale = this.currentScale,
-        dims = this.currentDimensions,
+    let scale = this.currentScale;
+
+    const dims = this.currentDimensions,
         width = dims[0] * scale,
         treatWordAsGlyph = this.treatWordAsGlyph,
         lineHeight = this.lineHeight,
         justify = this.justify;
-
-    let handle, handleX, handleY;
 
     fontAttributes.updateMetadata(scale, lineHeight, host);
     glyphAttributes.updateMetadata(scale, lineHeight, host);
@@ -1305,10 +1304,10 @@ P.calculateTextPositions = function (mytext) {
 
     this.cleanHandle();
     this.dirtyHandle = false;
-    handle = this.currentHandle;
 
-    handleX = -handle[0] * scale;
-    handleY = -handle[1] * scale;
+    const handle = this.currentHandle,
+        handleX = -handle[0] * scale,
+        handleY = -handle[1] * scale;
 
     // Handle path positioning (which we'll assume will need to be done for every display cycle) separately during stamping
     if (!path) {

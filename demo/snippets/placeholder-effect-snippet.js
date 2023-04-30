@@ -59,8 +59,9 @@ export default function (scrawl, el) {
         // Data can be passed to the snippet via `data-` attributes on the DOM element:
         // + __data-line-width__ - default: "4"
         // + __data-line-color__ - default: "black"
-        let lineWidth = el.dataset.lineWidth || '4',
-            lineColor = el.dataset.lineColor || 'black';
+        let lineWidth = el.dataset.lineWidth || '4';
+
+        const lineColor = el.dataset.lineColor || 'black';
 
         lineWidth = parseFloat(lineWidth);
 

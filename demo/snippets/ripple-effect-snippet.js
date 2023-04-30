@@ -38,8 +38,9 @@ export default function (scrawl, el, args = {}) {
     // The snippet will accept an optional key:value Object as the second argument
     // + __rippleColor__ - default: `white`
     // + __backgroundColor__ - default: false (will use the DOM element's background-color style)
-    let backgroundColor = args.backgroundColor || false,
-        rippleColor = args.rippleColor || 'white';
+    let backgroundColor = args.backgroundColor || false;
+
+    const rippleColor = args.rippleColor || 'white';
 
     // Apply the snippet to the DOM element
     const snippet = scrawl.makeSnippet({

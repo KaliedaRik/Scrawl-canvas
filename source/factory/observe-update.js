@@ -115,10 +115,11 @@ export const observeAndUpdate = function (items = Ωempty) {
 
                 setup();
 
-                let actionAttribute = actionArray[0],
+                const actionAttribute = actionArray[0],
                     action = actionArray[1],
-                    targetVal = e.target.value,
-                    actionFlag = true,
+                    targetVal = e.target.value;
+
+                let actionFlag = true,
                     val;
 
                 switch (action) {

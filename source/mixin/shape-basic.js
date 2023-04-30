@@ -656,6 +656,7 @@ export default function (P = Ωempty) {
 
         const minDims = this.minimumBoundingBoxDimensions;
 
+/* eslint-disable-next-line */
         let [x, y, w, h] = this.localBox;
         const [hX, hY] = this.currentStampHandlePosition;
         const [sX, sY] = this.currentStampPosition;

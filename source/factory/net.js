@@ -336,8 +336,9 @@ P.regularStamp = function () {
     const host = this.currentHost;
 
     // The particle system is a physics system, which means we need to advance it by a small amount of time as part of each Display cycle
-    let deltaTime = _tick,
-        now = _now();
+    let deltaTime = _tick;
+
+    const now = _now();
 
     if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 
@@ -452,10 +453,10 @@ P.checkHit = function (items = [], mycell) {
 
     if (this.noUserInteraction) return false;
 
-    const tests = (!_isArray(items)) ?  [items] : items;
+    const tests = (!_isArray(items)) ?  [items] : items,
+        particleStore = this.particleStore;
 
-    let particleStore = this.particleStore,
-        res = false,
+    let res = false,
         tx, ty, i, iz, p;
 
     if (tests.some(test => {
@@ -548,12 +549,10 @@ const springMaker = function (particleFrom, particleTo, springName) {
 
     const { springs, springConstant, damperConstant, restLength } = this;
 
-    let v, l, s;
+    const v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
+    const l = v.getMagnitude();
 
-    v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
-    l = v.getMagnitude();
-
-    s = makeSpring({
+    const s = makeSpring({
 
         name: springName,
 
@@ -962,7 +961,7 @@ const generators = {
 
             const { particleStore, artefact:art, historyLength, engine, forces, mass, name, joinTemplateEnds } = this;
 
-            let i, p, f, t, hub;
+            let i, p, f, t;
 
             if (HUB_ARTEFACTS_1.includes(shapeTemplate.type)) {
 
@@ -1037,7 +1036,7 @@ const generators = {
 
             const [x, y] = shapeTemplate.get(POSITION);
 
-            hub = makeParticle({
+            const hub = makeParticle({
 
                 name: `${name}-hub`,
 

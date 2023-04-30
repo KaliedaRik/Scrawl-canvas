@@ -182,7 +182,6 @@ P.makeStarPath = function () {
         radius2 = this.radius2;
 
     let currentX, currentY, x, y,
-        myMin, myXoffset, i,
         myPath = ZERO_STR;
 
     if (radius1.substring || radius2.substring) {
@@ -209,7 +208,7 @@ P.makeStarPath = function () {
     v2.rotate(-turn/2);
     v2.rotate(twist);
 
-    for (i = 0; i < points; i++) {
+    for (let i = 0; i < points; i++) {
 
         v2.rotate(turn);
 
@@ -238,8 +237,8 @@ P.makeStarPath = function () {
     releaseVector(v1);
     releaseVector(v2);
 
-    myMin = _min(...xPts);
-    myXoffset = _abs(myMin).toFixed(1);
+    const myMin = _min(...xPts),
+        myXoffset = _abs(myMin).toFixed(1);
 
     myPath = `m${myXoffset},0l${myPath}z`;
 

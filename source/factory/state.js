@@ -204,8 +204,9 @@ P.set = function (items = Ωempty) {
     const keys = _keys(items),
         keysLen = keys.length;
 
-    let key, i,
-        d = this.defs;
+    let key, i;
+
+    const d = this.defs;
 
     for (i = 0; i < keysLen; i++) {
 
@@ -225,16 +226,14 @@ P.set = function (items = Ωempty) {
 
 P.get = function (item) {
 
-    let undef, d, i;
-
-    d = this.defs[item];
+    const d = this.defs[item];
 
     if (d != null) {
 
-        i = this[item];
+        const i = this[item];
         return (i != null) ? i : d;
     }
-    else return undef;
+    else return undefined;
 };
 
 const S = P.setters;

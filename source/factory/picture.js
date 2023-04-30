@@ -322,8 +322,9 @@ P.get = function (item) {
 
         else {
 
+            const state = this.state;
+
             let def = this.defs[item],
-                state = this.state,
                 val;
 
             if (typeof def != UNDEF) {

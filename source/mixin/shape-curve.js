@@ -468,8 +468,9 @@ P.factoryKill = function () {
         }
 
         let lock = this[`${label}LockTo`],
-            x, y, ox, oy, here, host, dims,
-            raw = this[label],
+            x, y, ox, oy, here, host, dims;
+
+        const raw = this[label],
             current = this[`current${capLabel}`];
 
         if (lock == PIVOT && (!pivot || pivot.substring)) lock = COORD;
@@ -560,8 +561,9 @@ P.factoryKill = function () {
 
         if (checkAttribute) return checkAttribute;
 
-        let pathPos = this[`${label}PathPosition`],
-            tempPos = pathPos,
+        let pathPos = this[`${label}PathPosition`];
+
+        const tempPos = pathPos,
             pathData = path.getPathPositionData(pathPos);
 
         if (pathPos < 0) pathPos += 1;

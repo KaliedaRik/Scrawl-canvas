@@ -970,8 +970,9 @@ const setActionsArray = _freeze({
         let red = (f.red != null) ? f.red : 0,
             green = (f.green != null) ? f.green : 0,
             blue = (f.blue != null) ? f.blue : 0,
-            alpha = (f.alpha != null) ? f.alpha : 255,
-            excludeAlpha = (f.excludeAlpha != null) ? f.excludeAlpha : false;
+            alpha = (f.alpha != null) ? f.alpha : 255;
+
+        const excludeAlpha = (f.excludeAlpha != null) ? f.excludeAlpha : false;
 
         if (f.reference != null) {
 

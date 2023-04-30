@@ -419,10 +419,12 @@ P.calculateSize = function () {
 
     if (this.host) {
 
-        let {scale, lineHeight, host, sizeValue, sizeMetric} = this;
+        const {scale, lineHeight, host, sizeMetric} = this;
 
-        let gcfs = host.getComputedFontSizes(),
-            parentSize, rootSize, viewportWidth, viewportHeight;
+        const gcfs = host.getComputedFontSizes();
+
+        let parentSize, rootSize, viewportWidth, viewportHeight,
+            sizeValue = this.sizeValue;
 
         if (!gcfs) {
 

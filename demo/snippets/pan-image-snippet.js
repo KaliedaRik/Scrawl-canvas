@@ -63,10 +63,10 @@ export default function (scrawl, el) {
         el.style.backgroundColor = 'transparent';
 
         // Grab all the child &lt;img> elements
-        let images = el.querySelectorAll('img'),
-            imgName = `${name}-image`;
+        const images = el.querySelectorAll('img');
 
         // If the coder gave the DOM element a sane id attribute value then all our names will be sensible names. If not, then Scrawl-canvas will have computer-generated an id for the element. These generated names often include characters that do not sit well with the CSS/JS querySelector string requirements. So we have to make the name safe to be used as a search string
+        let imgName = `${name}-image`;
         imgName = imgName.replace('.', '');
 
         // Update all the &lt;img> elements we found. In particular:

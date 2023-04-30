@@ -290,10 +290,10 @@ P.get = function (item) {
 
     else {
 
-        let def = this.defs[item],
-            state = this.state;
+        const state = this.state;
 
-        let val;
+        let def = this.defs[item],
+            val;
 
         if (def != null) {
 
@@ -713,18 +713,18 @@ P.prepareStamp = function() {
 
         if(fPath && tPath) {
 
-            let fPathLength = _ceil(fPath.length),
-                tPathLength = _ceil(tPath.length),
-                pathSteps, pathDelta, x, y;
+            const fPathLength = _ceil(fPath.length),
+                tPathLength = _ceil(tPath.length);
 
-            pathSteps = this.setSourceDimension(_max(fPathLength, tPathLength));
+            const pathSteps = this.setSourceDimension(_max(fPathLength, tPathLength));
 
-            let fPathStart = this.fromPathStart,
+            const fPathStart = this.fromPathStart,
                 fPathEnd = this.fromPathEnd,
                 tPathStart = this.toPathStart,
                 tPathEnd = this.toPathEnd,
-                fPartial, tPartial, minPartial,
                 pathSpeed = this.constantPathSpeed;
+
+            let fPartial, tPartial;
 
             if (fPathStart < fPathEnd) fPartial = fPathEnd - fPathStart;
             else fPartial = fPathEnd + (1 - fPathStart);
@@ -734,11 +734,12 @@ P.prepareStamp = function() {
             else tPartial = tPathEnd + (1 - tPathStart);
             if (tPartial < 0.005) tPartial = 0.005;
 
-            minPartial = _ceil(_min(fPartial, tPartial));
+            const minPartial = _ceil(_min(fPartial, tPartial)),
+                pathDelta = 1 / (pathSteps * (1 / minPartial));
 
-            pathDelta = 1 / (pathSteps * (1 / minPartial));
+            let x, y, cursor;
 
-            for (let cursor = 0; cursor <= 1; cursor += pathDelta) {
+            for (cursor = 0; cursor <= 1; cursor += pathDelta) {
 
                 ({x, y} = fPath.getPathPositionData(cursor, pathSpeed));
                 fromPathData.push([x - startX, y - startY]);
@@ -900,17 +901,15 @@ P.cleanOutput = function () {
 
     if (sourceDimension && sourceData) {
 
-        let fromPathData = this.fromPathData,
+        const fromPathData = this.fromPathData,
             toPathData = this.toPathData,
 
             dataLen = fromPathData.length,
 
             fPathStart = this.fromPathStart,
-            fCursor = fPathStart * dataLen,
             fStep = this.fromPathSteps || 1,
 
             tPathStart = this.toPathStart,
-            tCursor = tPathStart * dataLen,
             tStep = this.toPathSteps || 1,
 
             magicVerticalPi = _piHalf - 1.5708,
@@ -918,12 +917,14 @@ P.cleanOutput = function () {
             isHorizontalCopy = this.isHorizontalCopy,
             loop = this.loopPathCursors,
 
-            fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin, i, j,
-
             watchFromPath = this.watchFromPath,
-            watchIndex = this.watchIndex,
             engineInstructions = this.engineInstructions,
-            engineDeltaLengths = this.engineDeltaLengths,
+            engineDeltaLengths = this.engineDeltaLengths;
+
+        let fCursor = fPathStart * dataLen,
+            tCursor = tPathStart * dataLen,
+            watchIndex = this.watchIndex,
+            fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin, i, j,
             instruction;
 
         let [, , outputWidth, outputHeight] = this.getBoundingBox();
@@ -1103,7 +1104,9 @@ P.getBoundingBox = function () {
 
                 this.dirtyStart = false;
 
+/* eslint-disable-next-line */
                 let [lsx, lsy, sw, sh, sx, sy] = fPath.getBoundingBox();
+/* eslint-disable-next-line */
                 let [lex, ley, ew, eh, ex, ey] = tPath.getBoundingBox();
 
                 if (isNaN(lsx) || isNaN(lsy) || isNaN(sw) || isNaN(sh) || isNaN(sx) || isNaN(sy) || isNaN(lex) || isNaN(ley) || isNaN(ew) || isNaN(eh) || isNaN(ex) || isNaN(ey)) this.dirtyStart = true;
@@ -1334,9 +1337,10 @@ P.checkHit = function (items = []) {
 
     if (this.noUserInteraction) return false;
 
-    let tests = (!_isArray(items)) ?  [items] : items,
-        targetData = (this.output && this.output.data) ? this.output.data : false,
-        tx, ty, cx, cy, index;
+    const tests = (!_isArray(items)) ?  [items] : items,
+        targetData = (this.output && this.output.data) ? this.output.data : false;
+
+    let tx, ty, cx, cy, index;
 
     if (targetData) {
 

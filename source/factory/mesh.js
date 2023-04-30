@@ -267,10 +267,10 @@ P.get = function (item) {
 
     else {
 
-        let def = this.defs[item],
-            state = this.state;
+        const state = this.state;
 
-        let val;
+        let def = this.defs[item],
+            val;
 
         if (typeof def != UNDEF) {
 
@@ -804,20 +804,17 @@ P.cleanInput = function () {
 // + If you're not a fan of big functions, please look away now.
 P.cleanOutput = function () {
 
-    // const _piHalf = Math.PI / 2;
-
     this.dirtyOutput = false;
 
-    let {sourceDimension, sourceImageData, columns, rows, struts, boundingBox} = this;
+    const {sourceImageData, columns, rows, struts, boundingBox} = this;
 
-    sourceDimension = _ceil(sourceDimension);
+    const sourceDimension = _ceil(this.sourceDimension);
 
     if (sourceImageData && rows - 1 > 0) {
 
+/* eslint-disable-next-line */
         let [startX, startY, outputWidth, outputHeight] = boundingBox;
 
-        // outputWidth += startX;
-        // outputHeight += startY;
         outputWidth = ~~(startX + outputWidth);
         outputHeight = ~~(startY + outputHeight);
 
@@ -854,7 +851,9 @@ P.cleanOutput = function () {
 
             for (c = 0, cz = columns - 1; c < cz; c++) {
 
+/* eslint-disable-next-line */
                 let [ltx, lty, rtx, rty, tLen] = topStruts[c];
+/* eslint-disable-next-line */
                 let [lbx, lby, rbx, rby, bLen] = baseStruts[c];
 
                 tLen *= sourceDimension;
@@ -1068,17 +1067,17 @@ P.checkHit = function (items = [], mycell) {
 
     if (!this.pathObject) return false;
 
-    let tests = (!_isArray(items)) ?  [items] : items,
-        poolCellFlag = false;
+    const tests = (!_isArray(items)) ?  [items] : items,
+        engine = mycell.engine;
+
+    let poolCellFlag = false,
+        tx, ty;
 
     if (!mycell) {
 
         mycell = requestCell();
         poolCellFlag = true;
     }
-
-    let engine = mycell.engine,
-        tx, ty;
 
     if (tests.some(test => {
 

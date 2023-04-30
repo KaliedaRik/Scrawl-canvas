@@ -731,15 +731,13 @@ P.complete = function () {
 // + Directionality is determined by Tween/Action object attribute settings, not the Ticker.
 P.reverse = function (resume = false) {
 
-    let timePlayed;
-
     resume = xtGet(resume, false);
 
     if (this.active) {
         this.halt();
     }
 
-    timePlayed = this.currentTime - this.startTime;
+    const timePlayed = this.currentTime - this.startTime;
     this.startTime = this.currentTime - (this.effectiveDuration - timePlayed);
     this.changeSubscriberDirection();
     this.active = true;

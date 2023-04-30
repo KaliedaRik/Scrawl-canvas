@@ -837,8 +837,9 @@ export default function (P = Ωempty) {
             scale = this.currentScale,
             rotation = this.currentRotation;
 
-        let nTransformOrigin = `${handleX}px ${handleY}px 0`,
-            nTransform = `translate(${stampX - handleX}px,${stampY - handleY}px)`;
+        const nTransformOrigin = `${handleX}px ${handleY}px 0`;
+
+        let nTransform = `translate(${stampX - handleX}px,${stampY - handleY}px)`;
 
         if (this.yaw || this.pitch || this.roll || (this.pivot && this.addPivotRotation) || (this.mimic && this.useMimicRotation) || (this.path && this.addPathRotation)) {
 

@@ -7,7 +7,7 @@ import { constructors, filter, filternames, styles, stylesnames } from '../core/
 
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
 
-import { doCreate, easeEngines, isa_fn } from '../core/utilities.js';
+import { correctAngle, doCreate, easeEngines, isa_fn } from '../core/utilities.js';
 
 import { makeAnimation } from './animation.js';
 
@@ -630,8 +630,9 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
             test = [0, 0];
 
         let tiles = [],
-            points = [],
-            referencePoints = [],
+            points = [];
+
+        const referencePoints = [],
             neighbourPoints = [];
 
         let h, hz, w, wz, x, xz, y, yz,
@@ -640,12 +641,13 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
         // Check to stop the hex grid breaking when user supplies an inappropriately low `tileHeight` argument value, compared to the value supplied in the `tileRadius` argument.
         if (req == HEX_GRID && tileH / tileR < 1.05) tileH = tileR * 1.05;
 
-        let i, iz, cursor, ref,
-            counter = 0,
-            halfW = _floor(tileW / 2),
+        const halfW = _floor(tileW / 2),
             halfH = _floor(tileH / 2),
             doubleR = tileR * 2,
-            hexDown = _round((tileH / tileR) * tileR),
+            hexDown = _round((tileH / tileR) * tileR);
+
+        let i, iz, cursor, ref,
+            counter = 0,
             hexOffset = 0;
 
         switch (req) {
@@ -1192,17 +1194,18 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length;
 
+        const {
+            opacity = 1,
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
+            excludeRed = true,
+            excludeGreen = true,
+            excludeBlue = true,
+            lineOut,
+        } = requirements;
+
         let r, g, b, a, aVal, i;
-
-        let {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == includeRed) includeRed = true;
-        if (null == includeGreen) includeGreen = true;
-        if (null == includeBlue) includeBlue = true;
-        if (null == excludeRed) excludeRed = true;
-        if (null == excludeGreen) excludeGreen = true;
-        if (null == excludeBlue) excludeBlue = true;
 
         for (i = 0; i < len; i += 4) {
 
@@ -1234,22 +1237,23 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length;
 
-        let a, j, jz, tVal;
-
-        let {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, lineOut } = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == tileWidth) tileWidth = 1;
-        if (null == tileHeight) tileHeight = 1;
-        if (null == offsetX) offsetX = 0;
-        if (null == offsetY) offsetY = 0;
-        if (null == gutterWidth) gutterWidth = 1;
-        if (null == gutterHeight) gutterHeight = 1;
-        if (null == areaAlphaLevels) areaAlphaLevels = [255,0,0,0];
+        const {
+            opacity = 1,
+            tileWidth = 1,
+            tileHeight = 1,
+            offsetX = 0,
+            offsetY = 0,
+            gutterWidth = 1,
+            gutterHeight = 1,
+            areaAlphaLevels = [255, 0, 0, 0],
+            lineOut,
+        } = requirements;
 
         const tiles = this.buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
 
         this.transferDataUnchanged(oData, iData, len);
+
+        let a, j, jz, tVal;
 
         tiles.forEach((t, index) => {
 
@@ -1276,22 +1280,23 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length;
 
-        let i, avg, r, g, b, a;
-
-        let {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == includeRed) includeRed = true;
-        if (null == includeGreen) includeGreen = true;
-        if (null == includeBlue) includeBlue = true;
-        if (null == excludeRed) excludeRed = false;
-        if (null == excludeGreen) excludeGreen = false;
-        if (null == excludeBlue) excludeBlue = false;
+        const {
+            opacity = 1,
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
+            excludeRed = false,
+            excludeGreen = false,
+            excludeBlue = false,
+            lineOut,
+        } = requirements;
 
         let divisor = 0;
         if (includeRed) divisor++;
         if (includeGreen) divisor++;
         if (includeBlue) divisor++;
+
+        let i, avg, r, g, b, a;
 
         for (i = 0; i < len; i += 4) {
 
@@ -1405,13 +1410,15 @@ P.theBigActionsObject = _freeze({
         const {data:oData} = output;
         const {width:mWidth, height:mHeight, data:mData} = mix;
 
-        let {opacity, blend, offsetX, offsetY, lineOut} = requirements;
+        const {
+            opacity = 1,
+            blend = ZERO_STR,
+            offsetX = 0,
+            offsetY = 0,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == blend) blend = ZERO_STR;
-        if (null == offsetX) offsetX = 0;
-        if (null == offsetY) offsetY = 0;
-
+        // Pixel calculations
         const colorburnCalc = (din, dmix) => {
             if (dmix == 1) return 255;
             else if (din == 0) return 0;
@@ -2070,21 +2077,20 @@ P.theBigActionsObject = _freeze({
             len = iData.length,
             pixelLen = _floor(len / 4);
 
-        let counter, r, g, b, a, pass;
-
-        let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, step, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == radius) radius = 0;
-        if (null == passes) passes = 1;
-        if (null == processVertical) processVertical = true;
-        if (null == processHorizontal) processHorizontal = true;
-        if (null == includeRed) includeRed = true;
-        if (null == includeGreen) includeGreen = true;
-        if (null == includeBlue) includeBlue = true;
-        if (null == includeAlpha) includeAlpha = false;
-        if (null == excludeTransparentPixels) excludeTransparentPixels = false;
-        if (null == step) step = 1;
+        const {
+            opacity = 1,
+            radius = 0,
+            passes = 1,
+            processVertical = true,
+            processHorizontal = true,
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
+            includeAlpha = false,
+            excludeTransparentPixels = false,
+            step = 1,
+            lineOut,
+        } = requirements;
 
         let horizontalBlurGrid, verticalBlurGrid;
 
@@ -2102,6 +2108,8 @@ P.theBigActionsObject = _freeze({
         const hold = new Uint8ClampedArray(iData);
 
         const selectedMethod = (excludeTransparentPixels) ? getCheckedValue : getUncheckedValue;
+
+        let counter, r, g, b, a, pass;
 
         for (pass = 0; pass < passes; pass++) {
 
@@ -2160,19 +2168,20 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length;
 
-        let r, g, b, a, vr, vg, vb, i, sum;
-
-        let {opacity, includeRed, includeGreen, includeBlue, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == includeRed) includeRed = true;
-        if (null == includeGreen) includeGreen = true;
-        if (null == includeBlue) includeBlue = true;
+        const {
+            opacity = 1,
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
+            lineOut,
+        } = requirements;
 
         let divisor = 0;
         if (includeRed) divisor++;
         if (includeGreen) divisor++;
         if (includeBlue) divisor++;
+
+        let r, g, b, a, vr, vg, vb, i, sum;
 
         for (i = 0; i < len; i += 4) {
 
@@ -2215,12 +2224,13 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length;
 
+        const {
+            opacity = 1,
+            ranges = [],
+            lineOut,
+        } = requirements;
+
         let r, g, b, a, vr, vg, vb, i, iz, j, flag;
-
-        let {opacity, ranges, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == ranges) ranges = [];
 
         for (j = 0; j < len; j += 4) {
 
@@ -2264,21 +2274,22 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length;
 
-        let r, g, b, a, vr, vg, vb, va, i;
-
-        let {opacity, lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == lowRed) lowRed = 0;
-        if (null == lowGreen) lowGreen = 0;
-        if (null == lowBlue) lowBlue = 0;
-        if (null == highRed) highRed = 255;
-        if (null == highGreen) highGreen = 255;
-        if (null == highBlue) highBlue = 255;
+        const {
+            opacity = 1,
+            lowRed = 0,
+            lowGreen = 0,
+            lowBlue = 0,
+            highRed = 255,
+            highGreen = 255,
+            highBlue = 255,
+            lineOut,
+        } = requirements;
 
         const dR = highRed - lowRed,
             dG = highGreen - lowGreen,
             dB = highBlue - lowBlue;
+
+        let r, g, b, a, vr, vg, vb, va, i;
 
         for (i = 0; i < len; i += 4) {
 
@@ -2332,21 +2343,22 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length;
 
-        let r, g, b, a, vr, vg, vb, i;
-
-        let {opacity, red, green, blue, opaqueAt, transparentAt, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == red) red = 0;
-        if (null == green) green = 255;
-        if (null == blue) blue = 0;
-        if (null == opaqueAt) opaqueAt = 1;
-        if (null == transparentAt) transparentAt = 0;
+        const {
+            opacity = 1,
+            red = 0,
+            green = 255,
+            blue = 0,
+            opaqueAt = 1,
+            transparentAt = 0,
+            lineOut,
+        } = requirements;
 
         const maxDiff = _max(((red + green + blue) / 3), (((255 - red) + (255 - green) + (255 - blue)) / 3)),
             transparent = transparentAt * maxDiff,
             opaque = opaqueAt * maxDiff,
             range = opaque - transparent;
+
+        let r, g, b, a, vr, vg, vb, i;
 
         for (i = 0; i < len; i += 4) {
 
@@ -2412,12 +2424,13 @@ P.theBigActionsObject = _freeze({
         const {data:oData} = output;
         const {width:mWidth, height:mHeight, data:mData} = mix;
 
-        let {opacity, compose, offsetX, offsetY, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == compose) compose = ZERO_STR;
-        if (null == offsetX) offsetX = 0;
-        if (null == offsetY) offsetY = 0;
+        const {
+            opacity = 1,
+            compose = ZERO_STR,
+            offsetX = 0,
+            offsetY = 0,
+            lineOut,
+        } = requirements;
 
         // Pixel calculations
         const sAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * mAlpha) + (mAlpha * mColor * (1 - iAlpha));
@@ -2724,8 +2737,9 @@ P.theBigActionsObject = _freeze({
 
             let max = 0,
                 min = 255,
-                matlen = matrix.length,
                 v, c;
+
+            const matlen = matrix.length;
 
             for (c = 0; c < matlen; c++) {
 
@@ -2754,18 +2768,31 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length;
 
-        let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation, lineOut} = requirements;
+        const {
+            opacity = 1,
+            includeRed = false,
+            includeGreen = false,
+            includeBlue = false,
+            includeAlpha = true,
+            operation = MEAN,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == includeRed) includeRed = false;
-        if (null == includeGreen) includeGreen = false;
-        if (null == includeBlue) includeBlue = false;
-        if (null == includeAlpha) includeAlpha = true;
-        if (null == width || width < 1) width = 3;
-        if (null == height || height < 1) height = 3;
-        if (null == offsetX) offsetX = 1;
-        if (null == offsetY) offsetY = 1;
-        if (null == operation) operation = MEAN;
+        let width = requirements.width;
+        if (isNaN(width) || width < 1) width = 3;
+        width = _floor(width);
+
+        let height = requirements.height;
+        if (isNaN(height) || height < 1) height = 3;
+        height = _floor(height);
+
+        let offsetX = requirements.offsetX;
+        if (isNaN(offsetX) || offsetX < 1) offsetX = 1;
+        offsetX = _floor(offsetX);
+
+        let offsetY = requirements.offsetY;
+        if (isNaN(offsetY) || offsetY < 1) offsetY = 1;
+        offsetY = _floor(offsetY);
 
         const grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
 
@@ -2821,8 +2848,9 @@ P.theBigActionsObject = _freeze({
                 mx = x + offsetX,
                 my = y + offsetY;
 
-            let mPos = -1,
-                iPos = ((iy * iWidth) + ix) * 4;
+            let mPos = -1;
+
+            const iPos = ((iy * iWidth) + ix) * 4;
 
             if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = ((my * mWidth) + mx) * 4;
 
@@ -2835,16 +2863,17 @@ P.theBigActionsObject = _freeze({
         const {data:oData} = output;
         const {width:mWidth, height:mHeight, data:mData} = mix;
 
-        let {opacity, channelX, channelY, scaleX, scaleY, offsetX, offsetY, transparentEdges, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == channelX) channelX = RED;
-        if (null == channelY) channelY = GREEN;
-        if (null == scaleX) scaleX = 1;
-        if (null == scaleY) scaleY = 1;
-        if (null == offsetX) offsetX = 0;
-        if (null == offsetY) offsetY = 0;
-        if (null == transparentEdges) transparentEdges = false;
+        const {
+            opacity = 1,
+            channelX = RED,
+            channelY = GREEN,
+            scaleX = 1,
+            scaleY = 1,
+            offsetX = 0,
+            offsetY = 0,
+            transparentEdges = false,
+            lineOut,
+        } = requirements;
 
         let offsetForChannelX = 3;
         if (channelX == RED) offsetForChannelX = 0;
@@ -2912,28 +2941,23 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length;
 
-        let {opacity, strength, angle, tolerance, keepOnlyChangedAreas, postProcessResults, lineOut} = requirements;
+        const {
+            opacity = 1,
+            tolerance = 0,
+            keepOnlyChangedAreas = false,
+            postProcessResults = false,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == strength) strength = 1;
-        if (null == angle) angle = 0;
-        if (null == tolerance) tolerance = 0;
-        if (null == keepOnlyChangedAreas) keepOnlyChangedAreas = false;
-        if (null == postProcessResults) postProcessResults = false;
+        const strength = _abs(requirements.strength || 1);
 
-        strength = _abs(strength);
+        const angle = correctAngle(requirements.angle || 0);
 
-        while (angle < 0) {
-            angle += 360;
-        }
-
-        angle = angle % 360;
-
-        let slices = _floor(angle / 45),
+        const slices = _floor(angle / 45),
             remains = ((angle % 45) / 45) * strength,
             weights = new Array(9);
 
-        weights = weights.fill(0, 0, 9);
+        weights.fill(0, 0, 9);
         weights[4] = 1;
 
         if (slices == 0) {
@@ -3040,19 +3064,21 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            i, c, a;
+            len = iData.length;
 
-        let {opacity, red, green, blue, alpha, excludeAlpha, lineOut} = requirements;
+        const {
+            opacity = 1,
+            red = 0,
+            green = 0,
+            blue = 0,
+            alpha = 255,
+            excludeAlpha = false,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == red) red = 0;
-        if (null == green) green = 0;
-        if (null == blue) blue = 0;
-        if (null == alpha) alpha = 255;
-        if (null == excludeAlpha) excludeAlpha = false;
+        let i, c, a;
 
         for (i = 0; i < len; i += 4) {
 
@@ -3263,10 +3289,11 @@ P.theBigActionsObject = _freeze({
 
         const {width, height} = input;
 
-        let {opacity, radius, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == radius) radius = 1;
+        const {
+            opacity = 1,
+            radius = 1,
+            lineOut,
+        } = requirements;
 
         const hold = new Uint8ClampedArray(iData);
 
@@ -3291,33 +3318,33 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
             len = iData.length,
             iWidth = input.width,
-            iHeight = input.height,
-            i, j, affectedRow, shift, shiftR, shiftG, shiftB, shiftA,
-            r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, cursor,
-            dr, dg, db, da, ur, ug, ub, ua;
+            iHeight = input.height;
 
-        let {opacity, useMixedChannel, seed, level, step, offsetMin, offsetMax, offsetRedMin, offsetRedMax, offsetGreenMin, offsetGreenMax, offsetBlueMin, offsetBlueMax, offsetAlphaMin, offsetAlphaMax, transparentEdges, lineOut} = requirements;
+        const {
+            opacity = 1,
+            useMixedChannel = true,
+            seed = DEFAULT_SEED,
+            level = 0,
+            offsetMin = 0,
+            offsetMax = 0,
+            offsetRedMin = 0,
+            offsetRedMax = 0,
+            offsetGreenMin = 0,
+            offsetGreenMax = 0,
+            offsetBlueMin = 0,
+            offsetBlueMax = 0,
+            offsetAlphaMin = 0,
+            offsetAlphaMax = 0,
+            transparentEdges = false,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == useMixedChannel) useMixedChannel = true;
-        if (null == seed) seed = DEFAULT_SEED;
-        if (null == level) level = 0;
-        if (null == step) step = 1;
-        if (null == offsetMin) offsetMin = 0;
-        if (null == offsetMax) offsetMax = 0;
-        if (null == offsetRedMin) offsetRedMin = 0;
-        if (null == offsetRedMax) offsetRedMax = 0;
-        if (null == offsetGreenMin) offsetGreenMin = 0;
-        if (null == offsetGreenMax) offsetGreenMax = 0;
-        if (null == offsetBlueMin) offsetBlueMin = 0;
-        if (null == offsetBlueMax) offsetBlueMax = 0;
-        if (null == offsetAlphaMin) offsetAlphaMin = 0;
-        if (null == offsetAlphaMax) offsetAlphaMax = 0;
-        if (null == transparentEdges) transparentEdges = false;
+        let step = _floor(requirements.step);
+        if (step < 1) step = 1;
 
         const rnd = this.getRandomNumbers({
             seed,
@@ -3334,8 +3361,9 @@ P.theBigActionsObject = _freeze({
 
         const rows = [];
 
-        step = _floor(step);
-        if (step < 1) step = 1;
+        let i, j, affectedRow, shift, shiftR, shiftG, shiftB, shiftA,
+            r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, cursor,
+            dr, dg, db, da, ur, ug, ub, ua;
 
         for (i = 0; i < iHeight; i += step) {
 
@@ -3418,16 +3446,18 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, i, gray;
+            len = iData.length;
 
-        let {opacity, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
+        const {
+            opacity = 1,
+            lineOut,
+        } = requirements;
 
         const gVal = this.getGrayscaleValue;
+
+        let r, g, b, a, i, gray;
 
         for (i = 0; i < len; i += 4) {
 
@@ -3453,18 +3483,20 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, i;
+            len = iData.length;
 
-        let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
+        const {
+            opacity = 1,
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
+            includeAlpha = false,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == includeRed) includeRed = true;
-        if (null == includeGreen) includeGreen = true;
-        if (null == includeBlue) includeBlue = true;
-        if (null == includeAlpha) includeAlpha = false;
+        let r, g, b, a, i;
 
         for (i = 0; i < len; i += 4) {
 
@@ -3501,18 +3533,20 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, i;
+            len = iData.length;
 
-        let {opacity, red, green, blue, alpha, lineOut} = requirements;
+        const {
+            opacity = 1,
+            red = [0],
+            green = [0],
+            blue = [0],
+            alpha = [255],
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == red) red = [0];
-        if (null == green) green = [0];
-        if (null == blue) blue = [0];
-        if (null == alpha) alpha = [255];
+        let r, g, b, a, i;
 
         for (i = 0; i < len; i += 4) {
 
@@ -3536,18 +3570,20 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            i, avg, r, g, b, a, v;
+            len = iData.length;
 
-        let {opacity, useNaturalGrayscale, gradient, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == useNaturalGrayscale) useNaturalGrayscale = false;
-        if (null == gradient) gradient = false;
+        const {
+            opacity = 1,
+            useNaturalGrayscale = false,
+            gradient = false,
+            lineOut,
+        } = requirements;
 
         if (gradient) {
+
+            let i, avg, r, g, b, a, v;
 
             const rainbowData = this.getGradientData(gradient);
 
@@ -3609,30 +3645,40 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, i, pixels;
+            len = iData.length;
 
-        let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, weights, lineOut} = requirements;
+        const {
+            opacity = 1,
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
+            includeAlpha = false,
+            offsetX = 1,
+            offsetY = 1,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == includeRed) includeRed = true;
-        if (null == includeGreen) includeGreen = true;
-        if (null == includeBlue) includeBlue = true;
-        if (null == includeAlpha) includeAlpha = false;
-        if (null == width || width < 1) width = 3;
-        if (null == height || height < 1) height = 3;
-        if (null == offsetX) offsetX = 1;
-        if (null == offsetY) offsetY = 1;
-        if (null == weights) {
+        let width = requirements.width;
+        if (isNaN(width) || width < 1) width = 3;
+        width = _floor(width);
+
+        let height = requirements.height;
+        if (isNaN(height) || height < 1) height = 3;
+        height = _floor(height);
+
+        let weights = requirements.weights;
+        if (!weights || weights.length != (width * height)) {
             weights = [].fill(0, 0, (width * height) - 1);
             weights[_floor(weights.length / 2) + 1] = 1;
         }
 
         const grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
 
-        pixels = _floor(len / 4);
+        let r, g, b, a, i;
+
+        const pixels = _floor(len / 4);
 
         for (i = 0; i < pixels; i++) {
 
@@ -3659,19 +3705,21 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, gray, vr, vg, vb, i;
+            len = iData.length;
 
-        let {opacity, red, green, blue, alpha, saturation, lineOut} = requirements;
+        const {
+            opacity = 1,
+            red = 1,
+            green = 1,
+            blue = 1,
+            alpha = 1,
+            saturation = false,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == red) red = 1;
-        if (null == green) green = 1;
-        if (null == blue) blue = 1;
-        if (null == alpha) alpha = 1;
-        if (null == saturation) saturation = false;
+        let r, g, b, a, gray, vr, vg, vb, i;
 
         if (saturation) {
 
@@ -3725,9 +3773,9 @@ P.theBigActionsObject = _freeze({
             calcGrays.length = 0;
 
             let avg = 0,
-                i, r, g, b, a, gray,
-                l = tile.length,
-                pattern;
+                i, r, g, b, a, gray;
+
+            const l = tile.length;
 
             for (i = 0; i < l; i++) {
 
@@ -3741,9 +3789,9 @@ P.theBigActionsObject = _freeze({
             }
             avg /= l;
 
-            pattern = patterns[_floor((avg / 255) * 13)];
+            const pattern = patterns[_floor((avg / 255) * 13)];
 
-            if (width === 1) grays.push(...pattern);
+            if (width == 1) grays.push(...pattern);
             else {
 
                 gray = pattern[0];
@@ -3792,11 +3840,12 @@ P.theBigActionsObject = _freeze({
         const iData = input.data,
             oData = output.data;
 
-        let {opacity, width, lineOut} = requirements;
+        const {
+            opacity = 1,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == width) width = 1;
-
+        let width = _floor(requirements.width || 1);
         if (width < 1) width = 1;
 
         const tileDimensions = width * 2;
@@ -3822,17 +3871,18 @@ P.theBigActionsObject = _freeze({
         const iData = input.data,
             oData = output.data;
 
-        let {opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == offsetRedX) offsetRedX = 0;
-        if (null == offsetRedY) offsetRedY = 0;
-        if (null == offsetGreenX) offsetGreenX = 0;
-        if (null == offsetGreenY) offsetGreenY = 0;
-        if (null == offsetBlueX) offsetBlueX = 0;
-        if (null == offsetBlueY) offsetBlueY = 0;
-        if (null == offsetAlphaX) offsetAlphaX = 0;
-        if (null == offsetAlphaY) offsetAlphaY = 0;
+        const {
+            opacity = 1,
+            offsetRedX = 0,
+            offsetRedY = 0,
+            offsetGreenX = 0,
+            offsetGreenY = 0,
+            offsetBlueX = 0,
+            offsetBlueY = 0,
+            offsetAlphaX = 0,
+            offsetAlphaY = 0,
+            lineOut,
+        } = requirements;
 
         if (offsetRedX || offsetGreenX || offsetBlueX || offsetAlphaX || offsetRedY || offsetGreenY || offsetBlueY || offsetAlphaY) {
 
@@ -3840,10 +3890,11 @@ P.theBigActionsObject = _freeze({
 
             if (offsetRedX == offsetGreenX && offsetRedX == offsetBlueX && offsetRedX == offsetAlphaX && offsetRedY == offsetGreenY && offsetRedY == offsetBlueY && offsetRedY == offsetAlphaY) simpleoffset = true;
 
-            let grid = this.buildImageGrid(input),
+            const grid = this.buildImageGrid(input),
                 gWidth = grid[0].length,
-                gHeight = grid.length,
-                drx, dry, dgx, dgy, dbx, dby, dax, day, inCell, outCell;
+                gHeight = grid.length;
+
+            let drx, dry, dgx, dgy, dbx, dby, dax, day, inCell, outCell;
 
             for (let y = 0; y < gHeight; y++) {
                 for (let x = 0; x < gWidth; x++) {
@@ -3938,21 +3989,23 @@ P.theBigActionsObject = _freeze({
         const iData = input.data,
             oData = output.data;
 
-        let {opacity, tileWidth, tileHeight, offsetX, offsetY, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == includeRed) includeRed = true;
-        if (null == includeGreen) includeGreen = true;
-        if (null == includeBlue) includeBlue = true;
-        if (null == includeAlpha) includeAlpha = false;
-        if (null == tileWidth) tileWidth = 1;
-        if (null == tileHeight) tileHeight = 1;
-        if (null == offsetX) offsetX = 0;
-        if (null == offsetY) offsetY = 0;
+        const {
+            opacity = 1,
+            tileWidth = 1,
+            tileHeight = 1,
+            offsetX = 0,
+            offsetY = 0,
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
+            includeAlpha = false,
+            lineOut,
+        } = requirements;
 
         const tiles = this.buildImageTileSets(tileWidth, tileHeight, offsetX, offsetY);
 
         tiles.forEach(t => {
+
             if (includeRed) doCalculations(iData, oData, t, 0);
             else setOutValueToInValue(iData, oData, t, 0);
 
@@ -3964,7 +4017,7 @@ P.theBigActionsObject = _freeze({
 
             if (includeAlpha) doCalculations(iData, oData, t, 3);
             else setOutValueToInValue(iData, oData, t, 3);
-        })
+        });
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
@@ -3991,11 +4044,12 @@ P.theBigActionsObject = _freeze({
 
                 const {width:sWidth, height:sHeight} = this.cache.source;
 
-                if (sWidth !== width || sHeight !== height) {
+                if (sWidth != width || sHeight != height) {
 
-                    let temp = new ImageData(sWidth, sHeight),
-                        tempData = temp.data,
-                        tx, ty, tempCursor, inputCursor,
+                    const temp = new ImageData(sWidth, sHeight),
+                        tempData = temp.data;
+
+                    let tx, ty, tempCursor, inputCursor,
                         dx = (sWidth - width) / 2,
                         dy = (sHeight - height) / 2;
 
@@ -4037,26 +4091,26 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
             len = iData.length,
-            iWidth = input.width,
-            r, g, b, a, i, dw, dh, source;
+            iWidth = input.width;
 
-        let {opacity, width, height, level, seed, noiseType, noWrap, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == width) width = 1;
-        if (null == height) height = 1;
-        if (null == level) level = 0.5;
-        if (null == seed) seed = DEFAULT_SEED;
-        if (null == noiseType) noiseType = RANDOM;
-        if (null == noWrap) noWrap = false;
-        if (null == includeRed) includeRed = true;
-        if (null == includeGreen) includeGreen = true;
-        if (null == includeBlue) includeBlue = true;
-        if (null == includeAlpha) includeAlpha = true;
-        if (null == excludeTransparentPixels) excludeTransparentPixels = true;
+        const {
+            opacity = 1,
+            width = 1,
+            height = 1,
+            level = 0.5,
+            seed = DEFAULT_SEED,
+            noiseType = RANDOM,
+            noWrap = false,
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
+            includeAlpha = true,
+            excludeTransparentPixels = true,
+            lineOut,
+        } = requirements;
 
         const rnd = this.getRandomNumbers({
             seed,
@@ -4064,10 +4118,12 @@ P.theBigActionsObject = _freeze({
             imgWidth: iWidth,
             type: noiseType,
         });
+
         let rndCursor = -1,
             rndLevel,
             rndWidth,
-            rndHeight;
+            rndHeight,
+            r, g, b, a, i, dw, dh, source;
 
         const halfWidth = width / 2,
             halfHeight = height / 2;
@@ -4351,10 +4407,9 @@ P.theBigActionsObject = _freeze({
             const pl = pal.length;
 
             let palIndex, counter,
-                palL, palA, palB,
                 pixL, pixA, pixB,
                 diff, dL, dA, dB,
-                j, totalScore, propensity;
+                j;
 
             if (!pl) return 0;
 
@@ -4362,11 +4417,11 @@ P.theBigActionsObject = _freeze({
 
             counter = pixel * 3;
 
-            palL = labIndices[counter];
+            const palL = labIndices[counter];
             counter++;
-            palA = labIndices[counter];
+            const palA = labIndices[counter];
             counter++;
-            palB = labIndices[counter];
+            const palB = labIndices[counter];
 
             const distArray = [];
 
@@ -4398,8 +4453,8 @@ P.theBigActionsObject = _freeze({
 
             let test = rnd[rndCursor];
 
-            totalScore = distance0 + distance1;
-            propensity = totalScore - distance0;
+            const totalScore = distance0 + distance1,
+                propensity = totalScore - distance0;
 
             test *= totalScore;
 
@@ -4410,30 +4465,29 @@ P.theBigActionsObject = _freeze({
         // Filter generics (as used by all filters)
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             iWidth = input.width,
             iHeight = input.height,
             oData = output.data,
             len = iData.length,
-            quarterLen = len / 4,
-            i, index,
+            quarterLen = len / 4;
+
+        const {
+            opacity = 1,
+            palette = BLACK_WHITE,
+            seed = DEFAULT_SEED,
+            useBluenoise = false,
+            minimumColorDistance = 1000,
+            useLabForPaletteDistance = false,
+            lineOut,
+        } = requirements;
+
+        const noiseType = (useBluenoise) ? BLUENOISE : requirements.noiseType || RANDOM;
+
+        let i, index,
             r, g, b, a, red, green, blue, alpha, gray,
             rndCursor, indicesCursor, dataCursor,
             selectedPalette;
-
-        let {opacity, palette, seed, noiseType, useBluenoise, minimumColorDistance, useLabForPaletteDistance, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == seed) seed = DEFAULT_SEED;
-        if (null == noiseType) noiseType = RANDOM;
-        if (null == useBluenoise) useBluenoise = false;
-        if (null == useLabForPaletteDistance) useLabForPaletteDistance = false;
-        if (null == palette) palette = BLACK_WHITE;
-        if (null == minimumColorDistance) minimumColorDistance = 1000;
-
-        // `useBluenoise` is deprecated
-        // + use `noiseType: 'bluenoise'` instead
-        if (useBluenoise) noiseType = BLUENOISE;
 
         // Noise - used for dithering the output
         const rnd = this.getRandomNumbers({
@@ -4583,19 +4637,21 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, i;
+            len = iData.length;
 
-        let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, level, lineOut} = requirements;
+        const {
+            opacity = 1,
+            includeRed = false,
+            includeGreen = false,
+            includeBlue = false,
+            includeAlpha = false,
+            level = 0,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == includeRed) includeRed = false;
-        if (null == includeGreen) includeGreen = false;
-        if (null == includeBlue) includeBlue = false;
-        if (null == includeAlpha) includeAlpha = false;
-        if (null == level) level = 0;
+        let r, g, b, a, i;
 
         for (i = 0; i < len; i += 4) {
 
@@ -4624,18 +4680,20 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, i;
+            len = iData.length;
 
-        let {opacity, red, green, blue, clamp, lineOut} = requirements;
+        const {
+            opacity = 1,
+            red = 1,
+            green = 1,
+            blue = 1,
+            clamp = DOWN,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == red) red = 1;
-        if (null == green) green = 1;
-        if (null == blue) blue = 1;
-        if (null == clamp) clamp = DOWN;
+        let r, g, b, a, i;
 
         for (i = 0; i < len; i += 4) {
 
@@ -4682,24 +4740,25 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
             len = iData.length,
             iWidth = input.width,
-            iHeight = input.height,
-            r, g, b, a, s, sz, pos, x, y, xz, yz, i, j,
-            distance, dr, dg, db, da, dx, dy, dLen;
+            iHeight = input.height;
 
         const tempInput = new ImageData(iWidth, iHeight),
             tData = tempInput.data,
             tWidth = tempInput.width,
             tHeight = tempInput.height;
 
-        let {opacity, swirls, lineOut} = requirements;
+        const {
+            opacity = 1,
+            swirls = [],
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == swirls) swirls = [];
-
+        let r, g, b, a, s, sz, pos, x, y, xz, yz, i, j,
+            distance, dr, dg, db, da, dx, dy, dLen;
 
         for (i = 0; i < len; i += 4) {
 
@@ -4877,31 +4936,33 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, i, pr, pg, pb, pa, gray;
+            len = iData.length;
 
-        let {opacity, low, high, level, red, green, blue, alpha, includeRed, includeGreen, includeBlue, includeAlpha, useMixedChannel, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == low) low = [0,0,0,0];
-        if (null == high) high = [255,255,255,255];
-        if (null == level) level = 128;
-        if (null == red) red = 128;
-        if (null == green) green = 128;
-        if (null == blue) blue = 128;
-        if (null == alpha) alpha = 128;
-        if (null == includeRed) includeRed = true;
-        if (null == includeGreen) includeGreen = true;
-        if (null == includeBlue) includeBlue = true;
-        if (null == includeAlpha) includeAlpha = false;
-        if (null == useMixedChannel) useMixedChannel = true;
+        const {
+            opacity = 1,
+            low = [0, 0, 0, 0],
+            high = [255, 255, 255, 255],
+            level = 128,
+            red = 128,
+            green = 128,
+            blue = 128,
+            alpha = 128,
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
+            includeAlpha = false,
+            useMixedChannel = true,
+            lineOut,
+        } = requirements;
 
         const [lowR, lowG, lowB, lowA] = low;
         const [highR, highG, highB, highA] = high;
 
         const gVal = this.getGrayscaleValue;
+
+        let r, g, b, a, i, pr, pg, pb, pa, gray;
 
         for (i = 0; i < len; i += 4) {
 
@@ -4999,21 +5060,22 @@ P.theBigActionsObject = _freeze({
             oData = output.data,
             len = iData.length;
 
-        let {opacity, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, points, seed, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == includeRed) includeRed = true;
-        if (null == includeGreen) includeGreen = true;
-        if (null == includeBlue) includeBlue = true;
-        if (null == includeAlpha) includeAlpha = false;
-        if (null == tileWidth) tileWidth = 1;
-        if (null == tileHeight) tileHeight = 1;
-        if (null == tileRadius) tileRadius = 1;
-        if (null == offsetX) offsetX = 0;
-        if (null == offsetY) offsetY = 0;
-        if (null == angle) angle = 0;
-        if (null == points) points = RECT_GRID;
-        if (null == seed) seed = DEFAULT_SEED;
+        const {
+            opacity = 1,
+            tileWidth = 1,
+            tileHeight = 1,
+            tileRadius = 1,
+            offsetX = 0,
+            offsetY = 0,
+            angle = 0,
+            points = RECT_GRID,
+            seed = DEFAULT_SEED,
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
+            includeAlpha = false,
+            lineOut,
+        } = requirements;
 
         const tiles = this.buildGeneralTileSets(points, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, seed);
 
@@ -5045,23 +5107,25 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            r, g, b, a, i, vr, vg, vb;
+            len = iData.length;
 
-        let {opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue, lineOut} = requirements;
+        const {
+            opacity = 1,
+            redInRed = 1,
+            redInGreen = 0,
+            redInBlue = 0,
+            greenInRed = 0,
+            greenInGreen = 1,
+            greenInBlue = 0,
+            blueInRed = 0,
+            blueInGreen = 0,
+            blueInBlue = 1,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == redInRed) redInRed = 1;
-        if (null == redInGreen) redInGreen = 0;
-        if (null == redInBlue) redInBlue = 0;
-        if (null == greenInRed) greenInRed = 0;
-        if (null == greenInGreen) greenInGreen = 1;
-        if (null == greenInBlue) greenInBlue = 0;
-        if (null == blueInRed) blueInRed = 0;
-        if (null == blueInGreen) blueInGreen = 0;
-        if (null == blueInBlue) blueInBlue = 1;
+        let r, g, b, a, i, vr, vg, vb;
 
         for (i = 0; i < len; i += 4) {
 
@@ -5090,9 +5154,10 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputChannels(requirements);
 
-        let {opacity, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
+        const {
+            opacity = 1,
+            lineOut,
+        } = requirements;
 
         this.transferDataUnchanged(input, output);
 
@@ -5109,24 +5174,26 @@ P.theBigActionsObject = _freeze({
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
-        let iData = input.data,
+        const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            i, r, g, b, a, red, green, blue, alpha, gray, all, allR, allG, allB;
+            len = iData.length;
 
-        let {opacity, weights, useMixedChannel, lineOut} = requirements;
+        const {
+            opacity = 1,
+            weights = [],
+            useMixedChannel = true,
+            lineOut,
+        } = requirements;
 
-        if (null == opacity) opacity = 1;
-        if (null == useMixedChannel) useMixedChannel = true;
-        if (null == weights) weights = false;
+        if (weights.length != 1024) {
 
-        if (!weights || weights.length !== 1024) {
-
-            weights = new Array(1024);
+            weights.length = 1024;
             weights.fill(0);
         }
 
         const gVal = this.getGrayscaleValue;
+
+        let i, r, g, b, a, red, green, blue, alpha, gray, all, allR, allG, allB;
 
         for (i = 0; i < len; i += 4) {
 

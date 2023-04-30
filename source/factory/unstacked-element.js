@@ -141,7 +141,9 @@ P.checkElementStyleValues = function () {
 
         let {x: elX, y: elY, width: elW, height: elH} = el.getBoundingClientRect();
         let {x: canvasX, y: canvasY} = canvas.getBoundingClientRect();
-        let {zIndex: styleZ, width: styleW, height: styleH} = style;
+        let {width: styleW, height: styleH} = style;
+
+        const styleZ = style.zIndex;
 
         elX = _floor(elX);
         elY = _floor(elY);

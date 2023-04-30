@@ -171,8 +171,7 @@ P.makePolygonPath = function () {
         yPts = requestArray();
 
     let currentY = 0,
-        myPath = ZERO_STR,
-        myMax, myMin, myYoffset;
+        myPath = ZERO_STR;
 
     const v = requestVector({x: 0, y: -sideLength});
 
@@ -186,9 +185,9 @@ P.makePolygonPath = function () {
 
     releaseVector(v);
 
-    myMin = _min(...yPts);
-    myMax = _max(...yPts);
-    myYoffset = (((_abs(myMin) + _abs(myMax)) - sideLength) / 2).toFixed(1);
+    const myMin = _min(...yPts),
+        myMax = _max(...yPts),
+        myYoffset = (((_abs(myMin) + _abs(myMax)) - sideLength) / 2).toFixed(1);
 
     myPath = `m0,${myYoffset}l${myPath}z`;
 

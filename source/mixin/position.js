@@ -1084,13 +1084,13 @@ export default function (P = Ωempty) {
 
         if (host) {
 
-            let dims, w, h, oldW, oldH;
+            let dims, w, h;
 
             dims = (host.currentDimensions) ? host.currentDimensions : [host.w, host.h];
 
             [w, h] = this.dimensions;
 
-            [oldW, oldH] = curDims;
+            const [oldW, oldH] = curDims;
 
             if (w.substring) w = (parseFloat(w) / 100) * dims[0];
 
