@@ -658,7 +658,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">UnstackedElement</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) {
-    
+
     <span class="hljs-keyword">const</span> name = el.<span class="hljs-property">id</span> || el.<span class="hljs-property">name</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(name);
@@ -830,7 +830,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         <span class="hljs-keyword">if</span> (style.<span class="hljs-property">position</span> == <span class="hljs-variable constant_">STATIC</span>) style.<span class="hljs-property">position</span> = <span class="hljs-variable constant_">RELATIVE</span>;
 
         canvas.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-canvas`</span>;
-        
+
         el.<span class="hljs-title function_">prepend</span>(canvas);
 
         <span class="hljs-keyword">const</span> art = <span class="hljs-title function_">makeCanvas</span>({
@@ -883,7 +883,9 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
         <span class="hljs-keyword">let</span> {<span class="hljs-attr">x</span>: elX, <span class="hljs-attr">y</span>: elY, <span class="hljs-attr">width</span>: elW, <span class="hljs-attr">height</span>: elH} = el.<span class="hljs-title function_">getBoundingClientRect</span>();
         <span class="hljs-keyword">let</span> {<span class="hljs-attr">x</span>: canvasX, <span class="hljs-attr">y</span>: canvasY} = canvas.<span class="hljs-title function_">getBoundingClientRect</span>();
-        <span class="hljs-keyword">let</span> {<span class="hljs-attr">zIndex</span>: styleZ, <span class="hljs-attr">width</span>: styleW, <span class="hljs-attr">height</span>: styleH} = style;
+        <span class="hljs-keyword">let</span> {<span class="hljs-attr">width</span>: styleW, <span class="hljs-attr">height</span>: styleH} = style;
+
+        <span class="hljs-keyword">const</span> styleZ = style.<span class="hljs-property">zIndex</span>;
 
         elX = <span class="hljs-title function_">_floor</span>(elX);
         elY = <span class="hljs-title function_">_floor</span>(elY);
@@ -934,12 +936,12 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
                 <span class="hljs-keyword">default</span> :
 
-                    
+
                     hi = host[item];
                     si = style[item];
 
                     <span class="hljs-keyword">if</span>(!<span class="hljs-title function_">xt</span>(hi) || hi != si) {
-                
+
                         host[item] = si;
                         results[item] = si;
                     }
@@ -994,7 +996,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
             style = canvas.<span class="hljs-property">domElement</span>.<span class="hljs-property">style</span>,
             updates = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkElementStyleValues</span>();
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title function_">_entries</span>(updates)) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title function_">_entries</span>(updates)) {
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">UE_MIMICKED_STYLES</span>.<span class="hljs-title function_">includes</span>(key)) {
 
@@ -1057,7 +1059,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeUnstackedElement = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
-    
+
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnstackedElement</span>(items);
 };

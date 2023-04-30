@@ -882,11 +882,11 @@
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
-<p>Define some demo variables. All Scrawl-canvas wrappers for DOM elements can be found in the <strong>scrawl.library.artefact</strong> section of the Scrawl-canvas library. The elements themselves are held in the <strong>domElement</strong> attribute of the wrapper. </p>
+<p>Define some demo variables. All Scrawl-canvas wrappers for DOM elements can be found in the <strong>scrawl.library.artefact</strong> section of the Scrawl-canvas library. The elements themselves are held in the <strong>domElement</strong> attribute of the wrapper.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myStack = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mystack</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myStack = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">mystack</span>,
     reportMessage = L.<span class="hljs-property">artefact</span>.<span class="hljs-property">reportmessage</span>;</pre></div></div>
             
         </li>
@@ -971,7 +971,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Every animation object must include a <strong>fn</strong> function attribute which <em><strong>MUST</strong></em> return a Promise object - even if the functionality within the function is entirely synchronous. </p>
+              <p>Every animation object must include a <strong>fn</strong> function attribute which <em><strong>MUST</strong></em> return a Promise object - even if the functionality within the function is entirely synchronous.</p>
 <p>This is because some animation functions (for instance: canvas filters) rely on web workers to speed up their calculations which are - by definition - asynchronous. The promise should resolve as true if all is well; false otherwise</p>
 
             </div>
@@ -980,7 +980,7 @@
 
         <span class="hljs-title function_">render</span>()
 
-        <span class="hljs-keyword">let</span> here = myStack.<span class="hljs-property">here</span> || {};
+        <span class="hljs-keyword">const</span> here = myStack.<span class="hljs-property">here</span> || {};
 
         reportMessage.<span class="hljs-property">domElement</span>.<span class="hljs-property">textContent</span> =  <span class="hljs-string">`File dom-001.js has loaded successfully
    Stack name: <span class="hljs-subst">${myStack.name}</span> - width: <span class="hljs-subst">${here.w}</span>, height: <span class="hljs-subst">${here.h}</span>

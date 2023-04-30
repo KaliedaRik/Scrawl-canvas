@@ -257,7 +257,8 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-keyword">let</span> { src, bodymovinLibrary, width, name, loop, autoplay, scrawl } = items;
+    <span class="hljs-keyword">const</span> { src, name, scrawl } = items;
+    <span class="hljs-keyword">let</span> { bodymovinLibrary, width, loop, autoplay } = items;
 
     <span class="hljs-keyword">if</span> (!(src &amp;&amp; name &amp;&amp; scrawl)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
@@ -311,30 +312,31 @@
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-asset`</span>,
 
             <span class="hljs-attr">userAttributes</span>: [{
-                <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lottie&#x27;</span>, 
+                <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lottie&#x27;</span>,
                 <span class="hljs-attr">defaultValue</span>: controller,
                 <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
             },{
-                <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lottieCanvas&#x27;</span>, 
+                <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lottieCanvas&#x27;</span>,
                 <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">null</span>,
                 <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
             },{
-                <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>, 
+                <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>,
                 <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
                 <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
             },{
-                <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>, 
+                <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>,
                 <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
                 <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
             },{
-                <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;trigger&#x27;</span>, 
+                <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;trigger&#x27;</span>,
                 <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
                 <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = item },
             }],
 
             <span class="hljs-attr">updateSource</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">assetWrapper</span>) {
 
-                <span class="hljs-keyword">let</span> { element, engine, canvasWidth, canvasHeight, lottieCanvas } = assetWrapper;
+                <span class="hljs-keyword">const</span> { element, engine } = assetWrapper;
+                <span class="hljs-keyword">let</span> { canvasWidth, canvasHeight, lottieCanvas } = assetWrapper;
 
                 <span class="hljs-keyword">if</span> (!lottieCanvas) {
 

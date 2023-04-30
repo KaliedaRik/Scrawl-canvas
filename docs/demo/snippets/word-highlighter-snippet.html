@@ -254,7 +254,7 @@
               </div>
               <h3 id="word-highlighter-text-snippet">‘Word highlighter text’ snippet</h3>
 <p><strong>Purpose:</strong> adds highlighting to specified words.</p>
-<p><strong>Function input:</strong> </p>
+<p><strong>Function input:</strong></p>
 <ul>
 <li>the DOM element - generally a block or inline-block element.</li>
 <li>an optional key:value Object as the second argument</li>
@@ -286,7 +286,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p><strong>Effects on the element:</strong> </p>
+              <p><strong>Effects on the element:</strong></p>
 <ul>
 <li>no additional effects on the DOM element</li>
 <li>setting any background fill on the DOM element will hide the snippet canvas, unless it is deliberately brought forward</li>
@@ -312,7 +312,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> highlightColor = args.<span class="hljs-property">highlightColor</span> || <span class="hljs-string">&#x27;red&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> highlightColor = args.<span class="hljs-property">highlightColor</span> || <span class="hljs-string">&#x27;red&#x27;</span>,
         thickness = args.<span class="hljs-property">thickness</span> || <span class="hljs-number">3</span>;</pre></div></div>
             
         </li>
@@ -328,7 +328,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
     });
 
@@ -347,7 +347,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.<span class="hljs-property">canvas</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> canvas = snippet.<span class="hljs-property">canvas</span>,
             group = canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
             wrapper = snippet.<span class="hljs-property">element</span>,
             name = wrapper.<span class="hljs-property">name</span>;

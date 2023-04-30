@@ -1270,7 +1270,7 @@ S.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-ke
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">initialRandomSeedLevel</span> = <span class="hljs-number">0.0045</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-attr">default</span>: 
+            <span class="hljs-attr">default</span>:
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">diffusionRateA</span> = <span class="hljs-number">0.2097</span>;
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">diffusionRateB</span> = <span class="hljs-number">0.105</span>;
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">feedRate</span> = <span class="hljs-number">0.054</span>;
@@ -1419,7 +1419,7 @@ S.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-ke
             }
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentSource</span> = <span class="hljs-number">0</span>;
 
-            <span class="hljs-keyword">let</span> [sourceA, destA, sourceB, destB] = dataArrays;
+            <span class="hljs-keyword">const</span> [sourceA, destA, sourceB, destB] = dataArrays;
 
             sourceA.<span class="hljs-title function_">fill</span>(<span class="hljs-number">1</span>);
             destA.<span class="hljs-title function_">fill</span>(<span class="hljs-number">1</span>);
@@ -1443,7 +1443,7 @@ S.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-ke
 
                 <span class="hljs-keyword">const</span> ent = entity[initialSettingEntity],
                     cell = <span class="hljs-title function_">requestCell</span>();
-                
+
                 <span class="hljs-keyword">const</span> {<span class="hljs-attr">engine</span>:cellEngine, <span class="hljs-attr">element</span>:cellElement} = cell;
 
                 cellElement.<span class="hljs-property">width</span> = width;
@@ -1527,14 +1527,15 @@ S.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-ke
 
     <span class="hljs-keyword">const</span> w = <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span>;
 
-    <span class="hljs-keyword">let</span> res = <span class="hljs-number">0</span>,
-        row = <span class="hljs-title function_">_floor</span>(index / w), 
+    <span class="hljs-keyword">const</span> row = <span class="hljs-title function_">_floor</span>(index / w),
         rowAbove = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkRow</span>(row - <span class="hljs-number">1</span>) * w,
         rowBelow = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkRow</span>(row + <span class="hljs-number">1</span>) * w,
         rowHere = row * w,
         col = index - rowHere,
         colLeft = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkCol</span>(col - <span class="hljs-number">1</span>),
-        colRight = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkCol</span>(col + <span class="hljs-number">1</span>),
+        colRight = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkCol</span>(col + <span class="hljs-number">1</span>);
+
+    <span class="hljs-keyword">let</span> res = <span class="hljs-number">0</span>,
         cursor;</pre></div></div>
             
         </li>
@@ -1703,7 +1704,7 @@ S.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-ke
     <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> h - <span class="hljs-number">1</span>;
     <span class="hljs-keyword">if</span> (val &gt;= h) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
     <span class="hljs-keyword">return</span> val;
-} 
+}
 
 P.<span class="hljs-property">checkCol</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 

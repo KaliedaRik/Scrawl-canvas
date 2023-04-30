@@ -235,20 +235,20 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">scrawl, el</span>) {
 
-    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
+    <span class="hljs-keyword">const</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
     });
 
     <span class="hljs-keyword">if</span> (snippet) {
 
-        <span class="hljs-keyword">let</span> canvas = snippet.<span class="hljs-property">canvas</span>,
+        <span class="hljs-keyword">const</span> canvas = snippet.<span class="hljs-property">canvas</span>,
             animation = snippet.<span class="hljs-property">animation</span>,
             wrapper = snippet.<span class="hljs-property">element</span>,
             name = wrapper.<span class="hljs-property">name</span>;
 
         canvas.<span class="hljs-title function_">setAsCurrentCanvas</span>();
 
-        <span class="hljs-keyword">let</span> spotlightGradient = scrawl.<span class="hljs-title function_">makeRadialGradient</span>({
+        <span class="hljs-keyword">const</span> spotlightGradient = scrawl.<span class="hljs-title function_">makeRadialGradient</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradient`</span>,
             <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
             <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
@@ -276,7 +276,7 @@
             };
         }();
 
-        <span class="hljs-keyword">let</span> block = scrawl.<span class="hljs-title function_">makeBlock</span>({
+        <span class="hljs-keyword">const</span> block = scrawl.<span class="hljs-title function_">makeBlock</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-spotlight`</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;200%&#x27;</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;200%&#x27;</span>,
@@ -289,7 +289,7 @@
             <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;lightgray&#x27;</span>,
             <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
 
-            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>, 
+            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
         });
 
         scrawl.<span class="hljs-title function_">makeBlock</span>({

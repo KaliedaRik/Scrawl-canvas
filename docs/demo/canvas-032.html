@@ -872,7 +872,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>,
     base = canvas.<span class="hljs-property">base</span>;</pre></div></div>
             
         </li>
@@ -888,12 +888,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> currentLine,
-    currentPins = [],
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> currentPins = [],
     lineHold = [],
-    lineBin = [],
-    counter = <span class="hljs-number">0</span>,
-    lastX, lastY;</pre></div></div>
+    lineBin = [];
+
+<span class="hljs-keyword">let</span> counter = <span class="hljs-number">0</span>,
+    currentLine, lastX, lastY;</pre></div></div>
             
         </li>
         
@@ -928,11 +928,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> startLine = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> startLine = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">if</span> (base.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>) {
 
-        <span class="hljs-keyword">let</span> coord = base.<span class="hljs-property">here</span>;
+        <span class="hljs-keyword">const</span> coord = base.<span class="hljs-property">here</span>;
 
         <span class="hljs-keyword">if</span> (coord) {
 
@@ -963,7 +963,7 @@
 };
 scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;down&#x27;</span>, startLine, canvas.<span class="hljs-property">domElement</span>);
 
-<span class="hljs-keyword">let</span> endLine = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span class="hljs-keyword">const</span> endLine = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">if</span> (currentLine) lineHold.<span class="hljs-title function_">push</span>(currentLine);
 
@@ -973,13 +973,13 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 };
 scrawl.<span class="hljs-title function_">addListener</span>([<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>], endLine, canvas.<span class="hljs-property">domElement</span>);
 
-<span class="hljs-keyword">let</span> checkLine = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span class="hljs-keyword">const</span> checkLine = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">if</span> (currentLine &amp;&amp; base.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>) {
 
-        <span class="hljs-keyword">let</span> coord = base.<span class="hljs-property">here</span>;
+        <span class="hljs-keyword">const</span> coord = base.<span class="hljs-property">here</span>;
 
-        <span class="hljs-keyword">let</span> x = coord.<span class="hljs-property">x</span>,
+        <span class="hljs-keyword">const</span> x = coord.<span class="hljs-property">x</span>,
             y = coord.<span class="hljs-property">y</span>;
 
         <span class="hljs-keyword">if</span> (x === lastX &amp;&amp; y === lastY) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
@@ -1080,7 +1080,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
 
-    <span class="hljs-keyword">let</span> line = lineHold.<span class="hljs-title function_">pop</span>();
+    <span class="hljs-keyword">const</span> line = lineHold.<span class="hljs-title function_">pop</span>();
 
     <span class="hljs-keyword">if</span> (line) {
 
@@ -1105,7 +1105,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
 
-    <span class="hljs-keyword">let</span> line = lineBin.<span class="hljs-title function_">pop</span>();
+    <span class="hljs-keyword">const</span> line = lineBin.<span class="hljs-title function_">pop</span>();
 
     <span class="hljs-keyword">if</span> (line) {
 

@@ -261,7 +261,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { 
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
     api <span class="hljs-keyword">as</span> frame,
     dims <span class="hljs-keyword">as</span> frameDims,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-chart-frame.js&#x27;</span>;
@@ -385,7 +385,7 @@ Data supplied to graph module as Javascript object with structure:
             </div>
             
             <div class="content"><div class='highlight'><pre>        currentData = data;
-        yearLabels = data.<span class="hljs-property">yearLabels</span>,
+        yearLabels = data.<span class="hljs-property">yearLabels</span>;
         xStep = graphWidth / yearLabels.<span class="hljs-property">length</span>;</pre></div></div>
             
         </li>
@@ -422,7 +422,7 @@ Data supplied to graph module as Javascript object with structure:
               </div>
               <p>The <code>lines</code> Group</p>
 <ul>
-<li>A set of line Shape entitys </li>
+<li>A set of line Shape entitys</li>
 <li>Use position entitys for their start and end coordinate pivots</li>
 </ul>
 
@@ -648,16 +648,18 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">let</span> yearLabels = currentData.<span class="hljs-property">yearLabels</span>,
-                    data = currentData.<span class="hljs-property">data</span>,
-                    max = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(...data),
-                    min = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(...data),
-                    batch = <span class="hljs-title function_">calculateBatchValue</span>(max - min);
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> yearLabels = currentData.<span class="hljs-property">yearLabels</span>,
+                    data = currentData.<span class="hljs-property">data</span>;
+
+                <span class="hljs-keyword">let</span> max = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(...data),
+                    min = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(...data);
+
+                <span class="hljs-keyword">const</span> batch = <span class="hljs-title function_">calculateBatchValue</span>(max - min);
 
                 max = ((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(max / batch)) * batch) + batch;
                 min = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(min / batch)) * batch;
 
-                <span class="hljs-keyword">let</span> categoryValue = graphHeight / (max - min),
+                <span class="hljs-keyword">const</span> categoryValue = graphHeight / (max - min),
                     yDepth = graphBottom - graphHeight;</pre></div></div>
             
         </li>
@@ -673,7 +675,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">let</span> entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>;</pre></div></div>
             
         </li>
         
@@ -708,7 +710,7 @@ Data supplied to graph module as Javascript object with structure:
             
             <div class="content"><div class='highlight'><pre>                yearLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">label, index</span>) =&gt;</span> {
 
-                    <span class="hljs-keyword">let</span> pointDepth = (data[index] - min) * categoryValue,
+                    <span class="hljs-keyword">const</span> pointDepth = (data[index] - min) * categoryValue,
                         yVal = yDepth + (graphHeight - pointDepth),
                         tempName = <span class="hljs-title function_">name</span>(<span class="hljs-string">`<span class="hljs-subst">${index}</span>`</span>);
 
@@ -773,11 +775,11 @@ Data supplied to graph module as Javascript object with structure:
 
             <span class="hljs-keyword">switch</span> (direction) {
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;left&#x27;</span> : 
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;left&#x27;</span> :
                     selectedColumn--;
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;right&#x27;</span> : 
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;right&#x27;</span> :
                     selectedColumn++;
                     <span class="hljs-keyword">break</span>;
             }

@@ -544,12 +544,12 @@
 <p>Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>. They use the <a href="../mixin/shapeBasic.html">shapeBasic</a> and <a href="../mixin/shapePathCalculation.html">shapePathCalculation</a> (some also use <a href="../mixin/shapeCurve.html">shapeCurve</a>) mixins to define much of their functionality.</p>
 <p>All path-defined entitys can be positioned, cloned, filtered etc:</p>
 <ul>
-<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
+<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin.</li>
 <li>Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use <code>scale</code> instead.</li>
-<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects.</li>
 <li>They will also accept <strong>Filter</strong> objects.</li>
-<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can use <strong>Anchor</strong> objects for user navigation.</li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
 <li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Path-defined entitys can be cloned, and killed.</li>
 </ul>
@@ -951,7 +951,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 
     <span class="hljs-keyword">if</span> (item &amp;&amp; <span class="hljs-variable constant_">PERMITTED_CURVES</span>.<span class="hljs-title function_">includes</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">curve</span> = item;
     <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">curve</span> = <span class="hljs-variable constant_">BEZIER</span>;
-    
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
@@ -1009,8 +1009,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
     <span class="hljs-keyword">const</span> turn = <span class="hljs-number">360</span> / points,
         xPts = <span class="hljs-title function_">requestArray</span>();
 
-    <span class="hljs-keyword">let</span> currentPointX, currentPointY, deltaX, deltaY,
-        myMin, myXoffset, i,
+    <span class="hljs-keyword">let</span> currentPointX, currentPointY, deltaX, deltaY, i,
         myPath = <span class="hljs-string">&#x27;&#x27;</span>;
 
     <span class="hljs-keyword">if</span> (outerRadius.<span class="hljs-property">substring</span> || innerRadius.<span class="hljs-property">substring</span> || outerControlsDistance.<span class="hljs-property">substring</span> || innerControlsDistance.<span class="hljs-property">substring</span> || outerControlsOffset.<span class="hljs-property">substring</span> || innerControlsOffset.<span class="hljs-property">substring</span>) {
@@ -1027,7 +1026,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
             innerControlsDistance = (innerControlsDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(innerControlsDistance) / <span class="hljs-number">100</span>) * hW : innerControlsDistance;
             outerControlsOffset = (outerControlsOffset.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(outerControlsOffset) / <span class="hljs-number">100</span>) * hW : outerControlsOffset;
             innerControlsOffset = (innerControlsOffset.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(innerControlsOffset) / <span class="hljs-number">100</span>) * hW : innerControlsOffset;
-        } 
+        }
     }
 
     <span class="hljs-keyword">const</span> outerPoint = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -outerRadius}),
@@ -1182,8 +1181,8 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
     }
     <span class="hljs-title function_">releaseVector</span>(outerPoint, outerPointLead, outerPointTrail, innerPoint, innerPointLead, innerPointTrail);
 
-    myMin = <span class="hljs-title function_">_min</span>(...xPts);
-    myXoffset = <span class="hljs-title function_">_abs</span>(myMin).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">const</span> myMin = <span class="hljs-title function_">_min</span>(...xPts),
+        myXoffset = <span class="hljs-title function_">_abs</span>(myMin).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
 
     <span class="hljs-title function_">releaseArray</span>(xPts);
 

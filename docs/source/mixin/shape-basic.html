@@ -540,7 +540,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="shape-basic-mixin">Shape-basic mixin</h1>
-<p>This mixin defines the key attributes and functionality for all Scrawl-canvas <strong>path-defined entitys</strong>. </p>
+<p>This mixin defines the key attributes and functionality for all Scrawl-canvas <strong>path-defined entitys</strong>.</p>
 
             </div>
             
@@ -1141,7 +1141,7 @@
 
         <span class="hljs-keyword">if</span> (unit) {
 
-            <span class="hljs-keyword">let</span> [unitSpecies, ...vars] = unit;
+            <span class="hljs-keyword">const</span> [unitSpecies, ...vars] = unit;
 
             <span class="hljs-keyword">let</span> myPoint, angle;
 
@@ -1156,7 +1156,7 @@
                     myPoint = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">positionPointOnPath</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getQuadraticXY</span>(myLen, ...vars));
                     angle = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getQuadraticAngle</span>(myLen, ...vars);
                     <span class="hljs-keyword">break</span>;
-                    
+
                 <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">BEZIER</span> :
                     myPoint = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">positionPointOnPath</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBezierXY</span>(myLen, ...vars));
                     angle = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBezierAngle</span>(myLen, ...vars);
@@ -1200,10 +1200,10 @@
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useAsPath</span> &amp;&amp; <span class="hljs-title function_">xt</span>(pos) &amp;&amp; pos.<span class="hljs-property">toFixed</span>) {
 
             <span class="hljs-keyword">const</span> unitPartials = <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPartials</span>;
-            
+
             <span class="hljs-keyword">let</span> previousLen = <span class="hljs-number">0</span>,
                 remainder = pos % <span class="hljs-number">1</span>;
-            
+
             <span class="hljs-keyword">let</span> stoppingLen, myLen, i, iz, unit, species;</pre></div></div>
             
         </li>
@@ -1339,7 +1339,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
-              <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code> </p>
+              <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code></p>
 <ul>
 <li>Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.</li>
 </ul>
@@ -1431,7 +1431,7 @@
 
             dims[<span class="hljs-number">0</span>] = <span class="hljs-built_in">parseFloat</span>((maxX - minX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             dims[<span class="hljs-number">1</span>] = <span class="hljs-built_in">parseFloat</span>((maxY - minY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
-            
+
             <span class="hljs-keyword">if</span>(dims[<span class="hljs-number">0</span>] !== currentDims[<span class="hljs-number">0</span>] || dims[<span class="hljs-number">1</span>] !== currentDims[<span class="hljs-number">1</span>]) {
 
                 currentDims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">0</span>];
@@ -1475,10 +1475,10 @@
             <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> flatProgression = <span class="hljs-title function_">requestArray</span>(),
                     flatPositions = <span class="hljs-title function_">requestArray</span>();
 
-                <span class="hljs-keyword">let</span> lastLength = <span class="hljs-number">0</span>, 
+                <span class="hljs-keyword">let</span> lastLength = <span class="hljs-number">0</span>,
                     currentPartial,
                     lastPartial,
-                    progression, 
+                    progression,
                     positions,
                     i, iz, j, jz, l, p;
 
@@ -1596,7 +1596,7 @@
 
         engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
-    },</pre></div></div>
+    };</pre></div></div>
             
         </li>
         
@@ -1615,7 +1615,7 @@
 
         engine.<span class="hljs-title function_">fill</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
-    },</pre></div></div>
+    };</pre></div></div>
             
         </li>
         
@@ -1638,7 +1638,7 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
         engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
-    },</pre></div></div>
+    };</pre></div></div>
             
         </li>
         
@@ -1662,7 +1662,7 @@
         engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
         engine.<span class="hljs-title function_">stroke</span>(p);
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
-    },</pre></div></div>
+    };</pre></div></div>
             
         </li>
         
@@ -1684,7 +1684,7 @@
         engine.<span class="hljs-title function_">stroke</span>(p);
         engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
-    },</pre></div></div>
+    };</pre></div></div>
             
         </li>
         
@@ -1706,7 +1706,7 @@
         engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
         engine.<span class="hljs-title function_">stroke</span>(p);
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
-    },</pre></div></div>
+    };</pre></div></div>
             
         </li>
         
@@ -1727,11 +1727,11 @@
 
         engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">DESTINATION_OUT</span>;
         engine.<span class="hljs-title function_">fill</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        
+
         engine.<span class="hljs-property">globalCompositeOperation</span> = gco;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
-    },</pre></div></div>
+    };</pre></div></div>
             
         </li>
         
@@ -1780,9 +1780,10 @@
 
         <span class="hljs-keyword">const</span> minDims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">minimumBoundingBoxDimensions</span>;
 
+<span class="hljs-comment">/* eslint-disable-next-line */</span>
         <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>;
-        <span class="hljs-keyword">let</span> [hX, hY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>;
-        <span class="hljs-keyword">let</span> [sX, sY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;</pre></div></div>
+        <span class="hljs-keyword">const</span> [hX, hY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>;
+        <span class="hljs-keyword">const</span> [sX, sY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;</pre></div></div>
             
         </li>
         

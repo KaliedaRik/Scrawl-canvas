@@ -540,7 +540,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="state-factory">State factory</h1>
-<p>Scrawl-canvas uses State objects to keep track of Cell object <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a> rendering engine state. </p>
+<p>Scrawl-canvas uses State objects to keep track of Cell object <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a> rendering engine state.</p>
 <p>Every entity object also has a State object. Before an entity is ‘stamped’ onto a Cell &lt;canvas&gt; their State objects are compared, to draw up a list of changes required by the entity to bring the engine’s state into alignment.</p>
 <ul>
 <li>State objects are not stored in the Scrawl-canvas library; they can only be accessed through their Cell or entity object.</li>
@@ -989,7 +989,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
 
     <span class="hljs-keyword">switch</span> (key) {
 
-        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">LINE_DASH</span> : 
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">LINE_DASH</span> :
 
             <span class="hljs-keyword">if</span> (!value.<span class="hljs-property">length</span>) {
 
@@ -997,7 +997,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
             }
             <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-keyword">default</span> : 
+        <span class="hljs-keyword">default</span> :
 
             <span class="hljs-keyword">if</span> (!incs.<span class="hljs-title function_">includes</span>(key) &amp;&amp; value === <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[key]) result = <span class="hljs-literal">false</span>;
     }
@@ -1006,7 +1006,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
 
 P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy</span>) {
 
-    <span class="hljs-keyword">let</span> fill = copy.<span class="hljs-property">fillStyle</span>,
+    <span class="hljs-keyword">const</span> fill = copy.<span class="hljs-property">fillStyle</span>,
         stroke = copy.<span class="hljs-property">strokeStyle</span>;
 
     <span class="hljs-keyword">if</span> (fill &amp;&amp; !fill.<span class="hljs-property">substring</span>) copy.<span class="hljs-property">fillStyle</span> = fill.<span class="hljs-property">name</span>;
@@ -1060,9 +1060,10 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
     <span class="hljs-keyword">const</span> keys = <span class="hljs-title function_">_keys</span>(items),
         keysLen = keys.<span class="hljs-property">length</span>;
-    
-    <span class="hljs-keyword">let</span> key, i,
-        d = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>;
+
+    <span class="hljs-keyword">let</span> key, i;
+
+    <span class="hljs-keyword">const</span> d = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>;
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
 
@@ -1082,16 +1083,14 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
 P.<span class="hljs-property">get</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> undef, d, i;
-
-    d = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item];
+    <span class="hljs-keyword">const</span> d = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item];
 
     <span class="hljs-keyword">if</span> (d != <span class="hljs-literal">null</span>) {
-    
-        i = <span class="hljs-variable language_">this</span>[item];
+
+        <span class="hljs-keyword">const</span> i = <span class="hljs-variable language_">this</span>[item];
         <span class="hljs-keyword">return</span> (i != <span class="hljs-literal">null</span>) ? i : d;
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> undef;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
 };
 
 <span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>

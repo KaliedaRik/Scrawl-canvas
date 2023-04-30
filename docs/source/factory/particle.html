@@ -563,7 +563,7 @@
 <li>All artefacts (including all entitys) can position themselves by reference to a named (non-recycled) Particle.</li>
 </ul>
 <h4 id="the-particle-pool">The particle pool</h4>
-<p>As part of a particle animation many thousands of Particle objects may need to be generated, used and then discarded. Scrawl-canvas attempts to make this more efficient by pooling particle objects so that they can be reused as the animation progresses. </p>
+<p>As part of a particle animation many thousands of Particle objects may need to be generated, used and then discarded. Scrawl-canvas attempts to make this more efficient by pooling particle objects so that they can be reused as the animation progresses.</p>
 
             </div>
             
@@ -920,8 +920,8 @@ P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title fun
 
         s = spring[name];
 
-        <span class="hljs-keyword">if</span> (s.<span class="hljs-property">particleFrom</span> &amp;&amp; s.<span class="hljs-property">particleFrom</span>.<span class="hljs-property">name</span> === <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) deadSprings.<span class="hljs-property">push</span>[s];
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s.<span class="hljs-property">particleTo</span> &amp;&amp; s.<span class="hljs-property">particleTo</span>.<span class="hljs-property">name</span> === <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) deadSprings.<span class="hljs-property">push</span>[s];
+        <span class="hljs-keyword">if</span> (s.<span class="hljs-property">particleFrom</span> &amp;&amp; s.<span class="hljs-property">particleFrom</span>.<span class="hljs-property">name</span> == <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) deadSprings.<span class="hljs-title function_">push</span>(s);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s.<span class="hljs-property">particleTo</span> &amp;&amp; s.<span class="hljs-property">particleTo</span>.<span class="hljs-property">name</span> == <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) deadSprings.<span class="hljs-title function_">push</span>(s);
     });
 
     deadSprings.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> s.<span class="hljs-title function_">kill</span>());
@@ -1087,7 +1087,7 @@ D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</s
                 <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
-<p><code>initializePositions</code> - internal function called by all particle factories </p>
+<p><code>initializePositions</code> - internal function called by all particle factories</p>
 <ul>
 <li>Setup initial Arrays and Objects.</li>
 </ul>
@@ -1325,7 +1325,7 @@ D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</s
               <div class="sswrap ">
                 <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
-              <p><code>run</code> - internal function. We define the triggers that will kill the particle at the same time as we start it running. This function should only be called by an physics entity (Emitter, Net, Tracer). Note that there is no equivalent <code>halt</code> function; instead, we set the particle’s <code>isRunning</code> attribute to false to get it removed from the system. </p>
+              <p><code>run</code> - internal function. We define the triggers that will kill the particle at the same time as we start it running. This function should only be called by an physics entity (Emitter, Net, Tracer). Note that there is no equivalent <code>halt</code> function; instead, we set the particle’s <code>isRunning</code> attribute to false to get it removed from the system.</p>
 
             </div>
             
@@ -1366,7 +1366,7 @@ D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</s
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">distanceLimit</span> = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">if</span> (radiusKill) {
-        
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">initialPosition</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">distanceLimit</span> = radiusKill;
     }</pre></div></div>

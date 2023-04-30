@@ -747,7 +747,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>, 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>,
         D = P.<span class="hljs-property">deltaSetters</span>;
 
     S.<span class="hljs-property">paletteStart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
@@ -1015,7 +1015,7 @@
                 <span class="hljs-keyword">const</span> img = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height),
                     iData = img.<span class="hljs-property">data</span>,
                     len = width * height;
-                
+
                 <span class="hljs-keyword">let</span> i, v, c;
 
                 <span class="hljs-keyword">const</span> now = <span class="hljs-title function_">_now</span>();
@@ -1040,7 +1040,7 @@
                 <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) {
 
                     v = <span class="hljs-title function_">_floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getOutputValue</span>(i, width) * <span class="hljs-number">255</span>) * <span class="hljs-number">4</span>;
-                    
+
                     c = i * <span class="hljs-number">4</span>;
 
                     iData[c] = gData[v];

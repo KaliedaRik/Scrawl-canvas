@@ -544,12 +544,12 @@
 <p>Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>. They use the <a href="../mixin/shapeBasic.html">shapeBasic</a> and <a href="../mixin/shapePathCalculation.html">shapePathCalculation</a> (some also use <a href="../mixin/shapeCurve.html">shapeCurve</a>) mixins to define much of their functionality.</p>
 <p>All path-defined entitys can be positioned, cloned, filtered etc:</p>
 <ul>
-<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
+<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin.</li>
 <li>Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use <code>scale</code> instead.</li>
-<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects.</li>
 <li>They will also accept <strong>Filter</strong> objects.</li>
-<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can use <strong>Anchor</strong> objects for user navigation.</li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
 <li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Path-defined entitys can be cloned, and killed.</li>
 </ul>
@@ -918,7 +918,6 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
         radius2 = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius2</span>;
 
     <span class="hljs-keyword">let</span> currentX, currentY, x, y,
-        myMin, myXoffset, i,
         myPath = <span class="hljs-variable constant_">ZERO_STR</span>;
 
     <span class="hljs-keyword">if</span> (radius1.<span class="hljs-property">substring</span> || radius2.<span class="hljs-property">substring</span>) {
@@ -931,7 +930,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
 
             radius1 = (radius1.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(radius1) / <span class="hljs-number">100</span>) * hW : radius1;
             radius2 = (radius2.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(radius2) / <span class="hljs-number">100</span>) * hW : radius2;
-        } 
+        }
     }
 
     <span class="hljs-keyword">const</span> v1 = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -radius1}),
@@ -945,7 +944,7 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
     v2.<span class="hljs-title function_">rotate</span>(-turn/<span class="hljs-number">2</span>);
     v2.<span class="hljs-title function_">rotate</span>(twist);
 
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; points; i++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; points; i++) {
 
         v2.<span class="hljs-title function_">rotate</span>(turn);
 
@@ -974,8 +973,8 @@ D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function
     <span class="hljs-title function_">releaseVector</span>(v1);
     <span class="hljs-title function_">releaseVector</span>(v2);
 
-    myMin = <span class="hljs-title function_">_min</span>(...xPts);
-    myXoffset = <span class="hljs-title function_">_abs</span>(myMin).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">const</span> myMin = <span class="hljs-title function_">_min</span>(...xPts),
+        myXoffset = <span class="hljs-title function_">_abs</span>(myMin).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
 
     myPath = <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0l<span class="hljs-subst">${myPath}</span>z`</span>;
 

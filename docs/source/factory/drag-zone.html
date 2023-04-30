@@ -619,21 +619,21 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> processDragZoneData = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty, doAddListeners, doRemoveListeners</span>) {
 
     <span class="hljs-keyword">let</span> {
-        zone, 
-        coordinateSource, 
-        collisionGroup, 
-        startOn, 
-        endOn, 
-        updateOnStart, 
-        updateOnEnd, 
-        updateWhileMoving, 
-        updateOnShiftStart, 
-        updateOnShiftEnd, 
-        updateWhileShiftMoving, 
+        zone,
+        coordinateSource,
+        collisionGroup,
+        startOn,
+        endOn,
+        updateOnStart,
+        updateOnEnd,
+        updateWhileMoving,
+        updateOnShiftStart,
+        updateOnShiftEnd,
+        updateWhileShiftMoving,
         updateOnPrematureExit,
-        exposeCurrentArtefact, 
-        preventTouchDefaultWhenDragging, 
-        resetCoordsToZeroOnTouchEnd, 
+        exposeCurrentArtefact,
+        preventTouchDefaultWhenDragging,
+        resetCoordsToZeroOnTouchEnd,
         processingOrder,
     } = items;</pre></div></div>
             
@@ -659,7 +659,7 @@
 
     <span class="hljs-keyword">if</span> (!zone || !<span class="hljs-variable constant_">ACCEPTED_WRAPPERS</span>.<span class="hljs-title function_">includes</span>(zone.<span class="hljs-property">type</span>)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - zone object is not a Stack or Canvas wrapper&#x27;</span>);
 
-    <span class="hljs-keyword">let</span> target = zone.<span class="hljs-property">domElement</span>;
+    <span class="hljs-keyword">const</span> target = zone.<span class="hljs-property">domElement</span>;
 
     <span class="hljs-keyword">if</span> (!target) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - zone does not contain a target DOM element&#x27;</span>);</pre></div></div>
             
@@ -828,7 +828,7 @@
     <span class="hljs-keyword">const</span> checkE = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
         <span class="hljs-keyword">if</span> (e &amp;&amp; e.<span class="hljs-property">cancelable</span>) {
-            
+
             <span class="hljs-keyword">if</span> (preventTouchDefaultWhenDragging &amp;&amp; current) {
 
                 e.<span class="hljs-title function_">preventDefault</span>();
@@ -931,7 +931,7 @@
 
     <span class="hljs-keyword">const</span> data = {
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${zone.name}</span>_<span class="hljs-subst">${collisionGroup.name}</span>_<span class="hljs-subst">${processingOrder}</span>`</span>,
-        exposeCurrentArtefact, 
+        exposeCurrentArtefact,
         target,
         processingOrder,
         pickup,
@@ -946,7 +946,7 @@
     dragZones[zone.<span class="hljs-property">name</span>].<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a.<span class="hljs-property">processingOrder</span> - b.<span class="hljs-property">processingOrder</span>);
 
     <span class="hljs-keyword">return</span> {
-        exposeCurrentArtefact, 
+        exposeCurrentArtefact,
         getCurrent,
         kill,
         zone,

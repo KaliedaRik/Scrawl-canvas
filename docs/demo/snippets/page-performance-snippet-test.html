@@ -235,11 +235,12 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">scrawl, el</span>) {
 
-    <span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">const</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
-            testTime, testNow,
-            testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${el.id}</span>`</span>);
+            testTime, testNow;
+
+        <span class="hljs-keyword">const</span> testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${el.id}</span>`</span>);
 
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -253,7 +254,7 @@
         };
     }();
 
-    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
+    <span class="hljs-keyword">const</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
         <span class="hljs-attr">animationHooks</span>: {
             <span class="hljs-attr">afterShow</span>: report,

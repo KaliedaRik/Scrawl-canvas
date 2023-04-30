@@ -629,7 +629,7 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
-    <span class="hljs-keyword">let</span> keytypes = items.<span class="hljs-property">keytypes</span> || {};
+    <span class="hljs-keyword">const</span> keytypes = items.<span class="hljs-property">keytypes</span> || {};
     <span class="hljs-keyword">if</span> (!keytypes.<span class="hljs-property">gravity</span>) keytypes.<span class="hljs-property">gravity</span> = <span class="hljs-variable constant_">T_VECTOR</span>;
     <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">gravity</span>) items.<span class="hljs-property">gravity</span> = [<span class="hljs-number">0</span>, <span class="hljs-number">9.81</span>, <span class="hljs-number">0</span>];
 
@@ -858,9 +858,9 @@ S.<span class="hljs-property">gravity</span> = <span class="hljs-keyword">functi
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p><code>addAttribute</code>, <code>removeAttribute</code> - we can use these functions to add and remove other attributes to the World object. See the following Demos for examples of constructing a World object and adding attributes to it: </p>
+              <p><code>addAttribute</code>, <code>removeAttribute</code> - we can use these functions to add and remove other attributes to the World object. See the following Demos for examples of constructing a World object and adding attributes to it:</p>
 <ul>
-<li><a href="../../demo/particles-007.html">particles-007</a> Particle Force objects: generation and functionality; and </li>
+<li><a href="../../demo/particles-007.html">particles-007</a> Particle Force objects: generation and functionality; and</li>
 <li><a href="../../demo/particles-008.html">particles-008</a> Net entity: generation and basic functionality, including Spring objects.</li>
 </ul>
 
@@ -910,7 +910,7 @@ P.<span class="hljs-property">removeAttribute</span> = <span class="hljs-keyword
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">initializeAttributes</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">types</span>) {
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title function_">_entries</span>(types)) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title function_">_entries</span>(types)) {
 
         <span class="hljs-keyword">switch</span> (value) {
 
@@ -948,13 +948,13 @@ P.<span class="hljs-property">removeAttribute</span> = <span class="hljs-keyword
     <span class="hljs-attr">userAttributes</span>: [
 
         {
-            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;testCoordinate&#x27;</span>, 
+            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;testCoordinate&#x27;</span>,
             <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;Coordinate&#x27;</span>,
             <span class="hljs-attr">getter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">testCoordinate</span>) },
             <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">testCoordinate</span>.<span class="hljs-title function_">set</span>(item) },
         },
         {
-            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;particleColor&#x27;</span>, 
+            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;particleColor&#x27;</span>,
             <span class="hljs-attr">defaultValue</span>: <span class="hljs-string">&#x27;#F0F8FF&#x27;</span>,
         },
     ],

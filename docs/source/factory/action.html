@@ -837,7 +837,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
         <span class="hljs-keyword">const</span> setters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">setters</span>,
             defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>;
-        
+
         <span class="hljs-keyword">let</span> fn, i, key, value;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
@@ -854,7 +854,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
             }
         }
 
-        <span class="hljs-keyword">let</span> ticker = (<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">ticker</span>)) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">ticker</span> : <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">const</span> ticker = (<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">ticker</span>)) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">ticker</span> : <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">if</span> (ticker) {
 
@@ -985,18 +985,18 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;6.25%&#x27;</span>,
 
     <span class="hljs-comment">// &#x27;action&#x27; and &#x27;revert&#x27; functions, to be applied to targets</span>
-    <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { 
-        element.<span class="hljs-title function_">set</span>({ 
-            <span class="hljs-attr">css</span>: { 
-                <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>, 
+    <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        element.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">css</span>: {
+                <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
             },
         });
     },
 
     <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-        element.<span class="hljs-title function_">set</span>({ 
-            <span class="hljs-attr">css</span>: { 
-                <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>, 
+        element.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">css</span>: {
+                <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
             },
         });
     },

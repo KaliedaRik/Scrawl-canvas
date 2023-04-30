@@ -869,7 +869,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -897,7 +897,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
     <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
@@ -925,7 +925,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Pins to control the shape of the bezier </p>
+              <p>Pins to control the shape of the bezier</p>
 
             </div>
             
@@ -972,7 +972,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> pins = scrawl.<span class="hljs-title function_">makeGroup</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pins = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-pins&#x27;</span>,
 
@@ -1053,7 +1053,7 @@
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;gold&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>, 
+    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
 
     <span class="hljs-attr">noUserInteraction</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">noPositionDependencies</span>: <span class="hljs-literal">true</span>,
@@ -1074,7 +1074,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> emitter = scrawl.<span class="hljs-title function_">makeEmitter</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> emitter = scrawl.<span class="hljs-title function_">makeEmitter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emitter-1&#x27;</span>,
     <span class="hljs-attr">world</span>: myWorld,
@@ -1101,8 +1101,9 @@
 
     <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> history = particle.<span class="hljs-property">history</span>,
-            remaining, start;
+        <span class="hljs-keyword">const</span> history = particle.<span class="hljs-property">history</span>;
+
+        <span class="hljs-keyword">let</span> remaining, start;
 
         <span class="hljs-keyword">if</span> (history.<span class="hljs-property">length</span>) {
 
@@ -1110,7 +1111,7 @@
 
             artefact.<span class="hljs-title function_">simpleStamp</span>(host, {
 
-                start, 
+                start,
                 <span class="hljs-attr">globalAlpha</span>: remaining / <span class="hljs-number">5</span>,
             });
         }
@@ -1157,7 +1158,7 @@
 emitter.<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emitter-2&#x27;</span>,
-    <span class="hljs-attr">artefact</span>: stars.<span class="hljs-title function_">clone</span>({ 
+    <span class="hljs-attr">artefact</span>: stars.<span class="hljs-title function_">clone</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;stars-2&#x27;</span>,
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
     }),
@@ -1192,7 +1193,7 @@ emitter.<span class="hljs-title function_">clone</span>({
 emitter.<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emitter-3&#x27;</span>,
-    <span class="hljs-attr">artefact</span>: stars.<span class="hljs-title function_">clone</span>({ 
+    <span class="hljs-attr">artefact</span>: stars.<span class="hljs-title function_">clone</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;stars-3&#x27;</span>,
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
     }),
@@ -1234,7 +1235,7 @@ emitter.<span class="hljs-title function_">clone</span>({
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> historyCount = <span class="hljs-number">0</span>;
     particlenames.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> p = particle[n];
+        <span class="hljs-keyword">const</span> p = particle[n];
         <span class="hljs-keyword">if</span> (p) historyCount += p.<span class="hljs-property">history</span>.<span class="hljs-property">length</span>;
     });
 

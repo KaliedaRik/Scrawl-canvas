@@ -598,7 +598,7 @@
 
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateFrames</span> = (<span class="hljs-params">x, y</span>) =&gt; {
 
-        <span class="hljs-keyword">let</span> newX = x * mainMapRatioX,
+        <span class="hljs-keyword">const</span> newX = x * mainMapRatioX,
         newY = y * mainMapRatioY;</pre></div></div>
             
         </li>
@@ -656,7 +656,7 @@
 
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">checkMinimapFrameDrag</span> = (<span class="hljs-params"></span>) =&gt; {
 
-        <span class="hljs-keyword">let</span> [x, y] = frame.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>);
+        <span class="hljs-keyword">const</span> [x, y] = frame.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>);
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">checkPermittedFramePosition</span>(x, y)) <span class="hljs-title function_">updateFrames</span>(x, y);
         <span class="hljs-keyword">else</span> <span class="hljs-title function_">frameDragZone</span>(<span class="hljs-string">&#x27;exit&#x27;</span>);
@@ -741,7 +741,7 @@
 
         <span class="hljs-keyword">if</span>(<span class="hljs-title function_">checkPermittedFramePosition</span>(x, y)) {
 
-            <span class="hljs-keyword">let</span> newX = x * mainMapRatioX,
+            <span class="hljs-keyword">const</span> newX = x * mainMapRatioX,
                 newY = y * mainMapRatioY;
 
             frame.<span class="hljs-title function_">set</span>({

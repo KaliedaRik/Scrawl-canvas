@@ -869,7 +869,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -936,7 +936,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> noiseAsset = scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> noiseAsset = scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-noise-generator&#x27;</span>,
     <span class="hljs-attr">width</span>: dimension,
@@ -958,7 +958,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> impressionistAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> impressionistAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pretend-van-gogh&#x27;</span>,
 
@@ -977,22 +977,22 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lineWidth&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lineWidth&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">4</span>,
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lineLengthMultiplier&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lineLengthMultiplier&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">20</span>,
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lineLengthStart&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lineLengthStart&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">5</span>,
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;linesToAdd&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;linesToAdd&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">50</span>,
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lineBlend&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lineBlend&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lineOpacity&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;lineOpacity&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">1</span>,
     },{</pre></div></div>
             
@@ -1009,16 +1009,16 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;offsetX&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;offsetX&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;offsetY&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;offsetY&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rotationMultiplier&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rotationMultiplier&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">90</span>,
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rotationStart&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rotationStart&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
     },{</pre></div></div>
             
@@ -1035,10 +1035,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: dimension,
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: dimension,
     },{</pre></div></div>
             
@@ -1055,7 +1055,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;background&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;background&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">background</span> = item;
@@ -1076,7 +1076,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;noise&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;noise&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">noise</span> = item;
@@ -1093,14 +1093,14 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p><strong>trigger</strong> - we update the RawAsset at the start of each Display cycle by setting its <code>trigger</code> attribute. </p>
+              <p><strong>trigger</strong> - we update the RawAsset at the start of each Display cycle by setting its <code>trigger</code> attribute.</p>
 <ul>
 <li>It’s at this point that we fill the RawAsset canvas with the background image, if required</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;trigger&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;trigger&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -1141,7 +1141,7 @@
               </div>
               <p>Strictly speaking, copyArray and pasteArray are Picture entity internal data structures but that doesn’t stop us using them here.</p>
 <ul>
-<li>TODO: consider whether the RawAsset object should be using a Cell wrapper rather than a raw &lt;canvas&gt; element </li>
+<li>TODO: consider whether the RawAsset object should be using a Cell wrapper rather than a raw &lt;canvas&gt; element</li>
 <li>if we did it that way, then we would be able to simpleStamp the Picture entity onto the canvas</li>
 <li>the reason why we’re NOT doing it that way at the moment is to keep RawAsset canvases out of the SC library</li>
 </ul>
@@ -1319,7 +1319,7 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">commence</span>: <span class="hljs-function">() =&gt;</span> impressionistAsset.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">trigger</span>: <span class="hljs-literal">true</span> }),
-    
+
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             
@@ -1337,10 +1337,10 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">addImageDragAndDrop</span>(
-    canvas, 
-    <span class="hljs-string">&#x27;#my-image-store&#x27;</span>, 
-    backgroundImage, 
-    <span class="hljs-function">() =&gt;</span> { 
+    canvas,
+    <span class="hljs-string">&#x27;#my-image-store&#x27;</span>,
+    backgroundImage,
+    <span class="hljs-function">() =&gt;</span> {
         impressionistAsset.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">background</span>: backgroundImage,
         });
@@ -1608,7 +1608,7 @@ videoButton.<span class="hljs-title function_">addEventListener</span>(<span cla
         };
 
         myRecorder.<span class="hljs-title function_">start</span>();
-    } 
+    }
     <span class="hljs-keyword">else</span> {
 
         videoButton.<span class="hljs-property">textContent</span> = <span class="hljs-string">&quot;Record a video&quot;</span>;
@@ -1616,7 +1616,7 @@ videoButton.<span class="hljs-title function_">addEventListener</span>(<span cla
         myRecorder.<span class="hljs-title function_">stop</span>();
 
         <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
-            
+
             <span class="hljs-keyword">const</span> blob = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Blob</span>(recordedChunks, { <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;video/webm&quot;</span> });
 
             <span class="hljs-keyword">const</span> url = <span class="hljs-variable constant_">URL</span>.<span class="hljs-title function_">createObjectURL</span>(blob);

@@ -256,7 +256,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> { canvas, namespace, scrawl } = items;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> { canvas, namespace, scrawl } = items;
 
     <span class="hljs-keyword">if</span> (!(canvas &amp;&amp; namespace &amp;&amp; scrawl)) <span class="hljs-keyword">return</span> {
         <span class="hljs-attr">animation</span>: <span class="hljs-literal">null</span>,
@@ -297,7 +297,7 @@
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> targetPos = <span class="hljs-title function_">calculateTargetPosition</span>(assets.<span class="hljs-property">target</span>, <span class="hljs-number">5</span>);
 
     canvas.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;The canvas displays an image of statues in a cemetery (Havana, Cuba). As the user scrolls through the page the image moves to focus on particular points of interest&#x27;</span>, 
+        <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;The canvas displays an image of statues in a cemetery (Havana, Cuba). As the user scrolls through the page the image moves to focus on particular points of interest&#x27;</span>,
     }).<span class="hljs-title function_">setAsCurrentCanvas</span>();
 
     canvas.<span class="hljs-title function_">setBase</span>({

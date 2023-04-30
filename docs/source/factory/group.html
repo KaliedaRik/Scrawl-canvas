@@ -951,7 +951,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p>Artefect membership of the Group object is better handled by the dedicated artefact management functions - <strong>addArtefacts</strong>, <strong>removeArtefacts</strong>, <strong>clearArtefacts</strong>, <strong>moveArtefactsIntoGroup</strong>.  </p>
+              <p>Artefect membership of the Group object is better handled by the dedicated artefact management functions - <strong>addArtefacts</strong>, <strong>removeArtefacts</strong>, <strong>clearArtefacts</strong>, <strong>moveArtefactsIntoGroup</strong>.</p>
 
             </div>
             
@@ -964,7 +964,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <p>Returns a new Array containing the name String values of current artefact members </p>
+              <p>Returns a new Array containing the name String values of current artefact members</p>
 
             </div>
             
@@ -1012,7 +1012,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
     <span class="hljs-keyword">const</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>(item);
 
     <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">addGroups</span>) {
-        
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> = item;
         host.<span class="hljs-title function_">addGroups</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
@@ -1315,7 +1315,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         <span class="hljs-keyword">const</span> { artefacts, artefactCalculateBuckets, artefactStampBuckets } = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">let</span> obj, order, i, iz, name, arr;
-        
+
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = artefacts.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
             name = artefacts[i];
@@ -1409,7 +1409,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> {
 
         <span class="hljs-keyword">if</span> (art.<span class="hljs-property">lib</span> == <span class="hljs-variable constant_">ENTITY</span>) {
-            
+
             <span class="hljs-keyword">if</span> (!art.<span class="hljs-property">currentHost</span> || art.<span class="hljs-property">currentHost</span>.<span class="hljs-property">name</span> != host.<span class="hljs-property">name</span>) {
 
                 art.<span class="hljs-property">currentHost</span> = host;
@@ -1476,13 +1476,13 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
             <span class="hljs-keyword">if</span> (realEngine) {
 
                 realEngine.<span class="hljs-title function_">save</span>();
-                
+
                 realEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
                 realEngine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
                 realEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
                 realEngine.<span class="hljs-title function_">drawImage</span>(tempElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-                
+
                 realEngine.<span class="hljs-title function_">restore</span>();
 
                 <span class="hljs-keyword">const</span> tempImg = tempEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, tempElement.<span class="hljs-property">width</span>, tempElement.<span class="hljs-property">height</span>);
@@ -1545,7 +1545,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isStencil</span>) {
-        
+
         filterCellEngine.<span class="hljs-title function_">save</span>();
         filterCellEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_IN</span>;
         filterCellEngine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
@@ -1588,7 +1588,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         filterCellEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
         filterCellEngine.<span class="hljs-title function_">putImageData</span>(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
     }
-    
+
     currentEngine.<span class="hljs-title function_">save</span>();
     currentEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
     currentEngine.<span class="hljs-title function_">drawImage</span>(filterCellElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
@@ -1686,7 +1686,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
 
         <span class="hljs-keyword">if</span> (data[counter]) {
 
-            y = <span class="hljs-title function_">_floor</span>(i / width); 
+            y = <span class="hljs-title function_">_floor</span>(i / width);
             x = i - (y * width);
 
             <span class="hljs-keyword">if</span> (minX &gt; x) minX = x;
@@ -1991,7 +1991,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
         art = artefact[name];
-        
+
         <span class="hljs-keyword">if</span>(art &amp;&amp; art[action]) art[action](items);
     });
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
@@ -2051,7 +2051,7 @@ TODO: don’t think this is tested anywhere - build test!</p>
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
         ent = entity[name];
-        
+
         <span class="hljs-keyword">if</span> (ent &amp;&amp; ent.<span class="hljs-property">addFilters</span>) ent.<span class="hljs-title function_">addFilters</span>(args);
     });
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
@@ -2121,8 +2121,8 @@ TODO: don’t think this is tested anywhere - build test!</p>
                 <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
-<p>The <code>getArtefactAt</code> function checks to see if any of the Group object’s artefacts are located at the supplied coordinates in the argument object. </p>
-<p>The hit report from the first artefact to respond back positively (artefacts with the highest order value are checked first) will be returned by the function. </p>
+<p>The <code>getArtefactAt</code> function checks to see if any of the Group object’s artefacts are located at the supplied coordinates in the argument object.</p>
+<p>The hit report from the first artefact to respond back positively (artefacts with the highest order value are checked first) will be returned by the function.</p>
 <p>Where no artefacts are present at that coordinate the function returns false.</p>
 <p>A <strong>hit report</strong> is a Javascript object with the following attributes:</p>
 <ul>
@@ -2146,7 +2146,7 @@ TODO: don’t think this is tested anywhere - build test!</p>
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = artBuckets.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
 
         art = artBuckets[i];
-        
+
         <span class="hljs-keyword">if</span> (art) {
 
             result = art.<span class="hljs-title function_">checkHit</span>(items, myCell);
@@ -2179,7 +2179,7 @@ TODO: don’t think this is tested anywhere - build test!</p>
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getAllArtefactsAt</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortArtefacts</span>();
-    
+
     <span class="hljs-keyword">const</span> myCell = <span class="hljs-title function_">requestCell</span>(),
         artBuckets = <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactStampBuckets</span>,
         resultNames = <span class="hljs-title function_">requestArray</span>(),
@@ -2190,11 +2190,11 @@ TODO: don’t think this is tested anywhere - build test!</p>
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = artBuckets.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
 
         art = artBuckets[i];
-        
+
         <span class="hljs-keyword">if</span> (art) {
 
             result = art.<span class="hljs-title function_">checkHit</span>(items, myCell);
-            
+
             <span class="hljs-keyword">if</span> (result &amp;&amp; result.<span class="hljs-property">artefact</span>) {
 
                 hit = result.<span class="hljs-property">artefact</span>;

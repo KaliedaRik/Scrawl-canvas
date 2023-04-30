@@ -672,8 +672,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
               <p><strong>intrinsicDimensions</strong> - Javascript object which defines the intrinsic dimensions of each image contributing to an &lt;img&gt; element’s <code>srcset</code> attribute. Can also be set in Javascript code:</p>
 <pre><code>filename-<span class="hljs-title class_">String</span>: [width-<span class="hljs-title class_">Number</span>, height-<span class="hljs-title class_">Number</span>]
 {
-    <span class="hljs-string">&#x27;river-300.jpg&#x27;</span>: [<span class="hljs-number">300</span>, <span class="hljs-number">225</span>], 
-    <span class="hljs-string">&#x27;river-600.jpg&#x27;</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">450</span>], 
+    <span class="hljs-string">&#x27;river-300.jpg&#x27;</span>: [<span class="hljs-number">300</span>, <span class="hljs-number">225</span>],
+    <span class="hljs-string">&#x27;river-600.jpg&#x27;</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">450</span>],
     <span class="hljs-string">&#x27;river-900.jpg&#x27;</span>: [<span class="hljs-number">900</span>, <span class="hljs-number">675</span>]
 }
 </code></pre>
@@ -850,7 +850,7 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkSource</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">width, height</span>) {
 
     <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
-    
+
     <span class="hljs-keyword">let</span> action = <span class="hljs-variable constant_">ELEMENT</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span>) {
@@ -864,7 +864,7 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
             });
 
             iDims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">intrinsicDimensions</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFile</span>];
-            
+
             <span class="hljs-keyword">if</span> (iDims) action = <span class="hljs-variable constant_">INTRINSIC</span>;
             <span class="hljs-keyword">else</span> action = <span class="hljs-variable constant_">ZERO</span>;
         }
@@ -881,7 +881,7 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
 
             <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">INTRINSIC</span> :
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== iDims[<span class="hljs-number">0</span>] || 
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== iDims[<span class="hljs-number">0</span>] ||
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== iDims[<span class="hljs-number">1</span>]) {
 
                     <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = iDims[<span class="hljs-number">0</span>];
@@ -893,8 +893,8 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
 
             <span class="hljs-attr">default</span>:
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== el.<span class="hljs-property">naturalWidth</span> || 
-                        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== el.<span class="hljs-property">naturalHeight</span> || 
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== el.<span class="hljs-property">naturalWidth</span> ||
+                        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== el.<span class="hljs-property">naturalHeight</span> ||
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== width ||
                         <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== height) {
 
@@ -969,7 +969,7 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
 
     args.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> name, url, className, visibility, 
+        <span class="hljs-keyword">let</span> name, url, className, visibility,
             parent = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">let</span> flag = <span class="hljs-literal">false</span>;
@@ -1000,7 +1000,7 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
 
                 flag = <span class="hljs-literal">true</span>;
             }
-        }    
+        }
 
         <span class="hljs-keyword">if</span> (flag) {
 
@@ -1018,14 +1018,14 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
             img.<span class="hljs-property">style</span>.<span class="hljs-property">display</span> = (visibility) ? <span class="hljs-variable constant_">BLOCK</span> : <span class="hljs-variable constant_">NONE</span>;
 
             <span class="hljs-keyword">if</span> (parent) parent.<span class="hljs-title function_">appendChild</span>(img);
-            
+
             img.<span class="hljs-property">onload</span> = <span class="hljs-function">() =&gt;</span> {
 
                 image.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">source</span>: img,
                 });
             };
-            
+
             img.<span class="hljs-property">src</span> = url;
 
             image.<span class="hljs-title function_">set</span>({
@@ -1051,7 +1051,7 @@ S.<span class="hljs-property">source</span> = <span class="hljs-keyword">functio
               <p><code>importDomImage</code> - import images defined in the web page HTML code</p>
 <ul>
 <li>Required argument is a query string used to search the dom for matching elements</li>
-<li>Scrawl-canvas does not remove &lt;img&gt; elements from the DOM (this is a breaking change from Scrawl-canvas v7.0). </li>
+<li>Scrawl-canvas does not remove &lt;img&gt; elements from the DOM (this is a breaking change from Scrawl-canvas v7.0).</li>
 <li>If &lt;img&gt; elements should not appear, developers need to hide them in some way - for instance by positioning them (or their parent element) absolutely to the top or left of the display; or by giving their parent element zero width/height; or by setting their CSS: <code>display: none;</code>, <code>opacity: 0;</code>, etc.</li>
 </ul>
 

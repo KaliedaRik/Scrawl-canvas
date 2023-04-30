@@ -590,7 +590,7 @@
         <span class="hljs-keyword">let</span> result;
 
         <span class="hljs-keyword">return</span> (<span class="hljs-variable constant_">TARGET_SECTIONS</span>.<span class="hljs-title function_">some</span>(<span class="hljs-function"><span class="hljs-params">section</span> =&gt;</span> {
-            
+
             result = library[section][item];
             <span class="hljs-keyword">return</span> result;
 
@@ -793,7 +793,7 @@
         <span class="hljs-keyword">if</span> (ticker == <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>_ticker`</span>) {
 
             <span class="hljs-keyword">const</span> t = animationtickers[ticker];
-            
+
             <span class="hljs-keyword">if</span> (t) t.<span class="hljs-title function_">kill</span>();
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ticker) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">removeFromTicker</span>(ticker);
@@ -861,7 +861,7 @@
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">action</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span> = item;
-        
+
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span> != <span class="hljs-variable constant_">FUNCTION</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span> = λ<span class="hljs-literal">null</span>;
     };</pre></div></div>
             
@@ -1074,7 +1074,7 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
 
         newTargets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> type = target.<span class="hljs-property">type</span> || <span class="hljs-variable constant_">UNKNOWN</span>,
+            <span class="hljs-keyword">const</span> type = target.<span class="hljs-property">type</span> || <span class="hljs-variable constant_">UNKNOWN</span>,
                 name = target.<span class="hljs-property">name</span> || <span class="hljs-variable constant_">UNNAMED</span>;
 
             <span class="hljs-keyword">if</span> (type != <span class="hljs-variable constant_">UNKNOWN</span> &amp;&amp; name != <span class="hljs-variable constant_">UNNAMED</span>) identifiers.<span class="hljs-title function_">push</span>(<span class="hljs-string">`<span class="hljs-subst">${type}</span>_<span class="hljs-subst">${name}</span>`</span>);
@@ -1083,18 +1083,18 @@ The <em><strong>effective time</strong></em> is the time, relative to the Tween/
         items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
             <span class="hljs-keyword">let</span> myObj;
-            
+
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> item == <span class="hljs-variable constant_">FUNCTION</span>) myObj = item;
             <span class="hljs-keyword">else</span> myObj = <span class="hljs-title function_">locateTarget</span>(item);
 
             <span class="hljs-keyword">if</span> (myObj) {
 
-                <span class="hljs-keyword">let</span> type = myObj.<span class="hljs-property">type</span> || <span class="hljs-variable constant_">UNKNOWN</span>,
+                <span class="hljs-keyword">const</span> type = myObj.<span class="hljs-property">type</span> || <span class="hljs-variable constant_">UNKNOWN</span>,
                     name = myObj.<span class="hljs-property">name</span> || <span class="hljs-variable constant_">UNNAMED</span>;
 
                 <span class="hljs-keyword">if</span> (type != <span class="hljs-variable constant_">UNKNOWN</span> &amp;&amp; name != <span class="hljs-variable constant_">UNNAMED</span>) {
 
-                    <span class="hljs-keyword">let</span> objName = <span class="hljs-string">`<span class="hljs-subst">${type}</span>_<span class="hljs-subst">${name}</span>`</span>,
+                    <span class="hljs-keyword">const</span> objName = <span class="hljs-string">`<span class="hljs-subst">${type}</span>_<span class="hljs-subst">${name}</span>`</span>,
                         doRemove = identifiers.<span class="hljs-title function_">indexOf</span>(objName);
 
                     <span class="hljs-keyword">if</span> (doRemove &gt;= <span class="hljs-number">0</span>) newTargets[doRemove] = <span class="hljs-literal">false</span>;

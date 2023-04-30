@@ -621,7 +621,7 @@
         }
 
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-            
+
             observer.<span class="hljs-title function_">disconnect</span>();
         }
     }
@@ -725,16 +725,16 @@
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = events.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-        e = events[i]; 
+        e = events[i];
 
         <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = targets.<span class="hljs-property">length</span>; j &lt; jz; j++) {
 
             t = targets[j];
 
             <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_dom</span>(t) || t.<span class="hljs-property">document</span> || t.<span class="hljs-property">characterSet</span>) {
-                
+
                 <span class="hljs-keyword">switch</span> (e) {
-                
+
                     <span class="hljs-keyword">case</span> <span class="hljs-attr">MOVE</span>:
                         t[action](<span class="hljs-variable constant_">MOUSE_MOVE</span>, fn, <span class="hljs-literal">false</span>);
                         t[action](<span class="hljs-variable constant_">TOUCH_MOVE</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
@@ -772,7 +772,7 @@
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = events.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-        e = events[i]; 
+        e = events[i];
 
         <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = targets.<span class="hljs-property">length</span>; j &lt; jz; j++) {
 
@@ -781,7 +781,7 @@
             <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_dom</span>(t) || t.<span class="hljs-property">document</span> || t.<span class="hljs-property">characterSet</span>) {
 
                 <span class="hljs-keyword">switch</span> (e) {
-                
+
                     <span class="hljs-keyword">case</span> <span class="hljs-attr">MOVE</span>:
                         t[action](<span class="hljs-variable constant_">POINTER_MOVE</span>, fn, <span class="hljs-literal">false</span>);
                         <span class="hljs-keyword">break</span>;
@@ -816,7 +816,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p><strong>Any event listener</strong> can be added to a Scrawl-canvas stack or canvas DOM element. </p>
+              <p><strong>Any event listener</strong> can be added to a Scrawl-canvas stack or canvas DOM element.</p>
 <p>The <strong>scrawl.addNativeListener</strong> function makes adding and removing these ‘native’ listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.</p>
 <p>The function requires three arguments:</p>
 <ul>
@@ -951,7 +951,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p><strong>Note:</strong> I have no idea what Safari is doing - maybe device pixel ratio stuff is handled internally? </p>
+              <p><strong>Note:</strong> I have no idea what Safari is doing - maybe device pixel ratio stuff is handled internally?</p>
 <ul>
 <li>Whatever. Safari does not like, or respond to, this matchmedia query</li>
 <li>As long as the demos display as expected in Safari on both 1dppx and 2dppx (Retina) screens, and dragging the Safari browser between screens with different dppx values doesn’t break the display or freeze the page, then I think we’re okay</li>

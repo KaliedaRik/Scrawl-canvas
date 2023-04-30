@@ -983,7 +983,7 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
 });
 
 canvas.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span class="hljs-function">() =&gt;</span> {
-    
+
     canvas.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: background_light});
     textGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">fillStyle</span>: text_light});
 });</pre></div></div>
@@ -1039,12 +1039,68 @@ canvas.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">checkE</span> = (<span class="hljs-params">e</span>) =&gt; {
     <span class="hljs-keyword">if</span> (e) {
-        <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;keydown&quot;</span> === e.<span class="hljs-property">type</span>) {
-            <span class="hljs-keyword">if</span> (<span class="hljs-number">32</span> === e.<span class="hljs-property">keycode</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>; <span class="hljs-comment">// spacebar</span>
-            <span class="hljs-keyword">if</span> (<span class="hljs-number">13</span> === e.<span class="hljs-property">keycode</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>; <span class="hljs-comment">// enter key</span>
-        }
-        <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;click&quot;</span> === e.<span class="hljs-property">type</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>; <span class="hljs-comment">// mouse click</span>
-        <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;touchend&quot;</span> === e.<span class="hljs-property">type</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>; <span class="hljs-comment">// tap</span>
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;keydown&quot;</span> === e.<span class="hljs-property">type</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>spacebar</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-number">32</span> === e.<span class="hljs-property">keycode</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>enter key</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-number">13</span> === e.<span class="hljs-property">keycode</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>mouse click</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;click&quot;</span> === e.<span class="hljs-property">type</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>tap</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;touchend&quot;</span> === e.<span class="hljs-property">type</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
     }
     <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 };
@@ -1074,11 +1130,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-10">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 <p>In chrome browsers, open the inspector and enable the <strong>Rendering</strong> view - this includes selectors to emulate both <code>prefers-reduced-motion</code> and <code>prefers-color-scheme</code> user choices.</p>

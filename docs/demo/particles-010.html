@@ -869,7 +869,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -938,7 +938,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
     <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
@@ -1005,7 +1005,7 @@
 
             <span class="hljs-keyword">if</span> (regex.<span class="hljs-title function_">test</span>(p.<span class="hljs-property">name</span>)) {
 
-                p.<span class="hljs-title function_">set</span>({ 
+                p.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
                     <span class="hljs-attr">stroke</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
                     <span class="hljs-attr">forces</span>: [],
@@ -1058,7 +1058,7 @@
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
         <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;gold&#x27;</span>,
 
-        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>, 
+        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
 
         <span class="hljs-attr">noUserInteraction</span>: <span class="hljs-literal">true</span>,
         <span class="hljs-attr">noPositionDependencies</span>: <span class="hljs-literal">true</span>,
@@ -1068,12 +1068,12 @@
 
     <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-            <span class="hljs-keyword">let</span> [ , , ...start] = particle.<span class="hljs-property">history</span>[<span class="hljs-number">0</span>];
+            <span class="hljs-keyword">const</span> [ , , ...start] = particle.<span class="hljs-property">history</span>[<span class="hljs-number">0</span>];
 
-            artefact.<span class="hljs-title function_">simpleStamp</span>(host, { 
+            artefact.<span class="hljs-title function_">simpleStamp</span>(host, {
                 start,
-                <span class="hljs-attr">fillStyle</span>: particle.<span class="hljs-property">fill</span>, 
-                <span class="hljs-attr">strokeStyle</span>: particle.<span class="hljs-property">stroke</span>, 
+                <span class="hljs-attr">fillStyle</span>: particle.<span class="hljs-property">fill</span>,
+                <span class="hljs-attr">strokeStyle</span>: particle.<span class="hljs-property">stroke</span>,
             });
     },
     <span class="hljs-attr">particlesAreDraggable</span>: <span class="hljs-literal">true</span>,</pre></div></div>

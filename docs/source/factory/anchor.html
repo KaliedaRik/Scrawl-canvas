@@ -540,7 +540,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="anchor-factory">Anchor factory</h1>
-<p>In Scrawl-canvas, an Anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in this file. </p>
+<p>In Scrawl-canvas, an Anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in this file.</p>
 <p>Scrawl-canvas uses the <a href="../mixin/anchor.html">Anchor mixin</a> to add anchor functionality to artefacts - in particular canvas entitys.</p>
 <p>This gives us a interactive canvas containing dynamic, clickable regions.</p>
 <p>Note that while anchors are primarily for generating URL links to (external site) web pages, they can also be used to trigger any other desired action. This can be achieved by setting the anchor object’s <strong>clickAction</strong> attribute to a function. For instance:</p>
@@ -608,7 +608,7 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
-    
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
@@ -871,7 +871,7 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
             
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">host</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> h = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item;
+    <span class="hljs-keyword">const</span> h = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item;
 
     <span class="hljs-keyword">if</span> (h &amp;&amp; h.<span class="hljs-property">name</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> = h;
 };</pre></div></div>
@@ -924,7 +924,7 @@ anchor.<span class="hljs-property">download</span>        ~~&gt; artefact.<span 
 </code></pre>
 <p>One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an ‘anchor’ attribute:</p>
 <pre><code>artefact.<span class="hljs-title function_">set</span>({
-   
+
     <span class="hljs-attr">anchor</span>: {
         <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
         <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
@@ -1032,7 +1032,7 @@ S.<span class="hljs-property">clickAction</span> = <span class="hljs-keyword">fu
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>The <code>build</code> function builds the &lt;a&gt; element and adds it to the DOM</p>
-<p>Scrawl-canvas generated anchor links are kept in hidden &lt;nav&gt; elements - either the Canvas object’s nav, or the Scrawl-canvas default nav (referenced by <em>scrawlNavigationHold</em>) which Scrawl-canvas automatically generates and adds to the top of the DOM &lt;body&gt; element when it first runs. </p>
+<p>Scrawl-canvas generated anchor links are kept in hidden &lt;nav&gt; elements - either the Canvas object’s nav, or the Scrawl-canvas default nav (referenced by <em>scrawlNavigationHold</em>) which Scrawl-canvas automatically generates and adds to the top of the DOM &lt;body&gt; element when it first runs.</p>
 <p>This is done to give screen readers access to link URLs and descriptions associated with Canvas graphical entitys (which visually impaired users may not be able to see). It also allows links to be tabbed through and invoked in the normal way (which may vary dependent on how browsers implement tab focus functionality)</p>
 
             </div>
@@ -1144,7 +1144,7 @@ S.<span class="hljs-property">clickAction</span> = <span class="hljs-keyword">fu
               </div>
               <h4 id="factory">Factory</h4>
 <p>To create an anchor, include an anchor definition object in any artefact object’s factory argument:</p>
-<pre><code><span class="hljs-comment">// get a handle on the canvas where the block/link will be defined </span>
+<pre><code><span class="hljs-comment">// get a handle on the canvas where the block/link will be defined</span>
 <span class="hljs-comment">// (in this case a canvas with id=&quot;mycanvas&quot;)</span>
 <span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
 canvas.<span class="hljs-title function_">setAsCurrentCanvas</span>();
@@ -1171,7 +1171,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">onUp</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">clickAnchor</span>,
 });
 
-<span class="hljs-comment">// Add a listener to propagate DOM-detected click events on our canvas </span>
+<span class="hljs-comment">// Add a listener to propagate DOM-detected click events on our canvas</span>
 <span class="hljs-comment">// back into the Scrawl-canvas event system</span>
 scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;up&#x27;</span>), canvas.<span class="hljs-property">domElement</span>);
 </code></pre>
@@ -1179,7 +1179,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeAnchor = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
-    
+
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Anchor</span>(items);
 };

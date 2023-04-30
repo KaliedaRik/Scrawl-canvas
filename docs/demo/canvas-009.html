@@ -877,8 +877,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>],
-    myTracker;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];
+
+<span class="hljs-keyword">let</span> myTracker;</pre></div></div>
             
         </li>
         
@@ -889,7 +890,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Create a new tracker to handle tween and ticker action/progress, and set some attributes on it. 
+              <p>Create a new tracker to handle tween and ticker action/progress, and set some attributes on it.
 @ts-expect-error</p>
 
             </div>
@@ -912,7 +913,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">ga</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];</pre></div></div>
+    <span class="hljs-keyword">const</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];</pre></div></div>
             
         </li>
         
@@ -1462,7 +1463,7 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
     },
 
 }).<span class="hljs-title function_">clone</span>({
-    
+
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>),
 
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;75%&#x27;</span>,
@@ -1477,7 +1478,7 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
     },
 
 }).<span class="hljs-title function_">clone</span>({
-    
+
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;marble-in-water&#x27;</span>),
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
@@ -1506,9 +1507,9 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
 <li>Available cascadeEventAction arguments are: ‘enter’, ‘leave’, ‘down’, or ‘up’</li>
 <li>Also, the ‘move’ argument will trigger enter and leave actions on the entitys, as appropriate to each</li>
 </ul>
-<p>In this case, moving the mouse cursor over a block entity will increase its line width, as specified in the <strong>onEnter</strong> and <strong>onLeave</strong> functions in the block factories above. </p>
+<p>In this case, moving the mouse cursor over a block entity will increase its line width, as specified in the <strong>onEnter</strong> and <strong>onLeave</strong> functions in the block factories above.</p>
 <p>Additionally, it will update the &lt;canvas&gt; element’s title attribute (for tool tips) and its ARIA label value (for accessibility)</p>
-<p>The cascadeEventAction function returns an Array of name Strings for the entitys at the current mouse cursor coordinates </p>
+<p>The cascadeEventAction function returns an Array of name Strings for the entitys at the current mouse cursor coordinates</p>
 
             </div>
             

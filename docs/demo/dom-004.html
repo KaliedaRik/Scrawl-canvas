@@ -869,7 +869,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> library = scrawl.<span class="hljs-property">library</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> library = scrawl.<span class="hljs-property">library</span>,
     artefact = library.<span class="hljs-property">artefact</span>,
     stack = artefact.<span class="hljs-property">mystack</span>;
 
@@ -882,7 +882,7 @@ stack.<span class="hljs-title function_">set</span>({
 });
 
 stack.<span class="hljs-title function_">addExistingDomElements</span>(<span class="hljs-string">&#x27;#rocket&#x27;</span>);
-<span class="hljs-keyword">let</span> rocket = artefact.<span class="hljs-property">rocket</span>;
+<span class="hljs-keyword">const</span> rocket = artefact.<span class="hljs-property">rocket</span>;
 
 rocket.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">startX</span>: <span class="hljs-number">600</span>,
@@ -906,7 +906,7 @@ rocket.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> tween = scrawl.<span class="hljs-title function_">makeTween</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> tween = scrawl.<span class="hljs-title function_">makeTween</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;template&#x27;</span>,
 
@@ -1001,7 +1001,7 @@ rocket.<span class="hljs-title function_">set</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> counter = <span class="hljs-number">0</span>;
-<span class="hljs-keyword">let</span> flyRocket = <span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) {
+<span class="hljs-keyword">const</span> flyRocket = <span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) {
 
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;

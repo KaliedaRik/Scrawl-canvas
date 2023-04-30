@@ -891,7 +891,7 @@
 
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">pointsOfTriangle</span> = (<span class="hljs-params">del, t</span>) =&gt; {
 
-    <span class="hljs-keyword">let</span> { triangles } = del;
+    <span class="hljs-keyword">const</span> { triangles } = del;
 
     <span class="hljs-keyword">return</span> <span class="hljs-title function_">edgesOfTriangle</span>(t).<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> triangles[e]);
 };
@@ -926,9 +926,9 @@
 
     <span class="hljs-keyword">if</span> (del) {
 
-        <span class="hljs-keyword">let</span> { triangles, halfedges } = del;
+        <span class="hljs-keyword">const</span> { triangles, halfedges } = del;
 
-        <span class="hljs-keyword">let</span> len = triangles.<span class="hljs-property">length</span>;
+        <span class="hljs-keyword">const</span> len = triangles.<span class="hljs-property">length</span>;
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> e = <span class="hljs-number">0</span>; e &lt; len; e++) {
 
@@ -1024,7 +1024,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;voronoi-web&#x27;</span>,
 
@@ -1046,7 +1046,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;points&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;points&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: [],
         <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
@@ -1067,7 +1067,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;here&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;here&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">null</span>,
     },{</pre></div></div>
             
@@ -1084,7 +1084,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;delaunay&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;delaunay&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">null</span>,
     },{</pre></div></div>
             
@@ -1101,10 +1101,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: baseDimension,
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: baseDimension,
     },{</pre></div></div>
             
@@ -1121,7 +1121,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;trigger&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;trigger&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {</pre></div></div>
             
@@ -1330,7 +1330,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p>Tile shadows - blur the voronoi web then apply it, offset up and left, to the image </p>
+              <p>Tile shadows - blur the voronoi web then apply it, offset up and left, to the image</p>
 
             </div>
             
@@ -1355,7 +1355,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <p>Tile highlights - invert the blurred web then apply it, offset down and right, to the image </p>
+              <p>Tile highlights - invert the blurred web then apply it, offset down and right, to the image</p>
 
             </div>
             
@@ -1380,7 +1380,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p>Display our image in a Picture entity - the filter is applied here </p>
+              <p>Display our image in a Picture entity - the filter is applied here</p>
 
             </div>
             

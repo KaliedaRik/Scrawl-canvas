@@ -367,7 +367,7 @@ Data supplied to graph module as Javascript object with structure:
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; categoryLabels.<span class="hljs-property">length</span>; i++) {
 
-        <span class="hljs-keyword">let</span> cData = categoryData[categoryLabels[i]];
+        <span class="hljs-keyword">const</span> cData = categoryData[categoryLabels[i]];
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; yearLabels.<span class="hljs-property">length</span>; j++) {
 
@@ -473,8 +473,8 @@ Data supplied to graph module as Javascript object with structure:
             </div>
             
             <div class="content"><div class='highlight'><pre>            graph.<span class="hljs-property">build</span> ({
-                namespace, 
-                canvas, 
+                namespace,
+                canvas,
                 data,
                 scrawl,
             });</pre></div></div>

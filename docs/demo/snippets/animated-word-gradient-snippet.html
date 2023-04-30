@@ -254,7 +254,7 @@
               </div>
               <h3 id="animated-word-gradient-snippet">‘Animated word gradient’ snippet</h3>
 <p><strong>Purpose:</strong> imports the element’s text and adds an animated gradient effect to it.</p>
-<p><strong>Function input:</strong> </p>
+<p><strong>Function input:</strong></p>
 <ul>
 <li>the DOM element - generally a block or inline-block element.</li>
 </ul>
@@ -285,7 +285,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p><strong>Effects on the element:</strong> </p>
+              <p><strong>Effects on the element:</strong></p>
 <ul>
 <li>Imports the element’s background color, and sets the element background to <code>transparent</code></li>
 <li>Imports the element’s text node text, and sets the text color to <code>transparent</code></li>
@@ -309,7 +309,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
     });
 
@@ -328,7 +328,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.<span class="hljs-property">canvas</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> canvas = snippet.<span class="hljs-property">canvas</span>,
             group = canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
             animation = snippet.<span class="hljs-property">animation</span>,
             wrapper = snippet.<span class="hljs-property">element</span>,
@@ -351,10 +351,10 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> backgroundColor = compStyles.<span class="hljs-property">backgroundColor</span> || <span class="hljs-string">&#x27;#f2f2f2&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> backgroundColor = compStyles.<span class="hljs-property">backgroundColor</span> || <span class="hljs-string">&#x27;#f2f2f2&#x27;</span>,
             font = compStyles.<span class="hljs-property">font</span> || <span class="hljs-string">`<span class="hljs-subst">${(compStyles.fontStyle != <span class="hljs-string">&#x27;normal&#x27;</span>) ? compStyles.fontStyle + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${(compStyles.fontVariant != <span class="hljs-string">&#x27;normal&#x27;</span>) ? compStyles.fontVariant + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${compStyles.fontSize}</span> <span class="hljs-subst">${compStyles.fontFamily}</span>`</span> || <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>;
 
-        <span class="hljs-keyword">let</span> text = el.<span class="hljs-property">innerText</span>;
+        <span class="hljs-keyword">const</span> text = el.<span class="hljs-property">innerText</span>;
 
         canvas.<span class="hljs-title function_">set</span>({
             backgroundColor,
@@ -391,7 +391,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-text`</span>,
             group,
             font,
-            text, 
+            text,
             <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradient`</span>,</pre></div></div>
             
         </li>

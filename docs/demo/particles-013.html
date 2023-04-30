@@ -1049,7 +1049,7 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
 
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>, 
+        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
 
         <span class="hljs-attr">noUserInteraction</span>: <span class="hljs-literal">true</span>,
         <span class="hljs-attr">noPositionDependencies</span>: <span class="hljs-literal">true</span>,
@@ -1059,8 +1059,9 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> history = particle.<span class="hljs-property">history</span>,
-            remaining, globalAlpha, scale, start, z;</pre></div></div>
+        <span class="hljs-keyword">const</span> history = particle.<span class="hljs-property">history</span>;
+
+        <span class="hljs-keyword">let</span> remaining, globalAlpha, scale, start, z;</pre></div></div>
             
         </li>
         
@@ -1084,9 +1085,9 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
             <span class="hljs-keyword">if</span> (globalAlpha &gt; <span class="hljs-number">0</span> &amp;&amp; scale &gt; <span class="hljs-number">0</span>) {
 
                 artefact.<span class="hljs-title function_">simpleStamp</span>(host, {
-                    start, 
-                    scale, 
-                    globalAlpha, 
+                    start,
+                    scale,
+                    globalAlpha,
                     <span class="hljs-attr">fillStyle</span>: particle.<span class="hljs-property">fill</span>,
                 });
             }
@@ -1187,7 +1188,7 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
 
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>, 
+        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
 
         <span class="hljs-attr">delta</span>: {
             <span class="hljs-attr">roll</span>: <span class="hljs-number">0.6</span>,
@@ -1200,7 +1201,7 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> history = particle.<span class="hljs-property">history</span>;</pre></div></div>
+        <span class="hljs-keyword">const</span> history = particle.<span class="hljs-property">history</span>;</pre></div></div>
             
         </li>
         
@@ -1217,7 +1218,7 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (history.<span class="hljs-property">length</span>) {
 
-            <span class="hljs-keyword">let</span> [remaining, , ...start] = history[<span class="hljs-number">0</span>];</pre></div></div>
+            <span class="hljs-keyword">const</span> [remaining, , ...start] = history[<span class="hljs-number">0</span>];</pre></div></div>
             
         </li>
         
@@ -1306,7 +1307,7 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
             }
 
             artefact.<span class="hljs-title function_">simpleStamp</span>(host, {
-                start, 
+                start,
                 <span class="hljs-attr">fillStyle</span>: particle.<span class="hljs-property">fill</span>,
                 globalAlpha,
                 radius1,
@@ -1414,10 +1415,11 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> engine = host.<span class="hljs-property">engine</span>,
+        <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>,
             history = particle.<span class="hljs-property">history</span>,
-            remaining, radius, alpha, x, y, z,
-            endRad = <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">2</span>;</pre></div></div>
+            endRad = <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">2</span>;
+
+        <span class="hljs-keyword">let</span> remaining, radius, alpha, x, y, z;</pre></div></div>
             
         </li>
         
@@ -1432,7 +1434,7 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> colorFactory = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillColorFactory</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> colorFactory = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillColorFactory</span>;
 
         engine.<span class="hljs-title function_">save</span>();
         engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
@@ -1547,42 +1549,42 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-2&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.793</span>,
-    
+
 }).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-3&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.272</span>,
-    
+
 }).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-4&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.696</span>,
-    
+
 }).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-5&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.352</span>,
-    
+
 }).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-6&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.616</span>,
-    
+
 }).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-7&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.413</span>,
-    
+
 }).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-8&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.555</span>,
-    
+
 }).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-9&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.459</span>,
-    
+
 }).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-10&#x27;</span>,

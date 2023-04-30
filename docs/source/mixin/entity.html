@@ -714,7 +714,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p><strong>flipReverse</strong>, <strong>flipUpend</strong> - Boolean flags which determine the orientation of the entity when it stamps itself on the display. </p>
+              <p><strong>flipReverse</strong>, <strong>flipUpend</strong> - Boolean flags which determine the orientation of the entity when it stamps itself on the display.</p>
 <ul>
 <li>a <code>reversed</code> entity is effectively flipped 180&deg; around a vertical line passing through that entity’s rotation-reflection (start) point - a face looking to the right will now look to the left</li>
 <li>an <code>upended</code> entity is effectively flipped 180&deg; around a horizontal line passing through that entity’s rotation-reflection (start) point - a normal face will now appear upside-down</li>
@@ -749,7 +749,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p><strong>lockFillStyleToEntity</strong>, <strong>lockStrokeStyleToEntity</strong> - Boolean flags. </p>
+              <p><strong>lockFillStyleToEntity</strong>, <strong>lockStrokeStyleToEntity</strong> - Boolean flags.</p>
 <ul>
 <li>When set, these flags instruct any gradient-type style (Scrawl-canvas Gradient, RadialGradient) to map their <code>start</code> and <code>end</code> coordinates to the entity’s dimensions</li>
 <li>Default action is for gradient-type styles to map their coordinates to the host Cell’s dimensions</li>
@@ -777,12 +777,12 @@
 <li><code>up</code> - triggers when a user releases their (left) mouse key while inside the entity’s fillable area - this can also be used for capturing mouse click and touch tap actions</li>
 <li><code>leave</code> - triggers when the cursor passes over the entity’s outline away from its fillable area</li>
 </ul>
-<p>The events are regular functions. </p>
+<p>The events are regular functions.</p>
 <ul>
-<li><code>this</code> refers to the entity object, giving the functions access to any attribute and method set on it. </li>
+<li><code>this</code> refers to the entity object, giving the functions access to any attribute and method set on it.</li>
 <li>They can also use variables defined elsewhere in the script code (though these will need to be rehydrated if the entity is packet stored and resurrected - see Demo <a href="../../demo/canvas-009.html">Canvas-009</a> tests for an example of doing this)</li>
 </ul>
-<p>Scrawl-canvas will not automatically trigger these functions: </p>
+<p>Scrawl-canvas will not automatically trigger these functions:</p>
 <ul>
 <li>They can be triggered as part of an Animation object’s function checking for hits on a Group of entitys</li>
 <li>Similar checks can be included in a RenderAnimation hook function</li>
@@ -1301,9 +1301,9 @@
                 <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <h5 id="step-1-prepare-the-entity-for-stamping">Step 1: prepare the entity for stamping</h5>
-<p><code>prepareStamp</code> - all entity objects need to check the following dirty flags and take corrective action when a flag is set. </p>
+<p><code>prepareStamp</code> - all entity objects need to check the following dirty flags and take corrective action when a flag is set.</p>
 <ul>
-<li>The order in which flags get checked is important! </li>
+<li>The order in which flags get checked is important!</li>
 <li>As part of the checking process, additional dirty flags may be set early in the function, for processing later on in the function.</li>
 </ul>
 <p>If an entity relies on another artefact as a <code>pivot</code>, <code>mimic</code> or <code>path</code> reference, those artefacts should be processed earlier in the compile cascade. This can be achieved by:</p>
@@ -1732,7 +1732,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> { 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> {
             <span class="hljs-attr">element</span>: currEl,
             <span class="hljs-attr">engine</span>: currEng,
             <span class="hljs-attr">currentDimensions</span>: currDims,
@@ -1826,7 +1826,7 @@
                     filterEng.<span class="hljs-title function_">restore</span>();
 
                     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
-                } 
+                }
 
                 filterEng.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
@@ -1852,7 +1852,7 @@
 
             currEng.<span class="hljs-property">globalAlpha</span> = (state &amp;&amp; state.<span class="hljs-property">globalAlpha</span>) ? state.<span class="hljs-property">globalAlpha</span> : <span class="hljs-number">1</span>;
             currEng.<span class="hljs-property">globalCompositeOperation</span> = (state &amp;&amp; state.<span class="hljs-property">globalCompositeOperation</span>) ? state.<span class="hljs-property">globalCompositeOperation</span> : <span class="hljs-variable constant_">SOURCE_OVER</span>;
-            
+
             currEng.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
             currEng.<span class="hljs-title function_">drawImage</span>(filterEl, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);</pre></div></div>
@@ -1954,7 +1954,7 @@
 
             <span class="hljs-keyword">if</span> (data[counter]) {
 
-                y = <span class="hljs-title function_">_floor</span>(i / width); 
+                y = <span class="hljs-title function_">_floor</span>(i / width);
                 x = i - (y * width);
 
                 <span class="hljs-keyword">if</span> (minX &gt; x) minX = x;
@@ -1990,7 +1990,7 @@
         <span class="hljs-keyword">if</span> (host &amp;&amp; <span class="hljs-variable constant_">GOOD_HOST</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = host;
-            
+
             <span class="hljs-keyword">if</span> (changes) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(changes);
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStamp</span>();
 
@@ -2175,7 +2175,7 @@
 
         engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">DESTINATION_OUT</span>;
         engine.<span class="hljs-title function_">fill</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        
+
         engine.<span class="hljs-property">globalCompositeOperation</span> = gco;
     };</pre></div></div>
             

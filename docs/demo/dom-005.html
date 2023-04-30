@@ -869,7 +869,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> porthole = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">porthole</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> porthole = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">porthole</span>;
 
 porthole.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
@@ -898,16 +898,16 @@ porthole.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> starCount = <span class="hljs-number">0</span>,
-    addNumber = <span class="hljs-number">100</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> starCount = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">const</span> addNumber = <span class="hljs-number">100</span>;
 
-<span class="hljs-keyword">let</span> makeStars = <span class="hljs-keyword">function</span> (<span class="hljs-params">buildNumber</span>) {
+<span class="hljs-keyword">const</span> makeStars = <span class="hljs-keyword">function</span> (<span class="hljs-params">buildNumber</span>) {
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; buildNumber; i++) {
 
         starCount++;
 
-        <span class="hljs-keyword">let</span> star = porthole.<span class="hljs-title function_">addNewElement</span>({
+        <span class="hljs-keyword">const</span> star = porthole.<span class="hljs-title function_">addNewElement</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`star_<span class="hljs-subst">${starCount}</span>`</span>,
             <span class="hljs-attr">tag</span>: <span class="hljs-string">&#x27;div&#x27;</span>,
@@ -933,13 +933,13 @@ porthole.<span class="hljs-title function_">set</span>({
             },
         });
 
-        <span class="hljs-keyword">let</span> r1 = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>();
+        <span class="hljs-keyword">const</span> r1 = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>();
 
-        <span class="hljs-keyword">let</span> v = scrawl.<span class="hljs-title function_">requestVector</span>({ 
-            <span class="hljs-attr">x</span>: <span class="hljs-number">1</span> 
+        <span class="hljs-keyword">const</span> v = scrawl.<span class="hljs-title function_">requestVector</span>({
+            <span class="hljs-attr">x</span>: <span class="hljs-number">1</span>
         }).<span class="hljs-title function_">rotate</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">360</span>).<span class="hljs-title function_">scalarMultiply</span>(<span class="hljs-number">300</span>);
 
-        <span class="hljs-keyword">let</span> x = v.<span class="hljs-property">x</span>,
+        <span class="hljs-keyword">const</span> x = v.<span class="hljs-property">x</span>,
             y = v.<span class="hljs-property">y</span>;
 
         scrawl.<span class="hljs-title function_">releaseVector</span>(v);
@@ -1023,7 +1023,7 @@ porthole.<span class="hljs-title function_">set</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">addStars</span> = (<span class="hljs-params">e</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">addStars</span> = (<span class="hljs-params">e</span>) =&gt; {
 
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;

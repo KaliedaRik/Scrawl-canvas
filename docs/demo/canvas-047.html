@@ -874,7 +874,7 @@
 
 <span class="hljs-keyword">const</span> easingDisplayComponent = <span class="hljs-keyword">function</span> (<span class="hljs-params">name, ypos</span>) {
 
-    <span class="hljs-keyword">let</span> color = scrawl.<span class="hljs-title function_">makeColor</span>({
+    <span class="hljs-keyword">const</span> color = scrawl.<span class="hljs-title function_">makeColor</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-color`</span>,
         <span class="hljs-attr">easing</span>: name,
         <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
@@ -890,7 +890,7 @@
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
     });
 
-    <span class="hljs-keyword">let</span> wheel = scrawl.<span class="hljs-title function_">makeWheel</span>({
+    <span class="hljs-keyword">const</span> wheel = scrawl.<span class="hljs-title function_">makeWheel</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-wheel`</span>,
         <span class="hljs-attr">radius</span>: <span class="hljs-number">12</span>,
         <span class="hljs-attr">startX</span>: <span class="hljs-number">110</span>,

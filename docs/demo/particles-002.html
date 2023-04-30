@@ -869,7 +869,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
 
 scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;#bunny&#x27;</span>);
 
@@ -895,20 +895,20 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> commonValues = {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> commonValues = {
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>, 
+    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">noUserInteraction</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">noPositionDependencies</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">noFilters</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span>,
 };
 
-<span class="hljs-keyword">let</span> wheel = scrawl.<span class="hljs-title function_">makeWheel</span>({ 
+<span class="hljs-keyword">const</span> wheel = scrawl.<span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-wheel-entity&#x27;</span>,
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">16</span>, 
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">16</span>,
     <span class="hljs-attr">startAngle</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">endAngle</span>: -<span class="hljs-number">20</span>,
     <span class="hljs-attr">includeCenter</span>: <span class="hljs-literal">true</span>,</pre></div></div>
@@ -928,7 +928,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
             
             <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">set</span>(commonValues);
 
-<span class="hljs-keyword">let</span> block = scrawl.<span class="hljs-title function_">makeBlock</span>({ 
+<span class="hljs-keyword">const</span> block = scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-block-entity&#x27;</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">30</span>, <span class="hljs-number">20</span>],</pre></div></div>
             
@@ -947,7 +947,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
             
             <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">set</span>(commonValues);
 
-<span class="hljs-keyword">let</span> star = scrawl.<span class="hljs-title function_">makeStar</span>({
+<span class="hljs-keyword">const</span> star = scrawl.<span class="hljs-title function_">makeStar</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-star-entity&#x27;</span>,
     <span class="hljs-attr">radius1</span>: <span class="hljs-number">18</span>,
     <span class="hljs-attr">radius2</span>: <span class="hljs-number">12</span>,
@@ -968,7 +968,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
             
             <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">set</span>(commonValues);
 
-<span class="hljs-keyword">let</span> picture = scrawl.<span class="hljs-title function_">makePicture</span>({
+<span class="hljs-keyword">const</span> picture = scrawl.<span class="hljs-title function_">makePicture</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-image-entity&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;bunny&#x27;</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-number">26</span>,
@@ -991,7 +991,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
             
             <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">set</span>(commonValues);
 
-<span class="hljs-keyword">let</span> phrase = scrawl.<span class="hljs-title function_">makePhrase</span>({
+<span class="hljs-keyword">const</span> phrase = scrawl.<span class="hljs-title function_">makePhrase</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-phrase-entity&#x27;</span>,
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Hello&#x27;</span>,
     <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;bold 40px Garamond, serif&#x27;</span>,
@@ -1038,7 +1038,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
 
@@ -1046,11 +1046,11 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
     <span class="hljs-attr">userAttributes</span>: [
         {
-            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;strokeStyle&#x27;</span>, 
+            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;strokeStyle&#x27;</span>,
             <span class="hljs-attr">defaultValue</span>: <span class="hljs-string">&#x27;#b9b5df&#x27;</span>,
         },
         {
-            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;globalAlpha&#x27;</span>, 
+            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;globalAlpha&#x27;</span>,
             <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0.2</span>,
         },
     ],
@@ -1067,7 +1067,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
               </div>
               <p>Create the particle Emitter entity</p>
 <ul>
-<li>Emitter entitys include functionality for assigning randomized fillStyle and strokeStyle colors to the particles they generate. They do this through the use of a Color factory in the emitter. By default the emitter will assign the full range of random colors to each particle (which then remembers its color). </li>
+<li>Emitter entitys include functionality for assigning randomized fillStyle and strokeStyle colors to the particles they generate. They do this through the use of a Color factory in the emitter. By default the emitter will assign the full range of random colors to each particle (which then remembers its color).</li>
 <li>We can restrict the range of colors generated by setting the minimum and maximum color values on these color factories - see the user interaction code near the end of this file for details.</li>
 </ul>
 
@@ -1098,7 +1098,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">killRadius</span>: <span class="hljs-number">50</span>, 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">killRadius</span>: <span class="hljs-number">50</span>,
     <span class="hljs-attr">killRadiusVariation</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
@@ -1153,7 +1153,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> {history, fill} = particle;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> {history, fill} = particle;
         <span class="hljs-keyword">let</span> remaining, scale, roll, start, z;</pre></div></div>
             
         </li>
@@ -1170,7 +1170,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> {strokeStyle, globalAlpha} = myWorld;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> {strokeStyle, globalAlpha} = myWorld;</pre></div></div>
             
         </li>
         
@@ -1252,12 +1252,12 @@ canvas.<span class="hljs-title function_">setBase</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre>                artefact.<span class="hljs-title function_">simpleStamp</span>(host, {
-                    start, 
-                    scale, 
-                    roll, 
+                    start,
+                    scale,
+                    roll,
                     globalAlpha,
-                    strokeStyle, 
-                    <span class="hljs-attr">fillStyle</span>: fill, 
+                    strokeStyle,
+                    <span class="hljs-attr">fillStyle</span>: fill,
                 });
             }
         });
@@ -1299,7 +1299,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> historyCount = <span class="hljs-number">0</span>;
     particlenames.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> p = particle[n];
+        <span class="hljs-keyword">const</span> p = particle[n];
         <span class="hljs-keyword">if</span> (p) historyCount += p.<span class="hljs-property">history</span>.<span class="hljs-property">length</span>;
     });</pre></div></div>
             
@@ -1316,7 +1316,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> kr = <span class="hljs-built_in">parseFloat</span>(killRadius.<span class="hljs-property">value</span>),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> kr = <span class="hljs-built_in">parseFloat</span>(killRadius.<span class="hljs-property">value</span>),</pre></div></div>
             
         </li>
         
@@ -1349,7 +1349,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Particles: <span class="hljs-subst">${particlenames.length}</span>, generationRate: <span class="hljs-subst">${generationRate.value}</span>, historyLength: <span class="hljs-subst">${historyLength.value}</span>\n    Stamps per display: <span class="hljs-subst">${historyCount}</span>\n\n    Background color: <span class="hljs-subst">${background.value}</span>, World speed (tickMultiplier): <span class="hljs-subst">${worldSpeed.value}</span>\n    Outline color (strokeStyle): <span class="hljs-subst">${outlineColor.value}</span>, Opacity (globalAlpha): <span class="hljs-subst">${opacity.value}</span>\n    Kill radius: from <span class="hljs-subst">${(kr - krv) &gt; <span class="hljs-number">0</span> ? kr - krv : <span class="hljs-number">0</span>}</span>px to <span class="hljs-subst">${kr + krv}</span>px\n    Minimum fill color: <span class="hljs-subst">${minFill.value}</span>, Maximum fill color: <span class="hljs-subst">${maxFill.value}</span>`</span>;
 });
 
-<span class="hljs-keyword">let</span> mouseCheck = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+<span class="hljs-keyword">const</span> mouseCheck = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> active = <span class="hljs-literal">false</span>;
 
@@ -1506,7 +1506,6 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
             </div>
             
             <div class="content"><div class='highlight'><pre>        val = selector.<span class="hljs-property">value</span>;
-        choice;
 
         <span class="hljs-keyword">switch</span> (val) {
 

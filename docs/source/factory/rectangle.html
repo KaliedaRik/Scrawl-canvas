@@ -544,12 +544,12 @@
 <p>Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>. They use the <a href="../mixin/shapeBasic.html">shapeBasic</a> and <a href="../mixin/shapePathCalculation.html">shapePathCalculation</a> (some also use <a href="../mixin/shapeCurve.html">shapeCurve</a>) mixins to define much of their functionality.</p>
 <p>All path-defined entitys can be positioned, cloned, filtered etc:</p>
 <ul>
-<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
+<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin.</li>
 <li>Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use <code>scale</code> instead.</li>
-<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects.</li>
 <li>They will also accept <strong>Filter</strong> objects.</li>
-<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can use <strong>Anchor</strong> objects for user navigation.</li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
 <li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Path-defined entitys can be cloned, and killed.</li>
 </ul>
@@ -1150,7 +1150,7 @@ D.<span class="hljs-property">rectangleHeight</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code> </p>
+              <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code></p>
 <ul>
 <li>Unlike other Shape entitys, Rectangles have settable dimensions <code>rectangleWidth</code> and <code>rectangleWidth</code>.</li>
 </ul>
@@ -1177,7 +1177,7 @@ D.<span class="hljs-property">rectangleHeight</span> = <span class="hljs-keyword
         <span class="hljs-keyword">if</span> (h.<span class="hljs-property">substring</span>) h = (<span class="hljs-built_in">parseFloat</span>(h) / <span class="hljs-number">100</span>) * hostDims[<span class="hljs-number">1</span>];
 
         <span class="hljs-keyword">const</span> mimic = <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span>;
-        
+
         <span class="hljs-keyword">let</span> mimicDims;
 
         <span class="hljs-keyword">if</span> (mimic &amp;&amp; mimic.<span class="hljs-property">name</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicDimensions</span>) mimicDims = mimic.<span class="hljs-property">currentDimensions</span>;
@@ -1256,17 +1256,17 @@ D.<span class="hljs-property">rectangleHeight</span> = <span class="hljs-keyword
     <span class="hljs-keyword">if</span> (width - _tlx - _trx !== <span class="hljs-number">0</span>) myData += <span class="hljs-string">`h<span class="hljs-subst">${width - _tlx - _trx}</span>`</span>;
 
     <span class="hljs-keyword">if</span> (_trx + _try !== <span class="hljs-number">0</span>) myData += <span class="hljs-string">`c<span class="hljs-subst">${_trx * A}</span>,<span class="hljs-subst">${_try * B}</span> <span class="hljs-subst">${_trx - (_trx * B)}</span>,<span class="hljs-subst">${_try - (_try * A)}</span>, <span class="hljs-subst">${_trx}</span>,<span class="hljs-subst">${_try}</span>`</span>;
-    
+
     <span class="hljs-keyword">if</span> (height - _try - _bry !== <span class="hljs-number">0</span>) myData += <span class="hljs-string">`v<span class="hljs-subst">${height - _try - _bry}</span>`</span>;
-    
+
     <span class="hljs-keyword">if</span> (_brx + _bry !== <span class="hljs-number">0</span>) myData += <span class="hljs-string">`c<span class="hljs-subst">${-_brx * B}</span>,<span class="hljs-subst">${_bry * A}</span> <span class="hljs-subst">${-_brx + (_brx * A)}</span>,<span class="hljs-subst">${_bry - (_bry * B)}</span> <span class="hljs-subst">${-_brx}</span>,<span class="hljs-subst">${_bry}</span>`</span>;
-    
+
     <span class="hljs-keyword">if</span> (-width + _blx + _brx !== <span class="hljs-number">0</span>) myData += <span class="hljs-string">`h<span class="hljs-subst">${-width + _blx + _brx}</span>`</span>;
-    
+
     <span class="hljs-keyword">if</span> (_blx + _bly !== <span class="hljs-number">0</span>) myData += <span class="hljs-string">`c<span class="hljs-subst">${-_blx * A}</span>,<span class="hljs-subst">${-_bly * B}</span> <span class="hljs-subst">${-_blx + (_blx * B)}</span>,<span class="hljs-subst">${-_bly + (_bly * A)}</span> <span class="hljs-subst">${-_blx}</span>,<span class="hljs-subst">${-_bly}</span>`</span>;
-    
+
     <span class="hljs-keyword">if</span> (-height + _tly + _bly !== <span class="hljs-number">0</span>) myData += <span class="hljs-string">`v<span class="hljs-subst">${-height + _tly + _bly}</span>`</span>;
-    
+
     <span class="hljs-keyword">if</span> (_tlx + _tly !== <span class="hljs-number">0</span>) myData += <span class="hljs-string">`c<span class="hljs-subst">${_tlx * B}</span>,<span class="hljs-subst">${-_tly * A}</span> <span class="hljs-subst">${_tlx - (_tlx * A)}</span>,<span class="hljs-subst">${-_tly + (_tly * B)}</span> <span class="hljs-subst">${_tlx}</span>,<span class="hljs-subst">${-_tly}</span>`</span>;
 
     myData += <span class="hljs-string">&#x27;z&#x27;</span>;
@@ -1276,7 +1276,7 @@ D.<span class="hljs-property">rectangleHeight</span> = <span class="hljs-keyword
 
 P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>;
+    <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-variable constant_">ZERO_PATH</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x}</span>,<span class="hljs-subst">${-y}</span>`</span>);
 

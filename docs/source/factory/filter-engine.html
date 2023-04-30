@@ -553,7 +553,7 @@
 
 <span class="hljs-keyword">import</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/random-seed.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, easeEngines, isa_fn } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { correctAngle, doCreate, easeEngines, isa_fn } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./animation.js&#x27;</span>;
 
@@ -709,7 +709,7 @@ P.<span class="hljs-property">action</span> = <span class="hljs-keyword">functio
 
     <span class="hljs-keyword">const</span> { workstoreLastAccessed, workstore, actions, theBigActionsObject } = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">const</span> workstoreKeys = <span class="hljs-title function_">_keys</span>(workstore), 
+    <span class="hljs-keyword">const</span> workstoreKeys = <span class="hljs-title function_">_keys</span>(workstore),
         workstoreChoke = <span class="hljs-title function_">_now</span>() - choke;
 
     <span class="hljs-keyword">let</span> i, iz, s, actData, a;
@@ -789,7 +789,7 @@ P.<span class="hljs-property">action</span> = <span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">workstore</span> = {},
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">workstore</span> = {};
 P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></div>
             
         </li>
@@ -924,7 +924,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
             row = [];
 
             <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; width; x++) {
-                
+
                 row.<span class="hljs-title function_">push</span>(counter);
                 counter++;
             }
@@ -967,9 +967,9 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 P.<span class="hljs-property">getRandomNumbers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) {
 
     <span class="hljs-keyword">const</span> {
-        seed = <span class="hljs-variable constant_">DEFAULT_SEED</span>, 
-        length = <span class="hljs-number">0</span>, 
-        imgWidth = <span class="hljs-number">0</span>, 
+        seed = <span class="hljs-variable constant_">DEFAULT_SEED</span>,
+        length = <span class="hljs-number">0</span>,
+        imgWidth = <span class="hljs-number">0</span>,
         type = <span class="hljs-variable constant_">RANDOM</span>,
     } = items;
 
@@ -1082,7 +1082,7 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> y = <span class="hljs-number">0</span>; y &lt; height; y++) {
 
             <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> x = <span class="hljs-number">0</span>; x &lt; width; x++) {
-                
+
                 lookup.<span class="hljs-title function_">push</span>(<span class="hljs-title function_">_freeze</span>([x, y]));
             }
         }
@@ -1149,7 +1149,7 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
         }
 
         <span class="hljs-keyword">const</span> tiles = [];
-        
+
         <span class="hljs-keyword">let</span> hold, i, iz, j, jz, x, xz, y, yz;
 
         <span class="hljs-keyword">for</span> (j = offsetY - aHeight, jz = iHeight; j &lt; jz; j += aHeight) {
@@ -1257,7 +1257,7 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
             <span class="hljs-keyword">for</span> (i = offsetX - tileWidth, iz = iWidth; i &lt; iz; i += tileWidth) {
 
                 hold = [];
-                
+
                 <span class="hljs-keyword">for</span> (y = j, yz = j + tileHeight; y &lt; yz; y++) {
 
                     <span class="hljs-keyword">if</span> (y &gt;= <span class="hljs-number">0</span> &amp;&amp; y &lt; iHeight) {
@@ -1303,10 +1303,10 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
 
     <span class="hljs-keyword">if</span> (iWidth &amp;&amp; iHeight) {
 
-        <span class="hljs-keyword">let</span> tileW = <span class="hljs-number">1</span>, 
-            tileH = <span class="hljs-number">1</span>, 
+        <span class="hljs-keyword">let</span> tileW = <span class="hljs-number">1</span>,
+            tileH = <span class="hljs-number">1</span>,
             tileR = <span class="hljs-number">1</span>,
-            offX = <span class="hljs-number">0</span>, 
+            offX = <span class="hljs-number">0</span>,
             offY = <span class="hljs-number">0</span>,
             ang = <span class="hljs-number">0</span>,
             req = <span class="hljs-variable constant_">UNSET</span>;</pre></div></div>
@@ -1437,8 +1437,9 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
             test = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
 
         <span class="hljs-keyword">let</span> tiles = [],
-            points = [],
-            referencePoints = [],
+            points = [];
+
+        <span class="hljs-keyword">const</span> referencePoints = [],
             neighbourPoints = [];
 
         <span class="hljs-keyword">let</span> h, hz, w, wz, x, xz, y, yz,
@@ -1459,12 +1460,13 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (req == <span class="hljs-variable constant_">HEX_GRID</span> &amp;&amp; tileH / tileR &lt; <span class="hljs-number">1.05</span>) tileH = tileR * <span class="hljs-number">1.05</span>;
 
-        <span class="hljs-keyword">let</span> i, iz, cursor, ref, 
-            counter = <span class="hljs-number">0</span>,
-            halfW = <span class="hljs-title function_">_floor</span>(tileW / <span class="hljs-number">2</span>),
+        <span class="hljs-keyword">const</span> halfW = <span class="hljs-title function_">_floor</span>(tileW / <span class="hljs-number">2</span>),
             halfH = <span class="hljs-title function_">_floor</span>(tileH / <span class="hljs-number">2</span>),
             doubleR = tileR * <span class="hljs-number">2</span>,
-            hexDown = <span class="hljs-title function_">_round</span>((tileH / tileR) * tileR),
+            hexDown = <span class="hljs-title function_">_round</span>((tileH / tileR) * tileR);
+
+        <span class="hljs-keyword">let</span> i, iz, cursor, ref,
+            counter = <span class="hljs-number">0</span>,
             hexOffset = <span class="hljs-number">0</span>;
 
         <span class="hljs-keyword">switch</span> (req) {
@@ -1927,7 +1929,7 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
     <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; iHeight; y++) {
 
         <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
-            
+
             pos = ((y * iWidth) + x) * <span class="hljs-number">4</span>;
             cell = [];
 
@@ -2112,7 +2114,7 @@ P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="h
 
     <span class="hljs-keyword">const</span> sData = store.<span class="hljs-property">data</span>,
         iData = incoming.<span class="hljs-property">data</span>;
-    
+
     <span class="hljs-keyword">let</span> antiRatio, i, iz;
 
     <span class="hljs-keyword">if</span> (ratio == <span class="hljs-number">1</span>) {
@@ -2238,18 +2240,19 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>;
-        
+
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            includeRed = <span class="hljs-literal">true</span>,
+            includeGreen = <span class="hljs-literal">true</span>,
+            includeBlue = <span class="hljs-literal">true</span>,
+            excludeRed = <span class="hljs-literal">true</span>,
+            excludeGreen = <span class="hljs-literal">true</span>,
+            excludeBlue = <span class="hljs-literal">true</span>,
+            lineOut,
+        } = requirements;
+
         <span class="hljs-keyword">let</span> r, g, b, a, aVal, i;
-
-        <span class="hljs-keyword">let</span> {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == excludeRed) excludeRed = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == excludeGreen) excludeGreen = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == excludeBlue) excludeBlue = <span class="hljs-literal">true</span>;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -2292,23 +2295,24 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>;
-        
-        <span class="hljs-keyword">let</span> a, j, jz, tVal;
 
-        <span class="hljs-keyword">let</span> {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, lineOut } = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == tileWidth) tileWidth = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == tileHeight) tileHeight = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetX) offsetX = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetY) offsetY = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == gutterWidth) gutterWidth = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == gutterHeight) gutterHeight = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == areaAlphaLevels) areaAlphaLevels = [<span class="hljs-number">255</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            tileWidth = <span class="hljs-number">1</span>,
+            tileHeight = <span class="hljs-number">1</span>,
+            offsetX = <span class="hljs-number">0</span>,
+            offsetY = <span class="hljs-number">0</span>,
+            gutterWidth = <span class="hljs-number">1</span>,
+            gutterHeight = <span class="hljs-number">1</span>,
+            areaAlphaLevels = [<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">const</span> tiles = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildAlphaTileSets</span>(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">transferDataUnchanged</span>(oData, iData, len);
+
+        <span class="hljs-keyword">let</span> a, j, jz, tVal;
 
         tiles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">t, index</span>) =&gt;</span> {
 
@@ -2346,23 +2350,24 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>;
-        
-        <span class="hljs-keyword">let</span> i, avg, r, g, b, a;
 
-        <span class="hljs-keyword">let</span> {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == excludeRed) excludeRed = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == excludeGreen) excludeGreen = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == excludeBlue) excludeBlue = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            includeRed = <span class="hljs-literal">true</span>,
+            includeGreen = <span class="hljs-literal">true</span>,
+            includeBlue = <span class="hljs-literal">true</span>,
+            excludeRed = <span class="hljs-literal">false</span>,
+            excludeGreen = <span class="hljs-literal">false</span>,
+            excludeBlue = <span class="hljs-literal">false</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">let</span> divisor = <span class="hljs-number">0</span>;
         <span class="hljs-keyword">if</span> (includeRed) divisor++;
         <span class="hljs-keyword">if</span> (includeGreen) divisor++;
         <span class="hljs-keyword">if</span> (includeBlue) divisor++;
+
+        <span class="hljs-keyword">let</span> i, avg, r, g, b, a;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -2389,7 +2394,7 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
                     oData[a] = iData[a];
                 }
                 <span class="hljs-keyword">else</span> {
-    
+
                     oData[r] = (excludeRed) ? <span class="hljs-number">0</span> : iData[r];
                     oData[g] = (excludeGreen) ? <span class="hljs-number">0</span> : iData[g];
                     oData[b] = (excludeBlue) ? <span class="hljs-number">0</span> : iData[b];
@@ -2404,7 +2409,7 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
                 oData[a] = iData[a];
             }
         }
-        
+
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
         <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
     },</pre></div></div>
@@ -2419,9 +2424,9 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
                 <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>DEPRECATED! <strong>binary</strong> - use the updated <code>threshold</code> filter instead, which now incorporates binary filter functionality</p>
-<p><strong>blend</strong> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations. </p>
+<p><strong>blend</strong> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations.</p>
 <ul>
-<li>The blending method is determined by the String value supplied in the “blend” argument; permitted values are: ‘color-burn’, ‘color-dodge’, ‘darken’, ‘difference’, ‘exclusion’, ‘hard-light’, ‘lighten’, ‘lighter’, ‘multiply’, ‘overlay’, ‘screen’, ‘soft-light’, ‘color’, ‘hue’, ‘luminosity’, and ‘saturation’. </li>
+<li>The blending method is determined by the String value supplied in the “blend” argument; permitted values are: ‘color-burn’, ‘color-dodge’, ‘darken’, ‘difference’, ‘exclusion’, ‘hard-light’, ‘lighten’, ‘lighter’, ‘multiply’, ‘overlay’, ‘screen’, ‘soft-light’, ‘color’, ‘hue’, ‘luminosity’, and ‘saturation’.</li>
 <li>Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the “offsetX” and “offsetY” arguments.</li>
 </ul>
 
@@ -2452,7 +2457,7 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
                 my = y - offsetY;
 
             <span class="hljs-keyword">let</span> mPos = -<span class="hljs-number">1</span>;
-            
+
             <span class="hljs-keyword">const</span> iPos = ((iy * iWidth) + ix) * <span class="hljs-number">4</span>;
 
             <span class="hljs-keyword">if</span> (mx &gt;= <span class="hljs-number">0</span> &amp;&amp; mx &lt; mWidth &amp;&amp; my &gt;= <span class="hljs-number">0</span> &amp;&amp; my &lt; mHeight) mPos = ((my * mWidth) + mx) * <span class="hljs-number">4</span>;
@@ -2489,14 +2494,28 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         <span class="hljs-keyword">const</span> {<span class="hljs-attr">data</span>:oData} = output;
         <span class="hljs-keyword">const</span> {<span class="hljs-attr">width</span>:mWidth, <span class="hljs-attr">height</span>:mHeight, <span class="hljs-attr">data</span>:mData} = mix;
 
-        <span class="hljs-keyword">let</span> {opacity, blend, offsetX, offsetY, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            blend = <span class="hljs-variable constant_">ZERO_STR</span>,
+            offsetX = <span class="hljs-number">0</span>,
+            offsetY = <span class="hljs-number">0</span>,
+            lineOut,
+        } = requirements;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
+              <p>Pixel calculations</p>
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == blend) blend = <span class="hljs-variable constant_">ZERO_STR</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetX) offsetX = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetY) offsetY = <span class="hljs-number">0</span>;
-
-        <span class="hljs-keyword">const</span> <span class="hljs-title function_">colorburnCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> <span class="hljs-title function_">colorburnCalc</span> = (<span class="hljs-params">din, dmix</span>) =&gt; {
             <span class="hljs-keyword">if</span> (dmix == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">255</span>;
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (din == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
             <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> - <span class="hljs-title function_">_min</span>(<span class="hljs-number">1</span>, ((<span class="hljs-number">1</span> - dmix) / din ))) * <span class="hljs-number">255</span>;
@@ -3086,13 +3105,13 @@ P.<span class="hljs-property">transferDataUnchanged</span> = <span class="hljs-k
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
-              <p><strong>blur</strong> - Performs a multi-loop, two-step ‘horizontal-then-vertical averaging sweep’ calculation across all pixels to create a blur effect. 
+              <p><strong>blur</strong> - Performs a multi-loop, two-step ‘horizontal-then-vertical averaging sweep’ calculation across all pixels to create a blur effect.
 Note that this filter is expensive, thus much slower to complete compared to other filter effects. Where possible, memoize the results this filter produces.</p>
 
             </div>
@@ -3108,7 +3127,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 <span class="hljs-keyword">if</span> (h != <span class="hljs-literal">null</span>) {
 
                     <span class="hljs-keyword">const</span> l = h.<span class="hljs-property">length</span>;
-                    
+
                     <span class="hljs-keyword">let</span> valCounter = <span class="hljs-number">0</span>,
                         total = <span class="hljs-number">0</span>,
                         index, t;
@@ -3135,7 +3154,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 <span class="hljs-keyword">if</span> (h != <span class="hljs-literal">null</span>) {
 
                     <span class="hljs-keyword">const</span> l = h.<span class="hljs-property">length</span>;
-                    
+
                     <span class="hljs-keyword">let</span> valCounter = <span class="hljs-number">0</span>,
                         total = <span class="hljs-number">0</span>,
                         index, t, a, hVal;
@@ -3165,28 +3184,27 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>,
             pixelLen = <span class="hljs-title function_">_floor</span>(len / <span class="hljs-number">4</span>);
-        
-        <span class="hljs-keyword">let</span> counter, r, g, b, a, pass;
 
-        <span class="hljs-keyword">let</span> {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, step, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == radius) radius = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == passes) passes = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == processVertical) processVertical = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == processHorizontal) processHorizontal = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeAlpha) includeAlpha = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == excludeTransparentPixels) excludeTransparentPixels = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == step) step = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            radius = <span class="hljs-number">0</span>,
+            passes = <span class="hljs-number">1</span>,
+            processVertical = <span class="hljs-literal">true</span>,
+            processHorizontal = <span class="hljs-literal">true</span>,
+            includeRed = <span class="hljs-literal">true</span>,
+            includeGreen = <span class="hljs-literal">true</span>,
+            includeBlue = <span class="hljs-literal">true</span>,
+            includeAlpha = <span class="hljs-literal">false</span>,
+            excludeTransparentPixels = <span class="hljs-literal">false</span>,
+            step = <span class="hljs-number">1</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">let</span> horizontalBlurGrid, verticalBlurGrid;
 
         <span class="hljs-keyword">if</span> (processHorizontal || processVertical) {
 
-            <span class="hljs-keyword">let</span> grid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildImageGrid</span>(input);
+            <span class="hljs-keyword">const</span> grid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildImageGrid</span>(input);
 
             <span class="hljs-keyword">if</span> (processHorizontal)  horizontalBlurGrid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildHorizontalBlur</span>(grid, radius);
 
@@ -3198,6 +3216,8 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">const</span> hold = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint8ClampedArray</span>(iData);
 
         <span class="hljs-keyword">const</span> selectedMethod = (excludeTransparentPixels) ? getCheckedValue : getUncheckedValue;
+
+        <span class="hljs-keyword">let</span> counter, r, g, b, a, pass;
 
         <span class="hljs-keyword">for</span> (pass = <span class="hljs-number">0</span>; pass &lt; passes; pass++) {
 
@@ -3250,11 +3270,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>channels-to-alpha</strong> - Calculates an average value from each pixel’s included channels and applies that value to the alpha channel.</p>
 
@@ -3267,20 +3287,21 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>;
-        
-        <span class="hljs-keyword">let</span> r, g, b, a, vr, vg, vb, i, sum;
 
-        <span class="hljs-keyword">let</span> {opacity, includeRed, includeGreen, includeBlue, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            includeRed = <span class="hljs-literal">true</span>,
+            includeGreen = <span class="hljs-literal">true</span>,
+            includeBlue = <span class="hljs-literal">true</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">let</span> divisor = <span class="hljs-number">0</span>;
         <span class="hljs-keyword">if</span> (includeRed) divisor++;
         <span class="hljs-keyword">if</span> (includeGreen) divisor++;
         <span class="hljs-keyword">if</span> (includeBlue) divisor++;
+
+        <span class="hljs-keyword">let</span> r, g, b, a, vr, vg, vb, i, sum;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -3317,11 +3338,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><strong>chroma</strong> - Using an array of ‘range’ arrays, determine whether a pixel’s values lie entirely within a range’s values and, if true, sets that pixel’s alpha channel value to zero. Each ‘range’ array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.</p>
 
@@ -3334,13 +3355,14 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>;
-        
+
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            ranges = [],
+            lineOut,
+        } = requirements;
+
         <span class="hljs-keyword">let</span> r, g, b, a, vr, vg, vb, i, iz, j, flag;
-
-        <span class="hljs-keyword">let</span> {opacity, ranges, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == ranges) ranges = [];
 
         <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; len; j += <span class="hljs-number">4</span>) {
 
@@ -3357,7 +3379,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = ranges.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-                <span class="hljs-keyword">let</span> [minR, minG, minB, maxR, maxG, maxB] = ranges[i];
+                <span class="hljs-keyword">const</span> [minR, minG, minB, maxR, maxG, maxB] = ranges[i];
 
                 <span class="hljs-keyword">if</span> (vr &gt;= minR &amp;&amp; vr &lt;= maxR &amp;&amp; vg &gt;= minG &amp;&amp; vg &lt;= maxG &amp;&amp; vb &gt;= minB &amp;&amp; vb &lt;= maxB) {
                     flag = <span class="hljs-literal">true</span>;
@@ -3378,11 +3400,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>clamp-channels</strong> - Clamp each color channel to a range set by lowColor and highColor values</p>
 
@@ -3395,22 +3417,23 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>;
-        
-        <span class="hljs-keyword">let</span> r, g, b, a, vr, vg, vb, va, i;
 
-        <span class="hljs-keyword">let</span> {opacity, lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == lowRed) lowRed = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == lowGreen) lowGreen = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == lowBlue) lowBlue = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == highRed) highRed = <span class="hljs-number">255</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == highGreen) highGreen = <span class="hljs-number">255</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == highBlue) highBlue = <span class="hljs-number">255</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            lowRed = <span class="hljs-number">0</span>,
+            lowGreen = <span class="hljs-number">0</span>,
+            lowBlue = <span class="hljs-number">0</span>,
+            highRed = <span class="hljs-number">255</span>,
+            highGreen = <span class="hljs-number">255</span>,
+            highBlue = <span class="hljs-number">255</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">const</span> dR = highRed - lowRed,
             dG = highGreen - lowGreen,
             dB = highBlue - lowBlue;
+
+        <span class="hljs-keyword">let</span> r, g, b, a, vr, vg, vb, va, i;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -3449,11 +3472,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><strong>colors-to-alpha</strong> - Determine the alpha channel value for each pixel depending on the closeness to that pixel’s color channel values to a reference color supplied in the “red”, “green” and “blue” arguments. The sensitivity of the effect can be manipulated using the “transparentAt” and “opaqueAt” values, both of which lie in the range 0-1.</p>
 
@@ -3475,22 +3498,23 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>;
-        
-        <span class="hljs-keyword">let</span> r, g, b, a, vr, vg, vb, i;
 
-        <span class="hljs-keyword">let</span> {opacity, red, green, blue, opaqueAt, transparentAt, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == red) red = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == green) green = <span class="hljs-number">255</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == blue) blue = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opaqueAt) opaqueAt = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == transparentAt) transparentAt = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            red = <span class="hljs-number">0</span>,
+            green = <span class="hljs-number">255</span>,
+            blue = <span class="hljs-number">0</span>,
+            opaqueAt = <span class="hljs-number">1</span>,
+            transparentAt = <span class="hljs-number">0</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">const</span> maxDiff = <span class="hljs-title function_">_max</span>(((red + green + blue) / <span class="hljs-number">3</span>), (((<span class="hljs-number">255</span> - red) + (<span class="hljs-number">255</span> - green) + (<span class="hljs-number">255</span> - blue)) / <span class="hljs-number">3</span>)),
             transparent = transparentAt * maxDiff,
             opaque = opaqueAt * maxDiff,
             range = opaque - transparent;
+
+        <span class="hljs-keyword">let</span> r, g, b, a, vr, vg, vb, i;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -3519,11 +3543,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><strong>compose</strong> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the “compose” argument; permitted values are: ‘destination-only’, ‘destination-over’, ‘destination-in’, ‘destination-out’, ‘destination-atop’, ‘source-only’, ‘source-over’ (default), ‘source-in’, ‘source-out’, ‘source-atop’, ‘clear’, ‘xor’, or ‘lighter’. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the “offsetX” and “offsetY” arguments.</p>
 
@@ -3554,7 +3578,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                 my = y - offsetY;
 
             <span class="hljs-keyword">let</span> mp = -<span class="hljs-number">1</span>;
-            
+
             <span class="hljs-keyword">const</span> ip = ((iy * iWidth) + ix) * <span class="hljs-number">4</span>;
 
             <span class="hljs-keyword">if</span> (mx &gt;= <span class="hljs-number">0</span> &amp;&amp; mx &lt; mWidth &amp;&amp; my &gt;= <span class="hljs-number">0</span> &amp;&amp; my &lt; mHeight) mp = ((my * mWidth) + mx) * <span class="hljs-number">4</span>;
@@ -3568,21 +3592,22 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         <span class="hljs-keyword">const</span> {<span class="hljs-attr">data</span>:oData} = output;
         <span class="hljs-keyword">const</span> {<span class="hljs-attr">width</span>:mWidth, <span class="hljs-attr">height</span>:mHeight, <span class="hljs-attr">data</span>:mData} = mix;
 
-        <span class="hljs-keyword">let</span> {opacity, compose, offsetX, offsetY, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == compose) compose = <span class="hljs-variable constant_">ZERO_STR</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetX) offsetX = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetY) offsetY = <span class="hljs-number">0</span>;</pre></div></div>
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            compose = <span class="hljs-variable constant_">ZERO_STR</span>,
+            offsetX = <span class="hljs-number">0</span>,
+            offsetY = <span class="hljs-number">0</span>,
+            lineOut,
+        } = requirements;</pre></div></div>
             
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>Pixel calculations</p>
 
@@ -3888,11 +3913,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><strong>corrode</strong> - Performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The operation will set the pixel’s channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the “level” attribute. Channels can be selected by setting the “includeRed”, “includeGreen”, “includeBlue” (all false by default) and “includeAlpha” (default: true) flags.</p>
 
@@ -3904,8 +3929,9 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             <span class="hljs-keyword">let</span> max = <span class="hljs-number">0</span>,
                 min = <span class="hljs-number">255</span>,
-                matlen = matrix.<span class="hljs-property">length</span>,
                 v, c;
+
+            <span class="hljs-keyword">const</span> matlen = matrix.<span class="hljs-property">length</span>;
 
             <span class="hljs-keyword">for</span> (c = <span class="hljs-number">0</span>; c &lt; matlen; c++) {
 
@@ -3919,10 +3945,10 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
                 <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;lowest&#x27;</span> :
                     <span class="hljs-keyword">return</span> min;
-                
+
                 <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;highest&#x27;</span> :
                     <span class="hljs-keyword">return</span> max;
-                
+
                 <span class="hljs-keyword">default</span> :
                     <span class="hljs-keyword">return</span> <span class="hljs-title function_">_floor</span>(min + ((max - min) / <span class="hljs-number">2</span>));
             }
@@ -3934,23 +3960,36 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            includeRed = <span class="hljs-literal">false</span>,
+            includeGreen = <span class="hljs-literal">false</span>,
+            includeBlue = <span class="hljs-literal">false</span>,
+            includeAlpha = <span class="hljs-literal">true</span>,
+            operation = <span class="hljs-variable constant_">MEAN</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeAlpha) includeAlpha = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == width || width &lt; <span class="hljs-number">1</span>) width = <span class="hljs-number">3</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == height || height &lt; <span class="hljs-number">1</span>) height = <span class="hljs-number">3</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetX) offsetX = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetY) offsetY = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == operation) operation = <span class="hljs-variable constant_">MEAN</span>;
+        <span class="hljs-keyword">let</span> width = requirements.<span class="hljs-property">width</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(width) || width &lt; <span class="hljs-number">1</span>) width = <span class="hljs-number">3</span>;
+        width = <span class="hljs-title function_">_floor</span>(width);
+
+        <span class="hljs-keyword">let</span> height = requirements.<span class="hljs-property">height</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(height) || height &lt; <span class="hljs-number">1</span>) height = <span class="hljs-number">3</span>;
+        height = <span class="hljs-title function_">_floor</span>(height);
+
+        <span class="hljs-keyword">let</span> offsetX = requirements.<span class="hljs-property">offsetX</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(offsetX) || offsetX &lt; <span class="hljs-number">1</span>) offsetX = <span class="hljs-number">1</span>;
+        offsetX = <span class="hljs-title function_">_floor</span>(offsetX);
+
+        <span class="hljs-keyword">let</span> offsetY = requirements.<span class="hljs-property">offsetY</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(offsetY) || offsetY &lt; <span class="hljs-number">1</span>) offsetY = <span class="hljs-number">1</span>;
+        offsetY = <span class="hljs-title function_">_floor</span>(offsetY);
 
         <span class="hljs-keyword">const</span> grid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildMatrixGrid</span>(width, height, offsetX, offsetY, input);
 
         <span class="hljs-keyword">const</span> m = <span class="hljs-title function_">_floor</span>(len / <span class="hljs-number">4</span>);
-        
+
         <span class="hljs-keyword">let</span> r, g, b, a, i;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; m; i++) {
@@ -3973,11 +4012,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><strong>displace</strong> - Shift pixels around the image, based on the values supplied in a displacement image</p>
 
@@ -4008,35 +4047,37 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
         <span class="hljs-keyword">const</span> getLinePositions = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
-            <span class="hljs-keyword">let</span> ix = x,
+            <span class="hljs-keyword">const</span> ix = x,
                 iy = y,
                 mx = x + offsetX,
                 my = y + offsetY;
 
-            <span class="hljs-keyword">let</span> mPos = -<span class="hljs-number">1</span>,
-                iPos = ((iy * iWidth) + ix) * <span class="hljs-number">4</span>;
+            <span class="hljs-keyword">let</span> mPos = -<span class="hljs-number">1</span>;
+
+            <span class="hljs-keyword">const</span> iPos = ((iy * iWidth) + ix) * <span class="hljs-number">4</span>;
 
             <span class="hljs-keyword">if</span> (mx &gt;= <span class="hljs-number">0</span> &amp;&amp; mx &lt; mWidth &amp;&amp; my &gt;= <span class="hljs-number">0</span> &amp;&amp; my &lt; mHeight) mPos = ((my * mWidth) + mx) * <span class="hljs-number">4</span>;
 
             <span class="hljs-keyword">return</span> [iPos, mPos];
         };
 
-        <span class="hljs-keyword">let</span> [input, output, mix] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output, mix] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> {<span class="hljs-attr">width</span>:iWidth, <span class="hljs-attr">height</span>:iHeight, <span class="hljs-attr">data</span>:iData} = input;
-        <span class="hljs-keyword">let</span> {<span class="hljs-attr">data</span>:oData} = output;
-        <span class="hljs-keyword">let</span> {<span class="hljs-attr">width</span>:mWidth, <span class="hljs-attr">height</span>:mHeight, <span class="hljs-attr">data</span>:mData} = mix;
+        <span class="hljs-keyword">const</span> {<span class="hljs-attr">width</span>:iWidth, <span class="hljs-attr">height</span>:iHeight, <span class="hljs-attr">data</span>:iData} = input;
+        <span class="hljs-keyword">const</span> {<span class="hljs-attr">data</span>:oData} = output;
+        <span class="hljs-keyword">const</span> {<span class="hljs-attr">width</span>:mWidth, <span class="hljs-attr">height</span>:mHeight, <span class="hljs-attr">data</span>:mData} = mix;
 
-        <span class="hljs-keyword">let</span> {opacity, channelX, channelY, scaleX, scaleY, offsetX, offsetY, transparentEdges, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == channelX) channelX = <span class="hljs-variable constant_">RED</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == channelY) channelY = <span class="hljs-variable constant_">GREEN</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == scaleX) scaleX = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == scaleY) scaleY = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetX) offsetX = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetY) offsetY = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == transparentEdges) transparentEdges = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            channelX = <span class="hljs-variable constant_">RED</span>,
+            channelY = <span class="hljs-variable constant_">GREEN</span>,
+            scaleX = <span class="hljs-number">1</span>,
+            scaleY = <span class="hljs-number">1</span>,
+            offsetX = <span class="hljs-number">0</span>,
+            offsetY = <span class="hljs-number">0</span>,
+            transparentEdges = <span class="hljs-literal">false</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">let</span> offsetForChannelX = <span class="hljs-number">3</span>;
         <span class="hljs-keyword">if</span> (channelX == <span class="hljs-variable constant_">RED</span>) offsetForChannelX = <span class="hljs-number">0</span>;
@@ -4087,11 +4128,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><strong>emboss</strong> - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: “strength”, and “angle” - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action</p>
 
@@ -4110,34 +4151,29 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             <span class="hljs-keyword">return</span> val;
         }
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, strength, angle, tolerance, keepOnlyChangedAreas, postProcessResults, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            tolerance = <span class="hljs-number">0</span>,
+            keepOnlyChangedAreas = <span class="hljs-literal">false</span>,
+            postProcessResults = <span class="hljs-literal">false</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == strength) strength = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == angle) angle = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == tolerance) tolerance = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == keepOnlyChangedAreas) keepOnlyChangedAreas = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == postProcessResults) postProcessResults = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">const</span> strength = <span class="hljs-title function_">_abs</span>(requirements.<span class="hljs-property">strength</span> || <span class="hljs-number">1</span>);
 
-        strength = <span class="hljs-title function_">_abs</span>(strength);
+        <span class="hljs-keyword">const</span> angle = <span class="hljs-title function_">correctAngle</span>(requirements.<span class="hljs-property">angle</span> || <span class="hljs-number">0</span>);
 
-        <span class="hljs-keyword">while</span> (angle &lt; <span class="hljs-number">0</span>) {
-            angle += <span class="hljs-number">360</span>;
-        }
-
-        angle = angle % <span class="hljs-number">360</span>;
-
-        <span class="hljs-keyword">let</span> slices = <span class="hljs-title function_">_floor</span>(angle / <span class="hljs-number">45</span>),
+        <span class="hljs-keyword">const</span> slices = <span class="hljs-title function_">_floor</span>(angle / <span class="hljs-number">45</span>),
             remains = ((angle % <span class="hljs-number">45</span>) / <span class="hljs-number">45</span>) * strength,
             weights = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Array</span>(<span class="hljs-number">9</span>);
 
-        weights = weights.<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">9</span>); 
+        weights.<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">9</span>);
         weights[<span class="hljs-number">4</span>] = <span class="hljs-number">1</span>;
 
         <span class="hljs-keyword">if</span> (slices == <span class="hljs-number">0</span>) {
@@ -4216,12 +4252,12 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
                 <span class="hljs-keyword">if</span> (postProcessResults) {
 
-                    oR = oData[r],
-                    oG = oData[g],
+                    oR = oData[r];
+                    oG = oData[g];
                     oB = oData[b];
 
-                    <span class="hljs-keyword">if</span> (oR &gt;= iR - tolerance &amp;&amp; oR &lt;= iR + tolerance &amp;&amp; 
-                        oG &gt;= iG - tolerance &amp;&amp; oG &lt;= iG + tolerance &amp;&amp; 
+                    <span class="hljs-keyword">if</span> (oR &gt;= iR - tolerance &amp;&amp; oR &lt;= iR + tolerance &amp;&amp;
+                        oG &gt;= iG - tolerance &amp;&amp; oG &lt;= iG + tolerance &amp;&amp;
                         oB &gt;= iB - tolerance &amp;&amp; oB &lt;= iB + tolerance) {
 
                         <span class="hljs-keyword">if</span> (keepOnlyChangedAreas) oData[a] = <span class="hljs-number">0</span>;
@@ -4242,11 +4278,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><strong>flood</strong> - Set all pixels to the channel values supplied in the “red”, “green”, “blue” and “alpha” arguments</p>
 
@@ -4254,21 +4290,23 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">FLOOD</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            i, c, a;
+            len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, red, green, blue, alpha, excludeAlpha, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            red = <span class="hljs-number">0</span>,
+            green = <span class="hljs-number">0</span>,
+            blue = <span class="hljs-number">0</span>,
+            alpha = <span class="hljs-number">255</span>,
+            excludeAlpha = <span class="hljs-literal">false</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == red) red = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == green) green = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == blue) blue = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == alpha) alpha = <span class="hljs-number">255</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == excludeAlpha) excludeAlpha = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">let</span> i, c, a;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -4297,11 +4335,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><strong>gaussian-blur</strong> - from this GitHub repository: <a href="https://github.com/nodeca/glur/blob/master/index.js">https://github.com/nodeca/glur/blob/master/index.js</a> (code accessed 1 June 2021)</p>
 
@@ -4315,7 +4353,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             <span class="hljs-keyword">if</span> (sigma &lt; <span class="hljs-number">0.5</span>) sigma = <span class="hljs-number">0.5</span>;
 
-            <span class="hljs-keyword">let</span> a = <span class="hljs-title function_">_exp</span>(<span class="hljs-number">0.726</span> * <span class="hljs-number">0.726</span>) / sigma,
+            <span class="hljs-keyword">const</span> a = <span class="hljs-title function_">_exp</span>(<span class="hljs-number">0.726</span> * <span class="hljs-number">0.726</span>) / sigma,
                 g1 = <span class="hljs-title function_">_exp</span>(-a),
                 g2 = <span class="hljs-title function_">_exp</span>(-<span class="hljs-number">2</span> * a),
                 k = (<span class="hljs-number">1</span> - g1) * (<span class="hljs-number">1</span> - g1) / (<span class="hljs-number">1</span> + <span class="hljs-number">2</span> * a * g1 - g2);
@@ -4332,11 +4370,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p>Attempt to force type to FP32.</p>
 
@@ -4350,11 +4388,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>takes src image and writes the blurred and transposed result into out</p>
 
@@ -4381,11 +4419,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>left to right</p>
 
@@ -4456,11 +4494,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>right to left</p>
 
@@ -4533,17 +4571,18 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             }
         }
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>;
 
-        <span class="hljs-keyword">let</span> {width, height} = input;
+        <span class="hljs-keyword">const</span> {width, height} = input;
 
-        <span class="hljs-keyword">let</span> {opacity, radius, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == radius) radius = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            radius = <span class="hljs-number">1</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">const</span> hold = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint8ClampedArray</span>(iData);
 
@@ -4566,11 +4605,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><strong>glitch</strong> - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels</p>
 
@@ -4578,38 +4617,38 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">GLITCH</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>,
             iWidth = input.<span class="hljs-property">width</span>,
-            iHeight = input.<span class="hljs-property">height</span>,
-            i, j, affectedRow, shift, shiftR, shiftG, shiftB, shiftA,
-            r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, cursor, 
-            dr, dg, db, da, ur, ug, ub, ua;
+            iHeight = input.<span class="hljs-property">height</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, useMixedChannel, seed, level, step, offsetMin, offsetMax, offsetRedMin, offsetRedMax, offsetGreenMin, offsetGreenMax, offsetBlueMin, offsetBlueMax, offsetAlphaMin, offsetAlphaMax, transparentEdges, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            useMixedChannel = <span class="hljs-literal">true</span>,
+            seed = <span class="hljs-variable constant_">DEFAULT_SEED</span>,
+            level = <span class="hljs-number">0</span>,
+            offsetMin = <span class="hljs-number">0</span>,
+            offsetMax = <span class="hljs-number">0</span>,
+            offsetRedMin = <span class="hljs-number">0</span>,
+            offsetRedMax = <span class="hljs-number">0</span>,
+            offsetGreenMin = <span class="hljs-number">0</span>,
+            offsetGreenMax = <span class="hljs-number">0</span>,
+            offsetBlueMin = <span class="hljs-number">0</span>,
+            offsetBlueMax = <span class="hljs-number">0</span>,
+            offsetAlphaMin = <span class="hljs-number">0</span>,
+            offsetAlphaMax = <span class="hljs-number">0</span>,
+            transparentEdges = <span class="hljs-literal">false</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == useMixedChannel) useMixedChannel = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == seed) seed = <span class="hljs-variable constant_">DEFAULT_SEED</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == level) level = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == step) step = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetMin) offsetMin = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetMax) offsetMax = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetRedMin) offsetRedMin = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetRedMax) offsetRedMax = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetGreenMin) offsetGreenMin = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetGreenMax) offsetGreenMax = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetBlueMin) offsetBlueMin = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetBlueMax) offsetBlueMax = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetAlphaMin) offsetAlphaMin = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetAlphaMax) offsetAlphaMax = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == transparentEdges) transparentEdges = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">let</span> step = <span class="hljs-title function_">_floor</span>(requirements.<span class="hljs-property">step</span>);
+        <span class="hljs-keyword">if</span> (step &lt; <span class="hljs-number">1</span>) step = <span class="hljs-number">1</span>;
 
         <span class="hljs-keyword">const</span> rnd = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getRandomNumbers</span>({
-            seed, 
+            seed,
             <span class="hljs-attr">length</span>: iHeight * <span class="hljs-number">5</span>,
         });
 
@@ -4623,8 +4662,9 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
         <span class="hljs-keyword">const</span> rows = [];
 
-        step = <span class="hljs-title function_">_floor</span>(step);
-        <span class="hljs-keyword">if</span> (step &lt; <span class="hljs-number">1</span>) step = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">let</span> i, j, affectedRow, shift, shiftR, shiftG, shiftB, shiftA,
+            r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, cursor,
+            dr, dg, db, da, ur, ug, ub, ua;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; iHeight; i += step) {
 
@@ -4647,7 +4687,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                     shiftG = (offsetGreenMin + <span class="hljs-title function_">_floor</span>(rnd[++rndCursor] * greenRange)) * <span class="hljs-number">4</span>;
                     shiftB= (offsetBlueMin + <span class="hljs-title function_">_floor</span>(rnd[++rndCursor] * blueRange)) * <span class="hljs-number">4</span>;
                     shiftA= (offsetAlphaMin + <span class="hljs-title function_">_floor</span>(rnd[++rndCursor] * alphaRange)) * <span class="hljs-number">4</span>;
-                    
+
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; step; j++) {
 
                         rows.<span class="hljs-title function_">push</span>(shiftR, shiftG, shiftB, shiftA);
@@ -4705,11 +4745,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><strong>grayscale</strong> - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.</p>
 
@@ -4717,18 +4757,20 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">GRAYSCALE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            r, g, b, a, i, gray;
+            len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">const</span> gVal = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getGrayscaleValue</span>;
+
+        <span class="hljs-keyword">let</span> r, g, b, a, i, gray;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -4752,11 +4794,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><strong>invert-channels</strong> - For each pixel, subtracts its current channel values - when included - from 255.</p>
 
@@ -4764,20 +4806,22 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">INVERT_CHANNELS</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            r, g, b, a, i;
+            len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            includeRed = <span class="hljs-literal">true</span>,
+            includeGreen = <span class="hljs-literal">true</span>,
+            includeBlue = <span class="hljs-literal">true</span>,
+            includeAlpha = <span class="hljs-literal">false</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeAlpha) includeAlpha = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">let</span> r, g, b, a, i;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -4799,11 +4843,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><strong>lock-channels-to-levels</strong> - Produces a posterize effect. Takes in four arguments - “red”, “green”, “blue” and “alpha” - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel’s channel value and determines which of the corresponding Array’s Number values it is closest to; it then sets the channel value to that Number value.</p>
 
@@ -4817,27 +4861,29 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>, jz = levels.<span class="hljs-property">length</span>; j &lt; jz; j++) {
 
-                <span class="hljs-keyword">let</span> [start, end, level] = levels[j];
+                <span class="hljs-keyword">const</span> [start, end, level] = levels[j];
                 <span class="hljs-keyword">if</span> (val &gt;= start &amp;&amp; val &lt;= end) <span class="hljs-keyword">return</span> level;
             }
         };
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkChannelLevelsParameters</span>(requirements);
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            r, g, b, a, i;
+            len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, red, green, blue, alpha, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            red = [<span class="hljs-number">0</span>],
+            green = [<span class="hljs-number">0</span>],
+            blue = [<span class="hljs-number">0</span>],
+            alpha = [<span class="hljs-number">255</span>],
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == red) red = [<span class="hljs-number">0</span>];
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == green) green = [<span class="hljs-number">0</span>];
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == blue) blue = [<span class="hljs-number">0</span>];
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == alpha) alpha = [<span class="hljs-number">255</span>];
+        <span class="hljs-keyword">let</span> r, g, b, a, i;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -4859,11 +4905,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><strong>map-to-gradient</strong> - maps the colors in the supplied (complex) gradient to a grayscaled input.</p>
 
@@ -4871,22 +4917,24 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">MAP_TO_GRADIENT</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            i, avg, r, g, b, a, v;
+            len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, useNaturalGrayscale, gradient, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == useNaturalGrayscale) useNaturalGrayscale = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == gradient) gradient = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            useNaturalGrayscale = <span class="hljs-literal">false</span>,
+            gradient = <span class="hljs-literal">false</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">if</span> (gradient) {
 
-            <span class="hljs-keyword">let</span> rainbowData = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getGradientData</span>(gradient);
+            <span class="hljs-keyword">let</span> i, avg, r, g, b, a, v;
+
+            <span class="hljs-keyword">const</span> rainbowData = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getGradientData</span>(gradient);
 
             <span class="hljs-keyword">if</span> (rainbowData.<span class="hljs-property">length</span>) {
 
@@ -4927,11 +4975,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><strong>matrix</strong> - Performs a matrix operation on each pixel’s channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The weights to be applied need to be supplied in the “weights” argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The ‘edgeDetect’, ‘emboss’ and ‘sharpen’ convenience filter methods all use the matrix action, pre-setting the required weights.</p>
 
@@ -4956,32 +5004,42 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             <span class="hljs-keyword">return</span> val;
         };
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            r, g, b, a, i, pixels;
+            len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, weights, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            includeRed = <span class="hljs-literal">true</span>,
+            includeGreen = <span class="hljs-literal">true</span>,
+            includeBlue = <span class="hljs-literal">true</span>,
+            includeAlpha = <span class="hljs-literal">false</span>,
+            offsetX = <span class="hljs-number">1</span>,
+            offsetY = <span class="hljs-number">1</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeAlpha) includeAlpha = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == width || width &lt; <span class="hljs-number">1</span>) width = <span class="hljs-number">3</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == height || height &lt; <span class="hljs-number">1</span>) height = <span class="hljs-number">3</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetX) offsetX = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetY) offsetY = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == weights) {
+        <span class="hljs-keyword">let</span> width = requirements.<span class="hljs-property">width</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(width) || width &lt; <span class="hljs-number">1</span>) width = <span class="hljs-number">3</span>;
+        width = <span class="hljs-title function_">_floor</span>(width);
+
+        <span class="hljs-keyword">let</span> height = requirements.<span class="hljs-property">height</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(height) || height &lt; <span class="hljs-number">1</span>) height = <span class="hljs-number">3</span>;
+        height = <span class="hljs-title function_">_floor</span>(height);
+
+        <span class="hljs-keyword">let</span> weights = requirements.<span class="hljs-property">weights</span>;
+        <span class="hljs-keyword">if</span> (!weights || weights.<span class="hljs-property">length</span> != (width * height)) {
             weights = [].<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, (width * height) - <span class="hljs-number">1</span>);
             weights[<span class="hljs-title function_">_floor</span>(weights.<span class="hljs-property">length</span> / <span class="hljs-number">2</span>) + <span class="hljs-number">1</span>] = <span class="hljs-number">1</span>;
         }
 
-        <span class="hljs-keyword">let</span> grid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildMatrixGrid</span>(width, height, offsetX, offsetY, input);
+        <span class="hljs-keyword">const</span> grid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildMatrixGrid</span>(width, height, offsetX, offsetY, input);
 
-        pixels = <span class="hljs-title function_">_floor</span>(len / <span class="hljs-number">4</span>);
+        <span class="hljs-keyword">let</span> r, g, b, a, i;
+
+        <span class="hljs-keyword">const</span> pixels = <span class="hljs-title function_">_floor</span>(len / <span class="hljs-number">4</span>);
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; pixels; i++) {
 
@@ -5006,11 +5064,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><strong>modulate-channels</strong> - Multiplies each channel’s value by the supplied argument value. A channel-argument’s value of ‘0’ will set that channel’s value to zero; a value of ‘1’ will leave the channel value unchanged. If the “saturation” flag is set to ‘true’ the calculation changes to start at that pixel’s grayscale values. The ‘brightness’ and ‘saturation’ filters are special forms of the ‘channels’ filter which use a single “levels” argument to set all three color channel arguments to the same value.</p>
 
@@ -5018,21 +5076,23 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">MODULATE_CHANNELS</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            r, g, b, a, gray, vr, vg, vb, i;
+            len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, red, green, blue, alpha, saturation, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            red = <span class="hljs-number">1</span>,
+            green = <span class="hljs-number">1</span>,
+            blue = <span class="hljs-number">1</span>,
+            alpha = <span class="hljs-number">1</span>,
+            saturation = <span class="hljs-literal">false</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == red) red = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == green) green = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == blue) blue = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == alpha) alpha = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == saturation) saturation = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">let</span> r, g, b, a, gray, vr, vg, vb, i;
 
         <span class="hljs-keyword">if</span> (saturation) {
 
@@ -5080,11 +5140,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><strong>newsprint</strong> - TODO documentation</p>
 
@@ -5097,10 +5157,10 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             grays.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
             calcGrays.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
-            <span class="hljs-keyword">let</span> avg = <span class="hljs-number">0</span>, 
-                i, r, g, b, a, gray,
-                l = tile.<span class="hljs-property">length</span>,
-                pattern;
+            <span class="hljs-keyword">let</span> avg = <span class="hljs-number">0</span>,
+                i, r, g, b, a, gray;
+
+            <span class="hljs-keyword">const</span> l = tile.<span class="hljs-property">length</span>;
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; l; i++) {
 
@@ -5114,11 +5174,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             }
             avg /= l;
 
-            pattern = patterns[<span class="hljs-title function_">_floor</span>((avg / <span class="hljs-number">255</span>) * <span class="hljs-number">13</span>)];
+            <span class="hljs-keyword">const</span> pattern = patterns[<span class="hljs-title function_">_floor</span>((avg / <span class="hljs-number">255</span>) * <span class="hljs-number">13</span>)];
 
-            <span class="hljs-keyword">if</span> (width === <span class="hljs-number">1</span>) grays.<span class="hljs-title function_">push</span>(...pattern);
+            <span class="hljs-keyword">if</span> (width == <span class="hljs-number">1</span>) grays.<span class="hljs-title function_">push</span>(...pattern);
             <span class="hljs-keyword">else</span> {
-                
+
                 gray = pattern[<span class="hljs-number">0</span>];
                 <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; width; i++) {
                     calcGrays.<span class="hljs-title function_">push</span>(gray);
@@ -5160,16 +5220,17 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             }
         }
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, width, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == width) width = <span class="hljs-number">1</span>;
-
+        <span class="hljs-keyword">let</span> width = <span class="hljs-title function_">_floor</span>(requirements.<span class="hljs-property">width</span> || <span class="hljs-number">1</span>);
         <span class="hljs-keyword">if</span> (width &lt; <span class="hljs-number">1</span>) width = <span class="hljs-number">1</span>;
 
         <span class="hljs-keyword">const</span> tileDimensions = width * <span class="hljs-number">2</span>;
@@ -5190,11 +5251,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><strong>offset</strong> - Offset the input image in the output image.</p>
 
@@ -5202,22 +5263,23 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">OFFSET</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetRedX) offsetRedX = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetRedY) offsetRedY = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetGreenX) offsetGreenX = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetGreenY) offsetGreenY = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetBlueX) offsetBlueX = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetBlueY) offsetBlueY = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetAlphaX) offsetAlphaX = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetAlphaY) offsetAlphaY = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            offsetRedX = <span class="hljs-number">0</span>,
+            offsetRedY = <span class="hljs-number">0</span>,
+            offsetGreenX = <span class="hljs-number">0</span>,
+            offsetGreenY = <span class="hljs-number">0</span>,
+            offsetBlueX = <span class="hljs-number">0</span>,
+            offsetBlueY = <span class="hljs-number">0</span>,
+            offsetAlphaX = <span class="hljs-number">0</span>,
+            offsetAlphaY = <span class="hljs-number">0</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">if</span> (offsetRedX || offsetGreenX || offsetBlueX || offsetAlphaX || offsetRedY || offsetGreenY || offsetBlueY || offsetAlphaY) {
 
@@ -5225,10 +5287,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             <span class="hljs-keyword">if</span> (offsetRedX == offsetGreenX &amp;&amp; offsetRedX == offsetBlueX &amp;&amp; offsetRedX == offsetAlphaX &amp;&amp; offsetRedY == offsetGreenY &amp;&amp; offsetRedY == offsetBlueY &amp;&amp; offsetRedY == offsetAlphaY) simpleoffset = <span class="hljs-literal">true</span>;
 
-            <span class="hljs-keyword">let</span> grid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildImageGrid</span>(input),
+            <span class="hljs-keyword">const</span> grid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildImageGrid</span>(input),
                 gWidth = grid[<span class="hljs-number">0</span>].<span class="hljs-property">length</span>,
-                gHeight = grid.<span class="hljs-property">length</span>,
-                drx, dry, dgx, dgy, dbx, dby, dax, day, inCell, outCell;
+                gHeight = grid.<span class="hljs-property">length</span>;
+
+            <span class="hljs-keyword">let</span> drx, dry, dgx, dgy, dbx, dby, dax, day, inCell, outCell;
 
             <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> y = <span class="hljs-number">0</span>; y &lt; gHeight; y++) {
                 <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> x = <span class="hljs-number">0</span>; x &lt; gWidth; x++) {
@@ -5295,11 +5358,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><strong>pixelate</strong> - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the “tileWidth”, “tileHeight”, “offsetX” and “offsetY” arguments.</p>
 
@@ -5330,26 +5393,28 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             }
         };
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, tileWidth, tileHeight, offsetX, offsetY, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeAlpha) includeAlpha = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == tileWidth) tileWidth = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == tileHeight) tileHeight = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetX) offsetX = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetY) offsetY = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            tileWidth = <span class="hljs-number">1</span>,
+            tileHeight = <span class="hljs-number">1</span>,
+            offsetX = <span class="hljs-number">0</span>,
+            offsetY = <span class="hljs-number">0</span>,
+            includeRed = <span class="hljs-literal">true</span>,
+            includeGreen = <span class="hljs-literal">true</span>,
+            includeBlue = <span class="hljs-literal">true</span>,
+            includeAlpha = <span class="hljs-literal">false</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">const</span> tiles = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildImageTileSets</span>(tileWidth, tileHeight, offsetX, offsetY);
 
         tiles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
+
             <span class="hljs-keyword">if</span> (includeRed) <span class="hljs-title function_">doCalculations</span>(iData, oData, t, <span class="hljs-number">0</span>);
             <span class="hljs-keyword">else</span> <span class="hljs-title function_">setOutValueToInValue</span>(iData, oData, t, <span class="hljs-number">0</span>);
 
@@ -5361,7 +5426,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             <span class="hljs-keyword">if</span> (includeAlpha) <span class="hljs-title function_">doCalculations</span>(iData, oData, t, <span class="hljs-number">3</span>);
             <span class="hljs-keyword">else</span> <span class="hljs-title function_">setOutValueToInValue</span>(iData, oData, t, <span class="hljs-number">3</span>);
-        })
+        });
 
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
         <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
@@ -5370,16 +5435,16 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
-              <p><strong>process-image</strong> - Add an asset to the filter, which can then be used by other filters as either their <code>lineIn</code> or <code>lineMix</code> inputs. </p>
+              <p><strong>process-image</strong> - Add an asset to the filter, which can then be used by other filters as either their <code>lineIn</code> or <code>lineMix</code> inputs.</p>
 <ul>
 <li><code>asset</code> - the String name of the asset object. The asset must be pre-loaded before it can be included in the filter; where things go wrong, the system will attempt to load a 1x1 transparent pixel in place of the asset.</li>
-<li><code>width</code> and <code>height</code> - arguments are measured in integer Number pixels, or % strings (relative to the source entity/Group/Cell dimensions). </li>
+<li><code>width</code> and <code>height</code> - arguments are measured in integer Number pixels, or % strings (relative to the source entity/Group/Cell dimensions).</li>
 <li><code>copyX</code>, <code>copyY</code>, <code>copyWidth</code>, <code>copyHeight</code> - the start and dimensions of the area of the image to be used in the filter; values are integer Number pixels, or % strings relative to the image’s natural dimensions.</li>
 <li>If the image’s dimensions differ from the source entity/Group/Cell dimensions then, where a given dimension is smaller than source, that dimension will be centered; where the image dimension is larger then that dimension will be pinned to the top, or left.</li>
 <li>Filters will run faster when the asset’s dimensions match the dimensions of the entity/Group/Cell to which the filter is being applied.</li>
@@ -5400,14 +5465,15 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             <span class="hljs-keyword">if</span> (width &amp;&amp; height &amp;&amp; data) {
 
-                <span class="hljs-keyword">let</span> {<span class="hljs-attr">width</span>:sWidth, <span class="hljs-attr">height</span>:sHeight} = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">source</span>;
+                <span class="hljs-keyword">const</span> {<span class="hljs-attr">width</span>:sWidth, <span class="hljs-attr">height</span>:sHeight} = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">source</span>;
 
-                <span class="hljs-keyword">if</span> (sWidth !== width || sHeight !== height) {
+                <span class="hljs-keyword">if</span> (sWidth != width || sHeight != height) {
 
-                    <span class="hljs-keyword">let</span> temp = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImageData</span>(sWidth, sHeight),
-                        tempData = temp.<span class="hljs-property">data</span>,
-                        tx, ty, tempCursor, inputCursor,
-                        dx = (sWidth - width) / <span class="hljs-number">2</span>, 
+                    <span class="hljs-keyword">const</span> temp = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImageData</span>(sWidth, sHeight),
+                        tempData = temp.<span class="hljs-property">data</span>;
+
+                    <span class="hljs-keyword">let</span> tx, ty, tempCursor, inputCursor,
+                        dx = (sWidth - width) / <span class="hljs-number">2</span>,
                         dy = (sHeight - height) / <span class="hljs-number">2</span>;
 
                     <span class="hljs-keyword">if</span> (dx &lt; <span class="hljs-number">0</span>) dx = <span class="hljs-number">0</span>;
@@ -5446,11 +5512,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><strong>random-noise</strong> - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels</p>
 
@@ -5458,39 +5524,41 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">RANDOM_NOISE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>,
-            iWidth = input.<span class="hljs-property">width</span>,
-            r, g, b, a, i, dw, dh, source;
+            iWidth = input.<span class="hljs-property">width</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, width, height, level, seed, noiseType, noWrap, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == width) width = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == height) height = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == level) level = <span class="hljs-number">0.5</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == seed) seed = <span class="hljs-variable constant_">DEFAULT_SEED</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == noiseType) noiseType = <span class="hljs-variable constant_">RANDOM</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == noWrap) noWrap = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeAlpha) includeAlpha = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == excludeTransparentPixels) excludeTransparentPixels = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            width = <span class="hljs-number">1</span>,
+            height = <span class="hljs-number">1</span>,
+            level = <span class="hljs-number">0.5</span>,
+            seed = <span class="hljs-variable constant_">DEFAULT_SEED</span>,
+            noiseType = <span class="hljs-variable constant_">RANDOM</span>,
+            noWrap = <span class="hljs-literal">false</span>,
+            includeRed = <span class="hljs-literal">true</span>,
+            includeGreen = <span class="hljs-literal">true</span>,
+            includeBlue = <span class="hljs-literal">true</span>,
+            includeAlpha = <span class="hljs-literal">true</span>,
+            excludeTransparentPixels = <span class="hljs-literal">true</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">const</span> rnd = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getRandomNumbers</span>({
-            seed, 
+            seed,
             <span class="hljs-attr">length</span>: <span class="hljs-title function_">_ceil</span>((len / <span class="hljs-number">4</span>) * <span class="hljs-number">3</span>),
             <span class="hljs-attr">imgWidth</span>: iWidth,
             <span class="hljs-attr">type</span>: noiseType,
         });
+
         <span class="hljs-keyword">let</span> rndCursor = -<span class="hljs-number">1</span>,
             rndLevel,
             rndWidth,
-            rndHeight;
+            rndHeight,
+            r, g, b, a, i, dw, dh, source;
 
         <span class="hljs-keyword">const</span> halfWidth = width / <span class="hljs-number">2</span>,
             halfHeight = height / <span class="hljs-number">2</span>;
@@ -5503,7 +5571,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             a = b + <span class="hljs-number">1</span>;
 
             <span class="hljs-keyword">if</span> (noiseType == <span class="hljs-variable constant_">RANDOM</span>) {
-                
+
                 rndLevel = rnd[++rndCursor];
                 rndWidth = rnd[++rndCursor];
                 rndHeight = rnd[++rndCursor];
@@ -5569,11 +5637,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><strong>reducePalette</strong> - Reduce the number of colors in its palette. The <code>palette</code> attribute can be: a Number (for the commonest colors);  an Array of CSS color Strings to use as the palette; or  the String name of a pre-defined palette - default: ‘black-white’</p>
 
@@ -5584,11 +5652,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p>Check to see if external objects have been set up by a previous run</p>
 <ul>
@@ -5604,11 +5672,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p>Check to see if colorSpaceIndices have been created; if not, create them.</p>
 
@@ -5619,11 +5687,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p>Localize some handles to required functions/objects</p>
 
@@ -5636,11 +5704,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p>Internal function - create and memoize a palette</p>
 
@@ -5688,11 +5756,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p>Setup predefined palettes if not done so by a previous run</p>
 
@@ -5709,11 +5777,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-81">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p>Perform test to discover pixel’s closest palette gray, after dithering</p>
 
@@ -5748,7 +5816,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             <span class="hljs-keyword">const</span> [candidate1, distance1] = distance[<span class="hljs-number">1</span>];
             <span class="hljs-keyword">const</span> totalscore = distance0 + distance1;
             <span class="hljs-keyword">const</span> propensity0 = totalscore - distance0;
-                
+
             <span class="hljs-keyword">const</span> test = rnd[rndCursor] * totalscore;
 
             <span class="hljs-keyword">if</span> (test &lt; propensity0) <span class="hljs-keyword">return</span> candidate0;
@@ -5758,11 +5826,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-82">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p>Winnow all colors to recover the commonest, taking into account the minimum color distance between them</p>
 
@@ -5773,7 +5841,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             <span class="hljs-keyword">const</span> candidates = [],
                 final = [];
 
-            <span class="hljs-keyword">let</span> f, fz, fIndex, fr, fg, fb, 
+            <span class="hljs-keyword">let</span> f, fz, fIndex, fr, fg, fb,
                 k, kz, kIndex, kr, kg, kb,
                 dr, dg, db, dFlag;
 
@@ -5786,7 +5854,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             <span class="hljs-keyword">for</span> (k = <span class="hljs-number">0</span>, kz = candidates.<span class="hljs-property">length</span>; k &lt; kz; k++) {
 
-                <span class="hljs-keyword">let</span> candidate = candidates[k];
+                <span class="hljs-keyword">const</span> candidate = candidates[k];
 
                 <span class="hljs-keyword">if</span> (!k) final.<span class="hljs-title function_">push</span>(candidate[<span class="hljs-number">0</span>]);
                 <span class="hljs-keyword">else</span> {
@@ -5869,11 +5937,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
         </li>
         
         
-        <li id="section-83">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p>Perform test to discover pixel’s closest palette color, after dithering</p>
 
@@ -5883,11 +5951,10 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             <span class="hljs-keyword">const</span> pl = pal.<span class="hljs-property">length</span>;
 
-            <span class="hljs-keyword">let</span> palIndex, counter, 
-                palL, palA, palB, 
-                pixL, pixA, pixB, 
+            <span class="hljs-keyword">let</span> palIndex, counter,
+                pixL, pixA, pixB,
                 diff, dL, dA, dB,
-                j, totalScore, propensity;
+                j;
 
             <span class="hljs-keyword">if</span> (!pl) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 
@@ -5895,11 +5962,11 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             counter = pixel * <span class="hljs-number">3</span>;
 
-            palL = labIndices[counter];
+            <span class="hljs-keyword">const</span> palL = labIndices[counter];
             counter++;
-            palA = labIndices[counter];
+            <span class="hljs-keyword">const</span> palA = labIndices[counter];
             counter++;
-            palB = labIndices[counter];
+            <span class="hljs-keyword">const</span> palB = labIndices[counter];
 
             <span class="hljs-keyword">const</span> distArray = [];
 
@@ -5931,50 +5998,14 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
             <span class="hljs-keyword">let</span> test = rnd[rndCursor];
 
-            totalScore = distance0 + distance1;
-            propensity = totalScore - distance0;
-            
+            <span class="hljs-keyword">const</span> totalScore = distance0 + distance1,
+                propensity = totalScore - distance0;
+
             test *= totalScore;
 
             <span class="hljs-keyword">if</span> (test &lt; propensity) <span class="hljs-keyword">return</span> candidate0;
             <span class="hljs-keyword">return</span> candidate1;
         };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-84">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-84">&#x00a7;</a>
-              </div>
-              <p>Filter generics (as used by all filters)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
-
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
-            iWidth = input.<span class="hljs-property">width</span>,
-            iHeight = input.<span class="hljs-property">height</span>,
-            oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            quarterLen = len / <span class="hljs-number">4</span>,
-            i, index,
-            r, g, b, a, red, green, blue, alpha, gray, 
-            rndCursor, indicesCursor, dataCursor,
-            selectedPalette;
-
-        <span class="hljs-keyword">let</span> {opacity, palette, seed, noiseType, useBluenoise, minimumColorDistance, useLabForPaletteDistance, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == seed) seed = <span class="hljs-variable constant_">DEFAULT_SEED</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == noiseType) noiseType = <span class="hljs-variable constant_">RANDOM</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == useBluenoise) useBluenoise = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == useLabForPaletteDistance) useLabForPaletteDistance = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == palette) palette = <span class="hljs-variable constant_">BLACK_WHITE</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == minimumColorDistance) minimumColorDistance = <span class="hljs-number">1000</span>;</pre></div></div>
             
         </li>
         
@@ -5985,14 +6016,35 @@ Note that this filter is expensive, thus much slower to complete compared to oth
               <div class="sswrap ">
                 <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
-              <p><code>useBluenoise</code> is deprecated</p>
-<ul>
-<li>use <code>noiseType: &#39;bluenoise&#39;</code> instead</li>
-</ul>
+              <p>Filter generics (as used by all filters)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (useBluenoise) noiseType = <span class="hljs-variable constant_">BLUENOISE</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
+            iWidth = input.<span class="hljs-property">width</span>,
+            iHeight = input.<span class="hljs-property">height</span>,
+            oData = output.<span class="hljs-property">data</span>,
+            len = iData.<span class="hljs-property">length</span>,
+            quarterLen = len / <span class="hljs-number">4</span>;
+
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            palette = <span class="hljs-variable constant_">BLACK_WHITE</span>,
+            seed = <span class="hljs-variable constant_">DEFAULT_SEED</span>,
+            useBluenoise = <span class="hljs-literal">false</span>,
+            minimumColorDistance = <span class="hljs-number">1000</span>,
+            useLabForPaletteDistance = <span class="hljs-literal">false</span>,
+            lineOut,
+        } = requirements;
+
+        <span class="hljs-keyword">const</span> noiseType = (useBluenoise) ? <span class="hljs-variable constant_">BLUENOISE</span> : requirements.<span class="hljs-property">noiseType</span> || <span class="hljs-variable constant_">RANDOM</span>;
+
+        <span class="hljs-keyword">let</span> i, index,
+            r, g, b, a, red, green, blue, alpha, gray,
+            rndCursor, indicesCursor, dataCursor,
+            selectedPalette;</pre></div></div>
             
         </li>
         
@@ -6244,21 +6296,23 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">SET_CHANNEL_TO_LEVEL</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            r, g, b, a, i;
+            len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, includeRed, includeGreen, includeBlue, includeAlpha, level, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            includeRed = <span class="hljs-literal">false</span>,
+            includeGreen = <span class="hljs-literal">false</span>,
+            includeBlue = <span class="hljs-literal">false</span>,
+            includeAlpha = <span class="hljs-literal">false</span>,
+            level = <span class="hljs-number">0</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeAlpha) includeAlpha = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == level) level = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">let</span> r, g, b, a, i;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -6298,20 +6352,22 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">STEP_CHANNELS</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            r, g, b, a, i;
+            len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, red, green, blue, clamp, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            red = <span class="hljs-number">1</span>,
+            green = <span class="hljs-number">1</span>,
+            blue = <span class="hljs-number">1</span>,
+            clamp = <span class="hljs-variable constant_">DOWN</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == red) red = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == green) green = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == blue) blue = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == clamp) clamp = <span class="hljs-variable constant_">DOWN</span>;
+        <span class="hljs-keyword">let</span> r, g, b, a, i;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -6370,26 +6426,27 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             <span class="hljs-keyword">return</span> (val.<span class="hljs-property">substring</span>) ? <span class="hljs-title function_">_floor</span>((<span class="hljs-built_in">parseFloat</span>(val) / <span class="hljs-number">100</span>) * dim) : val;
         };
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>,
             iWidth = input.<span class="hljs-property">width</span>,
-            iHeight = input.<span class="hljs-property">height</span>,
-            r, g, b, a, s, sz, pos, x, y, xz, yz, i, j, 
-            distance, dr, dg, db, da, dx, dy, dLen;
+            iHeight = input.<span class="hljs-property">height</span>;
 
-        <span class="hljs-keyword">let</span> tempInput = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImageData</span>(iWidth, iHeight),
+        <span class="hljs-keyword">const</span> tempInput = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImageData</span>(iWidth, iHeight),
             tData = tempInput.<span class="hljs-property">data</span>,
             tWidth = tempInput.<span class="hljs-property">width</span>,
             tHeight = tempInput.<span class="hljs-property">height</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, swirls, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            swirls = [],
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == swirls) swirls = [];
-
+        <span class="hljs-keyword">let</span> r, g, b, a, s, sz, pos, x, y, xz, yz, i, j,
+            distance, dr, dg, db, da, dx, dy, dLen;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -6411,7 +6468,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
         <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(swirls) &amp;&amp; swirls.<span class="hljs-property">length</span>) {
 
-            <span class="hljs-keyword">let</span> grid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildImageGrid</span>(input);
+            <span class="hljs-keyword">const</span> grid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildImageGrid</span>(input);
 
             <span class="hljs-keyword">for</span> (s = <span class="hljs-number">0</span>, sz = swirls.<span class="hljs-property">length</span>; s &lt; sz; s++) {
 
@@ -6425,7 +6482,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
 
                 <span class="hljs-keyword">if</span> (inner &gt; outer) {
 
-                    <span class="hljs-keyword">let</span> temp = inner;
+                    <span class="hljs-keyword">const</span> temp = inner;
                     inner = outer;
                     outer = temp;
                 }
@@ -6465,7 +6522,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                         <span class="hljs-keyword">for</span> (i = y; i &lt; yz; i++) {
 
                             <span class="hljs-keyword">for</span> (j = x; j &lt; xz; j++) {
-                                
+
                                 pos = [j, i];
 
                                 r = grid[i][j] * <span class="hljs-number">4</span>;
@@ -6518,7 +6575,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                     <span class="hljs-keyword">for</span> (i = y; i &lt; yz; i++) {
 
                         <span class="hljs-keyword">for</span> (j = x; j &lt; xz; j++) {
-                            
+
                             r = grid[i][j] * <span class="hljs-number">4</span>;
                             g = r + <span class="hljs-number">1</span>;
                             b = g + <span class="hljs-number">1</span>;
@@ -6537,9 +6594,9 @@ Note that this filter is expensive, thus much slower to complete compared to oth
                     }
 
                     <span class="hljs-keyword">for</span> (i = y; i &lt; yz; i++) {
-                        
+
                         <span class="hljs-keyword">for</span> (j = x; j &lt; xz; j++) {
-                            
+
                             r = grid[i][j] * <span class="hljs-number">4</span>;
                             g = r + <span class="hljs-number">1</span>;
                             b = g + <span class="hljs-number">1</span>;
@@ -6569,7 +6626,7 @@ Note that this filter is expensive, thus much slower to complete compared to oth
               </div>
               <p><strong>threshold</strong> - performs a binary check on each pixel and, according to the result, assigns the pixel to a defined high or low color</p>
 <ul>
-<li>By default this filter will grayscale the input then, for each pixel, check the color channel values against a <code>level</code> argument: pixels with grayscale values above the level value are assigned to the <code>high</code> color; otherwise they are updated to the <code>low</code> color. The “high” and “low” arguments are <code>[red, green, blue, alpha]</code> integer Number Arrays. </li>
+<li>By default this filter will grayscale the input then, for each pixel, check the color channel values against a <code>level</code> argument: pixels with grayscale values above the level value are assigned to the <code>high</code> color; otherwise they are updated to the <code>low</code> color. The “high” and “low” arguments are <code>[red, green, blue, alpha]</code> integer Number Arrays.</li>
 <li>The convenience function will accept the pseudo-attributes <code>highRed</code>, <code>lowRed</code> etc in place of the “high” and “low” Arrays.</li>
 <li>When the <code>useMixedChannel</code> flag is set to <code>false</code> then the filter will perform the threshold check on each channel in turn; the threshold levels for these per-channel checks are set in the <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> arguments</li>
 <li>Channels can be excluded from the filter action by setting the <code>includeRed</code> etc flags to false</li>
@@ -6579,33 +6636,35 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">THRESHOLD</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            r, g, b, a, i, pr, pg, pb, pa, gray;
+            len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, low, high, level, red, green, blue, alpha, includeRed, includeGreen, includeBlue, includeAlpha, useMixedChannel, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            low = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+            high = [<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>],
+            level = <span class="hljs-number">128</span>,
+            red = <span class="hljs-number">128</span>,
+            green = <span class="hljs-number">128</span>,
+            blue = <span class="hljs-number">128</span>,
+            alpha = <span class="hljs-number">128</span>,
+            includeRed = <span class="hljs-literal">true</span>,
+            includeGreen = <span class="hljs-literal">true</span>,
+            includeBlue = <span class="hljs-literal">true</span>,
+            includeAlpha = <span class="hljs-literal">false</span>,
+            useMixedChannel = <span class="hljs-literal">true</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == low) low = [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>];
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == high) high = [<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">255</span>];
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == level) level = <span class="hljs-number">128</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == red) red = <span class="hljs-number">128</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == green) green = <span class="hljs-number">128</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == blue) blue = <span class="hljs-number">128</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == alpha) alpha = <span class="hljs-number">128</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeAlpha) includeAlpha = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == useMixedChannel) useMixedChannel = <span class="hljs-literal">true</span>;
-
-        <span class="hljs-keyword">let</span> [lowR, lowG, lowB, lowA] = low;
-        <span class="hljs-keyword">let</span> [highR, highG, highB, highA] = high;
+        <span class="hljs-keyword">const</span> [lowR, lowG, lowB, lowA] = low;
+        <span class="hljs-keyword">const</span> [highR, highG, highB, highA] = high;
 
         <span class="hljs-keyword">const</span> gVal = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getGrayscaleValue</span>;
+
+        <span class="hljs-keyword">let</span> r, g, b, a, i, pr, pg, pb, pa, gray;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -6711,27 +6770,28 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             }
         };
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, points, seed, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeAlpha) includeAlpha = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == tileWidth) tileWidth = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == tileHeight) tileHeight = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == tileRadius) tileRadius = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetX) offsetX = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetY) offsetY = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == angle) angle = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == points) points = <span class="hljs-variable constant_">RECT_GRID</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == seed) seed = <span class="hljs-variable constant_">DEFAULT_SEED</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            tileWidth = <span class="hljs-number">1</span>,
+            tileHeight = <span class="hljs-number">1</span>,
+            tileRadius = <span class="hljs-number">1</span>,
+            offsetX = <span class="hljs-number">0</span>,
+            offsetY = <span class="hljs-number">0</span>,
+            angle = <span class="hljs-number">0</span>,
+            points = <span class="hljs-variable constant_">RECT_GRID</span>,
+            seed = <span class="hljs-variable constant_">DEFAULT_SEED</span>,
+            includeRed = <span class="hljs-literal">true</span>,
+            includeGreen = <span class="hljs-literal">true</span>,
+            includeBlue = <span class="hljs-literal">true</span>,
+            includeAlpha = <span class="hljs-literal">false</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-keyword">const</span> tiles = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildGeneralTileSets</span>(points, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, seed);
 
@@ -6773,25 +6833,27 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">TINT_CHANNELS</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            r, g, b, a, i, vr, vg, vb;
+            len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            redInRed = <span class="hljs-number">1</span>,
+            redInGreen = <span class="hljs-number">0</span>,
+            redInBlue = <span class="hljs-number">0</span>,
+            greenInRed = <span class="hljs-number">0</span>,
+            greenInGreen = <span class="hljs-number">1</span>,
+            greenInBlue = <span class="hljs-number">0</span>,
+            blueInRed = <span class="hljs-number">0</span>,
+            blueInGreen = <span class="hljs-number">0</span>,
+            blueInBlue = <span class="hljs-number">1</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == redInRed) redInRed = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == redInGreen) redInGreen = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == redInBlue) redInBlue = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == greenInRed) greenInRed = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == greenInGreen) greenInGreen = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == greenInBlue) greenInBlue = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == blueInRed) blueInRed = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == blueInGreen) blueInGreen = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == blueInBlue) blueInBlue = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">let</span> r, g, b, a, i, vr, vg, vb;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -6830,11 +6892,12 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             <div class="content"><div class='highlight'><pre>
     [<span class="hljs-variable constant_">USER_DEFINED_LEGACY</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputChannels</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputChannels</span>(requirements);
 
-        <span class="hljs-keyword">let</span> {opacity, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            lineOut,
+        } = requirements;
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">transferDataUnchanged</span>(input, output);
 
@@ -6863,26 +6926,28 @@ Note that this filter is expensive, thus much slower to complete compared to oth
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">VARY_CHANNELS_BY_WEIGHTS</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+        <span class="hljs-keyword">const</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
 
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+        <span class="hljs-keyword">const</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
-            len = iData.<span class="hljs-property">length</span>,
-            i, r, g, b, a, red, green, blue, alpha, gray, all, allR, allG, allB;
+            len = iData.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">let</span> {opacity, weights, useMixedChannel, lineOut} = requirements;
+        <span class="hljs-keyword">const</span> {
+            opacity = <span class="hljs-number">1</span>,
+            weights = [],
+            useMixedChannel = <span class="hljs-literal">true</span>,
+            lineOut,
+        } = requirements;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == useMixedChannel) useMixedChannel = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == weights) weights = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span> (weights.<span class="hljs-property">length</span> != <span class="hljs-number">1024</span>) {
 
-        <span class="hljs-keyword">if</span> (!weights || weights.<span class="hljs-property">length</span> !== <span class="hljs-number">1024</span>) {
-
-            weights = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Array</span>(<span class="hljs-number">1024</span>);
+            weights.<span class="hljs-property">length</span> = <span class="hljs-number">1024</span>;
             weights.<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>);
         }
 
         <span class="hljs-keyword">const</span> gVal = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getGrayscaleValue</span>;
+
+        <span class="hljs-keyword">let</span> i, r, g, b, a, red, green, blue, alpha, gray, all, allR, allG, allB;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 

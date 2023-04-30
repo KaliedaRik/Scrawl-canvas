@@ -919,7 +919,7 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
 
     <span class="hljs-keyword">let</span> r0 = <span class="hljs-title function_">_atan2</span>(y, x);
     r0 += (angle * <span class="hljs-number">0.01745329251</span>);
-    
+
     <span class="hljs-keyword">const</span> r1 = <span class="hljs-title function_">_hypot</span>(x, y);
 
     <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] = r1 * <span class="hljs-title function_">_cos</span>(r0);
@@ -981,9 +981,9 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">normalize</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
-    
+
     <span class="hljs-keyword">const</span> val = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMagnitude</span>();
-    
+
     <span class="hljs-keyword">if</span> (val &gt; <span class="hljs-number">0</span>) {
         <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] /= val;
         <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] /= val;

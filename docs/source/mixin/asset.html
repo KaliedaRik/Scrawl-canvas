@@ -571,10 +571,10 @@
 <li><code>scrawl.createImageFromEntity</code></li>
 </ul>
 <p>Assets will also be created when Picture entitys or Pattern styles are defined using a ‘scrawl.make’ function (<code>makePicture</code>, <code>makePattern</code>), or updated with the <code>set</code> function, where the <em>imageSource</em>, <em>videoSource</em> or <em>spriteSource</em> key in the argument object has been set to a valid URL path string.</p>
-<p>Be aware that <strong>loading assets takes time!</strong> </p>
+<p>Be aware that <strong>loading assets takes time!</strong></p>
 <ul>
-<li>Performing a single render operation immediately after defining or updating a Picture entity or Pattern style will almost certainly fail to render the expected image/sprite/video in the canvas. </li>
-<li>The load functionality is asynchronous (using Promises). </li>
+<li>Performing a single render operation immediately after defining or updating a Picture entity or Pattern style will almost certainly fail to render the expected image/sprite/video in the canvas.</li>
+<li>The load functionality is asynchronous (using Promises).</li>
 <li>To display the resulting images in the canvas, it needs to be running an animation object (for instance, <strong>scrawl.makeRender</strong>) so that updates appear as soon as they have loaded, as part of the animation’s Display cycle functionality.</li>
 </ul>
 
@@ -654,10 +654,10 @@
               </div>
               <p><strong>source</strong> - A handle to the DOM element supplying the image - either an &lt;img&gt;, &lt;video&gt; or &lt;canvas&gt; element.</p>
 <ul>
-<li>Note that the <em><strong>Web Canvas API does not support</strong></em> using the &lt;picture&gt; element as a legitimate image source. </li>
+<li>Note that the <em><strong>Web Canvas API does not support</strong></em> using the &lt;picture&gt; element as a legitimate image source.</li>
 <li>However most browsers allow the &lt;img&gt; element to use <strong>srcset</strong> and <strong>sizes</strong> attributes, which will give them the same type of functionality as picture elements - for example to determine the most appropriately sized image file for the browser/device’s viewport dimensions.</li>
 <li>Asset wrappers will detect, and handle actions required, if/when a browser decides to download a new image file, to update the &lt;img&gt; element with a more detailed image, for instance when the browser viewport changes its dimensions, or a device is rotated from portrait to landscape viewing.</li>
-<li>The web Canvas API claims that <strong>SVG</strong> images can be used as legitimate image sources for the canvas element. To make this happen, the SVG file needs to be set as the src attribute of an &lt;img&gt; element, and the resulting image will be entirely static, and rasterized! </li>
+<li>The web Canvas API claims that <strong>SVG</strong> images can be used as legitimate image sources for the canvas element. To make this happen, the SVG file needs to be set as the src attribute of an &lt;img&gt; element, and the resulting image will be entirely static, and rasterized!</li>
 <li>For this reason, we don’t recommend trying to use SVG files for canvas image sources; instead, the SVG can be included in a Scrawl-canvas display by adding it - as an &lt;svg&gt; element - to a Scrawl-canvas stack (see Demo DOM-003 for an example of this approach).</li>
 <li>&lt;img&gt; elements using an animated GIF as their src are not supported.</li>
 <li><em><strong>Be aware that this attribute cannot be directly or indirectly set.</strong></em> Scrawl-canvas will update it as part of its asset loading and wrapper creation functionality.</li>
@@ -676,7 +676,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p><strong>subscribers</strong> - An Array containing the Picture entity and Pattern style Objects, who wish to use the asset as their source. </p>
+              <p><strong>subscribers</strong> - An Array containing the Picture entity and Pattern style Objects, who wish to use the asset as their source.</p>
 <ul>
 <li>Pictures and Patterns may subscribe to a maximum of ONE asset at any given time, though they may set/update that asset subscription to a different asset whenever required (which involves unsubscribing their existing asset).</li>
 <li><em><strong>Note that the contents of this Array cannot be directly or indirectly set.</strong></em> Picture entitys and Pattern styles will subscribe and unsubscribe to an asset as part of their source acquisition functionality (via the asset wrapper’s <strong>subscribe</strong> and <strong>unsubscribe</strong> functions).</li>

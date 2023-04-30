@@ -545,9 +545,9 @@
 <ul>
 <li>Every Loom object requires two (or one) path-enabled <a href="./shape.html">Shape</a> entitys to act as its left and right tracks.</li>
 <li>A Loom entity also requires a <a href="./picture.html">Picture</a> entity to act as its image source.</li>
-<li>Looms can use CSS color Strings for their strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
-<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>Looms can use CSS color Strings for their strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects.</li>
+<li>They can use <strong>Anchor</strong> objects for user navigation.</li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
 <li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Looms can be cloned, and killed.</li>
 </ul>
@@ -735,7 +735,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p><strong>fromPathStart</strong>, <strong>fromPathEnd</strong> and <strong>toPathStart</strong>, <strong>toPathEnd</strong> - float Numbers generally between <code>0.0 - 1.0</code> - The Loom entity can set the start and end cursors on each of its path struts, between which the image will be drawn. </p>
+              <p><strong>fromPathStart</strong>, <strong>fromPathEnd</strong> and <strong>toPathStart</strong>, <strong>toPathEnd</strong> - float Numbers generally between <code>0.0 - 1.0</code> - The Loom entity can set the start and end cursors on each of its path struts, between which the image will be drawn.</p>
 <ul>
 <li>These can be animated to allow the image to <em>flow</em> between one part of the display and another, changing its shape as it moves.</li>
 </ul>
@@ -757,7 +757,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p><strong>synchronizePathCursors</strong> - Boolean flag - To make sure the <code>from...</code> and <code>to...</code> strut start points, and end points, have the same value set the attribute to <code>true</code> (default). </p>
+              <p><strong>synchronizePathCursors</strong> - Boolean flag - To make sure the <code>from...</code> and <code>to...</code> strut start points, and end points, have the same value set the attribute to <code>true</code> (default).</p>
 <ul>
 <li>Setting it to <code>false</code> allows the cursors to be set independently on each strut … which in turn may lead to unexpected display consequences.</li>
 </ul>
@@ -775,7 +775,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p> <strong>loopPathCursors</strong> - Boolean flag - For animation purposes, the image will move between the struts with the bottom of the page appearing again at the top of the Loom as it moves down (and vice versa). </p>
+              <p> <strong>loopPathCursors</strong> - Boolean flag - For animation purposes, the image will move between the struts with the bottom of the page appearing again at the top of the Loom as it moves down (and vice versa).</p>
 <ul>
 <li>To change this functionality - so that the image slowly disappears as it animates up and down past the ends of the struts, set the attribute to <code>false</code>.</li>
 </ul>
@@ -794,7 +794,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p><strong>isHorizontalCopy</strong> - Boolean flag - Copying the source image to the output happens, by default, by rows - which effectively means the struts are on the left-hand and right-hand edges of the image. </p>
+              <p><strong>isHorizontalCopy</strong> - Boolean flag - Copying the source image to the output happens, by default, by rows - which effectively means the struts are on the left-hand and right-hand edges of the image.</p>
 <ul>
 <li>To change this to columns (which sets the struts to the top and bottom edges of the image) set the attribute to <code>false</code></li>
 </ul>
@@ -847,9 +847,9 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p><strong>sourceIsVideoOrSprite</strong> - Boolean flag - If the Picture entity is hosting a video or sprite asset, we need to update the input on every frame. </p>
+              <p><strong>sourceIsVideoOrSprite</strong> - Boolean flag - If the Picture entity is hosting a video or sprite asset, we need to update the input on every frame.</p>
 <ul>
-<li>It’s easier to tell the Loom entity to do this using a flag, rather than get the Picture entity to update all its Loom subscribers on every display cycle. </li>
+<li>It’s easier to tell the Loom entity to do this using a flag, rather than get the Picture entity to update all its Loom subscribers on every display cycle.</li>
 <li>For Pictures using image assets the flag must be set to <code>false</code> (the default); setting the flag to <code>true</code> will significantly degrade display and animation performance.</li>
 </ul>
 
@@ -866,8 +866,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p>The current Frame drawing process often leads to <a href="https://en.wikipedia.org/wiki/Moir%C3%A9_pattern">moiré interference patterns</a> appearing in the resulting image. Scrawl-canvas uses a resize trick to blur out these patterns. </p>
-<p><strong>interferenceLoops</strong> (positive integer Number), <strong>interferenceFactor</strong> (positive float Number) - The interferenceFactor attribute sets the resizing ratio; while he interferenceLoops attribute sets the number of times the image gets resized. </p>
+              <p>The current Frame drawing process often leads to <a href="https://en.wikipedia.org/wiki/Moir%C3%A9_pattern">moiré interference patterns</a> appearing in the resulting image. Scrawl-canvas uses a resize trick to blur out these patterns.</p>
+<p><strong>interferenceLoops</strong> (positive integer Number), <strong>interferenceFactor</strong> (positive float Number) - The interferenceFactor attribute sets the resizing ratio; while he interferenceLoops attribute sets the number of times the image gets resized.</p>
 <ul>
 <li>If inteference patterns still appear in the final image, tweak these values to see if a better output can be achieved.</li>
 </ul>
@@ -886,7 +886,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p>The Loom entity does not use the <a href="./mixin/position.html">position</a> or <a href="./mixin/entity.html">entity</a> mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts. </p>
+              <p>The Loom entity does not use the <a href="./mixin/position.html">position</a> or <a href="./mixin/entity.html">entity</a> mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts.</p>
 <p>It does, however, use these attributes (alongside their setters and getters): <strong>visibility</strong>, <strong>order</strong>, <strong>delta</strong>, <strong>host</strong>, <strong>group</strong>, <strong>anchor</strong>, <strong>collides</strong>.</p>
 
             </div>
@@ -993,7 +993,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         <span class="hljs-attr">rel</span>:
         <span class="hljs-attr">target</span>:
         anchorType
-        <span class="hljs-attr">clickAction</span>: 
+        <span class="hljs-attr">clickAction</span>:
     }
 </code></pre>
 <p>Note that Loom entitys DO NOT SUPPORT the sensor component of the Scrawl-canvas collisions system and will return an empty array when asked to supply sensor coordinates for testing against other artefacts.</p>
@@ -1024,7 +1024,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <p>Loom entitys support appropriate styling attributes, mainly for their stroke styles (used with the <code>draw</code>, <code>drawAndFill</code>, <code>fillAndDraw</code>, <code>drawThenFill</code> and <code>fillThenDraw</code> stamping methods). </p>
+              <p>Loom entitys support appropriate styling attributes, mainly for their stroke styles (used with the <code>draw</code>, <code>drawAndFill</code>, <code>fillAndDraw</code>, <code>drawThenFill</code> and <code>fillThenDraw</code> stamping methods).</p>
 <ul>
 <li>These <em><strong>state</strong></em> attributes are stored directly on the object, rather than in a separate <a href="./state.html">State</a> object.</li>
 </ul>
@@ -1175,10 +1175,10 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
 
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">let</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item],
-            state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
 
-        <span class="hljs-keyword">let</span> val;
+        <span class="hljs-keyword">let</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item],
+            val;
 
         <span class="hljs-keyword">if</span> (def != <span class="hljs-literal">null</span>) {
 
@@ -1832,7 +1832,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
               </div>
               <p>Sanity check 1</p>
 <ul>
-<li><code>getBoundingBox</code> will recalculate and set the <code>dirtyPathData</code> flag </li>
+<li><code>getBoundingBox</code> will recalculate and set the <code>dirtyPathData</code> flag</li>
 <li>if paths have set the Loom’s <code>dirtyStart</code> flag</li>
 </ul>
 
@@ -1889,18 +1889,18 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 
         <span class="hljs-keyword">if</span>(fPath &amp;&amp; tPath) {
 
-            <span class="hljs-keyword">let</span> fPathLength = <span class="hljs-title function_">_ceil</span>(fPath.<span class="hljs-property">length</span>),
-                tPathLength = <span class="hljs-title function_">_ceil</span>(tPath.<span class="hljs-property">length</span>),
-                pathSteps, pathDelta, x, y;
+            <span class="hljs-keyword">const</span> fPathLength = <span class="hljs-title function_">_ceil</span>(fPath.<span class="hljs-property">length</span>),
+                tPathLength = <span class="hljs-title function_">_ceil</span>(tPath.<span class="hljs-property">length</span>);
 
-            pathSteps = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setSourceDimension</span>(<span class="hljs-title function_">_max</span>(fPathLength, tPathLength));
+            <span class="hljs-keyword">const</span> pathSteps = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setSourceDimension</span>(<span class="hljs-title function_">_max</span>(fPathLength, tPathLength));
 
-            <span class="hljs-keyword">let</span> fPathStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathStart</span>,
+            <span class="hljs-keyword">const</span> fPathStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathStart</span>,
                 fPathEnd = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathEnd</span>,
                 tPathStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathStart</span>,
                 tPathEnd = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathEnd</span>,
-                fPartial, tPartial, minPartial,
                 pathSpeed = <span class="hljs-variable language_">this</span>.<span class="hljs-property">constantPathSpeed</span>;
+
+            <span class="hljs-keyword">let</span> fPartial, tPartial;
 
             <span class="hljs-keyword">if</span> (fPathStart &lt; fPathEnd) fPartial = fPathEnd - fPathStart;
             <span class="hljs-keyword">else</span> fPartial = fPathEnd + (<span class="hljs-number">1</span> - fPathStart);
@@ -1910,11 +1910,12 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
             <span class="hljs-keyword">else</span> tPartial = tPathEnd + (<span class="hljs-number">1</span> - tPathStart);
             <span class="hljs-keyword">if</span> (tPartial &lt; <span class="hljs-number">0.005</span>) tPartial = <span class="hljs-number">0.005</span>;
 
-            minPartial = <span class="hljs-title function_">_ceil</span>(<span class="hljs-title function_">_min</span>(fPartial, tPartial));
+            <span class="hljs-keyword">const</span> minPartial = <span class="hljs-title function_">_ceil</span>(<span class="hljs-title function_">_min</span>(fPartial, tPartial)),
+                pathDelta = <span class="hljs-number">1</span> / (pathSteps * (<span class="hljs-number">1</span> / minPartial));
 
-            pathDelta = <span class="hljs-number">1</span> / (pathSteps * (<span class="hljs-number">1</span> / minPartial));
+            <span class="hljs-keyword">let</span> x, y, cursor;
 
-            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> cursor = <span class="hljs-number">0</span>; cursor &lt;= <span class="hljs-number">1</span>; cursor += pathDelta) {
+            <span class="hljs-keyword">for</span> (cursor = <span class="hljs-number">0</span>; cursor &lt;= <span class="hljs-number">1</span>; cursor += pathDelta) {
 
                 ({x, y} = fPath.<span class="hljs-title function_">getPathPositionData</span>(cursor, pathSpeed));
                 fromPathData.<span class="hljs-title function_">push</span>([x - startX, y - startY]);
@@ -2035,7 +2036,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
     <span class="hljs-keyword">if</span> (host &amp;&amp; <span class="hljs-variable constant_">GOOD_HOST</span>.<span class="hljs-title function_">includes</span>(host.<span class="hljs-property">type</span>)) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = host;
-        
+
         <span class="hljs-keyword">if</span> (changes) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(changes);
@@ -2149,7 +2150,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
     canvas.<span class="hljs-property">height</span> = sourceDimension;
     engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-title function_">stamp</span>(<span class="hljs-literal">true</span>, cell, { 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-title function_">stamp</span>(<span class="hljs-literal">true</span>, cell, {
         <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">handleX</span>: <span class="hljs-number">0</span>,
@@ -2201,25 +2202,23 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanOutput</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-    
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> sourceDimension = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceDimension</span>, 
+    <span class="hljs-keyword">const</span> sourceDimension = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceDimension</span>,
         sourceData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceImageData</span>;
 
     <span class="hljs-keyword">if</span> (sourceDimension &amp;&amp; sourceData) {
 
-        <span class="hljs-keyword">let</span> fromPathData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathData</span>,
+        <span class="hljs-keyword">const</span> fromPathData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathData</span>,
             toPathData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathData</span>,
 
             dataLen = fromPathData.<span class="hljs-property">length</span>,
 
             fPathStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathStart</span>,
-            fCursor = fPathStart * dataLen,
             fStep = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathSteps</span> || <span class="hljs-number">1</span>,
 
             tPathStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathStart</span>,
-            tCursor = tPathStart * dataLen,
             tStep = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathSteps</span> || <span class="hljs-number">1</span>,
 
             magicVerticalPi = _piHalf - <span class="hljs-number">1.5708</span>,
@@ -2227,12 +2226,14 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
             isHorizontalCopy = <span class="hljs-variable language_">this</span>.<span class="hljs-property">isHorizontalCopy</span>,
             loop = <span class="hljs-variable language_">this</span>.<span class="hljs-property">loopPathCursors</span>,
 
-            fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin, i, j,
-
             watchFromPath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchFromPath</span>,
-            watchIndex = <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchIndex</span>, 
             engineInstructions = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engineInstructions</span>,
-            engineDeltaLengths = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engineDeltaLengths</span>,
+            engineDeltaLengths = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engineDeltaLengths</span>;
+
+        <span class="hljs-keyword">let</span> fCursor = fPathStart * dataLen,
+            tCursor = tPathStart * dataLen,
+            watchIndex = <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchIndex</span>,
+            fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin, i, j,
             instruction;
 
         <span class="hljs-keyword">let</span> [, , outputWidth, outputHeight] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
@@ -2427,7 +2428,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getBoundingBox</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> fPath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPath</span>,
+    <span class="hljs-keyword">const</span> fPath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPath</span>,
         tPath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPath</span>;
 
     <span class="hljs-keyword">if</span>(fPath &amp;&amp; tPath) {
@@ -2438,7 +2439,9 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">false</span>;
 
+<span class="hljs-comment">/* eslint-disable-next-line */</span>
                 <span class="hljs-keyword">let</span> [lsx, lsy, sw, sh, sx, sy] = fPath.<span class="hljs-title function_">getBoundingBox</span>();
+<span class="hljs-comment">/* eslint-disable-next-line */</span>
                 <span class="hljs-keyword">let</span> [lex, ley, ew, eh, ex, ey] = tPath.<span class="hljs-title function_">getBoundingBox</span>();
 
                 <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(lsx) || <span class="hljs-built_in">isNaN</span>(lsy) || <span class="hljs-built_in">isNaN</span>(sw) || <span class="hljs-built_in">isNaN</span>(sh) || <span class="hljs-built_in">isNaN</span>(sx) || <span class="hljs-built_in">isNaN</span>(sy) || <span class="hljs-built_in">isNaN</span>(lex) || <span class="hljs-built_in">isNaN</span>(ley) || <span class="hljs-built_in">isNaN</span>(ew) || <span class="hljs-built_in">isNaN</span>(eh) || <span class="hljs-built_in">isNaN</span>(ex) || <span class="hljs-built_in">isNaN</span>(ey)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
@@ -2799,7 +2802,7 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
 
     engine.<span class="hljs-title function_">save</span>();
 
-    <span class="hljs-keyword">let</span> t = engine.<span class="hljs-title function_">getTransform</span>();
+    <span class="hljs-keyword">const</span> t = engine.<span class="hljs-title function_">getTransform</span>();
     engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
     engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxColor</span>;
@@ -2850,13 +2853,14 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">noUserInteraction</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> tests = (!<span class="hljs-title function_">_isArray</span>(items)) ?  [items] : items,
-        targetData = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span>.<span class="hljs-property">data</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span>.<span class="hljs-property">data</span> : <span class="hljs-literal">false</span>, 
-        tx, ty, cx, cy, index;
+    <span class="hljs-keyword">const</span> tests = (!<span class="hljs-title function_">_isArray</span>(items)) ?  [items] : items,
+        targetData = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span>.<span class="hljs-property">data</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">output</span>.<span class="hljs-property">data</span> : <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">let</span> tx, ty, cx, cy, index;
 
     <span class="hljs-keyword">if</span> (targetData) {
 
-        <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
+        <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBoundingBox</span>();
 
         <span class="hljs-keyword">if</span> (tests.<span class="hljs-title function_">some</span>(<span class="hljs-function"><span class="hljs-params">test</span> =&gt;</span> {
 
@@ -2877,7 +2881,7 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
             cx = tx - x;
             cy = ty - y;
 
-            <span class="hljs-keyword">if</span> (cx &lt; <span class="hljs-number">0</span> || cx &gt; w || cy &lt; <span class="hljs-number">0</span> || cy &gt; h) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>; 
+            <span class="hljs-keyword">if</span> (cx &lt; <span class="hljs-number">0</span> || cx &gt; w || cy &lt; <span class="hljs-number">0</span> || cy &gt; h) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
             index = (((cy * w) + cx) * <span class="hljs-number">4</span>) + <span class="hljs-number">3</span>;
 

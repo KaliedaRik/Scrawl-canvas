@@ -1081,7 +1081,7 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
             
             <div class="content"><div class='highlight'><pre>    originals.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> e = entitys[name];
+        <span class="hljs-keyword">const</span> e = entitys[name];
 
         <span class="hljs-keyword">if</span> (e) {
 
@@ -1376,7 +1376,7 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    <span class="hljs-keyword">let</span> val = <span class="hljs-built_in">parseFloat</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>);
+    <span class="hljs-keyword">const</span> val = <span class="hljs-built_in">parseFloat</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>);
 
     myFilters.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> f.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">opacity</span>: val }));</pre></div></div>
             

@@ -544,7 +544,7 @@
 <ul>
 <li><em><strong>A Ticker is an animation</strong></em> (but not a Scrawl-canvas <a href="./animation.html">Animation</a>) object; it defines a <code>fn</code> function internally which will check through all Tween and Action objects subscribing to it and, where appropriate, trigger their <code>update</code> functions.</li>
 <li>This module defines and launches a <code>coreTickersAnimation</code> Animation object; all Ticker objects get added to this object when their <code>run</code> or <code>resume</code> functions are triggered.</li>
-<li>The <code>coreTickersAnimation</code> object runs in the Scrawl-canvas <code>animationLoop</code> which is tied to the browser/device’s requestAnimationFrame (RAF) functionality. </li>
+<li>The <code>coreTickersAnimation</code> object runs in the Scrawl-canvas <code>animationLoop</code> which is tied to the browser/device’s requestAnimationFrame (RAF) functionality.</li>
 <li><code>coreTickersAnimation</code> runs before other Animation objects, thus <em><strong>Tween/Action updates happen before any Display cycle functionality</strong></em>.</li>
 <li>Unlike Animation objects, <em><strong>Ticker objects do not run automatically</strong></em> as soon as they have been created.</li>
 <li>To trigger a Ticker object, invoke its <code>run</code> or <code>resume</code> functions.</li>
@@ -745,9 +745,9 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p><strong>order</strong> - positive integer Number - determines the order in which each Ticker animation object will be actioned before the Display cycle starts. </p>
+              <p><strong>order</strong> - positive integer Number - determines the order in which each Ticker animation object will be actioned before the Display cycle starts.</p>
 <ul>
-<li>Higher order Tickers will be processed after lower order Tickers. </li>
+<li>Higher order Tickers will be processed after lower order Tickers.</li>
 <li>Tickers with the same <code>order</code> value will be processed in the order in which they were defined in code.</li>
 </ul>
 
@@ -814,7 +814,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p><strong>cycles</strong> - positive integer Number representing the number of cycles the Ticker will run before it completes. </p>
+              <p><strong>cycles</strong> - positive integer Number representing the number of cycles the Ticker will run before it completes.</p>
 <ul>
 <li>A value of <code>0</code> indicates that the Ticker should repeat itself forever, until its <code>halt</code>, <code>seekTo</code>, <code>seekFor</code>, <code>complete</code> or <code>reset</code> functions are triggered.</li>
 <li>Note that Tween and Action animation direction is determined by those objects (via their <code>reverseOnCycleEnd</code> and <code>reversed</code> flags). Tickers always repeat in a forwards direction - they loop back to their start; they never reverse time.</li>
@@ -1039,7 +1039,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">order</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">order</span> = item;
-    
+
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>) tickerAnimationsFlag = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
@@ -1059,7 +1059,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">cycles</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">cycles</span> = item;
-    
+
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">cycles</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">cycleCount</span> = <span class="hljs-number">0</span>;
 };</pre></div></div>
             
@@ -1088,7 +1088,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
     <span class="hljs-keyword">if</span>(<span class="hljs-title function_">xt</span>(subscribers)){
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = subscribers.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-        
+
             target = tween[subscribers[i]];
 
             <span class="hljs-keyword">if</span> (target) {
@@ -1123,7 +1123,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <p><code>subscribe</code> - accepts a Tween or Action name-String, or an Array of such Strings. </p>
+              <p><code>subscribe</code> - accepts a Tween or Action name-String, or an Array of such Strings.</p>
 
             </div>
             
@@ -1132,13 +1132,13 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
     <span class="hljs-keyword">const</span> myItems = <span class="hljs-title function_">requestArray</span>();
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(items)) myItems.<span class="hljs-title function_">push</span>(...items);
     <span class="hljs-keyword">else</span> myItems.<span class="hljs-title function_">push</span>(items);
-    
+
     <span class="hljs-keyword">let</span> i, iz, item, name;
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = myItems.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
         item = myItems[i];
-        
+
         <span class="hljs-keyword">if</span>(item != <span class="hljs-literal">null</span>){
 
             <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) name = item;
@@ -1175,7 +1175,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
     <span class="hljs-keyword">const</span> myItems = <span class="hljs-title function_">requestArray</span>();
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(items)) myItems.<span class="hljs-title function_">push</span>(...items);
     <span class="hljs-keyword">else</span> myItems.<span class="hljs-title function_">push</span>(items);
-    
+
     <span class="hljs-keyword">let</span> i, iz, item, name;
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = myItems.<span class="hljs-property">length</span>; i &lt; iz; i++) {
@@ -1316,11 +1316,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateSubscribers</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">items, reversed</span>) {
-    
+
     reversed = (<span class="hljs-title function_">xt</span>(reversed)) ? reversed : <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">const</span> subs = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSubscriberObjects</span>();
-    
+
     <span class="hljs-keyword">let</span> i, iz;
 
     <span class="hljs-keyword">if</span> (reversed) {
@@ -1358,7 +1358,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
     <span class="hljs-keyword">const</span> subs = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSubscriberObjects</span>();
 
     subs.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> sub.<span class="hljs-property">reversed</span> = !sub.<span class="hljs-property">reversed</span>);
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
@@ -1436,7 +1436,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-keyword">const</span> subs = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getSubscriberObjects</span>();
 
-    <span class="hljs-keyword">let</span> durationValue, 
+    <span class="hljs-keyword">let</span> durationValue,
         duration = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">duration</span>) {
@@ -1486,7 +1486,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
     <span class="hljs-keyword">let</span> temp;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">duration</span>) {
-    
+
         temp = <span class="hljs-title function_">convertTime</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">duration</span>);</pre></div></div>
             
         </li>
@@ -1602,7 +1602,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         cycles = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cycles</span>,
         effectiveDuration = <span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveDuration</span>,
         eventChoke = <span class="hljs-variable language_">this</span>.<span class="hljs-property">eventChoke</span>;
-    
+
     <span class="hljs-keyword">let</span> i, iz, subs, eTime, now, e,
         currentTime, tick,
         active = <span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>,
@@ -1703,7 +1703,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
                     result.<span class="hljs-property">tick</span> = effectiveDuration;
                     result.<span class="hljs-property">reverseTick</span> = <span class="hljs-number">0</span>;
                     active = <span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span> = <span class="hljs-literal">false</span>;
-                    
+
                     <span class="hljs-keyword">if</span> (cycles) {
 
                         cycleCount++
@@ -1844,7 +1844,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
               <div class="sswrap ">
                 <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
-              <p><code>run</code> </p>
+              <p><code>run</code></p>
 <ul>
 <li>Start the Ticker from time 0.</li>
 <li>Trigger the object’s <code>onRun</code> function.</li>
@@ -1993,22 +1993,20 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">reverse</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">resume = <span class="hljs-literal">false</span></span>) {
 
-    <span class="hljs-keyword">let</span> timePlayed;
-
     resume = <span class="hljs-title function_">xtGet</span>(resume, <span class="hljs-literal">false</span>);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>) {
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">halt</span>();
     }
 
-    timePlayed = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTime</span> - <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTime</span>;
+    <span class="hljs-keyword">const</span> timePlayed = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTime</span> - <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTime</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTime</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTime</span> - (<span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveDuration</span> - timePlayed);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">changeSubscriberDirection</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span> = <span class="hljs-literal">true</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fn</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span> = <span class="hljs-literal">false</span>;
-    
+
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">onReverse</span> == <span class="hljs-variable constant_">FUNCTION</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">onReverse</span>();
 
     <span class="hljs-keyword">if</span> (resume) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">resume</span>();
@@ -2067,8 +2065,8 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>) {
 
-        now = <span class="hljs-title function_">_now</span>(),
-        current = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTime</span>,
+        now = <span class="hljs-title function_">_now</span>();
+        current = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTime</span>;
         start = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTime</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTime</span> = now - (current - start);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTime</span> = now;

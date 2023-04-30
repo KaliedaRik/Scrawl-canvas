@@ -256,7 +256,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p><strong>Effects on the element:</strong> </p>
+              <p><strong>Effects on the element:</strong></p>
 <ul>
 <li>updates the &lt;div&gt; element’s <code>innerHTML</code> data, which will replace any child elements or text placed between the element’s opening and closing tags.</li>
 </ul>
@@ -278,14 +278,14 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
             testTime, testNow,
-            testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${el.id}</span>`</span>);
-
-        <span class="hljs-keyword">let</span> history = [],
             averageTime = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">const</span> testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${el.id}</span>`</span>),
+            history = [];
 
         <span class="hljs-keyword">const</span> <span class="hljs-title function_">addTime</span> = (<span class="hljs-params">t</span>) =&gt; {
 
@@ -320,7 +320,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
         <span class="hljs-attr">animationHooks</span>: {
             <span class="hljs-attr">afterShow</span>: report,

@@ -540,7 +540,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="shape-curve-mixin">Shape-curve mixin</h1>
-<p>This mixin defines additional attributes and functionality used byScrawl-canvas <strong>line</strong>, <strong>quadratic</strong> and <strong>bezier</strong> path-defined entitys. </p>
+<p>This mixin defines additional attributes and functionality used byScrawl-canvas <strong>line</strong>, <strong>quadratic</strong> and <strong>bezier</strong> path-defined entitys.</p>
 <p>These entitys have additional positioning coordinates (<code>startControl</code> and <code>endControl</code> for Bezier entitys; <code>control</code> for Quadratic entitys; all three entity types use the <code>end</code> coordinate) which we use to construct and position them. Other artefacts can pivot themselves to these coordinates, and path-defined entitys can pivot the coordinates to other artefacts.</p>
 
             </div>
@@ -814,7 +814,7 @@
 
         <span class="hljs-keyword">if</span> (!item) {
 
-            <span class="hljs-keyword">let</span> controlledLine = <span class="hljs-variable language_">this</span>.<span class="hljs-property">controlledLineOffset</span>;
+            <span class="hljs-keyword">const</span> controlledLine = <span class="hljs-variable language_">this</span>.<span class="hljs-property">controlledLineOffset</span>;
             controlledLine[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;
             controlledLine[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
         }
@@ -1075,12 +1075,12 @@
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item) {
 
-            <span class="hljs-keyword">let</span> oldControl = <span class="hljs-variable language_">this</span>[attr];
-            
+            <span class="hljs-keyword">const</span> oldControl = <span class="hljs-variable language_">this</span>[attr];
+
             <span class="hljs-keyword">let</span> newControl = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item;
 
             <span class="hljs-keyword">if</span> (attr.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">T_PIVOT</span>)) {
-                
+
                 <span class="hljs-keyword">if</span> (newControl &amp;&amp; newControl.<span class="hljs-property">isArtefact</span>) {
 
                     <span class="hljs-keyword">if</span> (oldControl &amp;&amp; oldControl.<span class="hljs-property">isArtefact</span>) <span class="hljs-title function_">removeItem</span>(oldControl.<span class="hljs-property">pivoted</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
@@ -1090,7 +1090,7 @@
             }
 
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (attr.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">T_PATH</span>)) {
-                
+
                 <span class="hljs-keyword">if</span> (newControl &amp;&amp; newControl.<span class="hljs-property">isArtefact</span>) {
 
                     <span class="hljs-keyword">if</span> (oldControl &amp;&amp; oldControl.<span class="hljs-property">isArtefact</span>) <span class="hljs-title function_">removeItem</span>(oldControl.<span class="hljs-property">pathed</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
@@ -1100,7 +1100,7 @@
             }
 
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (attr.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">T_PARTICLE</span>)) {
-                
+
                 newControl = (item.<span class="hljs-property">substring</span>) ? particle[item] : item;</pre></div></div>
             
         </li>
@@ -1166,7 +1166,7 @@
                     myPoint = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">positionPointOnPath</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getQuadraticXY</span>(myLen, ...vars));
                     angle = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getQuadraticAngle</span>(myLen, ...vars);
                     <span class="hljs-keyword">break</span>;
-                    
+
                 <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">BEZIER</span> :
                     myPoint = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">positionPointOnPath</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBezierXY</span>(myLen, ...vars));
                     angle = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getBezierAngle</span>(myLen, ...vars);
@@ -1312,9 +1312,9 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
-              <p><code>useStartAsControlPoint</code> </p>
+              <p><code>useStartAsControlPoint</code></p>
 <ul>
-<li>When false, this flag indicates that line, quadratic and bezier shapes should treat <code>start</code> Coordinate updates as an instruction to move the entire Shape. </li>
+<li>When false, this flag indicates that line, quadratic and bezier shapes should treat <code>start</code> Coordinate updates as an instruction to move the entire Shape.</li>
 <li>When true, the Coordinate is used to define the shape of the Shape relative to its other control/end Coordinates</li>
 </ul>
 
@@ -1431,9 +1431,10 @@
             <span class="hljs-keyword">if</span> (art) part = art;
         }
 
-        <span class="hljs-keyword">let</span> lock = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${label}</span>LockTo`</span>], 
-            x, y, ox, oy, here, host, dims,
-            raw = <span class="hljs-variable language_">this</span>[label],
+        <span class="hljs-keyword">let</span> lock = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${label}</span>LockTo`</span>],
+            x, y, ox, oy, here, host, dims;
+
+        <span class="hljs-keyword">const</span> raw = <span class="hljs-variable language_">this</span>[label],
             current = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`current<span class="hljs-subst">${capLabel}</span>`</span>];
 
         <span class="hljs-keyword">if</span> (lock == <span class="hljs-variable constant_">PIVOT</span> &amp;&amp; (!pivot || pivot.<span class="hljs-property">substring</span>)) lock = <span class="hljs-variable constant_">COORD</span>;
@@ -1492,7 +1493,7 @@
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">default</span> :
-                
+
                 x = y = <span class="hljs-number">0</span>;
 
                 host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>();
@@ -1536,8 +1537,9 @@
 
         <span class="hljs-keyword">if</span> (checkAttribute) <span class="hljs-keyword">return</span> checkAttribute;
 
-        <span class="hljs-keyword">let</span> pathPos = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${label}</span>PathPosition`</span>],
-            tempPos = pathPos,
+        <span class="hljs-keyword">let</span> pathPos = <span class="hljs-variable language_">this</span>[<span class="hljs-string">`<span class="hljs-subst">${label}</span>PathPosition`</span>];
+
+        <span class="hljs-keyword">const</span> tempPos = pathPos,
             pathData = path.<span class="hljs-title function_">getPathPositionData</span>(pathPos);
 
         <span class="hljs-keyword">if</span> (pathPos &lt; <span class="hljs-number">0</span>) pathPos += <span class="hljs-number">1</span>;
@@ -1607,7 +1609,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> items = [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">endSubscriber</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControlSubscriber</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">controlSubscriber</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControlSubscriber</span>);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> items = [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">endSubscriber</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControlSubscriber</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">controlSubscriber</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControlSubscriber</span>);
 
         <span class="hljs-keyword">let</span> sub;
 

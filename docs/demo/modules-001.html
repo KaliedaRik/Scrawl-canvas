@@ -958,15 +958,15 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addListener</span>(
-    <span class="hljs-string">&#x27;move&#x27;</span>, 
-    <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>), 
-    canvas.<span class="hljs-property">domElement</span> 
+    <span class="hljs-string">&#x27;move&#x27;</span>,
+    <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>),
+    canvas.<span class="hljs-property">domElement</span>
 );
 
 scrawl.<span class="hljs-title function_">addNativeListener</span>(
-    <span class="hljs-string">&#x27;touchstart&#x27;</span>, 
-    <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>), 
-    canvas.<span class="hljs-property">domElement</span> 
+    <span class="hljs-string">&#x27;touchstart&#x27;</span>,
+    <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>),
+    canvas.<span class="hljs-property">domElement</span>
 );</pre></div></div>
             
         </li>
@@ -1064,7 +1064,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
             </div>
             
             <div class="content"><div class='highlight'><pre>                        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> barGraph.<span class="hljs-title function_">build</span>({
-                            <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bars&#x27;</span>), 
+                            <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bars&#x27;</span>),
                             <span class="hljs-attr">dataSource</span>: <span class="hljs-string">`data/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>,
                             canvas,
                             scrawl,
@@ -1088,7 +1088,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
             </div>
             
             <div class="content"><div class='highlight'><pre>                        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> lineGraph.<span class="hljs-title function_">build</span>({
-                            <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;lines&#x27;</span>), 
+                            <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;lines&#x27;</span>),
                             <span class="hljs-attr">dataSource</span>: <span class="hljs-string">`data/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>,
                             <span class="hljs-attr">category</span>: currentCategory,
                             canvas,
@@ -1109,7 +1109,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
                         lineGraph.<span class="hljs-title function_">kill</span>();
 
                         barGraph.<span class="hljs-title function_">build</span>({
-                            <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bars&#x27;</span>), 
+                            <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bars&#x27;</span>),
                             <span class="hljs-attr">dataSource</span>: <span class="hljs-string">`data/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>,
                             canvas,
                             scrawl,
@@ -1122,7 +1122,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
                         barGraph.<span class="hljs-title function_">kill</span>();
 
                         lineGraph.<span class="hljs-title function_">build</span>({
-                            <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;lines&#x27;</span>), 
+                            <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;lines&#x27;</span>),
                             <span class="hljs-attr">dataSource</span>: <span class="hljs-string">`data/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>,
                             <span class="hljs-attr">category</span>: currentCategory,
                             canvas,
@@ -1143,7 +1143,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
                     lineGraph.<span class="hljs-title function_">update</span>({
                         <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;lines&#x27;</span>),
                         <span class="hljs-attr">category</span>: currentCategory,
-                        canvas, 
+                        canvas,
                         scrawl,
                     });
                 }
@@ -1173,7 +1173,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 });
 
 barGraph.<span class="hljs-title function_">build</span>({
-    <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bars&#x27;</span>), 
+    <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;bars&#x27;</span>),
     <span class="hljs-attr">dataSource</span>: <span class="hljs-string">&#x27;data/crimes-in-hackney.json&#x27;</span>,
     canvas,
     scrawl,

@@ -932,7 +932,7 @@
     <span class="hljs-string">&#x27;user-repeat&#x27;</span>: <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> (val * <span class="hljs-number">4</span>) % <span class="hljs-number">1</span>,
 };
 
-<span class="hljs-keyword">let</span> noiseAsset = scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
+<span class="hljs-keyword">const</span> noiseAsset = scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-noise-generator&#x27;</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-number">400</span>,
@@ -1078,7 +1078,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
     <span class="hljs-keyword">if</span> (e &amp;&amp; e.<span class="hljs-property">target</span>) {
 
-        <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+        <span class="hljs-keyword">const</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
         noiseAsset.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">colors</span>: bespokeColors[val],
@@ -1092,7 +1092,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
     e.<span class="hljs-title function_">preventDefault</span>();
 
-    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+    <span class="hljs-keyword">const</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
     <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;user-steps&#x27;</span>, <span class="hljs-string">&#x27;user-repeat&#x27;</span>].<span class="hljs-title function_">includes</span>(val)) {
         noiseAsset.<span class="hljs-title function_">set</span>({

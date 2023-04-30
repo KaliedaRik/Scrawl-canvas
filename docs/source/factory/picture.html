@@ -542,14 +542,14 @@
               <h1 id="picture-factory">Picture factory</h1>
 <p>Picture entitys are image, video or canvas-based rectangles rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D interface</a> - in particular the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage">drawImage</a> method.</p>
 <ul>
-<li>Positioning and dimensions functionality for the Picture is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
+<li>Positioning and dimensions functionality for the Picture is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin.</li>
 <li>Pictures can use <a href="./imageAsset.html">ImageAsset</a>, <a href="./spriteAsset.html">SpriteAsset</a>, <a href="./videoAsset.html">VideoAsset</a>, or <a href="./cell.html">Cells</a> for the source of the image they display.</li>
 <li>Additionally, we can restrict the display to a portion of the source by defining and updating <code>copy</code> attributes.</li>
 </ul>
 <p>We define the source copy area in a similar way to how we position and dimension the Picture entity on its Cell host, using two additional <a href="./coordinate.html">Coordinate</a> Arrays to hold our data.</p>
 <ul>
 <li>for both positioning and dimensions, we can define the coordinate in absolute, or relative, terms</li>
-<li><strong>absolute</strong> positioning and dimensions - where we give the artefact a Number coordinate measured in pixels. </li>
+<li><strong>absolute</strong> positioning and dimensions - where we give the artefact a Number coordinate measured in pixels.</li>
 <li><strong>relative</strong> positioning and dimensions - where we use String percentage coordinates, with <code>[&#39;0%&#39;, &#39;0%&#39;]</code> representing the top left corner of the source, and <code>[&#39;100%&#39;, &#39;100%&#39;]</code> its bottom right corner.</li>
 </ul>
 <p>Source dimensions are the <em><strong>natural width and height</strong></em> of the image or video</p>
@@ -565,10 +565,10 @@
 </ul>
 <p>Also:</p>
 <ul>
-<li>Pictures can use CSS color Strings for their strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>Pictures can use CSS color Strings for their strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects.</li>
 <li>They will also accept <strong>Filter</strong> objects.</li>
-<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can use <strong>Anchor</strong> objects for user navigation.</li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
 <li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Pictures (but not their source assets) can be cloned, and killed.</li>
 </ul>
@@ -1101,8 +1101,9 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
 
         <span class="hljs-keyword">else</span> {
 
+            <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
             <span class="hljs-keyword">let</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item],
-                state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>,
                 val;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-variable constant_">UNDEF</span>) {
@@ -1383,7 +1384,7 @@ S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="h
 
         <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyDimensions</span>,
             currentDims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyDimensions</span>,
-            width = dims[<span class="hljs-number">0</span>], 
+            width = dims[<span class="hljs-number">0</span>],
             height = dims[<span class="hljs-number">1</span>];
 
         <span class="hljs-keyword">if</span> (width.<span class="hljs-property">substring</span>) currentDims[<span class="hljs-number">0</span>] = (<span class="hljs-built_in">parseFloat</span>(width) / <span class="hljs-number">100</span>) * natWidth;

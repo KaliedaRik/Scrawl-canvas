@@ -889,7 +889,7 @@
 });
 
 scrawl.<span class="hljs-title function_">makeGroup</span>({
-    
+
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-group&#x27;</span>,
     <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 });
@@ -897,7 +897,7 @@ scrawl.<span class="hljs-title function_">makeGroup</span>({
 <span class="hljs-keyword">const</span> pinArray = [];
 
 <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">6</span>; i++) {
-  
+
     pinArray.<span class="hljs-title function_">push</span>(scrawl.<span class="hljs-title function_">makeWheel</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`pin-<span class="hljs-subst">${i}</span>`</span>,
@@ -944,7 +944,7 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> colorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
+<span class="hljs-keyword">const</span> colorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;color-factory&#x27;</span>,
     <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,

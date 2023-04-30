@@ -1029,7 +1029,7 @@ curveArray.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> draggedPin;
 
-<span class="hljs-keyword">let</span> dragGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+<span class="hljs-keyword">const</span> dragGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;drag-group&#x27;</span>,
 });
 
@@ -1049,7 +1049,7 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hl
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> draggedPin != <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; draggedPin) {
 
-            <span class="hljs-keyword">let</span> pin = draggedPin.<span class="hljs-property">artefact</span>,
+            <span class="hljs-keyword">const</span> pin = draggedPin.<span class="hljs-property">artefact</span>,
                 name = pin.<span class="hljs-property">name</span>;
 
             <span class="hljs-keyword">if</span> (name.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;start&#x27;</span>) &gt; <span class="hljs-number">0</span> || name.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;end&#x27;</span>) &gt; <span class="hljs-number">0</span>) {</pre></div></div>
@@ -1079,7 +1079,7 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hl
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> draggedPin != <span class="hljs-string">&#x27;boolean&#x27;</span> &amp;&amp; draggedPin) {
 
-            <span class="hljs-keyword">let</span> pin = draggedPin.<span class="hljs-property">artefact</span>,
+            <span class="hljs-keyword">const</span> pin = draggedPin.<span class="hljs-property">artefact</span>,
                 name = pin.<span class="hljs-property">name</span>;
 
             <span class="hljs-keyword">if</span> (name.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;start&#x27;</span>) &gt; <span class="hljs-number">0</span> || name.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;end&#x27;</span>) &gt; <span class="hljs-number">0</span>) {
@@ -1139,7 +1139,7 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hl
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1</span>; i += <span class="hljs-number">0.001</span>) {
 
-            <span class="hljs-keyword">let</span> r = redCurve.<span class="hljs-title function_">getPathPositionData</span>(i),
+            <span class="hljs-keyword">const</span> r = redCurve.<span class="hljs-title function_">getPathPositionData</span>(i),
                 g = greenCurve.<span class="hljs-title function_">getPathPositionData</span>(i),
                 b = blueCurve.<span class="hljs-title function_">getPathPositionData</span>(i),
                 a = allCurve.<span class="hljs-title function_">getPathPositionData</span>(i);
@@ -1339,7 +1339,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
         <span class="hljs-keyword">if</span> (selectedGroup) {
 
-            <span class="hljs-keyword">let</span> order = selectedGroup.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;order&#x27;</span>) - <span class="hljs-number">10</span>;
+            <span class="hljs-keyword">const</span> order = selectedGroup.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;order&#x27;</span>) - <span class="hljs-number">10</span>;
 
             selectedGroup.<span class="hljs-title function_">setArtefacts</span>({ order });
             selectedGroup.<span class="hljs-title function_">set</span>({ order });
@@ -1352,7 +1352,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
             <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.channel-selector&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> el.<span class="hljs-property">classList</span>.<span class="hljs-title function_">remove</span>(<span class="hljs-string">&#x27;selected&#x27;</span>));
 
-            <span class="hljs-keyword">let</span> order = selectedGroup.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;order&#x27;</span>) + <span class="hljs-number">10</span>;
+            <span class="hljs-keyword">const</span> order = selectedGroup.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;order&#x27;</span>) + <span class="hljs-number">10</span>;
 
             selectedGroup.<span class="hljs-title function_">setArtefacts</span>({ order });
             selectedGroup.<span class="hljs-title function_">set</span>({ order });

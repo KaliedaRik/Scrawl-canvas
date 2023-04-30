@@ -760,7 +760,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>The <strong>scale</strong> attribute determines the relative scale of the noise calculation, which affects the noise output. Think of it as a rather idiosyncratic zoom factor </p>
+              <p>The <strong>scale</strong> attribute determines the relative scale of the noise calculation, which affects the noise output. Think of it as a rather idiosyncratic zoom factor</p>
 
             </div>
             
@@ -813,7 +813,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>Post-processing the noise map: The <strong>sumFunction</strong> attribute - a String value - identifies the smoothing function that will be applied to the noise map once the noise calculations complete. </p>
+              <p>Post-processing the noise map: The <strong>sumFunction</strong> attribute - a String value - identifies the smoothing function that will be applied to the noise map once the noise calculations complete.</p>
 <ul>
 <li>Permitted values include: <code>none</code>, <code>sine-x</code>, <code>sine-y</code>, <code>sine</code>, <code>modular</code>, <code>random</code></li>
 </ul>
@@ -861,7 +861,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p>Worley functionality found in the <a href="https://github.com/jackunion/tooloud/blob/master/src/Worley.js">jackunion/tooloud GitHub repository</a>. </p>
+              <p>Worley functionality found in the <a href="https://github.com/jackunion/tooloud/blob/master/src/Worley.js">jackunion/tooloud GitHub repository</a>.</p>
 <ul>
 <li>The noise generated can be one of <strong>worley-euclidean</strong> or <strong>worley-manhattan</strong></li>
 <li>we can amend the noise via the <code>worleyOutput</code> and <code>worleyDepth</code> attributes</li>
@@ -1306,7 +1306,7 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> relativeScale = <span class="hljs-title function_">_pow</span>(width, -scale / <span class="hljs-number">100</span>);
 
-            <span class="hljs-keyword">let</span> max = -<span class="hljs-number">1000</span>, 
+            <span class="hljs-keyword">let</span> max = -<span class="hljs-number">1000</span>,
                 min = <span class="hljs-number">1000</span>;</pre></div></div>
             
         </li>
@@ -1378,7 +1378,7 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
             </div>
             
             <div class="content"><div class='highlight'><pre>                        totalNoise = <span class="hljs-number">0</span>;
-                        amplitude = <span class="hljs-number">1</span>; 
+                        amplitude = <span class="hljs-number">1</span>;
                         frequency = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
@@ -1579,7 +1579,7 @@ S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">f
 };
 P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index, width</span>) {
 
-    <span class="hljs-keyword">let</span> row = <span class="hljs-title function_">_floor</span>(index / width),
+    <span class="hljs-keyword">const</span> row = <span class="hljs-title function_">_floor</span>(index / width),
         col = index - (row * width);
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">noiseValues</span>[row][col];
@@ -1616,13 +1616,13 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
 <span class="hljs-keyword">const</span> simplexConstantDoubleG = ((<span class="hljs-number">3</span> - <span class="hljs-title function_">_sqrt</span>(<span class="hljs-number">3</span>)) / <span class="hljs-number">6</span>) * <span class="hljs-number">2</span>;
 
 <span class="hljs-keyword">const</span> perlinGrad = <span class="hljs-title function_">_freeze</span>([
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">1</span>, <span class="hljs-number">1</span>]), 
-    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">1</span>, <span class="hljs-number">1</span>]), 
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>]), 
-    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>]), 
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">1</span>, <span class="hljs-number">0</span>]), 
-    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">1</span>, <span class="hljs-number">0</span>]), 
-    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0</span>, <span class="hljs-number">1</span>]), 
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">1</span>, <span class="hljs-number">1</span>]),
+    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">1</span>, <span class="hljs-number">1</span>]),
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>]),
+    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>]),
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">1</span>, <span class="hljs-number">0</span>]),
+    <span class="hljs-title function_">_freeze</span>([-<span class="hljs-number">1</span>, <span class="hljs-number">0</span>]),
+    <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0</span>, <span class="hljs-number">1</span>]),
     <span class="hljs-title function_">_freeze</span>([<span class="hljs-number">0</span>, -<span class="hljs-number">1</span>])
 ]);</pre></div></div>
             
@@ -1667,7 +1667,7 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
             <span class="hljs-keyword">const</span> {grad, size, rndEngine} = <span class="hljs-variable language_">this</span>;
 
             <span class="hljs-keyword">let</span> dist;
-            
+
             grad.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
             <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) {
@@ -1707,15 +1707,15 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
 
             <span class="hljs-keyword">const</span> sx = <span class="hljs-title function_">smoothing</span>(rx0),
                 sy = <span class="hljs-title function_">smoothing</span>(ry0);
-            
+
             u = rx0 * grad[b00][<span class="hljs-number">0</span>] + ry0 * grad[b00][<span class="hljs-number">1</span>];
             v = rx1 * grad[b10][<span class="hljs-number">0</span>] + ry0 * grad[b10][<span class="hljs-number">1</span>];
             <span class="hljs-keyword">const</span> a = <span class="hljs-title function_">interpolate</span>(sx, u, v);
-            
+
             u = rx0 * grad[b01][<span class="hljs-number">0</span>] + ry1 * grad[b01][<span class="hljs-number">1</span>];
             v = rx1 * grad[b11][<span class="hljs-number">0</span>] + ry1 * grad[b11][<span class="hljs-number">1</span>];
             <span class="hljs-keyword">const</span> b = <span class="hljs-title function_">interpolate</span>(sx, u, v);
-            
+
             <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> * (<span class="hljs-number">1</span> + <span class="hljs-title function_">interpolate</span>(sy, a, b));
         },
     },</pre></div></div>
@@ -1745,33 +1745,33 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
 
             <span class="hljs-keyword">let</span> u, v;
 
-            <span class="hljs-keyword">const</span> bx0 = <span class="hljs-title function_">_floor</span>(x) % size, 
+            <span class="hljs-keyword">const</span> bx0 = <span class="hljs-title function_">_floor</span>(x) % size,
                 bx1 = (bx0 + <span class="hljs-number">1</span>) % size;
 
-            <span class="hljs-keyword">const</span> rx0 = x - <span class="hljs-title function_">_floor</span>(x), 
+            <span class="hljs-keyword">const</span> rx0 = x - <span class="hljs-title function_">_floor</span>(x),
                 rx1 = rx0 - <span class="hljs-number">1</span>;
 
-            <span class="hljs-keyword">const</span> by0 = <span class="hljs-title function_">_floor</span>(y) % size, 
+            <span class="hljs-keyword">const</span> by0 = <span class="hljs-title function_">_floor</span>(y) % size,
                 by1 = (by0 + <span class="hljs-number">1</span>) % size;
 
-            <span class="hljs-keyword">const</span> ry0 = y - <span class="hljs-title function_">_floor</span>(y), 
+            <span class="hljs-keyword">const</span> ry0 = y - <span class="hljs-title function_">_floor</span>(y),
                 ry1 = ry0 - <span class="hljs-number">1</span>;
 
-            <span class="hljs-keyword">const</span> i = perm[bx0], 
-                j = perm[bx1]; 
+            <span class="hljs-keyword">const</span> i = perm[bx0],
+                j = perm[bx1];
 
-            <span class="hljs-keyword">const</span> b00 = permMod8[i + by0], 
-                b10 = permMod8[j + by0], 
-                b01 = permMod8[i + by1], 
+            <span class="hljs-keyword">const</span> b00 = permMod8[i + by0],
+                b10 = permMod8[j + by0],
+                b01 = permMod8[i + by1],
                 b11 = permMod8[j + by1];
-            
+
             <span class="hljs-keyword">const</span> sx = <span class="hljs-title function_">smoothing</span>(rx0),
                 sy = <span class="hljs-title function_">smoothing</span>(ry0);
-            
+
             u = rx0 * perlinGrad[b00][<span class="hljs-number">0</span>] + ry0 * perlinGrad[b00][<span class="hljs-number">1</span>];
             v = rx1 * perlinGrad[b10][<span class="hljs-number">0</span>] + ry0 * perlinGrad[b10][<span class="hljs-number">1</span>];
             <span class="hljs-keyword">const</span> a = <span class="hljs-title function_">interpolate</span>(sx, u, v);
-            
+
             u = rx0 * perlinGrad[b01][<span class="hljs-number">0</span>] + ry1 * perlinGrad[b01][<span class="hljs-number">1</span>];
             v = rx1 * perlinGrad[b11][<span class="hljs-number">0</span>] + ry1 * perlinGrad[b11][<span class="hljs-number">1</span>];
             <span class="hljs-keyword">const</span> b = <span class="hljs-title function_">interpolate</span>(sx, u, v);
@@ -1809,9 +1809,9 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
                 <span class="hljs-keyword">const</span> [gx, gy] = perlinGrad[gridPos];
                 <span class="hljs-keyword">return</span> calc * calc * ((gx * cx) + (gy * cy));
             };
-            
+
             <span class="hljs-keyword">const</span> { size, perm, permMod8 } = <span class="hljs-variable language_">this</span>;
-            
+
             <span class="hljs-keyword">const</span> summedCoordinates = (x + y) * simplexConstantF,
                 summedX = <span class="hljs-title function_">_floor</span>(x + summedCoordinates),
                 summedY = <span class="hljs-title function_">_floor</span>(y + summedCoordinates),
@@ -1819,7 +1819,7 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
 
             <span class="hljs-keyword">const</span> cornerX = x - (summedX - modifiedSummedCoordinates),
                 cornerY = y - (summedY - modifiedSummedCoordinates);
-            
+
             <span class="hljs-keyword">const</span> remainderX = summedX % size,
                 remainderY = summedY % size;
 
@@ -1985,7 +1985,7 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
             <span class="hljs-keyword">const</span> f = worleyDistanceFunctions[<span class="hljs-variable constant_">EUCLIDEAN_DISTANCE</span>];
             <span class="hljs-keyword">const</span> o = worleyOutputFunctions[worleyOutput];
 
-            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">worleyNoise</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, {<span class="hljs-attr">x</span>:x, <span class="hljs-attr">y</span>:y, <span class="hljs-attr">z</span>:worleyDepth}, f, o);
+            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">worleyNoise</span>({<span class="hljs-attr">x</span>:x, <span class="hljs-attr">y</span>:y, <span class="hljs-attr">z</span>:worleyDepth}, f, o);
         }
     },</pre></div></div>
             
@@ -2018,7 +2018,7 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
             <span class="hljs-keyword">const</span> f = worleyDistanceFunctions[<span class="hljs-variable constant_">MANHATTAN_DISTANCE</span>];
             <span class="hljs-keyword">const</span> o = worleyOutputFunctions[worleyOutput];
 
-            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">worleyNoise</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, {<span class="hljs-attr">x</span>:x, <span class="hljs-attr">y</span>:y, <span class="hljs-attr">z</span>:worleyDepth}, f, o);
+            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">worleyNoise</span>({<span class="hljs-attr">x</span>:x, <span class="hljs-attr">y</span>:y, <span class="hljs-attr">z</span>:worleyDepth}, f, o);
         }
     },
 };</pre></div></div>
@@ -2053,7 +2053,7 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
 
         perm[i] = i;
     }
-    
+
     <span class="hljs-keyword">while</span> (--i) {
 
         j = <span class="hljs-title function_">_floor</span>(rndEngine.<span class="hljs-title function_">random</span>() * size);
@@ -2061,7 +2061,7 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
         perm[i] = perm[j];
         perm[j] = k;
     }
-    
+
     <span class="hljs-keyword">for</span>(i = <span class="hljs-number">0</span>; i &lt; size; i++) {
 
         perm[i + size] = perm[i];
@@ -2353,12 +2353,13 @@ P.<span class="hljs-property">worleyNoise</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-keyword">let</span> lastRandom,
         numberFeaturePoints,
-        randomDiff = { <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">z</span>: <span class="hljs-number">0</span> },
         featurePoint = { <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">z</span>: <span class="hljs-number">0</span> };
+
+    <span class="hljs-keyword">const</span> randomDiff = { <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">z</span>: <span class="hljs-number">0</span> };
 
     <span class="hljs-keyword">let</span> cubeX, cubeY, cubeZ;
 
-    <span class="hljs-keyword">let</span> distanceArray = [<span class="hljs-number">9999999</span>, <span class="hljs-number">9999999</span>, <span class="hljs-number">9999999</span>];
+    <span class="hljs-keyword">const</span> distanceArray = [<span class="hljs-number">9999999</span>, <span class="hljs-number">9999999</span>, <span class="hljs-number">9999999</span>];
 
     <span class="hljs-keyword">let</span> {<span class="hljs-attr">x</span>:inputX, <span class="hljs-attr">y</span>:inputY, <span class="hljs-attr">z</span>:inputZ} = input;
     inputX = <span class="hljs-title function_">_floor</span>(inputX);

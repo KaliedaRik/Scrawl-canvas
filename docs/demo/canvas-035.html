@@ -869,7 +869,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>,
     styles = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">styles</span>,
     cells = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">cell</span>;
 
@@ -1014,7 +1014,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
               </div>
               <p>Create a spritesheet-based pattern</p>
 <ul>
-<li>As defined in the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern">CanvasPattern API</a> the pattern constructor takes an image source (&lt;img&gt;, SVG &lt;image&gt;, &lt;video&gt;, &lt;canvas&gt;, ImageBitmap, or OffscreenCanvas) as its argument, but is not able to use just a part of that source for the pattern. </li>
+<li>As defined in the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern">CanvasPattern API</a> the pattern constructor takes an image source (&lt;img&gt;, SVG &lt;image&gt;, &lt;video&gt;, &lt;canvas&gt;, ImageBitmap, or OffscreenCanvas) as its argument, but is not able to use just a part of that source for the pattern.</li>
 <li>To use a spritesheet as a source, we need to work around this limitation by putting a Picture entity using the spritesheet into a Cell, then using the Cell as the pattern’s source.</li>
 </ul>
 
@@ -1090,7 +1090,7 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> matrix = styles[<span class="hljs-string">&#x27;bunny-pattern&#x27;</span>].<span class="hljs-property">patternMatrix</span>;
+    <span class="hljs-keyword">const</span> matrix = styles[<span class="hljs-string">&#x27;bunny-pattern&#x27;</span>].<span class="hljs-property">patternMatrix</span>;
     <span class="hljs-keyword">if</span> (matrix) <span class="hljs-keyword">return</span> <span class="hljs-string">`    Matrix: [<span class="hljs-subst">${matrix.a}</span>, <span class="hljs-subst">${matrix.b}</span>, <span class="hljs-subst">${matrix.c}</span>, <span class="hljs-subst">${matrix.d}</span>, <span class="hljs-subst">${matrix.e}</span>, <span class="hljs-subst">${matrix.f}</span>]
     stretchX: <span class="hljs-subst">${matrix.a}</span>, stretchY: <span class="hljs-subst">${matrix.d}</span>
     skewX: <span class="hljs-subst">${matrix.c}</span>, skewY: <span class="hljs-subst">${matrix.b}</span>
@@ -1211,23 +1211,23 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myPatterns = [styles[<span class="hljs-string">&#x27;bunny-pattern&#x27;</span>], styles[<span class="hljs-string">&#x27;leaves-pattern&#x27;</span>], styles[<span class="hljs-string">&#x27;video-pattern&#x27;</span>], cells[<span class="hljs-string">&#x27;cell-pattern&#x27;</span>], cells[<span class="hljs-string">&#x27;cat-pattern&#x27;</span>]];
 
-<span class="hljs-keyword">let</span> <span class="hljs-title function_">updateRepeat</span> = (<span class="hljs-params">e</span>) =&gt; {
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateRepeat</span> = (<span class="hljs-params">e</span>) =&gt; {
 
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+    <span class="hljs-keyword">const</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
     myPatterns.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">set</span>({<span class="hljs-attr">repeat</span>: val}));
 };
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateRepeat, <span class="hljs-string">&#x27;#repeat&#x27;</span>);
 
-<span class="hljs-keyword">let</span> <span class="hljs-title function_">updateMatrix</span> = (<span class="hljs-params">e</span>) =&gt; {
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateMatrix</span> = (<span class="hljs-params">e</span>) =&gt; {
 
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>,
+    <span class="hljs-keyword">const</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>,
         id = e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>;
 
     myPatterns.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">set</span>({[id]: <span class="hljs-built_in">parseFloat</span>(val)}));

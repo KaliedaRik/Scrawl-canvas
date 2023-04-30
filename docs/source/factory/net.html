@@ -815,7 +815,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p><strong>historyLength</strong> - positive integer Number - every Particle will keep a record of its recent state, in a set of ParticleHistory arrays stored in the Particle’s <code>history</code> Array. The Net entity will set the maximum permitted length of the history array whenever it generates a new Particle. </p>
+              <p><strong>historyLength</strong> - positive integer Number - every Particle will keep a record of its recent state, in a set of ParticleHistory arrays stored in the Particle’s <code>history</code> Array. The Net entity will set the maximum permitted length of the history array whenever it generates a new Particle.</p>
 
             </div>
             
@@ -1148,10 +1148,10 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
 
 P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
 
-    <span class="hljs-keyword">let</span> forces = items.<span class="hljs-property">forces</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">forces</span> || <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">const</span> forces = items.<span class="hljs-property">forces</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">forces</span> || <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">if</span> (forces) {
 
-        <span class="hljs-keyword">let</span> tempForces = [];
+        <span class="hljs-keyword">const</span> tempForces = [];
         forces.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> {
 
             <span class="hljs-keyword">if</span> (f.<span class="hljs-property">substring</span>) tempForces.<span class="hljs-title function_">push</span>(f);
@@ -1160,7 +1160,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         copy.<span class="hljs-property">forces</span> = tempForces;
     }
 
-    <span class="hljs-keyword">let</span> tempParticles = [];
+    <span class="hljs-keyword">const</span> tempParticles = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> tempParticles.<span class="hljs-title function_">push</span>(p.<span class="hljs-title function_">saveAsPacket</span>()));
     copy.<span class="hljs-property">particleStore</span> = tempParticles;
 
@@ -1201,7 +1201,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefact, killWorld</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">isRunning</span> = <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">if</span> (killArtefact) {       
+    <span class="hljs-keyword">if</span> (killArtefact) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefact</span>.<span class="hljs-title function_">kill</span>();
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">shapeTemplate</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">shapeTemplate</span>.<span class="hljs-title function_">kill</span>();
@@ -1417,8 +1417,9 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> deltaTime = _tick,
-        now = <span class="hljs-title function_">_now</span>();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> deltaTime = _tick;
+
+    <span class="hljs-keyword">const</span> now = <span class="hljs-title function_">_now</span>();
 
     <span class="hljs-keyword">if</span> (lastUpdated) deltaTime = (now - lastUpdated) / <span class="hljs-number">1000</span>;</pre></div></div>
             
@@ -1469,7 +1470,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
               <div class="sswrap ">
                 <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
-              <p>The physics core of the function: </p>
+              <p>The physics core of the function:</p>
 <ul>
 <li>Calculate the forces acting on each of the Net entity’s particles</li>
 <li>Add the Spring constraints to the particles</li>
@@ -1503,10 +1504,10 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         engine.<span class="hljs-property">globalAlpha</span> = globalAlpha;
         engine.<span class="hljs-property">globalCompositeOperation</span> = globalCompositeOperation;
         engine.<span class="hljs-property">strokeStyle</span> = showSpringsColor;
-        engine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>,
-        engine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>,
-        engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>,
-        engine.<span class="hljs-property">shadowColor</span> = <span class="hljs-variable constant_">BLANK</span>,
+        engine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>;
+        engine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>;
+        engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
+        engine.<span class="hljs-property">shadowColor</span> = <span class="hljs-variable constant_">BLANK</span>;
         engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-number">1</span>;
         engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
         engine.<span class="hljs-title function_">beginPath</span>();
@@ -1567,10 +1568,10 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         engine.<span class="hljs-property">globalCompositeOperation</span> = globalCompositeOperation;
         engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-number">1</span>;
         engine.<span class="hljs-property">strokeStyle</span> = hitRadiusColor;
-        engine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>,
-        engine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>,
-        engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>,
-        engine.<span class="hljs-property">shadowColor</span> = <span class="hljs-variable constant_">BLANK</span>,
+        engine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>;
+        engine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>;
+        engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
+        engine.<span class="hljs-property">shadowColor</span> = <span class="hljs-variable constant_">BLANK</span>;
 
         engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
         engine.<span class="hljs-title function_">beginPath</span>();
@@ -1579,7 +1580,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
             engine.<span class="hljs-title function_">moveTo</span>(p.<span class="hljs-property">position</span>.<span class="hljs-property">x</span>, p.<span class="hljs-property">position</span>.<span class="hljs-property">y</span>);
             engine.<span class="hljs-title function_">arc</span>(p.<span class="hljs-property">position</span>.<span class="hljs-property">x</span>, p.<span class="hljs-property">position</span>.<span class="hljs-property">y</span>, hitRadius, <span class="hljs-number">0</span>, _piDouble);
         });
-        
+
         engine.<span class="hljs-title function_">stroke</span>();
         engine.<span class="hljs-title function_">restore</span>();
     }</pre></div></div>
@@ -1616,7 +1617,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">restart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">purgeParticlesFromLibrary</span>();
-    
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastUpdated</span> = <span class="hljs-title function_">_now</span>();
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
@@ -1633,7 +1634,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
               </div>
               <p><code>checkHit</code> - overwrites the function defined in mixin/position.js</p>
 <ul>
-<li>The Net entity’s hit areas are circles centred on the entity’s Particle’s positions. </li>
+<li>The Net entity’s hit areas are circles centred on the entity’s Particle’s positions.</li>
 <li>Nets cannot be dragged; the Particles that make up the Net can be dragged.</li>
 </ul>
 
@@ -1647,10 +1648,10 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">noUserInteraction</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">const</span> tests = (!<span class="hljs-title function_">_isArray</span>(items)) ?  [items] : items;
+    <span class="hljs-keyword">const</span> tests = (!<span class="hljs-title function_">_isArray</span>(items)) ?  [items] : items,
+        particleStore = <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span>;
 
-    <span class="hljs-keyword">let</span> particleStore = <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span>,
-        res = <span class="hljs-literal">false</span>,
+    <span class="hljs-keyword">let</span> res = <span class="hljs-literal">false</span>,
         tx, ty, i, iz, p;
 
     <span class="hljs-keyword">if</span> (tests.<span class="hljs-title function_">some</span>(<span class="hljs-function"><span class="hljs-params">test</span> =&gt;</span> {
@@ -1748,7 +1749,6 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
         particle.<span class="hljs-property">isBeingDragged</span> = items;
         particle.<span class="hljs-property">dragOffset</span> = <span class="hljs-title function_">requestVector</span>(particle.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(items);
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span>
     }
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -1808,19 +1808,17 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
     <span class="hljs-keyword">const</span> { springs, springConstant, damperConstant, restLength } = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">let</span> v, l, s;
+    <span class="hljs-keyword">const</span> v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
+    <span class="hljs-keyword">const</span> l = v.<span class="hljs-title function_">getMagnitude</span>();
 
-    v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
-    l = v.<span class="hljs-title function_">getMagnitude</span>();
-
-    s = <span class="hljs-title function_">makeSpring</span>({
+    <span class="hljs-keyword">const</span> s = <span class="hljs-title function_">makeSpring</span>({
 
         <span class="hljs-attr">name</span>: springName,
 
         particleFrom,
         particleTo,
 
-        springConstant, 
+        springConstant,
         damperConstant,
 
         <span class="hljs-attr">restLength</span>: l * restLength,
@@ -1854,11 +1852,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
         <span class="hljs-keyword">if</span> (host &amp;&amp; rows &gt; <span class="hljs-number">0</span> &amp;&amp; columns &gt; <span class="hljs-number">0</span>) {
 
-            <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
-            <span class="hljs-keyword">let</span> [, height] = host.<span class="hljs-property">currentDimensions</span>;
+            <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
+            <span class="hljs-keyword">const</span> [, height] = host.<span class="hljs-property">currentDimensions</span>;
 
-            <span class="hljs-keyword">let</span> deltaR = (rowDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
-            <span class="hljs-keyword">let</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
+            <span class="hljs-keyword">const</span> deltaR = (rowDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
+            <span class="hljs-keyword">const</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
 
             <span class="hljs-keyword">let</span> dx, dy, p, i, j;</pre></div></div>
             
@@ -1895,9 +1893,9 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
                         <span class="hljs-attr">velocityY</span>: <span class="hljs-number">0</span>,
                         <span class="hljs-attr">velocityZ</span>: <span class="hljs-number">0</span>,
 
-                        historyLength, 
-                        engine, 
-                        forces, 
+                        historyLength,
+                        engine,
+                        forces,
 
                         mass,
 
@@ -1970,11 +1968,11 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
         <span class="hljs-keyword">if</span> (host &amp;&amp; rows &gt; <span class="hljs-number">0</span> &amp;&amp; columns &gt; <span class="hljs-number">0</span>) {
 
-            <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
-            <span class="hljs-keyword">let</span> [, height] = host.<span class="hljs-property">currentDimensions</span>;
+            <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
+            <span class="hljs-keyword">const</span> [, height] = host.<span class="hljs-property">currentDimensions</span>;
 
-            <span class="hljs-keyword">let</span> deltaR = (rowDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
-            <span class="hljs-keyword">let</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
+            <span class="hljs-keyword">const</span> deltaR = (rowDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
+            <span class="hljs-keyword">const</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
 
             <span class="hljs-keyword">let</span> dx, dy, p, i, j;</pre></div></div>
             
@@ -2011,9 +2009,9 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
                         <span class="hljs-attr">velocityY</span>: <span class="hljs-number">0</span>,
                         <span class="hljs-attr">velocityZ</span>: <span class="hljs-number">0</span>,
 
-                        historyLength, 
-                        engine, 
-                        forces, 
+                        historyLength,
+                        engine,
+                        forces,
 
                         mass,
 
@@ -2107,7 +2105,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision; i++) {
 
-                <span class="hljs-keyword">let</span> coords = shapeTemplate.<span class="hljs-title function_">getPathPositionData</span>(i / precision);
+                <span class="hljs-keyword">const</span> coords = shapeTemplate.<span class="hljs-title function_">getPathPositionData</span>(i / precision);
 
                 p = <span class="hljs-title function_">makeParticle</span>({
 
@@ -2215,7 +2213,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision; i++) {
 
-                <span class="hljs-keyword">let</span> coords = shapeTemplate.<span class="hljs-title function_">getPathPositionData</span>(i / precision);
+                <span class="hljs-keyword">const</span> coords = shapeTemplate.<span class="hljs-title function_">getPathPositionData</span>(i / precision);
 
                 p = <span class="hljs-title function_">makeParticle</span>({
 
@@ -2298,7 +2296,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
                 springMaker.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>);
             }
 
-            <span class="hljs-keyword">let</span> halfPrecision = <span class="hljs-title function_">_floor</span>(precision / <span class="hljs-number">2</span>);
+            <span class="hljs-keyword">const</span> halfPrecision = <span class="hljs-title function_">_floor</span>(precision / <span class="hljs-number">2</span>);
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - halfPrecision; i++) {
 
@@ -2328,13 +2326,13 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>    [<span class="hljs-variable constant_">HUB_SPOKE</span>]: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">let</span> { shapeTemplate, precision } = <span class="hljs-variable language_">this</span>;
+        <span class="hljs-keyword">const</span> { shapeTemplate, precision } = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">if</span> (shapeTemplate &amp;&amp; shapeTemplate.<span class="hljs-property">type</span> &amp;&amp; precision) {
 
             <span class="hljs-keyword">const</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, mass, name, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
 
-            <span class="hljs-keyword">let</span> i, p, f, t, hub;
+            <span class="hljs-keyword">let</span> i, p, f, t;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">HUB_ARTEFACTS_1</span>.<span class="hljs-title function_">includes</span>(shapeTemplate.<span class="hljs-property">type</span>)) {</pre></div></div>
             
@@ -2353,7 +2351,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision; i++) {
 
-                    <span class="hljs-keyword">let</span> coords = shapeTemplate.<span class="hljs-title function_">getPathPositionData</span>(i / precision);
+                    <span class="hljs-keyword">const</span> coords = shapeTemplate.<span class="hljs-title function_">getPathPositionData</span>(i / precision);
 
                     p = <span class="hljs-title function_">makeParticle</span>({
 
@@ -2433,7 +2431,7 @@ else if (HUB_ARTEFACTS_3.includes(host.type)) {}</p>
             <div class="content"><div class='highlight'><pre>
             <span class="hljs-keyword">const</span> [x, y] = shapeTemplate.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">POSITION</span>);
 
-            hub = <span class="hljs-title function_">makeParticle</span>({
+            <span class="hljs-keyword">const</span> hub = <span class="hljs-title function_">makeParticle</span>({
 
                 <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-hub`</span>,
 

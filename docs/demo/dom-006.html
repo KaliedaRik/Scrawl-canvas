@@ -870,7 +870,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];
 <span class="hljs-keyword">let</span> myTracker;</pre></div></div>
             
         </li>
@@ -882,7 +882,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Create a new tracker to handle tween and ticker action/progress, and set some attributes on it. 
+              <p>Create a new tracker to handle tween and ticker action/progress, and set some attributes on it.
 @ts-expect-error</p>
 
             </div>
@@ -905,7 +905,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-title function_">ga</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];</pre></div></div>
+    <span class="hljs-keyword">const</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];</pre></div></div>
             
         </li>
         
@@ -953,7 +953,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> artefact = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> artefact = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>,
     stack = artefact.<span class="hljs-property">mystack</span>,
     element = artefact.<span class="hljs-property">myelement</span>;</pre></div></div>
             
@@ -1014,7 +1014,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> modelTicker = scrawl.<span class="hljs-title function_">makeTicker</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> modelTicker = scrawl.<span class="hljs-title function_">makeTicker</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;modelTicker&#x27;</span>,
     <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;12s&#x27;</span>
@@ -1033,7 +1033,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ticker = modelTicker.<span class="hljs-title function_">clone</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ticker = modelTicker.<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myTicker&#x27;</span>,
 });</pre></div></div>
             
@@ -1073,7 +1073,7 @@
             <span class="hljs-attr">end</span>: <span class="hljs-number">340</span>
         }
     ]
-}).<span class="hljs-title function_">clone</span>({ 
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mySecondClonedTween&#x27;</span>,
     <span class="hljs-attr">targets</span>: artefact.<span class="hljs-property">mythirdelement</span>,
     <span class="hljs-attr">useNewTicker</span>: <span class="hljs-literal">true</span>,
@@ -1101,7 +1101,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> red = { <span class="hljs-attr">css</span>: { <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;red&#x27;</span> }},
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> red = { <span class="hljs-attr">css</span>: { <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;red&#x27;</span> }},
     purple = { <span class="hljs-attr">css</span>: { <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;purple&#x27;</span> }},
     brown = { <span class="hljs-attr">css</span>: { <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;brown&#x27;</span> }},
     orange = { <span class="hljs-attr">css</span>: { <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;orange&#x27;</span> }},
@@ -1188,12 +1188,12 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;lapStarted&#x27;</span>,
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;0%&#x27;</span>,
 
-    <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { 
+    <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
         <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;Ticker loop starting (forwards)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>) ;
     },
 
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { 
-        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;Ticker loop starting (reversed)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>); 
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;Ticker loop starting (reversed)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>);
     },
 
 }).<span class="hljs-title function_">clone</span>({
@@ -1201,12 +1201,12 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;lapCompleted&#x27;</span>,
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
-    <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { 
-        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;100% complete (forwards)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>); 
+    <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;100% complete (forwards)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>);
     },
 
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { 
-        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;100% complete (reversed)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>); 
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;100% complete (reversed)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>);
     },
 
 }).<span class="hljs-title function_">clone</span>({
@@ -1214,12 +1214,12 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;halfwayThere&#x27;</span>,
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
 
-    <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { 
-        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;50% complete (forwards)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>); 
+    <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;50% complete (forwards)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>);
     },
 
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { 
-        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;50% complete (reversed)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>); 
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;50% complete (reversed)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>);
     },
 });</pre></div></div>
             
@@ -1236,16 +1236,16 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> smallboat = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">tween</span>.<span class="hljs-property">mySecondClonedTween</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> smallboat = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">tween</span>.<span class="hljs-property">mySecondClonedTween</span>;
 
 smallboat.<span class="hljs-title function_">set</span>({
 
-    <span class="hljs-attr">onHalt</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { 
-        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Tween state&#x27;</span>, <span class="hljs-string">&#x27;halt&#x27;</span>, <span class="hljs-string">`Tween <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>) 
+    <span class="hljs-attr">onHalt</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Tween state&#x27;</span>, <span class="hljs-string">&#x27;halt&#x27;</span>, <span class="hljs-string">`Tween <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>)
     },
 
-    <span class="hljs-attr">onResume</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { 
-        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Tween state&#x27;</span>, <span class="hljs-string">&#x27;resume&#x27;</span>, <span class="hljs-string">`Tween <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>) 
+    <span class="hljs-attr">onResume</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Tween state&#x27;</span>, <span class="hljs-string">&#x27;resume&#x27;</span>, <span class="hljs-string">`Tween <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.ticker}</span>`</span>)
     },
 });</pre></div></div>
             
@@ -1315,7 +1315,7 @@ smallboat.<span class="hljs-title function_">run</span>();</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">changeDirection</span> = (<span class="hljs-params">e</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">changeDirection</span> = (<span class="hljs-params">e</span>) =&gt; {
 
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;

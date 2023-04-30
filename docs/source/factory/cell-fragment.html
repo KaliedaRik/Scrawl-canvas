@@ -704,8 +704,10 @@ P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable langua
 
     <span class="hljs-keyword">if</span> (!cellPool.<span class="hljs-property">length</span>) cellPool.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">CellFragment</span>(<span class="hljs-string">`pool_<span class="hljs-subst">${count++}</span>`</span>));
 
-    <span class="hljs-keyword">let</span> c = cellPool.<span class="hljs-title function_">shift</span>();
-    c.<span class="hljs-property">engine</span>.<span class="hljs-title function_">save</span>();</pre></div></div>
+    <span class="hljs-keyword">const</span> c = cellPool.<span class="hljs-title function_">shift</span>();
+    c.<span class="hljs-property">engine</span>.<span class="hljs-title function_">save</span>();
+    <span class="hljs-keyword">return</span> c;
+};</pre></div></div>
             
         </li>
         
@@ -715,22 +717,6 @@ P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable langua
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>console.log(c.name, c.element.width, c.element.height);</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> c;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> - <strong>releaseCell</strong></p>
 

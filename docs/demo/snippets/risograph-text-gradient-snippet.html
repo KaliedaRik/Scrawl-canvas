@@ -238,7 +238,7 @@
 <li>This snippet supports high contrast alternative colors</li>
 <li>This snippet is not animated</li>
 </ul>
-<p><strong>Function input:</strong> </p>
+<p><strong>Function input:</strong></p>
 <ul>
 <li>the DOM element - generally a block or inline-block element.</li>
 </ul>
@@ -298,7 +298,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p><strong>Effects on the element:</strong> </p>
+              <p><strong>Effects on the element:</strong></p>
 <ul>
 <li>Imports the element’s background color, and sets the element background to <code>transparent</code></li>
 <li>Imports the element’s text node text, and sets the text color to <code>transparent</code></li>
@@ -322,7 +322,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
     });</pre></div></div>
             
@@ -354,7 +354,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> { canvas, group, dataset, compStyles, name, fontSize, lineHeight, initCanvas, initPhrase, textGroup, responsiveFunctions, contrastMoreActions, contrastOtherActions, colorSchemeDarkActions, colorSchemeLightActions, additionalDemolishActions } = <span class="hljs-title function_">getSnippetData</span>(snippet, scrawl);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> { canvas, group, dataset, compStyles, name, fontSize, lineHeight, initCanvas, initPhrase, textGroup, responsiveFunctions, contrastMoreActions, contrastOtherActions, colorSchemeDarkActions, colorSchemeLightActions, additionalDemolishActions } = <span class="hljs-title function_">getSnippetData</span>(snippet, scrawl);</pre></div></div>
             
         </li>
         
@@ -639,7 +639,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             p1.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">matrixF</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(localLineHeight / <span class="hljs-number">10</span>),
             });
-            
+
             f1.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">height</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(localLineHeight * randomRadius),
             });

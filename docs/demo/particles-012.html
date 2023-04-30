@@ -871,7 +871,7 @@
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;#bunny&#x27;</span>);
 
-<span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+<span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -899,7 +899,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
     <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
@@ -999,7 +999,7 @@
     <span class="hljs-attr">artefact</span>: scrawl.<span class="hljs-title function_">makeBlock</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;unseen-net-block&#x27;</span>,
-        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>, 
+        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
     }),
 });</pre></div></div>
             
@@ -1266,7 +1266,7 @@ scrawl.makeTracer({
         history.forEach((p, index) =&gt; {
 
             [remaining, z, ...start] = p;
-            
+
             artefact.simpleStamp(host, {
                 start,
                 scale: (len - index) / len,
@@ -1279,13 +1279,13 @@ scrawl.makeTracer({
     name: &#x27;trace-2&#x27;,
     particle: &#x27;test-net-11-14&#x27;,
     artefact: scrawl.library.entity[&#x27;burn-1&#x27;].clone({ name: &#x27;burn-2&#x27;}),
-    
+
 }).clone({
 
     name: &#x27;trace-3&#x27;,
     particle: &#x27;test-net-12-14&#x27;,
     artefact: scrawl.library.entity[&#x27;burn-1&#x27;].clone({ name: &#x27;burn-3&#x27;}),
-    
+
 }).clone({
 
     name: &#x27;trace-4&#x27;,

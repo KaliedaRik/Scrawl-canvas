@@ -701,7 +701,7 @@ P.<span class="hljs-property">setY</span> = <span class="hljs-keyword">function<
 P.<span class="hljs-property">setZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">z</span>) {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(z)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> Vector error - setZ() arguments error: <span class="hljs-subst">${z}</span>`</span>);
-    
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">z</span> = z;
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
@@ -710,7 +710,7 @@ P.<span class="hljs-property">setZ</span> = <span class="hljs-keyword">function<
 P.<span class="hljs-property">setXY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(x, y)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> Vector error - setXY() arguments error: <span class="hljs-subst">${x}</span>, <span class="hljs-subst">${y}</span>`</span>);
-    
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> = x;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> = y;
 
@@ -752,7 +752,7 @@ P.<span class="hljs-property">setFromArray</span> = <span class="hljs-keyword">f
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isArray</span>(args)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> Vector error - setFromArray() arguments error: <span class="hljs-subst">${args}</span>`</span>);
 
     <span class="hljs-keyword">const</span> [x, y, z] = args;
-    
+
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> = x;
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(y)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> = y;
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(z)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">z</span> = z;
@@ -763,7 +763,7 @@ P.<span class="hljs-property">setFromArray</span> = <span class="hljs-keyword">f
 P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> Vector error - setFromVector() arguments error: <span class="hljs-subst">${_stringify(item)}</span>`</span>);
-    
+
     <span class="hljs-keyword">const</span> {x, y, z} = item;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> = x;
@@ -992,7 +992,7 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
 
     <span class="hljs-keyword">let</span> arg = <span class="hljs-title function_">_atan2</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span>);
     arg += (angle * <span class="hljs-number">0.01745329251</span>);
-    
+
     <span class="hljs-keyword">const</span> mag = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMagnitude</span>();
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> = mag * <span class="hljs-title function_">_cos</span>(arg);
@@ -1037,9 +1037,9 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">normalize</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
-    
+
     <span class="hljs-keyword">const</span> val = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getMagnitude</span>();
-    
+
     <span class="hljs-keyword">if</span> (val &gt; <span class="hljs-number">0</span>) {
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> /= val;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> /= val;
@@ -1120,7 +1120,7 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeVector = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Vector</span>(x, y, z);
 };
 

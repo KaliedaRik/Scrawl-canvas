@@ -542,12 +542,12 @@
               <h1 id="crescent-factory">Crescent factory</h1>
 <p>Crescent entitys are formed by the intersection of two circles, rendered onto a DOM &lt;canvas&gt; element using the Canvas 2D API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a> - specifically the arc() method.</p>
 <ul>
-<li>Positioning functionality for the Crescent is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
+<li>Positioning functionality for the Crescent is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin.</li>
 <li>Crescent dimensions are tied closely to its <strong>radius</strong> attribute; relative dimensions are calculated using the Crescent’s Cell container’s width.</li>
-<li>Crescents can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>Crescents can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects.</li>
 <li>They will also accept <strong>Filter</strong> objects.</li>
-<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can use <strong>Anchor</strong> objects for user navigation.</li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
 <li>They can be animated directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Crescents can be cloned, and killed.</li>
 </ul>
@@ -801,7 +801,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p><strong>width</strong> and <strong>height</strong> (and dimensions) values are largely irrelevant to Crescent entitys; they get used internally purely as part of the Display cycle stamp functionality. </p>
+              <p><strong>width</strong> and <strong>height</strong> (and dimensions) values are largely irrelevant to Crescent entitys; they get used internally purely as part of the Display cycle stamp functionality.</p>
 
             </div>
             
@@ -988,7 +988,7 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
             <span class="hljs-keyword">const</span> {engine, element} = cell;
 
             <span class="hljs-keyword">const</span> v = <span class="hljs-title function_">requestCoordinate</span>();
-            
+
             <span class="hljs-keyword">let</span> a, b;</pre></div></div>
             
         </li>
@@ -1099,7 +1099,7 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
 
             <span class="hljs-keyword">const</span> pOuter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
             <span class="hljs-keyword">const</span> pInner = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectInner</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
-        
+
             <span class="hljs-keyword">if</span> (displayIntersect) p.<span class="hljs-title function_">arc</span>(x, y, oR, ocs, oce);
             <span class="hljs-keyword">else</span> p.<span class="hljs-title function_">arc</span>(x, y, oR, ocs, oce, <span class="hljs-literal">true</span>);
 
@@ -1342,7 +1342,7 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
 
     engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">DESTINATION_OUT</span>;
     engine.<span class="hljs-title function_">fill</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-    
+
     engine.<span class="hljs-property">globalCompositeOperation</span> = gco;
 };</pre></div></div>
             

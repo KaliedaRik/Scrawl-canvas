@@ -1323,7 +1323,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
-              <p><code>initializeDomLayout</code> - internal function </p>
+              <p><code>initializeDomLayout</code> - internal function</p>
 <ul>
 <li>Used by factory constructors to help wrap DOM elements in a Stack, Canvas or Element wrapper</li>
 <li>TODO - there’s a lot of improvements we can do here - the aim should be to create the wrapper object and update the objects DOM element’s style and dimensions attributes - specifically shifting <code>position</code> from “static” to “absolute” - in a way that does not disturb the page view in any way whatsoever (pixel-perfect!) so website visitors are completely unaware that the work has taken place</li>
@@ -1336,7 +1336,7 @@
         <span class="hljs-keyword">const</span> el = items.<span class="hljs-property">domElement</span>;
 
         <span class="hljs-keyword">if</span> (el) {
-            
+
             <span class="hljs-keyword">const</span> style = el.<span class="hljs-property">style</span>;
 
             style.<span class="hljs-property">boxSizing</span> = <span class="hljs-variable constant_">BORDER_BOX</span>;
@@ -1730,7 +1730,7 @@
                 x = currentCorePosition.<span class="hljs-property">scrollX</span> - (here.<span class="hljs-property">offsetX</span> || <span class="hljs-number">0</span>),
                 y = currentCorePosition.<span class="hljs-property">scrollY</span> - (here.<span class="hljs-property">offsetY</span> || <span class="hljs-number">0</span>),
                 results = [];
-            
+
             <span class="hljs-keyword">let</span> client, coord;
 
             <span class="hljs-keyword">const</span> cornerPush = <span class="hljs-keyword">function</span> (<span class="hljs-params">c</span>) {
@@ -1829,7 +1829,7 @@
               </div>
               <p><code>cleanPathObject</code></p>
 <ul>
-<li>Scrawl-canvas uses the DOM wrapper element’s child &lt;div&gt; elements’ position coordinates to build a <code>Path2D object</code> (which will be some form of trapezium). </li>
+<li>Scrawl-canvas uses the DOM wrapper element’s child &lt;div&gt; elements’ position coordinates to build a <code>Path2D object</code> (which will be some form of trapezium).</li>
 <li>We can now perform collision detection in the same way as we do for Canvas-based entity objects using <code>CanvasRenderingContext2D.isPointInPath</code></li>
 </ul>
 
@@ -1929,9 +1929,9 @@
                 <span class="hljs-attr">artefact</span>: <span class="hljs-variable language_">this</span>,
             };
         }
-        
+
         <span class="hljs-keyword">if</span> (flag) <span class="hljs-title function_">releaseCell</span>(cell);
-        
+
         <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     };</pre></div></div>
             
@@ -2012,7 +2012,7 @@
                 <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">addOwnRotationToMimic</span>) processedRotation.<span class="hljs-title function_">quaternionRotate</span>(calculatedRotation);
             }
             <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicRotation</span> = <span class="hljs-literal">true</span>;
-        } 
+        }
         <span class="hljs-keyword">else</span> {
 
             processedRotation.<span class="hljs-title function_">set</span>(calculatedRotation);
@@ -2029,7 +2029,7 @@
         <span class="hljs-title function_">releaseQuaternion</span>(processedRotation);
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span> = <span class="hljs-literal">true</span>;
-        
+
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mimicked</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimicked</span>.<span class="hljs-property">length</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicRotation</span> = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
@@ -2171,7 +2171,7 @@
 <li>The functionality for performing the update is defined in the <a href="../core/document.html">document</a> module’s <code>domShow</code> function, which will be called for each DOM-based artefact during the ‘show’ stage of the Display cycle</li>
 <li>Function returns a promise</li>
 </ul>
-<p>Only DOM elements whose attribute values have changed will be updated - as made clear by setting the appropriate dirty flags. Affected style attributes are: </p>
+<p>Only DOM elements whose attribute values have changed will be updated - as made clear by setting the appropriate dirty flags. Affected style attributes are:</p>
 <ul>
 <li><code>perspectiveOrigin</code> and <code>perspective</code> - Stack wrappers only</li>
 <li><code>position</code> (relative vs absolute, not position within a Stack)</li>
@@ -2218,8 +2218,9 @@
             scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>,
             rotation = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRotation</span>;
 
-        <span class="hljs-keyword">let</span> nTransformOrigin = <span class="hljs-string">`<span class="hljs-subst">${handleX}</span>px <span class="hljs-subst">${handleY}</span>px 0`</span>,
-            nTransform = <span class="hljs-string">`translate(<span class="hljs-subst">${stampX - handleX}</span>px,<span class="hljs-subst">${stampY - handleY}</span>px)`</span>;
+        <span class="hljs-keyword">const</span> nTransformOrigin = <span class="hljs-string">`<span class="hljs-subst">${handleX}</span>px <span class="hljs-subst">${handleY}</span>px 0`</span>;
+
+        <span class="hljs-keyword">let</span> nTransform = <span class="hljs-string">`translate(<span class="hljs-subst">${stampX - handleX}</span>px,<span class="hljs-subst">${stampY - handleY}</span>px)`</span>;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">yaw</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">pitch</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">roll</span> || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">addPivotRotation</span>) || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicRotation</span>) || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">addPathRotation</span>)) {
 

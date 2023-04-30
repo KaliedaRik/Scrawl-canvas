@@ -372,7 +372,8 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">reducedMotionFunctions</span> = (<span class="hljs-params">items</span>) =&gt; {
 
-    <span class="hljs-keyword">let</span> {fixed, animated, animation, commence, halt } = items;
+    <span class="hljs-keyword">const</span> {animation, commence } = items;
+    <span class="hljs-keyword">let</span> {fixed, animated, halt } = items;
 
     <span class="hljs-keyword">if</span> (!(fixed &amp;&amp; animated &amp;&amp; animation &amp;&amp; commence)) <span class="hljs-keyword">return</span> {};
 

@@ -1040,11 +1040,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
         <span class="hljs-keyword">const</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
-        myFilter.<span class="hljs-title function_">set</span>({ 
-            <span class="hljs-attr">reference</span>: val, 
+        myFilter.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">reference</span>: val,
         });
 
-        <span class="hljs-keyword">let</span> [r, g, b, a] = colorFactory.<span class="hljs-title function_">extractRGBfromColor</span>(val)</pre></div></div>
+        <span class="hljs-keyword">const</span> [r, g, b, a] = colorFactory.<span class="hljs-title function_">extractRGBfromColor</span>(val)</pre></div></div>
             
         </li>
         

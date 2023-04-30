@@ -722,7 +722,7 @@
 
             <span class="hljs-keyword">const</span> setters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">setters</span>,
                 defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>;
-            
+
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
 
                 key = keys[i];
@@ -771,7 +771,7 @@
 
             <span class="hljs-keyword">const</span> setters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">deltaSetters</span>,
                 defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>;
-            
+
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
 
                 key = keys[i];
@@ -995,7 +995,7 @@ box.<span class="hljs-title function_">kill</span>()
 
                     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(val) &amp;&amp; val != <span class="hljs-literal">null</span>) {
 
-                        <span class="hljs-keyword">let</span> func = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stringifyFunction</span>(val);
+                        <span class="hljs-keyword">const</span> func = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stringifyFunction</span>(val);
 
                         <span class="hljs-keyword">if</span> (func &amp;&amp; func.<span class="hljs-property">length</span>) copy[key] = func;
                     }
@@ -1027,7 +1027,7 @@ box.<span class="hljs-title function_">kill</span>()
             <div class="content"><div class='highlight'><pre>                    test = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processPacketOut</span>(key, val, packetDefaultInclusions);
                     <span class="hljs-keyword">if</span> (test) copy[key] = val;
                 }
-            } 
+            }
         }, <span class="hljs-variable language_">this</span>);</pre></div></div>
             
         </li>
@@ -1493,6 +1493,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
                 <span class="hljs-keyword">let</span> args, func, f;
 
+<span class="hljs-comment">/* eslint-disable-next-line */</span>
                 [args, func] = fItem.<span class="hljs-title function_">split</span>(<span class="hljs-variable constant_">PACKET_DIVIDER</span>);
 
                 args = args.<span class="hljs-title function_">split</span>(<span class="hljs-variable constant_">ARG_SPLITTER</span>);
@@ -1679,7 +1680,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">makeName</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">substring</span> &amp;&amp; !library[<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.lib}</span>names`</span>].<span class="hljs-title function_">includes</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = item;                
+        <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">substring</span> &amp;&amp; !library[<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.lib}</span>names`</span>].<span class="hljs-title function_">includes</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = item;
         <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = <span class="hljs-title function_">generateUniqueString</span>();
 
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
@@ -1694,7 +1695,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
-              <p><code>register</code> - Many (but not all) factory functions will register their result objects in the scrawl lobrary. The section where the object is stored is dependent on the factory function’s type value. </p>
+              <p><code>register</code> - Many (but not all) factory functions will register their result objects in the scrawl lobrary. The section where the object is stored is dependent on the factory function’s type value.</p>
 <ul>
 <li>Some objects are stored in more than one place - for example the artefacts section will include Stack, Element and Canvas objects in addition to various Entity objects</li>
 </ul>

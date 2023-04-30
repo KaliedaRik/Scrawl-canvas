@@ -1189,9 +1189,9 @@ scrawl.<span class="hljs-title function_">makeGroup</span>({
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">frameDragZone</span>()) {
 
-        <span class="hljs-keyword">let</span> [x, y] = frame.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;position&quot;</span>);
+        <span class="hljs-keyword">const</span> [x, y] = frame.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;position&quot;</span>);
 
-        <span class="hljs-keyword">let</span> newX = x * mainMapRatio,
+        <span class="hljs-keyword">const</span> newX = x * mainMapRatio,
         newY = y * mainMapRatio;</pre></div></div>
             
         </li>
@@ -1343,7 +1343,7 @@ scrawl.<span class="hljs-title function_">makeGroup</span>({
             <span class="hljs-keyword">break</span>;
     }
 
-    <span class="hljs-keyword">let</span> newX = x * mainMapRatio,
+    <span class="hljs-keyword">const</span> newX = x * mainMapRatio,
         newY = y * mainMapRatio;
 
     frame.<span class="hljs-title function_">set</span>({

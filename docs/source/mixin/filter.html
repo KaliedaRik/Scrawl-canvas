@@ -713,11 +713,11 @@
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilters</span> = <span class="hljs-literal">true</span>;
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
-        
+
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
-                
-                <span class="hljs-title function_">pushUnique</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span>, item); 
+
+                <span class="hljs-title function_">pushUnique</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span>, item);
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilters</span> = <span class="hljs-literal">true</span>;
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
@@ -754,7 +754,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p><code>updateFilterIdentifier</code> - manually trigger re-memoization. The function’s (optional) argument is a boolean. </p>
+              <p><code>updateFilterIdentifier</code> - manually trigger re-memoization. The function’s (optional) argument is a boolean.</p>
 
             </div>
             
@@ -933,7 +933,7 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilters</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
-        
+
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
@@ -959,7 +959,7 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilters</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
-        
+
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
@@ -1123,7 +1123,7 @@
             <span class="hljs-keyword">if</span> (state.<span class="hljs-property">dirtyFilterIdentifier</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">else</span> {
 
-                <span class="hljs-keyword">let</span> {fillStyle, strokeStyle} = state;
+                <span class="hljs-keyword">const</span> {fillStyle, strokeStyle} = state;
 
                 <span class="hljs-keyword">if</span> (styles[fillStyle] &amp;&amp; styles[fillStyle].<span class="hljs-property">dirtyFilterIdentifier</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 

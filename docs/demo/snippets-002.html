@@ -853,7 +853,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>Import the Scrawl-canvas object </p>
+              <p>Import the Scrawl-canvas object</p>
 <ul>
 <li>there’s various ways to do this. See <a href="../dom-001.html">Demo DOM-001</a> for more details</li>
 </ul>
@@ -876,7 +876,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> greenBox <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/green-box-snippet.js&#x27;</span>;
-<span class="hljs-keyword">let</span> boxElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.green-box&#x27;</span>);
+<span class="hljs-keyword">const</span> boxElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.green-box&#x27;</span>);
 boxElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">greenBox</span>(scrawl, el));</pre></div></div>
             
         </li>
@@ -893,7 +893,7 @@ boxElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> artefact = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> artefact = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>,
     stack = artefact.<span class="hljs-property">mystack</span>,
     element = artefact.<span class="hljs-property">myelement</span>;</pre></div></div>
             
@@ -965,7 +965,7 @@ boxElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> stackCheck = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> stackCheck = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> active = <span class="hljs-literal">false</span>;
 
@@ -995,11 +995,12 @@ boxElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
-        testTime, testNow,
-        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testTime, testNow;
+
+    <span class="hljs-keyword">const</span> testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 

@@ -866,12 +866,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> naturalWidth = <span class="hljs-number">4160</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> naturalWidth = <span class="hljs-number">4160</span>,
     naturalHeight = <span class="hljs-number">3120</span>,
     frameDimension = <span class="hljs-number">500</span>,
     maxScale = naturalHeight / frameDimension,
-    currentScale = maxScale,
-    minScale = <span class="hljs-number">1</span>,
+    minScale = <span class="hljs-number">1</span>;
+
+<span class="hljs-keyword">let</span> currentScale = maxScale,
     fromLeft = <span class="hljs-number">0</span>,
     fromTop = <span class="hljs-number">0</span>;</pre></div></div>
             
@@ -888,7 +889,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>, 
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>,
     base = canvas.<span class="hljs-property">base</span>,
     baseGroup = base.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;group&#x27;</span>);</pre></div></div>
             
@@ -918,7 +919,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> piccie = scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccie = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;river-pic&#x27;</span>,
 
@@ -993,7 +994,7 @@
 
     e.<span class="hljs-title function_">preventDefault</span>();
 
-    <span class="hljs-keyword">let</span> oldScale = currentScale,
+    <span class="hljs-keyword">const</span> oldScale = currentScale,
         here = canvas.<span class="hljs-property">here</span>;
 
     currentScale += (e.<span class="hljs-property">deltaY</span> * -<span class="hljs-number">0.0005</span>);
@@ -1001,7 +1002,7 @@
     <span class="hljs-keyword">if</span> (currentScale &gt; maxScale) currentScale = maxScale;
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentScale &lt; minScale) currentScale = minScale;
 
-    <span class="hljs-keyword">let</span> delta = (frameDimension * oldScale) - (frameDimension * currentScale);
+    <span class="hljs-keyword">const</span> delta = (frameDimension * oldScale) - (frameDimension * currentScale);
 
     fromLeft += delta * here.<span class="hljs-property">normX</span>;
     fromTop += delta * here.<span class="hljs-property">normY</span>;
@@ -1048,12 +1049,12 @@
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;down&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
 
-    <span class="hljs-keyword">let</span> here = base.<span class="hljs-property">here</span>,
+    <span class="hljs-keyword">const</span> here = base.<span class="hljs-property">here</span>,
         target = baseGroup.<span class="hljs-title function_">getArtefactAt</span>(base.<span class="hljs-property">here</span>);
 
-    draggingArtefact = (target &amp;&amp; target.<span class="hljs-property">artefact</span> &amp;&amp; target.<span class="hljs-property">artefact</span>.<span class="hljs-property">type</span> == <span class="hljs-string">&#x27;Picture&#x27;</span>) ? 
-        target.<span class="hljs-property">artefact</span> : 
-        <span class="hljs-literal">false</span>; 
+    draggingArtefact = (target &amp;&amp; target.<span class="hljs-property">artefact</span> &amp;&amp; target.<span class="hljs-property">artefact</span>.<span class="hljs-property">type</span> == <span class="hljs-string">&#x27;Picture&#x27;</span>) ?
+        target.<span class="hljs-property">artefact</span> :
+        <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">if</span> (draggingArtefact) {
         currentDragX = here.<span class="hljs-property">x</span>;
@@ -1063,14 +1064,14 @@
 
 scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
 
-    <span class="hljs-keyword">let</span> here = base.<span class="hljs-property">here</span>;
+    <span class="hljs-keyword">const</span> here = base.<span class="hljs-property">here</span>;
 
     <span class="hljs-keyword">if</span> (draggingArtefact) {
 
         fromLeft += (currentDragX - here.<span class="hljs-property">x</span>) * currentScale;
         fromTop += (currentDragY - here.<span class="hljs-property">y</span>) * currentScale;
 
-        currentDragX = here.<span class="hljs-property">x</span>,
+        currentDragX = here.<span class="hljs-property">x</span>;
         currentDragY = here.<span class="hljs-property">y</span>;
 
         <span class="hljs-keyword">if</span> (fromLeft &lt; <span class="hljs-number">0</span>) fromLeft = <span class="hljs-number">0</span>;

@@ -548,8 +548,8 @@
 <li>The display for each tile, and the gutters, can be easily updated.</li>
 <li>Grid entity <strong>hit reports</strong> include an extra attribute - an array of tiles that report being hit.</li>
 <li>Grids will accept <strong>Filter</strong> objects - filters are applied to the entire Grid, not to individual tiles.</li>
-<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can use <strong>Anchor</strong> objects for user navigation.</li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
 <li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Grids can be cloned, and killed.</li>
 </ul>
@@ -916,8 +916,9 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
         <span class="hljs-keyword">if</span> (item != <span class="hljs-variable language_">this</span>.<span class="hljs-property">columns</span>) {
 
-            <span class="hljs-keyword">let</span> i, iz, j, 
-                currentFill = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>,
+            <span class="hljs-keyword">let</span> i, iz, j;
+
+            <span class="hljs-keyword">const</span> currentFill = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>,
                 currentCols = <span class="hljs-variable language_">this</span>.<span class="hljs-property">columns</span>,
                 newFill = [];
 
@@ -930,7 +931,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
                     <span class="hljs-keyword">if</span> (j &lt; currentCols) newFill.<span class="hljs-title function_">push</span>(currentFill[(i * currentCols) + j]);
                     <span class="hljs-keyword">else</span> newFill.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>);
                 }
-            } 
+            }
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span> = newFill;
         }
     }
@@ -960,7 +961,7 @@ D.<span class="hljs-property">columns</span> = λ<span class="hljs-literal">null
 
         <span class="hljs-keyword">if</span> (item != <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span>) {
 
-            <span class="hljs-keyword">let</span> currentRows = <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span>;
+            <span class="hljs-keyword">const</span> currentRows = <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span>;
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span> = item;
 
@@ -996,7 +997,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p><code>setAllTilesTo</code> - change the fill for all tiles in a Grid </p>
+              <p><code>setAllTilesTo</code> - change the fill for all tiles in a Grid</p>
 <ul>
 <li>Argument is an integer Number representing the index of a tileSource object</li>
 </ul>
@@ -1205,7 +1206,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D(),
             rowLines = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D(),
             colLines = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
-        
+
         <span class="hljs-keyword">const</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
             scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>,
             dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
@@ -1224,7 +1225,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
             paths = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tilePaths</span>,
             real = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileRealCoordinates</span>,
             virtual = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileVirtualCoordinates</span>;
-        
+
         <span class="hljs-keyword">let</span> i, j, cx, cy;
 
         rowLines.<span class="hljs-title function_">moveTo</span>(x, y);
@@ -1405,7 +1406,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> validTiles = tileFill.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item === index ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> validTiles = tileFill.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item === index ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
 
         <span class="hljs-keyword">if</span> (validTiles.<span class="hljs-property">length</span>) {
 
@@ -1483,10 +1484,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         }
     });
 
-    <span class="hljs-keyword">let</span> gColor = <span class="hljs-variable language_">this</span>.<span class="hljs-property">gutterColor</span>,
+    <span class="hljs-keyword">const</span> gColor = <span class="hljs-variable language_">this</span>.<span class="hljs-property">gutterColor</span>,
         gRow = <span class="hljs-variable language_">this</span>.<span class="hljs-property">rowGutterWidth</span>,
-        gCol = <span class="hljs-variable language_">this</span>.<span class="hljs-property">columnGutterWidth</span>,
-        gObject;
+        gCol = <span class="hljs-variable language_">this</span>.<span class="hljs-property">columnGutterWidth</span>;
+
+    <span class="hljs-keyword">let</span> gObject;
 
     <span class="hljs-keyword">if</span>(<span class="hljs-title function_">xt</span>(gColor)) {</pre></div></div>
             
@@ -1573,11 +1575,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
 
                     <span class="hljs-keyword">if</span> (currentPicture.<span class="hljs-property">simpleStamp</span>) {
 
-                        <span class="hljs-keyword">let</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
+                        <span class="hljs-keyword">const</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
                             scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>,
                             x = handle[<span class="hljs-number">0</span>] * scale,
                             y = handle[<span class="hljs-number">1</span>] * scale;
-                            
+
                         compCanvas.<span class="hljs-property">width</span> = dims[<span class="hljs-number">0</span>] * scale;
                         compCanvas.<span class="hljs-property">height</span> = dims[<span class="hljs-number">1</span>] * scale;
                         compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
@@ -1863,9 +1865,9 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
             <span class="hljs-attr">artefact</span>: <span class="hljs-variable language_">this</span>
         };
     }
-    
+
     <span class="hljs-keyword">if</span> (poolCellFlag) <span class="hljs-title function_">releaseCell</span>(mycell);
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 };</pre></div></div>
             

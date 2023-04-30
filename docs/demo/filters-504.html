@@ -946,7 +946,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> feFuncR = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;feFuncR&#x27;</span>),
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> feFuncR = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;feFuncR&#x27;</span>),
     feFuncG = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;feFuncG&#x27;</span>),
     feFuncB = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;feFuncB&#x27;</span>);</pre></div></div>
             
@@ -1015,13 +1015,13 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> r1 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#r1&#x27;</span>),
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> r1 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#r1&#x27;</span>),
     r2 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#r2&#x27;</span>);
 
-<span class="hljs-keyword">let</span> g1 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#g1&#x27;</span>),
+<span class="hljs-keyword">const</span> g1 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#g1&#x27;</span>),
     g2 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#g2&#x27;</span>);
 
-<span class="hljs-keyword">let</span> b1 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#b1&#x27;</span>),
+<span class="hljs-keyword">const</span> b1 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#b1&#x27;</span>),
     b2 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#b2&#x27;</span>);</pre></div></div>
             
         </li>
@@ -1128,7 +1128,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updateR</span> = (<span class="hljs-params"></span>) =&gt; feFuncR.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tableValues&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${r1.value}</span> <span class="hljs-subst">${r2.value}</span>`</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">updateR</span> = (<span class="hljs-params"></span>) =&gt; feFuncR.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tableValues&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${r1.value}</span> <span class="hljs-subst">${r2.value}</span>`</span>);
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateR, <span class="hljs-string">&#x27;.feFuncR&#x27;</span>);</pre></div></div>
             
         </li>
@@ -1144,7 +1144,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updateG</span> = (<span class="hljs-params"></span>) =&gt; feFuncG.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tableValues&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${g1.value}</span> <span class="hljs-subst">${g2.value}</span>`</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">updateG</span> = (<span class="hljs-params"></span>) =&gt; feFuncG.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tableValues&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${g1.value}</span> <span class="hljs-subst">${g2.value}</span>`</span>);
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateG, <span class="hljs-string">&#x27;.feFuncG&#x27;</span>);</pre></div></div>
             
         </li>
@@ -1160,7 +1160,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updateB</span> = (<span class="hljs-params"></span>) =&gt; feFuncB.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tableValues&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${b1.value}</span> <span class="hljs-subst">${b2.value}</span>`</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">updateB</span> = (<span class="hljs-params"></span>) =&gt; feFuncB.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tableValues&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${b1.value}</span> <span class="hljs-subst">${b2.value}</span>`</span>);
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateB, <span class="hljs-string">&#x27;.feFuncB&#x27;</span>);</pre></div></div>
             
         </li>

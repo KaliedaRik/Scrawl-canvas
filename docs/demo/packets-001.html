@@ -869,7 +869,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -900,7 +900,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> box = scrawl.<span class="hljs-title function_">makeBlock</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> box = scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-box&#x27;</span>,
 
@@ -990,7 +990,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxPacket1 = box.<span class="hljs-title function_">saveAsPacket</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> boxPacket1 = box.<span class="hljs-title function_">saveAsPacket</span>();</pre></div></div>
             
         </li>
         
@@ -1006,7 +1006,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxPacket2 = box.<span class="hljs-title function_">saveAsPacket</span>(<span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> boxPacket2 = box.<span class="hljs-title function_">saveAsPacket</span>(<span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
         
@@ -1022,7 +1022,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxPacket3 = box.<span class="hljs-title function_">saveAsPacket</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> boxPacket3 = box.<span class="hljs-title function_">saveAsPacket</span>({
     <span class="hljs-attr">includeDefaults</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
@@ -1040,7 +1040,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxPacket4 = box.<span class="hljs-title function_">saveAsPacket</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> boxPacket4 = box.<span class="hljs-title function_">saveAsPacket</span>({
     <span class="hljs-attr">includeDefaults</span>: [<span class="hljs-string">&#x27;handle&#x27;</span>, <span class="hljs-string">&#x27;miterLimit&#x27;</span>, <span class="hljs-string">&#x27;onUp&#x27;</span>, <span class="hljs-string">&#x27;useMimicScale&#x27;</span>, <span class="hljs-string">&#x27;anchor&#x27;</span>],
 });
 
@@ -1082,7 +1082,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         <span class="hljs-string">&quot;fillStyle&quot;</span>:<span class="hljs-string">&quot;red&quot;</span>
     }
 ]
-   
+
 <span class="hljs-variable constant_">TEST</span> <span class="hljs-number">2</span>, <span class="hljs-variable constant_">TEST</span> <span class="hljs-number">3</span>
 [
     <span class="hljs-string">&quot;my-box&quot;</span>,
@@ -1176,7 +1176,7 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         <span class="hljs-string">&quot;textBaseline&quot;</span>:<span class="hljs-string">&quot;alphabetic&quot;</span>
     }
 ]
-   
+
 <span class="hljs-variable constant_">TEST</span> <span class="hljs-number">4</span>
 [
     <span class="hljs-string">&quot;my-box&quot;</span>,

@@ -1062,7 +1062,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         <span class="hljs-keyword">const</span> target = e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>,
             val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
-        <span class="hljs-keyword">let</span> [r, g, b] = colorFactory.<span class="hljs-title function_">extractRGBfromColor</span>(val)
+        <span class="hljs-keyword">const</span> [r, g, b] = colorFactory.<span class="hljs-title function_">extractRGBfromColor</span>(val)
 
         <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;low-color&#x27;</span> === target) {
 
@@ -1114,7 +1114,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
             <div class="content"><div class='highlight'><pre>            lowBlue.<span class="hljs-property">value</span> = b;
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;high-color&#x27;</span> === target) {
-            
+
             myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">highColor</span>: val });</pre></div></div>
             
         </li>

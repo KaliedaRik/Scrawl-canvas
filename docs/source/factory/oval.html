@@ -544,12 +544,12 @@
 <p>Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>. They use the <a href="../mixin/shapeBasic.html">shapeBasic</a> and <a href="../mixin/shapePathCalculation.html">shapePathCalculation</a> (some also use <a href="../mixin/shapeCurve.html">shapeCurve</a>) mixins to define much of their functionality.</p>
 <p>All path-defined entitys can be positioned, cloned, filtered etc:</p>
 <ul>
-<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
+<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin.</li>
 <li>Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use <code>scale</code> instead.</li>
-<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects.</li>
 <li>They will also accept <strong>Filter</strong> objects.</li>
-<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can use <strong>Anchor</strong> objects for user navigation.</li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
 <li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Path-defined entitys can be cloned, and killed.</li>
 </ul>
@@ -954,7 +954,7 @@ D.<span class="hljs-property">intersectB</span> = <span class="hljs-keyword">fun
         B = <span class="hljs-built_in">parseFloat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootB</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">6</span>)),
         radiusX = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radiusX</span>,
         radiusY = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radiusY</span>;
-    
+
     <span class="hljs-keyword">let</span> width, height;
 
     <span class="hljs-keyword">if</span> (radiusX.<span class="hljs-property">substring</span> || radiusY.<span class="hljs-property">substring</span>) {
@@ -970,7 +970,7 @@ D.<span class="hljs-property">intersectB</span> = <span class="hljs-keyword">fun
 
             width = rx * <span class="hljs-number">2</span>;
             height = ry * <span class="hljs-number">2</span>;
-        } 
+        }
     }
     <span class="hljs-keyword">else</span> {
 
@@ -1043,12 +1043,12 @@ P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h5 id="makeoval">makeOval</h5>
-<p>Scrawl-canvas uses quadratic curves internally to create the curved path. </p>
+<p>Scrawl-canvas uses quadratic curves internally to create the curved path.</p>
 <ul>
 <li>The <em>bend</em> of these curves is set by the quadratic’s control point which doesn’t have its own coordinate but is rather calculated using two float Number variables: <strong>offshootA</strong> (default: <code>0.55</code>) and <strong>offshootB</strong> (default: <code>0</code>) - change these values to make the quarter-curves more or less bendy.</li>
 <li>The main shape of the oval is determined by differing radius lengths in the <code>x</code> and <code>y</code> directions, as set by the attributes <strong>radiusX</strong> and <strong>radiusY</strong>; to set both radiuses to the same value, use <strong><strong>radius</strong></strong> instead.</li>
 <li>The radius values can be: <em>absolute</em> (using Number values); or <em>relative</em> using %-String values - with the y radius representing a portion of the Cell container’s height and the x radius the Cell’s width.</li>
-<li>The radiuses (as diameter lines) cross in the middle of the oval shape. We can move the position of where the intersection happens by setting a float Number value between <code>0.0 - 1.0</code> (or beyond those limits) for the <strong>intersectX</strong> and <strong>intersectY</strong> attributes. </li>
+<li>The radiuses (as diameter lines) cross in the middle of the oval shape. We can move the position of where the intersection happens by setting a float Number value between <code>0.0 - 1.0</code> (or beyond those limits) for the <strong>intersectX</strong> and <strong>intersectY</strong> attributes.</li>
 <li><code>intersectX</code> (default: <code>0.5</code>) represents the point at which the <code>y</code> diameter crosses the <code>x</code> diameter, with <code>0</code> being the left end and <code>1</code> being the right end.</li>
 <li><code>intersectY</code> (default: <code>0.5</code>) represents the point at which the <code>x</code> diameter crosses the <code>y</code> diameter, with <code>0</code> being the top end and <code>1</code> being the bottom end.</li>
 </ul>

@@ -540,37 +540,37 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="position-mixin">Position mixin</h1>
-<p>This mixin defines the key attributes and functionality of Scrawl-canvas <strong>artefact objects</strong>. </p>
+<p>This mixin defines the key attributes and functionality of Scrawl-canvas <strong>artefact objects</strong>.</p>
 <p>We define an artefact as something that can be displayed in a Scrawl-canvas <a href="../factory/stack.html">Canvas</a> or <a href="../factory/stack.html">Stack</a> wrapper - both of which wrap DOM elements in the web page document - &lt;canvas&gt;, and other DOM elements (most commonly a &lt;div&gt; element), respectively.</p>
 <ul>
-<li>We call canvas based artefacts <strong>entity objects</strong> - these objects represent a shape, path or image drawn in the canvas. </li>
+<li>We call canvas based artefacts <strong>entity objects</strong> - these objects represent a shape, path or image drawn in the canvas.</li>
 <li>Entitys include: <a href="../factory/block.html">Block</a>; <a href="../factory/grid.html">Grid</a>; <a href="../factory/loom.html">Loom</a>; <a href="../factory/phrase.html">Phrase</a> for text; <a href="../factory/picture.html">Picture</a> for images, videos, etc; <a href="../factory/shape.html">Shape</a>s of various types; and <a href="../factory/wheel.html">Wheel</a>.</li>
 <li><strong>Other artefacts</strong> live in stack containers. They include nested Stack wrappers, Canvas wrappers (which can exist outside of a stack); and <a href="../factory/element.html">Element</a> wrappers for other direct child elements.</li>
 </ul>
 <h5 id="positioning">Positioning</h5>
 <p>Artefacts break away from the normal flow mechanisms of the HTML document; instead they are explicitly positioned within their containers in a variety of ways:</p>
 <ul>
-<li><strong>absolute</strong> positioning - where we give the artefact a coordinate, measured in pixels from the top left corner of the container (<code>[0, 0]</code>, <code>[347, 26.4]</code>, etc). </li>
+<li><strong>absolute</strong> positioning - where we give the artefact a coordinate, measured in pixels from the top left corner of the container (<code>[0, 0]</code>, <code>[347, 26.4]</code>, etc).</li>
 <li><strong>relative</strong> positioning - where we supply the artefact with percentage coordinates, with <code>[&#39;0%&#39;, &#39;0%&#39;]</code> representing the top left corner of the container, and <code>[&#39;100%&#39;, &#39;100%&#39;]</code> its bottom right corner.</li>
 <li><strong>reference</strong> positioning - this is where an artefact will use another artefact’s <em><strong>current</strong></em> (not given) coordinate to determine its own position. We can reference by <code>pivot</code>, or by <code>mimic</code>, or by <code>path</code>.</li>
 </ul>
 <p>Scrawl-canvas uses <a href="../factory/coordinate.html">Coordinate Arrays</a> - <code>[x, y]</code> - for storing artefact coordinates. The <em><strong>Javascript types</strong></em> of the <code>x</code> and <code>y</code> parts of the coordinate can be either Numbers or Strings, and do not need to match each other: <code>[&#39;5%&#39;, 20]</code> and <code>[10, &#39;15.4%&#39;]</code> are as valid as <code>[10, 20]</code> and <code>[&#39;5%&#39;, &#39;15.4%&#39;]</code>.</p>
 <h5 id="the-artefact-rotation-reflection-point">The artefact ‘rotation-reflection’ point</h5>
-<p>Every artefact has a <strong>start</strong> coordinate which, by default, is set at the artefact’s top-left corner - even for Wheels and Shapes! </p>
+<p>Every artefact has a <strong>start</strong> coordinate which, by default, is set at the artefact’s top-left corner - even for Wheels and Shapes!</p>
 <ul>
-<li>When we rotate an artefact, we rotate it around this coordinate. When we <em><strong>flip</strong></em> entity artefacts, we flip them around the artefact’s local horizontal or vertical axis drawn through this coordinate. </li>
+<li>When we rotate an artefact, we rotate it around this coordinate. When we <em><strong>flip</strong></em> entity artefacts, we flip them around the artefact’s local horizontal or vertical axis drawn through this coordinate.</li>
 <li>Thus what we call a ‘start’ coordinate is in fact the artefact’s <strong>Rotation-Reflection</strong> point.</li>
 </ul>
 <p>The R-R point does not need to be at the artefact’s top-left corner. We can move it by giving the artefact a <strong>handle</strong> coordinate - a distance measured from the artefact’s top-left corner. Just as for the start coordinate, we can set the handle coordinate using absolute, relative or reference values:</p>
 <ul>
-<li><strong>absolute</strong> handles - where we give the artefact a distance, measured in pixels from its top left corner . </li>
+<li><strong>absolute</strong> handles - where we give the artefact a distance, measured in pixels from its top left corner .</li>
 <li><strong>relative</strong> handles - where we supply the artefact with percentage distances measured against the artefact’s own dimensions.</li>
 <li><strong>reference</strong> handles.</li>
 <li>In all cases, <em><strong>the distancing effect is along the artefact’s local horizontal and vertical axes</strong></em> - if the artefact is rotated, then those axes will not be perpendicular to the containing Canvas or Stack axes.</li>
 </ul>
 <p>Normally this is enough information to position an artefact in its container. However there may be times when we need to move the artefact’s R-R point a given distance along the container axes. We can achieve this by giving the artefact an <strong>offset</strong> coordinate.</p>
 <ul>
-<li><strong>absolute</strong> offsets - where we give the artefact a distance, measured in pixels from its top left corner. </li>
+<li><strong>absolute</strong> offsets - where we give the artefact a distance, measured in pixels from its top left corner.</li>
 <li><strong>relative</strong> offsets - where we supply the artefact with percentage distances measured against the <em><strong>container’s dimensions</strong></em>.</li>
 <li><strong>reference</strong> offsets.</li>
 </ul>
@@ -579,7 +579,7 @@
 <p>Another use for Coordinate Arrays is to <strong>set the artefact’s dimensions - their width and height values</strong>. In this case we can think of the coordinate in terms of <code>[w, h]</code>. All artefacts, except Shape and Loom entitys, require dimension data.</p>
 <p>Just as for positioning data, an artefact’s dimensions data can be supplied in absolute, relative or reference terms:</p>
 <ul>
-<li><strong>absolute</strong> dimensions - where we give the artefact a width and height, measured in pixels from its top left corner. </li>
+<li><strong>absolute</strong> dimensions - where we give the artefact a width and height, measured in pixels from its top left corner.</li>
 <li><strong>relative</strong> dimensions - where we supply the artefact with percentage widths and height values, measured against the <em><strong>container’s dimensions</strong></em>.</li>
 <li><strong>reference</strong> dimensions.</li>
 </ul>
@@ -621,7 +621,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 });
 </code></pre>
 <h5 id="referencing-other-artefacts">Referencing other artefacts</h5>
-<p>Scrawl-canvas allows an artefact to reference other artefacts. The referenced objects supply data back to the first artefact, which it then uses to update its position and dimensions. </p>
+<p>Scrawl-canvas allows an artefact to reference other artefacts. The referenced objects supply data back to the first artefact, which it then uses to update its position and dimensions.</p>
 <ul>
 <li>This all happens automatically once the reference is set up, with updates occuring as part of the Scrawl-canvas <strong>Display cycle</strong>.</li>
 <li>To move a group of artefacts as a single unit, we can set up one as the reference artefact, with the rest using handles and offsets to supply distancing data from the reference. Updates to the reference artefact will now be transmitted automatically to all artefacts using it as their <code>pivot</code> or <code>mimic</code>.</li>
@@ -647,7 +647,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 </ul>
 <p>For instance if we set the lock to <code>[&#39;start&#39;, &#39;mouse&#39;]</code> we can make the artefact track the mouse across the container along an (invisible) vertical line, whose position is determined by the artefact’s x coordinate value.</p>
 <h5 id="artefact-rotation">Artefact rotation</h5>
-<p>Scrawl-canvas artefacts can be rotated around their <strong>Rotation-Reflection point</strong>: </p>
+<p>Scrawl-canvas artefacts can be rotated around their <strong>Rotation-Reflection point</strong>:</p>
 <ul>
 <li>Entity artefacts, being representations of 2-dimensional graphical shapes drawn on a &lt;canvas&gt; element, are restricted to rotating around the R-R point’s <em><strong>z-axis</strong></em>.</li>
 <li>Other artefacts, when part of a Stack container, can be rotated in 3 dimensions along the R-R point’s <em><strong>x-axis</strong></em>, <em><strong>y-axis</strong></em> and <em><strong>z-axis</strong></em>.</li>
@@ -662,7 +662,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 <ul>
 <li>Internally, Scrawl-canvas stores rotational data in <a href="../factory/quaternion.html">Quaternion objects</a> rather than in matrices.</li>
 </ul>
-<p>Instead of 3D rotations, entity artefacts have two Boolean flags - <strong>flipReverse</strong>, <strong>flipUpend</strong> - which determine the orientation of the entity when it stamps itself on the display. </p>
+<p>Instead of 3D rotations, entity artefacts have two Boolean flags - <strong>flipReverse</strong>, <strong>flipUpend</strong> - which determine the orientation of the entity when it stamps itself on the display.</p>
 <ul>
 <li>a <code>reversed</code> entity is effectively flipped 180&deg; around a vertical line passing through that entity’s rotation-reflection (start) point - a face looking to the right will now look to the left</li>
 <li>an <code>upended</code> entity is effectively flipped 180&deg; around a horizontal line passing through that entity’s rotation-reflection (start) point - a normal face will now appear upside-down</li>
@@ -1139,7 +1139,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>) {
 
-            <span class="hljs-keyword">let</span> a = <span class="hljs-title function_">_parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
+            <span class="hljs-keyword">const</span> a = <span class="hljs-title function_">_parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
             copy.<span class="hljs-property">anchor</span> = a;
         }
         <span class="hljs-keyword">return</span> copy;
@@ -1290,7 +1290,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
-        
+
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
@@ -1406,13 +1406,13 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
     };
     D.<span class="hljs-property">startX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">start</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">start</span>;
         c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], coord);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
     };
     D.<span class="hljs-property">startY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">start</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">start</span>;
         c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], coord);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
     };
@@ -1470,13 +1470,13 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
     };
     D.<span class="hljs-property">handleX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">handle</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">handle</span>;
         c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], coord);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
     };
     D.<span class="hljs-property">handleY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">handle</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">handle</span>;
         c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], coord);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
     };
@@ -1534,13 +1534,13 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
     };
     D.<span class="hljs-property">offsetX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">offset</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">offset</span>;
         c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], coord);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
     };
     D.<span class="hljs-property">offsetY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">offset</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">offset</span>;
         c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], coord);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
     };
@@ -1598,13 +1598,13 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
     };
     D.<span class="hljs-property">width</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
         c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], val);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
     };
     D.<span class="hljs-property">height</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
+        <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
         c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], val);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
     };
@@ -1948,7 +1948,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
-              <p><code>initializePositions</code> - Internal function called by all artefact factories </p>
+              <p><code>initializePositions</code> - Internal function called by all artefact factories</p>
 <ul>
 <li>Setup initial Arrays and Objects, including <code>current...</code> and <code>...Subscriber</code> Arrays.</li>
 <li>Create a variety of <code>dirty...</code> flags, setting them all to true.</li>
@@ -2301,13 +2301,13 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
         <span class="hljs-keyword">if</span> (host) {
 
-            <span class="hljs-keyword">let</span> dims, w, h, oldW, oldH;
+            <span class="hljs-keyword">let</span> dims, w, h;
 
             dims = (host.<span class="hljs-property">currentDimensions</span>) ? host.<span class="hljs-property">currentDimensions</span> : [host.<span class="hljs-property">w</span>, host.<span class="hljs-property">h</span>];
 
             [w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>;
 
-            [oldW, oldH] = curDims;
+            <span class="hljs-keyword">const</span> [oldW, oldH] = curDims;
 
             <span class="hljs-keyword">if</span> (w.<span class="hljs-property">substring</span>) w = (<span class="hljs-built_in">parseFloat</span>(w) / <span class="hljs-number">100</span>) * dims[<span class="hljs-number">0</span>];
 
@@ -2542,7 +2542,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">addPathRotation</span>) {
 
-                <span class="hljs-keyword">let</span> pathData = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getPathData</span>();
+                <span class="hljs-keyword">const</span> pathData = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getPathData</span>();
 
                 <span class="hljs-keyword">if</span> (pathData) r += pathData.<span class="hljs-property">angle</span>;
             }
@@ -2557,7 +2557,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
                 <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">addOwnRotationToMimic</span>) r += myroll;
             }
             <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicRotation</span> = <span class="hljs-literal">true</span>;
-        } 
+        }
         <span class="hljs-keyword">else</span> {
 
             r = myroll;
@@ -2599,7 +2599,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
-              <p><code>cleanStampPositions</code> </p>
+              <p><code>cleanStampPositions</code></p>
 <ul>
 <li>the <strong>currentStampPosition</strong> Coordinate represents the combination of <strong>start</strong> and <strong>offset</strong> Coordinates to determine the current value of the artefact’s <em>Rotation-Reflection point</em>.</li>
 <li>The calculation does not take into account the <strong>handle</strong> Coordinate which, for entity artefacts, gets applied after the canvas engine transformation is performend for its stamp operation.</li>
@@ -2771,7 +2771,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
             };
 
             <span class="hljs-keyword">const</span> localLockArray = <span class="hljs-title function_">requestCoordinate</span>();
-            
+
             <span class="hljs-keyword">let</span> hereFlag = <span class="hljs-literal">false</span>,
                 lock, here, pathData;</pre></div></div>
             
@@ -2798,7 +2798,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
                 <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">getCornerCoordinate</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanPathObject</span>();
             }
             <span class="hljs-keyword">else</span> {
-                
+
                 <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2</span>; i++) {
 
                     lock = <span class="hljs-title function_">confirmLock</span>(lockTo[i]);
@@ -2843,9 +2843,9 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
-              <p><code>cleanStampHandlePositions</code> </p>
+              <p><code>cleanStampHandlePositions</code></p>
 <ul>
-<li>an entity’s <strong>currentStampHandlePosition</strong> values get applied after the canvas grid has been set up for the stamp operation. </li>
+<li>an entity’s <strong>currentStampHandlePosition</strong> values get applied after the canvas grid has been set up for the stamp operation.</li>
 <li>Entities include handle values as part of their ‘path’ calculation.</li>
 <li>DOM-based artefacts include handle values as part of their CSS transform string.</li>
 <li>Handle values DO scale, but not here; that happens when the transform/path is recalculated.</li>
@@ -2934,7 +2934,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
-              <p>At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality. </p>
+              <p>At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality.</p>
 
             </div>
             
@@ -2955,7 +2955,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
               </div>
               <p><code>checkHit</code></p>
 <ul>
-<li>We use pool Cells (see <a href="../factory/cell.html">Cell code</a>) to help calculate whether (any of) the Coordinate(s) supplied in the first argument are colliding with the artefact. </li>
+<li>We use pool Cells (see <a href="../factory/cell.html">Cell code</a>) to help calculate whether (any of) the Coordinate(s) supplied in the first argument are colliding with the artefact.</li>
 <li>This works both for entitys and for DOM-based artefacts.</li>
 </ul>
 
@@ -2970,7 +2970,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         <span class="hljs-keyword">const</span> tests = (!<span class="hljs-title function_">_isArray</span>(items)) ?  [items] : items;
 
         <span class="hljs-keyword">let</span> flag = <span class="hljs-literal">false</span>,
-            x = <span class="hljs-number">0</span>, 
+            x = <span class="hljs-number">0</span>,
             y = <span class="hljs-number">0</span>;
 
         <span class="hljs-keyword">if</span> (!mycell) {
@@ -3012,9 +3012,9 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
             <span class="hljs-keyword">return</span> val;
         }
-        
+
         <span class="hljs-keyword">if</span> (flag) <span class="hljs-title function_">releaseCell</span>(mycell);
-        
+
         <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     };</pre></div></div>
             
@@ -3154,12 +3154,12 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
                 <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <h4 id="subscription-management">Subscription management</h4>
-<p>Artefacts can subscribe to other artefacts so that they can be notified when a particular attribute changes. </p>
+<p>Artefacts can subscribe to other artefacts so that they can be notified when a particular attribute changes.</p>
 <ul>
 <li>This notification happens when an artefact completes cleaning its attributes and detects that there have been changes which other artefacts need to be aware.</li>
-<li>The artefact doesbn’t change any values in artefacts which have subscribed to them - unlike asset objects, which do directly update attribute values in their subscribing artefacts. </li>
+<li>The artefact doesbn’t change any values in artefacts which have subscribed to them - unlike asset objects, which do directly update attribute values in their subscribing artefacts.</li>
 <li>Instead, the artefact sets the appropriate <code>dirty</code> flags which the subscribing artefacts can process as they progress through the Display cycle.</li>
-<li>Because the update functionality cascades from one controlling function - <code>updatePositionSubscribers</code> - we also define a range of subsidiary functions here </li>
+<li>Because the update functionality cascades from one controlling function - <code>updatePositionSubscribers</code> - we also define a range of subsidiary functions here</li>
 <li>TODO: some of the subsidiary functions should be moved to more appropriate factory code?</li>
 </ul>
 

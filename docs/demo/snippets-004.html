@@ -853,7 +853,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>Import the Scrawl-canvas object </p>
+              <p>Import the Scrawl-canvas object</p>
 <ul>
 <li>there’s various ways to do this. See <a href="../dom-001.html">Demo DOM-001</a> for more details</li>
 </ul>
@@ -886,11 +886,11 @@
 });
 
 <span class="hljs-keyword">import</span> greenBox <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/green-box-snippet.js&#x27;</span>;
-<span class="hljs-keyword">let</span> greenBoxElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.green-box&#x27;</span>);
+<span class="hljs-keyword">const</span> greenBoxElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.green-box&#x27;</span>);
 greenBoxElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">greenBox</span>(scrawl, el));
 
 <span class="hljs-keyword">import</span> jazzyButton <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/jazzy-button-snippet.js&#x27;</span>;
-<span class="hljs-keyword">let</span> jazzyButtonElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.jazzy-button&#x27;</span>);
+<span class="hljs-keyword">const</span> jazzyButtonElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.jazzy-button&#x27;</span>);
 jazzyButtonElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">jazzyButton</span>(scrawl, el));
 
 <span class="hljs-keyword">import</span> spotlight <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/spotlight-text-snippet.js&#x27;</span>;
@@ -902,11 +902,11 @@ jazzyButtonElements.<span class="hljs-title function_">forEach</span>(<span clas
 });
 
 <span class="hljs-keyword">import</span> pagePerformance <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/page-performance-snippet.js&#x27;</span>;
-<span class="hljs-keyword">let</span> performanceElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.page-performance&#x27;</span>);
+<span class="hljs-keyword">const</span> performanceElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.page-performance&#x27;</span>);
 performanceElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">pagePerformance</span>(scrawl, el));
 
 <span class="hljs-keyword">import</span> placeholder <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/placeholder-effect-snippet.js&#x27;</span>;
-<span class="hljs-keyword">let</span> placeholderElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.placeholder&#x27;</span>);
+<span class="hljs-keyword">const</span> placeholderElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.placeholder&#x27;</span>);
 placeholderElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">placeholder</span>(scrawl, el));
 
 <span class="hljs-keyword">import</span> wordHighlighter <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/word-highlighter-snippet.js&#x27;</span>;

@@ -752,7 +752,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">buildStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">cell</span>) {
-    
+
     <span class="hljs-keyword">if</span> (cell) {
 
         <span class="hljs-keyword">const</span> engine = cell.<span class="hljs-property">engine</span>;
@@ -760,7 +760,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         <span class="hljs-keyword">if</span> (engine) {
 
             <span class="hljs-keyword">const</span> gradient = engine.<span class="hljs-title function_">createLinearGradient</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-property">gradientArgs</span>);
-            
+
             <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addStopsToGradient</span>(gradient, <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteStart</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteEnd</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">cyclePalette</span>);
         }
     }

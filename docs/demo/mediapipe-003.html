@@ -953,11 +953,11 @@
 
 <span class="hljs-keyword">const</span> updateLabelsAndWorm = <span class="hljs-keyword">function</span> (<span class="hljs-params">asset</span>) {
 
-    <span class="hljs-keyword">let</span> { entitys, mesh } = asset
+    <span class="hljs-keyword">const</span> { entitys, mesh } = asset
 
     <span class="hljs-keyword">if</span> (mesh.<span class="hljs-property">length</span> &amp;&amp; <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(mesh[<span class="hljs-number">0</span>])) {
 
-        <span class="hljs-keyword">let</span> face = mesh[<span class="hljs-number">0</span>];</pre></div></div>
+        <span class="hljs-keyword">const</span> face = mesh[<span class="hljs-number">0</span>];</pre></div></div>
             
         </li>
         
@@ -981,7 +981,7 @@
                     <span class="hljs-attr">text</span>: <span class="hljs-string">`<span class="hljs-subst">${index}</span>`</span>,
                     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
                     <span class="hljs-attr">width</span>: <span class="hljs-number">20</span>,
-                    <span class="hljs-attr">justify</span>: <span class="hljs-string">&#x27;center&#x27;</span>, 
+                    <span class="hljs-attr">justify</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
                     <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;10px Arial&#x27;</span>,
                 }));
             });
@@ -1002,9 +1002,9 @@
             
             <div class="content"><div class='highlight'><pre>        entitys.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">e, index</span>) =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> coord = face[index];
+            <span class="hljs-keyword">const</span> coord = face[index];
 
-            <span class="hljs-keyword">let</span> {x, y} = coord;
+            <span class="hljs-keyword">const</span> {x, y} = coord;
 
             e.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${x * <span class="hljs-number">100</span>}</span>%`</span>,
@@ -1035,9 +1035,9 @@
 
         <span class="hljs-keyword">if</span> (wormEnd &lt; wormStart) {
 
-            <span class="hljs-keyword">let</span> temp = wormStart;
+            <span class="hljs-keyword">const</span> temp = wormStart;
             wormStart = wormEnd;
-            wormEnd = temp; 
+            wormEnd = temp;
         }</pre></div></div>
             
         </li>
@@ -1103,19 +1103,19 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mediapipe-model-interpreter&#x27;</span>,
 
     <span class="hljs-attr">userAttributes</span>: [{
 
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;mesh&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;mesh&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
             <span class="hljs-keyword">if</span> (item) {
 
-                <span class="hljs-keyword">let</span> {<span class="hljs-attr">image</span>:img, <span class="hljs-attr">multiFaceLandmarks</span>:mesh} = item;
+                <span class="hljs-keyword">const</span> {<span class="hljs-attr">image</span>:img, <span class="hljs-attr">multiFaceLandmarks</span>:mesh} = item;
 
                 <span class="hljs-keyword">if</span> (img) {
 
@@ -1129,15 +1129,15 @@
             }
         },
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;entitys&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;entitys&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: [],
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     }],
@@ -1299,7 +1299,7 @@
         <span class="hljs-attr">locateFile</span>: <span class="hljs-function">(<span class="hljs-params">file</span>) =&gt;</span> <span class="hljs-string">`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/<span class="hljs-subst">${file}</span>`</span>,
     });
 
-    model.<span class="hljs-title function_">setOptions</span>({   
+    model.<span class="hljs-title function_">setOptions</span>({
         <span class="hljs-attr">maxNumFaces</span>: <span class="hljs-number">1</span>,
         <span class="hljs-attr">minDetectionConfidence</span>: <span class="hljs-number">0.5</span>,
         <span class="hljs-attr">minTrackingConfidence</span>: <span class="hljs-number">0.5</span>
@@ -1407,7 +1407,7 @@
         e.<span class="hljs-title function_">preventDefault</span>();
         e.<span class="hljs-title function_">stopPropagation</span>();
 
-        <span class="hljs-keyword">let</span> target = e.<span class="hljs-property">target</span>;
+        <span class="hljs-keyword">const</span> target = e.<span class="hljs-property">target</span>;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;wormstart&#x27;</span> === target.<span class="hljs-property">id</span>) wormStart = <span class="hljs-built_in">parseInt</span>(target.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>);
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;wormend&#x27;</span> === target.<span class="hljs-property">id</span>) wormEnd = <span class="hljs-built_in">parseInt</span>(target.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>);

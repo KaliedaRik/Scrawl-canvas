@@ -422,7 +422,7 @@ Data supplied to graph module as Javascript object with structure:
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (currentData &amp;&amp; namespace &amp;&amp; canvas &amp;&amp; category &amp;&amp; scrawl) {
 
-                <span class="hljs-keyword">let</span> myData = <span class="hljs-title function_">getData</span>(category);
+                <span class="hljs-keyword">const</span> myData = <span class="hljs-title function_">getData</span>(category);
 
                 <span class="hljs-keyword">if</span> (!isBuilt) {
 
@@ -486,9 +486,9 @@ Data supplied to graph module as Javascript object with structure:
                 currentData = rawData;
 
                 graph.<span class="hljs-title function_">build</span>({
-                    namespace, 
+                    namespace,
                     <span class="hljs-attr">data</span>: <span class="hljs-title function_">getData</span>(category),
-                    canvas, 
+                    canvas,
                     scrawl,
                 });
 

@@ -885,7 +885,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tensorflow-model-interpreter&#x27;</span>,
 
@@ -904,7 +904,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;parts&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;parts&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: {},
         <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
@@ -925,7 +925,7 @@
             
             <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> { parts, leftEyeX, leftEyeY, leftEye, rightEyeX, rightEyeY, rightEye, wobbleDamper } = <span class="hljs-variable language_">this</span>;
 
-                <span class="hljs-keyword">let</span> segs = item.<span class="hljs-property">allPoses</span>[<span class="hljs-number">0</span>];
+                <span class="hljs-keyword">const</span> segs = item.<span class="hljs-property">allPoses</span>[<span class="hljs-number">0</span>];
 
                 segs.<span class="hljs-property">keypoints</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> parts[s.<span class="hljs-property">part</span>] = s.<span class="hljs-property">position</span>);
 
@@ -933,7 +933,7 @@
 
                     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
 
-                    <span class="hljs-keyword">let</span> eye = parts.<span class="hljs-property">leftEye</span>;
+                    <span class="hljs-keyword">const</span> eye = parts.<span class="hljs-property">leftEye</span>;
 
                     <span class="hljs-keyword">if</span> (leftEyeX.<span class="hljs-property">length</span> &gt; wobbleDamper) leftEyeX.<span class="hljs-title function_">shift</span>();
                     <span class="hljs-keyword">if</span> (leftEyeY.<span class="hljs-property">length</span> &gt; wobbleDamper) leftEyeY.<span class="hljs-title function_">shift</span>();
@@ -949,7 +949,7 @@
 
                     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
 
-                    <span class="hljs-keyword">let</span> eye = parts.<span class="hljs-property">rightEye</span>;
+                    <span class="hljs-keyword">const</span> eye = parts.<span class="hljs-property">rightEye</span>;
 
                     <span class="hljs-keyword">if</span> (rightEyeX.<span class="hljs-property">length</span> &gt; wobbleDamper) rightEyeX.<span class="hljs-title function_">shift</span>();
                     <span class="hljs-keyword">if</span> (rightEyeY.<span class="hljs-property">length</span> &gt; wobbleDamper) rightEyeY.<span class="hljs-title function_">shift</span>();
@@ -991,38 +991,38 @@
             }
         },
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;leftEyeX&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;leftEyeX&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: [],
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;leftEyeY&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;leftEyeY&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: [],
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rightEyeX&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rightEyeX&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: [],
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rightEyeY&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rightEyeY&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: [],
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;wobbleDamper&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;wobbleDamper&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">2</span>,
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;leftEye&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;leftEye&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rightEye&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rightEye&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     }],</pre></div></div>
@@ -1080,7 +1080,7 @@
         engine.<span class="hljs-title function_">beginPath</span>();
         engine.<span class="hljs-title function_">arc</span>(...leftEye, <span class="hljs-number">50</span>, <span class="hljs-number">0</span>, end);
         engine.<span class="hljs-title function_">fill</span>();
-        
+
         engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;orange&#x27;</span>;
         engine.<span class="hljs-title function_">beginPath</span>();
         engine.<span class="hljs-title function_">arc</span>(...rightEye, <span class="hljs-number">50</span>, <span class="hljs-number">0</span>, end);
@@ -1122,7 +1122,7 @@
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h5 id="import-and-use-livestream">Import and use livestream</h5>
-<p>convenience handle for the media stream asset </p>
+<p>convenience handle for the media stream asset</p>
 
             </div>
             

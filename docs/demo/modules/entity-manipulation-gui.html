@@ -547,7 +547,7 @@
                 <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
                 <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
 
-                start, 
+                start,
 
                 <span class="hljs-attr">pivot</span>: moveControl,
                 <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
@@ -660,7 +660,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>MOVE pin’s drag-drop functionality </p>
+              <p>MOVE pin’s drag-drop functionality</p>
 
             </div>
             
@@ -707,7 +707,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>ROLL pin’s drag-drop functionality </p>
+              <p>ROLL pin’s drag-drop functionality</p>
 
             </div>
             
@@ -798,7 +798,7 @@
         rotateStartValues = {};
 
         <span class="hljs-keyword">const</span> coord = scrawl.<span class="hljs-title function_">requestCoordinate</span>();
-        
+
         selectedEntitys.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
             <span class="hljs-keyword">const</span> artefact = selectedEntitys.<span class="hljs-title function_">getArtefact</span>(name);
@@ -889,7 +889,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>SCALE pin’s drag-drop functionality </p>
+              <p>SCALE pin’s drag-drop functionality</p>
 
             </div>
             
@@ -1015,7 +1015,7 @@
     };
 
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">endScaleGroup</span> = (<span class="hljs-params"></span>) =&gt; {
-        
+
         scalingWithShift = <span class="hljs-literal">false</span>;
         updateControllerDisplay.<span class="hljs-title function_">onEnd</span>();
         <span class="hljs-title function_">restorePinDisplay</span>(scaleControl);
@@ -1343,7 +1343,7 @@
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">setDeltaAngle</span> = (<span class="hljs-params"></span>) =&gt; {
 
         <span class="hljs-keyword">const</span> val = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">prompt</span>(<span class="hljs-string">&#x27;Set the delta angle to be applied to selected entitys via keyboard interactions&#x27;</span>, <span class="hljs-string">&#x27;0.5&#x27;</span>);
-        
+
         deltaAngle = <span class="hljs-built_in">parseFloat</span>(val);
 
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(deltaAngle)) deltaAngle = <span class="hljs-number">0.5</span>;
@@ -1352,7 +1352,7 @@
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">setDeltaScale</span> = (<span class="hljs-params"></span>) =&gt; {
 
         <span class="hljs-keyword">const</span> val = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">prompt</span>(<span class="hljs-string">&#x27;Set the delta scale to be applied to selected entitys via keyboard interactions&#x27;</span>, <span class="hljs-string">&#x27;0.01&#x27;</span>);
-        
+
         deltaScale = <span class="hljs-built_in">parseFloat</span>(val);
 
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(deltaScale)) deltaScale = <span class="hljs-number">0.5</span>;
@@ -1361,7 +1361,7 @@
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">setDeltaMove</span> = (<span class="hljs-params"></span>) =&gt; {
 
         <span class="hljs-keyword">const</span> val = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">prompt</span>(<span class="hljs-string">&#x27;Set the delta move (in px) to be applied to selected entitys via keyboard interactions&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>);
-        
+
         deltaMove = <span class="hljs-built_in">parseInt</span>(val, <span class="hljs-number">10</span>);
 
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(deltaMove)) deltaMove = <span class="hljs-number">1</span>;
@@ -1408,7 +1408,7 @@
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">setGuiControlChars</span> = (<span class="hljs-params">chars</span>) =&gt; {
 
         <span class="hljs-keyword">if</span> (chars != <span class="hljs-literal">null</span>) {
-            
+
             chars = chars.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/ /g</span>, <span class="hljs-string">&#x27;&#x27;</span>);
 
             <span class="hljs-keyword">if</span> (chars.<span class="hljs-property">length</span> === <span class="hljs-number">11</span>) {
@@ -1424,33 +1424,339 @@
                     shiftedActions[char.<span class="hljs-title function_">toUpperCase</span>()] = <span class="hljs-literal">null</span>;
                 });
 
-                currentGuiControlChars = chars.<span class="hljs-title function_">toUpperCase</span>();
+                currentGuiControlChars = chars.<span class="hljs-title function_">toUpperCase</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>q</p>
 
-                shiftedActions[currentGuiControlChars[<span class="hljs-number">0</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setDeltaMove</span>(); <span class="hljs-comment">// q</span>
-                shiftedActions[currentGuiControlChars[<span class="hljs-number">1</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveGuiPin</span>(<span class="hljs-string">&#x27;up&#x27;</span>); <span class="hljs-comment">// w</span>
-                shiftedActions[currentGuiControlChars[<span class="hljs-number">2</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveGuiPin</span>(<span class="hljs-string">&#x27;left&#x27;</span>); <span class="hljs-comment">// a</span>
-                shiftedActions[currentGuiControlChars[<span class="hljs-number">3</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveGuiPin</span>(<span class="hljs-string">&#x27;down&#x27;</span>); <span class="hljs-comment">// s</span>
-                shiftedActions[currentGuiControlChars[<span class="hljs-number">4</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveGuiPin</span>(<span class="hljs-string">&#x27;right&#x27;</span>); <span class="hljs-comment">// d</span>
-                shiftedActions[currentGuiControlChars[<span class="hljs-number">5</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setDeltaScale</span>(); <span class="hljs-comment">// b</span>
-                shiftedActions[currentGuiControlChars[<span class="hljs-number">6</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">scaleEntitys</span>(<span class="hljs-string">&#x27;grow&#x27;</span>); <span class="hljs-comment">// n</span>
-                shiftedActions[currentGuiControlChars[<span class="hljs-number">7</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">scaleEntitys</span>(<span class="hljs-string">&#x27;shrink&#x27;</span>); <span class="hljs-comment">// m</span>
-                shiftedActions[currentGuiControlChars[<span class="hljs-number">8</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setDeltaAngle</span>(); <span class="hljs-comment">// g</span>
-                shiftedActions[currentGuiControlChars[<span class="hljs-number">9</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">rotateEntitys</span>(<span class="hljs-string">&#x27;dextral&#x27;</span>); <span class="hljs-comment">// j</span>
-                shiftedActions[currentGuiControlChars[<span class="hljs-number">10</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">rotateEntitys</span>(<span class="hljs-string">&#x27;sinistral&#x27;</span>); <span class="hljs-comment">// h</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                shiftedActions[currentGuiControlChars[<span class="hljs-number">0</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setDeltaMove</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>w</p>
 
-                currentGuiControlChars = currentGuiControlChars.<span class="hljs-title function_">toLowerCase</span>();
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                shiftedActions[currentGuiControlChars[<span class="hljs-number">1</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveGuiPin</span>(<span class="hljs-string">&#x27;up&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>a</p>
 
-                unshiftedActions[currentGuiControlChars[<span class="hljs-number">0</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setDeltaMove</span>(); <span class="hljs-comment">// q</span>
-                unshiftedActions[currentGuiControlChars[<span class="hljs-number">1</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveSelection</span>(<span class="hljs-string">&#x27;up&#x27;</span>); <span class="hljs-comment">// w</span>
-                unshiftedActions[currentGuiControlChars[<span class="hljs-number">2</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveSelection</span>(<span class="hljs-string">&#x27;left&#x27;</span>); <span class="hljs-comment">// a</span>
-                unshiftedActions[currentGuiControlChars[<span class="hljs-number">3</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveSelection</span>(<span class="hljs-string">&#x27;down&#x27;</span>); <span class="hljs-comment">// s</span>
-                unshiftedActions[currentGuiControlChars[<span class="hljs-number">4</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveSelection</span>(<span class="hljs-string">&#x27;right&#x27;</span>); <span class="hljs-comment">// d</span>
-                unshiftedActions[currentGuiControlChars[<span class="hljs-number">5</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setDeltaScale</span>(); <span class="hljs-comment">// b</span>
-                unshiftedActions[currentGuiControlChars[<span class="hljs-number">6</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">scaleGroup</span>(<span class="hljs-string">&#x27;grow&#x27;</span>); <span class="hljs-comment">// n</span>
-                unshiftedActions[currentGuiControlChars[<span class="hljs-number">7</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">scaleGroup</span>(<span class="hljs-string">&#x27;shrink&#x27;</span>); <span class="hljs-comment">// m</span>
-                unshiftedActions[currentGuiControlChars[<span class="hljs-number">8</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setDeltaAngle</span>(); <span class="hljs-comment">// g</span>
-                unshiftedActions[currentGuiControlChars[<span class="hljs-number">9</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">rotateGroup</span>(<span class="hljs-string">&#x27;dextral&#x27;</span>); <span class="hljs-comment">// j</span>
-                unshiftedActions[currentGuiControlChars[<span class="hljs-number">10</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">rotateGroup</span>(<span class="hljs-string">&#x27;sinistral&#x27;</span>); <span class="hljs-comment">// h</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                shiftedActions[currentGuiControlChars[<span class="hljs-number">2</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveGuiPin</span>(<span class="hljs-string">&#x27;left&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p>s</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                shiftedActions[currentGuiControlChars[<span class="hljs-number">3</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveGuiPin</span>(<span class="hljs-string">&#x27;down&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p>d</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                shiftedActions[currentGuiControlChars[<span class="hljs-number">4</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveGuiPin</span>(<span class="hljs-string">&#x27;right&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p>b</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                shiftedActions[currentGuiControlChars[<span class="hljs-number">5</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setDeltaScale</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p>n</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                shiftedActions[currentGuiControlChars[<span class="hljs-number">6</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">scaleEntitys</span>(<span class="hljs-string">&#x27;grow&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p>m</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                shiftedActions[currentGuiControlChars[<span class="hljs-number">7</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">scaleEntitys</span>(<span class="hljs-string">&#x27;shrink&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p>g</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                shiftedActions[currentGuiControlChars[<span class="hljs-number">8</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setDeltaAngle</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p>j</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                shiftedActions[currentGuiControlChars[<span class="hljs-number">9</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">rotateEntitys</span>(<span class="hljs-string">&#x27;dextral&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p>h</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                shiftedActions[currentGuiControlChars[<span class="hljs-number">10</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">rotateEntitys</span>(<span class="hljs-string">&#x27;sinistral&#x27;</span>);
+
+                currentGuiControlChars = currentGuiControlChars.<span class="hljs-title function_">toLowerCase</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <p>q</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                unshiftedActions[currentGuiControlChars[<span class="hljs-number">0</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setDeltaMove</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <p>w</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                unshiftedActions[currentGuiControlChars[<span class="hljs-number">1</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveSelection</span>(<span class="hljs-string">&#x27;up&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <p>a</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                unshiftedActions[currentGuiControlChars[<span class="hljs-number">2</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveSelection</span>(<span class="hljs-string">&#x27;left&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
+              </div>
+              <p>s</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                unshiftedActions[currentGuiControlChars[<span class="hljs-number">3</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveSelection</span>(<span class="hljs-string">&#x27;down&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <p>d</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                unshiftedActions[currentGuiControlChars[<span class="hljs-number">4</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">moveSelection</span>(<span class="hljs-string">&#x27;right&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
+              </div>
+              <p>b</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                unshiftedActions[currentGuiControlChars[<span class="hljs-number">5</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setDeltaScale</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
+              </div>
+              <p>n</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                unshiftedActions[currentGuiControlChars[<span class="hljs-number">6</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">scaleGroup</span>(<span class="hljs-string">&#x27;grow&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <p>m</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                unshiftedActions[currentGuiControlChars[<span class="hljs-number">7</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">scaleGroup</span>(<span class="hljs-string">&#x27;shrink&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
+              </div>
+              <p>g</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                unshiftedActions[currentGuiControlChars[<span class="hljs-number">8</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">setDeltaAngle</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
+              </div>
+              <p>j</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                unshiftedActions[currentGuiControlChars[<span class="hljs-number">9</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">rotateGroup</span>(<span class="hljs-string">&#x27;dextral&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
+              </div>
+              <p>h</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                unshiftedActions[currentGuiControlChars[<span class="hljs-number">10</span>]] = <span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">rotateGroup</span>(<span class="hljs-string">&#x27;sinistral&#x27;</span>);
 
                 keyboard = scrawl.<span class="hljs-title function_">makeKeyboardZone</span>({
                     <span class="hljs-attr">zone</span>: canvas,
@@ -1464,11 +1770,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>The default keys are <code>q w a s d b n m g j h</code></p>
 
@@ -1497,11 +1803,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <h4 id="cleanup-and-return">Cleanup and return</h4>
 
@@ -1527,11 +1833,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <h4 id="export">Export</h4>
 

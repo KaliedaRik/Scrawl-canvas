@@ -866,11 +866,11 @@
 
     <span class="hljs-keyword">if</span> (!output) <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {};
 
+        <span class="hljs-keyword">const</span> testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(output),
+            history = []
+
         <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
             testTime, testNow,
-            testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(output);
-
-        <span class="hljs-keyword">let</span> history = [],
             averageTime = <span class="hljs-number">0</span>;
 
         <span class="hljs-keyword">const</span> <span class="hljs-title function_">addTime</span> = (<span class="hljs-params">t</span>) =&gt; {
@@ -918,7 +918,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">reportFullLibrary</span> = (<span class="hljs-params">scrawl</span>) =&gt; {
 
-    <span class="hljs-keyword">const</span> { 
+    <span class="hljs-keyword">const</span> {
         anchor, anchornames,
         animation, animationnames,
         animationtickers, animationtickersnames,
@@ -1009,12 +1009,13 @@
 
     <span class="hljs-keyword">if</span> (canvas &amp;&amp; canvas.<span class="hljs-property">base</span> &amp;&amp; name &amp;&amp; time) {
 
-        <span class="hljs-keyword">let</span> groupname = canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-            packet;
+        <span class="hljs-keyword">const</span> groupname = canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>;
 
-        <span class="hljs-keyword">let</span> <span class="hljs-title function_">checkGroupBucket</span> = (<span class="hljs-params">name, groupname</span>) =&gt; {
+        <span class="hljs-keyword">let</span> res, packet;
 
-            <span class="hljs-keyword">let</span> res = L.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">checkGroupBucket</span> = (<span class="hljs-params">name, groupname</span>) =&gt; {
+
+            res = L.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
             <span class="hljs-keyword">return</span> (res.<span class="hljs-property">length</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
         };
 
@@ -1130,12 +1131,13 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">killArtefactAndAnchor</span> = (<span class="hljs-params">canvas, name, anchorname, time, finishResurrection = () =&gt; {}</span>) =&gt; {
 
-    <span class="hljs-keyword">let</span> groupname = <span class="hljs-string">&#x27;mycanvas_base&#x27;</span>,
-        packet;
+    <span class="hljs-keyword">const</span> groupname = <span class="hljs-string">&#x27;mycanvas_base&#x27;</span>;
 
-    <span class="hljs-keyword">let</span> <span class="hljs-title function_">checkGroupBucket</span> = (<span class="hljs-params">name, groupname</span>) =&gt; {
+    <span class="hljs-keyword">let</span> packet, res;
 
-        <span class="hljs-keyword">let</span> res = L.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">checkGroupBucket</span> = (<span class="hljs-params">name, groupname</span>) =&gt; {
+
+        res = L.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
         <span class="hljs-keyword">return</span> (res.<span class="hljs-property">length</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
     };
 
@@ -1200,20 +1202,21 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">killPolylineArtefact</span> = (<span class="hljs-params">canvas, name, time, myline, restore = () =&gt; {}</span>) =&gt; {
 
-    <span class="hljs-keyword">let</span> groupname = <span class="hljs-string">&#x27;mycanvas_base&#x27;</span>,
-        packet;
+    <span class="hljs-keyword">const</span> groupname = <span class="hljs-string">&#x27;mycanvas_base&#x27;</span>;
 
-    <span class="hljs-keyword">let</span> <span class="hljs-title function_">checkGroupBucket</span> = (<span class="hljs-params">name, groupname</span>) =&gt; {
+    <span class="hljs-keyword">let</span> packet, res;
 
-        <span class="hljs-keyword">let</span> res = L.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">checkGroupBucket</span> = (<span class="hljs-params">name, groupname</span>) =&gt; {
+
+        res = L.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
         <span class="hljs-keyword">return</span> (res.<span class="hljs-property">length</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
     };
 
-    <span class="hljs-keyword">let</span> <span class="hljs-title function_">checkPinsArray</span> = (<span class="hljs-params">name</span>) =&gt; {
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">checkPinsArray</span> = (<span class="hljs-params">name</span>) =&gt; {
 
         <span class="hljs-keyword">if</span> (myline.<span class="hljs-property">pins</span>.<span class="hljs-title function_">indexOf</span>(name) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;no&#x27;</span>;
 
-        <span class="hljs-keyword">let</span> res = myline.<span class="hljs-property">pins</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e &amp;&amp; e.<span class="hljs-property">name</span> === name );
+        res = myline.<span class="hljs-property">pins</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e &amp;&amp; e.<span class="hljs-property">name</span> === name );
         <span class="hljs-keyword">return</span> (res.<span class="hljs-property">length</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
     };
 

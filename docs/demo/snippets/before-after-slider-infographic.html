@@ -245,21 +245,21 @@
               <h3 id="before-after-slider-infographic-snippet">‘Before-after slider infographic’ snippet</h3>
 <p><strong>Purpose:</strong> Turn a pair of images, alongside associated data, into a fully responsive, interactive and accessible before-after slider infographic</p>
 <p>Note that this is a highly complex snippet, which relies on recieving an element to process in a very specific format containing a number of required child elements. All elements are expected to have various specified data- attributes which are used to build the infographic.</p>
-<p><strong>Function input:</strong> </p>
-<pre><code>&lt;div 
+<p><strong>Function input:</strong></p>
+<pre><code>&lt;div
   id=<span class="hljs-string">&quot;infographic-unique name&quot;</span>
   <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;some-class-name&quot;</span>
   data-label=<span class="hljs-string">&quot;Infographic title - required for accessibility&quot;</span>
   data-description=<span class="hljs-string">&quot;Infographic description - required for accessibility&quot;</span>&gt;
-  
-  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> 
+
+  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>
     <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;left-panel-unique-name&quot;</span>
       <span class="hljs-attr">data-date</span>=<span class="hljs-string">&quot;date of image&quot;</span>
     <span class="hljs-attr">data-frame</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>
 
-    <span class="hljs-tag">&lt;<span class="hljs-name">img</span> 
+    <span class="hljs-tag">&lt;<span class="hljs-name">img</span>
       <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;left-panel-image-unique-name&quot;</span>
-      <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Alternative text for image - required for accessibility&quot;</span> 
+      <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Alternative text for image - required for accessibility&quot;</span>
       <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;path/to/image/url&quot;</span> /&gt;</span>
 
     <span class="hljs-comment">&lt;!--
@@ -269,7 +269,7 @@
           - for proof of concept we&#x27;re only handling spot pins, not area pins
 
         - data-position - required (no default value)
-          - a string of two percentage values, separated by a comma 
+          - a string of two percentage values, separated by a comma
           - these are the &#x27;x%, y%&#x27; coords where the pin will appear on image
 
         - data-fill - pin fill color - default is &quot;red&quot;
@@ -278,23 +278,23 @@
         - data-labelbackground - default is &quot;rgb(0 0 0 / 0.2)&quot;
 
         - data-labelposition - default is &quot;below&quot;
-          - where we want the text to appear relative to the pin&#x27;s location 
+          - where we want the text to appear relative to the pin&#x27;s location
           - acceptable values: &quot;left&quot;, &quot;right&quot;, &quot;above&quot;, &quot;below&quot;
 
         - data-shared - default is not included
           - if included, we create the pin on both panels
 
-      The text in the &lt;p&gt; element is the text that will be used for the pin&#x27;s 
-      label. Note that the snippet has been set up to interpret and display 
-      the following inline markup: 
+      The text in the &lt;p&gt; element is the text that will be used for the pin&#x27;s
+      label. Note that the snippet has been set up to interpret and display
+      the following inline markup:
         - &lt;b&gt;&lt;/b&gt;, &lt;strong&gt;&lt;/strong&gt;, &lt;i&gt;&lt;/i&gt;, &lt;em&gt;&lt;/em&gt;
         - &lt;span class=&quot;sc-red&quot;&gt;&lt;/span&gt;, etc
     --&gt;</span>
 
-    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> 
-      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;pin-unique-id&quot;</span> 
-      <span class="hljs-attr">data-type</span>=<span class="hljs-string">&quot;pin&quot;</span> 
-      <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;59%, 21%&quot;</span> 
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>
+      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;pin-unique-id&quot;</span>
+      <span class="hljs-attr">data-type</span>=<span class="hljs-string">&quot;pin&quot;</span>
+      <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;59%, 21%&quot;</span>
       <span class="hljs-attr">data-fill</span>=<span class="hljs-string">&quot;blue&quot;</span>,
       <span class="hljs-attr">data-stroke</span>=<span class="hljs-string">&quot;yellow&quot;</span>,
       <span class="hljs-attr">data-labelwidth</span>=<span class="hljs-string">&quot;30%&quot;</span>
@@ -304,14 +304,14 @@
 
   <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 
-  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> 
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>
     <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;right-panel-unique-name&quot;</span>
       <span class="hljs-attr">data-date</span>=<span class="hljs-string">&quot;date of image&quot;</span>
     <span class="hljs-attr">data-frame</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>
 
-    <span class="hljs-tag">&lt;<span class="hljs-name">img</span> 
+    <span class="hljs-tag">&lt;<span class="hljs-name">img</span>
       <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;right-panel-image-unique-name&quot;</span>
-      <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Alternative text for image - required for accessibility&quot;</span> 
+      <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Alternative text for image - required for accessibility&quot;</span>
       <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;path/to/image/url&quot;</span> /&gt;</span>
 
     <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>...Pin definitions<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
@@ -319,29 +319,29 @@
   <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 
   <span class="hljs-comment">&lt;!--
-    If we also want to include any clickable links in the infographic, 
+    If we also want to include any clickable links in the infographic,
     we can include them in a &amp;lt;nav&gt; element
       - data-position - required (no default value)
-        - a string of two percentage values, separated by a comma 
+        - a string of two percentage values, separated by a comma
         - these are the &#x27;x%, y%&#x27; coords where the link will appear over image
 
       - data-justify - one of: &quot;left&quot;, &quot;right&quot;, &quot;center&quot; (default)
       - data-width - defaults to &quot;20%&quot;
-      - data-background - defaults to &quot;rgb(0 0 0 / 0.2)&quot; 
+      - data-background - defaults to &quot;rgb(0 0 0 / 0.2)&quot;
   --&gt;</span>
 
   <span class="hljs-tag">&lt;<span class="hljs-name">nav</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> 
-      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;link-unique-id&quot;</span> 
-      <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;https://absolute/link/url&quot;</span> 
-      <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;1%, 95%&quot;</span> 
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span>
+      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;link-unique-id&quot;</span>
+      <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;https://absolute/link/url&quot;</span>
+      <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;1%, 95%&quot;</span>
       <span class="hljs-attr">data-width</span>=<span class="hljs-string">&quot;45%&quot;</span>
       <span class="hljs-attr">data-justify</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>Text to include in the link<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
 
-    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> 
-      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;another-link-unique-id&quot;</span> 
-      <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;relative/link/url&quot;</span> 
-      <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;99%, 95%&quot;</span> 
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span>
+      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;another-link-unique-id&quot;</span>
+      <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;relative/link/url&quot;</span>
+      <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;99%, 95%&quot;</span>
       <span class="hljs-attr">data-width</span>=<span class="hljs-string">&quot;45%&quot;</span>
       <span class="hljs-attr">data-background</span>=<span class="hljs-string">&quot;darkblue&quot;</span>
       <span class="hljs-attr">data-justify</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>Different text for different link<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
@@ -369,7 +369,7 @@
 myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">slider</span>(scrawl, el));
 </code></pre>
 <p>Note that this snippet has a profound effect on the element it processes, moving images inside a canvas element and deleting most of the child elements (to prevent copy repetition for screen readers)</p>
-<p><strong>Function output:</strong> </p>
+<p><strong>Function output:</strong></p>
 <pre><code>{
     element           <span class="hljs-comment">// wrapper</span>
     canvas            <span class="hljs-comment">// wrapper</span>
@@ -378,7 +378,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 }
 </code></pre>
 <h3 id="snippet-code">Snippet code</h3>
-<p>Internal function to scrape data from the supplied element </p>
+<p>Internal function to scrape data from the supplied element</p>
 
             </div>
             
@@ -426,7 +426,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Internal function to scrape data from the supplied element </p>
+              <p>Internal function to scrape data from the supplied element</p>
 
             </div>
             
@@ -559,7 +559,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                pin.<span class="hljs-title function_">set</span>({ 
+            <div class="content"><div class='highlight'><pre>                pin.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">radius</span>: <span class="hljs-number">15</span>,
                     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
                 });</pre></div></div>
@@ -602,7 +602,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                pin.<span class="hljs-title function_">set</span>({ 
+            <div class="content"><div class='highlight'><pre>                pin.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">radius</span>: <span class="hljs-number">10</span>,
                     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
                 });</pre></div></div>
@@ -864,7 +864,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
     });
 
@@ -883,7 +883,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.<span class="hljs-property">canvas</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> canvas = snippet.<span class="hljs-property">canvas</span>,
             animation = snippet.<span class="hljs-property">animation</span>,
             wrapper = snippet.<span class="hljs-property">element</span>,
             element = wrapper.<span class="hljs-property">domElement</span>,
@@ -1472,7 +1472,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
                     p.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${n}</span>-left`</span>
                     p.<span class="hljs-property">groupname</span> = leftPanelName;
-                    
+
                     <span class="hljs-title function_">pinFactory</span>(scrawl, p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
 
                     p.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${n}</span>-right`</span>
@@ -1490,7 +1490,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
                     p.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${n}</span>-left`</span>
                     p.<span class="hljs-property">groupname</span> = leftPanelName;
-                    
+
                     <span class="hljs-title function_">pinFactory</span>(scrawl, p, canvas, pinTextGroup, pinTextBackgroundGroup, colors);
 
                     p.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${n}</span>-right`</span>
@@ -1635,7 +1635,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
                 <span class="hljs-attr">updateOnEnd</span>: <span class="hljs-function">() =&gt;</span> {
 
-                    <span class="hljs-keyword">let</span> [x] = dragBar.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>),
+                    <span class="hljs-keyword">const</span> [x] = dragBar.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>),
                         width = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;width&#x27;</span>);
 
                     dragBar.<span class="hljs-title function_">set</span>({

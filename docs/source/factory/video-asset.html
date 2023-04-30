@@ -871,8 +871,8 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== source.<span class="hljs-property">videoWidth</span> || 
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== source.<span class="hljs-property">videoHeight</span> || 
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== source.<span class="hljs-property">videoWidth</span> ||
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== source.<span class="hljs-property">videoHeight</span> ||
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== width ||
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== height) {
 
@@ -895,7 +895,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="managing-video-sources">Managing video sources</h4>
-<p>The following functions invoke their <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement">namesake functions on the source &lt;video&gt; element</a>. </p>
+<p>The following functions invoke their <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement">namesake functions on the source &lt;video&gt; element</a>.</p>
 <ul>
 <li>Note that some of the functions are defined as being asynchronous; for these functions, we wrap the invocations in Promises which cascade back to the original invocation (probably in user code).</li>
 <li>All of these functions are also mapped onto the factories which consume the videoAsset - Picture entitys and Pattern styles - so they can be invoked on those objects instead on the videoAsset instance.</li>
@@ -1225,12 +1225,12 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
             </div>
             
             <div class="content"><div class='highlight'><pre>    constraints.<span class="hljs-property">video</span> = {};
-    
+
     <span class="hljs-keyword">const</span> width = constraints.<span class="hljs-property">video</span>.<span class="hljs-property">width</span> = {};
     <span class="hljs-keyword">if</span> (items.<span class="hljs-property">minWidth</span>) width.<span class="hljs-property">min</span> = items.<span class="hljs-property">minWidth</span>;
     <span class="hljs-keyword">if</span> (items.<span class="hljs-property">maxWidth</span>) width.<span class="hljs-property">max</span> = items.<span class="hljs-property">maxWidth</span>;
     width.<span class="hljs-property">ideal</span> = (items.<span class="hljs-property">width</span>) ? items.<span class="hljs-property">width</span> : <span class="hljs-number">1280</span>;
-    
+
     <span class="hljs-keyword">const</span> height = constraints.<span class="hljs-property">video</span>.<span class="hljs-property">height</span> = {};
     <span class="hljs-keyword">if</span> (items.<span class="hljs-property">minHeight</span>) height.<span class="hljs-property">min</span> = items.<span class="hljs-property">minHeight</span>;
     <span class="hljs-keyword">if</span> (items.<span class="hljs-property">maxHeight</span>) height.<span class="hljs-property">max</span> = items.<span class="hljs-property">maxHeight</span>;

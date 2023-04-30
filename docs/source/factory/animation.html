@@ -545,7 +545,7 @@
 <ul>
 <li><code>scrawl.makeAnimation</code> - as coded by this factory - will supply a very basic Animation object. The factory requires that we supply it with a Promise-based <code>fn</code> function which will be added to the core Scrawl-canvas animation loop.</li>
 </ul>
-<p>Because creating an Animation object from this factory can be quite fiddly, Scrawl-canvas supplies some additional convenience factories to make the process easier: </p>
+<p>Because creating an Animation object from this factory can be quite fiddly, Scrawl-canvas supplies some additional convenience factories to make the process easier:</p>
 <ul>
 <li><code>scrawl.makeRender</code> - use this function to create an animation object which will <strong>control the Display cycle for a canvas or stack</strong>. The function allows users to add a number of hook functions that will trigger at various points in the Display cycle, alongside functions that will trigger whenever the animation object starts running, stops running, or errors.</li>
 <li><code>scrawl.makeTween</code> and <code>scrawl.makeTicker</code> - both of these factory functions use animation objects under the hood</li>
@@ -690,9 +690,9 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p><strong>order</strong> - positive integer Number - determines the order in which each Animation object will be actioned before the Display cycle starts. </p>
+              <p><strong>order</strong> - positive integer Number - determines the order in which each Animation object will be actioned before the Display cycle starts.</p>
 <ul>
-<li>Higher order Animations will be processed after lower order Animations. </li>
+<li>Higher order Animations will be processed after lower order Animations.</li>
 <li>Animations with the same <code>order</code> value will be processed in the order in which they were defined in code.</li>
 </ul>
 
@@ -851,7 +851,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
     <span class="hljs-title function_">animateAdd</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
     <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">forceUpdate</span>(), <span class="hljs-number">20</span>);
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
@@ -912,7 +912,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
     <span class="hljs-title function_">animateRemove</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
@@ -947,7 +947,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeAnimation = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
-    
+
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Animation</span>(items);
 };

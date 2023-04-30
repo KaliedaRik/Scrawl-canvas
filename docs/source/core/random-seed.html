@@ -545,6 +545,20 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
+              </div>
               <p>Seedable random numbers
 The following code has been lifted in its entirety from <a href="https://github.com/skratchdot/random-seed">https://github.com/skratchdot/random-seed</a></p>
 
@@ -649,11 +663,11 @@ which is good.  See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         </li>
         
         
-        <li id="section-2">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-2">&#x00a7;</a>
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <p>when our “uheprng” is initially invoked our PRNG state is initialized from the
 browser’s own local PRNG. This is okay since although its generator might not
@@ -666,11 +680,11 @@ be wonderful, it’s useful for establishing large startup entropy for our usage
         </li>
         
         
-        <li id="section-3">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>fill the array with initial mash hash values</p>
 
@@ -683,11 +697,11 @@ be wonderful, it’s useful for establishing large startup entropy for our usage
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>this PRIVATE (internal access only) function is the heart of the multiply-with-carry
 (MWC) PRNG algorithm. When called it returns a pseudo-random number in the form of a
@@ -708,11 +722,11 @@ characters from 33 to 126.</p>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>this EXPORTED function is the default function returned by this library.
 The values returned are integers in the range from 0 to range-1. We first
@@ -729,11 +743,11 @@ resolution 53-bit prng (0 to &lt;1), then we multiply this by the caller’s
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>this EXPORTED function ‘string(n)’ returns a pseudo-random string of
 ‘n’ printable characters ranging from chr(33) to chr(126) inclusive.</p>
@@ -752,11 +766,11 @@ resolution 53-bit prng (0 to &lt;1), then we multiply this by the caller’s
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>this PRIVATE “hash” function is used to evolve the generator’s internal
 entropy state. It is also called by the EXPORTED addEntropy() function
@@ -779,11 +793,11 @@ which is used to pour entropy into the PRNG.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>this EXPORTED “clean string” function removes leading and trailing spaces and non-printing
 control characters, including any embedded carriage-return (CR) and line-feed (LF) characters,
@@ -803,11 +817,11 @@ users always obtain the same EFFECTIVE uheprng seeding key.</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>this EXPORTED “hash string” function hashes the provided character string after first removing
 any leading or trailing spaces and ignoring any embedded carriage returns (CR) or Line Feeds (LF)</p>
@@ -831,11 +845,11 @@ any leading or trailing spaces and ignoring any embedded carriage returns (CR) o
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>this EXPORTED function allows you to seed the random generator.</p>
 
@@ -860,11 +874,11 @@ any leading or trailing spaces and ignoring any embedded carriage returns (CR) o
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>this handy exported function is used to add entropy to our uheprng at any time</p>
 
@@ -881,11 +895,11 @@ any leading or trailing spaces and ignoring any embedded carriage returns (CR) o
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>if we want to provide a deterministic startup context for our PRNG,
 but without directly setting the internal state variables, this allows
@@ -906,11 +920,11 @@ some hashing input</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>we use this (optional) exported function to signal the JavaScript interpreter
 that we’re finished using the “Mash” hash function so that it can free up the
@@ -926,11 +940,11 @@ necessary, of course, but it’s good JavaScript citizenship.</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>if we called “uheprng” with a seed value, then execute random.seed() before returning</p>
 
@@ -943,11 +957,11 @@ necessary, of course, but it’s good JavaScript citizenship.</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Returns a random integer between 0 (inclusive) and range (exclusive)</p>
 
@@ -960,11 +974,11 @@ necessary, of course, but it’s good JavaScript citizenship.</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Returns a random float between 0 (inclusive) and 1 (exclusive)</p>
 
@@ -977,11 +991,11 @@ necessary, of course, but it’s good JavaScript citizenship.</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Returns a random float between min (inclusive) and max (exclusive)</p>
 
@@ -994,11 +1008,11 @@ necessary, of course, but it’s good JavaScript citizenship.</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Returns a random integer between min (inclusive) and max (inclusive)</p>
 
@@ -1011,11 +1025,11 @@ necessary, of course, but it’s good JavaScript citizenship.</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>when our main outer “uheprng” function is called, after setting up our
 initial variables and entropic state, we return an “instance pointer”
@@ -1033,11 +1047,11 @@ using any of these functions.</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>… And this code comes from <a href="https://github.com/moll/json-stringify-safe">https://github.com/moll/json-stringify-safe</a></p>
 

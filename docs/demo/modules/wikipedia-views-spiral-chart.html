@@ -277,8 +277,8 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (assetName &amp;&amp; page &amp;&amp; canvas &amp;&amp; scrawl) {
 
-        <span class="hljs-keyword">const</span> { 
-            size = <span class="hljs-number">400</span>, 
+        <span class="hljs-keyword">const</span> {
+            size = <span class="hljs-number">400</span>,
             backgroundColor = <span class="hljs-string">&#x27;rgb(0 0 0 / 0)&#x27;</span>,
             minimumColor = <span class="hljs-string">&#x27;azure&#x27;</span>,
             medialColor = <span class="hljs-string">&#x27;blue&#x27;</span>,
@@ -414,8 +414,9 @@
                         nextWeek = nextWeek % <span class="hljs-number">52</span>;
                     }
 
-                    <span class="hljs-keyword">let</span> views = dayData[i] - minViews,
-                        dataColor;</pre></div></div>
+                    <span class="hljs-keyword">const</span> views = dayData[i] - minViews;
+
+                    <span class="hljs-keyword">let</span> dataColor;</pre></div></div>
             
         </li>
         
@@ -596,39 +597,41 @@
             <span class="hljs-attr">min</span>: <span class="hljs-number">0</span>,
             <span class="hljs-attr">fromdate</span>: <span class="hljs-string">&#x27;20200101&#x27;</span>,
             <span class="hljs-attr">todate</span>: <span class="hljs-string">&#x27;20200101&#x27;</span>,
-            <span class="hljs-attr">sunday</span>: [], 
-            <span class="hljs-attr">monday</span>: [], 
-            <span class="hljs-attr">tuesday</span>: [], 
-            <span class="hljs-attr">wednesday</span>: [], 
-            <span class="hljs-attr">thursday</span>: [], 
-            <span class="hljs-attr">friday</span>: [], 
-            <span class="hljs-attr">saturday</span>: [], 
+            <span class="hljs-attr">sunday</span>: [],
+            <span class="hljs-attr">monday</span>: [],
+            <span class="hljs-attr">tuesday</span>: [],
+            <span class="hljs-attr">wednesday</span>: [],
+            <span class="hljs-attr">thursday</span>: [],
+            <span class="hljs-attr">friday</span>: [],
+            <span class="hljs-attr">saturday</span>: [],
         };
 
-        <span class="hljs-keyword">let</span> t = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(),
+        <span class="hljs-keyword">const</span> t = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(),
             f = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();
 
         t.<span class="hljs-title function_">setDate</span>(t.<span class="hljs-title function_">getDate</span>() - <span class="hljs-number">1</span>);
         f.<span class="hljs-title function_">setFullYear</span>(f.<span class="hljs-title function_">getFullYear</span>() - <span class="hljs-number">3</span>);
 
-        <span class="hljs-keyword">let</span> fromdate = f.<span class="hljs-title function_">toISOString</span>().<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;T&#x27;</span>)[<span class="hljs-number">0</span>].<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/-/g</span>, <span class="hljs-string">&#x27;&#x27;</span>),
-            todate = t.<span class="hljs-title function_">toISOString</span>().<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;T&#x27;</span>)[<span class="hljs-number">0</span>].<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/-/g</span>, <span class="hljs-string">&#x27;&#x27;</span>),
-            dayCounter = f.<span class="hljs-title function_">getDay</span>(),
-            maxViews = <span class="hljs-number">0</span>, minViews = -<span class="hljs-number">1</span>;
+        <span class="hljs-keyword">const</span> fromdate = f.<span class="hljs-title function_">toISOString</span>().<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;T&#x27;</span>)[<span class="hljs-number">0</span>].<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/-/g</span>, <span class="hljs-string">&#x27;&#x27;</span>),
+            todate = t.<span class="hljs-title function_">toISOString</span>().<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;T&#x27;</span>)[<span class="hljs-number">0</span>].<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/-/g</span>, <span class="hljs-string">&#x27;&#x27;</span>);
 
-        <span class="hljs-keyword">let</span> url = <span class="hljs-string">`https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/<span class="hljs-subst">${page}</span>/daily/<span class="hljs-subst">${fromdate}</span>/<span class="hljs-subst">${todate}</span>`</span>;
+        <span class="hljs-keyword">let</span> dayCounter = f.<span class="hljs-title function_">getDay</span>(),
+            maxViews = <span class="hljs-number">0</span>,
+            minViews = -<span class="hljs-number">1</span>;
+
+        <span class="hljs-keyword">const</span> url = <span class="hljs-string">`https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/<span class="hljs-subst">${page}</span>/daily/<span class="hljs-subst">${fromdate}</span>/<span class="hljs-subst">${todate}</span>`</span>;
 
         <span class="hljs-title function_">fetch</span>(url)
         .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.<span class="hljs-title function_">json</span>())
         .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">dataObject</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> dataArray = dataObject.<span class="hljs-property">items</span>;
+            <span class="hljs-keyword">const</span> dataArray = dataObject.<span class="hljs-property">items</span>;
 
-            <span class="hljs-keyword">let</span> results = [[],[],[],[],[],[],[]];
+            <span class="hljs-keyword">const</span> results = [[],[],[],[],[],[],[]];
 
             dataArray.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> {
 
-                <span class="hljs-keyword">let</span> views = d.<span class="hljs-property">views</span>;
+                <span class="hljs-keyword">const</span> views = d.<span class="hljs-property">views</span>;
 
                 maxViews = (views &gt; maxViews) ? views : maxViews;
 

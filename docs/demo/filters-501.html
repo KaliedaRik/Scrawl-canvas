@@ -996,12 +996,12 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updateTarget</span> = (<span class="hljs-params">e</span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">updateTarget</span> = (<span class="hljs-params">e</span>) =&gt; {
 
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+    <span class="hljs-keyword">const</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
     <span class="hljs-keyword">if</span> (val) {
 
@@ -1032,7 +1032,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 };
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateTarget, <span class="hljs-string">&#x27;#target&#x27;</span>);
 
-<span class="hljs-keyword">let</span> <span class="hljs-title function_">updateFilter</span> = (<span class="hljs-params">e</span>) =&gt; {
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateFilter</span> = (<span class="hljs-params">e</span>) =&gt; {
 
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;

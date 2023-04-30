@@ -255,7 +255,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> { canvas, namespace, scrawl } = items;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> { canvas, namespace, scrawl } = items;
 
     <span class="hljs-keyword">if</span> (!(canvas &amp;&amp; namespace &amp;&amp; scrawl)) <span class="hljs-keyword">return</span> {
         <span class="hljs-attr">animation</span>: <span class="hljs-literal">null</span>,
@@ -316,7 +316,7 @@
 
     canvas.<span class="hljs-title function_">set</span>({
         title,
-        <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;An interactive canvas. An arrow appears in the center; its outline is drawn as the user scrolls. Labels tell the user the canvas shape and size. These labels are draggable. Links appear in the bottom corners.&#x27;</span>, 
+        <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;An interactive canvas. An arrow appears in the center; its outline is drawn as the user scrolls. Labels tell the user the canvas shape and size. These labels are draggable. Links appear in the bottom corners.&#x27;</span>,
     }).<span class="hljs-title function_">setAsCurrentCanvas</span>();
 
     <span class="hljs-keyword">const</span> animGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
@@ -437,14 +437,14 @@
         <span class="hljs-attr">exposeText</span>: <span class="hljs-literal">false</span>,
 
         <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-            canvas.<span class="hljs-title function_">set</span>({ 
+            canvas.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span> },
                 <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;https://en.wikipedia.org/wiki/Arrow&#x27;</span>,
             });
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">text</span>: <span class="hljs-string">`§UNDERLINE§<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.text}</span>`</span>});
         },
         <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-            canvas.<span class="hljs-title function_">set</span>({ 
+            canvas.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span> },
                 title,
             });
@@ -467,7 +467,7 @@
         <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Labels&#x27;</span>,
 
         <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-            canvas.<span class="hljs-title function_">set</span>({ 
+            canvas.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span> },
                 <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;https://en.wikipedia.org/wiki/Label&#x27;</span>,
             });
@@ -691,7 +691,7 @@
         <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;world&#x27;</span>),
 
         <span class="hljs-attr">userAttributes</span>: [{
-            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;progress&#x27;</span>, 
+            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;progress&#x27;</span>,
             <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
             <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
@@ -699,7 +699,7 @@
 
                 <span class="hljs-keyword">if</span> (arrow.<span class="hljs-property">length</span> != <span class="hljs-literal">null</span>) {
 
-                    arrow.<span class="hljs-title function_">set</span>({ 
+                    arrow.<span class="hljs-title function_">set</span>({
                         <span class="hljs-attr">lineDashOffset</span>: balance - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(arrow.<span class="hljs-property">length</span> * item),
                     });
                 }

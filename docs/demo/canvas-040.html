@@ -943,7 +943,7 @@
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> japan = arrow.<span class="hljs-title function_">clone</span>({
+<span class="hljs-keyword">const</span> japan = arrow.<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;japan&#x27;</span>,
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;70%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
@@ -1306,7 +1306,7 @@
     <span class="hljs-attr">userAttributes</span>: [
 
         {
-            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;progress&#x27;</span>, 
+            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;progress&#x27;</span>,
             <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
             <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
@@ -1416,14 +1416,14 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myTween = scrawl.<span class="hljs-title function_">makeTween</span>({
-  
+
   <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;line-progression&#x27;</span>,
-  
+
   <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>,
   <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
   <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
   <span class="hljs-attr">targets</span>: myWorld,
-  
+
   <span class="hljs-attr">definitions</span>: [
     {
       <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;progress&#x27;</span>,
@@ -1541,7 +1541,7 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+    <span class="hljs-keyword">const</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
     <span class="hljs-keyword">if</span> (myTween.<span class="hljs-title function_">isRunning</span>() &amp;&amp; val === <span class="hljs-string">&#x27;halt&#x27;</span>) {
 

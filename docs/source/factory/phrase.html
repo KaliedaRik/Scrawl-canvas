@@ -542,11 +542,11 @@
               <h1 id="phrase-factory">Phrase factory</h1>
 <p>Phrase entitys are graphical text rectangles rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D interface</a> - in particular the <code>fillRect</code>, <code>strokeRect</code>, <code>fillText</code> and <code>strokeText</code> methods.</p>
 <ul>
-<li>Positioning functionality for the Phrase is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
-<li>Phrases can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>Positioning functionality for the Phrase is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin.</li>
+<li>Phrases can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects.</li>
 <li>They will also accept <strong>Filter</strong> objects.</li>
-<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can use <strong>Anchor</strong> objects for user navigation.</li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
 <li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Phrases can be cloned, and killed.</li>
 </ul>
@@ -555,9 +555,9 @@
 <li>The <code>width</code> attribute is required for multi-line text. When set, Phrase entitys will automatically render text longer than its width in multiple lines on the canvas.</li>
 <li>The <code>height</code> attribute is normally disregarded. Instead height is calculated as a combination of the font <code>size</code>, <code>lineheight</code>, and the number of lines of text that need to be rendered on the canvas - which itself depends on the text’s length and the entity’s <code>width</code> attribute.</li>
 </ul>
-<p><strong>Be aware that text is <em>always</em> rendered as a graphic, not a block.</strong> </p>
+<p><strong>Be aware that text is <em>always</em> rendered as a graphic, not a block.</strong></p>
 <ul>
-<li>Scrawl-canvas ignores all attempts to set the canvas context engine’s <code>textAlign</code> and <code>textBaseline</code> attributes, which are permanently set to the defaults <code>left</code> and <code>top</code> respectively. </li>
+<li>Scrawl-canvas ignores all attempts to set the canvas context engine’s <code>textAlign</code> and <code>textBaseline</code> attributes, which are permanently set to the defaults <code>left</code> and <code>top</code> respectively.</li>
 <li>Each glyph (letter) is stamped separately onto the canvas - this allows us to include letterspacing and justification functionality, and to allow text to be styled on a per-glyph basis (overline/underline, highlight, color, bold/italics, etc).</li>
 </ul>
 <p>Phrase entitys use <a href="./fontAttribute.html">FontAttribute objects</a> to help manage their text font:</p>
@@ -912,7 +912,7 @@ P.<span class="hljs-property">midInitActions</span> = <span class="hljs-keyword"
               </div>
               <p><strong>exposeText</strong> - Boolean accessibility feature</p>
 <ul>
-<li>When <strong>exposeText</strong> is set to true (default), Scrawl-canvas will create an element in the DOM and mirror its current text value in that element. </li>
+<li>When <strong>exposeText</strong> is set to true (default), Scrawl-canvas will create an element in the DOM and mirror its current text value in that element.</li>
 <li>The element - a &lt;div&gt; - is attached to the canvas element’s textHold element, which immediately follows that element and has zero dimensions, so its contents don’t interfere with the flow of the rest of the DOM content.</li>
 </ul>
 
@@ -1008,7 +1008,7 @@ P.<span class="hljs-property">midInitActions</span> = <span class="hljs-keyword"
 <li><code>overline</code> - boolean - whether overline should be applied to the glyph</li>
 <li><code>defaults</code> - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase entity’s current font and fill/stroke style values</li>
 </ul>
-<p>Usage: </p>
+<p>Usage:</p>
 <ol>
 <li>Add styling objects to the <code>sectionClasses</code> Array - a number of styling objects are pre-defined for every Phrase entity; these can be added to, modified or deleted at any time using the <code>addSectionClass</code> and <code>removeSectionClass</code> functions.</li>
 <li>If necessary, update the entity’s <code>sectionClassMarker</code> delimiter attrbute. The attribute has to be a String, but that string can define a Regular Expression - for example setting the attribute to <code>[§&lt;&gt;]</code> will identify style markup delimeted by both <code>§marker-label§</code> and <code>&lt;marker-label&gt;</code>.</li>
@@ -1421,7 +1421,7 @@ D.<span class="hljs-property">handle</span> = <span class="hljs-keyword">functio
 S.<span class="hljs-property">text</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">text</span> = <span class="hljs-title function_">ensureString</span>(item);
-    
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyText</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
@@ -1444,7 +1444,7 @@ S.<span class="hljs-property">text</span> = <span class="hljs-keyword">function<
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">justify</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">JUSTIFICATIONS</span>.<span class="hljs-title function_">includes</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">justify</span> = item;
-    
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyText</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
@@ -1551,7 +1551,7 @@ D.<span class="hljs-property">scale</span> = <span class="hljs-keyword">function
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lineHeight</span> &lt; <span class="hljs-number">0.5</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lineHeight</span> = <span class="hljs-number">0.5</span>;
-    
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyText</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
@@ -1783,7 +1783,7 @@ D.<span class="hljs-property">textPathPosition</span> = <span class="hljs-keywor
               <h5 id="fontattribute-attributes">FontAttribute attributes</h5>
 <p>Phrase entitys break down fonts into their constituent parts using <a href="./fontAttribute.html">FontAttribute</a> objects.</p>
 <ul>
-<li>The Canvas API standards for using fonts on a canvas (<code>font</code>, <code>textAlign</code>, <code>textBaseline</code>) are near-useless, and often lead to a sub-par display of text. </li>
+<li>The Canvas API standards for using fonts on a canvas (<code>font</code>, <code>textAlign</code>, <code>textBaseline</code>) are near-useless, and often lead to a sub-par display of text.</li>
 <li>Thus Phrase entitys hide these from the developer, instead giving them functions to get/set/update fonts which align more closely with CSS standards.</li>
 <li>Note that the Canvas API only supports a subset of possible CSS font-related values, and that the level of support for even these will vary between browsers/devices. The Phrase entity will do work to ensure the font strings passed to the Canvas API CanvasRenderingContext2D engine will be valid (thus avoiding unnecessary runtime errors), but this may not be the same as a developer specifies in their code.</li>
 </ul>
@@ -2027,7 +2027,7 @@ S.<span class="hljs-property">sizeMetric</span> = <span class="hljs-keyword">fun
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontAttributes</span>.<span class="hljs-title function_">get</span>(<span class="hljs-variable constant_">FAMILY</span>);
 };
 S.<span class="hljs-property">family</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-    
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontAttributes</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">family</span>: item});
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
@@ -2256,7 +2256,7 @@ P.<span class="hljs-property">removeSectionClass</span> = <span class="hljs-keyw
               <div class="sswrap ">
                 <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
-              <p><code>cleanPathObject</code> - overwrites mixin/entity.js functionality so that it can deal with the <code>dirtyFont</code>, <code>dirtyText</code> and <code>dirtyHandle</code> flags </p>
+              <p><code>cleanPathObject</code> - overwrites mixin/entity.js functionality so that it can deal with the <code>dirtyFont</code>, <code>dirtyText</code> and <code>dirtyHandle</code> flags</p>
 <ul>
 <li>Fonts don’t have accessible paths; Phrase entity pathObjects represent the bounding box around the entity’s text.</li>
 </ul>
@@ -2268,7 +2268,7 @@ P.<span class="hljs-property">removeSectionClass</span> = <span class="hljs-keyw
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noPathUpdates</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>) {
-        
+
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontAttributes</span>) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">false</span>;
@@ -2281,7 +2281,7 @@ P.<span class="hljs-property">removeSectionClass</span> = <span class="hljs-keyw
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanHandle</span>();
 
         <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
-        
+
         <span class="hljs-keyword">const</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHandle</span>,
             dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>,
 
@@ -2472,7 +2472,7 @@ P.<span class="hljs-property">getCanvasTextHold</span> = <span class="hljs-keywo
         textLineWords = <span class="hljs-title function_">requestArray</span>(),
         textPositions = <span class="hljs-title function_">requestArray</span>();
 
-    <span class="hljs-keyword">let</span> gStyle, gPos, item, 
+    <span class="hljs-keyword">let</span> gStyle, gPos, item,
         starts, ends, cursor, height,
         space, i, iz, j, jz;
 
@@ -2491,26 +2491,25 @@ P.<span class="hljs-property">getCanvasTextHold</span> = <span class="hljs-keywo
         fontLibrary = {},
         fontArray = <span class="hljs-title function_">requestArray</span>();
 
-    <span class="hljs-keyword">let</span> scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>,
-        dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>,
+    <span class="hljs-keyword">let</span> scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>;
+
+    <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>,
         width = dims[<span class="hljs-number">0</span>] * scale,
         treatWordAsGlyph = <span class="hljs-variable language_">this</span>.<span class="hljs-property">treatWordAsGlyph</span>,
         lineHeight = <span class="hljs-variable language_">this</span>.<span class="hljs-property">lineHeight</span>,
         justify = <span class="hljs-variable language_">this</span>.<span class="hljs-property">justify</span>;
 
-    <span class="hljs-keyword">let</span> handle, handleX, handleY;
-
     fontAttributes.<span class="hljs-title function_">updateMetadata</span>(scale, lineHeight, host);
     glyphAttributes.<span class="hljs-title function_">updateMetadata</span>(scale, lineHeight, host);
 
-    <span class="hljs-keyword">const</span> defaultFont = fontAttributes.<span class="hljs-title function_">getFontString</span>(), 
-        defaultFillStyle = <span class="hljs-title function_">makeStyle</span>(state.<span class="hljs-property">fillStyle</span>), 
-        defaultStrokeStyle = <span class="hljs-title function_">makeStyle</span>(state.<span class="hljs-property">strokeStyle</span>), 
-        defaultSpace = <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpacing</span> * scale; 
+    <span class="hljs-keyword">const</span> defaultFont = fontAttributes.<span class="hljs-title function_">getFontString</span>(),
+        defaultFillStyle = <span class="hljs-title function_">makeStyle</span>(state.<span class="hljs-property">fillStyle</span>),
+        defaultStrokeStyle = <span class="hljs-title function_">makeStyle</span>(state.<span class="hljs-property">strokeStyle</span>),
+        defaultSpace = <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpacing</span> * scale;
 
-    <span class="hljs-keyword">let</span> currentFont = defaultFont, 
-        currentFillStyle = defaultFillStyle, 
-        currentStrokeStyle = defaultStrokeStyle, 
+    <span class="hljs-keyword">let</span> currentFont = defaultFont,
+        currentFillStyle = defaultFillStyle,
+        currentStrokeStyle = defaultStrokeStyle,
         currentSpace = defaultSpace;
 
     <span class="hljs-comment">/*
@@ -2764,7 +2763,7 @@ fontArray.push(currentFont);</p>
 
         engine.<span class="hljs-property">font</span> = font;
 
-        <span class="hljs-keyword">let</span> f = engine.<span class="hljs-title function_">measureText</span>(defaultTextForHeightMeasurements);
+        <span class="hljs-keyword">const</span> f = engine.<span class="hljs-title function_">measureText</span>(defaultTextForHeightMeasurements);
 
         <span class="hljs-keyword">if</span> (f.<span class="hljs-property">actualBoundingBoxAscent</span> != <span class="hljs-literal">null</span> &amp;&amp; f.<span class="hljs-property">actualBoundingBoxDescent</span> != <span class="hljs-literal">null</span>) {
 
@@ -2825,7 +2824,7 @@ fontArray.push(currentFont);</p>
         <span class="hljs-keyword">if</span> (glyphArr[<span class="hljs-number">0</span>]) engine.<span class="hljs-property">font</span> = glyphArr[<span class="hljs-number">0</span>];
 
         singles.<span class="hljs-title function_">push</span>(engine.<span class="hljs-title function_">measureText</span>(glyph).<span class="hljs-property">width</span>);
-        
+
         nextGlyph = textPositions[i + <span class="hljs-number">1</span>];
         nextGlyph = (!treatWordAsGlyph &amp;&amp; nextGlyph) ? nextGlyph[<span class="hljs-number">6</span>] : <span class="hljs-literal">false</span>;
 
@@ -3007,10 +3006,10 @@ fontArray.push(currentFont);</p>
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanHandle</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">false</span>;
-    handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHandle</span>;
-    
-    handleX = -handle[<span class="hljs-number">0</span>] * scale;
-    handleY = -handle[<span class="hljs-number">1</span>] * scale;</pre></div></div>
+
+    <span class="hljs-keyword">const</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHandle</span>,
+        handleX = -handle[<span class="hljs-number">0</span>] * scale,
+        handleY = -handle[<span class="hljs-number">1</span>] * scale;</pre></div></div>
             
         </li>
         
@@ -3127,7 +3126,7 @@ fontArray.push(currentFont);</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-100">&#x00a7;</a>
               </div>
-              <p>BUG: There’s an issue here which causes the function to fail when <code>treatWordAsGlyph</code> flag is set to true. Affects non-path-referencing Phrase entitys. This test to see if item exists is a temporary fix. </p>
+              <p>BUG: There’s an issue here which causes the function to fail when <code>treatWordAsGlyph</code> flag is set to true. Affects non-path-referencing Phrase entitys. This test to see if item exists is a temporary fix.</p>
 <ul>
 <li>Question: do we only care about treating word as glyph when it references a path? Probably no - we need to care about attempts to add space between letters (glyphs) as that may have an unwanted effect on heavily kerned fonts, or fonts with a lot of ligatures between various glyphs.</li>
 </ul>
@@ -3293,7 +3292,7 @@ fontArray.push(currentFont);</p>
             pos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">textPositions</span>;
 
             <span class="hljs-keyword">let</span> p, pathData;
-            
+
             <span class="hljs-keyword">const</span> cr = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRotation</span>;</pre></div></div>
             
         </li>
@@ -3424,10 +3423,10 @@ fontArray.push(currentFont);</p>
               <p>textPathPosition Array indexes [
 0-font - font definition, or null
 1-strokeStyle - Boolean
-2-fillStyle - Boolean 
+2-fillStyle - Boolean
 3-highlight - Boolean
 4-underline - Boolean
-5-overline - Boolean 
+5-overline - Boolean
 6-text - String
 7-startX - Number - on paths, acts as a negative offset for justifying glyphs
 8-startY - Number
@@ -3460,8 +3459,8 @@ fontArray.push(currentFont);</p>
             localPathPos = (localPathPos &gt; <span class="hljs-number">0.5</span>) ? localPathPos - <span class="hljs-number">1</span> : localPathPos + <span class="hljs-number">1</span>;
         }
 
-        posArray[<span class="hljs-number">10</span>] = (localPathPos &lt;= <span class="hljs-number">1</span> &amp;&amp; localPathPos &gt;= <span class="hljs-number">0</span>) ? 
-            path.<span class="hljs-title function_">getPathPositionData</span>(localPathPos, pathSpeed) : 
+        posArray[<span class="hljs-number">10</span>] = (localPathPos &lt;= <span class="hljs-number">1</span> &amp;&amp; localPathPos &gt;= <span class="hljs-number">0</span>) ?
+            path.<span class="hljs-title function_">getPathPositionData</span>(localPathPos, pathSpeed) :
             <span class="hljs-literal">false</span>;
 
         posArray[<span class="hljs-number">9</span>] = width;
@@ -3578,7 +3577,7 @@ data[3] - width</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">draw</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) { 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">draw</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) {
 
         engine.<span class="hljs-title function_">strokeText</span>(...data);
     },</pre></div></div>
@@ -3596,7 +3595,7 @@ data[3] - width</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fill</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) { 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fill</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) {
 
         engine.<span class="hljs-title function_">fillText</span>(...data);
     },</pre></div></div>
@@ -3614,7 +3613,7 @@ data[3] - width</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">drawAndFill</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) { 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">drawAndFill</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) {
 
         engine.<span class="hljs-title function_">strokeText</span>(...data);
         engine.<span class="hljs-title function_">fillText</span>(...data);
@@ -3637,7 +3636,7 @@ data[3] - width</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fillAndDraw</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) { 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fillAndDraw</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) {
 
         engine.<span class="hljs-title function_">fillText</span>(...data);
         engine.<span class="hljs-title function_">strokeText</span>(...data);
@@ -3660,7 +3659,7 @@ data[3] - width</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">drawThenFill</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) { 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">drawThenFill</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) {
 
         engine.<span class="hljs-title function_">strokeText</span>(...data);
         engine.<span class="hljs-title function_">fillText</span>(...data);
@@ -3679,7 +3678,7 @@ data[3] - width</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fillThenDraw</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) { 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fillThenDraw</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) {
 
         engine.<span class="hljs-title function_">fillText</span>(...data);
         engine.<span class="hljs-title function_">strokeText</span>(...data);
@@ -3698,13 +3697,13 @@ data[3] - width</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">clear</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) { 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">clear</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) {
 
         <span class="hljs-keyword">const</span> gco = engine.<span class="hljs-property">globalCompositeOperation</span>;
         engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">DESTINATION_OUT</span>;
         engine.<span class="hljs-title function_">fillText</span>(...data);
         engine.<span class="hljs-property">globalCompositeOperation</span> = gco;
-    },    
+    },
 };</pre></div></div>
             
         </li>

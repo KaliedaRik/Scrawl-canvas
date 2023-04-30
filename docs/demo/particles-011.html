@@ -869,7 +869,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -968,7 +968,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> colorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> colorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tracer-3-color-factory&#x27;</span>,
 
@@ -1054,8 +1054,9 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> history = particle.<span class="hljs-property">history</span>,
-            start;
+        <span class="hljs-keyword">const</span> history = particle.<span class="hljs-property">history</span>;
+
+        <span class="hljs-keyword">let</span> start;
 
         history.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {
 
@@ -1106,16 +1107,17 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> history = particle.<span class="hljs-property">history</span>,
-            len = history.<span class="hljs-property">length</span>,
-            start;
+        <span class="hljs-keyword">const</span> history = particle.<span class="hljs-property">history</span>,
+            len = history.<span class="hljs-property">length</span>;
+
+        <span class="hljs-keyword">let</span> start;
 
         history.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {
 
             <span class="hljs-keyword">if</span> (index % <span class="hljs-number">3</span> === <span class="hljs-number">0</span>) {
 
                 [ , , ...start] = p;
-                
+
                 artefact.<span class="hljs-title function_">simpleStamp</span>(host, {
                     start,
                     <span class="hljs-attr">globalAlpha</span>: (len - index) / len,
@@ -1162,16 +1164,17 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> history = particle.<span class="hljs-property">history</span>,
-            len = history.<span class="hljs-property">length</span>,
-            start;
+        <span class="hljs-keyword">const</span> history = particle.<span class="hljs-property">history</span>,
+            len = history.<span class="hljs-property">length</span>;
+
+        <span class="hljs-keyword">let</span> start;
 
         history.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {
 
             [ , , ...start] = p;
 
-            <span class="hljs-keyword">let</span> magicNumber = (len - index) / len;
-            
+            <span class="hljs-keyword">const</span> magicNumber = (len - index) / len;
+
             artefact.<span class="hljs-title function_">simpleStamp</span>(host, {
                 start,
                 <span class="hljs-attr">scale</span>: magicNumber * <span class="hljs-number">3</span>,
@@ -1266,7 +1269,7 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>,
+    <span class="hljs-keyword">const</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>,
         entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>[<span class="hljs-string">&#x27;trace-2&#x27;</span>];
 
     entity.<span class="hljs-title function_">clearFilters</span>();

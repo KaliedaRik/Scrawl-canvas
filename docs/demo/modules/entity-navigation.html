@@ -611,8 +611,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> entityNames = [],
-        currentKeyboardEntity;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> entityNames = [];
+    <span class="hljs-keyword">let</span> currentKeyboardEntity;
 
     <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateEntityNames</span> = (<span class="hljs-params"></span>) =&gt; {
 
@@ -818,7 +818,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateControllersDisplayOnStart</span> = (<span class="hljs-params"></span>) =&gt; {
-        
+
         keyboardEntitys.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">noFilters</span>: <span class="hljs-literal">true</span>,
         });

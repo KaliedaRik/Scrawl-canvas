@@ -268,7 +268,7 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { 
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
     api <span class="hljs-keyword">as</span> frame,
     dims <span class="hljs-keyword">as</span> frameDims,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-chart-frame.js&#x27;</span>;</pre></div></div>
@@ -296,7 +296,7 @@ Data format requirements - a Javascript object with structure:
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; yearLabels.<span class="hljs-property">length</span>; i++) {
 
-        <span class="hljs-keyword">let</span> total = yearData[yearLabels[i]].<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">const</span> total = yearData[yearLabels[i]].<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>);
         <span class="hljs-keyword">if</span> (total &gt; max) max = total;
     }
     <span class="hljs-keyword">return</span> ((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(max / <span class="hljs-number">1000</span>)) * <span class="hljs-number">1000</span>) + <span class="hljs-number">1000</span>;
@@ -350,8 +350,9 @@ Data format requirements - a Javascript object with structure:
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> selectedColumn = <span class="hljs-number">0</span>,
-        selectedRow = <span class="hljs-number">0</span>,
-        currentData = data;
+        selectedRow = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">const</span> currentData = data;
 
     <span class="hljs-keyword">if</span> (namespace &amp;&amp; canvas &amp;&amp; data &amp;&amp; scrawl) {</pre></div></div>
             
@@ -383,8 +384,8 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> yearLabels = data.<span class="hljs-property">yearLabels</span>, 
-            categoryLabels = data.<span class="hljs-property">categoryLabels</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> yearLabels = data.<span class="hljs-property">yearLabels</span>,
+            categoryLabels = data.<span class="hljs-property">categoryLabels</span>,
             yearData = data.<span class="hljs-property">yearData</span>,
 
             gap = <span class="hljs-number">1</span>,</pre></div></div>
@@ -461,10 +462,10 @@ Data format requirements - a Javascript object with structure:
             
             <div class="content"><div class='highlight'><pre>        yearLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">year, yearIndex</span>) =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> xPosition = (barDistance * yearIndex) + graphLeft,
-                localHeight = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">const</span> xPosition = (barDistance * yearIndex) + graphLeft,
+                categoryLen = categoryLabels.<span class="hljs-property">length</span>;
 
-            <span class="hljs-keyword">const</span> categoryLen = categoryLabels.<span class="hljs-property">length</span>;
+            <span class="hljs-keyword">let</span> localHeight = <span class="hljs-number">0</span>;
 
             categoryLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">category, categoryIndex</span>) =&gt;</span> {
 
@@ -580,19 +581,19 @@ Data format requirements - a Javascript object with structure:
 
             <span class="hljs-keyword">switch</span> (direction) {
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span> : 
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span> :
                     selectedRow++;
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span> : 
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span> :
                     selectedRow--;
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;left&#x27;</span> : 
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;left&#x27;</span> :
                     selectedColumn--;
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;right&#x27;</span> : 
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;right&#x27;</span> :
                     selectedColumn++;
                     <span class="hljs-keyword">break</span>;
             }

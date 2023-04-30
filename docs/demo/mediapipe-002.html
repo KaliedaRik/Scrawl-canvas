@@ -901,13 +901,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mediapipe-model-interpreter&#x27;</span>,
 
     <span class="hljs-attr">userAttributes</span>: [{
 
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;stuff&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;stuff&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
@@ -920,11 +920,11 @@
             }
         },
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>, 
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>,
         <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
     }],
@@ -1136,7 +1136,7 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h5 id="import-and-use-livestream">Import and use livestream</h5>
-<p>convenience handle for the media stream asset </p>
+<p>convenience handle for the media stream asset</p>
 
             </div>
             
@@ -1239,7 +1239,7 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         <span class="hljs-attr">locateFile</span>: <span class="hljs-function">(<span class="hljs-params">file</span>) =&gt;</span> <span class="hljs-string">`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/<span class="hljs-subst">${file}</span>`</span>,
     });
 
-    model.<span class="hljs-title function_">setOptions</span>({   
+    model.<span class="hljs-title function_">setOptions</span>({
         <span class="hljs-attr">maxNumFaces</span>: <span class="hljs-number">1</span>,
         <span class="hljs-attr">minDetectionConfidence</span>: <span class="hljs-number">0.5</span>,
         <span class="hljs-attr">minTrackingConfidence</span>: <span class="hljs-number">0.5</span>

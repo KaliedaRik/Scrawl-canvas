@@ -545,12 +545,12 @@
 <p>Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>. They use the <a href="../mixin/shapeBasic.html">shapeBasic</a> and <a href="../mixin/shapePathCalculation.html">shapePathCalculation</a> (some also use <a href="../mixin/shapeCurve.html">shapeCurve</a>) mixins to define much of their functionality.</p>
 <p>All path-defined entitys can be positioned, cloned, filtered etc:</p>
 <ul>
-<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
+<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin.</li>
 <li>Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use <code>scale</code> instead.</li>
-<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects.</li>
 <li>They will also accept <strong>Filter</strong> objects.</li>
-<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can use <strong>Anchor</strong> objects for user navigation.</li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
 <li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Path-defined entitys can be cloned, and killed.</li>
 </ul>
@@ -1098,7 +1098,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p><code>getPinAt</code> - </p>
+              <p><code>getPinAt</code> -</p>
 
             </div>
             
@@ -1145,7 +1145,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <p><code>updatePinAt</code> - </p>
+              <p><code>updatePinAt</code> -</p>
 
             </div>
             
@@ -1178,7 +1178,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p><code>removePinAt</code> - </p>
+              <p><code>removePinAt</code> -</p>
 
             </div>
             
@@ -1460,7 +1460,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
                 }
                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(temp) &amp;&amp; temp.<span class="hljs-property">currentStart</span>) {
 
-                    <span class="hljs-keyword">let</span> name = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
+                    <span class="hljs-keyword">const</span> name = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
                     <span class="hljs-keyword">if</span> (!temp.<span class="hljs-property">pivoted</span>.<span class="hljs-title function_">includes</span>(name)) <span class="hljs-title function_">pushUnique</span>(temp.<span class="hljs-property">pivoted</span>, name);
 
@@ -1517,7 +1517,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
     <span class="hljs-keyword">const</span> getPathParts = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getPathParts</span>,
         buildLine = <span class="hljs-variable language_">this</span>.<span class="hljs-property">buildLine</span>,
         buildCurve = <span class="hljs-variable language_">this</span>.<span class="hljs-property">buildCurve</span>,
-        cPin = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPins</span>, 
+        cPin = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPins</span>,
         tension = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tension</span>,
         closed = <span class="hljs-variable language_">this</span>.<span class="hljs-property">closed</span>;</pre></div></div>
             
@@ -1560,7 +1560,7 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
             last = cPin[cLen - <span class="hljs-number">1</span>];
 
         <span class="hljs-keyword">const</span> calc = <span class="hljs-title function_">requestArray</span>();
-        
+
         <span class="hljs-keyword">let</span> result = <span class="hljs-variable constant_">ZERO_PATH</span>,
             i;
 

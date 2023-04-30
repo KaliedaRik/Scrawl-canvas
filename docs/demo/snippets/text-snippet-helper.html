@@ -439,12 +439,12 @@
             localFontSize = <span class="hljs-built_in">parseFloat</span>(fontSize);
 
         phrase.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">style</span>: fontStyle, 
-            <span class="hljs-attr">variant</span>: fontVariant, 
-            <span class="hljs-attr">weight</span>: fontWeight, 
-            <span class="hljs-attr">size</span>: fontSize, 
-            <span class="hljs-attr">family</span>: fontFamily, 
-            <span class="hljs-attr">lineHeight</span>: (localLineHeight / localFontSize) * lineheightAdjuster, 
+            <span class="hljs-attr">style</span>: fontStyle,
+            <span class="hljs-attr">variant</span>: fontVariant,
+            <span class="hljs-attr">weight</span>: fontWeight,
+            <span class="hljs-attr">size</span>: fontSize,
+            <span class="hljs-attr">family</span>: fontFamily,
+            <span class="hljs-attr">lineHeight</span>: (localLineHeight / localFontSize) * lineheightAdjuster,
             <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
             <span class="hljs-attr">text</span>: <span class="hljs-title function_">processText</span>(el.<span class="hljs-property">innerHTML</span>),
             <span class="hljs-attr">startY</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(localFontSize * yOffset),
@@ -500,12 +500,12 @@
                 localFontSize = <span class="hljs-built_in">parseFloat</span>(fontSize);
 
             textGroup.<span class="hljs-title function_">setArtefacts</span>({
-                <span class="hljs-attr">style</span>: fontStyle, 
-                <span class="hljs-attr">variant</span>: fontVariant, 
-                <span class="hljs-attr">weight</span>: fontWeight, 
-                <span class="hljs-attr">size</span>: fontSize, 
-                <span class="hljs-attr">family</span>: fontFamily, 
-                <span class="hljs-attr">lineHeight</span>: (localLineHeight / localFontSize) * lineheightAdjuster, 
+                <span class="hljs-attr">style</span>: fontStyle,
+                <span class="hljs-attr">variant</span>: fontVariant,
+                <span class="hljs-attr">weight</span>: fontWeight,
+                <span class="hljs-attr">size</span>: fontSize,
+                <span class="hljs-attr">family</span>: fontFamily,
+                <span class="hljs-attr">lineHeight</span>: (localLineHeight / localFontSize) * lineheightAdjuster,
                 <span class="hljs-attr">startY</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(localFontSize * yOffset),
                 <span class="hljs-attr">underlineWidth</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(localFontSize * underlineWidth) || <span class="hljs-number">1</span>,
                 <span class="hljs-attr">justify</span>: textAlign || <span class="hljs-string">&#x27;left&#x27;</span>,
@@ -575,14 +575,14 @@
         canvas.<span class="hljs-title function_">setReduceMotionAction</span>(<span class="hljs-function">() =&gt;</span> {
 
             <span class="hljs-keyword">if</span> (doAnimation) {
-                
+
                 doAnimation = <span class="hljs-literal">false</span>;
                 control.<span class="hljs-property">textContent</span> = <span class="hljs-string">&#x27;Play&#x27;</span>;
                 animationEndFunctions.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> <span class="hljs-title function_">a</span>());
                 eternalTweens.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.<span class="hljs-title function_">halt</span>());
             }
         });
-        
+
         canvas.<span class="hljs-title function_">setNoPreferenceMotionAction</span>(<span class="hljs-function">() =&gt;</span> {
 
             <span class="hljs-keyword">if</span> (!doAnimation) {

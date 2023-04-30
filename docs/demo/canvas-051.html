@@ -869,10 +869,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
 
 
-<span class="hljs-keyword">let</span> mySpiral = scrawl.<span class="hljs-title function_">makeLineSpiral</span>({
+<span class="hljs-keyword">const</span> mySpiral = scrawl.<span class="hljs-title function_">makeLineSpiral</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-spiral&#x27;</span>,
 
@@ -898,7 +898,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> {startRadius, radiusIncrement, radiusIncrementAdjust, startAngle, angleIncrement, angleIncrementAdjust, stepLimit} = mySpiral;
+    <span class="hljs-keyword">const</span> {startRadius, radiusIncrement, radiusIncrementAdjust, startAngle, angleIncrement, angleIncrementAdjust, stepLimit} = mySpiral;
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`    Radius - start: <span class="hljs-subst">${startRadius}</span>, increment: <span class="hljs-subst">${radiusIncrement}</span>, adjust: <span class="hljs-subst">${radiusIncrementAdjust}</span>
     Angle - start: <span class="hljs-subst">${startAngle}</span>, increment: <span class="hljs-subst">${angleIncrement}</span>, adjust: <span class="hljs-subst">${angleIncrementAdjust}</span>

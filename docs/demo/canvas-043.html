@@ -1260,7 +1260,7 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvasTwoPostInitialization = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;running canvasTwoPostInitialization()&#x27;</span>);
-    
+
     <span class="hljs-keyword">const</span> drag = scrawl.<span class="hljs-title function_">makeGroup</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-title function_">name2</span>(<span class="hljs-string">&#x27;drag-group&#x27;</span>),
     });
@@ -1493,7 +1493,7 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
             <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makeBlock</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-block&#x27;</span>),
         <span class="hljs-attr">group</span>: canvas3.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
-        width, 
+        width,
         height,
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
@@ -1505,7 +1505,7 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
 
     c3Cell.<span class="hljs-title function_">set</span>({
         width,
-        height, 
+        height,
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
         <span class="hljs-attr">pivot</span>: <span class="hljs-title function_">name3</span>(<span class="hljs-string">&#x27;serif-block&#x27;</span>),
         <span class="hljs-attr">addPivotRotation</span>: <span class="hljs-literal">true</span>,
@@ -1536,7 +1536,7 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
 
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(anim.<span class="hljs-property">target</span>.<span class="hljs-property">name</span>);
 
-    <span class="hljs-keyword">let</span> target = anim.<span class="hljs-property">target</span>.<span class="hljs-property">name</span>;
+    <span class="hljs-keyword">const</span> target = anim.<span class="hljs-property">target</span>.<span class="hljs-property">name</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;canvas2&#x27;</span> === target) <span class="hljs-title function_">canvasTwoPostInitialization</span>();
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;canvas3&#x27;</span> === target) <span class="hljs-title function_">canvasThreePostInitialization</span>();
@@ -1571,7 +1571,7 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <p>Note that this function will be run three times - once for each of the canvases targeted. Thus we need to code the function defensively so that code related to a particular canvas runs only once </p>
+              <p>Note that this function will be run three times - once for each of the canvases targeted. Thus we need to code the function defensively so that code related to a particular canvas runs only once</p>
 
             </div>
             

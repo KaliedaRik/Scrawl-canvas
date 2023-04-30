@@ -542,8 +542,8 @@
               <h1 id="cell-factory">Cell factory</h1>
 <p>Scrawl-canvas uses ‘hidden’ canvases - &lt;canvas&gt; elements that are not part of the DOM - for much of its functionality:</p>
 <ul>
-<li>When we wrap a DOM-based &lt;canvas&gt; element in a Scrawl-canvas <a href="./canvas.html">Canvas</a> wrapper, we create a second ‘hidden’ &lt;canvas&gt; element and assign it as that Canvas wrapper’s <strong>base cell</strong>. </li>
-<li>This Cell is used for building the display during the Display cycle (<code>clear</code> and <code>compile</code> steps). </li>
+<li>When we wrap a DOM-based &lt;canvas&gt; element in a Scrawl-canvas <a href="./canvas.html">Canvas</a> wrapper, we create a second ‘hidden’ &lt;canvas&gt; element and assign it as that Canvas wrapper’s <strong>base cell</strong>.</li>
+<li>This Cell is used for building the display during the Display cycle (<code>clear</code> and <code>compile</code> steps).</li>
 <li>It gets copied over to the Dom-based &lt;canvas&gt; element at the end of the cycle (the <code>show</code> step).</li>
 <li>When copied over, the base cell will determine how much of its display to copy into the controller Canvas, to meet the needs of that Canvas wrapper’s <code>fit</code> attribute.</li>
 </ul>
@@ -553,21 +553,21 @@
 <li>the source for image-based objects such as <strong>Picture entitys</strong> and <strong>Pattern styles</strong>.</li>
 <li><strong>artefacts</strong> - a Cell wrapper can act just like any artefact: it can be positioned, dimensioned, scaled and rotated ; it can act as a <code>pivot</code> or <code>mimic</code> source for other artefacts, or use them for its position and dimensions data. (Be aware, though, that Cell wrappers are NOT stored in the scrawl library’s <code>artefact</code> section).</li>
 </ul>
-<p>Cell wrappers include a number of Boolean flags and other attributes to control how they are stamped onto other Cells. </p>
+<p>Cell wrappers include a number of Boolean flags and other attributes to control how they are stamped onto other Cells.</p>
 <ul>
 <li>We can set flags to determine whether to include the Cell in each step of the Display cycle (<code>cleared</code>, <code>compiled</code>, <code>shown</code>) - this allows us to set up, for example, ‘static’ Cells that only need to be compiled once and can then be used as backgrounds for other Cells and entitys to be animated over.</li>
-<li>We can vary the order in which Cell wrappers get processed during the Display cycle (<code>compileOrder</code>, <code>showOrder</code>). </li>
+<li>We can vary the order in which Cell wrappers get processed during the Display cycle (<code>compileOrder</code>, <code>showOrder</code>).</li>
 <li>Each Cell can have its own <code>backgroundColor</code>.</li>
 <li>Each Cell can be made translucent (<code>alpha</code>).</li>
 <li>Each Cell can be stamped onto other Cell canvases using a different composition method (<code>composite</code>).</li>
-<li>Each Cell can be given its own dimensions, different to those of its Canvas wrapper, with updates cascading down to entitys that use the Cell to determine their own (relative) dimensions and start coordinates. </li>
+<li>Each Cell can be given its own dimensions, different to those of its Canvas wrapper, with updates cascading down to entitys that use the Cell to determine their own (relative) dimensions and start coordinates.</li>
 <li>We can <code>scale</code>, <code>roll</code> and <code>flip</code> a Cell.</li>
 <li>We can control which parts of the Cell display will be copied over to its destination (<code>copy attributes</code>).</li>
 <li>We can add one or more <code>filters</code> to the Cell’s outputted display.</li>
 </ul>
-<p>Every Cell wrapper will include a <a href="./group.html">Group object</a> which shares the same name as the Cell. To include an entity object in a Cell wrapper’s canvas display we add it to this group. </p>
+<p>Every Cell wrapper will include a <a href="./group.html">Group object</a> which shares the same name as the Cell. To include an entity object in a Cell wrapper’s canvas display we add it to this group.</p>
 <ul>
-<li>Additional Group objects can be added to the Cell wrapper as-and-when required. </li>
+<li>Additional Group objects can be added to the Cell wrapper as-and-when required.</li>
 <li>Groups are processed in the order specified in their <code>order</code> attributes.</li>
 <li>Groups whose <code>visibility</code> flag is set to false will be skipped during the Display cycle cascade.</li>
 </ul>
@@ -587,7 +587,7 @@
               </div>
               <h4 id="demos">Demos:</h4>
 <ul>
-<li>All canvas and packets demos, and a few of the stack demos, include Cell wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. </li>
+<li>All canvas and packets demos, and a few of the stack demos, include Cell wrapper functionality - most of which happens behind the scenes and does not need to be directly coded.</li>
 <li><a href="../../demo/canvas-009.html">Canvas-009</a> - Pattern styles; Entity web link anchors; Dynamic accessibility</li>
 <li><a href="../../demo/canvas-031.html">Canvas-031</a> - Cell generation and processing order - kaleidoscope clock</li>
 <li><a href="../../demo/canvas-036.html">Canvas-036</a> - Cell artefact-like positional functionality</li>
@@ -947,7 +947,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p><strong>flipReverse</strong>, <strong>flipUpend</strong> - Boolean flags which determine the orientation of the cell when it stamps itself on the display. </p>
+              <p><strong>flipReverse</strong>, <strong>flipUpend</strong> - Boolean flags which determine the orientation of the cell when it stamps itself on the display.</p>
 <ul>
 <li>a <code>reversed</code> cell is effectively flipped 180&deg; around a vertical line passing through that cell’s rotation-reflection (start) point - a face looking to the right will now look to the left</li>
 <li>an <code>upended</code> cell is effectively flipped 180&deg; around a horizontal line passing through that cell’s rotation-reflection (start) point - a normal face will now appear upside-down</li>
@@ -998,7 +998,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p><strong>isBase</strong> - Every displayed &lt;canvas&gt; element - wrapped in a Scrawl-canvas Canvas object (factory/canvas.js) - must possess at least one Cell object, known as its ‘base’ Cell. </p>
+              <p><strong>isBase</strong> - Every displayed &lt;canvas&gt; element - wrapped in a Scrawl-canvas Canvas object (factory/canvas.js) - must possess at least one Cell object, known as its ‘base’ Cell.</p>
 
             </div>
             
@@ -1013,7 +1013,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <p><strong>useAsPattern</strong> - Used to ignore the requirement to resize canvases to take into account device pixel ratios greater than 1 </p>
+              <p><strong>useAsPattern</strong> - Used to ignore the requirement to resize canvases to take into account device pixel ratios greater than 1</p>
 
             </div>
             
@@ -1105,7 +1105,7 @@ P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable langua
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> myname = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span></pre></div></div>
+    <span class="hljs-keyword">const</span> myname = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span></pre></div></div>
             
         </li>
         
@@ -1191,7 +1191,7 @@ P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable langua
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>, 
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
     S = P.<span class="hljs-property">setters</span>,
     D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
@@ -1217,8 +1217,9 @@ P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable langua
     <span class="hljs-keyword">else</span> {
 
         <span class="hljs-keyword">let</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item],
-            state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>,
             val;
+
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
 
         <span class="hljs-keyword">if</span> (def != <span class="hljs-literal">null</span>) {
 
@@ -1408,7 +1409,7 @@ S.<span class="hljs-property">showOrder</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
-              <p><strong>Stash coordinates and dimensions</strong> - which are stored in Coordinate arrays - allow us to store, and export to an image asset, a portion of the Cell’s current display which can then be used (for instance) by Pattern styles. </p>
+              <p><strong>Stash coordinates and dimensions</strong> - which are stored in Coordinate arrays - allow us to store, and export to an image asset, a portion of the Cell’s current display which can then be used (for instance) by Pattern styles.</p>
 <ul>
 <li>Scrawl-canvas supplies the following <em>pseudo-attributes</em> for dealing with the stash start coordinate (<code>stashX</code>, <code>stashY</code>) and dimensions (<code>stashWidth</code>, <code>stashHeight</code>)</li>
 <li>Each of these values can be either absolute px Numbers, or relative (to the Cell’s own dimensions) ‘%’ Strings</li>
@@ -1430,7 +1431,7 @@ S.<span class="hljs-property">stashWidth</span> = <span class="hljs-keyword">fun
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span>) {
 
-        <span class="hljs-keyword">let</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
+        <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span> = [dims[<span class="hljs-number">0</span>], dims[<span class="hljs-number">1</span>]];
     }
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span>[<span class="hljs-number">0</span>] = val;
@@ -1439,7 +1440,7 @@ S.<span class="hljs-property">stashHeight</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span>) {
 
-        <span class="hljs-keyword">let</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
+        <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span> = [dims[<span class="hljs-number">0</span>], dims[<span class="hljs-number">1</span>]];
     }
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span>[<span class="hljs-number">1</span>] = val;
@@ -1448,36 +1449,36 @@ D.<span class="hljs-property">stashX</span> = <span class="hljs-keyword">functio
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashCoordinates</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashCoordinates</span> = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashCoordinates</span>;
+    <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashCoordinates</span>;
     c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], val);
 };
 D.<span class="hljs-property">stashY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashCoordinates</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashCoordinates</span> = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashCoordinates</span>;
+    <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashCoordinates</span>;
     c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], val);
 };
 D.<span class="hljs-property">stashWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span>) {
 
-        <span class="hljs-keyword">let</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
+        <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span> = [dims[<span class="hljs-number">0</span>], dims[<span class="hljs-number">1</span>]];
     }
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span>;
+    <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span>;
     c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], val);
 };
 D.<span class="hljs-property">stashHeight</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span>) {
 
-        <span class="hljs-keyword">let</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
+        <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span> = [dims[<span class="hljs-number">0</span>], dims[<span class="hljs-number">1</span>]];
     }
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span>;
+    <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashDimensions</span>;
     c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], val);
 };
 
@@ -1937,7 +1938,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
 
         engine.<span class="hljs-title function_">save</span>();
         <span class="hljs-keyword">const</span> tempCell = <span class="hljs-title function_">requestCell</span>();
-        
+
         <span class="hljs-keyword">const</span> {<span class="hljs-attr">engine</span>:tempEngine, <span class="hljs-attr">element</span>:tempEl} = tempCell;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useAsPattern</span>) {
@@ -1946,7 +1947,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
             tempEl.<span class="hljs-property">height</span> = height;
 
             tempEngine.<span class="hljs-title function_">drawImage</span>(element, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
-            
+
             engine.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
             engine.<span class="hljs-property">globalAlpha</span> = clearAlpha;
 
@@ -1957,7 +1958,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
             tempEl.<span class="hljs-property">height</span> = h;
 
             tempEngine.<span class="hljs-title function_">drawImage</span>(element, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
-            
+
             engine.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
             engine.<span class="hljs-property">globalAlpha</span> = clearAlpha;
 
@@ -2058,16 +2059,16 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!destWidth || !destHeight) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">const</span> { 
-            <span class="hljs-attr">currentScale</span>:scale, 
-            currentDimensions, 
-            composite, 
-            alpha, 
-            controller, 
-            element, 
-            isBase, 
-            <span class="hljs-attr">currentStampHandlePosition</span>:handle, 
-            <span class="hljs-attr">currentStampPosition</span>:stamp, 
+        <span class="hljs-keyword">const</span> {
+            <span class="hljs-attr">currentScale</span>:scale,
+            currentDimensions,
+            composite,
+            alpha,
+            controller,
+            element,
+            isBase,
+            <span class="hljs-attr">currentStampHandlePosition</span>:handle,
+            <span class="hljs-attr">currentStampPosition</span>:stamp,
         } = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">const</span> curWidth = ~~(currentDimensions[<span class="hljs-number">0</span>]),
@@ -2078,7 +2079,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         engine.<span class="hljs-title function_">save</span>();
 
         <span class="hljs-title function_">checkEngineScale</span>(engine);
-            
+
         engine.<span class="hljs-property">filter</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">filter</span>;
 
         <span class="hljs-keyword">if</span> (isBase) {
@@ -2109,7 +2110,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
             engine.<span class="hljs-property">globalAlpha</span> = alpha;
 
             <span class="hljs-keyword">const</span> fit = (controller) ? controller.<span class="hljs-property">fit</span> : <span class="hljs-variable constant_">NONE</span>;
-            
+
             <span class="hljs-keyword">let</span> relWidth, relHeight;
 
             <span class="hljs-keyword">switch</span> (fit) {
@@ -2322,9 +2323,9 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
 
         <span class="hljs-keyword">const</span> [cellWidth, cellHeight] = currentDimensions;
 
-        <span class="hljs-keyword">let</span> stashX = (stashCoordinates) ? stashCoordinates[<span class="hljs-number">0</span>] : <span class="hljs-number">0</span>, 
-            stashY = (stashCoordinates) ? stashCoordinates[<span class="hljs-number">1</span>] : <span class="hljs-number">0</span>, 
-            stashWidth = (stashDimensions) ? stashDimensions[<span class="hljs-number">0</span>] : cellWidth, 
+        <span class="hljs-keyword">let</span> stashX = (stashCoordinates) ? stashCoordinates[<span class="hljs-number">0</span>] : <span class="hljs-number">0</span>,
+            stashY = (stashCoordinates) ? stashCoordinates[<span class="hljs-number">1</span>] : <span class="hljs-number">0</span>,
+            stashWidth = (stashDimensions) ? stashDimensions[<span class="hljs-number">0</span>] : cellWidth,
             stashHeight = (stashDimensions) ? stashDimensions[<span class="hljs-number">1</span>] : cellHeight;</pre></div></div>
             
         </li>
@@ -2449,7 +2450,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         <span class="hljs-keyword">const</span> host = asset[<span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>] || artefact[<span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>];
 
         <span class="hljs-keyword">if</span> (host) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = host;
-        
+
         <span class="hljs-keyword">return</span> (host) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> : <span class="hljs-literal">false</span>;
     }
     <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
@@ -2497,7 +2498,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
 
             <span class="hljs-keyword">const</span> relWidth = localWidth / remoteWidth || <span class="hljs-number">1</span>,
                 relHeight = localHeight / remoteHeight || <span class="hljs-number">1</span>;
-            
+
             <span class="hljs-keyword">let</span> offsetX, offsetY;
 
             here.<span class="hljs-property">w</span> = localWidth;
@@ -2631,7 +2632,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noPathUpdates</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>) {
 
         <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path2</span>D();
-        
+
         <span class="hljs-keyword">const</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
             scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>,
             dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
@@ -2701,7 +2702,8 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
 
                 <span class="hljs-keyword">const</span> [stampHandleX, stampHandleY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>;
 
-                <span class="hljs-keyword">let</span> {flipUpend, flipReverse, roll, scale} = <span class="hljs-variable language_">this</span>;
+                <span class="hljs-keyword">const</span> {flipUpend, flipReverse, scale} = <span class="hljs-variable language_">this</span>;
+                <span class="hljs-keyword">let</span> roll = <span class="hljs-variable language_">this</span>.<span class="hljs-property">roll</span>;
 
                 <span class="hljs-keyword">if</span> (scale) {
 

@@ -667,7 +667,7 @@
 
         items.<span class="hljs-property">target</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">tempTarget</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> tempItems = <span class="hljs-title function_">_assign</span>({}, items);
+            <span class="hljs-keyword">const</span> tempItems = <span class="hljs-title function_">_assign</span>({}, items);
             tempItems.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${tempItems.name}</span>_<span class="hljs-subst">${tempTarget.name}</span>`</span>;
             tempItems.<span class="hljs-property">target</span> = tempTarget;
             multiReturn.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">RenderAnimation</span>(tempItems));
@@ -1054,7 +1054,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
     <span class="hljs-title function_">animateRemove</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
@@ -1104,7 +1104,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
     <span class="hljs-title function_">animateAdd</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">checkAccessibilityValues</span>();
-    
+
     <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">forceUpdate</span>(), <span class="hljs-number">20</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
@@ -1204,7 +1204,7 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeRender = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
-    
+
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RenderAnimation</span>(items);
 };

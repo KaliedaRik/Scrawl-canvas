@@ -737,7 +737,7 @@
                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cellnames.<span class="hljs-title function_">includes</span>(item)) brokenStyle = cell[item];
 
                 <span class="hljs-keyword">if</span> (brokenStyle) {
-                    
+
                     entity.<span class="hljs-property">state</span>.<span class="hljs-property">fillStyle</span> = brokenStyle;
                     engine.<span class="hljs-property">fillStyle</span> = brokenStyle.<span class="hljs-title function_">getData</span>(entity, layer);
                 }
@@ -821,7 +821,7 @@
                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cellnames.<span class="hljs-title function_">includes</span>(item)) brokenStyle = cell[item];
 
                 <span class="hljs-keyword">if</span> (brokenStyle) {
-                    
+
                     entity.<span class="hljs-property">state</span>.<span class="hljs-property">strokeStyle</span> = brokenStyle;
                     engine.<span class="hljs-property">strokeStyle</span> = brokenStyle.<span class="hljs-title function_">getData</span>(entity, layer);
                 }
@@ -842,8 +842,8 @@
               </div>
               <p>The following functions are used as part of entity object <code>stamp</code> functionality - specifically for those with a <strong>method</strong> whose appearance is affected by shadows, and for the <code>clear</code> method</p>
 <ul>
-<li>Scrawl-canvas, for the most part, avoids using engine.save() and engine.restore() functionality, instead preferring to keep track of engine state in State objects. </li>
-<li>When clearing and restoring shadows - a frequent operation given Scrawl-canvas functionality around stamping methods - both the Cell’s state object and the Canvas context engine need to be updated with the necessary data </li>
+<li>Scrawl-canvas, for the most part, avoids using engine.save() and engine.restore() functionality, instead preferring to keep track of engine state in State objects.</li>
+<li>When clearing and restoring shadows - a frequent operation given Scrawl-canvas functionality around stamping methods - both the Cell’s state object and the Canvas context engine need to be updated with the necessary data</li>
 <li>The same reasoning holds when setting up the context engine to ‘clear’ an entity from the canvas display instead of stamping it onto the canvas</li>
 </ul>
 

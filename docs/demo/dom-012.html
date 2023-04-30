@@ -867,10 +867,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> library = scrawl.<span class="hljs-property">library</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> library = scrawl.<span class="hljs-property">library</span>,
     artefact = library.<span class="hljs-property">artefact</span>,
-    canvasnames = library.<span class="hljs-property">canvasnames</span>,
-    mystack = artefact.<span class="hljs-property">mystack</span>;</pre></div></div>
+    canvasnames = library.<span class="hljs-property">canvasnames</span>;
+
+<span class="hljs-keyword">let</span> mystack = artefact.<span class="hljs-property">mystack</span>;</pre></div></div>
             
         </li>
         
@@ -885,13 +886,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
-        testTime, testNow,
-        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testTime, testNow;
 
-    <span class="hljs-keyword">let</span> artefactnames = library.<span class="hljs-property">artefactnames</span>,
+    <span class="hljs-keyword">const</span> testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+
+    <span class="hljs-keyword">const</span> artefactnames = library.<span class="hljs-property">artefactnames</span>,
         stacknames = library.<span class="hljs-property">stacknames</span>,
         cellnames = library.<span class="hljs-property">cellnames</span>,
         stack = library.<span class="hljs-property">stack</span>,
@@ -943,7 +945,7 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>Animation loop </p>
+              <p>Animation loop</p>
 
             </div>
             
@@ -966,7 +968,7 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> controls = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> controls = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -981,7 +983,7 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> b1 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_1&#x27;</span>),
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> b1 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_1&#x27;</span>),
         b2 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_2&#x27;</span>),
         b3 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_3&#x27;</span>),
         b4 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_4&#x27;</span>);</pre></div></div>
@@ -1080,7 +1082,7 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> colorFactory = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">styles</span>.<span class="hljs-property">templateColor</span>.<span class="hljs-title function_">clone</span>({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> colorFactory = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">styles</span>.<span class="hljs-property">templateColor</span>.<span class="hljs-title function_">clone</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myColorObject&#x27;</span>,
     });
 
@@ -1132,7 +1134,7 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
 
         e.<span class="hljs-title function_">preventDefault</span>();
         e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
-        
+
         <span class="hljs-keyword">switch</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>) {
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;action_1&#x27;</span>:</pre></div></div>
@@ -1279,7 +1281,7 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
                 mystack = <span class="hljs-literal">false</span>;
 
                 <span class="hljs-keyword">break</span>;
-                
+
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;action_4&#x27;</span>:
 
                 scrawl.<span class="hljs-title function_">addCanvas</span>({

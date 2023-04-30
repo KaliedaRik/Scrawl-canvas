@@ -1100,7 +1100,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
@@ -1155,17 +1155,17 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
     }
     <span class="hljs-keyword">else</span>{
 
-        <span class="hljs-keyword">let</span> getter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getters</span>[item];
+        <span class="hljs-keyword">const</span> getter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getters</span>[item];
 
         <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);
 
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item];
+            <span class="hljs-keyword">const</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item];
 
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-variable constant_">UNDEF</span>) {
 
-                <span class="hljs-keyword">let</span> val = <span class="hljs-variable language_">this</span>[item];
+                <span class="hljs-keyword">const</span> val = <span class="hljs-variable language_">this</span>[item];
                 <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-variable constant_">UNDEF</span>) ? val : def;
             }
             <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
@@ -1195,7 +1195,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
         <span class="hljs-keyword">const</span> setters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">setters</span>,
             defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>;
-        
+
         <span class="hljs-keyword">let</span> predefined, i, key, value;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
@@ -1320,12 +1320,12 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span> &amp;&amp; easeEngines[item]) {
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easing</span> = item; 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easing</span> = item;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">easingFunction</span> = λfirstArg;
     }
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easing</span> = <span class="hljs-variable constant_">LINEAR</span>; 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">easing</span> = <span class="hljs-variable constant_">LINEAR</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">easingFunction</span> = λfirstArg;
     }
 };
@@ -1362,12 +1362,12 @@ S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setReturnColorAsHelper</span>(item);
 };
 P.<span class="hljs-property">setReturnColorAs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-    
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setReturnColorAsHelper</span>(item);
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };
 P.<span class="hljs-property">setReturnColorAsHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-    
+
     <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
         item = item.<span class="hljs-title function_">toUpperCase</span>();
@@ -1675,7 +1675,7 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
               <div class="sswrap ">
                 <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
-              <p><code>getRangeColor</code> - function which generates a color in the range between the minimum and maximum colors. </p>
+              <p><code>getRangeColor</code> - function which generates a color in the range between the minimum and maximum colors.</p>
 <ul>
 <li>when the argument is <code>0</code> the minimum color is returned; values below 0 are rounded up to 0</li>
 <li>when the argument is <code>1</code> the maximum color is returned; values above 1 are rounded down to 1</li>
@@ -1792,7 +1792,7 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
             <span class="hljs-keyword">if</span> (bMin === bMax) b = bMin;
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (test &gt; <span class="hljs-number">180</span> || test &lt; -<span class="hljs-number">180</span>) {
 
-                b = (test &gt; <span class="hljs-number">0</span>) ? 
+                b = (test &gt; <span class="hljs-number">0</span>) ?
                     <span class="hljs-title function_">interpolate</span>(val, bMin + <span class="hljs-number">360</span>, bMax) :
                     <span class="hljs-title function_">interpolate</span>(val, bMin - <span class="hljs-number">360</span>, bMax);
             }
@@ -1832,7 +1832,7 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
             <span class="hljs-keyword">if</span> (dMin === dMax) d = dMin;
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (test &gt; <span class="hljs-number">180</span> || test &lt; -<span class="hljs-number">180</span>) {
 
-                d = (test &gt; <span class="hljs-number">0</span>) ? 
+                d = (test &gt; <span class="hljs-number">0</span>) ?
                     <span class="hljs-title function_">interpolate</span>(val, dMin + <span class="hljs-number">360</span>, dMax) :
                     <span class="hljs-title function_">interpolate</span>(val, dMin - <span class="hljs-number">360</span>, dMax);
             }
@@ -1864,7 +1864,7 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">default</span> : 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">default</span> :
 
             <span class="hljs-keyword">if</span> (aMin === aMax) a = aMin;
             <span class="hljs-keyword">else</span> a = <span class="hljs-title function_">interpolate</span>(val, aMin, aMax);
@@ -2027,13 +2027,13 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractFromHwbColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
 
     <span class="hljs-keyword">const</span> { getAlphaValue, getHueValue, getColorValuesFromString } = <span class="hljs-variable language_">this</span>;
-    <span class="hljs-keyword">let</span> vals, a, b, c, d, hue, white, black;
+    <span class="hljs-keyword">let</span> b, c, d;
 
-    vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, _HWB);
+    <span class="hljs-keyword">const</span> vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, _HWB);
 
-    hue = <span class="hljs-title function_">getHueValue</span>(vals[<span class="hljs-number">0</span>]);
-    white = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]);
-    black = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]);
+    <span class="hljs-keyword">const</span> hue = <span class="hljs-title function_">getHueValue</span>(vals[<span class="hljs-number">0</span>]),
+    white = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]),
+    black = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]),
     a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
 
     [b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertHWBtoRGB</span>(hue, white, black);
@@ -2074,13 +2074,12 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractFromXyzColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
 
     <span class="hljs-keyword">const</span> { getAlphaValue, getColorValuesFromString } = <span class="hljs-variable language_">this</span>;
-    <span class="hljs-keyword">let</span> vals, a, b, c, d;
 
-    vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, _XYZ);
-    b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
-    c = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]);
-    d = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]);
-    a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
+    <span class="hljs-keyword">const</span> vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, _XYZ),
+        b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]),
+        c = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">1</span>]),
+        d = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">2</span>]),
+        a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
 
     <span class="hljs-keyword">return</span> [a, b, c, d];
 };</pre></div></div>
@@ -2104,9 +2103,10 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractFromLabColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
 
     <span class="hljs-keyword">const</span> { getAlphaValue, getColorValuesFromString } = <span class="hljs-variable language_">this</span>;
-    <span class="hljs-keyword">let</span> vals, a, b, c, d;
+    <span class="hljs-keyword">let</span> b, c, d;
 
-    vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, _LAB);
+    <span class="hljs-keyword">const</span> vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, _LAB);
+
     b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
     <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">100</span>) b = <span class="hljs-number">100</span>;
     <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">0</span>) b = <span class="hljs-number">0</span>;
@@ -2119,7 +2119,7 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
     <span class="hljs-keyword">if</span> (d &gt; <span class="hljs-number">160</span>) d = <span class="hljs-number">160</span>;
     <span class="hljs-keyword">if</span> (d &lt; -<span class="hljs-number">160</span>) d = -<span class="hljs-number">160</span>;
 
-    a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
+    <span class="hljs-keyword">const</span> a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
 
     <span class="hljs-keyword">return</span> [a, b, c, d];
 };</pre></div></div>
@@ -2143,9 +2143,10 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractFromOklabColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
 
     <span class="hljs-keyword">const</span> { getAlphaValue, getColorValuesFromString } = <span class="hljs-variable language_">this</span>;
-    <span class="hljs-keyword">let</span> vals, a, b, c, d;
+    <span class="hljs-keyword">let</span> b, c, d;
 
-    vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, _OKLAB);
+    <span class="hljs-keyword">const</span> vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, _OKLAB);
+
     b = (vals[<span class="hljs-number">0</span>].<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">PC</span>)) ? <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]) / <span class="hljs-number">100</span> : <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
     <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">1</span>) b = <span class="hljs-number">1</span>;
     <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">0</span>) b = <span class="hljs-number">0</span>;
@@ -2158,7 +2159,7 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
     <span class="hljs-keyword">if</span> (d &gt; <span class="hljs-number">0.5</span>) d = <span class="hljs-number">0.5</span>;
     <span class="hljs-keyword">if</span> (d &lt; -<span class="hljs-number">0.5</span>) d = -<span class="hljs-number">0.5</span>;
 
-    a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
+    <span class="hljs-keyword">const</span> a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
 
     <span class="hljs-keyword">return</span> [a, b, c, d];
 };</pre></div></div>
@@ -2182,9 +2183,10 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractFromLchColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
 
     <span class="hljs-keyword">const</span> { getAlphaValue, getHueValue, getColorValuesFromString } = <span class="hljs-variable language_">this</span>;
-    <span class="hljs-keyword">let</span> vals, a, b, c, d;
+    <span class="hljs-keyword">let</span> b, c;
 
-    vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, _LCH);
+    <span class="hljs-keyword">const</span> vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, _LCH);
+
     b = <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
     <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">100</span>) b = <span class="hljs-number">100</span>;
     <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">0</span>) b = <span class="hljs-number">0</span>;
@@ -2193,8 +2195,8 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
     <span class="hljs-keyword">if</span> (c &gt; <span class="hljs-number">230</span>) c = <span class="hljs-number">230</span>;
     <span class="hljs-keyword">if</span> (c &lt; <span class="hljs-number">0</span>) c = <span class="hljs-number">0</span>;
 
-    d = <span class="hljs-title function_">getHueValue</span>(vals[<span class="hljs-number">2</span>]);
-    a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
+    <span class="hljs-keyword">const</span> d = <span class="hljs-title function_">getHueValue</span>(vals[<span class="hljs-number">2</span>]),
+        a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
 
     <span class="hljs-keyword">return</span> [a, b, c, d];
 };</pre></div></div>
@@ -2218,9 +2220,10 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractFromOklchColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">color</span>) {
 
     <span class="hljs-keyword">const</span> { getAlphaValue, getHueValue, getColorValuesFromString } = <span class="hljs-variable language_">this</span>;
-    <span class="hljs-keyword">let</span> vals, a, b, c, d;
+    <span class="hljs-keyword">let</span> b, c;
 
-    vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, _OKLCH);
+    <span class="hljs-keyword">const</span> vals = <span class="hljs-title function_">getColorValuesFromString</span>(color, _OKLCH);
+
     b = b = (vals[<span class="hljs-number">0</span>].<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">PC</span>)) ? <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]) / <span class="hljs-number">100</span> : <span class="hljs-built_in">parseFloat</span>(vals[<span class="hljs-number">0</span>]);
     <span class="hljs-keyword">if</span> (b &gt; <span class="hljs-number">1</span>) b = <span class="hljs-number">1</span>;
     <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">0</span>) b = <span class="hljs-number">0</span>;
@@ -2229,8 +2232,8 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
     <span class="hljs-keyword">if</span> (c &gt; <span class="hljs-number">0.4</span>) c = <span class="hljs-number">0.4</span>;
     <span class="hljs-keyword">if</span> (c &lt; <span class="hljs-number">0</span>) c = <span class="hljs-number">0</span>;
 
-    d = <span class="hljs-title function_">getHueValue</span>(vals[<span class="hljs-number">2</span>]);
-    a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
+    <span class="hljs-keyword">const</span> d = <span class="hljs-title function_">getHueValue</span>(vals[<span class="hljs-number">2</span>]),
+        a = <span class="hljs-title function_">getAlphaValue</span>(vals[<span class="hljs-number">3</span>]);
 
     <span class="hljs-keyword">return</span> [a, b, c, d];
 };</pre></div></div>
@@ -2335,9 +2338,9 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
         lch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoLCH</span>(lab[<span class="hljs-number">0</span>], lab[<span class="hljs-number">1</span>], lab[<span class="hljs-number">2</span>]), a);
         oklab.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoOKLAB</span>(xyz[<span class="hljs-number">0</span>], xyz[<span class="hljs-number">1</span>], xyz[<span class="hljs-number">2</span>]), a);
         oklch.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoOKLCH</span>(oklab[<span class="hljs-number">0</span>], oklab[<span class="hljs-number">1</span>], oklab[<span class="hljs-number">2</span>]), a);
-    } 
+    }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">includes</span>(_XYZ)) {
-        
+
         [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromXyzColorString</span>(color);
 
         rgb.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(b, c, d), a);
@@ -2440,31 +2443,31 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
 
         [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromHwbColorString</span>(color);
         <span class="hljs-keyword">return</span> [b, c, d, a];
-    } 
+    }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">includes</span>(_XYZ)) {
-        
+
         [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromXyzColorString</span>(color);
         <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(b, c, d), a];
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">includes</span>(_OKLAB) &amp;&amp; !supportsOKLAB) {
 
         [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromOklabColorString</span>(color);
-        <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoXYZ</span>(b, c, d)), a]; 
+        <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoXYZ</span>(b, c, d)), a];
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">includes</span>(_OKLCH) &amp;&amp; !supportsOKLCH) {
 
         [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromOklchColorString</span>(color);
-        <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoXYZ</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLCHtoOKLAB</span>(b, c, d))), a]; 
+        <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLABtoXYZ</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertOKLCHtoOKLAB</span>(b, c, d))), a];
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">includes</span>(_LAB) &amp;&amp; !supportsLAB) {
 
         [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromLabColorString</span>(color);
-        <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoXYZ</span>(b, c, d)), a]; 
+        <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoXYZ</span>(b, c, d)), a];
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color.<span class="hljs-title function_">includes</span>(_LCH) &amp;&amp; !supportsLCH) {
 
         [a, b, c, d] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">extractFromLchColorString</span>(color);
-        <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoXYZ</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLCHtoLAB</span>(b, c, d))), a]; 
+        <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertXYZtoRGB</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLABtoXYZ</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertLCHtoLAB</span>(b, c, d))), a];
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getColorFromCanvas</span>(color);
 };</pre></div></div>
@@ -2567,10 +2570,13 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
     green /= <span class="hljs-number">255</span>;
     blue /= <span class="hljs-number">255</span>;
 
-    <span class="hljs-keyword">let</span> max = <span class="hljs-title function_">_max</span>(red, green, blue);
-    <span class="hljs-keyword">let</span> min = <span class="hljs-title function_">_min</span>(red, green, blue);
-    <span class="hljs-keyword">let</span> [hue, sat, light] = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, (min + max)/<span class="hljs-number">2</span>];
-    <span class="hljs-keyword">let</span> d = max - min;
+    <span class="hljs-keyword">const</span> max = <span class="hljs-title function_">_max</span>(red, green, blue),
+        min = <span class="hljs-title function_">_min</span>(red, green, blue),
+        light = (min + max)/<span class="hljs-number">2</span>,
+        d = max - min;
+
+    <span class="hljs-keyword">let</span> hue = <span class="hljs-number">0</span>,
+        sat = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">if</span> (d !== <span class="hljs-number">0</span>) {
         sat = (light === <span class="hljs-number">0</span> || light === <span class="hljs-number">1</span>)
@@ -2603,14 +2609,16 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertHSLtoRGB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">hue, sat, light</span>) {
-    
+
     hue = <span class="hljs-title function_">correctAngle</span>(hue);
     sat /= <span class="hljs-number">100</span>;
     light /= <span class="hljs-number">100</span>;
 
     <span class="hljs-keyword">const</span> f = <span class="hljs-keyword">function</span> (<span class="hljs-params">n</span>) {
-        <span class="hljs-keyword">let</span> k = (n + hue/<span class="hljs-number">30</span>) % <span class="hljs-number">12</span>;
-        <span class="hljs-keyword">let</span> a = sat * <span class="hljs-title function_">_min</span>(light, <span class="hljs-number">1</span> - light);
+
+        <span class="hljs-keyword">const</span> k = (n + hue/<span class="hljs-number">30</span>) % <span class="hljs-number">12</span>,
+            a = sat * <span class="hljs-title function_">_min</span>(light, <span class="hljs-number">1</span> - light);
+
         <span class="hljs-keyword">return</span> light - a * <span class="hljs-title function_">_max</span>(-<span class="hljs-number">1</span>, <span class="hljs-title function_">_min</span>(k - <span class="hljs-number">3</span>, <span class="hljs-number">9</span> - k, <span class="hljs-number">1</span>));
     }
     <span class="hljs-keyword">return</span> [<span class="hljs-title function_">f</span>(<span class="hljs-number">0</span>), <span class="hljs-title function_">f</span>(<span class="hljs-number">8</span>), <span class="hljs-title function_">f</span>(<span class="hljs-number">4</span>)];
@@ -2631,14 +2639,14 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertRGBtoHWB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">red, green, blue</span>) {
 
-    <span class="hljs-keyword">let</span> hsl = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(red, green, blue);
+    <span class="hljs-keyword">const</span> hsl = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertRGBtoHSL</span>(red, green, blue);
 
     red /= <span class="hljs-number">256</span>;
     green /= <span class="hljs-number">256</span>;
     blue /= <span class="hljs-number">256</span>;
 
-    <span class="hljs-keyword">let</span> white = <span class="hljs-title function_">_min</span>(red, green, blue);
-    <span class="hljs-keyword">let</span> black = <span class="hljs-number">1</span> - <span class="hljs-title function_">_max</span>(red, green, blue);
+    <span class="hljs-keyword">const</span> white = <span class="hljs-title function_">_min</span>(red, green, blue),
+        black = <span class="hljs-number">1</span> - <span class="hljs-title function_">_max</span>(red, green, blue);
 
     <span class="hljs-keyword">return</span> [hsl[<span class="hljs-number">0</span>], white * <span class="hljs-number">100</span>, black * <span class="hljs-number">100</span>];
 };</pre></div></div>
@@ -2662,8 +2670,8 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
     green /= <span class="hljs-number">256</span>;
     blue /= <span class="hljs-number">256</span>;
 
-    <span class="hljs-keyword">let</span> white = <span class="hljs-title function_">_min</span>(red, green, blue);
-    <span class="hljs-keyword">let</span> black = <span class="hljs-number">1</span> - <span class="hljs-title function_">_max</span>(red, green, blue);
+    <span class="hljs-keyword">const</span> white = <span class="hljs-title function_">_min</span>(red, green, blue),
+        black = <span class="hljs-number">1</span> - <span class="hljs-title function_">_max</span>(red, green, blue);
 
     <span class="hljs-keyword">return</span> [hue, white * <span class="hljs-number">100</span>, black * <span class="hljs-number">100</span>];
 };</pre></div></div>
@@ -2682,17 +2690,17 @@ P.<span class="hljs-property">updateColorConversions</span> = <span class="hljs-
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertHWBtoRGB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">hue, white, black</span>) {
-    
+
     white /= <span class="hljs-number">100</span>;
     black /= <span class="hljs-number">100</span>;
 
     <span class="hljs-keyword">if</span> (white + black &gt;= <span class="hljs-number">1</span>) {
-    
-        <span class="hljs-keyword">let</span> gray = white / (white + black);
+
+        <span class="hljs-keyword">const</span> gray = white / (white + black);
         <span class="hljs-keyword">return</span> [gray, gray, gray];
     }
 
-    <span class="hljs-keyword">let</span> rgb = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertHSLtoRGB</span>(hue, <span class="hljs-number">100</span>, <span class="hljs-number">50</span>);
+    <span class="hljs-keyword">const</span> rgb = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">convertHSLtoRGB</span>(hue, <span class="hljs-number">100</span>, <span class="hljs-number">50</span>);
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++) {
 

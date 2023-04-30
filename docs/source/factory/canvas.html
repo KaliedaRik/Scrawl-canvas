@@ -567,7 +567,7 @@
               </div>
               <h4 id="demos">Demos:</h4>
 <ul>
-<li>All canvas and packets demos, and a few of the stack demos, include Canvas wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. </li>
+<li>All canvas and packets demos, and a few of the stack demos, include Canvas wrapper functionality - most of which happens behind the scenes and does not need to be directly coded.</li>
 <li><a href="../../demo/canvas-009.html">Canvas-009</a> - Pattern styles; Entity web link anchors; Dynamic accessibility</li>
 <li><a href="../../demo/dom-011.html">DOM-011</a> - Canvas controller <code>fit</code> attribute; Cell positioning (mouse)</li>
 <li><a href="../../demo/dom-012.html">DOM-012</a> - Add and remove (kill) Scrawl-canvas canvas elements programmatically</li>
@@ -588,13 +588,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { 
-    canvas <span class="hljs-keyword">as</span> libCanvas, 
-    cell, 
-    constructors, 
-    artefact, 
-    group, 
-    purge, 
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> {
+    canvas <span class="hljs-keyword">as</span> libCanvas,
+    cell,
+    constructors,
+    artefact,
+    group,
+    purge,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { domShow, scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
@@ -631,8 +631,6 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Canvas</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">let</span> el;
-
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
@@ -665,7 +663,7 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanDimensions</span>();
 
-    el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
+    <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
     <span class="hljs-keyword">if</span> (!el) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanDimensions</span>();
     <span class="hljs-keyword">else</span> {
@@ -996,7 +994,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 <ul>
 <li>We only need to worry about this after we invoke <code>scrawl.setIgnorePixelRatio(false)</code> in the demo code</li>
 </ul>
-<p><strong>ignoreCanvasCssDimensions</strong> - skip setting the &lt;canvas&gt; element’s CSS width and height when dimensions change. When the flag is set to <code>false</code> (default), we need to set the CSS values to a valuepx String which will then allow us to set the canvas drawing dimensions to take into account the display’s device pixel ratio value. Set the flag to <code>true</code> if the canvas has been initialized as responsive by setting its CSS dimensions values to a value% String. </p>
+<p><strong>ignoreCanvasCssDimensions</strong> - skip setting the &lt;canvas&gt; element’s CSS width and height when dimensions change. When the flag is set to <code>false</code> (default), we need to set the CSS values to a valuepx String which will then allow us to set the canvas drawing dimensions to take into account the display’s device pixel ratio value. Set the flag to <code>true</code> if the canvas has been initialized as responsive by setting its CSS dimensions values to a value% String.</p>
 <ul>
 <li>Note that Scrawl-canvas ignores any attempt to set CSS dimension (width, height) values in the <code>css</code> attribute of the <code>set({})</code> function.</li>
 </ul>
@@ -1424,7 +1422,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
-              <p><code>baseGroup</code> - get the Canvas wrapper’s base Cell’s named group </p>
+              <p><code>baseGroup</code> - get the Canvas wrapper’s base Cell’s named group</p>
 
             </div>
             
@@ -1442,7 +1440,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
-              <p><code>baseName</code> - get the Canvas wrapper’s base Cell’s name </p>
+              <p><code>baseName</code> - get the Canvas wrapper’s base Cell’s name</p>
 
             </div>
             
@@ -1562,7 +1560,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setBaseHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> items = {};
+    <span class="hljs-keyword">const</span> items = {};
 
     <span class="hljs-keyword">const</span> base = <span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span>;
 
@@ -1635,7 +1633,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
     <span class="hljs-keyword">if</span> (!host) items.<span class="hljs-property">host</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>;
 
     <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">makeCell</span>(items);
-    
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addCell</span>(mycell);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanCells</span>();
     <span class="hljs-keyword">return</span> mycell;
@@ -1777,7 +1775,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
               </div>
               <p><code>clear</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays:</p>
 <ul>
-<li>If the Cell object’s <code>cleared</code> flag is true, invoke the Cell’s <code>clear</code> function </li>
+<li>If the Cell object’s <code>cleared</code> flag is true, invoke the Cell’s <code>clear</code> function</li>
 <li>Note that the Display canvas itself does not clearuntil the show stage, to minimize flickering</li>
 </ul>
 
@@ -2005,8 +2003,8 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
               <p><code>cleanCells</code> - internal function triggered each time there is an update to the <strong>cells</strong> Array attribute, or a constituent Cell sets the Canvas wrapper’s <code>dirtyCell</code> flag.</p>
 <ul>
 <li>Cell objects include attribute flags - <code>cleared</code>, <code>compiled</code>, <code>shown</code> - which tell their Canvas wrapper whether they should be included in each part of the Display cycle</li>
-<li>For the compile and show steps, Cell objects also include attributes - <code>compileOrder</code>, <code>showOrder</code> - indicating the order in which they should be processed (compared to other Cell objects). </li>
-<li>The sorting algorithm for all three operations is a bucket sort. </li>
+<li>For the compile and show steps, Cell objects also include attributes - <code>compileOrder</code>, <code>showOrder</code> - indicating the order in which they should be processed (compared to other Cell objects).</li>
+<li>The sorting algorithm for all three operations is a bucket sort.</li>
 <li>The results of these operations are deposited in three internal Arrays which are used as part of the Canvas wrapper’s clear/compile/show functionality.</li>
 </ul>
 <p>We do things this way because there may be situations where a Cell needs to calculate and compile before another cell, but should be shown (applied to) the base Cell after the other Cells (so it appears on top of them).</p>
@@ -2022,7 +2020,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         tempShow = <span class="hljs-title function_">requestArray</span>();
 
     <span class="hljs-keyword">const</span> { cells, cellBatchesClear, cellBatchesCompile, cellBatchesShow } = <span class="hljs-variable language_">this</span>;
-    
+
     <span class="hljs-keyword">let</span> mycell, order, arr, i, iz;
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = cells.<span class="hljs-property">length</span>; i &lt; iz; i++) {
@@ -2093,8 +2091,8 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
                 <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <h5 id="handling-dom-events">Handling DOM events</h5>
-<p><code>cascadeEventAction</code> - The Canvas wrapper’s &lt;canvas&gt; element is part of the DOM, thus it is able to participate in all normal DOM events. We use the cascadeEventAction function to tell the wrapper which of the events it receives should be cascaded down to its constituent Cell objects and, in turn, their Groups’ artefacts. </p>
-<p>This allows us to ‘regionalize’ various parts of the &lt;canvas&gt; element so that they respond in a similar way to an HTML <strong>image map</strong> (defined using &lt;map&gt; and &lt;area&gt; elements) </p>
+<p><code>cascadeEventAction</code> - The Canvas wrapper’s &lt;canvas&gt; element is part of the DOM, thus it is able to participate in all normal DOM events. We use the cascadeEventAction function to tell the wrapper which of the events it receives should be cascaded down to its constituent Cell objects and, in turn, their Groups’ artefacts.</p>
+<p>This allows us to ‘regionalize’ various parts of the &lt;canvas&gt; element so that they respond in a similar way to an HTML <strong>image map</strong> (defined using &lt;map&gt; and &lt;area&gt; elements)</p>
 <ul>
 <li>Cascaded events are limited to mouse and touch events, which Scrawl-canvas bundles together into 5 types of event: <code>down</code>, <code>up</code> (which also captures click events), <code>enter</code>, <code>leave</code>, <code>move</code>.</li>
 <li>Returns an Array of name Strings for the entitys at the current mouse cursor coordinates; the Array is also accessible from the Canvas wrapper’s <code>currentActiveEntityNames</code> attribute.</li>
@@ -2288,7 +2286,7 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
-              <p><code>getEntityHits</code>, <code>checkHover</code> - returns the names of all entitys associated with this canvas that are currently colliding with the mouse cursor; should also trigger any hover actions active on Group objects associated with the Canvas wrapper </p>
+              <p><code>getEntityHits</code>, <code>checkHover</code> - returns the names of all entitys associated with this canvas that are currently colliding with the mouse cursor; should also trigger any hover actions active on Group objects associated with the Canvas wrapper</p>
 
             </div>
             
@@ -2471,7 +2469,7 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
               <div class="sswrap ">
                 <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
-              <p><code>Exported variables</code> (to modules). </p>
+              <p><code>Exported variables</code> (to modules).</p>
 
             </div>
             
@@ -2487,7 +2485,7 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
               <div class="sswrap ">
                 <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
-              <p><code>Exported function</code> (to modules and scrawl object). </p>
+              <p><code>Exported function</code> (to modules and scrawl object).</p>
 
             </div>
             
@@ -2503,14 +2501,14 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
 
             <span class="hljs-keyword">if</span> (mycanvas) {
                 currentCanvas = mycanvas;
-                changeFlag = <span class="hljs-literal">true</span>;    
+                changeFlag = <span class="hljs-literal">true</span>;
             }
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_CANVAS</span>) {
 
-            currentCanvas = item;    
-            changeFlag = <span class="hljs-literal">true</span>;    
-        } 
+            currentCanvas = item;
+            changeFlag = <span class="hljs-literal">true</span>;
+        }
     }
 
     <span class="hljs-keyword">if</span> (changeFlag &amp;&amp; currentCanvas.<span class="hljs-property">base</span>) {
@@ -2530,7 +2528,7 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
               <div class="sswrap ">
                 <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
-              <p><code>Exported function</code> (to modules and scrawl object). Use <strong>addCanvas</strong> to add a Scrawl-canvas canvas element to a web page. The items argument should include </p>
+              <p><code>Exported function</code> (to modules and scrawl object). Use <strong>addCanvas</strong> to add a Scrawl-canvas canvas element to a web page. The items argument should include</p>
 <ul>
 <li><strong>host</strong> - the host element, either as the DOM element itself, or some sort of CSS search string, or a Scrawl-canvas Stack entity. If no host is supplied, Scrawl-canvas will add the new canvas element to the DOM document body; in all cases, the new canvas element is appended at the end of the host element (or DOM document)</li>
 <li><strong>name</strong> - String identifier for the element; will generate a random name for the canvas if no name is supplied.</li>
@@ -2585,7 +2583,7 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
 
     host.<span class="hljs-title function_">appendChild</span>(el);
 
-    <span class="hljs-keyword">let</span> mycanvas = <span class="hljs-title function_">makeCanvas</span>({
+    <span class="hljs-keyword">const</span> mycanvas = <span class="hljs-title function_">makeCanvas</span>({
         <span class="hljs-attr">name</span>: myname,
         <span class="hljs-attr">domElement</span>: el,
         <span class="hljs-attr">group</span>: mygroup,

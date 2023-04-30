@@ -250,7 +250,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> { canvas, namespace, scrawl } = items;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> { canvas, namespace, scrawl } = items;
 
     <span class="hljs-keyword">if</span> (!(canvas &amp;&amp; namespace &amp;&amp; scrawl)) <span class="hljs-keyword">return</span> {
         <span class="hljs-attr">animation</span>: <span class="hljs-literal">null</span>,
@@ -289,7 +289,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    canvas.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;An animated canvas showing three text snippets at the top, center and bottom of the canvas. Each text describes the canvas element\&#x27;s current position (from 0% top to 100% bottom) in the browser\&#x27; viewport. The texts update as the user scrolls through the page.&#x27;</span>, 
+        <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;An animated canvas showing three text snippets at the top, center and bottom of the canvas. Each text describes the canvas element\&#x27;s current position (from 0% top to 100% bottom) in the browser\&#x27; viewport. The texts update as the user scrolls through the page.&#x27;</span>,
     }).<span class="hljs-title function_">setAsCurrentCanvas</span>();
 
     scrawl.<span class="hljs-title function_">makeGradient</span>({

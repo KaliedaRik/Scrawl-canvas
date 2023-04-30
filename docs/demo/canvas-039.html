@@ -1056,12 +1056,12 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> [startX, startY] = mycell.<span class="hljs-property">start</span>;
-    <span class="hljs-keyword">let</span> [handleX, handleY] = mycell.<span class="hljs-property">handle</span>;
-    <span class="hljs-keyword">let</span> [offsetX, offsetY] = mycell.<span class="hljs-property">offset</span>;
-    <span class="hljs-keyword">let</span> [width, height] = mycell.<span class="hljs-property">dimensions</span>;
+    <span class="hljs-keyword">const</span> [startX, startY] = mycell.<span class="hljs-property">start</span>;
+    <span class="hljs-keyword">const</span> [handleX, handleY] = mycell.<span class="hljs-property">handle</span>;
+    <span class="hljs-keyword">const</span> [offsetX, offsetY] = mycell.<span class="hljs-property">offset</span>;
+    <span class="hljs-keyword">const</span> [width, height] = mycell.<span class="hljs-property">dimensions</span>;
 
-    <span class="hljs-keyword">let</span> {roll, scale} = mycell;
+    <span class="hljs-keyword">const</span> {roll, scale} = mycell;
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`    Start - x: <span class="hljs-subst">${startX}</span>, y: <span class="hljs-subst">${startY}</span>
     Handle - x: <span class="hljs-subst">${handleX}</span>, y: <span class="hljs-subst">${handleY}</span>

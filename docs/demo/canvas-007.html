@@ -2128,7 +2128,7 @@
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
             <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;source-alpha&#x27;</span>,
             <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;shadow&#x27;</span>,
-            <span class="hljs-attr">radius</span>: <span class="hljs-number">2</span>, 
+            <span class="hljs-attr">radius</span>: <span class="hljs-number">2</span>,
         },
         {
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
@@ -2225,7 +2225,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> events = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> events = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">const</span> base = canvas.<span class="hljs-property">base</span>,
         group = base.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;group&#x27;</span>);
@@ -2237,7 +2237,7 @@
         e.<span class="hljs-title function_">preventDefault</span>();
         e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> action = <span class="hljs-literal">false</span>, 
+        <span class="hljs-keyword">let</span> action = <span class="hljs-literal">false</span>,
             val;
 
         <span class="hljs-keyword">switch</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>) {

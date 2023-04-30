@@ -698,7 +698,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>In addition to the attributes defined in the <strong>base</strong> and <strong>styles</strong> mixins, Gradients also pass through Palette attributes to their Palette object. </p>
+              <p>In addition to the attributes defined in the <strong>base</strong> and <strong>styles</strong> mixins, Gradients also pass through Palette attributes to their Palette object.</p>
 <p>Attributes from <strong>base</strong> mixin:</p>
 <ul>
 <li><code>name</code></li>
@@ -718,7 +718,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 </ul>
 <p>Attributes from the <strong>palette</strong> factory:</p>
 <ul>
-<li><code>colors</code> </li>
+<li><code>colors</code></li>
 <li><code>cyclic</code></li>
 </ul>
 
@@ -915,7 +915,7 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">buildStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">cell</span>) {
-    
+
     <span class="hljs-keyword">if</span> (cell) {
 
         <span class="hljs-keyword">const</span> engine = cell.<span class="hljs-property">engine</span>;
@@ -923,7 +923,7 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
         <span class="hljs-keyword">if</span> (engine) {
 
             <span class="hljs-keyword">const</span> gradient = engine.<span class="hljs-title function_">createRadialGradient</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-property">gradientArgs</span>);
-            
+
             <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addStopsToGradient</span>(gradient, <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteStart</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteEnd</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">cyclePalette</span>);
         }
     }
@@ -949,7 +949,7 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
         currentStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStart</span>,
         currentEnd = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEnd</span>,
         sr = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartRadius</span>;
-    
+
     <span class="hljs-keyword">let</span> er = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndRadius</span>;
 
     <span class="hljs-keyword">const</span> sx = currentStart[<span class="hljs-number">0</span>] + x,
@@ -994,14 +994,14 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
     <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
- 
+
     <span class="hljs-attr">endRadius</span>: <span class="hljs-number">300</span>,
 });
 
 scrawl.<span class="hljs-title function_">makeBlock</span>({
-   
+
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myblock&#x27;</span>,
-   
+
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;90%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;90%&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
@@ -1010,7 +1010,7 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">fillStyle</span>: graddy,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>,
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-   
+
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
 });
 </code></pre>

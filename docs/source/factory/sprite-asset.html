@@ -921,7 +921,7 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> name, urls, className, visibility, manifest, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> name, urls, className, visibility, manifest,
             parent = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">let</span> flag = <span class="hljs-literal">false</span>;
@@ -992,7 +992,7 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
             urls.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">url</span> =&gt;</span> {
 
                 <span class="hljs-keyword">const</span> img = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-variable constant_">IMG</span>);
-                
+
                 <span class="hljs-keyword">let</span> filename, match;
 
                 <span class="hljs-keyword">if</span> (fileTlas.<span class="hljs-title function_">test</span>(url)) {
@@ -1008,7 +1008,7 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
                 img.<span class="hljs-property">style</span>.<span class="hljs-property">display</span> = (visibility) ? <span class="hljs-variable constant_">BLOCK</span> : <span class="hljs-variable constant_">NONE</span>;
 
                 <span class="hljs-keyword">if</span> (parent) parent.<span class="hljs-title function_">appendChild</span>(img);
-                
+
                 img.<span class="hljs-property">src</span> = url;
 
                 imgArray.<span class="hljs-title function_">push</span>(img);

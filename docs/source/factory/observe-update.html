@@ -569,7 +569,7 @@
 <p><strong>observeAndUpdate - example</strong></p>
 <pre><code>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
-    <span class="hljs-comment">// The input event which will trigger the O&amp;U </span>
+    <span class="hljs-comment">// The input event which will trigger the O&amp;U</span>
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
 
     <span class="hljs-comment">// CSS selector used to gather the DOM elements this O&amp;U will be attached to</span>
@@ -679,10 +679,11 @@
 
                 <span class="hljs-title function_">setup</span>();
 
-                <span class="hljs-keyword">let</span> actionAttribute = actionArray[<span class="hljs-number">0</span>],
+                <span class="hljs-keyword">const</span> actionAttribute = actionArray[<span class="hljs-number">0</span>],
                     action = actionArray[<span class="hljs-number">1</span>],
-                    targetVal = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>,
-                    actionFlag = <span class="hljs-literal">true</span>,
+                    targetVal = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+
+                <span class="hljs-keyword">let</span> actionFlag = <span class="hljs-literal">true</span>,
                     val;
 
                 <span class="hljs-keyword">switch</span> (action) {</pre></div></div>
@@ -898,7 +899,7 @@
         }
     };
 
-    <span class="hljs-keyword">let</span> kill = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">const</span> kill = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         <span class="hljs-title function_">killListener</span>(event, func, origin);
     };

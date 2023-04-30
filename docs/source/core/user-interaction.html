@@ -930,7 +930,7 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p>Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame. </p>
+              <p>Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame.</p>
 <p>TODO: Need to keep an eye on how many times touchAction gets run, for example during a touch-driven drag-and-drop action. If necessary, add a Date.now mediated choke to the check (say minimum 15ms between checks?) to minimize impact on the wider Scrawl-canvas ecosystem.</p>
 
             </div>
@@ -1027,7 +1027,7 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
 
     <span class="hljs-keyword">if</span> (dom) {
 
-        <span class="hljs-keyword">if</span> (!dom.<span class="hljs-property">here</span>) dom.<span class="hljs-property">here</span> = {}; 
+        <span class="hljs-keyword">if</span> (!dom.<span class="hljs-property">here</span>) dom.<span class="hljs-property">here</span> = {};
 
         <span class="hljs-keyword">const</span> { here, <span class="hljs-attr">domElement</span>:el } = dom;</pre></div></div>
             
@@ -1210,7 +1210,7 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
             <div class="content"><div class='highlight'><pre>
             <span class="hljs-keyword">if</span> (dom.<span class="hljs-property">checkForResize</span> &amp;&amp; !dom.<span class="hljs-property">dirtyDimensions</span> &amp;&amp; !dom.<span class="hljs-property">dirtyDomDimensions</span>) {
 
-                <span class="hljs-keyword">let</span> [w, h] = dom.<span class="hljs-property">currentDimensions</span>;
+                <span class="hljs-keyword">const</span> [w, h] = dom.<span class="hljs-property">currentDimensions</span>;
 
                 <span class="hljs-keyword">if</span> (dom.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_CANVAS</span>) {</pre></div></div>
             
@@ -1235,7 +1235,7 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
             
             <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (!dom.<span class="hljs-property">computedStyles</span>) dom.<span class="hljs-property">computedStyles</span> = <span class="hljs-title function_">_computed</span>(dom.<span class="hljs-property">domElement</span>);
 
-                    <span class="hljs-keyword">let</span> s = dom.<span class="hljs-property">computedStyles</span>,
+                    <span class="hljs-keyword">const</span> s = dom.<span class="hljs-property">computedStyles</span>,
                         hw = <span class="hljs-title function_">_floor</span>(here.<span class="hljs-property">w</span> - <span class="hljs-built_in">parseFloat</span>(s.<span class="hljs-property">borderLeftWidth</span>) - <span class="hljs-built_in">parseFloat</span>(s.<span class="hljs-property">borderRightWidth</span>) - <span class="hljs-built_in">parseFloat</span>(s.<span class="hljs-property">paddingLeft</span>) - <span class="hljs-built_in">parseFloat</span>(s.<span class="hljs-property">paddingRight</span>)),
                         hh = <span class="hljs-title function_">_floor</span>(here.<span class="hljs-property">h</span> - <span class="hljs-built_in">parseFloat</span>(s.<span class="hljs-property">borderTopWidth</span>) - <span class="hljs-built_in">parseFloat</span>(s.<span class="hljs-property">borderBottomWidth</span>) - <span class="hljs-built_in">parseFloat</span>(s.<span class="hljs-property">paddingTop</span>) - <span class="hljs-built_in">parseFloat</span>(s.<span class="hljs-property">paddingBottom</span>));
 
@@ -1376,9 +1376,9 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
 
             <span class="hljs-keyword">if</span> (prefersReducedMotionChanged || prefersDarkColorSchemeChanged || prefersReduceTransparencyChanged || prefersReduceDataChanged) {
 
-                <span class="hljs-title function_">setPrefersReducedMotionChanged</span>(<span class="hljs-literal">false</span>),
-                <span class="hljs-title function_">setPrefersDarkColorSchemeChanged</span>(<span class="hljs-literal">false</span>),
-                <span class="hljs-title function_">setPrefersReduceTransparencyChanged</span>(<span class="hljs-literal">false</span>),
+                <span class="hljs-title function_">setPrefersReducedMotionChanged</span>(<span class="hljs-literal">false</span>);
+                <span class="hljs-title function_">setPrefersDarkColorSchemeChanged</span>(<span class="hljs-literal">false</span>);
+                <span class="hljs-title function_">setPrefersReduceTransparencyChanged</span>(<span class="hljs-literal">false</span>);
                 <span class="hljs-title function_">setPrefersReduceDataChanged</span>(<span class="hljs-literal">false</span>);
             }
         }

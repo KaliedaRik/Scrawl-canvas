@@ -869,7 +869,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -884,7 +884,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWheel = scrawl.<span class="hljs-title function_">makeWheel</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myWheel = scrawl.<span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;ball&#x27;</span>,
 
@@ -965,7 +965,7 @@ scrawl.<span class="hljs-title function_">makeOval</span>({
     <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 });
 
-<span class="hljs-keyword">let</span> angle = <span class="hljs-number">3</span> / <span class="hljs-number">7</span>;
+<span class="hljs-keyword">const</span> angle = <span class="hljs-number">3</span> / <span class="hljs-number">7</span>;
 
 scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-1&#x27;</span>,
@@ -1112,7 +1112,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
     e.<span class="hljs-title function_">preventDefault</span>();
     e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> target = e.<span class="hljs-property">target</span>;
+    <span class="hljs-keyword">const</span> target = e.<span class="hljs-property">target</span>;
 
     <span class="hljs-keyword">if</span> (target) {
 

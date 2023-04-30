@@ -544,12 +544,12 @@
 <p>Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>. They use the <a href="../mixin/shapeBasic.html">shapeBasic</a> and <a href="../mixin/shapePathCalculation.html">shapePathCalculation</a> (some also use <a href="../mixin/shapeCurve.html">shapeCurve</a>) mixins to define much of their functionality.</p>
 <p>All path-defined entitys can be positioned, cloned, filtered etc:</p>
 <ul>
-<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
+<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin.</li>
 <li>Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use <code>scale</code> instead.</li>
-<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects.</li>
 <li>They will also accept <strong>Filter</strong> objects.</li>
-<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can use <strong>Anchor</strong> objects for user navigation.</li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>.</li>
 <li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Path-defined entitys can be cloned, and killed.</li>
 </ul>
@@ -1119,7 +1119,7 @@ D.<span class="hljs-property">control</span> = <span class="hljs-keyword">functi
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeQuadraticPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-    
+
     <span class="hljs-keyword">const</span> [startX, startY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
     <span class="hljs-keyword">const</span> [controlX, controlY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentControl</span>;
     <span class="hljs-keyword">const</span> [endX, endY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEnd</span>;
@@ -1136,7 +1136,7 @@ D.<span class="hljs-property">control</span> = <span class="hljs-keyword">functi
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code> </p>
+              <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code></p>
 <ul>
 <li>Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.</li>
 </ul>
@@ -1209,8 +1209,8 @@ P.<span class="hljs-property">preparePinsForStamp</span> = <span class="hljs-key
 <p>Accepts argument with attributes:</p>
 <ul>
 <li><strong>start</strong> (<em><strong>startX</strong></em>, <em><strong>startY</strong></em>) Coordinate, or <strong>pivot</strong>/<strong>mimic</strong>/<strong>path</strong> reference artefact (required)</li>
-<li><strong>control</strong> (<em><strong>controlX</strong></em>, <em><strong>controlY</strong></em>) Coordinate, or <strong>controlPivot</strong>/<strong>controlPath</strong> reference artefact (required) </li>
-<li><strong>end</strong> (<em><strong>endX</strong></em>, <em><strong>endY</strong></em>) Coordinate, or <strong>endPivot</strong>/<strong>endPath</strong> reference artefact (required) </li>
+<li><strong>control</strong> (<em><strong>controlX</strong></em>, <em><strong>controlY</strong></em>) Coordinate, or <strong>controlPivot</strong>/<strong>controlPath</strong> reference artefact (required)</li>
+<li><strong>end</strong> (<em><strong>endX</strong></em>, <em><strong>endY</strong></em>) Coordinate, or <strong>endPivot</strong>/<strong>endPath</strong> reference artefact (required)</li>
 <li>If using reference artefacts, may also need to set the <strong>lockTo</strong> (<em><strong>lockXTo</strong></em>, <em><strong>lockYTo</strong></em>), <strong>controlLockTo</strong> and <strong>endLockTo</strong> lock attributes</li>
 <li>additional reference-linked attributes for the <code>control</code> coordinate: <strong>controlPivotCorner</strong>, <strong>addControlPivotHandle</strong>, <strong>addControlPivotOffset</strong>, <strong>controlPathPosition</strong>, <strong>addControlPathHandle</strong>, <strong>addControlPathOffset</strong></li>
 <li>additional reference-linked attributes for the <code>end</code> coordinate: <strong>endPivotCorner</strong>, <strong>addEndPivotHandle</strong>, <strong>addEndPivotOffset</strong>, <strong>endPathPosition</strong>, <strong>addEndPathHandle</strong>, <strong>addEndPathOffset</strong></li>

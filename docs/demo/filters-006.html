@@ -993,7 +993,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
             </div>
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], 
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
         <span class="hljs-keyword">let</span> a;
@@ -1001,19 +1001,19 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         <span class="hljs-keyword">if</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span> === <span class="hljs-string">&#x27;opacity&#x27;</span>) a = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> temp = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);
+            <span class="hljs-keyword">const</span> temp = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);
             a = [];
 
             temp.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
-                <span class="hljs-keyword">let</span> n = <span class="hljs-built_in">parseInt</span>(t, <span class="hljs-number">10</span>);
+                <span class="hljs-keyword">const</span> n = <span class="hljs-built_in">parseInt</span>(t, <span class="hljs-number">10</span>);
                 <span class="hljs-keyword">if</span> (n.<span class="hljs-property">toFixed</span> &amp;&amp; !<span class="hljs-built_in">isNaN</span>(n)) a.<span class="hljs-title function_">push</span>(n)
             });
         }
 
-        myFilter.<span class="hljs-title function_">set</span>({ 
+        myFilter.<span class="hljs-title function_">set</span>({
             [e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>]: a,
         });
-    }, 
+    },
     <span class="hljs-string">&#x27;.controlItem&#x27;</span>);</pre></div></div>
             
         </li>

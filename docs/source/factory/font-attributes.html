@@ -544,7 +544,7 @@
 <ul>
 <li>The constructor uses naming functionality (from the <a href="../mixin/base.html">base</a> mixin), but doesn’t actually store FontAttribute instances in the <a href="../core/library.html">library</a></li>
 <li>Instead they are referenced directly from each Phrase instance.</li>
-<li>FontAttribute instances get cloned as part of the Phrase stamp functionality (because of subsequent ‘update’ invocations on them). </li>
+<li>FontAttribute instances get cloned as part of the Phrase stamp functionality (because of subsequent ‘update’ invocations on them).</li>
 <li>If we stored FA instances in the library we’d risk running out of memory, or slowing up code speed, as the cloned instances are pretty temporary and get thrown away whenever a new Phrase.set invocation (involving font attributes) happens.</li>
 </ul>
 <p>The Phrase entity includes functionality to allow the getting and setting of FontAttribute attributes directly on the entity instance.</p>
@@ -770,11 +770,11 @@ P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_"
 <li><code>1ex</code> is ≈ ‘0.5em’</li>
 <li><code>1cap</code>, <code>1ch</code>, <code>1ic</code> are all ≈ ‘1em’</li>
 </ul>
-<p>Length percentage values, with calculation based on the &lt;canvas&gt; element’s computed font size: </p>
+<p>Length percentage values, with calculation based on the &lt;canvas&gt; element’s computed font size:</p>
 <ul>
 <li><code>120%</code> = ‘1.2em’</li>
 </ul>
-<p>Non-numerical values (in the Fonts standards, ‘absolute-size’ and ‘relative-size’ keywords) will calculate a size based on the &lt;canvas&gt; element’s computed font size: </p>
+<p>Non-numerical values (in the Fonts standards, ‘absolute-size’ and ‘relative-size’ keywords) will calculate a size based on the &lt;canvas&gt; element’s computed font size:</p>
 <ul>
 <li><code>xx-small</code> = 60% of the computed font size</li>
 <li><code>x-small</code> = 75% of the computed font size</li>
@@ -799,7 +799,7 @@ P.<span class="hljs-property">lib</span> = <span class="hljs-variable constant_"
 <li><code>1in</code> (inch) = 96px</li>
 <li><code>1cm</code> (centimeter) = 37.80px</li>
 <li><code>1mm</code> (millimeter) = 3.78px</li>
-<li><code>1Q</code> (quarter mm) = 0.95px </li>
+<li><code>1Q</code> (quarter mm) = 0.95px</li>
 <li><code>1pc</code> (pica) = 16px</li>
 <li><code>1pt</code> (point) = 1.33px</li>
 <li><code>1px</code> (pixel) = 1px</li>
@@ -901,7 +901,7 @@ P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p><strong>size</strong> - pseudo-attribute </p>
+              <p><strong>size</strong> - pseudo-attribute</p>
 <ul>
 <li>getter returns a CSS fontSize String</li>
 </ul>
@@ -932,7 +932,7 @@ P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item)) {
 
-        <span class="hljs-keyword">let</span> size = <span class="hljs-number">0</span>, 
+        <span class="hljs-keyword">let</span> size = <span class="hljs-number">0</span>,
             metric = <span class="hljs-variable constant_">MEDIUM</span>;
 
         <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">XX_SMALL</span>)) metric = <span class="hljs-variable constant_">XX_SMALL</span>;
@@ -1300,7 +1300,7 @@ P.<span class="hljs-property">updateMetadata</span> = <span class="hljs-keyword"
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">lineHeight</span> = lineHeight;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
     }
-    
+
     <span class="hljs-keyword">const</span> currentHost = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>.<span class="hljs-property">type</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_CELL</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>.<span class="hljs-property">name</span> : <span class="hljs-variable constant_">ZERO_STR</span>;
     <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">type</span> &amp;&amp; host.<span class="hljs-property">type</span> == <span class="hljs-variable constant_">T_CELL</span> &amp;&amp; host.<span class="hljs-property">name</span> !== currentHost) {
 
@@ -1313,10 +1313,12 @@ P.<span class="hljs-property">calculateSize</span> = <span class="hljs-keyword">
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>) {
 
-        <span class="hljs-keyword">let</span> {scale, lineHeight, host, sizeValue, sizeMetric} = <span class="hljs-variable language_">this</span>;
+        <span class="hljs-keyword">const</span> {scale, lineHeight, host, sizeMetric} = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">let</span> gcfs = host.<span class="hljs-title function_">getComputedFontSizes</span>(),
-            parentSize, rootSize, viewportWidth, viewportHeight;
+        <span class="hljs-keyword">const</span> gcfs = host.<span class="hljs-title function_">getComputedFontSizes</span>();
+
+        <span class="hljs-keyword">let</span> parentSize, rootSize, viewportWidth, viewportHeight,
+            sizeValue = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sizeValue</span>;
 
         <span class="hljs-keyword">if</span> (!gcfs) {
 

@@ -548,7 +548,7 @@
 <li>Each Tween also includes a <code>definitions</code> Array which sets out the details of the animation to be performed.</li>
 <li>The <code>definitions</code> Array can include multiple objects, each defining a change to a specific attribute that needs to be applied to the target objects.</li>
 <li><strong>Any number-type attribute can be animated using a Tween</strong> - this includes integer and float Numbers, percentage Strings (<code>12.5%</code>) and measurement Strings (<code>20px</code>).</li>
-<li>We can run multiple Tween animations at the same time; Tweens can overlap (start one tween while another is running). </li>
+<li>We can run multiple Tween animations at the same time; Tweens can overlap (start one tween while another is running).</li>
 <li>We can dynamically halt, resume, restart and terminate Tweens in response to user interactions.</li>
 <li>Tweens include <code>packet</code> functionality: they can be saved, and cloned.</li>
 </ul>
@@ -791,7 +791,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 <li><strong>integer</strong> - Boolean flag indicating whether we should force results to be integers (default: false)</li>
 <li><strong>engine</strong> - String name for the easing function <em><strong>engine</strong></em> to be used to animate this change; or an easing function supplied by the developer.</li>
 </ul>
-<p>Scrawl-canvas includes functionality to allow <code>start</code> and <code>end</code> values to be defined as Strings, with a measurement suffix (<code>%</code>, <code>px</code>, etc) attached to the number. </p>
+<p>Scrawl-canvas includes functionality to allow <code>start</code> and <code>end</code> values to be defined as Strings, with a measurement suffix (<code>%</code>, <code>px</code>, etc) attached to the number.</p>
 <ul>
 <li>These values should be of a type that the target object (generally an artefact) expects to receive in its <code>set</code> function.</li>
 <li>Any object with a <code>set</code> function that takes an object as its argument can be tweened.</li>
@@ -879,7 +879,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               </div>
               <p><strong>ticker</strong> - String name of Ticker object which this Tween will associate itself with.</p>
 <ul>
-<li>If no Ticker is specified when building a new Tween, it will create a new Ticker object (sharing its <code>name</code> attribute) to associate with. </li>
+<li>If no Ticker is specified when building a new Tween, it will create a new Ticker object (sharing its <code>name</code> attribute) to associate with.</li>
 <li>If the attributes below are included in the argument object, they will be passed on to the new Ticker.</li>
 <li>This attribute is kept in the Tween object, but is excluded from the Tween prototype’s <code>defs</code> object.</li>
 </ul>
@@ -996,7 +996,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
     }
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(clone.<span class="hljs-property">definitions</span>)) {
-        
+
         clone.<span class="hljs-property">definitions</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">def, index</span>) =&gt;</span> {
 
             <span class="hljs-keyword">if</span> (def.<span class="hljs-property">engineIsFunction</span>) def.<span class="hljs-property">engine</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>[index].<span class="hljs-property">engine</span>;
@@ -1079,7 +1079,7 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">commenceAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">commenceAction</span> = item;
-    
+
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">commenceAction</span> != <span class="hljs-variable constant_">FUNCTION</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">commenceAction</span> = λ<span class="hljs-literal">null</span>;
 };</pre></div></div>
             
@@ -1132,11 +1132,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
         key = keys[i];
-        
+
         <span class="hljs-keyword">if</span> (key != <span class="hljs-variable constant_">NAME</span>) {
 
             s = setters[key];
-            
+
             <span class="hljs-keyword">if</span> (s) s.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, items[key]);
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> d[key] != <span class="hljs-variable constant_">UNDEF</span>) <span class="hljs-variable language_">this</span>[key] = items[key];
         }
@@ -1207,19 +1207,19 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         cType = calculatedDur[<span class="hljs-number">0</span>],
         ticker = <span class="hljs-variable language_">this</span>.<span class="hljs-property">ticker</span>;
 
-    <span class="hljs-keyword">let</span> myticker, 
+    <span class="hljs-keyword">let</span> myticker,
         tickerDuration = <span class="hljs-number">0</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveDuration</span> = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">if</span> (cType == <span class="hljs-variable constant_">PC</span>) {
-    
+
         <span class="hljs-keyword">if</span> (ticker) {
-    
+
             myticker = animationtickers[ticker];
-    
+
             <span class="hljs-keyword">if</span> (myticker) {
-    
+
                 tickerDuration = myticker.<span class="hljs-property">effectiveDuration</span>;
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveDuration</span> = tickerDuration * (cDur / <span class="hljs-number">100</span>);
             }
@@ -1395,10 +1395,9 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
             <div class="content"><div class='highlight'><pre>        setObj = <span class="hljs-variable language_">this</span>.<span class="hljs-property">setObj</span> || {};
 
     <span class="hljs-keyword">let</span> def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute,
-        i, iz, j, jz, progress,
-        effectiveTick;
+        i, iz, j, jz, progress;
 
-    effectiveTick = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">reversed</span>) ? items.<span class="hljs-property">reverseTick</span> - starts : items.<span class="hljs-property">tick</span> - starts;
+    <span class="hljs-keyword">const</span> effectiveTick = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">reversed</span>) ? items.<span class="hljs-property">reverseTick</span> - starts : items.<span class="hljs-property">tick</span> - starts;
 
     <span class="hljs-keyword">if</span> (effectiveDuration &amp;&amp; !status) progress = effectiveTick / effectiveDuration;
     <span class="hljs-keyword">else</span> progress = (status &gt; <span class="hljs-number">0</span>) ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
@@ -1473,12 +1472,12 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
               </div>
               <p><code>engineActions</code> - internal function to run built-in easing engines</p>
 <ul>
-<li><strong>engine</strong> - String name of the required easing. All built-in easing engines are defined in the <code>core/utilities</code> file </li>
+<li><strong>engine</strong> - String name of the required easing. All built-in easing engines are defined in the <code>core/utilities</code> file</li>
 <li><strong>start</strong> - the <code>effectiveStart</code> value, in milliseconds.</li>
 <li><strong>change</strong> - the time in milliseconds that this animation will take (<code>effectiveEnd - effectiveStart</code>).</li>
 <li><strong>position</strong> - the time elapsed since this Tween started running</li>
 </ul>
-<p>Scrawl-canvas easing engines use the following metaphor to define their names: </p>
+<p>Scrawl-canvas easing engines use the following metaphor to define their names:</p>
 <ul>
 <li><code>out</code> indicates an acceleration. Think of a train leaving the station.</li>
 <li><code>in</code> indicates a deceleration. Think of a train arriving the station.</li>
@@ -1565,14 +1564,14 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">parseDefinitionsValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">const</span> result = [<span class="hljs-variable constant_">ZERO_STR</span>, <span class="hljs-number">0</span>];
-    
+
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item)) {
 
         <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) result[<span class="hljs-number">1</span>] = item;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
             <span class="hljs-keyword">const</span> a = item.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/^-?\d+\.?\d*(\D*)/</span>);
-            
+
             <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(a[<span class="hljs-number">0</span>])) result[<span class="hljs-number">1</span>] = <span class="hljs-built_in">parseFloat</span>(a);
             <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(a[<span class="hljs-number">1</span>])) result[<span class="hljs-number">0</span>] = a[<span class="hljs-number">1</span>];
         }

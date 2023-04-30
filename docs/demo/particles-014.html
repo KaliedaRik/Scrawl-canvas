@@ -879,26 +879,26 @@ canvas.<span class="hljs-title function_">buildCell</span>({
     <span class="hljs-attr">clearAlpha</span>: <span class="hljs-number">0.998</span>,
 });
 
-<span class="hljs-keyword">let</span> lowAdjuster = scrawl.<span class="hljs-title function_">makeColor</span>({
+<span class="hljs-keyword">const</span> lowAdjuster = scrawl.<span class="hljs-title function_">makeColor</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;low-adjuster&#x27;</span>,
     <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
     <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> highAdjuster = scrawl.<span class="hljs-title function_">makeColor</span>({
+<span class="hljs-keyword">const</span> highAdjuster = scrawl.<span class="hljs-title function_">makeColor</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;high-adjuster&#x27;</span>,
     <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
     <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;lightblue&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
+<span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
     <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
     <span class="hljs-attr">userAttributes</span>: [
         {
-            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rangeColorValue&#x27;</span>, 
+            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rangeColorValue&#x27;</span>,
             <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
-            <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { 
+            <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">rangeColorValue</span> = item;
 
@@ -912,7 +912,7 @@ canvas.<span class="hljs-title function_">buildCell</span>({
 });
 
 
-<span class="hljs-keyword">let</span> emitter = scrawl.<span class="hljs-title function_">makeEmitter</span>({
+<span class="hljs-keyword">const</span> emitter = scrawl.<span class="hljs-title function_">makeEmitter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emitter-1&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;trace-chamber&#x27;</span>,
@@ -941,14 +941,15 @@ canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> history = particle.<span class="hljs-property">history</span>,
-            start;
+        <span class="hljs-keyword">const</span> history = particle.<span class="hljs-property">history</span>;
+
+        <span class="hljs-keyword">let</span> start;
 
         <span class="hljs-keyword">if</span> (history.<span class="hljs-property">length</span>) {
 
             [ , , ...start] = history[<span class="hljs-number">0</span>];
 
-            artefact.<span class="hljs-title function_">simpleStamp</span>(host, { 
+            artefact.<span class="hljs-title function_">simpleStamp</span>(host, {
                 start,
                 <span class="hljs-attr">fillStyle</span>: particle.<span class="hljs-property">fill</span>,
             });

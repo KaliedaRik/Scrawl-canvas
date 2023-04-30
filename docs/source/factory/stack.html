@@ -549,8 +549,8 @@
 <li>They can be stored and retrieved (‘packet’ functionality), cloned (‘clone’, based on packets) and killed (‘kill’ functions)</li>
 </ul>
 <p><strong>A Stack is a wrapper object around a DOM element</strong>, whose direct children are given Scrawl-canvas Element wrappers:</p>
-<pre><code><span class="hljs-title class_">Stack</span>    ~~&gt; <span class="hljs-title class_">Canvas</span>/<span class="hljs-title class_">Cell</span>  
-<span class="hljs-title class_">Element</span>  ~~&gt; <span class="hljs-title class_">Entity</span> (eg <span class="hljs-title class_">Block</span>)  
+<pre><code><span class="hljs-title class_">Stack</span>    ~~&gt; <span class="hljs-title class_">Canvas</span>/<span class="hljs-title class_">Cell</span>
+<span class="hljs-title class_">Element</span>  ~~&gt; <span class="hljs-title class_">Entity</span> (eg <span class="hljs-title class_">Block</span>)
 </code></pre>
 <p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-scrawl-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
 <ul>
@@ -579,7 +579,7 @@
               </div>
               <h4 id="demos">Demos:</h4>
 <ul>
-<li>All stack demos include Stack wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. </li>
+<li>All stack demos include Stack wrapper functionality - most of which happens behind the scenes and does not need to be directly coded.</li>
 <li><a href="../../demo/dom-001.html">DOM-001</a> - Loading the scrawl-canvas library using a script tag in the HTML code</li>
 <li><a href="../../demo/dom-003.html">DOM-003</a> - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack</li>
 <li><a href="../../demo/dom-010.html">DOM-010</a> - Add and remove (kill) Scrawl-canvas Stack elements programmatically</li>
@@ -635,8 +635,6 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Stack</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">let</span> g, el;
-
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
@@ -658,7 +656,7 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializeDomLayout</span>(items);
 
-    g = <span class="hljs-title function_">makeGroup</span>({
+    <span class="hljs-keyword">const</span> g = <span class="hljs-title function_">makeGroup</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
         <span class="hljs-attr">host</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>
     });
@@ -672,7 +670,7 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-    el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
+    <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
     <span class="hljs-keyword">if</span> (el) {
 
@@ -780,7 +778,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p><strong>trackHere</strong> </p>
+              <p><strong>trackHere</strong></p>
 
             </div>
             
@@ -842,7 +840,7 @@ P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable langua
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> myname = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;</pre></div></div>
+    <span class="hljs-keyword">const</span> myname = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;</pre></div></div>
             
         </li>
         
@@ -1092,7 +1090,7 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPerspective</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">perspective</span>;
+    <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">perspective</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">domPerspectiveString</span> = <span class="hljs-string">`perspective-origin: <span class="hljs-subst">${p.x}</span> <span class="hljs-subst">${p.y}</span>; perspective: <span class="hljs-subst">${p.z}</span>px;`</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">domShowRequired</span> = <span class="hljs-literal">true</span>;
@@ -1116,7 +1114,7 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>TODO - experimental! <code>checkResponsive</code></p>
-<p>Scrawl-canvas Stack artefacts - at the <strong>root</strong> level - cannot have ‘String%’ dimensions, which means they have absolute dimensions - because everything that relies on ‘String%’ dimensions needs an absolute (number) value for their calculations at the root, which is the stack. </p>
+<p>Scrawl-canvas Stack artefacts - at the <strong>root</strong> level - cannot have ‘String%’ dimensions, which means they have absolute dimensions - because everything that relies on ‘String%’ dimensions needs an absolute (number) value for their calculations at the root, which is the stack.</p>
 <p>But we still need to make Stacks responsive. We do this by checking if the viewport dimensions have changed (a resize action has taken place) and - if yes - update the stack’s absolute dimensions accordingly … if the <strong>isResponsive</strong> flag has been set to true for the Stack (default is ‘false’ - may change this in due course).</p>
 <p>We call this check in the <strong>clear</strong> function below, because it’s doing nothing else useful at the moment and it makes sense to get updates in place here before everything launches into the compile part of the display cycle</p>
 
@@ -1292,7 +1290,7 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
-              <p><code>addExistingDomElements</code> - argument is a CSS query search String. All elements in the DOM matching the search will be <strong>moved</strong> into the Stack wrapper’s DOM element and given Scrawl-canvas Element wrappers. While Scrawl-canvas will try its best to respect the elements’ CSS attributes, they will be <strong>positioned absolutely</strong> within the Stack and given start, handle and offset values of <code>[0, 0]</code>. </p>
+              <p><code>addExistingDomElements</code> - argument is a CSS query search String. All elements in the DOM matching the search will be <strong>moved</strong> into the Stack wrapper’s DOM element and given Scrawl-canvas Element wrappers. While Scrawl-canvas will try its best to respect the elements’ CSS attributes, they will be <strong>positioned absolutely</strong> within the Stack and given start, handle and offset values of <code>[0, 0]</code>.</p>
 
             </div>
             
@@ -1307,7 +1305,7 @@ D.<span class="hljs-property">perspectiveY</span> = <span class="hljs-keyword">f
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = elements.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
             el = elements[i];
-            
+
             <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_dom</span>(el)) {
 
                 captured = <span class="hljs-title function_">makeElement</span>({
@@ -1409,7 +1407,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <h4 id="stack-discovery">Stack discovery</h4>
-<p><code>Exported function</code> (to modules). Parse the DOM, looking for all elements that have been given a <strong>data-stack</strong> attribute; then create <strong>Stack</strong> artefact wrappers for each of them. </p>
+<p><code>Exported function</code> (to modules). Parse the DOM, looking for all elements that have been given a <strong>data-stack</strong> attribute; then create <strong>Stack</strong> artefact wrappers for each of them.</p>
 <p>This function will also create wrappers for all <strong>direct child elements</strong> (one level down) within the stack, and create appropriate wrappers (Stack, Canvas, Element) for them.</p>
 
             </div>
@@ -1499,7 +1497,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(el.<span class="hljs-property">children</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">child</span> =&gt;</span> {
-    
+
         <span class="hljs-keyword">if</span> (child.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_STACK</span>) == <span class="hljs-literal">null</span> &amp;&amp; !<span class="hljs-title function_">isa_canvas</span>(child) &amp;&amp; child.<span class="hljs-property">tagName</span> != $SCRIPT) {
 
             dims = child.<span class="hljs-title function_">getBoundingClientRect</span>();
@@ -1553,7 +1551,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
               <div class="sswrap ">
                 <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
-              <p><code>Exported function</code> (to modules and scrawl object). Use <strong>addStack</strong> to add a Scrawl-canvas stack element to a web page, or transform an existing element into a stack element. The items argument can include </p>
+              <p><code>Exported function</code> (to modules and scrawl object). Use <strong>addStack</strong> to add a Scrawl-canvas stack element to a web page, or transform an existing element into a stack element. The items argument can include</p>
 <ul>
 <li><strong>element</strong> - the DOM element to be the stack - if not present, will autogenerate a div element</li>
 <li><strong>host</strong> - the host element, either as the DOM element itself, or some sort of CSS search string; if not present, will create the stack at the stack element’s current place or, failing all else, add the stack to the end of the document body</li>
@@ -1578,7 +1576,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> el, host, hostinscrawl, mystack, mygroup, name,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> el, host, hostinscrawl, mygroup, name,
         position = <span class="hljs-variable constant_">ABSOLUTE</span>;</pre></div></div>
             
         </li>
@@ -1677,7 +1675,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
               <div class="sswrap ">
                 <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
-              <p>determine whether the parent element is already known to Scrawl-canvas - affects the stack-to-be element’s group </p>
+              <p>determine whether the parent element is already known to Scrawl-canvas - affects the stack-to-be element’s group</p>
 
             </div>
             
@@ -1747,7 +1745,7 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    mystack = <span class="hljs-title function_">makeStack</span>({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> mystack = <span class="hljs-title function_">makeStack</span>({
         <span class="hljs-attr">name</span>: name,
         <span class="hljs-attr">domElement</span>: el,
         <span class="hljs-attr">group</span>: mygroup,

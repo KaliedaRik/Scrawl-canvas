@@ -869,7 +869,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
 
 scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;#bunny&#x27;</span>);</pre></div></div>
             
@@ -886,7 +886,7 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({ 
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pivot-entity&#x27;</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">30</span>],
@@ -979,10 +979,10 @@ scrawl.<span class="hljs-title function_">makeShape</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> wheel = scrawl.<span class="hljs-title function_">makeWheel</span>({ 
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> wheel = scrawl.<span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-wheel-entity&#x27;</span>,
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">20</span>, 
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
 
     <span class="hljs-attr">startAngle</span>: <span class="hljs-number">20</span>,
@@ -991,7 +991,7 @@ scrawl.<span class="hljs-title function_">makeShape</span>({
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;linear1&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>, 
+    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
 
     <span class="hljs-attr">noUserInteraction</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">noPositionDependencies</span>: <span class="hljs-literal">true</span>,
@@ -999,7 +999,7 @@ scrawl.<span class="hljs-title function_">makeShape</span>({
     <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span>,
 });
 
-<span class="hljs-keyword">let</span> block = scrawl.<span class="hljs-title function_">makeBlock</span>({ 
+<span class="hljs-keyword">const</span> block = scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-block-entity&#x27;</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">40</span>, <span class="hljs-number">16</span>],
@@ -1009,7 +1009,7 @@ scrawl.<span class="hljs-title function_">makeShape</span>({
     <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>, 
+    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
 
     <span class="hljs-attr">noUserInteraction</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">noPositionDependencies</span>: <span class="hljs-literal">true</span>,
@@ -1017,7 +1017,7 @@ scrawl.<span class="hljs-title function_">makeShape</span>({
     <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span>,
 });
 
-<span class="hljs-keyword">let</span> star = scrawl.<span class="hljs-title function_">makeStar</span>({
+<span class="hljs-keyword">const</span> star = scrawl.<span class="hljs-title function_">makeStar</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-star-entity&#x27;</span>,
 
@@ -1030,7 +1030,7 @@ scrawl.<span class="hljs-title function_">makeShape</span>({
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;gold&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>, 
+    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
 
     <span class="hljs-attr">noUserInteraction</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">noPositionDependencies</span>: <span class="hljs-literal">true</span>,
@@ -1038,7 +1038,7 @@ scrawl.<span class="hljs-title function_">makeShape</span>({
     <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span>,
 });
 
-<span class="hljs-keyword">let</span> picture = scrawl.<span class="hljs-title function_">makePicture</span>({
+<span class="hljs-keyword">const</span> picture = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-image-entity&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;bunny&#x27;</span>,
@@ -1052,7 +1052,7 @@ scrawl.<span class="hljs-title function_">makeShape</span>({
     <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>, 
+    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
 
     <span class="hljs-attr">noUserInteraction</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">noPositionDependencies</span>: <span class="hljs-literal">true</span>,
@@ -1073,7 +1073,7 @@ scrawl.<span class="hljs-title function_">makeShape</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
     <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
@@ -1254,8 +1254,7 @@ scrawl.<span class="hljs-title function_">makeShape</span>({
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> history = particle.<span class="hljs-property">history</span>,
-            remaining, globalAlpha, scale, start, z,</pre></div></div>
+        <span class="hljs-keyword">const</span> history = particle.<span class="hljs-property">history</span>,</pre></div></div>
             
         </li>
         
@@ -1271,6 +1270,8 @@ scrawl.<span class="hljs-title function_">makeShape</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre>            roll = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;roll&#x27;</span>);
+
+        <span class="hljs-keyword">let</span> remaining, globalAlpha, scale, start, z;
 
         history.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
 
@@ -1337,7 +1338,7 @@ scrawl.<span class="hljs-title function_">makeShape</span>({
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> historyCount = <span class="hljs-number">0</span>;
     particlenames.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> p = particle[n];
+        <span class="hljs-keyword">const</span> p = particle[n];
         <span class="hljs-keyword">if</span> (p) historyCount += p.<span class="hljs-property">history</span>.<span class="hljs-property">length</span>;
     });
 
@@ -1446,7 +1447,6 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre>        val = selector.<span class="hljs-property">value</span>;
-        choice;
 
         <span class="hljs-keyword">switch</span> (val) {
 

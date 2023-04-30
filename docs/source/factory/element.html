@@ -549,8 +549,8 @@
 <li>They can be stored and retrieved (‘packet’ functionality), cloned (‘clone’, based on packets) and killed (‘kill’ functions)</li>
 </ul>
 <p><strong>A <a href="./stack.html">Stack</a> is a wrapper object around a DOM element</strong>, whose direct children are given Scrawl-canvas Element wrappers:</p>
-<pre><code><span class="hljs-title class_">Stack</span>    ~~&gt; <span class="hljs-title class_">Canvas</span>/<span class="hljs-title class_">Cell</span>  
-<span class="hljs-title class_">Element</span>  ~~&gt; <span class="hljs-title class_">Entity</span> (eg <span class="hljs-title class_">Block</span>)  
+<pre><code><span class="hljs-title class_">Stack</span>    ~~&gt; <span class="hljs-title class_">Canvas</span>/<span class="hljs-title class_">Cell</span>
+<span class="hljs-title class_">Element</span>  ~~&gt; <span class="hljs-title class_">Entity</span> (eg <span class="hljs-title class_">Block</span>)
 </code></pre>
 <p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-scrawl-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
 <ul>
@@ -625,7 +625,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Element</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
-    
+
     <span class="hljs-keyword">const</span> el = items.<span class="hljs-property">domElement</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
@@ -642,7 +642,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Scrawl-canvas does not retain an Element’s textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes <code>text</code> (for textContent, which automatically escapes all HTML-related tags and entities) and <code>content</code> (which should respect HTML tags and entities) </p>
+              <p>Scrawl-canvas does not retain an Element’s textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes <code>text</code> (for textContent, which automatically escapes all HTML-related tags and entities) and <code>content</code> (which should respect HTML tags and entities)</p>
 
             </div>
             
@@ -670,7 +670,7 @@
     <span class="hljs-keyword">if</span> (myEl) myEl.<span class="hljs-property">id</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">apply</span>();
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
@@ -809,7 +809,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p><code>text</code> - <strong>this is the preferred way to update an element’s text content</strong> because the text supplied in the argument is not treated as HTML by the browser. </p>
+              <p><code>text</code> - <strong>this is the preferred way to update an element’s text content</strong> because the text supplied in the argument is not treated as HTML by the browser.</p>
 <p>When we update the DOM attribute <code>element.textContent</code>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
 
             </div>
@@ -930,7 +930,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
             el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
         canvas.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-canvas`</span>;
-        
+
         <span class="hljs-keyword">const</span> rect = el.<span class="hljs-title function_">getBoundingClientRect</span>();
 
         el.<span class="hljs-property">parentNode</span>.<span class="hljs-title function_">insertBefore</span>(canvas, <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>);
@@ -946,7 +946,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             <span class="hljs-attr">mimic</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
             <span class="hljs-attr">lockTo</span>: <span class="hljs-variable constant_">MIMIC</span>,
-            
+
             <span class="hljs-attr">useMimicDimensions</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">useMimicScale</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">true</span>,
@@ -1032,7 +1032,7 @@ stack.<span class="hljs-title function_">addNewElement</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeElement = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
-    
+
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Element</span>(items);
 };

@@ -708,7 +708,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
     tv.<span class="hljs-property">x</span> = (<span class="hljs-title function_">isa_number</span>(x)) ? x : tv.<span class="hljs-property">x</span>;
     tv.<span class="hljs-property">y</span> = (<span class="hljs-title function_">isa_number</span>(y)) ? y : tv.<span class="hljs-property">y</span>;
     tv.<span class="hljs-property">z</span> = (<span class="hljs-title function_">isa_number</span>(z)) ? z : tv.<span class="hljs-property">z</span>;
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };
 
@@ -723,7 +723,7 @@ P.<span class="hljs-property">setFromQuaternion</span> = <span class="hljs-keywo
     tv.<span class="hljs-property">x</span> = iv.<span class="hljs-property">x</span>;
     tv.<span class="hljs-property">y</span> = iv.<span class="hljs-property">y</span>;
     tv.<span class="hljs-property">z</span> = iv.<span class="hljs-property">z</span>;
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };
 
@@ -930,7 +930,7 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
 
     <span class="hljs-title function_">releaseQuaternion</span>(q4);
     <span class="hljs-title function_">releaseQuaternion</span>(q5);
-    
+
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>
 };</pre></div></div>
             
@@ -970,7 +970,7 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
     <span class="hljs-keyword">const</span> q = quaternionPool.<span class="hljs-title function_">shift</span>();
 
     q.<span class="hljs-title function_">set</span>(items);
-    
+
     <span class="hljs-keyword">return</span> q
 };</pre></div></div>
             

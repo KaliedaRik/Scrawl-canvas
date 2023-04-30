@@ -551,9 +551,9 @@
 <li>the <code>createRadialGradient</code> method creates a radial gradient using the size and coordinates of two circles.</li>
 <li>the <code>createConicGradient</code> method creates a conic gradient as a 360° sweep around the gradient’s start coordinate. For browsers which don’t support this gradient out of the box, the method will apply no gradient to the entity.</li>
 </ul>
-<p>Common to linear and radial types of gradient is the idea of a start coordinate and an end coordinate, supplied in pixels. </p>
+<p>Common to linear and radial types of gradient is the idea of a start coordinate and an end coordinate, supplied in pixels.</p>
 <ul>
-<li>Scrawl-canvas extends this idea so that the coordinates can be supplied as a percentage value (String%) of the host Cell’s dimensions. </li>
+<li>Scrawl-canvas extends this idea so that the coordinates can be supplied as a percentage value (String%) of the host Cell’s dimensions.</li>
 <li>Furthermore Scrawl-canvas allows each entity that uses a Gradient-type style to indicate whether the reference box should be that of the host Cell, or of the entity itself, through their <code>lockFillStyleToEntity</code> and <code>lockStrokeStyleToEntity</code> attribute flags.</li>
 </ul>
 
@@ -654,7 +654,7 @@
 <li>for the start coordinate, <strong>startX</strong> and <strong>startY</strong></li>
 <li>for the end coordinate, <strong>endX</strong> and <strong>endY</strong></li>
 </ul>
-<p>In all cases, the attribute values can be Numbers, which indicate absolute pixel coordinates, or String% values for coordinates calculated relative to either Cell or entity current dimensions </p>
+<p>In all cases, the attribute values can be Numbers, which indicate absolute pixel coordinates, or String% values for coordinates calculated relative to either Cell or entity current dimensions</p>
 <ul>
 <li>for the <code>x</code> coordinate, the Strings <strong>left</strong>, <strong>center</strong> and <strong>right</strong> are also supported</li>
 <li>for the <code>y</code> coordinate, the Strings <strong>top</strong>, <strong>center</strong> and <strong>bottom</strong> are also supported</li>
@@ -925,7 +925,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
-        
+
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
@@ -1102,7 +1102,7 @@
         <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteStart</span> = item;
-            
+
             <span class="hljs-keyword">if</span>(item &lt; <span class="hljs-number">0</span> || item &gt; <span class="hljs-number">999</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteStart</span> = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
         }
     };
@@ -1142,7 +1142,7 @@
         <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteEnd</span> = item;
-            
+
             <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span> || item &gt; <span class="hljs-number">999</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteEnd</span> = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
         }
     };
@@ -1196,7 +1196,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
-              <p><code>easing</code>, <code>easingFunction</code> - the easing to be applied to the gradient </p>
+              <p><code>easing</code>, <code>easingFunction</code> - the easing to be applied to the gradient</p>
 <ul>
 <li>Can accept a String value identifying an SC pre-defined easing function (default: <code>linear</code>)</li>
 <li>Can also accept a function accepting a single Number argument (a value between 0-1) and returning an eased Number (again, between 0-1)</li>
@@ -1397,7 +1397,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">setDelta</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-        <span class="hljs-keyword">let</span> keys = <span class="hljs-title function_">_keys</span>(items),
+        <span class="hljs-keyword">const</span> keys = <span class="hljs-title function_">_keys</span>(items),
             keysLen = keys.<span class="hljs-property">length</span>;
 
         <span class="hljs-keyword">if</span> (keysLen) {
@@ -1657,14 +1657,14 @@
             dims = entity.<span class="hljs-property">currentDimensions</span>;
             scale = entity.<span class="hljs-property">currentScale</span>;
 
-            w = dims[<span class="hljs-number">0</span>] * scale; 
-            h = dims[<span class="hljs-number">1</span>] * scale; 
+            w = dims[<span class="hljs-number">0</span>] * scale;
+            h = dims[<span class="hljs-number">1</span>] * scale;
         }
         <span class="hljs-keyword">else</span> {
 
             dims = cell.<span class="hljs-property">currentDimensions</span>;
-            w = dims[<span class="hljs-number">0</span>]; 
-            h = dims[<span class="hljs-number">1</span>]; 
+            w = dims[<span class="hljs-number">0</span>];
+            h = dims[<span class="hljs-number">1</span>];
         }
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanPosition</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStart</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">start</span>, [w, h]);
@@ -1725,13 +1725,13 @@
 
         <span class="hljs-keyword">if</span> (entity.<span class="hljs-property">lockFillStyleToEntity</span> || entity.<span class="hljs-property">lockStrokeStyleToEntity</span>) {
 
-            correctX = -(entityStampHandlePosition[<span class="hljs-number">0</span>] * entityScale) || <span class="hljs-number">0</span>; 
-            correctY = -(entityStampHandlePosition[<span class="hljs-number">1</span>] * entityScale) || <span class="hljs-number">0</span>; 
+            correctX = -(entityStampHandlePosition[<span class="hljs-number">0</span>] * entityScale) || <span class="hljs-number">0</span>;
+            correctY = -(entityStampHandlePosition[<span class="hljs-number">1</span>] * entityScale) || <span class="hljs-number">0</span>;
         }
         <span class="hljs-keyword">else</span> {
 
-            correctX = -entityStampPosition[<span class="hljs-number">0</span>] || <span class="hljs-number">0</span>; 
-            correctY = -entityStampPosition[<span class="hljs-number">1</span>] || <span class="hljs-number">0</span>; 
+            correctX = -entityStampPosition[<span class="hljs-number">0</span>] || <span class="hljs-number">0</span>;
+            correctY = -entityStampPosition[<span class="hljs-number">1</span>] || <span class="hljs-number">0</span>;
         }
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateGradientArgs</span>(correctX, correctY);
     };</pre></div></div>
@@ -1803,11 +1803,11 @@
                 <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <h4 id="gradients-and-color-stops">Gradients and color stops</h4>
-<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a> uses a rather convoluted way to add color data to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> interface object: </p>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a> uses a rather convoluted way to add color data to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> interface object:</p>
 <ul>
-<li>the object is created first on the &lt;canvas&gt; context engine where it is to be applied, with <strong>start</strong> and <strong>end</strong> coordinates, </li>
-<li>then color stops are <em>individually</em> added to it afterwards. </li>
-<li>This needs to be done for every gradient applied to a context engine before any fill or stroke operation using that gradient. </li>
+<li>the object is created first on the &lt;canvas&gt; context engine where it is to be applied, with <strong>start</strong> and <strong>end</strong> coordinates,</li>
+<li>then color stops are <em>individually</em> added to it afterwards.</li>
+<li>This needs to be done for every gradient applied to a context engine before any fill or stroke operation using that gradient.</li>
 <li>And only one gradient may be applied to the context engine at any time.</li>
 </ul>
 <p>The specificity of the above requirements - in particular relating to position coordinates - and the inability to update the CanvasGradient beyond adding color stops to it, means that storing these objects for future use is not a useful proposition … especially in a dynamic environment where we want the gradient to move in-step with an entity, or animate its colors in some way.</p>
@@ -1826,7 +1826,7 @@
 </code></pre>
 <p>To <code>set</code> the Palette object’s <code>colors</code> object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color. Note that:</p>
 <ul>
-<li>the color object attribute labels MUST include a space after the String number; and </li>
+<li>the color object attribute labels MUST include a space after the String number; and</li>
 <li>the number itself must be a positive integer in the range 0-999:</li>
 </ul>
 <pre><code>myGradient.<span class="hljs-title function_">set</span>({

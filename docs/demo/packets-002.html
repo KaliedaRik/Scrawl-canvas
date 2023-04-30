@@ -867,7 +867,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -977,15 +977,15 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
     <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
 
     <span class="hljs-attr">definitions</span>: [{
-        
+
         <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;fillStyle&#x27;</span>,
         <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">end</span>: <span class="hljs-number">1</span>,
         <span class="hljs-attr">engine</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) {
-           <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position,
-                val;
 
-            val = (position &lt; <span class="hljs-number">0.5</span>) ?
+           <span class="hljs-keyword">const</span> temp = <span class="hljs-number">1</span> - position;
+
+           <span class="hljs-keyword">const</span> val = (position &lt; <span class="hljs-number">0.5</span>) ?
                 start + ((position * position) * change * <span class="hljs-number">2</span>) :
                 (start + change) + ((temp * temp) * -change * <span class="hljs-number">2</span>);
 
@@ -1578,17 +1578,17 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">performEntityTests</span> = (<span class="hljs-params"></span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">performEntityTests</span> = (<span class="hljs-params"></span>) =&gt; {
 
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Creating packets for all entitys in test&#x27;</span>);
-    <span class="hljs-keyword">let</span> myblockPacket = myblock.<span class="hljs-title function_">saveAsPacket</span>();
-    <span class="hljs-keyword">let</span> mypicturePacket = mypicture.<span class="hljs-title function_">saveAsPacket</span>();
-    <span class="hljs-keyword">let</span> myphrasePacket = myphrase.<span class="hljs-title function_">saveAsPacket</span>();
-    <span class="hljs-keyword">let</span> mypiePacket = mypie.<span class="hljs-title function_">saveAsPacket</span>();
-    <span class="hljs-keyword">let</span> myovalPacket = myoval.<span class="hljs-title function_">saveAsPacket</span>();
-    <span class="hljs-keyword">let</span> mybezierPacket = mybezier.<span class="hljs-title function_">saveAsPacket</span>();
-    <span class="hljs-keyword">let</span> mygridPacket = mygrid.<span class="hljs-title function_">saveAsPacket</span>();
-    <span class="hljs-keyword">let</span> myshapePacket = myshape.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">const</span> myblockPacket = myblock.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">const</span> mypicturePacket = mypicture.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">const</span> myphrasePacket = myphrase.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">const</span> mypiePacket = mypie.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">const</span> myovalPacket = myoval.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">const</span> mybezierPacket = mybezier.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">const</span> mygridPacket = mygrid.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">const</span> myshapePacket = myshape.<span class="hljs-title function_">saveAsPacket</span>();
 
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Kill all entitys in test&#x27;</span>);
     myblock.<span class="hljs-title function_">kill</span>();
@@ -1658,12 +1658,12 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
     .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 };
 
-<span class="hljs-keyword">let</span> <span class="hljs-title function_">performOtherTests</span> = (<span class="hljs-params"></span>) =&gt; {
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">performOtherTests</span> = (<span class="hljs-params"></span>) =&gt; {
 
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Creating packets for other objects in test&#x27;</span>);
-    <span class="hljs-keyword">let</span> mygradientPacket = mygradient.<span class="hljs-title function_">saveAsPacket</span>();
-    <span class="hljs-keyword">let</span> mycolorPacket = mycolor.<span class="hljs-title function_">saveAsPacket</span>();
-    <span class="hljs-keyword">let</span> myfilterPacket = myfilter.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">const</span> mygradientPacket = mygradient.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">const</span> mycolorPacket = mycolor.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">const</span> myfilterPacket = myfilter.<span class="hljs-title function_">saveAsPacket</span>();
 
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Kill other objects in test&#x27;</span>);
     mygradient.<span class="hljs-title function_">kill</span>();
@@ -1732,7 +1732,7 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
 
 <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);
 
-<span class="hljs-keyword">let</span> <span class="hljs-title function_">fixEntitys</span> = (<span class="hljs-params"></span>) =&gt; {
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">fixEntitys</span> = (<span class="hljs-params"></span>) =&gt; {
 
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Fix entitys to use other objects&#x27;</span>);
     myblock.<span class="hljs-title function_">set</span>({

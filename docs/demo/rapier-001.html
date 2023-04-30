@@ -834,10 +834,10 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="demo-rapier-001">Demo Rapier 001</h1>
-<p>Rapier physics engine - stacking boxes</p>
-
+              
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable */</span></pre></div></div>
             
         </li>
         
@@ -848,11 +848,10 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p><a href="../../demo/rapier-001.html">Run code</a></p>
+              <h1 id="demo-rapier-001">Demo Rapier 001</h1>
+<p>Rapier physics engine - stacking boxes</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -862,6 +861,21 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p><a href="../../demo/rapier-001.html">Run code</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>@ts-expect-error</p>
 
@@ -874,11 +888,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>We are using a 600px x 600px canvas</p>
 <ul>
@@ -901,11 +915,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
 
@@ -918,42 +932,19 @@
         </li>
         
         
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>Keep the dynamic boxes in their own group (for drag-and-drop functionality later)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxesGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;boxes-group&quot;</span>,
-    <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>
-});</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="scrawl-canvas-entitys">Scrawl-canvas entitys</h4>
-<p>Build static boxes</p>
+              <p>Keep the dynamic boxes in their own group (for drag-and-drop functionality later)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ground = scrawl.<span class="hljs-title function_">makeBlock</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;my-ground&quot;</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">40</span>],
-    <span class="hljs-attr">start</span>: [<span class="hljs-number">300</span>, <span class="hljs-number">580</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-string">&quot;center&quot;</span>],
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&quot;green&quot;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;fill&quot;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> boxesGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;boxes-group&quot;</span>,
+    <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>
 });</pre></div></div>
             
         </li>
@@ -965,14 +956,18 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>A color generator to make our dynamic boxes look pretty</p>
+              <h4 id="scrawl-canvas-entitys">Scrawl-canvas entitys</h4>
+<p>Build static boxes</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> colorMaker = scrawl.<span class="hljs-title function_">makeColor</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;box-color-fill-generator&quot;</span>,
-    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&quot;orange&quot;</span>,
-    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&quot;brown&quot;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ground = scrawl.<span class="hljs-title function_">makeBlock</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;my-ground&quot;</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">40</span>],
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">300</span>, <span class="hljs-number">580</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-string">&quot;center&quot;</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&quot;green&quot;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;fill&quot;</span>
 });</pre></div></div>
             
         </li>
@@ -983,6 +978,25 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>A color generator to make our dynamic boxes look pretty</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> colorMaker = scrawl.<span class="hljs-title function_">makeColor</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;box-color-fill-generator&quot;</span>,
+    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&quot;orange&quot;</span>,
+    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&quot;brown&quot;</span>
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Build dynamic boxes</p>
 
@@ -1009,11 +1023,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h3 id="rapier-rigid-bodies">Rapier rigid bodies</h3>
 
@@ -1026,11 +1040,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Function to automate rigid body generation from Scrawl-canvas Block entitys</p>
 
@@ -1039,14 +1053,14 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable-next-line */</span>
 <span class="hljs-keyword">const</span> createBodyFromBlock = <span class="hljs-keyword">function</span> (<span class="hljs-params">world, block, density = <span class="hljs-number">1</span>, isStatic = <span class="hljs-literal">false</span> </span>) {
 
-    <span class="hljs-keyword">let</span> tempx = block.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;startX&quot;</span>) / unit,
+    <span class="hljs-keyword">const</span> tempx = block.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;startX&quot;</span>) / unit,
         tempy = (height - block.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;startY&quot;</span>)) / unit,
         tempw = block.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;width&quot;</span>) / unit,
         temph = block.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;height&quot;</span>) / unit;
 
     <span class="hljs-keyword">let</span> rbDesc, colDesc, rigidBody;
 
-    <span class="hljs-keyword">let</span> bodyType = isStatic
+    <span class="hljs-keyword">const</span> bodyType = isStatic
         ? rapier.<span class="hljs-property">RigidBodyType</span>.<span class="hljs-property">Static</span>
         : rapier.<span class="hljs-property">RigidBodyType</span>.<span class="hljs-property">Dynamic</span>;
 
@@ -1062,11 +1076,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Function to update Scrawl-canvas entitys with Rapier rigid body position/rotation data</p>
 
@@ -1074,10 +1088,10 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> updatePosition = <span class="hljs-keyword">function</span> (<span class="hljs-params">box</span>) {
 
-    <span class="hljs-keyword">let</span> { entity, body } = box;
-    <span class="hljs-keyword">let</span> { x, y } = body.<span class="hljs-title function_">translation</span>();
+    <span class="hljs-keyword">const</span> { entity, body } = box;
+    <span class="hljs-keyword">const</span> { x, y } = body.<span class="hljs-title function_">translation</span>();
 
-    <span class="hljs-keyword">let</span> r = -body.<span class="hljs-title function_">rotation</span>() / rad;
+    <span class="hljs-keyword">const</span> r = -body.<span class="hljs-title function_">rotation</span>() / rad;
 
     <span class="hljs-keyword">let</span> sx = x * unit,
         sy = y * unit;
@@ -1094,11 +1108,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Flag to run/halt the physics simulation</p>
 
@@ -1109,11 +1123,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Initialize Rapier (involves web assembly, thus asynchronous)</p>
 
@@ -1125,33 +1139,18 @@
         </li>
         
         
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p>Create the world, with added gravity</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> gravity = <span class="hljs-keyword">new</span> rapier.<span class="hljs-title class_">Vector2</span>(<span class="hljs-number">0.0</span>, -<span class="hljs-number">9.8</span>),
-        world = <span class="hljs-keyword">new</span> rapier.<span class="hljs-title class_">World</span>(gravity);</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p>Create rigid body for static ground entity</p>
+              <p>Create the world, with added gravity</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">createBodyFromBlock</span>(world, ground, <span class="hljs-literal">null</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> gravity = <span class="hljs-keyword">new</span> rapier.<span class="hljs-title class_">Vector2</span>(<span class="hljs-number">0.0</span>, -<span class="hljs-number">9.8</span>),
+        world = <span class="hljs-keyword">new</span> rapier.<span class="hljs-title class_">World</span>(gravity);</pre></div></div>
             
         </li>
         
@@ -1162,13 +1161,28 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
+              <p>Create rigid body for static ground entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">createBodyFromBlock</span>(world, ground, <span class="hljs-literal">null</span>, <span class="hljs-literal">true</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
               <p>Create dynamic rigid-bodies for the other boxes</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    boxnames.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">name</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> ent = artefacts[name];
+        <span class="hljs-keyword">const</span> ent = artefacts[name];
 
         <span class="hljs-keyword">if</span> (ent) {
 
@@ -1182,11 +1196,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Simulation loop</p>
 
@@ -1204,11 +1218,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Add the simulation loop to our Scrawl-canvas animation object</p>
 
@@ -1223,11 +1237,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1239,11 +1253,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1258,11 +1272,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 
@@ -1290,11 +1304,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

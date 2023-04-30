@@ -921,7 +921,7 @@ sceneCanvas.<span class="hljs-title function_">set</span>({
     setGuiControlChars,
 
 } = <span class="hljs-title function_">initializeCanvasSceneEditor</span>({
-    sceneCanvas, 
+    sceneCanvas,
     <span class="hljs-attr">domEntityEditor</span>: <span class="hljs-string">&#x27;#scene-canvas-dahsboard&#x27;</span>,
     <span class="hljs-attr">sceneDimensions</span>: <span class="hljs-number">1000</span>,
 }, scrawl);</pre></div></div>
@@ -1101,7 +1101,7 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">buttonClickAction</span> = (<span class="hljs-params"></span>) =&gt; {
 
     <span class="hljs-keyword">const</span> keys = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">prompt</span>(<span class="hljs-string">&#x27;To change the keyboard settings to move, scale and rotate selected entitys, enter the desired characters (11 in total) in the order MOVE-DELTA, MOVE-UP, MOVE-LEFT, MOVE-DOWN, MOVE-RIGHT, SCALE-DELTA, SCALE-GROW, SCALE-SHRINK, ROTATE-DELTA, ROTATE-CLOCKWISE, ROTATE-ANTI-CLOCKWISE (with no spaces or separating commas etc, though the comma key can be used as a shortcut). Character case will be ignored.&#x27;</span>, <span class="hljs-string">&#x27;QWASDBNMGJH&#x27;</span>);
-    
+
     <span class="hljs-title function_">setGuiControlChars</span>(keys);
 };</pre></div></div>
             

@@ -238,7 +238,7 @@
 <li>The ability to select an entity, or a group of entitys, for editing</li>
 <li>A simple GUI control which users can use to move, rotate and scale the selected entity or group of entitys</li>
 <li>Full accessibility via a set of keyboard commands to move, rotate and/or scale the selected entitys, the GUI control and the minimap</li>
-<li>When an entity, or group of entitys, are selected for editing, a keyboard accessible form will appear which allows users to edit a comprehensive subset of that entity’s attributes </li>
+<li>When an entity, or group of entitys, are selected for editing, a keyboard accessible form will appear which allows users to edit a comprehensive subset of that entity’s attributes</li>
 <li>Cut|Copy|Paste functionality for selected entitys using keyboard <code>CTRL + X</code>, <code>CTRL + C</code>, <code>CTRL + V</code> keystrokes</li>
 </ul>
 <p><strong>Inputs to the <code>initializeCanvasSceneEditor</code> function</strong></p>
@@ -368,7 +368,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> { 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> {
         dashboard,
         killDomEntityEditor,
 
@@ -395,7 +395,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> { 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> {
         selectedEntitys,
         addControllerAttributes,
         checkForEntityNavigationHoverActions,
@@ -403,8 +403,8 @@
         killEntityNavigation,
 
     } = <span class="hljs-title function_">initializeEntityNavigation</span>({
-        <span class="hljs-attr">canvas</span>: sceneCanvas, 
-        <span class="hljs-attr">cell</span>: mainCell, 
+        <span class="hljs-attr">canvas</span>: sceneCanvas,
+        <span class="hljs-attr">cell</span>: mainCell,
         dashboard,
     }, scrawl);</pre></div></div>
             
@@ -424,15 +424,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> { 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> {
         checkForSelectionUpdates,
         setGuiControlChars,
         createGui,
         killEntityManipulationGui,
 
     } = <span class="hljs-title function_">initializeEntityManipulationGui</span>({
-        <span class="hljs-attr">canvas</span>: sceneCanvas, 
-        <span class="hljs-attr">cell</span>: mainCell, 
+        <span class="hljs-attr">canvas</span>: sceneCanvas,
+        <span class="hljs-attr">cell</span>: mainCell,
         selectedEntitys,
         dashboard,
         updateControllerDisplay,
@@ -458,7 +458,7 @@
         killEntityCopyPaste,
 
     } = <span class="hljs-title function_">initializeEntityCopyPaste</span>({
-        <span class="hljs-attr">canvas</span>: sceneCanvas, 
+        <span class="hljs-attr">canvas</span>: sceneCanvas,
         selectedEntitys,
         addControllerAttributes,
         updateControllerDisplay,

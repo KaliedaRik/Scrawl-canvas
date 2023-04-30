@@ -869,7 +869,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -884,7 +884,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> graddy = scrawl.<span class="hljs-title function_">makeConicGradient</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> graddy = scrawl.<span class="hljs-title function_">makeConicGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mygradient&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
@@ -1063,7 +1063,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
     <span class="hljs-title function_">events</span>(e);
 
-    <span class="hljs-keyword">let</span> val = <span class="hljs-built_in">parseInt</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>);
+    <span class="hljs-keyword">const</span> val = <span class="hljs-built_in">parseInt</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>);
 
     <span class="hljs-keyword">switch</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>) {
 
@@ -1083,7 +1083,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
     <span class="hljs-title function_">events</span>(e);
 
-    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+    <span class="hljs-keyword">const</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
     <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;user-steps&#x27;</span>, <span class="hljs-string">&#x27;user-repeat&#x27;</span>].<span class="hljs-title function_">includes</span>(val)) {
         graddy.<span class="hljs-title function_">set</span>({
